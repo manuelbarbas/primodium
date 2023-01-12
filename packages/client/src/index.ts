@@ -34,6 +34,8 @@ setupMUDNetwork<typeof components, SystemTypes>(
   // After setting up the network, we can tell MUD to start the synchronization process.
   startSync();
 
+  console.log(config.privateKey);
+
   // Just for demonstration purposes: we create a global function that can be
   // called to invoke the Increment system contract. (See IncrementSystem.sol.)
   (window as any).increment = () =>
