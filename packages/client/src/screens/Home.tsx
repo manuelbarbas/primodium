@@ -1,4 +1,3 @@
-import { useState } from "react";
 import InfoBox from "../components/InfoBox";
 import BuildingBox from "../components/BuildingBox";
 import ResourceBox from "../components/ResourceBox";

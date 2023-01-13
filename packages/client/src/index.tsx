@@ -9,6 +9,8 @@ import { config } from "./config";
 import { GodID as SingletonID } from "@latticexyz/network";
 import App from "./App";
 
+import "./index.css";
+
 const rootElement = document.getElementById("react-root");
 if (!rootElement) throw new Error("React root not found");
 const root = ReactDOM.createRoot(rootElement);
