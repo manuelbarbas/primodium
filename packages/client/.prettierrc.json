@@ -1,0 +1,11 @@
+{
+  "tabWidth": 2,
+  "proseWrap": "preserve",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "htmlWhitespaceSensitivity": "css",
+  "semi": true,
+  "useTabs": false,
+  "quoteProps": "as-needed",
+  "requirePragma": false
+}
