@@ -1,8 +1,15 @@
-import { GodID as SingletonID, TxQueue } from "@latticexyz/network";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import { WagmiConfig, createClient } from "wagmi";
+import { getDefaultProvider } from "ethers";
+
+import { TxQueue } from "@latticexyz/network";
 import { World } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
-import { useComponentValueStream } from "@latticexyz/std-client";
-import { components, singletonIndex } from ".";
+import { components } from ".";
+
+import Home from "./screens/Home";
+import Increment from "./screens/Increment";
 
 type Props = {
   world: World;
@@ -10,22 +17,29 @@ type Props = {
   components: typeof components;
 };
 
-export const App = ({ systems, components }: Props) => {
-  const counter = useComponentValueStream(components.Counter, singletonIndex);
+const wagmiClient = createClient({
+  autoConnect: true,
+  provider: getDefaultProvider(),
+});
+
+export default function App({ world, systems, components }: Props) {
   return (
-    <>
-      <div>
-        Counter: <span>{counter?.value ?? "??"}</span>
-      </div>
-      <button
-        type="button"
-        onClick={(event) => {
-          event.preventDefault();
-          systems["system.Increment"].executeTyped(SingletonID);
-        }}
-      >
-        Increment
-      </button>
-    </>
+    <WagmiConfig client={wagmiClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/increment"
+            element={
+              <Increment
+                world={world}
+                systems={systems}
+                components={components}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </WagmiConfig>
   );
-};
+}
