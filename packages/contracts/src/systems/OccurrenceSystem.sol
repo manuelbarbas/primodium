@@ -21,7 +21,7 @@ contract OccurrenceSystem is System {
     (uint256 blockType, VoxelCoord memory coord) = abi.decode(arguments, (uint256, VoxelCoord));
 
     if (blockType == LithiumID) return abi.encode(Lithium(coord));
-    if (blockType == RegolithID) return abi.encode(Log(coord));
+    if (blockType == RegolithID) return abi.encode(Regolith(coord));
     if (blockType == SandstoneID) return abi.encode(Sandstone(coord));
     if (blockType == AlluviumID) return abi.encode(Alluvium(coord));
     if (blockType == WaterID) return abi.encode(Water(coord));

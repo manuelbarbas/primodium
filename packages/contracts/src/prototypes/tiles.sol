@@ -9,14 +9,19 @@ import { OccurrenceSystem, ID as OccurrenceSystemID } from "../systems/Occurrenc
 
 //blocks: LithiumID, RegolithID, SandstoneID, AlluviumID, WaterID
 
-uint256 constant AirID = uint256(keccak256("block.Air"));
+uint256 constant LithiumID = uint256(keccak256("block.Lithium"));
+uint256 constant RegolithID = uint256(keccak256("block.Regolith"));
+uint256 constant SandstoneID = uint256(keccak256("block.Sandstone"));
+uint256 constant AlluviumID = uint256(keccak256("block.Alluvium"));
+uint256 constant WaterID = uint256(keccak256("block.Water"));
+uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 
 function defineBlocks(
   ItemPrototypeComponent itemPrototypeComponent,
   OccurrenceComponent occurrenceComponent,
   OccurrenceSystem occurrenceSystem
 ) {
-//for tiles that spawn naturally in the world
+  //for tiles that spawn naturally in the world
   itemPrototypeComponent.set(LithiumID);
   occurrenceComponent.set(LithiumID, FunctionSelector(address(occurrenceSystem), occurrenceSystem.Lithium.selector));
 
@@ -31,6 +36,7 @@ function defineBlocks(
 
   itemPrototypeComponent.set(WaterID);
   occurrenceComponent.set(WaterID, FunctionSelector(address(occurrenceSystem), occurrenceSystem.Water.selector));
-
-//for tiles that are craftable but don't naturally spawn
-  itemPrototypeComponent.set(LithiumMinerID); }
+  
+  //for tiles that are craftable but don't naturally spawn
+  itemPrototypeComponent.set(LithiumMinerID);
+}
