@@ -50,7 +50,7 @@ contract OccurrenceSystem is System {
     return LibTerrain.Alluvium(coord);
   }
 
-   function Water(VoxelCoord memory coord) public pure returns (uint256) {
+  function Water(VoxelCoord memory coord) public pure returns (uint256) {
     return LibTerrain.Water(coord);
   }
 
