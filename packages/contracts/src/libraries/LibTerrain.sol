@@ -4,9 +4,11 @@ pragma solidity >=0.8.0;
 import { Perlin } from "noise/Perlin.sol";
 import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 import { Biome, STRUCTURE_CHUNK, STRUCTURE_CHUNK_CENTER } from "../constants.sol";
-import { AirID, GrassID, DirtID, LogID, StoneID, SandID, WaterID, CobblestoneID, CoalID, CraftingID, IronID, GoldID, DiamondID, LeavesID, PlanksID, RedFlowerID, GrassPlantID, OrangeFlowerID, MagentaFlowerID, LightBlueFlowerID, LimeFlowerID, PinkFlowerID, GrayFlowerID, LightGrayFlowerID, CyanFlowerID, PurpleFlowerID, BlueFlowerID, GreenFlowerID, BlackFlowerID, KelpID, WoolID, SnowID, ClayID, BedrockID } from "../prototypes/Blocks.sol";
+import { LithiumID, RegolithID, SandstoneID, AlluviumID, WaterID } from "../prototypes/tiles.sol";
 import { VoxelCoord } from "../types.sol";
 import { div } from "../utils.sol";
+
+//tiles: LithiumID, RegolithID, SandstoneID, AlluviumID, WaterID
 
 int128 constant _0 = 0; // 0 * 2**64
 int128 constant _0_3 = 5534023222112865484; // 0.3 * 2**64
