@@ -32,8 +32,5 @@ function defineBlocks(
   itemPrototypeComponent.set(WaterID);
   occurrenceComponent.set(WaterID, FunctionSelector(address(occurrenceSystem), occurrenceSystem.Water.selector));
 
-  itemPrototypeComponent.set(RegolithID);
-  occurrenceComponent.set(RegolithID, FunctionSelector(address(occurrenceSystem), occurrenceSystem.Lithium.selector));
-
 //for tiles that are craftable but don't naturally spawn
   itemPrototypeComponent.set(LithiumMinerID); }
