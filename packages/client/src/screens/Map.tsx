@@ -5,7 +5,7 @@ import { SystemTypes } from "contracts/types/SystemTypes";
 import { useComponentValue } from "@latticexyz/react";
 import { components } from "..";
 
-import { getBlockAtPosition, getTerrainBlock } from "../layers/network/api";
+// import { getBlockAtPosition, getTerrainBlock } from "../layers/network/api";
 
 type Props = {
   world: World;
