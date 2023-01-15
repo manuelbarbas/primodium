@@ -3,7 +3,10 @@ import { setupMUDNetwork } from "@latticexyz/std-client";
 import { createWorld } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 import { SystemAbis } from "contracts/types/SystemAbis.mjs";
-import { defineNumberComponent } from "@latticexyz/std-client";
+import {
+  defineNumberComponent,
+  defineVoxelCoordComponent,
+} from "@latticexyz/std-client";
 import { config } from "./config";
 
 import { GodID as SingletonID } from "@latticexyz/network";
@@ -27,6 +30,10 @@ export const components = {
     metadata: {
       contractId: "component.Counter",
     },
+  }),
+  Position: defineVoxelCoordComponent(world, {
+    id: "Position",
+    metadata: { contractId: "component.Position" },
   }),
 };
 

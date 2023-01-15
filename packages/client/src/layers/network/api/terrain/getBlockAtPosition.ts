@@ -1,24 +1,17 @@
-import { Component, EntityID, getComponentValue, getEntitiesWithValue, Type, World } from "@latticexyz/recs";
+import {
+  Component,
+  EntityID,
+  getComponentValue,
+  getEntitiesWithValue,
+  Type,
+  World,
+} from "@latticexyz/recs";
 import { VoxelCoord } from "@latticexyz/utils";
 import { Perlin } from "@latticexyz/noise";
 import { BlockType } from "../../constants";
 import { Terrain, TerrainState } from "./types";
 import { getTerrain } from "./utils";
-import {
-  Air,
-  Bedrock,
-  Clay,
-  Coal,
-  Diamond,
-  Dirt,
-  Grass,
-  Sand,
-  SmallPlant,
-  Snow,
-  Stone,
-  Structure,
-  Water,
-} from "./occurrence";
+import { Lithium, Regolith, Sandstone, Alluvium } from "./occurrence";
 
 export function getEntityAtPosition(
   context: {
@@ -31,11 +24,10 @@ export function getEntityAtPosition(
   const { Position, Item } = context;
   const entitiesAtPosition = [...getEntitiesWithValue(Position, coord)];
 
-  // Prefer non-air blocks at this position
   return (
     entitiesAtPosition?.find((b) => {
       const item = getComponentValue(Item, b);
-      return item && item.value !== BlockType.Air;
+      return item && item.value !== BlockType.Water;
     }) ?? entitiesAtPosition[0]
   );
 }
@@ -62,25 +54,23 @@ export function getBlockAtPosition(
   perlin: Perlin,
   coord: VoxelCoord
 ) {
-  return getECSBlock(context, coord) ?? getTerrainBlock(getTerrain(coord, perlin), coord, perlin);
+  return (
+    getECSBlock(context, coord) ??
+    getTerrainBlock(getTerrain(coord, perlin), coord, perlin)
+  );
 }
 
-export function getTerrainBlock({ biome: biomeVector, height }: Terrain, coord: VoxelCoord, perlin: Perlin): EntityID {
+export function getTerrainBlock(
+  { biome: biomeVector, height }: Terrain,
+  coord: VoxelCoord,
+  perlin: Perlin
+): EntityID {
   const state: TerrainState = { biomeVector, height, coord, perlin };
   return (
-    Bedrock(state) ||
-    Water(state) ||
-    Air(state) ||
-    Diamond(state) ||
-    Coal(state) ||
-    Sand(state) ||
-    Snow(state) ||
-    Grass(state) ||
-    Stone(state) ||
-    Clay(state) ||
-    Dirt(state) ||
-    Structure(state) ||
-    SmallPlant(state) ||
-    BlockType.Air
+    Lithium(state) ||
+    Regolith(state) ||
+    Sandstone(state) ||
+    Alluvium(state) ||
+    BlockType.Water
   );
 }

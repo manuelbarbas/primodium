@@ -10,6 +10,7 @@ import { components } from ".";
 
 import Home from "./screens/Home";
 import Increment from "./screens/Increment";
+import Map from "./screens/Map";
 
 type Props = {
   world: World;
@@ -36,6 +37,12 @@ export default function App({ world, systems, components }: Props) {
                 systems={systems}
                 components={components}
               />
+            }
+          />
+          <Route
+            path="/map"
+            element={
+              <Map world={world} systems={systems} components={components} />
             }
           />
         </Routes>
