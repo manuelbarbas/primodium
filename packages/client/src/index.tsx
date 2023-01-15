@@ -1,12 +1,9 @@
 import ReactDOM from "react-dom/client";
 import { setupMUDNetwork } from "@latticexyz/std-client";
-import { createWorld } from "@latticexyz/recs";
+import { createWorld, defineComponent, Type } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 import { SystemAbis } from "contracts/types/SystemAbis.mjs";
-import {
-  defineNumberComponent,
-  defineVoxelCoordComponent,
-} from "@latticexyz/std-client";
+import { defineNumberComponent } from "@latticexyz/std-client";
 import { config } from "./config";
 
 import { GodID as SingletonID } from "@latticexyz/network";
@@ -31,10 +28,21 @@ export const components = {
       contractId: "component.Counter",
     },
   }),
-  Position: defineVoxelCoordComponent(world, {
-    id: "Position",
-    metadata: { contractId: "component.Position" },
-  }),
+  // add the new terraintile component here
+  TerrainTile: defineComponent(
+    world,
+    {
+      x: Type.Number,
+      y: Type.Number,
+      id: Type.Number,
+    },
+    {
+      id: "TerrainTile",
+      metadata: {
+        contractId: "component.TerrainTile",
+      },
+    }
+  ),
 };
 
 // This is where the magic happens

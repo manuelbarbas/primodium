@@ -8,7 +8,7 @@ import { WaterID, LithiumID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID
 library LibTerrain {
   function getTerrainFromId(
     int32 id
-  ) internal pure returns (uint256) {
+  ) public pure returns (uint256) {
     if (id == 0) return WaterID;
     if (id == 1) return LithiumID;
     if (id == 2) return RegolithID;
@@ -16,6 +16,18 @@ library LibTerrain {
     if (id == 4) return AlluviumID;
     if (id == 5) return LithiumMinerID;
     return WaterID;
+  }
+
+  function getIdFromTerrain(
+    uint256 id
+  ) public pure returns (int32) {
+    if (id == WaterID) return 0;
+    if (id == LithiumID) return 1;
+    if (id == RegolithID) return 2;
+    if (id == RegolithID) return 3;
+    if (id == AlluviumID) return 4;
+    if (id == LithiumMinerID) return 5;
+    return 0;
   }
 
   function getTerrainTile(Coord memory coord) public pure returns (uint256) {

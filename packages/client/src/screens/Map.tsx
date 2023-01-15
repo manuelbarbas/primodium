@@ -20,19 +20,19 @@ type Props = {
 // Read the terrain state of the current coordinate
 export default function Map({ systems, components }: Props) {
   // MUD
-  const position = useComponentValue(components.Position, 0 as EntityIndex);
+  // const position = useComponentValue(components.Position, 0 as EntityIndex);
   const fetchDemoBlockState = async () => {
     // getBlockAtPosition(context);
   };
+
   useEffect(() => {
     fetchDemoBlockState();
   }, []);
 
   // React Window
-
   const { height, width } = useWindowDimensions();
   const DISPLAY_GRID_SIZE = 32;
-  const DISPLAY_TILES_PER_AXIS = 1000;
+  const DISPLAY_TILES_PER_AXIS = 40;
 
   const displayIndexToTileIndex = (index: number) =>
     index - Math.round(DISPLAY_TILES_PER_AXIS * 0.5);
@@ -48,6 +48,11 @@ export default function Map({ systems, components }: Props) {
   }) => {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex);
+
+    // init all tiles
+    // fetch component state of tile
+    // display tile
+
     return (
       <div
         style={{
@@ -56,15 +61,17 @@ export default function Map({ systems, components }: Props) {
         }}
       >
         {plotX},{plotY}
+        <br />
+        "water"
       </div>
     );
   };
 
   const Example = () => (
     <Grid
-      columnCount={1000}
+      columnCount={DISPLAY_TILES_PER_AXIS}
       columnWidth={DISPLAY_GRID_SIZE}
-      rowCount={1000}
+      rowCount={DISPLAY_TILES_PER_AXIS}
       rowHeight={DISPLAY_GRID_SIZE}
       width={width}
       height={height * 0.9}

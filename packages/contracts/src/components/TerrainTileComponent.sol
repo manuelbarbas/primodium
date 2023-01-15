@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import "solecs/Component.sol";
+import "../libraries/LibTerrain.sol";
+
+import { Coord } from "../types.sol";
 
 struct TerrainTile {
   int32 x;
   int32 y;
   int32 id;
 }
+
+uint256 constant ID = uint256(keccak256("component.TerrainTile"));
 
 contract TerrainTileComponent is Component {
   constructor(address world, uint256 id) Component(world, id) {}
@@ -23,6 +28,12 @@ contract TerrainTileComponent is Component {
 
     keys[2] = "id";
     values[2] = LibTypes.SchemaValue.INT32;
+  }
+
+  function init(uint256 entity, Coord calldata value) public virtual {
+    set(entity, abi.encode(
+      TerrainTile(value.x, value.y, LibTerrain.getIdFromTerrain(LibTerrain.getTerrainTile(value)))
+    ));
   }
 
   function set(uint256 entity, TerrainTile calldata value) public virtual {
