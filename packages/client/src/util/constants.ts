@@ -2,13 +2,15 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 
 export const BlockType = {
+  Water: keccak256("block.Water") as EntityID,
   Lithium: keccak256("block.Lithium") as EntityID,
   Regolith: keccak256("block.Regolith") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,
   Alluvium: keccak256("block.Alluvium") as EntityID,
-  Water: keccak256("block.Water") as EntityID,
+  LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
 };
 
+// From OPCraft
 export type BlockTypeKey = keyof typeof BlockType;
 
 export const BlockIdToIndex = Object.values(BlockType).reduce<{
