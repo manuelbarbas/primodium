@@ -821,6 +821,20 @@
   dependencies:
     "@types/big-integer" "^0.0.31"
 
+"@latticexyz/noise@^1.34.0":
+  version "1.34.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/noise/-/noise-1.34.0.tgz#ce9c30d71181302240636ecb9bf358907a062b36"
+  integrity sha512-QZLKOy7+jedJQDESAp5cqqgLATPIZHykB33CUDLT3OFyF+JUu4e8jSvPZv/wwny15bJIYfd2BSEomsKZSxTkLA==
+  dependencies:
+    "@types/big-integer" "^0.0.31"
+
+"@latticexyz/phaserx@^1.34.0":
+  version "1.34.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/phaserx/-/phaserx-1.34.0.tgz#f9d1f470c3f2d8969039a76433a4f0b0a2d165c0"
+  integrity sha512-1JsZUkHgXAQdVlmpJ1AS3eZV/E5qkQw7AycEcMleB+BBrBHXzSLgZ8fOxgZBm5tvWCOOBTpxNA8Gms8ZxA8wjQ==
+  dependencies:
+    "@use-gesture/vanilla" "10.2.9"
+
 "@latticexyz/react@^1.33.1":
   version "1.33.1"
   resolved "https://registry.yarnpkg.com/@latticexyz/react/-/react-1.33.1.tgz#916e32b4b629c8e08e6a71a233f09fce15a84d3c"
@@ -1446,6 +1460,18 @@
   dependencies:
     "@typescript-eslint/types" "5.48.1"
     eslint-visitor-keys "^3.3.0"
+
+"@use-gesture/core@10.2.9":
+  version "10.2.9"
+  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.9.tgz#51eb2a12747c750dd0ac60af48fb7653382cf58a"
+  integrity sha512-MsPUCWZ6BSir8XqSrfQCyrFuBz405YI2D0hfZ7TXX/hhF0kekN+noPhHjg7m85vMyCYf92fjt3J5AbjoGV4eMw==
+
+"@use-gesture/vanilla@10.2.9":
+  version "10.2.9"
+  resolved "https://registry.yarnpkg.com/@use-gesture/vanilla/-/vanilla-10.2.9.tgz#0f6d8390ad2af0100f5d70b722c4e17c1685e842"
+  integrity sha512-DVH5d0Owaw1qsviNPt6o632q8YqSXM4GMPkeMlPevzpeXwRvPPFh3ngKX/zTRER9LXKvCDOMSL7WFY1l4J+a6Q==
+  dependencies:
+    "@use-gesture/core" "10.2.9"
 
 "@vitejs/plugin-react@^3.0.0":
   version "3.0.1"
@@ -4701,6 +4727,11 @@ jsonparse@^1.2.0:
   dependencies:
     array-includes "^3.1.5"
     object.assign "^4.1.3"
+
+keccak-wasm@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/keccak-wasm/-/keccak-wasm-0.10.3.tgz#5aee5cc6fbc0b734463013fee3b644d4b2ebf13d"
+  integrity sha512-HMbeV9BX+hGmrPk5C1PdZBPAGIAVyGzKywQt4OnU9cG+7sI1/moZmH7DXRd3XQBhR6z04LdMXkA15roVINmMsA==
 
 keccak@^3.0.0, keccak@^3.0.1:
   version "3.0.3"

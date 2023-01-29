@@ -4,9 +4,9 @@ import { createWorld, defineComponent, Type } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 import { SystemAbis } from "contracts/types/SystemAbis.mjs";
 import { defineNumberComponent } from "@latticexyz/std-client";
-import { config } from "./config";
-
 import { GodID as SingletonID } from "@latticexyz/network";
+
+import { config } from "./config";
 import App from "./App";
 
 import "./index.css";
