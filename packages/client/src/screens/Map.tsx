@@ -97,7 +97,7 @@ export default function Map({}: Props) {
       >
         {plotX},{plotY}
         <br />
-        {Math.round(depth * 100 * 100) / 100}
+        {Math.round(depth * 100) / 100}
         <br />
       </div>
     );
