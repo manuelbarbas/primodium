@@ -1,4 +1,4 @@
-import { createPerlin, Perlin } from "@latticexyz/noise";
+import { Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
 import { BlockType } from "./constants";
 
@@ -21,7 +21,6 @@ export function getTerrainTile(coord: Coord, perlin: Perlin) {
 }
 
 export async function createUtilities() {
-  const perlin = await createPerlin();
   return {
     getTerrainTile,
   };

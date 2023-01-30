@@ -1,4 +1,4 @@
-import { createPerlin, Perlin } from "@latticexyz/noise";
+import { createPerlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
 import { BlockType } from "./constants";
 
