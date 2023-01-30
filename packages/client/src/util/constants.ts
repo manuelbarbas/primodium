@@ -43,10 +43,14 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
 
 // Terrain Tiles
 export const BlockColors = {
-  Water: "#ffffff",
-  Lithium: "#ff00aa",
-  Regolith: "#ffbbcc",
-  Sandstone: "#ff1123",
-  Alluvium: "#aa3482",
+  Titanium: "#a3a3a3",
+  Teranomite: "#d9f99d",
+  Water: "#0369a1",
+  Lithium: "#d1d5db",
+  Regolith: "#71717a",
+  Sandstone: "#fef9c3",
+  Alluvium: "#4ade80",
+  Biofilm: "#22c55e",
+  Kyronium: "#cffafe",
   LithiumMiner: "ff23742",
 };
