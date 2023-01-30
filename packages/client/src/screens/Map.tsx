@@ -6,7 +6,8 @@ import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
-import { getTerrainTile, getTerrainDepth, getTerrainColor } from "../util/tile";
+import { getTerrainNormalizedDepth, getTerrainKey } from "../util/tile";
+import { BlockColors } from "../util/constants";
 
 import { FixedSizeGrid as Grid } from "react-window";
 import useWindowDimensions from "../hooks/useWindowDimensions";
@@ -32,29 +33,14 @@ export default function Map({}: Props) {
     });
   }, []);
 
-  const getTerrainTileHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return null;
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getTerrainTile(coord, perlin);
-      } else {
-        return null;
-      }
-    },
-    [initialized]
-  );
-
-  const getTerrainDepthHelper = useCallback(
+  const getTerrainNoramalizedDepthHelper = useCallback(
     (coord: Coord) => {
       if (!initialized || perlinRef.current === null) {
         return 0;
       }
       if (perlinRef.current !== null) {
         const perlin = perlinRef.current;
-        return getTerrainDepth(coord, perlin);
+        return getTerrainNormalizedDepth(coord, perlin);
       } else {
         return 0;
       }
@@ -69,7 +55,7 @@ export default function Map({}: Props) {
       }
       if (perlinRef.current !== null) {
         const perlin = perlinRef.current;
-        return getTerrainColor(coord, perlin);
+        return getTerrainKey(coord, perlin);
       } else {
         return "#fffff";
       }
@@ -98,14 +84,14 @@ export default function Map({}: Props) {
     const plotY = displayIndexToTileIndex(rowIndex);
 
     // Calculate tile perlin result
-    const depth = getTerrainDepthHelper({ x: plotX, y: plotY });
+    const depth = getTerrainNoramalizedDepthHelper({ x: plotX, y: plotY });
     const color = getTerrainColorHelper({ x: plotX, y: plotY });
 
     return (
       <div
         style={{
           fontSize: 3,
-          backgroundColor: color,
+          backgroundColor: BlockColors.get(color),
           ...style,
         }}
       >

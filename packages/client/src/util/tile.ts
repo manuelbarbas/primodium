@@ -1,42 +1,46 @@
 import { Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
-import { BlockType, BlockColors } from "./constants";
+import { BlockKey } from "./constants";
 
 // TODO: randomize perlinSeed
-const perlinSeed = 69420;
+const perlinSeed1 = 60194;
+const perlinSeed2 = 74037;
+const perlinSeed3 = 53092;
+const perlinSeed4 = 17326;
+const perlinSeed5 = 43875;
 
-export function getTerrainDepth(coord: Coord, perlin: Perlin) {
+export function getTerrainDepth(
+  coord: Coord,
+  perlin: Perlin,
+  perlinSeed: number
+) {
   const denom = 8;
   const depth = perlin(coord.x + perlinSeed, coord.y + perlinSeed, 0, denom);
   return depth;
 }
 
-export function getTerrainTile(coord: Coord, perlin: Perlin) {
-  const depth = getTerrainDepth(coord, perlin);
-  const normalizedDepth = depth * 100;
-  if (normalizedDepth < 40) return BlockType.Alluvium;
-  if (normalizedDepth < 45) return BlockType.Regolith;
-  if (normalizedDepth < 50) return BlockType.Regolith;
-  if (normalizedDepth < 45) return BlockType.Lithium;
-  return BlockType.Water;
+export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
+  const depth1 = getTerrainDepth(coord, perlin, perlinSeed1);
+  const depth2 = getTerrainDepth(coord, perlin, perlinSeed2);
+  const depth3 = getTerrainDepth(coord, perlin, perlinSeed3);
+  const depth4 = getTerrainDepth(coord, perlin, perlinSeed4);
+  const depth5 = getTerrainDepth(coord, perlin, perlinSeed5);
+
+  const normalizedDepth = ((depth1 + depth2 + depth3) / 3) * 100;
+
+  return normalizedDepth;
 }
 
-export function getTerrainColor(coord: Coord, perlin: Perlin) {
-  const depth = getTerrainDepth(coord, perlin);
-  const normalizedDepth = depth * 100;
-  if (normalizedDepth < 35) return BlockColors.Water;
-  if (normalizedDepth < 42) return BlockColors.Sandstone;
-  if (normalizedDepth < 48) return BlockColors.Alluvium;
-  if (normalizedDepth < 53) return BlockColors.Biofilm;
-  if (normalizedDepth < 54) return BlockColors.Teranomite;
-  if (normalizedDepth < 55) return BlockColors.Titanium;
-  if (normalizedDepth < 69) return BlockColors.Regolith;
-  if (normalizedDepth < 70) return BlockColors.Kyronium;
-  return BlockColors.Regolith;
-}
+export function getTerrainKey(coord: Coord, perlin: Perlin) {
+  const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
 
-export async function createUtilities() {
-  return {
-    getTerrainTile,
-  };
+  if (normalizedDepth < 35) return BlockKey.Water;
+  if (normalizedDepth < 42) return BlockKey.Sandstone;
+  if (normalizedDepth < 48) return BlockKey.Alluvium;
+  if (normalizedDepth < 53) return BlockKey.Biofilm;
+  if (normalizedDepth < 54) return BlockKey.Teranomite;
+  if (normalizedDepth < 55) return BlockKey.Titanium;
+  if (normalizedDepth < 69) return BlockKey.Regolith;
+  if (normalizedDepth < 70) return BlockKey.Kyronium;
+  return BlockKey.Regolith;
 }
