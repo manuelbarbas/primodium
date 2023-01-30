@@ -6,7 +6,7 @@ import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
-import { getTerrainTile, getTerrainDepth } from "../util/tile";
+import { getTerrainTile, getTerrainDepth, getTerrainColor } from "../util/tile";
 
 import { FixedSizeGrid as Grid } from "react-window";
 import useWindowDimensions from "../hooks/useWindowDimensions";
@@ -50,13 +50,28 @@ export default function Map({}: Props) {
   const getTerrainDepthHelper = useCallback(
     (coord: Coord) => {
       if (!initialized || perlinRef.current === null) {
-        return null;
+        return 0;
       }
       if (perlinRef.current !== null) {
         const perlin = perlinRef.current;
         return getTerrainDepth(coord, perlin);
       } else {
-        return null;
+        return 0;
+      }
+    },
+    [initialized]
+  );
+
+  const getTerrainColorHelper = useCallback(
+    (coord: Coord) => {
+      if (!initialized || perlinRef.current === null) {
+        return "#ffffff";
+      }
+      if (perlinRef.current !== null) {
+        const perlin = perlinRef.current;
+        return getTerrainColor(coord, perlin);
+      } else {
+        return "#fffff";
       }
     },
     [initialized]
@@ -64,8 +79,8 @@ export default function Map({}: Props) {
 
   // React Window
   const { height, width } = useWindowDimensions();
-  const DISPLAY_GRID_SIZE = 64;
-  const DISPLAY_TILES_PER_AXIS = 40;
+  const DISPLAY_GRID_SIZE = 16;
+  const DISPLAY_TILES_PER_AXIS = 512;
 
   const displayIndexToTileIndex = (index: number) =>
     index - Math.round(DISPLAY_TILES_PER_AXIS * 0.5);
@@ -82,37 +97,24 @@ export default function Map({}: Props) {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex);
 
-    if (plotX === 0 && plotY === 0) {
-      // Demo state of center tile
-      return (
-        <div
-          style={{
-            fontSize: 12,
-            ...style,
-          }}
-        >
-          <b>
-            {plotX},{plotY}
-          </b>
-        </div>
-      );
-    } else {
-      // Calculate tile perlin result
-      const depth = getTerrainDepthHelper({ x: plotX, y: plotY });
+    // Calculate tile perlin result
+    const depth = getTerrainDepthHelper({ x: plotX, y: plotY });
+    const color = getTerrainColorHelper({ x: plotX, y: plotY });
 
-      return (
-        <div
-          style={{
-            fontSize: 6,
-            ...style,
-          }}
-        >
-          {plotX},{plotY}
-          <br />
-          {depth}
-        </div>
-      );
-    }
+    return (
+      <div
+        style={{
+          fontSize: 3,
+          backgroundColor: color,
+          ...style,
+        }}
+      >
+        {plotX},{plotY}
+        <br />
+        {Math.round(depth * 100 * 100) / 100}
+        <br />
+      </div>
+    );
   };
 
   const TileMap = () => (
@@ -122,7 +124,7 @@ export default function Map({}: Props) {
       rowCount={DISPLAY_TILES_PER_AXIS}
       rowHeight={DISPLAY_GRID_SIZE}
       width={width}
-      height={height * 0.9}
+      height={height * 0.96}
       initialScrollLeft={(DISPLAY_TILES_PER_AXIS * 0.5 - 4) * DISPLAY_GRID_SIZE}
       initialScrollTop={(DISPLAY_TILES_PER_AXIS * 0.5 - 4) * DISPLAY_GRID_SIZE}
     >

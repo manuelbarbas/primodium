@@ -35,13 +35,14 @@ library LibTerrain {
     if (coord.x == 0 && coord.y == 0) return LithiumID;
       // TODO: randomize perlinSeed
       int128 perlinSeed = 413;
-      int128 denom = 128;
+      int128 denom = 50;
       int128 depth = Perlin.noise2d(coord.x + perlinSeed, coord.y + perlinSeed, denom, 64);
+      int128 normalizedDepth = depth * 100;
 
-      if (depth < 32) return AlluviumID;
-      if (depth < 16) return RegolithID;
-      if (depth < 8) return SandstoneID;
-      if (depth < 4) return LithiumID;
+      if (normalizedDepth < 40) return AlluviumID;
+      if (normalizedDepth < 45) return RegolithID;
+      if (normalizedDepth < 50) return SandstoneID;
+      if (normalizedDepth < 55) return LithiumID;
       return WaterID;
   }
 }

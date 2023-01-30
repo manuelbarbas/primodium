@@ -40,3 +40,13 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
   acc[id] = key as BlockTypeKey;
   return acc;
 }, {});
+
+// Terrain Tiles
+export const BlockColors = {
+  Water: "#ffffff",
+  Lithium: "#ff00aa",
+  Regolith: "#ffbbcc",
+  Sandstone: "#ff1123",
+  Alluvium: "#aa3482",
+  LithiumMiner: "ff23742",
+};
