@@ -45,15 +45,16 @@ export const components = {
   ),
 };
 
-// This is where the magic happens
-setupMUDNetwork<typeof components, SystemTypes>(
-  config,
-  world,
-  components,
-  SystemAbis
-).then(({ startSync, systems }) => {
-  // After setting up the network, we can tell MUD to start the synchronization process.
+async function boot() {
+  // await createNetworkLayer();
+
+  const { startSync, systems } = await setupMUDNetwork<
+    typeof components,
+    SystemTypes
+  >(config, world, components, SystemAbis);
   startSync();
 
   root.render(<App world={world} systems={systems} components={components} />);
-});
+}
+
+boot();
