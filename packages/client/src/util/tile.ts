@@ -14,7 +14,7 @@ export function getTerrainDepth(
   perlin: Perlin,
   perlinSeed: number
 ) {
-  const denom = 8;
+  const denom = 12;
   const depth = perlin(coord.x + perlinSeed, coord.y + perlinSeed, 0, denom);
   return depth;
 }
@@ -26,21 +26,24 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
   const depth4 = getTerrainDepth(coord, perlin, perlinSeed4);
   const depth5 = getTerrainDepth(coord, perlin, perlinSeed5);
 
-  const normalizedDepth = ((depth1 + depth2 + depth3) / 3) * 100;
+  const normalizedDepth = ((depth1 + depth2 + depth3 + depth4) / 5) * 100;
 
   return normalizedDepth;
 }
 
 export function getTerrainKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
+//landscape block gen
+  if (normalizedDepth < 30) return BlockKey.Water;
+//todo insert some mineral gen (between water and alluvium figures)
+  if (normalizedDepth < 33) return BlockKey.Alluvium;
+  if (normalizedDepth < 36) return BlockKey.Biofilm;
+//todo insert some metal gen (between biofilm and sandstone figures)
+  if (normalizedDepth < 39) return BlockKey.Sandstone;
+//todo insert some more metal gen (between sandstone and regolith)
+  if (normalizedDepth < 45) return BlockKey.Regolith;
+//todo insert some more metal gen (between regolith and bedrock)
+  if (normalizedDepth < 49) return BlockKey.Bedrock;
 
-  if (normalizedDepth < 35) return BlockKey.Water;
-  if (normalizedDepth < 42) return BlockKey.Sandstone;
-  if (normalizedDepth < 48) return BlockKey.Alluvium;
-  if (normalizedDepth < 53) return BlockKey.Biofilm;
-  if (normalizedDepth < 54) return BlockKey.Teranomite;
-  if (normalizedDepth < 55) return BlockKey.Titanium;
-  if (normalizedDepth < 69) return BlockKey.Regolith;
-  if (normalizedDepth < 70) return BlockKey.Kyronium;
-  return BlockKey.Regolith;
+  return BlockKey.Bedrock;
 }

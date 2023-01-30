@@ -2,34 +2,68 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 
 export const BlockKey = {
+//landscape blocks
   Water: "Water",
-
-  Lithium: "Lithium",
-  Regolith: "Regolith",
   Sandstone: "Sandstone",
-  Alluvium: "Alluvium",
-
   Biofilm: "Biofilm",
-  Kyronium: "Kyronium",
-  Titanium: "Titanium",
-  Teranomite: "Teranomite",
+  Alluvium: "Alluvium",
+  Regolith: "Regolith",
+  Bedrock: "Bedrock",
 
-  LithiumMiner: "LithiumMiner",
+//metal ores
+  Lithium: "Lithium",
+  Iron: "Iron",
+  Copper: "Copper",
+  Electrum: "Electrum",
+  Alvarium: "Alvarium",
+  Kydonium: "Kydonium",
+  Lethvium: "Lethvium",
+  Titanium: "Titanium",
+  Vandenium: "Vandenium",
+  Iridium: "Iridium",
+
+//mineral ores
+  Teranomite: "Teranomite",
+  Hankite: "Hankite",
+  Naberlite: "Naberlite",
+  Gyratite: "Gyratite",
+  Kimberlite: "Kimberlite",
+  Ludenite: "Ludenite",
+  Bolulite: "Bolutite",
+
 };
 
 export const BlockType = {
+  //landscape blocks
   Water: keccak256("block.Water") as EntityID,
-
-  Lithium: keccak256("block.Lithium") as EntityID,
-  Regolith: keccak256("block.Regolith") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,
-  Alluvium: keccak256("block.Alluvium") as EntityID,
   Biofilm: keccak256("block.Biofilm") as EntityID,
-  Kyronium: keccak256("block.Kyronium") as EntityID,
-  Titanium: keccak256("block.Titanium") as EntityID,
-  Teranomite: keccak256("block.Teranomite") as EntityID,
+  Alluvium: keccak256("block.Alluvium") as EntityID,
+  Regolith: keccak256("block.Regolith") as EntityID,
+  Bedrock: keccak256("block.Bedrock") as EntityID,
 
-  LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
+  //metal ores
+  Lithium: keccak256("block.Lithium") as EntityID,
+  Iron: keccak256("block.Iron") as EntityID,
+  Copper: keccak256("block.Copper") as EntityID,
+  Electrum: keccak256("block.Electrum") as EntityID,
+  Alvarium: keccak256("block.Alvarium") as EntityID,
+  Kydonium: keccak256("block.Kydonium") as EntityID,
+  Lethvium: keccak256("block.Lethvium") as EntityID,
+  Titanium: keccak256("block.Titanium") as EntityID,
+  Vandenium: keccak256("block.Vandenium") as EntityID,
+  Iridium: keccak256("block.Iridium") as EntityID,
+
+
+  //mineral ores
+  Teranomite: keccak256("block.Teranomite") as EntityID,
+  Hankite: keccak256("block.Hankite") as EntityID,
+  Naberlite: keccak256("block.Naberlite") as EntityID,
+  Gyratite: keccak256("block.Gyratite") as EntityID,
+  Kimberlite: keccak256("block.Kimberlite") as EntityID,
+  Ludenite: keccak256("block.Ludenite") as EntityID,
+  Bolulite: keccak256("block.Bolulite") as EntityID,
+
 };
 
 // From OPCraft
@@ -63,18 +97,36 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
   return acc;
 }, {});
 
-// Terrain Tiles
+// Terrain Tile colors
+//todo: pick ore block colors
 export const BlockColors = new Map<string, string>([
+  //landscape blocks
   ["Water", "#0369a1"],
-
-  ["Lithium", "#d1d5db"],
+  ["Sandstone", "#a8a29e"],
+  ["Biofilm", "#10b981"],
+  ["Alluvium", "#34d399"],
   ["Regolith", "#71717a"],
-  ["Sandstone", "#fef9c3"],
-  ["Alluvium", "#4ade80"],
-  ["Biofilm", "#22c55e"],
-  ["Kyronium", "#cffafe"],
+  ["Bedrock", "#52525b"],
+  
+  //metal ores
+  ["Lithium", "#d1d5db"],
+  ["Iron", ""],
+  ["Copper", ""],
+  ["Electrum", ""],
+  ["Alvarium", ""],
+  ["Kydonium", "#cffafe"],
+  ["Lethvium", ""],
   ["Titanium", "#a3a3a3"],
-  ["Teranomite", "#d9f99d"],
+  ["Vandenium", ""],
+  ["Iridium", ""],
 
-  ["LithiumMiner", "ff23742"],
+  //mineral ores
+  ["Teranomite", "#d9f99d"],
+  ["Hankite", ""],
+  ["Naberlite", ""],
+  ["Gyratite", ""],
+  ["Kimberlite", ""],
+  ["Ludenite", ""],
+  ["Bolutite", ""],
+
 ]);
