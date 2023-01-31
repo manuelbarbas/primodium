@@ -15,22 +15,15 @@ export const BlockKey = {
   Lithium: "Lithium",
   Iron: "Iron",
   Copper: "Copper",
-  Electrum: "Electrum",
-  Alvarium: "Alvarium",
-  Kydonium: "Kydonium",
-  Lethvium: "Lethvium",
   Titanium: "Titanium",
-  Vandenium: "Vandenium",
   Iridium: "Iridium",
+  Osmium: "Osmium",
+  Tungsten: "Tungsten",
 
   //mineral ores
-  Teranomite: "Teranomite",
-  Hankite: "Hankite",
-  Naberlite: "Naberlite",
-  Gyratite: "Gyratite",
   Kimberlite: "Kimberlite",
-  Ludenite: "Ludenite",
-  Bolulite: "Bolutite",
+  Uraninite: "Uraninite",
+  Bolutite: "Bolutite",
 };
 
 export const BlockType = {
@@ -47,22 +40,15 @@ export const BlockType = {
   Lithium: keccak256("block.Lithium") as EntityID,
   Iron: keccak256("block.Iron") as EntityID,
   Copper: keccak256("block.Copper") as EntityID,
-  Electrum: keccak256("block.Electrum") as EntityID,
-  Alvarium: keccak256("block.Alvarium") as EntityID,
-  Kydonium: keccak256("block.Kydonium") as EntityID,
-  Lethvium: keccak256("block.Lethvium") as EntityID,
   Titanium: keccak256("block.Titanium") as EntityID,
-  Vandenium: keccak256("block.Vandenium") as EntityID,
   Iridium: keccak256("block.Iridium") as EntityID,
+  Osmium: keccak256("block.Osmium") as EntityID,
+  Tungsten: keccak256("block.Tungsten") as EntityID,
 
   //mineral ores
-  Teranomite: keccak256("block.Teranomite") as EntityID,
-  Hankite: keccak256("block.Hankite") as EntityID,
-  Naberlite: keccak256("block.Naberlite") as EntityID,
-  Gyratite: keccak256("block.Gyratite") as EntityID,
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
-  Ludenite: keccak256("block.Ludenite") as EntityID,
-  Bolulite: keccak256("block.Bolulite") as EntityID,
+  Ludenite: keccak256("block.Uraninite") as EntityID,
+  Bolutite: keccak256("block.Bolutite") as EntityID,
 };
 
 // From OPCraft
@@ -100,7 +86,7 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
 //todo: pick ore block colors
 export const BlockColors = new Map<string, string>([
   //landscape blocks
-  ["Water", "#0369a150"],
+  ["Water", "#0369a1"],
   ["Sandstone", "#a8a29e"],
   ["Biofilm", "#10b981"],
   ["Alluvium", "#34d399"],
@@ -109,23 +95,17 @@ export const BlockColors = new Map<string, string>([
   ["Air", "#FFFFFF00"],
 
   //metal ores
-  ["Lithium", "#d1d5db"],
-  ["Iron", ""],
-  ["Copper", ""],
-  ["Electrum", ""],
-  ["Alvarium", ""],
-  ["Kydonium", "#cffafe"],
-  ["Lethvium", ""],
-  ["Titanium", "#a3a3a3"],
-  ["Vandenium", ""],
-  ["Iridium", ""],
+  ["Lithium", "#d8b4fe"],
+  ["Iron", "#44403c"],
+  ["Copper", "#047857"],
+  ["Titanium", "#60a5fa"],
+  ["Iridium", "#fce7f3"],
+  ["Osmium", "#164e63"],
+  ["Tungsten", "#94a3b8"],
+
 
   //mineral ores
-  ["Teranomite", "#d9f99d"],
-  ["Hankite", ""],
-  ["Naberlite", ""],
-  ["Gyratite", ""],
-  ["Kimberlite", ""],
-  ["Ludenite", ""],
-  ["Bolutite", ""],
+  ["Kimberlite", "#e0f2fe"],
+  ["Uraninite", "#d9f99d"],
+  ["Bolutite", "#a21caf"],
 ]);
