@@ -72,7 +72,7 @@ export function getResourceKey(coord: Coord, perlin: Perlin) {
   if (normalizedDepth > 24 && normalizedDepth < 24.18) return BlockKey.Iron;
 
   //mid game items
-  if (normalizedDepth < 13) return BlockKey.Titanium;
+  if (normalizedDepth < 13.5) return BlockKey.Titanium;
   if (normalizedDepth > 26 && normalizedDepth < 26.02) return BlockKey.Iridium;
   if (normalizedDepth > 30.95 && normalizedDepth < 31) return BlockKey.Osmium;
   if (normalizedDepth > 34 && normalizedDepth < 34.3) return BlockKey.Tungsten;
