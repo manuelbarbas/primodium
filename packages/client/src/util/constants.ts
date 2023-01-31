@@ -9,6 +9,7 @@ export const BlockKey = {
   Alluvium: "Alluvium",
   Regolith: "Regolith",
   Bedrock: "Bedrock",
+  Air: "Air",
 
 //metal ores
   Lithium: "Lithium",
@@ -41,6 +42,7 @@ export const BlockType = {
   Alluvium: keccak256("block.Alluvium") as EntityID,
   Regolith: keccak256("block.Regolith") as EntityID,
   Bedrock: keccak256("block.Bedrock") as EntityID,
+  Air: keccak256("block.Air") as EntityID,
 
   //metal ores
   Lithium: keccak256("block.Lithium") as EntityID,
@@ -101,12 +103,13 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
 //todo: pick ore block colors
 export const BlockColors = new Map<string, string>([
   //landscape blocks
-  ["Water", "#0369a1"],
+  ["Water", "#0369a150"],
   ["Sandstone", "#a8a29e"],
   ["Biofilm", "#10b981"],
   ["Alluvium", "#34d399"],
   ["Regolith", "#71717a"],
   ["Bedrock", "#52525b"],
+  ["Air", "#FFFFFF00"],
   
   //metal ores
   ["Lithium", "#d1d5db"],

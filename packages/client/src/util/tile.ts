@@ -19,6 +19,17 @@ export function getTerrainDepth(
   return depth;
 }
 
+export function getResourceDepth(
+  coord: Coord,
+  perlin: Perlin,
+  perlinSeed: number
+) {
+  const denom = 5;
+  const depth = perlin(coord.x + perlinSeed, coord.y + perlinSeed, 0, denom);
+  return depth;
+}
+
+//landscape blocks terrain generation
 export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
   const depth1 = getTerrainDepth(coord, perlin, perlinSeed1);
   const depth2 = getTerrainDepth(coord, perlin, perlinSeed2);
@@ -33,17 +44,32 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
 
 export function getTerrainKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
-//landscape block gen
-  if (normalizedDepth < 30) return BlockKey.Water;
-//todo insert some mineral gen (between water and alluvium figures)
-  if (normalizedDepth < 33) return BlockKey.Alluvium;
-  if (normalizedDepth < 36) return BlockKey.Biofilm;
-//todo insert some metal gen (between biofilm and sandstone figures)
+  if (normalizedDepth < 29) return BlockKey.Water;
+  if (normalizedDepth < 32) return BlockKey.Biofilm;
+  if (normalizedDepth < 35) return BlockKey.Alluvium;
   if (normalizedDepth < 39) return BlockKey.Sandstone;
-//todo insert some more metal gen (between sandstone and regolith)
-  if (normalizedDepth < 45) return BlockKey.Regolith;
-//todo insert some more metal gen (between regolith and bedrock)
-  if (normalizedDepth < 49) return BlockKey.Bedrock;
+  if (normalizedDepth < 48) return BlockKey.Regolith;
+  if (normalizedDepth < 51) return BlockKey.Bedrock;
 
   return BlockKey.Bedrock;
+}
+
+//resource blocks terrain gen
+export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
+  const depth1 = getResourceDepth(coord, perlin, perlinSeed1);
+  const depth2 = getResourceDepth(coord, perlin, perlinSeed2);
+
+  const normalizedDepth = ((depth1 + depth2) / 5) * 100;
+
+  return normalizedDepth;
+}
+
+export function getResourceKey(coord: Coord, perlin: Perlin) {
+  const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
+  if (normalizedDepth < 29) return BlockKey.Lithium;
+  if (normalizedDepth < 32) return BlockKey.Titanium;
+  if (normalizedDepth < 35) return BlockKey.Kydonium;
+  if (normalizedDepth < 39) return BlockKey.Teranomite;
+
+  return BlockKey.Air;
 }

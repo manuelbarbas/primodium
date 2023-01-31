@@ -6,7 +6,12 @@ import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
-import { getTerrainNormalizedDepth, getTerrainKey } from "../util/tile";
+import {
+  getTerrainNormalizedDepth,
+  getTerrainKey,
+  getResourceNormalizedDepth,
+  getResourceKey,
+} from "../util/tile";
 import { BlockColors } from "../util/constants";
 
 import { FixedSizeGrid as Grid } from "react-window";
@@ -33,7 +38,7 @@ export default function Map({}: Props) {
     });
   }, []);
 
-  const getTerrainNoramalizedDepthHelper = useCallback(
+  const getTerrainNormalizedDepthHelper = useCallback(
     (coord: Coord) => {
       if (!initialized || perlinRef.current === null) {
         return 0;
@@ -63,6 +68,37 @@ export default function Map({}: Props) {
     [initialized]
   );
 
+  //resource gen
+  const getResourceNormalizedDepthHelper = useCallback(
+    (coord: Coord) => {
+      if (!initialized || perlinRef.current === null) {
+        return 0;
+      }
+      if (perlinRef.current !== null) {
+        const perlin = perlinRef.current;
+        return getResourceNormalizedDepth(coord, perlin);
+      } else {
+        return 0;
+      }
+    },
+    [initialized]
+  );
+
+  const getResourceColorHelper = useCallback(
+    (coord: Coord) => {
+      if (!initialized || perlinRef.current === null) {
+        return "#ffffff";
+      }
+      if (perlinRef.current !== null) {
+        const perlin = perlinRef.current;
+        return getResourceKey(coord, perlin);
+      } else {
+        return "#fffff";
+      }
+    },
+    [initialized]
+  );
+
   // React Window
   const { height, width } = useWindowDimensions();
   const DISPLAY_GRID_SIZE = 16;
@@ -84,8 +120,14 @@ export default function Map({}: Props) {
     const plotY = displayIndexToTileIndex(rowIndex);
 
     // Calculate tile perlin result
-    const depth = getTerrainNoramalizedDepthHelper({ x: plotX, y: plotY });
+    const depth = getTerrainNormalizedDepthHelper({ x: plotX, y: plotY });
     const color = getTerrainColorHelper({ x: plotX, y: plotY });
+
+    const resourceDepth = getResourceNormalizedDepthHelper({
+      x: plotX,
+      y: plotY,
+    });
+    const resourceColor = getResourceColorHelper({ x: plotX, y: plotY });
 
     return (
       <div
