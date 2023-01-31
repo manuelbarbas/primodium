@@ -66,10 +66,21 @@ export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
 
 export function getResourceKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
-  if (normalizedDepth < 29) return BlockKey.Lithium;
-  if (normalizedDepth < 32) return BlockKey.Titanium;
-  if (normalizedDepth < 35) return BlockKey.Kydonium;
-  if (normalizedDepth < 39) return BlockKey.Teranomite;
+  if (normalizedDepth < 12) return BlockKey.Lithium;
+  if (normalizedDepth < 13) return BlockKey.Titanium;
+  if (normalizedDepth < 14) return BlockKey.Kydonium;
+  if (normalizedDepth < 15) return BlockKey.Teranomite;
 
   return BlockKey.Air;
+}
+
+export function getTopLayerKey(coord: Coord, perlin: Perlin) {
+  const terrainKey = getTerrainKey(coord, perlin);
+  const resourceKey = getResourceKey(coord, perlin);
+
+  if (resourceKey === BlockKey.Air) {
+    return terrainKey;
+  } else {
+    return resourceKey;
+  }
 }

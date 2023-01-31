@@ -11,6 +11,7 @@ import {
   getTerrainKey,
   getResourceNormalizedDepth,
   getResourceKey,
+  getTopLayerKey,
 } from "../util/tile";
 import { BlockColors } from "../util/constants";
 
@@ -99,6 +100,21 @@ export default function Map({}: Props) {
     [initialized]
   );
 
+  const getTopLayerColorHelper = useCallback(
+    (coord: Coord) => {
+      if (!initialized || perlinRef.current === null) {
+        return "#ffffff";
+      }
+      if (perlinRef.current !== null) {
+        const perlin = perlinRef.current;
+        return getTopLayerKey(coord, perlin);
+      } else {
+        return "#fffff";
+      }
+    },
+    [initialized]
+  );
+
   // React Window
   const { height, width } = useWindowDimensions();
   const DISPLAY_GRID_SIZE = 16;
@@ -120,26 +136,35 @@ export default function Map({}: Props) {
     const plotY = displayIndexToTileIndex(rowIndex);
 
     // Calculate tile perlin result
-    const depth = getTerrainNormalizedDepthHelper({ x: plotX, y: plotY });
-    const color = getTerrainColorHelper({ x: plotX, y: plotY });
-
+    const terrainDepth = getTerrainNormalizedDepthHelper({
+      x: plotX,
+      y: plotY,
+    });
     const resourceDepth = getResourceNormalizedDepthHelper({
       x: plotX,
       y: plotY,
     });
-    const resourceColor = getResourceColorHelper({ x: plotX, y: plotY });
+
+    const color = getTerrainColorHelper({ x: plotX, y: plotY });
+
+    const topLayerColor = getTopLayerColorHelper({
+      x: plotX,
+      y: plotY,
+    });
 
     return (
       <div
         style={{
           fontSize: 3,
-          backgroundColor: BlockColors.get(color),
+          backgroundColor: BlockColors.get(topLayerColor),
           ...style,
         }}
       >
         {plotX},{plotY}
         <br />
-        {Math.round(depth * 100) / 100}
+        {Math.round(terrainDepth * 100) / 100}
+        <br />
+        <b>{Math.round(resourceDepth * 100) / 100}</b>
         <br />
       </div>
     );

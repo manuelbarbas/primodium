@@ -2,7 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 
 export const BlockKey = {
-//landscape blocks
+  //landscape blocks
   Water: "Water",
   Sandstone: "Sandstone",
   Biofilm: "Biofilm",
@@ -11,7 +11,7 @@ export const BlockKey = {
   Bedrock: "Bedrock",
   Air: "Air",
 
-//metal ores
+  //metal ores
   Lithium: "Lithium",
   Iron: "Iron",
   Copper: "Copper",
@@ -23,7 +23,7 @@ export const BlockKey = {
   Vandenium: "Vandenium",
   Iridium: "Iridium",
 
-//mineral ores
+  //mineral ores
   Teranomite: "Teranomite",
   Hankite: "Hankite",
   Naberlite: "Naberlite",
@@ -31,7 +31,6 @@ export const BlockKey = {
   Kimberlite: "Kimberlite",
   Ludenite: "Ludenite",
   Bolulite: "Bolutite",
-
 };
 
 export const BlockType = {
@@ -56,7 +55,6 @@ export const BlockType = {
   Vandenium: keccak256("block.Vandenium") as EntityID,
   Iridium: keccak256("block.Iridium") as EntityID,
 
-
   //mineral ores
   Teranomite: keccak256("block.Teranomite") as EntityID,
   Hankite: keccak256("block.Hankite") as EntityID,
@@ -65,7 +63,6 @@ export const BlockType = {
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
   Ludenite: keccak256("block.Ludenite") as EntityID,
   Bolulite: keccak256("block.Bolulite") as EntityID,
-
 };
 
 // From OPCraft
@@ -110,7 +107,7 @@ export const BlockColors = new Map<string, string>([
   ["Regolith", "#71717a"],
   ["Bedrock", "#52525b"],
   ["Air", "#FFFFFF00"],
-  
+
   //metal ores
   ["Lithium", "#d1d5db"],
   ["Iron", ""],
@@ -131,5 +128,4 @@ export const BlockColors = new Map<string, string>([
   ["Kimberlite", ""],
   ["Ludenite", ""],
   ["Bolutite", ""],
-
 ]);
