@@ -54,21 +54,6 @@ export default function Map({}: Props) {
     [initialized]
   );
 
-  const getTerrainColorHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return "#ffffff";
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getTerrainKey(coord, perlin);
-      } else {
-        return "#fffff";
-      }
-    },
-    [initialized]
-  );
-
   //resource gen
   const getResourceNormalizedDepthHelper = useCallback(
     (coord: Coord) => {
@@ -80,21 +65,6 @@ export default function Map({}: Props) {
         return getResourceNormalizedDepth(coord, perlin);
       } else {
         return 0;
-      }
-    },
-    [initialized]
-  );
-
-  const getResourceColorHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return "#ffffff";
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getResourceKey(coord, perlin);
-      } else {
-        return "#fffff";
       }
     },
     [initialized]
@@ -145,8 +115,6 @@ export default function Map({}: Props) {
       y: plotY,
     });
 
-    const color = getTerrainColorHelper({ x: plotX, y: plotY });
-
     const topLayerColor = getTopLayerColorHelper({
       x: plotX,
       y: plotY,
@@ -177,7 +145,7 @@ export default function Map({}: Props) {
       rowCount={DISPLAY_TILES_PER_AXIS}
       rowHeight={DISPLAY_GRID_SIZE}
       width={width}
-      height={height * 0.96}
+      height={height}
       initialScrollLeft={(DISPLAY_TILES_PER_AXIS * 0.5 - 4) * DISPLAY_GRID_SIZE}
       initialScrollTop={(DISPLAY_TILES_PER_AXIS * 0.5 - 4) * DISPLAY_GRID_SIZE}
     >
@@ -190,8 +158,6 @@ export default function Map({}: Props) {
   }
   return (
     <>
-      <p>Test Page</p>
-      {/* {position ? position : "??"} */}
       <TileMap />
     </>
   );
