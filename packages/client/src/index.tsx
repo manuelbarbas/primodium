@@ -1,6 +1,12 @@
 import ReactDOM from "react-dom/client";
 import { setupMUDNetwork } from "@latticexyz/std-client";
-import { createWorld, defineComponent, Type } from "@latticexyz/recs";
+import {
+  createWorld,
+  defineComponent,
+  Type,
+  defineComponentSystem,
+  setComponent,
+} from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 import { SystemAbis } from "contracts/types/SystemAbis.mjs";
 import { defineNumberComponent } from "@latticexyz/std-client";
@@ -45,6 +51,13 @@ export const components = {
   ),
 };
 
+export const offChainComponents = {
+  DoubleCounter: defineNumberComponent(world, {
+    metadata: {},
+    id: "DoubleCounter",
+  }),
+};
+
 async function boot() {
   // await createNetworkLayer();
 
@@ -52,6 +65,21 @@ async function boot() {
     typeof components,
     SystemTypes
   >(config, world, components, SystemAbis);
+
+  defineComponentSystem(world, components.Counter, (update) => {
+    setComponent(
+      offChainComponents.DoubleCounter,
+      // world.entityToIndex.get(SingletonID)!,
+      singletonIndex,
+      {
+        value: update.value[0]!.value * 2,
+      }
+    );
+  });
+
+  // index to id
+  // world.entities[index]
+
   startSync();
 
   root.render(<App world={world} systems={systems} components={components} />);
