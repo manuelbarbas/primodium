@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import { Coord } from "../types.sol";
 
-import { WaterID, LithiumID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID } from "../prototypes/Block.sol";
+import { WaterID, LithiumID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID } from "../prototypes/Tiles.sol";
 import { Perlin } from "noise/Perlin.sol";
 
 library LibTerrain {
