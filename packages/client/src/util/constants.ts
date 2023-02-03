@@ -50,7 +50,7 @@ export const BlockType = {
 
   //mineral ores
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
-  Ludenite: keccak256("block.Uraninite") as EntityID,
+  Uraninite: keccak256("block.Uraninite") as EntityID,
   Bolutite: keccak256("block.Bolutite") as EntityID,
 
   LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
@@ -89,29 +89,29 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
 
 // Terrain Tile colors
 //todo: pick ore block colors
-export const BlockColors = new Map<string, string>([
+export const BlockColors = new Map<EntityID, string>([
   //landscape blocks
-  ["Water", "#0369a1"],
-  ["Sandstone", "#a8a29e"],
-  ["Biofilm", "#10b981"],
-  ["Alluvium", "#34d399"],
-  ["Regolith", "#71717a"],
-  ["Bedrock", "#52525b"],
-  ["Air", "#FFFFFF00"],
+  [BlockType.Water, "#0369a1"],
+  [BlockType.Sandstone, "#a8a29e"],
+  [BlockType.Biofilm, "#10b981"],
+  [BlockType.Alluvium, "#34d399"],
+  [BlockType.Regolith, "#71717a"],
+  [BlockType.Bedrock, "#52525b"],
+  [BlockType.Air, "#FFFFFF00"],
 
   //metal ores
-  ["Lithium", "#d8b4fe"],
-  ["Iron", "#44403c"],
-  ["Copper", "#047857"],
-  ["Titanium", "#60a5fa"],
-  ["Iridium", "#fce7f3"],
-  ["Osmium", "#164e63"],
-  ["Tungsten", "#94a3b8"],
+  [BlockType.Lithium, "#d8b4fe"],
+  [BlockType.Iron, "#44403c"],
+  [BlockType.Copper, "#047857"],
+  [BlockType.Titanium, "#60a5fa"],
+  [BlockType.Iridium, "#fce7f3"],
+  [BlockType.Osmium, "#164e63"],
+  [BlockType.Tungsten, "#94a3b8"],
 
   //mineral ores
-  ["Kimberlite", "#e0f2fe"],
-  ["Uraninite", "#d9f99d"],
-  ["Bolutite", "#a21caf"],
+  [BlockType.Kimberlite, "#e0f2fe"],
+  [BlockType.Uraninite, "#d9f99d"],
+  [BlockType.Bolutite, "#a21caf"],
 
-  ["LithiumMiner", "#cf6664"],
+  [BlockType.LithiumMiner, "#cf6664"],
 ]);

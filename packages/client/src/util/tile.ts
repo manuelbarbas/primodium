@@ -1,6 +1,6 @@
 import { Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
-import { BlockKey } from "./constants";
+import { BlockType } from "./constants";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -44,14 +44,14 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
 
 export function getTerrainKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
-  if (normalizedDepth < 29) return BlockKey.Water;
-  if (normalizedDepth < 32) return BlockKey.Biofilm;
-  if (normalizedDepth < 35) return BlockKey.Alluvium;
-  if (normalizedDepth < 39) return BlockKey.Sandstone;
-  if (normalizedDepth < 48) return BlockKey.Regolith;
-  if (normalizedDepth < 51) return BlockKey.Bedrock;
+  if (normalizedDepth < 29) return BlockType.Water;
+  if (normalizedDepth < 32) return BlockType.Biofilm;
+  if (normalizedDepth < 35) return BlockType.Alluvium;
+  if (normalizedDepth < 39) return BlockType.Sandstone;
+  if (normalizedDepth < 48) return BlockType.Regolith;
+  if (normalizedDepth < 51) return BlockType.Bedrock;
 
-  return BlockKey.Bedrock;
+  return BlockType.Bedrock;
 }
 
 //resource blocks terrain gen
@@ -67,30 +67,32 @@ export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
 export function getResourceKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
   //base starting materials (most common)
-  if (normalizedDepth > 18 && normalizedDepth < 18.2) return BlockKey.Copper;
-  if (normalizedDepth > 20 && normalizedDepth < 20.06) return BlockKey.Lithium;
-  if (normalizedDepth > 24 && normalizedDepth < 24.18) return BlockKey.Iron;
+  if (normalizedDepth > 18 && normalizedDepth < 18.2) return BlockType.Copper;
+  if (normalizedDepth > 20 && normalizedDepth < 20.06) return BlockType.Lithium;
+  if (normalizedDepth > 24 && normalizedDepth < 24.18) return BlockType.Iron;
 
   //mid game items
-  if (normalizedDepth < 13.5) return BlockKey.Titanium;
-  if (normalizedDepth > 26 && normalizedDepth < 26.02) return BlockKey.Iridium;
-  if (normalizedDepth > 30.95 && normalizedDepth < 31) return BlockKey.Osmium;
-  if (normalizedDepth > 34 && normalizedDepth < 34.3) return BlockKey.Tungsten;
+  if (normalizedDepth < 13.5) return BlockType.Titanium;
+  if (normalizedDepth > 26 && normalizedDepth < 26.02) return BlockType.Iridium;
+  if (normalizedDepth > 30.95 && normalizedDepth < 31) return BlockType.Osmium;
+  if (normalizedDepth > 34 && normalizedDepth < 34.3) return BlockType.Tungsten;
 
   //late game (rarer) items
-  if (normalizedDepth > 27.2 && normalizedDepth < 27.21) return BlockKey.Kimberlite;
-  if (normalizedDepth > 32.2 && normalizedDepth < 32.22) return BlockKey.Uraninite;
-  if (normalizedDepth > 36.2 && normalizedDepth < 36.22) return BlockKey.Bolutite;
+  if (normalizedDepth > 27.2 && normalizedDepth < 27.21)
+    return BlockType.Kimberlite;
+  if (normalizedDepth > 32.2 && normalizedDepth < 32.22)
+    return BlockType.Uraninite;
+  if (normalizedDepth > 36.2 && normalizedDepth < 36.22)
+    return BlockType.Bolutite;
 
-
-  return BlockKey.Air;
+  return BlockType.Air;
 }
 
 export function getTopLayerKey(coord: Coord, perlin: Perlin) {
   const terrainKey = getTerrainKey(coord, perlin);
   const resourceKey = getResourceKey(coord, perlin);
 
-  if (resourceKey === BlockKey.Air || terrainKey === BlockKey.Water) {
+  if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
     return terrainKey;
   } else {
     return resourceKey;

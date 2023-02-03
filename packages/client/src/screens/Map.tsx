@@ -5,8 +5,10 @@ import { World } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
+import { EntityID } from "@latticexyz/recs";
+import { keccak256, Coord } from "@latticexyz/utils";
+
 import { useComponentValue } from "@latticexyz/react";
-import { Coord } from "@latticexyz/utils";
 
 import { FixedSizeGrid as Grid } from "react-window";
 import { BigNumber } from "ethers";
@@ -31,8 +33,16 @@ type Props = {
 };
 
 // Read the terrain state of the current coordinate
-export default function Map({ systems }: Props) {
+export default function Map({ world, systems }: Props) {
   const [initialized, setInitialized] = useState(false);
+
+  // Block entity test
+  // const counter = useComponentValue(
+  //   components.Position,
+  //   world.entityToIndex.get(BlockType.LithiumMiner)
+  // );
+  // console.log("COUNTER");
+  // console.log(counter);
 
   const perlinRef = useRef(null as null | Perlin);
 
@@ -74,7 +84,7 @@ export default function Map({ systems }: Props) {
     [initialized]
   );
 
-  const getTopLayerColorHelper = useCallback(
+  const getTopLayerKeyHelper = useCallback(
     (coord: Coord) => {
       if (!initialized || perlinRef.current === null) {
         return "#ffffff";
@@ -91,18 +101,15 @@ export default function Map({ systems }: Props) {
 
   // Place action
   const placeBlock = useCallback((x: number, y: number) => {
-    console.log(x, y);
-    console.log(systems["system.Increment"]);
-    console.log(systems["system.Build"]);
-    console.log(systems["system.Build"].executeTyped);
     systems["system.Build"].executeTyped(
+      BigNumber.from(keccak256(`tile+${x}/${y}`) as EntityID),
       BigNumber.from(BlockType.LithiumMiner),
       {
         x: x,
         y: y,
       },
       {
-        gasLimit: 500_000,
+        gasLimit: 1_000_000,
       }
     );
   }, []);
@@ -127,6 +134,15 @@ export default function Map({ systems }: Props) {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex);
 
+    const position = useComponentValue(
+      components.Position,
+      world.entityToIndex.get(keccak256(`tile+${plotX}/${plotY}`) as EntityID)
+    );
+    const tile = useComponentValue(
+      components.Tile,
+      world.entityToIndex.get(keccak256(`tile+${plotX}/${plotY}`) as EntityID)
+    );
+
     const placeBlockHelper = useCallback((event: MouseEvent) => {
       event.preventDefault();
       placeBlock(plotX, plotY);
@@ -142,16 +158,22 @@ export default function Map({ systems }: Props) {
     //   y: plotY,
     // });
 
-    const topLayerColor = getTopLayerColorHelper({
-      x: plotX,
-      y: plotY,
-    });
+    let topLayerKey;
+
+    if (position?.x && position?.y && tile?.value) {
+      topLayerKey = tile.value;
+    } else {
+      topLayerKey = getTopLayerKeyHelper({
+        x: plotX,
+        y: plotY,
+      });
+    }
 
     return (
       <div
         style={{
           fontSize: 3,
-          backgroundColor: BlockColors.get(topLayerColor),
+          backgroundColor: BlockColors.get(topLayerKey as EntityID),
           ...style,
         }}
       >

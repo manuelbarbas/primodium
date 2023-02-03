@@ -9,7 +9,10 @@ import {
 } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 import { SystemAbis } from "contracts/types/SystemAbis.mjs";
-import { defineNumberComponent } from "@latticexyz/std-client";
+import {
+  defineNumberComponent,
+  defineCoordComponent,
+} from "@latticexyz/std-client";
 import { GodID as SingletonID } from "@latticexyz/network";
 
 import { config } from "./config";
@@ -32,6 +35,16 @@ export const components = {
   Counter: defineNumberComponent(world, {
     metadata: {
       contractId: "component.Counter",
+    },
+  }),
+  Position: defineCoordComponent(world, {
+    metadata: {
+      contractId: "component.Position",
+    },
+  }),
+  Tile: defineNumberComponent(world, {
+    metadata: {
+      contractId: "component.Tile",
     },
   }),
   // add the new terraintile component here
