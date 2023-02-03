@@ -1,24 +1,28 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, MouseEvent } from "react";
 import { TxQueue } from "@latticexyz/network";
 
 import { World } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
+import { useComponentValue } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
+
+import { FixedSizeGrid as Grid } from "react-window";
+import { BigNumber } from "ethers";
+
 import {
   getTerrainNormalizedDepth,
-  getTerrainKey,
   getResourceNormalizedDepth,
-  getResourceKey,
   getTopLayerKey,
 } from "../util/tile";
 import { BlockColors } from "../util/constants";
 
-import { FixedSizeGrid as Grid } from "react-window";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
 import { components } from "..";
+
+import { BlockType } from "../util/constants";
 
 type Props = {
   world: World;
@@ -27,7 +31,7 @@ type Props = {
 };
 
 // Read the terrain state of the current coordinate
-export default function Map({}: Props) {
+export default function Map({ systems }: Props) {
   const [initialized, setInitialized] = useState(false);
 
   const perlinRef = useRef(null as null | Perlin);
@@ -85,6 +89,24 @@ export default function Map({}: Props) {
     [initialized]
   );
 
+  // Place action
+  const placeBlock = useCallback((x: number, y: number) => {
+    console.log(x, y);
+    console.log(systems["system.Increment"]);
+    console.log(systems["system.Build"]);
+    console.log(systems["system.Build"].executeTyped);
+    systems["system.Build"].executeTyped(
+      BigNumber.from(BlockType.LithiumMiner),
+      {
+        x: x,
+        y: y,
+      },
+      {
+        gasLimit: 500_000,
+      }
+    );
+  }, []);
+
   // React Window
   const { height, width } = useWindowDimensions();
   const DISPLAY_GRID_SIZE = 16;
@@ -105,15 +127,20 @@ export default function Map({}: Props) {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex);
 
-    // Calculate tile perlin result
-    const terrainDepth = getTerrainNormalizedDepthHelper({
-      x: plotX,
-      y: plotY,
-    });
-    const resourceDepth = getResourceNormalizedDepthHelper({
-      x: plotX,
-      y: plotY,
-    });
+    const placeBlockHelper = useCallback((event: MouseEvent) => {
+      event.preventDefault();
+      placeBlock(plotX, plotY);
+    }, []);
+
+    // // Calculate tile perlin result
+    // const terrainDepth = getTerrainNormalizedDepthHelper({
+    //   x: plotX,
+    //   y: plotY,
+    // });
+    // const resourceDepth = getResourceNormalizedDepthHelper({
+    //   x: plotX,
+    //   y: plotY,
+    // });
 
     const topLayerColor = getTopLayerColorHelper({
       x: plotX,
@@ -128,12 +155,16 @@ export default function Map({}: Props) {
           ...style,
         }}
       >
-        {plotX},{plotY}
+        <button onClick={placeBlockHelper}>
+          <b>place</b>
+        </button>
         <br />
+        {plotX},{plotY}
+        {/* <br />
         {Math.round(terrainDepth * 100) / 100}
         <br />
         <b>{Math.round(resourceDepth * 100) / 100}</b>
-        <br />
+        <br /> */}
       </div>
     );
   };

@@ -24,6 +24,9 @@ export const BlockKey = {
   Kimberlite: "Kimberlite",
   Uraninite: "Uraninite",
   Bolutite: "Bolutite",
+
+  // placeable blocks
+  LithiumMiner: "LithiumMiner",
 };
 
 export const BlockType = {
@@ -49,6 +52,8 @@ export const BlockType = {
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
   Ludenite: keccak256("block.Uraninite") as EntityID,
   Bolutite: keccak256("block.Bolutite") as EntityID,
+
+  LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
 };
 
 // From OPCraft
@@ -103,9 +108,10 @@ export const BlockColors = new Map<string, string>([
   ["Osmium", "#164e63"],
   ["Tungsten", "#94a3b8"],
 
-
   //mineral ores
   ["Kimberlite", "#e0f2fe"],
   ["Uraninite", "#d9f99d"],
   ["Bolutite", "#a21caf"],
+
+  ["LithiumMiner", "#cf6664"],
 ]);
