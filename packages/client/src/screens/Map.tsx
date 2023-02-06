@@ -1,21 +1,23 @@
 import { useState, useCallback, useEffect, useRef, MouseEvent } from "react";
 import { TxQueue } from "@latticexyz/network";
 
-import { World } from "@latticexyz/recs";
+import { Has, HasValue, World } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { EntityID } from "@latticexyz/recs";
 import { keccak256, Coord } from "@latticexyz/utils";
 
-import { useComponentValue } from "@latticexyz/react";
+import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 
 import { FixedSizeGrid as Grid } from "react-window";
 import { BigNumber } from "ethers";
 
+import { singletonIndex } from "..";
+
 import {
-  getTerrainNormalizedDepth,
-  getResourceNormalizedDepth,
+  // getTerrainNormalizedDepth,
+  // getResourceNormalizedDepth,
   getTopLayerKey,
 } from "../util/tile";
 import { BlockColors } from "../util/constants";
@@ -33,7 +35,7 @@ type Props = {
 };
 
 // Read the terrain state of the current coordinate
-export default function Map({ world, systems }: Props) {
+export default function Map({ systems }: Props) {
   const [initialized, setInitialized] = useState(false);
 
   // Block entity test
@@ -53,36 +55,36 @@ export default function Map({ world, systems }: Props) {
     });
   }, []);
 
-  const getTerrainNormalizedDepthHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return 0;
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getTerrainNormalizedDepth(coord, perlin);
-      } else {
-        return 0;
-      }
-    },
-    [initialized]
-  );
+  // const getTerrainNormalizedDepthHelper = useCallback(
+  //   (coord: Coord) => {
+  //     if (!initialized || perlinRef.current === null) {
+  //       return 0;
+  //     }
+  //     if (perlinRef.current !== null) {
+  //       const perlin = perlinRef.current;
+  //       return getTerrainNormalizedDepth(coord, perlin);
+  //     } else {
+  //       return 0;
+  //     }
+  //   },
+  //   [initialized]
+  // );
 
-  //resource gen
-  const getResourceNormalizedDepthHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return 0;
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getResourceNormalizedDepth(coord, perlin);
-      } else {
-        return 0;
-      }
-    },
-    [initialized]
-  );
+  // //resource gen
+  // const getResourceNormalizedDepthHelper = useCallback(
+  //   (coord: Coord) => {
+  //     if (!initialized || perlinRef.current === null) {
+  //       return 0;
+  //     }
+  //     if (perlinRef.current !== null) {
+  //       const perlin = perlinRef.current;
+  //       return getResourceNormalizedDepth(coord, perlin);
+  //     } else {
+  //       return 0;
+  //     }
+  //   },
+  //   [initialized]
+  // );
 
   const getTopLayerKeyHelper = useCallback(
     (coord: Coord) => {
@@ -102,7 +104,6 @@ export default function Map({ world, systems }: Props) {
   // Place action
   const placeBlock = useCallback((x: number, y: number) => {
     systems["system.Build"].executeTyped(
-      BigNumber.from(keccak256(`tile+${x}/${y}`) as EntityID),
       BigNumber.from(BlockType.LithiumMiner),
       {
         x: x,
@@ -134,13 +135,14 @@ export default function Map({ world, systems }: Props) {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex);
 
-    const position = useComponentValue(
-      components.Position,
-      world.entityToIndex.get(keccak256(`tile+${plotX}/${plotY}`) as EntityID)
-    );
+    const tilesAtPosition = useEntityQuery([
+      Has(components.Tile),
+      HasValue(components.Position, { x: plotX, y: plotY }),
+    ]);
+
     const tile = useComponentValue(
       components.Tile,
-      world.entityToIndex.get(keccak256(`tile+${plotX}/${plotY}`) as EntityID)
+      tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
     );
 
     const placeBlockHelper = useCallback((event: MouseEvent) => {
@@ -160,7 +162,7 @@ export default function Map({ world, systems }: Props) {
 
     let topLayerKey;
 
-    if (position?.x && position?.y && tile?.value) {
+    if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
       topLayerKey = tile.value;
     } else {
       topLayerKey = getTopLayerKeyHelper({

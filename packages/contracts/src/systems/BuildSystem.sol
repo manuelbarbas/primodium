@@ -12,7 +12,7 @@ contract BuildSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory arguments) public returns (bytes memory) {
-    (uint256 blockEntity, uint256 blockType, Coord memory coord) = abi.decode(arguments, (uint256, uint256, Coord));
+    (uint256 blockType, Coord memory coord) = abi.decode(arguments, (uint256, Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
@@ -22,11 +22,16 @@ contract BuildSystem is System {
 
     // TODO: Check that the tile is in the user's inventory. 
     // Remove from user's inventory
+
+    // Randomly generate IDs instead of basing on coordinate
+    uint256 blockEntity = world.getUniqueEntityId();
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);
+
+    return abi.encode(blockEntity);
   }
 
-  function executeTyped(uint256 entity, uint256 blockType, Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(entity, blockType, coord));
+  function executeTyped(uint256 blockType, Coord memory coord) public returns (bytes memory) {
+    return execute(abi.encode(blockType, coord));
   }
 }
