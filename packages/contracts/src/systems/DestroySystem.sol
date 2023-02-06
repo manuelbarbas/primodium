@@ -4,6 +4,8 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById } from "solecs/utils.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+
 import { Coord } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
@@ -15,6 +17,7 @@ contract DestroySystem is System {
     (Coord memory coord) = abi.decode(arguments, ( Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
@@ -23,6 +26,7 @@ contract DestroySystem is System {
 
     positionComponent.remove(entitiesAtPosition[0]);
     tileComponent.remove(entitiesAtPosition[0]);
+    ownedByComponent.remove(entitiesAtPosition[0]);
 
     return abi.encode(entitiesAtPosition[0]);
   }
