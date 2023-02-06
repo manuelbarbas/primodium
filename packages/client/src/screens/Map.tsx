@@ -6,7 +6,7 @@ import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { EntityID } from "@latticexyz/recs";
-import { keccak256, Coord } from "@latticexyz/utils";
+import { Coord } from "@latticexyz/utils";
 
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 

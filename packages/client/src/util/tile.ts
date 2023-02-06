@@ -7,7 +7,6 @@ const perlinSeed1 = 60194;
 const perlinSeed2 = 74037;
 const perlinSeed3 = 53092;
 const perlinSeed4 = 17326;
-const perlinSeed5 = 43875;
 
 export function getTerrainDepth(
   coord: Coord,
@@ -35,7 +34,6 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
   const depth2 = getTerrainDepth(coord, perlin, perlinSeed2);
   const depth3 = getTerrainDepth(coord, perlin, perlinSeed3);
   const depth4 = getTerrainDepth(coord, perlin, perlinSeed4);
-  const depth5 = getTerrainDepth(coord, perlin, perlinSeed5);
 
   const normalizedDepth = ((depth1 + depth2 + depth3 + depth4) / 5) * 100;
 
