@@ -1,4 +1,11 @@
-import { useState, useCallback, useEffect, useRef, MouseEvent } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useMemo,
+  MouseEvent,
+} from "react";
 import { TxQueue } from "@latticexyz/network";
 
 import { Has, HasValue, World } from "@latticexyz/recs";
@@ -135,10 +142,15 @@ export default function Map({ systems }: Props) {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex);
 
-    const tilesAtPosition = useEntityQuery([
-      Has(components.Tile),
-      HasValue(components.Position, { x: plotX, y: plotY }),
-    ]);
+    const tilesAtPosition = useEntityQuery(
+      useMemo(
+        () => [
+          Has(components.Tile),
+          HasValue(components.Position, { x: plotX, y: plotY }),
+        ],
+        [components.Tile, components.Position]
+      )
+    );
 
     const tile = useComponentValue(
       components.Tile,

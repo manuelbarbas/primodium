@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import { Coord } from "../types.sol";
 
-import { WaterID, LithiumID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID } from "../prototypes/Tiles.sol";
+import { WaterID, LithiumID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, AirID } from "../prototypes/Tiles.sol";
 import { Perlin } from "noise/Perlin.sol";
 
 library LibTerrain {
@@ -44,5 +44,21 @@ library LibTerrain {
       if (normalizedDepth < 50) return SandstoneID;
       if (normalizedDepth < 55) return LithiumID;
       return WaterID;
+  }
+
+  function getResourceTile(Coord memory coord) public pure returns (uint256) {
+    if (coord.x == 0 && coord.y == 0) return LithiumID;
+      return AirID;
+  }
+
+  function getTopLayerTile(Coord memory coord) public pure returns (uint256) {
+    uint256 terrainTile = getTerrainTile(coord);
+    uint256 resourceTile = getResourceTile(coord);
+
+    if (resourceTile == AirID || terrainTile == WaterID) {
+      return terrainTile;
+    } else {
+      return resourceTile;
+    }
   }
 }

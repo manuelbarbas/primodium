@@ -1,8 +1,8 @@
 {
-  "components": ["CounterComponent", "PositionComponent", "TileComponent"],
+  "components": ["CounterComponent", "PositionComponent", "TileComponent", "ItemComponent", "OwnedByComponent"],
   "systems": [
     { "name": "IncrementSystem", "writeAccess": ["CounterComponent"] },
-    { "name": "BuildSystem", "writeAccess": ["PositionComponent", "TileComponent"] },
-    { "name": "DestroySystem", "writeAccess": ["PositionComponent", "TileComponent"] }
+    { "name": "BuildSystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent"] },
+    { "name": "DestroySystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent"] }
   ]
 }
