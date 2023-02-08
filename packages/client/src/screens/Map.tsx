@@ -109,9 +109,9 @@ export default function Map({ systems }: Props) {
   );
 
   // Place action
-  const buildTile = useCallback((x: number, y: number) => {
+  const buildTile = useCallback((x: number, y: number, blockType: EntityID) => {
     systems["system.Build"].executeTyped(
-      BigNumber.from(BlockType.LithiumMiner),
+      BigNumber.from(blockType),
       {
         x: x,
         y: y,
@@ -169,9 +169,14 @@ export default function Map({ systems }: Props) {
       tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
     );
 
-    const buildTileHelper = useCallback((event: MouseEvent) => {
+    const buildMinerHelper = useCallback((event: MouseEvent) => {
       event.preventDefault();
-      buildTile(plotX, plotY);
+      buildTile(plotX, plotY, BlockType.LithiumMiner);
+    }, []);
+
+    const buildConveyerHelper = useCallback((event: MouseEvent) => {
+      event.preventDefault();
+      buildTile(plotX, plotY, BlockType.Conveyer);
     }, []);
 
     const destroyTileHelper = useCallback((event: MouseEvent) => {
@@ -208,11 +213,17 @@ export default function Map({ systems }: Props) {
           ...style,
         }}
       >
-        <button onClick={buildTileHelper}>
-          <b>place</b>
+        m:
+        <button onClick={buildMinerHelper}>
+          <b>-b-</b>
         </button>
         <button onClick={destroyTileHelper}>
-          <b>destroy</b>
+          <b>&lt;d&gt;</b>
+        </button>
+        <br />
+        p:
+        <button onClick={buildConveyerHelper}>
+          <b>-b-</b>
         </button>
         <br />
         {plotX},{plotY}

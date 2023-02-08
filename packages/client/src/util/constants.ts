@@ -58,6 +58,8 @@ export const BlockType = {
 
   // Resource
   MainBase: keccak256("block.MainBase") as EntityID,
+  Conveyer: keccak256("block.Conveyer") as EntityID,
+
   ConveyerUp: keccak256("block.ConveyerUp") as EntityID,
   ConveyerDown: keccak256("block.ConveyerDown") as EntityID,
   ConveyerLeft: keccak256("block.ConveyerLeft") as EntityID,
@@ -131,6 +133,9 @@ export const BlockColors = new Map<EntityID, string>([
 
   // Resource
   [BlockType.MainBase, "#8676c0"],
+
+  [BlockType.Conveyer, "#ffcd00"],
+
   [BlockType.ConveyerUp, "#d3816b"],
   [BlockType.ConveyerDown, "#d3816b"],
   [BlockType.ConveyerLeft, "#d3816b"],

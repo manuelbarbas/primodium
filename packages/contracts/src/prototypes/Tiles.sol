@@ -26,6 +26,8 @@ uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));
 
+uint256 constant ConveyerID = uint256(keccak256("block.Conveyer"));
+
 uint256 constant ConveyerUpID = uint256(keccak256("block.ConveyerUp"));
 uint256 constant ConveyerDownID = uint256(keccak256("block.ConveyerDown"));
 uint256 constant ConveyerLeftID = uint256(keccak256("block.ConveyerLeft"));
