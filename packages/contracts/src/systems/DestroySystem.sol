@@ -21,7 +21,7 @@ contract DestroySystem is System {
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length < 1, "can not destroy multiple tiles at once");
+    require(entitiesAtPosition.length < 2, "can not destroy multiple tiles at once");
     require(entitiesAtPosition.length == 1, "can not destroy tile at empty coord");
 
     positionComponent.remove(entitiesAtPosition[0]);

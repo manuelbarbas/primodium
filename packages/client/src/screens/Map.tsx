@@ -109,9 +109,21 @@ export default function Map({ systems }: Props) {
   );
 
   // Place action
-  const placeBlock = useCallback((x: number, y: number) => {
+  const buildTile = useCallback((x: number, y: number) => {
     systems["system.Build"].executeTyped(
       BigNumber.from(BlockType.LithiumMiner),
+      {
+        x: x,
+        y: y,
+      },
+      {
+        gasLimit: 1_000_000,
+      }
+    );
+  }, []);
+
+  const destroyTile = useCallback((x: number, y: number) => {
+    systems["system.Destroy"].executeTyped(
       {
         x: x,
         y: y,
@@ -157,9 +169,14 @@ export default function Map({ systems }: Props) {
       tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
     );
 
-    const placeBlockHelper = useCallback((event: MouseEvent) => {
+    const buildTileHelper = useCallback((event: MouseEvent) => {
       event.preventDefault();
-      placeBlock(plotX, plotY);
+      buildTile(plotX, plotY);
+    }, []);
+
+    const destroyTileHelper = useCallback((event: MouseEvent) => {
+      event.preventDefault();
+      destroyTile(plotX, plotY);
     }, []);
 
     // // Calculate tile perlin result
@@ -191,8 +208,11 @@ export default function Map({ systems }: Props) {
           ...style,
         }}
       >
-        <button onClick={placeBlockHelper}>
+        <button onClick={buildTileHelper}>
           <b>place</b>
+        </button>
+        <button onClick={destroyTileHelper}>
+          <b>destroy</b>
         </button>
         <br />
         {plotX},{plotY}

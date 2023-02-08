@@ -21,7 +21,7 @@ contract BuildSystem is System {
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 0, "can not built at non-empty coord");
+    require(entitiesAtPosition.length == 0, "can not build at non-empty coord");
 
     // TODO: Check that the tile is in the user's inventory. 
     // Remove from user's inventory
