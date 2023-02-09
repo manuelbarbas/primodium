@@ -113,7 +113,7 @@ export default function Map({ systems }: Props) {
         const perlin = perlinRef.current;
         return getTopLayerKey(coord, perlin);
       } else {
-        return "#fffff";
+        return "#ffffff";
       }
     },
     [initialized]
