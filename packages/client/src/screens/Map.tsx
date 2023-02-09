@@ -45,8 +45,16 @@ type Props = {
 export default function Map({ systems }: Props) {
   const [initialized, setInitialized] = useState(false);
 
-  // Conveyer have steps 1 (place start), 2 (place end), and 3 (continue)
-  const [placeConveyer, setPlaceConveyer] = useState(false);
+  // Conveyer have steps 1 (place start), 2 (place end and executeTyped)
+  const [startPathTile, setStartPathTile] = useState({
+    x: null as null | number,
+    y: null as null | number,
+  });
+
+  const [endPathTile, setEndPathTile] = useState({
+    x: null as null | number,
+    y: null as null | number,
+  });
 
   // Block entity test
   // const counter = useComponentValue(
@@ -137,6 +145,38 @@ export default function Map({ systems }: Props) {
     );
   }, []);
 
+  // Select tile to start path, store in state
+  const startPath = useCallback((x: number, y: number) => {
+    setStartPathTile({
+      x: x,
+      y: y,
+    });
+  }, []);
+
+  // Select tile to end path, executeTyped
+  const endPath = useCallback((x: number, y: number) => {
+    setEndPathTile({
+      x: x,
+      y: y,
+    });
+    if (startPathTile.x !== null && startPathTile.y !== null) {
+      systems["system.Path"].executeTyped(
+        {
+          x: startPathTile.x,
+          y: startPathTile.y,
+        },
+        {
+          x: x,
+          y: y,
+        },
+
+        {
+          gasLimit: 1_000_000,
+        }
+      );
+    }
+  }, []);
+
   // React Window
   const { height, width } = useWindowDimensions();
   const DISPLAY_GRID_SIZE = 16;
@@ -172,6 +212,7 @@ export default function Map({ systems }: Props) {
       tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
     );
 
+    // Build tiles
     const buildMinerHelper = useCallback((event: MouseEvent) => {
       event.preventDefault();
       buildTile(plotX, plotY, BlockType.LithiumMiner);
@@ -185,6 +226,17 @@ export default function Map({ systems }: Props) {
     const destroyTileHelper = useCallback((event: MouseEvent) => {
       event.preventDefault();
       destroyTile(plotX, plotY);
+    }, []);
+
+    // Create paths
+    const startPathHelper = useCallback((event: MouseEvent) => {
+      event.preventDefault();
+      startPath(plotX, plotY);
+    }, []);
+
+    const endPathHelper = useCallback((event: MouseEvent) => {
+      event.preventDefault();
+      endPath(plotX, plotY);
     }, []);
 
     // // Calculate tile perlin result
@@ -208,25 +260,52 @@ export default function Map({ systems }: Props) {
       });
     }
 
+    // Styling
+    const defaultStyle = {
+      fontSize: 3,
+      backgroundColor: BlockColors.get(topLayerKey as EntityID),
+      ...style,
+    };
+
+    let displayStyle;
+    if (startPathTile.x === plotX && startPathTile.y === plotY) {
+      displayStyle = {
+        ...defaultStyle,
+        outlineStyle: "dotted",
+        outlineWidth: 1,
+        outlineColor: "#ba524a",
+        ...style,
+      };
+    } else if (endPathTile.x === plotX && endPathTile.y === plotY) {
+      displayStyle = {
+        ...defaultStyle,
+        outlineStyle: "dotted",
+        outlineWidth: 1,
+        outlineColor: "#4aba6f",
+        ...style,
+      };
+    } else {
+      displayStyle = defaultStyle;
+    }
+
     return (
-      <div
-        style={{
-          fontSize: 3,
-          backgroundColor: BlockColors.get(topLayerKey as EntityID),
-          ...style,
-        }}
-      >
-        m:
+      <div style={displayStyle}>
         <button onClick={buildMinerHelper}>
-          <b>-b-</b>
+          <b>-m</b>
+        </button>
+        <button onClick={buildConveyerHelper}>
+          <b>-c</b>
         </button>
         <button onClick={destroyTileHelper}>
           <b>&lt;d&gt;</b>
         </button>
         <br />
         p:
-        <button onClick={buildConveyerHelper}>
-          <b>-b-</b>
+        <button onClick={startPathHelper}>
+          <b>-s-</b>
+        </button>
+        <button onClick={endPathHelper}>
+          <b>-e-</b>
         </button>
         <br />
         {plotX},{plotY}
