@@ -45,6 +45,9 @@ type Props = {
 export default function Map({ systems }: Props) {
   const [initialized, setInitialized] = useState(false);
 
+  // Conveyer have steps 1 (place start), 2 (place end), and 3 (continue)
+  const [placeConveyer, setPlaceConveyer] = useState(false);
+
   // Block entity test
   // const counter = useComponentValue(
   //   components.Position,
