@@ -12,7 +12,7 @@ import { Coord } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("system.Path"));
 
-contract BuildSystem is System {
+contract PathSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory arguments) public returns (bytes memory) {
