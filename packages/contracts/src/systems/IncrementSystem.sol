@@ -14,6 +14,7 @@ contract IncrementSystem is System {
     uint256 entity = abi.decode(arguments, (uint256));
     CounterComponent c = CounterComponent(getAddressById(components, CounterComponentID));
     LibMath.increment(c, entity);
+    return abi.encode(entity);
   }
 
   function executeTyped(uint256 entity) public returns (bytes memory) {

@@ -24,6 +24,8 @@ contract DestroySystem is System {
     require(entitiesAtPosition.length < 2, "can not destroy multiple tiles at once");
     require(entitiesAtPosition.length == 1, "can not destroy tile at empty coord");
 
+    // TODO: check that there is no path that starts or ends at the current location
+
     positionComponent.remove(entitiesAtPosition[0]);
     tileComponent.remove(entitiesAtPosition[0]);
     ownedByComponent.remove(entitiesAtPosition[0]);

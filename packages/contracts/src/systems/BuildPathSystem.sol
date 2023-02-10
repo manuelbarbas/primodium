@@ -10,9 +10,9 @@ import { ConveyerID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
-uint256 constant ID = uint256(keccak256("system.Path"));
+uint256 constant ID = uint256(keccak256("system.BuildPath"));
 
-contract PathSystem is System {
+contract BuildPathSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory arguments) public returns (bytes memory) {
@@ -25,25 +25,22 @@ contract PathSystem is System {
     // Check that the coordinates exist tiles
     uint256[] memory entitiesAtStartCoord = positionComponent.getEntitiesWithValue(coordStart);
     require(entitiesAtStartCoord.length == 1, "can not start path at empty coord");
-
     uint256[] memory entitiesAtEndCoord = positionComponent.getEntitiesWithValue(coordEnd);
     require(entitiesAtEndCoord.length == 1, "can not end path at empty coord");
-
-    // Check that the coordinates are both owned by the msg.sender
-    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtStartCoord[0]);
-    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not start path at not owned tile");
-    
-    uint256 ownedEntityAtEndCoord = ownedByComponent.getValue(entitiesAtEndCoord[0]);
-    require(ownedEntityAtEndCoord == addressToEntity(msg.sender), "can not end path at not owned tile");
 
     // Check that the coordinates are both conveyer tiles
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
     require(tileEntityAtStartCoord == ConveyerID, "can not start path at not conveyer tile");
-
     uint256 tileEntityAtEndCoord = tileComponent.getValue(entitiesAtEndCoord[0]);
     require(tileEntityAtEndCoord == ConveyerID, "can not start path at not conveyer tile");
 
-    // Check that a path doesn't already start there (each tile can only be initiated once)
+    // Check that the coordinates are both owned by the msg.sender
+    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtStartCoord[0]);
+    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not start path at not owned tile");
+    uint256 ownedEntityAtEndCoord = ownedByComponent.getValue(entitiesAtEndCoord[0]);
+    require(ownedEntityAtEndCoord == addressToEntity(msg.sender), "can not end path at not owned tile");
+
+    // Check that a path doesn't already start there (each tile can only be the start of one path)
     require(!ownedByComponent.has(entitiesAtStartCoord[0]), "can not start more than one path at the same tile");
     
     // Add key

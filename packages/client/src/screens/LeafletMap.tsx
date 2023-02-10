@@ -22,8 +22,8 @@ import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { FixedSizeGrid as Grid } from "react-window";
 import {
   MapContainer,
-  TileLayer,
   LayerGroup,
+  LayersControl,
   Rectangle,
   useMap,
   useMapEvent,
@@ -241,7 +241,11 @@ export default function LeafletMap({ systems }: Props) {
       preferCanvas={true}
       crs={L.CRS.Simple}
     >
-      <PlotsGridLayer getTopLayerKeyHelper={getTopLayerKeyHelper} />
+      <LayersControl position="bottomleft">
+        <LayersControl.Overlay checked={true} name="Resources">
+          <PlotsGridLayer getTopLayerKeyHelper={getTopLayerKeyHelper} />
+        </LayersControl.Overlay>
+      </LayersControl>
     </MapContainer>
   );
 }
