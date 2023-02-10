@@ -112,6 +112,7 @@ const PlotsGridLayer = memo(
                 ],
               ]}
               pathOptions={{
+                fillOpacity: 1,
                 weight,
                 color: BlockColors.get(topLayerKey as EntityID),
               }}
@@ -231,9 +232,9 @@ export default function LeafletMap({ systems }: Props) {
   return (
     <MapContainer
       center={[0, 0]}
-      minZoom={4}
-      maxZoom={8}
-      zoom={8}
+      minZoom={3}
+      maxZoom={6}
+      zoom={6}
       scrollWheelZoom={true}
       attributionControl={false}
       zoomControl={true}
