@@ -1,12 +1,4 @@
-import {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo,
-  memo,
-  MouseEvent,
-} from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { TxQueue } from "@latticexyz/network";
 
 import { Has, HasValue, World } from "@latticexyz/recs";
@@ -17,116 +9,20 @@ import { EntityID } from "@latticexyz/recs";
 import { GodID as SingletonID } from "@latticexyz/network";
 import { Coord } from "@latticexyz/utils";
 
-import { useComponentValue, useEntityQuery } from "@latticexyz/react";
-
-import { FixedSizeGrid as Grid } from "react-window";
-import {
-  MapContainer,
-  LayerGroup,
-  LayersControl,
-  Rectangle,
-  useMap,
-  useMapEvent,
-} from "react-leaflet";
+import { MapContainer, LayersControl } from "react-leaflet";
 import L from "leaflet";
 
 import { BigNumber } from "ethers";
-
-import { singletonIndex } from "..";
-
 import { getTopLayerKey } from "../util/tile";
-import { BlockColors } from "../util/constants";
-
-import useWindowDimensions from "../hooks/useWindowDimensions";
 
 import { components } from "..";
-
-import { BlockType } from "../util/constants";
+import ResourceTileLayer from "../mapComponents/ResourceTileLayer";
 
 type Props = {
   world: World;
   systems: TxQueue<SystemTypes>;
   components: typeof components;
 };
-
-const TILE_SIZE: number = 16;
-const SCALE_FACTOR: number = 16;
-
-const PlotsGridLayer = memo(
-  ({
-    getTopLayerKeyHelper,
-  }: {
-    getTopLayerKeyHelper: (coord: Coord) => EntityID;
-  }) => {
-    const map = useMap();
-
-    const [tileRange, setTileRange] = useState({
-      x1: 0,
-      x2: 0,
-      y1: 0,
-      y2: 0,
-    });
-
-    const setNewBounds = () => {
-      const bounds = map.getBounds();
-      const newTileRange = {
-        x1: Math.floor(bounds.getWest()),
-        x2: Math.ceil(bounds.getEast()),
-        y1: Math.floor(bounds.getSouth()),
-        y2: Math.ceil(bounds.getNorth()),
-      };
-      setTileRange(newTileRange);
-
-      console.log("Get new bounds");
-      console.log(newTileRange);
-    };
-
-    useEffect(setNewBounds, [map]);
-    useMapEvent("moveend", setNewBounds);
-
-    let [plots, setPlots] = useState<JSX.Element[]>([]);
-
-    useEffect(() => {
-      if (!map) return;
-
-      let toRender = [];
-
-      for (let i = tileRange.x1; i < tileRange.x2; i += 1) {
-        for (let j = tileRange.y1; j < tileRange.y2; j += 1) {
-          const currentCoord = { x: i, y: j };
-          const topLayerKey = getTopLayerKeyHelper({
-            x: i,
-            y: j,
-          });
-
-          const weight = 1;
-
-          toRender.push(
-            <Rectangle
-              key={JSON.stringify(currentCoord)}
-              bounds={[
-                [currentCoord.y, currentCoord.x],
-                [
-                  currentCoord.y + TILE_SIZE / SCALE_FACTOR,
-                  currentCoord.x + TILE_SIZE / SCALE_FACTOR,
-                ],
-              ]}
-              pathOptions={{
-                fillOpacity: 1,
-                weight,
-                color: BlockColors.get(topLayerKey as EntityID),
-              }}
-            />
-          );
-        }
-      }
-
-      setPlots(toRender);
-    }, [tileRange]);
-
-    return <LayerGroup>{plots}</LayerGroup>;
-  }
-);
 
 // Read the terrain state of the current coordinate
 export default function LeafletMap({ systems }: Props) {
@@ -237,14 +133,12 @@ export default function LeafletMap({ systems }: Props) {
       zoom={6}
       scrollWheelZoom={true}
       attributionControl={false}
-      zoomControl={true}
+      zoomControl={false}
       preferCanvas={true}
       crs={L.CRS.Simple}
     >
       <LayersControl position="bottomleft">
-        <LayersControl.Overlay checked={true} name="Resources">
-          <PlotsGridLayer getTopLayerKeyHelper={getTopLayerKeyHelper} />
-        </LayersControl.Overlay>
+        <ResourceTileLayer getTopLayerKeyHelper={getTopLayerKeyHelper} />
       </LayersControl>
     </MapContainer>
   );
