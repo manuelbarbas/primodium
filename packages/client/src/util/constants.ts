@@ -146,3 +146,8 @@ export const BlockColors = new Map<EntityID, string>([
   [BlockType.ConveyerDownLeft, "#d3816b"],
   [BlockType.ConveyerDownRight, "#d3816b"],
 ]);
+
+export type DisplayTile = {
+  x: null | number;
+  y: null | number;
+};

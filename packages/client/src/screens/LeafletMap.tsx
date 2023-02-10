@@ -18,6 +18,8 @@ import { getTopLayerKey } from "../util/tile";
 import { components } from "..";
 import ResourceTileLayer from "../mapComponents/ResourceTileLayer";
 
+import { DisplayTile } from "../util/constants";
+
 type Props = {
   world: World;
   systems: TxQueue<SystemTypes>;
@@ -27,17 +29,25 @@ type Props = {
 // Read the terrain state of the current coordinate
 export default function LeafletMap({ systems }: Props) {
   const [initialized, setInitialized] = useState(false);
+  const [selectedTile, setSelectedTile] = useState({
+    x: null,
+    y: null,
+  } as DisplayTile);
+
+  const executeTileAction = useCallback((x: number, y: number) => {
+    console.log(x, y);
+  }, []);
 
   // Conveyer have steps 1 (place start), 2 (place end and executeTyped)
   const [startPathTile, setStartPathTile] = useState({
-    x: null as null | number,
-    y: null as null | number,
-  });
+    x: null,
+    y: null,
+  } as DisplayTile);
 
   const [endPathTile, setEndPathTile] = useState({
-    x: null as null | number,
-    y: null as null | number,
-  });
+    x: null,
+    y: null,
+  } as DisplayTile);
 
   const perlinRef = useRef(null as null | Perlin);
 
@@ -128,7 +138,7 @@ export default function LeafletMap({ systems }: Props) {
   return (
     <MapContainer
       center={[0, 0]}
-      minZoom={3}
+      minZoom={4}
       maxZoom={6}
       zoom={6}
       scrollWheelZoom={true}
@@ -138,7 +148,10 @@ export default function LeafletMap({ systems }: Props) {
       crs={L.CRS.Simple}
     >
       <LayersControl position="bottomleft">
-        <ResourceTileLayer getTopLayerKeyHelper={getTopLayerKeyHelper} />
+        <ResourceTileLayer
+          getTileKey={getTopLayerKeyHelper}
+          setSelectedTile={setSelectedTile}
+        />
       </LayersControl>
     </MapContainer>
   );
