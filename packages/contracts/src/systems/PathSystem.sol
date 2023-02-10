@@ -42,6 +42,9 @@ contract PathSystem is System {
 
     uint256 tileEntityAtEndCoord = tileComponent.getValue(entitiesAtEndCoord[0]);
     require(tileEntityAtEndCoord == ConveyerID, "can not start path at not conveyer tile");
+
+    // Check that a path doesn't already start there (each tile can only be initiated once)
+    require(!ownedByComponent.has(entitiesAtStartCoord[0]), "can not start more than one path at the same tile");
     
     // Add key
     pathComponent.set(entitiesAtStartCoord[0], entitiesAtEndCoord[0]);
