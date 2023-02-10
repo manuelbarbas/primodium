@@ -208,7 +208,7 @@ export default function LeafletMap({ systems }: Props) {
       y: y,
     });
     if (startPathTile.x !== null && startPathTile.y !== null) {
-      systems["system.Path"].executeTyped(
+      systems["system.BuildPath"].executeTyped(
         {
           x: startPathTile.x,
           y: startPathTile.y,

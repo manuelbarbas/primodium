@@ -4,6 +4,7 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById } from "solecs/utils.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { Coord } from "../types.sol";
@@ -17,6 +18,7 @@ contract DestroySystem is System {
     (Coord memory coord) = abi.decode(arguments, ( Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
     // Check there isn't another tile there
@@ -25,6 +27,9 @@ contract DestroySystem is System {
     require(entitiesAtPosition.length == 1, "can not destroy tile at empty coord");
 
     // TODO: check that there is no path that starts or ends at the current location
+    require(!pathComponent.has(entitiesAtPosition[0]), "cannot destroy tile with a path that begins there");
+    uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(entitiesAtPosition[0]);
+    require(pathWithEndingTile.length == 0, "cannot destroy tile with a path that ends there");
 
     positionComponent.remove(entitiesAtPosition[0]);
     tileComponent.remove(entitiesAtPosition[0]);
