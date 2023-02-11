@@ -1,48 +1,32 @@
-import React, { useCallback, useMemo } from "react";
+import React from "react";
 
 import { EntityID } from "@latticexyz/recs";
 
 import { Rectangle } from "react-leaflet";
 
-import { BlockColors, DisplayTile } from "../util/constants";
-
-const TILE_SIZE: number = 16;
-const SCALE_FACTOR: number = 16;
+import { BlockColors } from "../util/constants";
 
 function ResourceTile({
   x,
   y,
   tileKey,
-  setSelectedTile,
 }: {
   x: number;
   y: number;
   tileKey: EntityID;
-  setSelectedTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
 }) {
-  const setSelectedTileHelper = useCallback(() => {
-    setSelectedTile({ x, y });
-  }, []);
-
-  const eventHandlers = useMemo(() => {
-    return {
-      click: setSelectedTileHelper,
-    };
-  }, []);
-
   return (
     <Rectangle
       key={JSON.stringify({ x, y })}
       bounds={[
         [y, x],
-        [y + TILE_SIZE / SCALE_FACTOR, x + TILE_SIZE / SCALE_FACTOR],
+        [y + 1, x + 1],
       ]}
       pathOptions={{
         fillOpacity: 1,
         weight: 1,
         color: BlockColors.get(tileKey),
       }}
-      eventHandlers={eventHandlers}
     />
   );
 }

@@ -4,6 +4,7 @@ import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
+import { LeafletMouseEvent } from "leaflet";
 
 import { DisplayTile } from "../util/constants";
 import ResourceTile from "./ResourceTile";
@@ -28,6 +29,7 @@ const ResourceTileLayer = ({
     y2: 0,
   });
 
+  // Map events
   const setNewBounds = useCallback(() => {
     const bounds = map.getBounds();
     const newTileRange = {
@@ -41,11 +43,27 @@ const ResourceTileLayer = ({
   useEffect(setNewBounds, [map]);
   useMapEvent("moveend", setNewBounds);
 
+  // Zoom event listener
   const zoomChange = useCallback(() => {
     setZoom(map.getZoom());
   }, [map]);
   useMapEvent("zoom", zoomChange);
 
+  // Select tile
+  // Touch event listener on the map itself instead of each tile due to touch offset issues for zoom.
+  const clickEvent = useCallback(
+    (event: LeafletMouseEvent) => {
+      console.log(event.layerPoint);
+      setSelectedTile({
+        x: Math.floor(event.latlng.lng),
+        y: Math.floor(event.latlng.lat),
+      });
+    },
+    [map]
+  );
+  useMapEvent("click", clickEvent);
+
+  // Displaying tiles
   let [tiles, setTiles] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
@@ -59,14 +77,7 @@ const ResourceTileLayer = ({
           x: i,
           y: j,
         });
-        tilesToRender.push(
-          <ResourceTile
-            x={i}
-            y={j}
-            tileKey={tileKey}
-            setSelectedTile={setSelectedTile}
-          />
-        );
+        tilesToRender.push(<ResourceTile x={i} y={j} tileKey={tileKey} />);
 
         if (selectedTile.x === i && selectedTile.y === j) {
           tilesToRender.push(<SelectedTile x={i} y={j} />);
