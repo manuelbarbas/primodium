@@ -38,6 +38,12 @@ export default function LeafletMap({ systems }: Props) {
     console.log(x, y);
   }, []);
 
+  // See that the tile has changed
+  useEffect(() => {
+    console.log("Here is the map, tile changed.");
+    console.log(selectedTile);
+  }, [selectedTile]);
+
   // Conveyer have steps 1 (place start), 2 (place end and executeTyped)
   const [startPathTile, setStartPathTile] = useState({
     x: null,
@@ -150,6 +156,7 @@ export default function LeafletMap({ systems }: Props) {
       <LayersControl position="bottomleft">
         <ResourceTileLayer
           getTileKey={getTopLayerKeyHelper}
+          selectedTile={selectedTile}
           setSelectedTile={setSelectedTile}
         />
       </LayersControl>

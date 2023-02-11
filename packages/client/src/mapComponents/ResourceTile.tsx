@@ -21,7 +21,6 @@ function ResourceTile({
   setSelectedTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
 }) {
   const setSelectedTileHelper = useCallback(() => {
-    console.log("Tile clicked", x, y);
     setSelectedTile({ x, y });
   }, []);
 

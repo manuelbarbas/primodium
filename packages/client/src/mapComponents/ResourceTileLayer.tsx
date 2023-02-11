@@ -7,12 +7,15 @@ import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 
 import { DisplayTile } from "../util/constants";
 import ResourceTile from "./ResourceTile";
+import SelectedTile from "./SelectedTile";
 
 const ResourceTileLayer = ({
   getTileKey,
+  selectedTile,
   setSelectedTile,
 }: {
   getTileKey: (coord: Coord) => EntityID;
+  selectedTile: DisplayTile;
   setSelectedTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
 }) => {
   const map = useMap();
@@ -49,7 +52,6 @@ const ResourceTileLayer = ({
     if (!map) return;
 
     let tilesToRender: JSX.Element[] = [];
-    let tileNamesToRender: JSX.Element[] = [];
 
     for (let i = tileRange.x1; i < tileRange.x2; i += 1) {
       for (let j = tileRange.y1; j < tileRange.y2; j += 1) {
@@ -65,11 +67,15 @@ const ResourceTileLayer = ({
             setSelectedTile={setSelectedTile}
           />
         );
+
+        if (selectedTile.x === i && selectedTile.y === j) {
+          tilesToRender.push(<SelectedTile x={i} y={j} />);
+        }
       }
     }
 
     setTiles(tilesToRender);
-  }, [tileRange]);
+  }, [tileRange, selectedTile]);
 
   return (
     <>
