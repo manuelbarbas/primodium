@@ -148,6 +148,6 @@ export const BlockColors = new Map<EntityID, string>([
 ]);
 
 export type DisplayTile = {
-  x: null | number;
-  y: null | number;
+  x: number;
+  y: number;
 };

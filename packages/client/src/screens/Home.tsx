@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import InfoBox from "../components/InfoBox";
 import BuildingBox from "../components/BuildingBox";
 import ResourceBox from "../components/ResourceBox";
@@ -10,15 +10,10 @@ import { MudRouterProps } from "../util/types";
 import { DisplayTile } from "../util/constants";
 
 export default function Home({ world, systems, components }: MudRouterProps) {
-  // Home should have the state of which tile is selected and child components associated with it.
-  const executeTileAction = useCallback((tile: DisplayTile) => {
-    console.log(tile);
-  }, []);
-
-  // Selected tile but local only to this component, for debugging purposes.
+  // Select tiles
   const [selectedTile, setSelectedTile] = useState({
-    x: null,
-    y: null,
+    x: 0,
+    y: 0,
   } as DisplayTile);
 
   useEffect(() => {
@@ -35,13 +30,17 @@ export default function Home({ world, systems, components }: MudRouterProps) {
           components={components}
           selectedTile={selectedTile}
           setSelectedTile={setSelectedTile}
-          executeTileAction={executeTileAction}
         />
       </div>
       <InfoBox />
-      <ResourceBox />
-      <BuildingBox />
-      <TooltipBox />
+      {/* <ResourceBox /> */}
+      <BuildingBox
+        world={world}
+        systems={systems}
+        components={components}
+        selectedTile={selectedTile}
+      />
+      {/* <TooltipBox /> */}
     </>
   );
 }

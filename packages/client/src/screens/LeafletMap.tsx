@@ -1,45 +1,36 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
-import { EntityID } from "@latticexyz/recs";
 import { GodID as SingletonID } from "@latticexyz/network";
 import { Coord } from "@latticexyz/utils";
 
 import { MapContainer, LayersControl } from "react-leaflet";
 import L from "leaflet";
 
-import { BigNumber } from "ethers";
 import { getTopLayerKey } from "../util/tile";
 
 import ResourceTileLayer from "../mapComponents/ResourceTileLayer";
 
 import { DisplayTile } from "../util/constants";
-
-import { MudRouterProps } from "../util/types";
-
-type LeafletRouterProps = MudRouterProps & {
-  selectedTile: DisplayTile;
-  setSelectedTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
-  executeTileAction: (tile: DisplayTile) => void;
-};
+import { MudComponentMapTileProps } from "../util/types";
 
 // Read the terrain state of the current coordinate
 export default function LeafletMap({
   systems,
   selectedTile,
   setSelectedTile,
-}: LeafletRouterProps) {
+}: MudComponentMapTileProps) {
   const [initialized, setInitialized] = useState(false);
 
   // Conveyer have steps 1 (place start), 2 (place end and executeTyped)
   const [startPathTile, setStartPathTile] = useState({
-    x: null,
-    y: null,
+    x: 0,
+    y: 0,
   } as DisplayTile);
 
   const [endPathTile, setEndPathTile] = useState({
-    x: null,
-    y: null,
+    x: 0,
+    y: 0,
   } as DisplayTile);
 
   const perlinRef = useRef(null as null | Perlin);
@@ -65,32 +56,6 @@ export default function LeafletMap({
     },
     [initialized]
   );
-
-  // Place action
-  const buildTile = useCallback((x: number, y: number, blockType: EntityID) => {
-    systems["system.Build"].executeTyped(
-      BigNumber.from(blockType),
-      {
-        x: x,
-        y: y,
-      },
-      {
-        gasLimit: 1_000_000,
-      }
-    );
-  }, []);
-
-  const destroyTile = useCallback((x: number, y: number) => {
-    systems["system.Destroy"].executeTyped(
-      {
-        x: x,
-        y: y,
-      },
-      {
-        gasLimit: 1_000_000,
-      }
-    );
-  }, []);
 
   // Select tile to start path, store in state
   const startPath = useCallback((x: number, y: number) => {
@@ -140,7 +105,7 @@ export default function LeafletMap({
       preferCanvas={true}
       crs={L.CRS.Simple}
     >
-      <LayersControl position="bottomleft">
+      <LayersControl position="bottomright">
         <ResourceTileLayer
           getTileKey={getTopLayerKeyHelper}
           selectedTile={selectedTile}

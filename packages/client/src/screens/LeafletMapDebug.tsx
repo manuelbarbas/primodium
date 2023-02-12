@@ -19,8 +19,8 @@ import { MudRouterProps } from "../util/types";
 export default function LeafletMapDebug({}: MudRouterProps) {
   const [initialized, setInitialized] = useState(false);
   const [selectedTile, setSelectedTile] = useState({
-    x: null,
-    y: null,
+    x: 0,
+    y: 0,
   } as DisplayTile);
 
   // See that the tile has changed
