@@ -1,4 +1,3 @@
-import { useState, useCallback, useEffect, useRef } from "react";
 import { TxQueue } from "@latticexyz/network";
 import { World } from "@latticexyz/recs";
 

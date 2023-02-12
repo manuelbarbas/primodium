@@ -22,7 +22,7 @@ const ResourceTileLayer = ({
   const map = useMap();
   const [zoom, setZoom] = useState(map.getZoom());
 
-  const [tileRange, setTileRange] = useState({
+  const [displayTileRange, setDisplayTileRange] = useState({
     x1: 0,
     x2: 0,
     y1: 0,
@@ -32,13 +32,13 @@ const ResourceTileLayer = ({
   // Map events
   const setNewBounds = useCallback(() => {
     const bounds = map.getBounds();
-    const newTileRange = {
+    const newDisplayTileRange = {
       x1: Math.floor(bounds.getWest()),
       x2: Math.ceil(bounds.getEast()),
       y1: Math.floor(bounds.getSouth()),
       y2: Math.ceil(bounds.getNorth()),
     };
-    setTileRange(newTileRange);
+    setDisplayTileRange(newDisplayTileRange);
   }, [map]);
   useEffect(setNewBounds, [map]);
   useMapEvent("moveend", setNewBounds);
@@ -70,8 +70,8 @@ const ResourceTileLayer = ({
 
     let tilesToRender: JSX.Element[] = [];
 
-    for (let i = tileRange.x1; i < tileRange.x2; i += 1) {
-      for (let j = tileRange.y1; j < tileRange.y2; j += 1) {
+    for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
+      for (let j = displayTileRange.y1; j < displayTileRange.y2; j += 1) {
         const tileKey = getTileKey({
           x: i,
           y: j,
@@ -85,7 +85,7 @@ const ResourceTileLayer = ({
     }
 
     setTiles(tilesToRender);
-  }, [tileRange, selectedTile]);
+  }, [displayTileRange, selectedTile]);
 
   return (
     <>
