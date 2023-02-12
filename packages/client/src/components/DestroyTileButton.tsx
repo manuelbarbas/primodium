@@ -6,7 +6,7 @@ function DestroyTileButton({ action }: BlockTypeActionComponent) {
       className="absolute bottom-4 right-4 h-10 w-36 bg-red-600 hover:bg-red-700 font-bold rounded text-sm"
       onClick={action}
     >
-      <p className="inline-block ml-1">Destroy</p>
+      <p className="inline-block ml-1">Demolish</p>
     </button>
   );
 }

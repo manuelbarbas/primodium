@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import InfoBox from "../components/InfoBox";
 import BuildingBox from "../components/BuildingBox";
-// import ResourceBox from "../components/ResourceBox";
+import ResourceBox from "../components/ResourceBox";
+import SideMenu from "../components/SideMenu";
 // import TooltipBox from "../components/TooltipBox";
 
 import LeafletMap from "./LeafletMap";
@@ -33,13 +34,14 @@ export default function Home({ world, systems, components }: MudRouterProps) {
         />
       </div>
       <InfoBox />
-      {/* <ResourceBox /> */}
-      <BuildingBox
+      <ResourceBox />
+      {/* <BuildingBox
         world={world}
         systems={systems}
         components={components}
         selectedTile={selectedTile}
-      />
+      /> */}
+      <SideMenu />
       {/* <TooltipBox /> */}
     </>
   );
