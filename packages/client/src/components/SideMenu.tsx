@@ -8,18 +8,16 @@ import { TbScale } from "react-icons/tb";
 
 const [menuItem, setMenuItem] = useState(false);
 
-const openMenu = () => {
-  if (menuItem) {
-    setMenuItem(false);
-  } else {
-    setMenuItem(true);
-  }
-};
-
 const SideBarIcon = ({ icon, text }: { icon: any; text: string }) => (
   <div>
-    <button className="sidebar-icon group" onClick={openMenu}>
+    <button
+      className="sidebar-icon group"
+      onClick={() => setMenuItem(!menuItem)}
+    >
       {icon}
+      {menuItem && (
+        <div className="fixed z-[1000]">building menu goes here</div>
+      )}
       <div className="sidebar-tooltip group-hover:scale-100"> {text} </div>
     </button>
   </div>
