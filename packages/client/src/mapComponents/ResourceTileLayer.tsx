@@ -76,13 +76,28 @@ const ResourceTileLayer = ({
           x: i,
           y: j,
         });
-        tilesToRender.push(<ResourceTile x={i} y={j} tileKey={tileKey} />);
+        tilesToRender.push(
+          <ResourceTile
+            key={JSON.stringify({ x: i, y: j, render: "tilesToRender" })}
+            x={i}
+            y={j}
+            tileKey={tileKey}
+          />
+        );
       }
     }
 
     if (selectedTile.x !== null && selectedTile.y !== null) {
       tilesToRender.push(
-        <SelectedTile x={selectedTile.x} y={selectedTile.y} />
+        <SelectedTile
+          key={JSON.stringify({
+            x: selectedTile.x,
+            y: selectedTile.x,
+            render: "selectedTile",
+          })}
+          x={selectedTile.x}
+          y={selectedTile.y}
+        />
       );
     }
 

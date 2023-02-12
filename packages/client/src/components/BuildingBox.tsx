@@ -14,6 +14,8 @@ function BuildingBox({ systems, selectedTile }: MudComponentTileProps) {
   // Place action
   const buildTile = useCallback(
     ({ x, y }: DisplayTile, blockType: EntityID) => {
+      console.log("building on tile");
+      console.log(x, y);
       systems["system.Build"].executeTyped(
         BigNumber.from(blockType),
         {
@@ -43,15 +45,15 @@ function BuildingBox({ systems, selectedTile }: MudComponentTileProps) {
   // Helpers
   const buildMinerHelper = useCallback(() => {
     buildTile(selectedTile, BlockType.LithiumMiner);
-  }, []);
+  }, [selectedTile]);
 
   const buildConveyerHelper = useCallback(() => {
     buildTile(selectedTile, BlockType.Conveyer);
-  }, []);
+  }, [selectedTile]);
 
   const destroyTileHelper = useCallback(() => {
     destroyTile(selectedTile);
-  }, []);
+  }, [selectedTile]);
 
   function BuildingPage() {
     return (

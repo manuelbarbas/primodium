@@ -8,11 +8,10 @@ import {
 } from "react";
 import { TxQueue } from "@latticexyz/network";
 
-import { Has, HasValue, World } from "@latticexyz/recs";
+import { Has, HasValue, World, EntityID } from "@latticexyz/recs";
 import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
-import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
@@ -326,8 +325,8 @@ export default function Map({ systems }: Props) {
       rowHeight={DISPLAY_GRID_SIZE}
       width={width}
       height={height}
-      initialScrollLeft={(DISPLAY_TILES_PER_AXIS * 0.5 - 4) * DISPLAY_GRID_SIZE}
-      initialScrollTop={(DISPLAY_TILES_PER_AXIS * 0.5 - 4) * DISPLAY_GRID_SIZE}
+      initialScrollLeft={DISPLAY_TILES_PER_AXIS * 0.5 * DISPLAY_GRID_SIZE}
+      initialScrollTop={DISPLAY_TILES_PER_AXIS * 0.5 * DISPLAY_GRID_SIZE}
     >
       {Cell}
     </Grid>
