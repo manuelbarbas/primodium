@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import InfoBox from "../components/InfoBox";
 import BuildingBox from "../components/BuildingBox";
-import ResourceBox from "../components/ResourceBox";
-import TooltipBox from "../components/TooltipBox";
+// import ResourceBox from "../components/ResourceBox";
+// import TooltipBox from "../components/TooltipBox";
 
 import LeafletMap from "./LeafletMap";
 

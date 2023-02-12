@@ -9,7 +9,7 @@ import { Rectangle } from "react-leaflet";
 // import L from "leaflet";
 // import { Marker } from "react-leaflet";
 
-import { BlockColors, BlockIdToKey } from "../util/constants";
+import { BlockColors } from "../util/constants";
 
 import { components } from "..";
 import { singletonIndex } from "..";
