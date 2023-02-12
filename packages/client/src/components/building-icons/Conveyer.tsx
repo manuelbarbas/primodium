@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { BlockType, BlockColors } from "../../util/constants";
 import { BlockTypeActionComponent } from "../../util/types";
 
