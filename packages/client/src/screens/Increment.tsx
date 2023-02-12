@@ -1,16 +1,10 @@
-import { GodID as SingletonID, TxQueue } from "@latticexyz/network";
-import { World } from "@latticexyz/recs";
-import { SystemTypes } from "contracts/types/SystemTypes";
+import { GodID as SingletonID } from "@latticexyz/network";
 import { useComponentValue } from "@latticexyz/react";
-import { components, singletonIndex, offChainComponents } from "..";
+import { singletonIndex, offChainComponents } from "..";
 
-type Props = {
-  world: World;
-  systems: TxQueue<SystemTypes>;
-  components: typeof components;
-};
+import { MudRouterProps } from "../util/types";
 
-export default function Increment({ systems, components }: Props) {
+export default function Increment({ systems, components }: MudRouterProps) {
   const counter = useComponentValue(components.Counter, singletonIndex);
   const doubleCounter = useComponentValue(
     offChainComponents.DoubleCounter,

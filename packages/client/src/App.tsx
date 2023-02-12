@@ -29,7 +29,12 @@ export default function App({ world, systems, components }: Props) {
     <WagmiConfig client={wagmiClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <Home world={world} systems={systems} components={components} />
+            }
+          />
           <Route
             path="/increment"
             element={

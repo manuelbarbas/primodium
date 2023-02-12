@@ -1,8 +1,4 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { TxQueue } from "@latticexyz/network";
-
-import { Has, HasValue, World } from "@latticexyz/recs";
-import { SystemTypes } from "contracts/types/SystemTypes";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { EntityID } from "@latticexyz/recs";
@@ -15,19 +11,14 @@ import L from "leaflet";
 import { BigNumber } from "ethers";
 import { getTopLayerKey } from "../util/tile";
 
-import { components } from "..";
 import ResourceTileLayer from "../mapComponents/ResourceTileLayer";
 
 import { DisplayTile } from "../util/constants";
 
-type Props = {
-  world: World;
-  systems: TxQueue<SystemTypes>;
-  components: typeof components;
-};
+import { MudRouterProps } from "../util/types";
 
 // Read the terrain state of the current coordinate
-export default function LeafletMap({ systems }: Props) {
+export default function LeafletMap({ systems }: MudRouterProps) {
   const [initialized, setInitialized] = useState(false);
   const [selectedTile, setSelectedTile] = useState({
     x: null,

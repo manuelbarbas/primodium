@@ -3,21 +3,15 @@ import BuildingBox from "../components/BuildingBox";
 import ResourceBox from "../components/ResourceBox";
 import TooltipBox from "../components/TooltipBox";
 
-import { MapContainer, TileLayer } from "react-leaflet";
+import LeafletMap from "./LeafletMap";
 
-export default function Home() {
+import { MudRouterProps } from "../util/types";
+
+export default function Home({ world, systems, components }: MudRouterProps) {
   return (
     <>
       <div className="leaflet-container">
-        <MapContainer
-          center={[51.505, -0.09]}
-          zoom={13}
-          scrollWheelZoom={true}
-          attributionControl={false}
-          zoomControl={false}
-        >
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        </MapContainer>
+        <LeafletMap world={world} systems={systems} components={components} />
       </div>
       <InfoBox />
       <ResourceBox />

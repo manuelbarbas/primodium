@@ -53,7 +53,6 @@ const ResourceTileLayer = ({
   // Touch event listener on the map itself instead of each tile due to touch offset issues for zoom.
   const clickEvent = useCallback(
     (event: LeafletMouseEvent) => {
-      console.log(event.layerPoint);
       setSelectedTile({
         x: Math.floor(event.latlng.lng),
         y: Math.floor(event.latlng.lat),
