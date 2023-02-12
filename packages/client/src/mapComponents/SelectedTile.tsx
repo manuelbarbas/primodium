@@ -10,7 +10,7 @@ function SelectedTile({ x, y }: { x: number; y: number }) {
         [y + 1, x + 1],
       ]}
       pathOptions={{
-        weight: 0,
+        weight: 4,
         color: "yellow",
       }}
     />

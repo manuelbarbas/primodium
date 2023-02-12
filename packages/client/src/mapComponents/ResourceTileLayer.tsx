@@ -77,11 +77,13 @@ const ResourceTileLayer = ({
           y: j,
         });
         tilesToRender.push(<ResourceTile x={i} y={j} tileKey={tileKey} />);
-
-        if (selectedTile.x === i && selectedTile.y === j) {
-          tilesToRender.push(<SelectedTile x={i} y={j} />);
-        }
       }
+    }
+
+    if (selectedTile.x !== null && selectedTile.y !== null) {
+      tilesToRender.push(
+        <SelectedTile x={selectedTile.x} y={selectedTile.y} />
+      );
     }
 
     setTiles(tilesToRender);
