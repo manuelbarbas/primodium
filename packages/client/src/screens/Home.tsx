@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
 import InfoBox from "../components/InfoBox";
-import BuildingBox from "../components/BuildingBox";
 import ResourceBox from "../components/ResourceBox";
 import SideMenu from "../components/SideMenu";
 // import TooltipBox from "../components/TooltipBox";
@@ -8,14 +7,10 @@ import SideMenu from "../components/SideMenu";
 import LeafletMap from "./LeafletMap";
 
 import { MudRouterProps } from "../util/types";
-import { DisplayTile } from "../util/constants";
+import { SelectedTileContext } from "../context/SelectedTileContext";
 
 export default function Home({ world, systems, components }: MudRouterProps) {
-  // Select tiles
-  const [selectedTile, setSelectedTile] = useState({
-    x: 0,
-    y: 0,
-  } as DisplayTile);
+  const { selectedTile } = useContext(SelectedTileContext);
 
   useEffect(() => {
     console.log("Here is the map from home, tile changed.");
@@ -25,13 +20,7 @@ export default function Home({ world, systems, components }: MudRouterProps) {
   return (
     <>
       <div className="leaflet-container">
-        <LeafletMap
-          world={world}
-          systems={systems}
-          components={components}
-          selectedTile={selectedTile}
-          setSelectedTile={setSelectedTile}
-        />
+        <LeafletMap world={world} systems={systems} components={components} />
       </div>
       <InfoBox />
       <ResourceBox />

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useContext } from "react";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { GodID as SingletonID } from "@latticexyz/network";
@@ -11,27 +11,20 @@ import { getTopLayerKey } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
-import { DisplayTile } from "../util/constants";
-import { MudComponentMapTileProps } from "../util/types";
+import { MudRouterProps } from "../util/types";
+import { SelectedTileContext } from "../context/SelectedTileContext";
 
 // Read the terrain state of the current coordinate
-export default function LeafletMap({
-  systems,
-  selectedTile,
-  setSelectedTile,
-}: MudComponentMapTileProps) {
+export default function LeafletMap({ systems }: MudRouterProps) {
+  const {
+    selectedTile,
+    setSelectedTile,
+    selectedStartPathTile,
+    setSelectedStartPathTile,
+    setSelectedEndPathTile,
+  } = useContext(SelectedTileContext);
+
   const [initialized, setInitialized] = useState(false);
-
-  // Conveyer have steps 1 (place start), 2 (place end and executeTyped)
-  const [startPathTile, setStartPathTile] = useState({
-    x: 0,
-    y: 0,
-  } as DisplayTile);
-
-  const [endPathTile, setEndPathTile] = useState({
-    x: 0,
-    y: 0,
-  } as DisplayTile);
 
   const perlinRef = useRef(null as null | Perlin);
 
@@ -59,7 +52,7 @@ export default function LeafletMap({
 
   // Select tile to start path, store in state
   const startPath = useCallback((x: number, y: number) => {
-    setStartPathTile({
+    setSelectedStartPathTile({
       x: x,
       y: y,
     });
@@ -67,15 +60,15 @@ export default function LeafletMap({
 
   // Select tile to end path, executeTyped
   const endPath = useCallback((x: number, y: number) => {
-    setEndPathTile({
+    setSelectedEndPathTile({
       x: x,
       y: y,
     });
-    if (startPathTile.x !== null && startPathTile.y !== null) {
+    if (selectedStartPathTile.x !== null && selectedStartPathTile.y !== null) {
       systems["system.BuildPath"].executeTyped(
         {
-          x: startPathTile.x,
-          y: startPathTile.y,
+          x: selectedStartPathTile.x,
+          y: selectedStartPathTile.y,
         },
         {
           x: x,

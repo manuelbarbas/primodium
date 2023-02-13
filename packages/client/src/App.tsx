@@ -12,6 +12,7 @@ import Home from "./screens/Home";
 import Increment from "./screens/Increment";
 import Map from "./screens/Map";
 import LeafletMapDebug from "./screens/LeafletMapDebug";
+import SelectedTileProvider from "./context/SelectedTileContext";
 
 type Props = {
   world: World;
@@ -27,42 +28,44 @@ const wagmiClient = createClient({
 export default function App({ world, systems, components }: Props) {
   return (
     <WagmiConfig client={wagmiClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home world={world} systems={systems} components={components} />
-            }
-          />
-          <Route
-            path="/increment"
-            element={
-              <Increment
-                world={world}
-                systems={systems}
-                components={components}
-              />
-            }
-          />
-          <Route
-            path="/map"
-            element={
-              <Map world={world} systems={systems} components={components} />
-            }
-          />
-          <Route
-            path="/leaflet"
-            element={
-              <LeafletMapDebug
-                world={world}
-                systems={systems}
-                components={components}
-              />
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <SelectedTileProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home world={world} systems={systems} components={components} />
+              }
+            />
+            <Route
+              path="/increment"
+              element={
+                <Increment
+                  world={world}
+                  systems={systems}
+                  components={components}
+                />
+              }
+            />
+            <Route
+              path="/map"
+              element={
+                <Map world={world} systems={systems} components={components} />
+              }
+            />
+            <Route
+              path="/leaflet"
+              element={
+                <LeafletMapDebug
+                  world={world}
+                  systems={systems}
+                  components={components}
+                />
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </SelectedTileProvider>
     </WagmiConfig>
   );
 }

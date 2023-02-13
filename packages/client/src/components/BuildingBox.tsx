@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 
 import { EntityID } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
@@ -6,11 +6,14 @@ import { BigNumber } from "ethers";
 import MinerButton from "./building-icons/Miner";
 import ConveyerButton from "./building-icons/Conveyer";
 
-import { MudComponentTileProps } from "../util/types";
+import { MudRouterProps } from "../util/types";
 import { BlockType, DisplayTile } from "../util/constants";
 import DestroyTileButton from "./DestroyTileButton";
+import { SelectedTileContext } from "../context/SelectedTileContext";
 
-function BuildingBox({ systems, selectedTile }: MudComponentTileProps) {
+function BuildingBox({ systems }: MudRouterProps) {
+  const { selectedTile } = useContext(SelectedTileContext);
+
   // Place action
   const buildTile = useCallback(
     ({ x, y }: DisplayTile, blockType: EntityID) => {
