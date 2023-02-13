@@ -33,7 +33,6 @@ import { components } from "..";
 import { BlockType } from "../util/constants";
 import { useMud } from "../context/MudContext";
 
-// Read the terrain state of the current coordinate
 export default function Map() {
   const { systems } = useMud();
 

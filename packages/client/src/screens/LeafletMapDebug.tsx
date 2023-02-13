@@ -13,7 +13,6 @@ import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
 import { useSelectedTile } from "../context/SelectedTileContext";
 
-// Read the terrain state of the current coordinate
 export default function LeafletMapDebug() {
   const [initialized, setInitialized] = useState(false);
 

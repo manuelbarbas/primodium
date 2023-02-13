@@ -6,6 +6,7 @@ import { TbBulldozer } from "react-icons/tb";
 import { TbSword } from "react-icons/tb";
 import { TbScale } from "react-icons/tb";
 import BuildingBox from "./BuildingBox";
+import DestroyBuildingBox from "./DestroyBuildingBox";
 
 function SideBarIcon({
   icon,
@@ -97,7 +98,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">building menu goes here</div>
+        <DestroyBuildingBox />
       </SideBarIcon>
     </div>
   );

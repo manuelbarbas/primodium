@@ -14,7 +14,6 @@ import ResourceTileLayer from "../map-components/ResourceTileLayer";
 import { useMud } from "../context/MudContext";
 import { useSelectedTile } from "../context/SelectedTileContext";
 
-// Read the terrain state of the current coordinate
 export default function LeafletMap() {
   const { systems } = useMud();
 

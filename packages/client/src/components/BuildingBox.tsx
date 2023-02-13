@@ -8,8 +8,6 @@ import ConveyerButton from "./building-icons/Conveyer";
 
 import { BlockType, DisplayTile } from "../util/constants";
 
-import DestroyTileButton from "./DestroyTileButton";
-
 import { useSelectedTile } from "../context/SelectedTileContext";
 import { useMud } from "../context/MudContext";
 
@@ -36,18 +34,6 @@ function BuildingBox() {
     []
   );
 
-  const destroyTile = useCallback(({ x, y }: DisplayTile) => {
-    systems["system.Destroy"].executeTyped(
-      {
-        x: x,
-        y: y,
-      },
-      {
-        gasLimit: 1_000_000,
-      }
-    );
-  }, []);
-
   // Helpers
   const buildMinerHelper = useCallback(() => {
     buildTile(selectedTile, BlockType.LithiumMiner);
@@ -55,10 +41,6 @@ function BuildingBox() {
 
   const buildConveyerHelper = useCallback(() => {
     buildTile(selectedTile, BlockType.Conveyer);
-  }, [selectedTile]);
-
-  const destroyTileHelper = useCallback(() => {
-    destroyTile(selectedTile);
   }, [selectedTile]);
 
   function BuildingPage() {
@@ -75,7 +57,6 @@ function BuildingBox() {
       <div className=" mt-4 ml-5 flex flex-col h-72">
         <p className="text-lg font-bold mb-3">Construct Buildings</p>
         <BuildingPage />
-        <DestroyTileButton action={destroyTileHelper} />
       </div>
     </div>
   );
