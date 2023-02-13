@@ -56,7 +56,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<IoFlaskSharp size="24" />}
-        text={"Research techs"}
+        text="Research techs"
         menuIndex={1}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
@@ -65,7 +65,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
-        text={"Access market"}
+        text="Access market"
         menuIndex={2}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
@@ -74,7 +74,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<TbSword size="24" />}
-        text={"Attack"}
+        text="Attack"
         menuIndex={3}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
@@ -83,7 +83,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<TbBulldozer size="24" />}
-        text={"Destroy buildings"}
+        text="Destroy buildings"
         menuIndex={4}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
