@@ -26,4 +26,12 @@
     width: 100vw;
     height: 100vh;
   }
+
+  .sidebar-icon {
+    @apply bg-gray-700 w-12 h-12 mt-3 text-white shadow-xl rounded items-center relative flex justify-center hover:text-teal-400
+  }
+
+  .sidebar-tooltip {
+    @apply bg-gray-700 scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-white font-mono transition-none origin-left
+  }
 }

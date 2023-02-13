@@ -6,11 +6,17 @@ import { BigNumber } from "ethers";
 import MinerButton from "./building-icons/Miner";
 import ConveyerButton from "./building-icons/Conveyer";
 
-import { MudComponentTileProps } from "../util/types";
 import { BlockType, DisplayTile } from "../util/constants";
+
 import DestroyTileButton from "./DestroyTileButton";
 
-function BuildingBox({ systems, selectedTile }: MudComponentTileProps) {
+import { useSelectedTile } from "../context/SelectedTileContext";
+import { useMud } from "../context/MudContext";
+
+function BuildingBox() {
+  const { systems } = useMud();
+  const { selectedTile } = useSelectedTile();
+
   // Place action
   const buildTile = useCallback(
     ({ x, y }: DisplayTile, blockType: EntityID) => {
@@ -65,7 +71,7 @@ function BuildingBox({ systems, selectedTile }: MudComponentTileProps) {
   }
 
   return (
-    <div className="z-[1000] fixed bottom-4 left-4 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+    <div className="z-[1000] fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
       <div className=" mt-4 ml-5 flex flex-col h-72">
         <p className="text-lg font-bold mb-3">Construct Buildings</p>
         <BuildingPage />

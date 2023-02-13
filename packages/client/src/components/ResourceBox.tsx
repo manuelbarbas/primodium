@@ -5,8 +5,8 @@ import { GiMetalDisc } from "react-icons/gi";
 
 function ResourceBox() {
   return (
-    <div className="z-[1000] fixed top-4 right-4 h-96 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-      <div className=" mt-4 ml-5 flex flex-col h-72">
+    <div className="z-[1000] fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className=" mt-4 ml-5 flex flex-col h-56">
         <p className="text-lg font-bold mb-3">Resources</p>
         <div className="h-64 overflow-y-scroll scrollbar">
           <div className="flex mb-1">
@@ -55,9 +55,6 @@ function ResourceBox() {
             <p className=" ml-1 my-auto">Copper</p>
           </div>
         </div>
-        <button className="absolute inset-x-4 bottom-4 h-10 bg-teal-600 hover:bg-teal-700 text-sm rounded font-bold">
-          Open tech tree
-        </button>
       </div>
     </div>
   );

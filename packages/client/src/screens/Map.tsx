@@ -6,10 +6,8 @@ import {
   useMemo,
   MouseEvent,
 } from "react";
-import { TxQueue } from "@latticexyz/network";
 
-import { Has, HasValue, World, EntityID } from "@latticexyz/recs";
-import { SystemTypes } from "contracts/types/SystemTypes";
+import { Has, HasValue, EntityID } from "@latticexyz/recs";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
@@ -33,15 +31,12 @@ import useWindowDimensions from "../hooks/useWindowDimensions";
 import { components } from "..";
 
 import { BlockType } from "../util/constants";
-
-type Props = {
-  world: World;
-  systems: TxQueue<SystemTypes>;
-  components: typeof components;
-};
+import { useMud } from "../context/MudContext";
 
 // Read the terrain state of the current coordinate
-export default function Map({ systems }: Props) {
+export default function Map() {
+  const { systems } = useMud();
+
   const [initialized, setInitialized] = useState(false);
 
   // Conveyer have steps 1 (place start), 2 (place end and executeTyped)
