@@ -6,21 +6,17 @@ import { Coord } from "@latticexyz/utils";
 import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 
-import { DisplayTile } from "../util/constants";
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
+import { useSelectedTile } from "../context/SelectedTileContext";
 
 const ResourceTileLayer = ({
   getTileKey,
-  selectedTile,
-  setSelectedTile,
 }: {
   getTileKey: (coord: Coord) => EntityID;
-  selectedTile: DisplayTile;
-  setSelectedTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
 }) => {
   const map = useMap();
-  const [zoom, setZoom] = useState(map.getZoom());
+  const { selectedTile, setSelectedTile } = useSelectedTile();
 
   const [displayTileRange, setDisplayTileRange] = useState({
     x1: 0,
@@ -44,6 +40,7 @@ const ResourceTileLayer = ({
   useMapEvent("moveend", setNewBounds);
 
   // Zoom event listener
+  const [zoom, setZoom] = useState(map.getZoom());
   const zoomChange = useCallback(() => {
     setZoom(map.getZoom());
   }, [map]);

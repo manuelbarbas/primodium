@@ -19,8 +19,6 @@ export default function LeafletMap() {
   const { systems } = useMud();
 
   const {
-    selectedTile,
-    setSelectedTile,
     selectedStartPathTile,
     setSelectedStartPathTile,
     setSelectedEndPathTile,
@@ -101,11 +99,7 @@ export default function LeafletMap() {
       crs={L.CRS.Simple}
     >
       <LayersControl position="bottomright">
-        <ResourceTileLayer
-          getTileKey={getTopLayerKeyHelper}
-          selectedTile={selectedTile}
-          setSelectedTile={setSelectedTile}
-        />
+        <ResourceTileLayer getTileKey={getTopLayerKeyHelper} />
       </LayersControl>
     </MapContainer>
   );

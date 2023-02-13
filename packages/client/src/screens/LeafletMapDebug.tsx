@@ -11,15 +11,13 @@ import { getTopLayerKey } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
-import { DisplayTile } from "../util/constants";
+import { useSelectedTile } from "../context/SelectedTileContext";
 
 // Read the terrain state of the current coordinate
 export default function LeafletMapDebug() {
   const [initialized, setInitialized] = useState(false);
-  const [selectedTile, setSelectedTile] = useState({
-    x: 0,
-    y: 0,
-  } as DisplayTile);
+
+  const { selectedTile } = useSelectedTile();
 
   // See that the tile has changed
   useEffect(() => {
@@ -68,11 +66,7 @@ export default function LeafletMapDebug() {
       crs={L.CRS.Simple}
     >
       <LayersControl position="bottomleft">
-        <ResourceTileLayer
-          getTileKey={getTopLayerKeyHelper}
-          selectedTile={selectedTile}
-          setSelectedTile={setSelectedTile}
-        />
+        <ResourceTileLayer getTileKey={getTopLayerKeyHelper} />
       </LayersControl>
     </MapContainer>
   );
