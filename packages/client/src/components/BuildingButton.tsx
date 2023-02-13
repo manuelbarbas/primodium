@@ -1,11 +1,9 @@
-function BuildingButton() {
+function BuildingButton({ icon, text }: { icon: any; text: string }) {
   return (
-    <button className="w-16 h-16 bg-green-600">
-      <img
-        src={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
-      ></img>
+    <button className="w-16 h-16 bg-green-600 text-xs">
+      <img src={icon}></img>
+      <div className="h-2"></div>
+      {text}
     </button>
   );
 }

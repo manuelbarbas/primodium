@@ -6,6 +6,7 @@ import { BigNumber } from "ethers";
 
 import MinerButton from "./building-icons/Miner";
 import ConveyerButton from "./building-icons/Conveyer";
+import BuildingButton from "../components/BuildingButton";
 
 import { BlockType, DisplayTile } from "../util/constants";
 
@@ -46,9 +47,46 @@ function BuildingBox() {
     buildTile(selectedTile, BlockType.Conveyer);
   }, [selectedTile]);
 
+  //need a back button between pages
   function BuildingPage() {
     return (
-      <div className="grid grid-cols-5 gap-1.5 h-36 overflow-y-scroll scrollbar">
+      <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
+        <BuildingButton
+          icon={
+            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
+          }
+          text={"Miners"}
+        />
+        <BuildingButton
+          icon={
+            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
+          }
+          text={"Transport"}
+        />
+        <BuildingButton
+          icon={
+            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
+          }
+          text={"Utility"}
+        />
+        <BuildingButton
+          icon={
+            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
+          }
+          text={"Factories"}
+        />
+        <BuildingButton
+          icon={
+            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
+          }
+          text={"Weapons"}
+        />
+        <BuildingButton
+          icon={
+            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
+          }
+          text={"Defenses"}
+        />
         <MinerButton action={buildMinerHelper} />
         <ConveyerButton action={buildConveyerHelper} />
       </div>
