@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useContext } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { GodID as SingletonID } from "@latticexyz/network";
@@ -12,7 +12,7 @@ import { getTopLayerKey } from "../util/tile";
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
 import { useMud } from "../context/MudContext";
-import { SelectedTileContext } from "../context/SelectedTileContext";
+import { useSelectedTile } from "../context/SelectedTileContext";
 
 // Read the terrain state of the current coordinate
 export default function LeafletMap() {
@@ -24,7 +24,7 @@ export default function LeafletMap() {
     selectedStartPathTile,
     setSelectedStartPathTile,
     setSelectedEndPathTile,
-  } = useContext(SelectedTileContext);
+  } = useSelectedTile();
 
   const [initialized, setInitialized] = useState(false);
 
