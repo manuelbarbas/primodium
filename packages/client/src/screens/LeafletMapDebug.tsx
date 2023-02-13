@@ -13,10 +13,8 @@ import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
 import { DisplayTile } from "../util/constants";
 
-import { MudRouterProps } from "../util/types";
-
 // Read the terrain state of the current coordinate
-export default function LeafletMapDebug({}: MudRouterProps) {
+export default function LeafletMapDebug() {
   const [initialized, setInitialized] = useState(false);
   const [selectedTile, setSelectedTile] = useState({
     x: 0,

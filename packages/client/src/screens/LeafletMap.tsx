@@ -11,11 +11,13 @@ import { getTopLayerKey } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
-import { MudRouterProps } from "../util/types";
+import { useMud } from "../context/MudContext";
 import { SelectedTileContext } from "../context/SelectedTileContext";
 
 // Read the terrain state of the current coordinate
-export default function LeafletMap({ systems }: MudRouterProps) {
+export default function LeafletMap() {
+  const { systems } = useMud();
+
   const {
     selectedTile,
     setSelectedTile,

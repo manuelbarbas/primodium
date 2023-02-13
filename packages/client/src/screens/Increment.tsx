@@ -1,10 +1,11 @@
 import { GodID as SingletonID } from "@latticexyz/network";
 import { useComponentValue } from "@latticexyz/react";
 import { singletonIndex, offChainComponents } from "..";
+import { useMud } from "../context/MudContext";
 
-import { MudRouterProps } from "../util/types";
+export default function Increment() {
+  const { components, systems } = useMud();
 
-export default function Increment({ systems, components }: MudRouterProps) {
   const counter = useComponentValue(components.Counter, singletonIndex);
   const doubleCounter = useComponentValue(
     offChainComponents.DoubleCounter,

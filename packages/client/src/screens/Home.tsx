@@ -6,10 +6,9 @@ import SideMenu from "../components/SideMenu";
 
 import LeafletMap from "./LeafletMap";
 
-import { MudRouterProps } from "../util/types";
 import { useSelectedTile } from "../context/SelectedTileContext";
 
-export default function Home({ world, systems, components }: MudRouterProps) {
+export default function Home() {
   const { selectedTile } = useSelectedTile();
 
   useEffect(() => {
@@ -20,7 +19,7 @@ export default function Home({ world, systems, components }: MudRouterProps) {
   return (
     <>
       <div className="leaflet-container">
-        <LeafletMap world={world} systems={systems} components={components} />
+        <LeafletMap />
       </div>
       <InfoBox />
       <ResourceBox />

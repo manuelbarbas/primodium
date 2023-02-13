@@ -6,14 +6,15 @@ import { BigNumber } from "ethers";
 import MinerButton from "./building-icons/Miner";
 import ConveyerButton from "./building-icons/Conveyer";
 
-import { MudRouterProps } from "../util/types";
 import { BlockType, DisplayTile } from "../util/constants";
 
 import DestroyTileButton from "./DestroyTileButton";
 
 import { useSelectedTile } from "../context/SelectedTileContext";
+import { useMud } from "../context/MudContext";
 
-function BuildingBox({ systems }: MudRouterProps) {
+function BuildingBox() {
+  const { systems } = useMud();
   const { selectedTile } = useSelectedTile();
 
   // Place action
