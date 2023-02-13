@@ -8,7 +8,6 @@ import MinerButton from "./building-icons/Miner";
 import ConveyerButton from "./building-icons/Conveyer";
 import BuildingButton from "../components/BuildingButton";
 import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
-import ResearchBox from "../components/ResearchBox";
 
 import { BlockType, DisplayTile } from "../util/constants";
 

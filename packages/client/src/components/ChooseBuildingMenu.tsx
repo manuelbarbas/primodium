@@ -28,12 +28,8 @@ function ChooseBuildingMenu({ title }: { title: string }) {
       </div>
     );
   } else {
-    return <div></div>;
+    return <></>;
   }
 }
-
-const LinkIcon = ({ icon }: { icon: any }) => (
-  <div className="link-icon inline-block align-middle">{icon}</div>
-);
 
 export default ChooseBuildingMenu;
