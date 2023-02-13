@@ -5,6 +5,10 @@ import { IoFlaskSharp } from "react-icons/io5";
 import { TbBulldozer } from "react-icons/tb";
 import { TbSword } from "react-icons/tb";
 import { TbScale } from "react-icons/tb";
+
+import AttackBox from "./AttackBox";
+import ResearchBox from "./ResearchBox";
+import MarketBox from "./MarketBox";
 import BuildingBox from "./BuildingBox";
 import DestroyBuildingBox from "./DestroyBuildingBox";
 
@@ -71,7 +75,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">research menu</div>
+        <ResearchBox />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
@@ -80,7 +84,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">market menu</div>
+        <MarketBox />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbSword size="24" />}
@@ -89,7 +93,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">attack menu</div>
+        <AttackBox />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbBulldozer size="24" />}
