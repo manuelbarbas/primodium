@@ -54,7 +54,7 @@ function SideMenu() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
 
   useEffect(() => {
-    console.log("Open Index changed", menuOpenIndex);
+    console.log("Side Menu Open Index changed", menuOpenIndex);
   }, [menuOpenIndex]);
 
   return (
