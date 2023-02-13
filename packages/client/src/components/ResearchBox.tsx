@@ -18,7 +18,7 @@ function ResearchBox() {
           <button onClick={minimizeBox} className="fixed top-4 right-5">
             <LinkIcon icon={<FaWindowClose size="24" />} />
           </button>
-          <p className="text-lg font-bold mb-3">Research Technologies</p>
+          <p className="text-lg font-bold mb-3">Research</p>
           <p>
             First select a tile on the map, then click on "Demolish" to remove
             the building.
