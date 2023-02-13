@@ -34,11 +34,11 @@ function SideBarIcon({
     <>
       <button className="sidebar-icon group" onClick={setMenuOpenIndexHelper}>
         {icon}
+        {menuIndex !== menuOpenIndex && (
+          <div className="sidebar-tooltip group-hover:scale-100"> {text} </div>
+        )}
       </button>
       {menuIndex === menuOpenIndex && children}
-      {menuIndex !== menuOpenIndex && (
-        <div className="sidebar-tooltip group-hover:scale-100"> {text} </div>
-      )}
     </>
   );
 }
