@@ -31,13 +31,15 @@ function SideBarIcon({
   }, [menuIndex, menuOpenIndex]);
 
   return (
-    <button className="sidebar-icon group" onClick={setMenuOpenIndexHelper}>
-      {icon}
+    <>
+      <button className="sidebar-icon group" onClick={setMenuOpenIndexHelper}>
+        {icon}
+      </button>
       {menuIndex === menuOpenIndex && children}
       {menuIndex !== menuOpenIndex && (
         <div className="sidebar-tooltip group-hover:scale-100"> {text} </div>
       )}
-    </button>
+    </>
   );
 }
 
