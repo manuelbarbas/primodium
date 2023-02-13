@@ -28,10 +28,10 @@
   }
 
   .sidebar-icon {
-    @apply bg-gray-700 w-12 h-12 mt-3 text-white shadow-xl rounded items-center relative flex justify-center hover:text-teal-400
+    @apply bg-gray-700 w-12 h-12 mt-3 text-white shadow-xl rounded items-center relative flex justify-center hover:text-yellow-100 focus:text-yellow-300
   }
 
   .sidebar-tooltip {
-    @apply bg-slate-50 z-[1000] scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-gray-700 font-mono font-bold transition-none origin-left
+    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-gray-700 font-mono font-bold transition-none origin-left
   }
 }

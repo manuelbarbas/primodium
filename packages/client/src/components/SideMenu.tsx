@@ -57,7 +57,7 @@ function SideMenu() {
     <div className="z-[1000] fixed bottom-4 left-4 selection:font-mono text-white">
       <SideBarIcon
         icon={<IoHammerSharp size="24" />}
-        text={"Build buildings"}
+        text={"Construct buildings"}
         menuIndex={0}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
@@ -71,7 +71,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">building menu goes here</div>
+        <div className="fixed z-[1000]">research menu</div>
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
@@ -80,7 +80,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">building menu goes here</div>
+        <div className="fixed z-[1000]">market menu</div>
       </SideBarIcon>
       <SideBarIcon
         icon={<TbSword size="24" />}
@@ -89,11 +89,11 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">building menu goes here</div>
+        <div className="fixed z-[1000]">attack menu</div>
       </SideBarIcon>
       <SideBarIcon
         icon={<TbBulldozer size="24" />}
-        text="Destroy buildings"
+        text="Demolish buildings"
         menuIndex={4}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
