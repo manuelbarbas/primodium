@@ -1,10 +1,11 @@
-import { useState, useCallback, ReactNode } from "react";
+import { useState, useCallback, ReactNode, useEffect } from "react";
 
 import { IoHammerSharp } from "react-icons/io5";
 import { IoFlaskSharp } from "react-icons/io5";
 import { TbBulldozer } from "react-icons/tb";
 import { TbSword } from "react-icons/tb";
 import { TbScale } from "react-icons/tb";
+import BuildingBox from "./BuildingBox";
 
 function SideBarIcon({
   icon,
@@ -33,7 +34,9 @@ function SideBarIcon({
     <button className="sidebar-icon group" onClick={setMenuOpenIndexHelper}>
       {icon}
       {menuIndex === menuOpenIndex && children}
-      <div className="sidebar-tooltip group-hover:scale-100"> {text} </div>
+      {menuIndex !== menuOpenIndex && (
+        <div className="sidebar-tooltip group-hover:scale-100"> {text} </div>
+      )}
     </button>
   );
 }
@@ -42,6 +45,10 @@ function SideMenu() {
   // Only show one element at a time
   // -1 means menu not selected at all.
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
+
+  useEffect(() => {
+    console.log("Open Index changed", menuOpenIndex);
+  }, [menuOpenIndex]);
 
   return (
     <div className="z-[1000] fixed bottom-4 left-4 selection:font-mono text-white">
@@ -52,7 +59,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <div className="fixed z-[1000]">building menu goes here</div>
+        <BuildingBox></BuildingBox>
       </SideBarIcon>
       <SideBarIcon
         icon={<IoFlaskSharp size="24" />}

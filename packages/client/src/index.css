@@ -32,6 +32,6 @@
   }
 
   .sidebar-tooltip {
-    @apply bg-gray-700 scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-10 rounded shadow-xl text-white font-mono transition-none origin-left
+    @apply bg-gray-700 scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-white font-mono transition-none origin-left
   }
 }

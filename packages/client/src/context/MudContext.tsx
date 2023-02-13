@@ -42,7 +42,7 @@ export default MudProvider;
 export function useMud() {
   const mudData = useContext(MudContext);
   if (!mudData) {
-    throw new Error("could not find context value");
+    throw new Error("Cannot use MudProvider without providing initial values");
   } else {
     return mudData;
   }
