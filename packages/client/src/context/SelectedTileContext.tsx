@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import { DisplayTile } from "../util/constants";
 
 interface SelectedTileContextInterface {
@@ -59,3 +59,8 @@ const SelectedTileProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export default SelectedTileProvider;
+
+export function useSelectedTile() {
+  const selectedTiles = useContext(SelectedTileContext);
+  return selectedTiles;
+}

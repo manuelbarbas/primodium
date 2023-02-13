@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import InfoBox from "../components/InfoBox";
 import ResourceBox from "../components/ResourceBox";
 import SideMenu from "../components/SideMenu";
@@ -7,10 +7,10 @@ import SideMenu from "../components/SideMenu";
 import LeafletMap from "./LeafletMap";
 
 import { MudRouterProps } from "../util/types";
-import { SelectedTileContext } from "../context/SelectedTileContext";
+import { useSelectedTile } from "../context/SelectedTileContext";
 
 export default function Home({ world, systems, components }: MudRouterProps) {
-  const { selectedTile } = useContext(SelectedTileContext);
+  const { selectedTile } = useSelectedTile();
 
   useEffect(() => {
     console.log("Here is the map from home, tile changed.");
