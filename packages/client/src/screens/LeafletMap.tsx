@@ -9,7 +9,7 @@ import L from "leaflet";
 
 import { getTopLayerKey } from "../util/tile";
 
-import ResourceTileLayer from "../mapComponents/ResourceTileLayer";
+import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
 import { DisplayTile } from "../util/constants";
 import { MudComponentMapTileProps } from "../util/types";
