@@ -1,5 +1,6 @@
 import { useCallback } from "react";
-import BuildingButton from "./BuildingButton";
+import { useSelectedTile } from "../context/SelectedTileContext";
+import BuildingButton from "./building-icons/BuildingButton";
 
 function ChooseTransportMenu({
   title,
@@ -12,13 +13,17 @@ function ChooseTransportMenu({
     setMenuOpenIndex(-1);
   }, []);
 
+  // Set start and end paths for conveyers
+  const { selectedTile, setSelectedStartPathTile, setSelectedEndPathTile } =
+    useSelectedTile();
+
   const startPath = useCallback(() => {
-    console.log("startPath");
-  }, []);
+    setSelectedStartPathTile(selectedTile);
+  }, [selectedTile]);
 
   const endPath = useCallback(() => {
-    console.log("endPath");
-  }, []);
+    setSelectedEndPathTile(selectedTile);
+  }, [selectedTile]);
 
   const clearPath = useCallback(() => {
     console.log("clearPath");
@@ -29,24 +34,23 @@ function ChooseTransportMenu({
       <p className="mt-4 text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
         <BuildingButton
-          icon={
-            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-          }
+          backgroundColor="red"
           text={"Start Path"}
           action={startPath}
         />
         <BuildingButton
-          icon={
-            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-          }
+          backgroundColor="green"
           text={"End Path"}
           action={endPath}
         />
         <BuildingButton
-          icon={
-            "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-          }
+          backgroundColor="blue"
           text={"Clear Path"}
+          action={clearPath}
+        />
+        <BuildingButton
+          backgroundColor="brown"
+          text={"Create Path"}
           action={clearPath}
         />
       </div>

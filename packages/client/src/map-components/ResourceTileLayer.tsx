@@ -3,7 +3,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
-import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
+import {
+  LayersControl,
+  LayerGroup,
+  useMap,
+  useMapEvent,
+  Polyline,
+} from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 
 import ResourceTile from "./ResourceTile";
@@ -16,7 +22,12 @@ const ResourceTileLayer = ({
   getTileKey: (coord: Coord) => EntityID;
 }) => {
   const map = useMap();
-  const { selectedTile, setSelectedTile } = useSelectedTile();
+  const {
+    selectedTile,
+    setSelectedTile,
+    selectedStartPathTile,
+    selectedEndPathTile,
+  } = useSelectedTile();
 
   const [displayTileRange, setDisplayTileRange] = useState({
     x1: 0,
@@ -61,11 +72,13 @@ const ResourceTileLayer = ({
 
   // Displaying tiles
   let [tiles, setTiles] = useState<JSX.Element[]>([]);
+  let [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     if (!map) return;
 
     let tilesToRender: JSX.Element[] = [];
+    let selectedTilesToRender: JSX.Element[] = [];
 
     for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
       for (let j = displayTileRange.y1; j < displayTileRange.y2; j += 1) {
@@ -85,24 +98,83 @@ const ResourceTileLayer = ({
     }
 
     if (selectedTile.x !== null && selectedTile.y !== null) {
-      tilesToRender.push(
+      selectedTilesToRender.push(
         <SelectedTile
           key={JSON.stringify({
             x: selectedTile.x,
-            y: selectedTile.x,
+            y: selectedTile.y,
             render: "selectedTile",
           })}
           x={selectedTile.x}
           y={selectedTile.y}
+          color="yellow"
         />
       );
     }
 
+    if (selectedStartPathTile.x !== null && selectedStartPathTile.y !== null) {
+      selectedTilesToRender.push(
+        <SelectedTile
+          key={JSON.stringify({
+            x: selectedStartPathTile.x,
+            y: selectedStartPathTile.y,
+            render: "selectedStartPathTile",
+          })}
+          x={selectedStartPathTile.x}
+          y={selectedStartPathTile.y}
+          color="red"
+          pane="markerPane"
+        />
+      );
+    }
+
+    if (selectedEndPathTile.x !== null && selectedEndPathTile.y !== null) {
+      selectedTilesToRender.push(
+        <SelectedTile
+          key={JSON.stringify({
+            x: selectedEndPathTile.x,
+            y: selectedEndPathTile.y,
+            render: "selectedEndPathTile",
+          })}
+          x={selectedEndPathTile.x}
+          y={selectedEndPathTile.y}
+          color="green"
+          pane="markerPane"
+        />
+      );
+    }
+
+    selectedTilesToRender.push(
+      <Polyline
+        key="path-in-progress-1"
+        pathOptions={{
+          color: "brown",
+          dashArray: "10 30",
+          weight: 10,
+        }}
+        positions={[
+          [selectedStartPathTile.y + 0.5, selectedStartPathTile.x + 0.5],
+          [selectedEndPathTile.y + 0.5, selectedStartPathTile.x + 0.5],
+          [selectedEndPathTile.y + 0.5, selectedEndPathTile.x + 0.5],
+        ]}
+        pane="markerPane"
+      />
+    );
+
+    setSelectedTiles(selectedTilesToRender);
     setTiles(tilesToRender);
-  }, [displayTileRange, selectedTile]);
+  }, [
+    displayTileRange,
+    selectedTile,
+    selectedStartPathTile,
+    selectedEndPathTile,
+  ]);
 
   return (
     <>
+      <LayersControl.Overlay checked={true} name="Selected Tiles">
+        <LayerGroup>{selectedTiles}</LayerGroup>
+      </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Resources">
         <LayerGroup>{tiles}</LayerGroup>
       </LayersControl.Overlay>

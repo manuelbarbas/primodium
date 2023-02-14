@@ -2,7 +2,17 @@ import React from "react";
 
 import { Rectangle } from "react-leaflet";
 
-function SelectedTile({ x, y }: { x: number; y: number }) {
+function SelectedTile({
+  x,
+  y,
+  color,
+  pane,
+}: {
+  x: number;
+  y: number;
+  color: string;
+  pane?: string;
+}) {
   return (
     <Rectangle
       bounds={[
@@ -11,8 +21,9 @@ function SelectedTile({ x, y }: { x: number; y: number }) {
       ]}
       pathOptions={{
         weight: 4,
-        color: "yellow",
+        color: color,
       }}
+      pane={pane || "tooltipPane"}
     />
   );
 }

@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import MinerButton from "./building-icons/Miner";
 import ConveyerButton from "./building-icons/Conveyer";
-import BuildingButton from "./BuildingMenuButton";
+import BuildingButton from "./building-icons/BuildingMenuButton";
 import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
 import ChooseTransportMenu from "./ChooseTransportMenu";
 
