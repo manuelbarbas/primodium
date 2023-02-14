@@ -2,8 +2,6 @@ import ReactDOM from "react-dom/client";
 import { setupMUDNetwork } from "@latticexyz/std-client";
 import {
   createWorld,
-  defineComponent,
-  Type,
   defineComponentSystem,
   setComponent,
 } from "@latticexyz/recs";
@@ -47,21 +45,16 @@ export const components = {
       contractId: "component.Tile",
     },
   }),
-  // add the new terraintile component here
-  TerrainTile: defineComponent(
-    world,
-    {
-      x: Type.Number,
-      y: Type.Number,
-      id: Type.Number,
+  Path: defineNumberComponent(world, {
+    metadata: {
+      contractId: "component.Path",
     },
-    {
-      id: "TerrainTile",
-      metadata: {
-        contractId: "component.TerrainTile",
-      },
-    }
-  ),
+  }),
+  Item: defineNumberComponent(world, {
+    metadata: {
+      contractId: "component.Item",
+    },
+  }),
 };
 
 export const offChainComponents = {

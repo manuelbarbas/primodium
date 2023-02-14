@@ -1,9 +1,9 @@
 import { memo, useMemo } from "react";
 
-import { Has, HasValue, EntityID } from "@latticexyz/recs";
+import { Has, HasValue, EntityID, EntityIndex } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 
-import { Rectangle } from "react-leaflet";
+import { Rectangle, Polyline } from "react-leaflet";
 
 // import ReactDOMServer from "react-dom/server";
 // import L from "leaflet";
@@ -24,6 +24,7 @@ function ResourceTile({
   y: number;
   tileKey: EntityID;
 }) {
+  // Get tile information
   const tilesAtPosition = useEntityQuery(
     useMemo(
       () => [
@@ -40,7 +41,6 @@ function ResourceTile({
   );
 
   let topLayerKey;
-
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
     topLayerKey = tile.value;
   } else {
