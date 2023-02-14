@@ -1,36 +1,24 @@
-import { useCallback, ReactNode } from "react";
+import { ReactNode } from "react";
 
 function BuildingButton({
   icon,
   text,
-  menuIndex,
-  menuOpenIndex,
-  setMenuOpenIndex,
+  action,
   children,
 }: {
   icon: any;
   text: string;
-  menuIndex: number;
-  menuOpenIndex: number;
-  setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
+  action: () => void;
   children?: ReactNode;
 }) {
-  const setMenuOpenIndexHelper = useCallback(() => {
-    if (menuIndex !== menuOpenIndex) {
-      setMenuOpenIndex(menuIndex);
-    } else {
-      setMenuOpenIndex(-1);
-    }
-  }, [menuIndex, menuOpenIndex]);
-
   return (
     <>
-      <button className="w-16 h-16 text-xs" onClick={setMenuOpenIndexHelper}>
+      <button className="w-16 h-16 text-xs" onClick={action}>
         <img src={icon}></img>
         <div className="h-2"></div>
         {text}
       </button>
-      {menuIndex === menuOpenIndex && children}
+      {children}
     </>
   );
 }

@@ -8,7 +8,6 @@ function ChooseBuildingMenu({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const closeMenuHelper = useCallback(() => {
-    console.log("CLOSE MENU HELPER");
     setMenuOpenIndex(-1);
   }, []);
 

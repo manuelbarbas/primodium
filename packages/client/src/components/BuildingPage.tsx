@@ -3,8 +3,9 @@ import { useState } from "react";
 
 import MinerButton from "./building-icons/Miner";
 import ConveyerButton from "./building-icons/Conveyer";
-import BuildingButton from "../components/BuildingButton";
+import BuildingButton from "./BuildingMenuButton";
 import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
+import ChooseTransportMenu from "./ChooseTransportMenu";
 
 //need a back button between pages
 function BuildingPage({
@@ -45,7 +46,7 @@ function BuildingPage({
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ChooseBuildingMenu
+        <ChooseTransportMenu
           title="Build Transports"
           setMenuOpenIndex={setMenuOpenIndex}
         />
