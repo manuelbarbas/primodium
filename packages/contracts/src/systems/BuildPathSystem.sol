@@ -41,7 +41,7 @@ contract BuildPathSystem is System {
     require(ownedEntityAtEndCoord == addressToEntity(msg.sender), "can not end path at not owned tile");
 
     // Check that a path doesn't already start there (each tile can only be the start of one path)
-    require(!ownedByComponent.has(entitiesAtStartCoord[0]), "can not start more than one path at the same tile");
+    require(!pathComponent.has(entitiesAtStartCoord[0]), "can not start more than one path at the same tile");
     
     // Add key
     pathComponent.set(entitiesAtStartCoord[0], entitiesAtEndCoord[0]);
