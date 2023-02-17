@@ -97,52 +97,46 @@ const ResourceTileLayer = ({
       }
     }
 
-    if (selectedTile.x !== null && selectedTile.y !== null) {
-      selectedTilesToRender.push(
-        <SelectedTile
-          key={JSON.stringify({
-            x: selectedTile.x,
-            y: selectedTile.y,
-            render: "selectedTile",
-          })}
-          x={selectedTile.x}
-          y={selectedTile.y}
-          color="yellow"
-        />
-      );
-    }
+    selectedTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: selectedTile.x,
+          y: selectedTile.y,
+          render: "selectedTile",
+        })}
+        x={selectedTile.x}
+        y={selectedTile.y}
+        color="yellow"
+      />
+    );
 
-    if (selectedStartPathTile.x !== null && selectedStartPathTile.y !== null) {
-      selectedTilesToRender.push(
-        <SelectedTile
-          key={JSON.stringify({
-            x: selectedStartPathTile.x,
-            y: selectedStartPathTile.y,
-            render: "selectedStartPathTile",
-          })}
-          x={selectedStartPathTile.x}
-          y={selectedStartPathTile.y}
-          color="red"
-          pane="markerPane"
-        />
-      );
-    }
+    selectedTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: selectedStartPathTile.x,
+          y: selectedStartPathTile.y,
+          render: "selectedStartPathTile",
+        })}
+        x={selectedStartPathTile.x}
+        y={selectedStartPathTile.y}
+        color="red"
+        pane="markerPane"
+      />
+    );
 
-    if (selectedEndPathTile.x !== null && selectedEndPathTile.y !== null) {
-      selectedTilesToRender.push(
-        <SelectedTile
-          key={JSON.stringify({
-            x: selectedEndPathTile.x,
-            y: selectedEndPathTile.y,
-            render: "selectedEndPathTile",
-          })}
-          x={selectedEndPathTile.x}
-          y={selectedEndPathTile.y}
-          color="green"
-          pane="markerPane"
-        />
-      );
-    }
+    selectedTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: selectedEndPathTile.x,
+          y: selectedEndPathTile.y,
+          render: "selectedEndPathTile",
+        })}
+        x={selectedEndPathTile.x}
+        y={selectedEndPathTile.y}
+        color="green"
+        pane="markerPane"
+      />
+    );
 
     selectedTilesToRender.push(
       <Polyline
