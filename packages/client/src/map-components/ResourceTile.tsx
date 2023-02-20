@@ -1,12 +1,6 @@
 import { memo, useMemo } from "react";
 
-import {
-  Has,
-  HasValue,
-  EntityID,
-  EntityIndex,
-  getComponentValue,
-} from "@latticexyz/recs";
+import { Has, HasValue, EntityID, getComponentValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 
 import { Rectangle, Polyline } from "react-leaflet";
@@ -16,9 +10,9 @@ import { Rectangle, Polyline } from "react-leaflet";
 // import { Marker } from "react-leaflet";
 
 import { BlockColors } from "../util/constants";
-
 import { components } from "..";
 import { singletonIndex } from "..";
+import { useMud } from "../context/MudContext";
 
 // tileKey prop is the default terrain beneath any building on top.
 function ResourceTile({
@@ -30,6 +24,8 @@ function ResourceTile({
   y: number;
   tileKey: EntityID;
 }) {
+  const { world } = useMud();
+
   // Get tile information
   const tilesAtPosition = useEntityQuery(
     useMemo(
@@ -56,79 +52,77 @@ function ResourceTile({
   // Get the conveyer path that start at this tile.
   let pathsToRender: JSX.Element[] = [];
 
-  // const path = useComponentValue(
-  //   components.Path,
-  //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  // );
+  const path = useComponentValue(
+    components.Path,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
 
-  // // Get the tile at the end of the conveyer path.
-  // const endPathTile = useComponentValue(
-  //   components.Position,
-  //   path ? (path.value as EntityIndex) : singletonIndex
-  // );
+  // Get the tile at the end of the conveyer path.
+  const endPathTile = useComponentValue(
+    components.Position,
+    path
+      ? world.entityToIndex.get(path.value.toString() as EntityID)
+      : singletonIndex
+  );
 
-  // if (path && endPathTile) {
-  //   // Path that starts at the current selected tile
-  //   pathsToRender.push(
-  //     <Polyline
-  //       key="path-in-progress-1"
-  //       pathOptions={{
-  //         color: "blue",
-  //         dashArray: "10 30",
-  //         weight: 10,
-  //       }}
-  //       positions={[
-  //         [y + 0.5, x + 0.5],
-  //         [endPathTile.y + 0.5, x + 0.5],
-  //         [endPathTile.y + 0.5, endPathTile.x + 0.5],
-  //       ]}
-  //       pane="overlayPane"
-  //     />
-  //   );
-  // }
+  if (path && endPathTile) {
+    // Path that starts at the current selected tile
+    pathsToRender.push(
+      <Polyline
+        key="path-in-progress-1"
+        pathOptions={{
+          color: "blue",
+          dashArray: "10 30",
+          weight: 10,
+        }}
+        positions={[
+          [y + 0.5, x + 0.5],
+          [endPathTile.y + 0.5, x + 0.5],
+          [endPathTile.y + 0.5, endPathTile.x + 0.5],
+        ]}
+        pane="overlayPane"
+      />
+    );
+  }
 
-  // // Get all conveyer paths that end at this tile.
-  // const endingConveyerPaths = useEntityQuery(
-  //   useMemo(
-  //     () => [
-  //       Has(components.Path),
-  //       HasValue(components.Path, {
-  //         value:
-  //           tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex,
-  //       }),
-  //     ],
-  //     [components.Path]
-  //   )
-  // );
+  // Get all conveyer paths that end at this tile.
+  const endingConveyerPaths = useEntityQuery(
+    useMemo(
+      () => [
+        Has(components.Path),
+        HasValue(components.Path, {
+          value:
+            tilesAtPosition.length > 0
+              ? (world.entities[tilesAtPosition[0]] as unknown as number)
+              : 0,
+        }),
+      ],
+      [components.Path, tilesAtPosition]
+    )
+  );
 
-  // endingConveyerPaths.map((item) => {
-  //   const currentStartEntity = getComponentValue(components.Path, item);
-  //   if (currentStartEntity) {
-  //     // Paths that ends at the current tile
-  //     const currentStartTile = getComponentValue(
-  //       components.Position,
-  //       currentStartEntity.value as EntityIndex
-  //     );
-  //     if (currentStartTile) {
-  //       pathsToRender.push(
-  //         <Polyline
-  //           key="path-in-progress-1"
-  //           pathOptions={{
-  //             color: "blue",
-  //             dashArray: "10 30",
-  //             weight: 10,
-  //           }}
-  //           positions={[
-  //             [currentStartTile.y + 0.5, currentStartTile.x + 0.5],
-  //             [y + 0.5, currentStartTile.x + 0.5],
-  //             [y + 0.5, x + 0.5],
-  //           ]}
-  //           pane="overlayPane"
-  //         />
-  //       );
-  //     }
-  //   }
-  // });
+  endingConveyerPaths.map((item) => {
+    // Paths that ends at the current tile
+    const currentStartTile = getComponentValue(components.Position, item);
+    if (currentStartTile) {
+      pathsToRender.push(
+        <Polyline
+          key={`tile: ${JSON.stringify(currentStartTile)}`}
+          pathOptions={{
+            color: "blue",
+            dashArray: "10 30",
+            weight: 10,
+          }}
+          positions={[
+            [currentStartTile.y + 0.5, currentStartTile.x + 0.5],
+            [y + 0.5, currentStartTile.x + 0.5],
+            [y + 0.5, x + 0.5],
+          ]}
+          pane="popupPane"
+        />
+      );
+    }
+  });
 
   // // Debug to show tile info
   // const DivElement = (

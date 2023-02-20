@@ -80,6 +80,7 @@ const ResourceTileLayer = ({
     let tilesToRender: JSX.Element[] = [];
     let selectedTilesToRender: JSX.Element[] = [];
 
+    // Render tiles and paths that start and end at displayed tiles
     for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
       for (let j = displayTileRange.y1; j < displayTileRange.y2; j += 1) {
         const tileKey = getTileKey({
@@ -97,6 +98,7 @@ const ResourceTileLayer = ({
       }
     }
 
+    // Render selected tiles
     selectedTilesToRender.push(
       <SelectedTile
         key={JSON.stringify({
