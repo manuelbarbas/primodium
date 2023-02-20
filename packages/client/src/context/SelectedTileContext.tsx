@@ -8,6 +8,8 @@ interface SelectedTileContextInterface {
   setSelectedTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
   setSelectedStartPathTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
   setSelectedEndPathTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
+  showSelectedPathTiles: boolean;
+  setShowSelectedPathTiles: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const SelectedTileContext = createContext<SelectedTileContextInterface>({
@@ -26,6 +28,8 @@ export const SelectedTileContext = createContext<SelectedTileContextInterface>({
   setSelectedTile: () => {},
   setSelectedStartPathTile: () => {},
   setSelectedEndPathTile: () => {},
+  showSelectedPathTiles: false,
+  setShowSelectedPathTiles: () => {},
 });
 
 const SelectedTileProvider = ({ children }: { children: ReactNode }) => {
@@ -33,6 +37,8 @@ const SelectedTileProvider = ({ children }: { children: ReactNode }) => {
     x: 0,
     y: 0,
   } as DisplayTile);
+
+  const [showSelectedPathTiles, setShowSelectedPathTiles] = useState(false);
   const [selectedStartPathTile, setSelectedStartPathTile] = useState({
     x: 0,
     y: 0,
@@ -45,12 +51,14 @@ const SelectedTileProvider = ({ children }: { children: ReactNode }) => {
   return (
     <SelectedTileContext.Provider
       value={{
-        selectedTile: selectedTile,
-        selectedStartPathTile: selectedStartPathTile,
-        selectedEndPathTile: selectedEndPathTile,
-        setSelectedTile: setSelectedTile,
-        setSelectedStartPathTile: setSelectedStartPathTile,
-        setSelectedEndPathTile: setSelectedEndPathTile,
+        selectedTile,
+        selectedStartPathTile,
+        selectedEndPathTile,
+        setSelectedTile,
+        setSelectedStartPathTile,
+        setSelectedEndPathTile,
+        showSelectedPathTiles,
+        setShowSelectedPathTiles,
       }}
     >
       {children}

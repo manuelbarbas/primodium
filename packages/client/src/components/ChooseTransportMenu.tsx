@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useMud } from "../context/MudContext";
 import { useSelectedTile } from "../context/SelectedTileContext";
 import BuildingButton from "./building-icons/BuildingButton";
@@ -10,10 +10,6 @@ function ChooseTransportMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const closeMenuHelper = useCallback(() => {
-    setMenuOpenIndex(-1);
-  }, []);
-
   const { systems } = useMud();
 
   // Set start and end paths for conveyers
@@ -23,7 +19,18 @@ function ChooseTransportMenu({
     selectedEndPathTile,
     setSelectedStartPathTile,
     setSelectedEndPathTile,
+    setShowSelectedPathTiles,
   } = useSelectedTile();
+
+  useEffect(() => {
+    // show selected path tiles on mount
+    setShowSelectedPathTiles(true);
+  }, []);
+
+  const closeMenuHelper = useCallback(() => {
+    setMenuOpenIndex(-1);
+    setShowSelectedPathTiles(false);
+  }, []);
 
   const startPath = useCallback(() => {
     setSelectedStartPathTile(selectedTile);

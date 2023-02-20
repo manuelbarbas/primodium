@@ -27,6 +27,7 @@ const ResourceTileLayer = ({
     setSelectedTile,
     selectedStartPathTile,
     selectedEndPathTile,
+    showSelectedPathTiles,
   } = useSelectedTile();
 
   const [displayTileRange, setDisplayTileRange] = useState({
@@ -171,7 +172,10 @@ const ResourceTileLayer = ({
 
   return (
     <>
-      <LayersControl.Overlay checked={true} name="Selected Path">
+      <LayersControl.Overlay
+        checked={showSelectedPathTiles}
+        name="Selected Path"
+      >
         <LayerGroup>{selectedPathTiles}</LayerGroup>
       </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Selected Tile">
