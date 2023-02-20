@@ -147,6 +147,32 @@ export const BlockColors = new Map<EntityID, string>([
   [BlockType.ConveyerDownRight, "#d3816b"],
 ]);
 
+export const BackgroundImage = new Map<EntityID, string>([
+  //landscape blocks
+  [BlockType.Water, "../public/img/water.gif"],
+  [BlockType.Sandstone, "../public/img/sandstone.png"],
+  [BlockType.Biofilm, "../public/img/biofilm.png"],
+  [BlockType.Alluvium, "../public/img/alluvium.png"],
+  [BlockType.Regolith, "../public/img/regolith.png"],
+  [BlockType.Bedrock, "../public/img/bedrock.png"],
+  [BlockType.Air, "../public/img/air.png"],
+
+  //metal ores
+  [BlockType.Lithium, "../public/img/sandstone.png"],
+  [BlockType.Iron, "../public/img/sandstone.png"],
+  [BlockType.Copper, "../public/img/sandstone.png"],
+  [BlockType.Titanium, "../public/img/sandstone.png"],
+  [BlockType.Iridium, "../public/img/sandstone.png"],
+  [BlockType.Osmium, "../public/img/sandstone.png"],
+  [BlockType.Tungsten, "../public/img/sandstone.png"],
+
+  //mineral ores
+  [BlockType.Kimberlite, "../public/img/sandstone.png"],
+  [BlockType.Uraninite, "../public/img/sandstone.png"],
+  [BlockType.Bolutite, "../public/img/sandstone.png"],
+]);
+
+
 export type DisplayTile = {
   x: number;
   y: number;

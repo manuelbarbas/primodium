@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
 
+import ResearchPage from "./ResearchPage";
+
 function ResearchBox() {
   const [minimized, setMinimize] = useState(false);
 
@@ -19,10 +21,7 @@ function ResearchBox() {
             <LinkIcon icon={<FaWindowClose size="24" />} />
           </button>
           <p className="text-lg font-bold mb-3">Research</p>
-          <p>
-            First select a tile on the map, then click on "Demolish" to remove
-            the building.
-          </p>
+          <ResearchPage />{" "}
         </div>
       </div>
     );
