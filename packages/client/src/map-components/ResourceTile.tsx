@@ -72,7 +72,7 @@ function ResourceTile({
         key="path-in-progress-1"
         pathOptions={{
           color: "blue",
-          dashArray: "10 30",
+          dashArray: "20 20",
           weight: 10,
         }}
         positions={[
@@ -110,7 +110,7 @@ function ResourceTile({
           key={`tile: ${JSON.stringify(currentStartTile)}`}
           pathOptions={{
             color: "blue",
-            dashArray: "10 30",
+            dashArray: "20 20",
             weight: 10,
           }}
           positions={[

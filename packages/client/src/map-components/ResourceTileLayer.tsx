@@ -71,14 +71,16 @@ const ResourceTileLayer = ({
   useMapEvent("click", clickEvent);
 
   // Displaying tiles
-  let [tiles, setTiles] = useState<JSX.Element[]>([]);
-  let [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
+  const [tiles, setTiles] = useState<JSX.Element[]>([]);
+  const [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
+  const [selectedPathTiles, setSelectedPathTiles] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     if (!map) return;
 
     let tilesToRender: JSX.Element[] = [];
     let selectedTilesToRender: JSX.Element[] = [];
+    let selectedPathTilesToRender: JSX.Element[] = [];
 
     // Render tiles and paths that start and end at displayed tiles
     for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
@@ -112,7 +114,7 @@ const ResourceTileLayer = ({
       />
     );
 
-    selectedTilesToRender.push(
+    selectedPathTilesToRender.push(
       <SelectedTile
         key={JSON.stringify({
           x: selectedStartPathTile.x,
@@ -126,7 +128,7 @@ const ResourceTileLayer = ({
       />
     );
 
-    selectedTilesToRender.push(
+    selectedPathTilesToRender.push(
       <SelectedTile
         key={JSON.stringify({
           x: selectedEndPathTile.x,
@@ -140,7 +142,7 @@ const ResourceTileLayer = ({
       />
     );
 
-    selectedTilesToRender.push(
+    selectedPathTilesToRender.push(
       <Polyline
         key="path-in-progress-1"
         pathOptions={{
@@ -157,8 +159,9 @@ const ResourceTileLayer = ({
       />
     );
 
-    setSelectedTiles(selectedTilesToRender);
     setTiles(tilesToRender);
+    setSelectedTiles(selectedTilesToRender);
+    setSelectedPathTiles(selectedPathTilesToRender);
   }, [
     displayTileRange,
     selectedTile,
@@ -168,7 +171,10 @@ const ResourceTileLayer = ({
 
   return (
     <>
-      <LayersControl.Overlay checked={true} name="Selected Tiles">
+      <LayersControl.Overlay checked={true} name="Selected Path">
+        <LayerGroup>{selectedPathTiles}</LayerGroup>
+      </LayersControl.Overlay>
+      <LayersControl.Overlay checked={true} name="Selected Tile">
         <LayerGroup>{selectedTiles}</LayerGroup>
       </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Resources">

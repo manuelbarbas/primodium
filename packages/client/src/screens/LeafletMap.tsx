@@ -11,18 +11,7 @@ import { getTopLayerKey } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
-import { useMud } from "../context/MudContext";
-import { useSelectedTile } from "../context/SelectedTileContext";
-
 export default function LeafletMap() {
-  const { systems } = useMud();
-
-  const {
-    selectedStartPathTile,
-    setSelectedStartPathTile,
-    setSelectedEndPathTile,
-  } = useSelectedTile();
-
   const [initialized, setInitialized] = useState(false);
 
   const perlinRef = useRef(null as null | Perlin);
@@ -48,38 +37,6 @@ export default function LeafletMap() {
     },
     [initialized]
   );
-
-  // Select tile to start path, store in state
-  const startPath = useCallback((x: number, y: number) => {
-    setSelectedStartPathTile({
-      x: x,
-      y: y,
-    });
-  }, []);
-
-  // Select tile to end path, executeTyped
-  const endPath = useCallback((x: number, y: number) => {
-    setSelectedEndPathTile({
-      x: x,
-      y: y,
-    });
-    if (selectedStartPathTile.x !== null && selectedStartPathTile.y !== null) {
-      systems["system.BuildPath"].executeTyped(
-        {
-          x: selectedStartPathTile.x,
-          y: selectedStartPathTile.y,
-        },
-        {
-          x: x,
-          y: y,
-        },
-
-        {
-          gasLimit: 1_000_000,
-        }
-      );
-    }
-  }, []);
 
   if (!initialized) {
     return <p>Initializing...</p>;
