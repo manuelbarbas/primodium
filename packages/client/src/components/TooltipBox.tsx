@@ -60,16 +60,24 @@ function TooltipBox() {
     tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
   );
 
+  const tileOwnedBy = useComponentValue(
+    components.OwnedBy,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
+
   const terrainTile = getTopLayerKeyHelper({
     x: selectedTile.x,
     y: selectedTile.y,
   });
 
   let builtTile: EntityID | undefined;
-  if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
+  let tileOwner: number | undefined;
+  if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile && tileOwnedBy) {
     builtTile = tile.value as unknown as EntityID;
+    tileOwner = tileOwnedBy.value;
   } else {
     builtTile = undefined;
+    tileOwner = undefined;
   }
 
   useEffect(() => {
@@ -107,9 +115,9 @@ function TooltipBox() {
                 </div>
                 <div className="ml-4 flex flex-col my-auto">
                   <div className="font-bold mb-1">Iron Drill 2×2</div>
-                  <div>test</div>
                   <div>{BlockIdToKey[terrainTile]}</div>
                   {builtTile && <div>{BlockIdToKey[builtTile]}</div>}
+                  {tileOwner && <div>{tileOwner}</div>}
                 </div>
               </div>
               <div className="mt-4 text-base font-bold">

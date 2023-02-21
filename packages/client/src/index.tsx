@@ -50,6 +50,11 @@ export const components = {
       contractId: "component.Path",
     },
   }),
+  OwnedBy: defineNumberComponent(world, {
+    metadata: {
+      contractId: "component.OwnedBy",
+    },
+  }),
   Item: defineNumberComponent(world, {
     metadata: {
       contractId: "component.Item",
