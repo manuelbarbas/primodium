@@ -1,8 +1,81 @@
-import { useState } from "react";
-import { FaMinusSquare } from "react-icons/fa";
-import { FaPlusSquare } from "react-icons/fa";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
+
+import { EntityID, Has, HasValue } from "@latticexyz/recs";
+import { useComponentValue, useEntityQuery } from "@latticexyz/react";
+import { Coord } from "@latticexyz/utils";
+import { createPerlin, Perlin } from "@latticexyz/noise";
+import { GodID as SingletonID } from "@latticexyz/network";
+import { useSelectedTile } from "../context/SelectedTileContext";
+
+import { components } from "..";
+import { singletonIndex } from "..";
+import { getTopLayerKey } from "../util/tile";
+
+import { BlockIdToKey } from "../util/constants";
 
 function TooltipBox() {
+  // Initialize Perlin to fetch the tile information
+  const [initialized, setInitialized] = useState(false);
+  const perlinRef = useRef(null as null | Perlin);
+
+  useEffect(() => {
+    createPerlin().then((perlin: Perlin) => {
+      perlinRef.current = perlin;
+      setInitialized(true);
+    });
+  }, []);
+
+  const getTopLayerKeyHelper = useCallback(
+    (coord: Coord) => {
+      if (!initialized || perlinRef.current === null) {
+        return SingletonID;
+      }
+      if (perlinRef.current !== null) {
+        const perlin = perlinRef.current;
+        return getTopLayerKey(coord, perlin);
+      } else {
+        return SingletonID;
+      }
+    },
+    [initialized]
+  );
+
+  // Get information on the selected tile
+  const { selectedTile } = useSelectedTile();
+
+  const tilesAtPosition = useEntityQuery(
+    useMemo(
+      () => [
+        Has(components.Tile),
+        HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
+      ],
+      [components.Tile, components.Position, selectedTile]
+    )
+  );
+
+  const tile = useComponentValue(
+    components.Tile,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
+
+  const terrainTile = getTopLayerKeyHelper({
+    x: selectedTile.x,
+    y: selectedTile.y,
+  });
+
+  let builtTile: EntityID | undefined;
+  if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
+    builtTile = tile.value as unknown as EntityID;
+  } else {
+    builtTile = undefined;
+  }
+
+  useEffect(() => {
+    console.log(builtTile);
+  }, [selectedTile]);
+
   const [minimized, setMinimize] = useState(false);
 
   const minimizeBox = () => {
@@ -25,16 +98,18 @@ function TooltipBox() {
             <div className="flex flex-col">
               <div className="flex align-center">
                 <div className="inline-block w-16 h-16">
-                  <img
+                  {/* <img
                     className="w-16 h-16"
                     src={
                       "https://mindustrygame.github.io/wiki/images/block-unit-cargo-loader-ui.png"
                     }
-                  ></img>
+                  /> */}
                 </div>
                 <div className="ml-4 flex flex-col my-auto">
                   <div className="font-bold mb-1">Iron Drill 2×2</div>
                   <div>test</div>
+                  <div>{BlockIdToKey[terrainTile]}</div>
+                  {builtTile && <div>{BlockIdToKey[builtTile]}</div>}
                 </div>
               </div>
               <div className="mt-4 text-base font-bold">

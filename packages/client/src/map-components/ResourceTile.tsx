@@ -9,7 +9,6 @@ import { Rectangle, Polyline, ImageOverlay } from "react-leaflet";
 // import L from "leaflet";
 // import { Marker } from "react-leaflet";
 
-
 import { BlockColors, BackgroundImage } from "../util/constants";
 import { components } from "..";
 import { singletonIndex } from "..";
