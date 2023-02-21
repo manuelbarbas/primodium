@@ -8,7 +8,6 @@ import { TbScale } from "react-icons/tb";
 
 import AttackBox from "./AttackBox";
 import ResearchBox from "./ResearchBox";
-import MarketBox from "./MarketBox";
 import MarketModal from "./MarketModal";
 import BuildingBox from "./BuildingBox";
 import DestroyBuildingBox from "./DestroyBuildingBox";
