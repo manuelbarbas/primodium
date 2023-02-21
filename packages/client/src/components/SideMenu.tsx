@@ -11,6 +11,7 @@ import ResearchBox from "./ResearchBox";
 import MarketBox from "./MarketBox";
 import BuildingBox from "./BuildingBox";
 import DestroyBuildingBox from "./DestroyBuildingBox";
+import { useSelectedTile } from "../context/SelectedTileContext";
 
 function SideBarIcon({
   icon,
@@ -27,11 +28,15 @@ function SideBarIcon({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
   children?: ReactNode;
 }) {
+  const { setShowSelectedPathTiles } = useSelectedTile();
+
   const setMenuOpenIndexHelper = useCallback(() => {
     if (menuIndex !== menuOpenIndex) {
       setMenuOpenIndex(menuIndex);
     } else {
+      // hide selected path upon menu close on default
       setMenuOpenIndex(-1);
+      setShowSelectedPathTiles(false);
     }
   }, [menuIndex, menuOpenIndex]);
 

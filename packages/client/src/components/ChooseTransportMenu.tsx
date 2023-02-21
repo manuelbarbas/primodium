@@ -1,4 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import { useMud } from "../context/MudContext";
 import { useSelectedTile } from "../context/SelectedTileContext";
 import BuildingButton from "./building-icons/BuildingButton";
 
@@ -9,13 +10,27 @@ function ChooseTransportMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const closeMenuHelper = useCallback(() => {
-    setMenuOpenIndex(-1);
-  }, []);
+  const { systems } = useMud();
 
   // Set start and end paths for conveyers
-  const { selectedTile, setSelectedStartPathTile, setSelectedEndPathTile } =
-    useSelectedTile();
+  const {
+    selectedTile,
+    selectedStartPathTile,
+    selectedEndPathTile,
+    setSelectedStartPathTile,
+    setSelectedEndPathTile,
+    setShowSelectedPathTiles,
+  } = useSelectedTile();
+
+  useEffect(() => {
+    // show selected path tiles on mount
+    setShowSelectedPathTiles(true);
+  }, []);
+
+  const closeMenuHelper = useCallback(() => {
+    setMenuOpenIndex(-1);
+    setShowSelectedPathTiles(false);
+  }, []);
 
   const startPath = useCallback(() => {
     setSelectedStartPathTile(selectedTile);
@@ -28,6 +43,26 @@ function ChooseTransportMenu({
   const clearPath = useCallback(() => {
     console.log("clearPath");
   }, []);
+
+  // Select tile to end path, executeTyped
+  const createPath = useCallback(() => {
+    if (selectedStartPathTile !== null && selectedEndPathTile !== null) {
+      systems["system.BuildPath"].executeTyped(
+        {
+          x: selectedStartPathTile.x,
+          y: selectedStartPathTile.y,
+        },
+        {
+          x: selectedEndPathTile.x,
+          y: selectedEndPathTile.y,
+        },
+
+        {
+          gasLimit: 1_000_000,
+        }
+      );
+    }
+  }, [selectedStartPathTile, selectedEndPathTile]);
 
   return (
     <div className="z-[1000] fixed bottom-0 w-11/12 h-72 flex flex-col bg-gray-700 text-white font-mono rounded">
@@ -51,7 +86,7 @@ function ChooseTransportMenu({
         <BuildingButton
           backgroundColor="brown"
           text={"Create Path"}
-          action={clearPath}
+          action={createPath}
         />
       </div>
       <button

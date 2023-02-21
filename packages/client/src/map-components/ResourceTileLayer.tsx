@@ -27,6 +27,7 @@ const ResourceTileLayer = ({
     setSelectedTile,
     selectedStartPathTile,
     selectedEndPathTile,
+    showSelectedPathTiles,
   } = useSelectedTile();
 
   const [displayTileRange, setDisplayTileRange] = useState({
@@ -71,15 +72,18 @@ const ResourceTileLayer = ({
   useMapEvent("click", clickEvent);
 
   // Displaying tiles
-  let [tiles, setTiles] = useState<JSX.Element[]>([]);
-  let [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
+  const [tiles, setTiles] = useState<JSX.Element[]>([]);
+  const [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
+  const [selectedPathTiles, setSelectedPathTiles] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     if (!map) return;
 
     let tilesToRender: JSX.Element[] = [];
     let selectedTilesToRender: JSX.Element[] = [];
+    let selectedPathTilesToRender: JSX.Element[] = [];
 
+    // Render tiles and paths that start and end at displayed tiles
     for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
       for (let j = displayTileRange.y1; j < displayTileRange.y2; j += 1) {
         const tileKey = getTileKey({
@@ -97,54 +101,49 @@ const ResourceTileLayer = ({
       }
     }
 
-    if (selectedTile.x !== null && selectedTile.y !== null) {
-      selectedTilesToRender.push(
-        <SelectedTile
-          key={JSON.stringify({
-            x: selectedTile.x,
-            y: selectedTile.y,
-            render: "selectedTile",
-          })}
-          x={selectedTile.x}
-          y={selectedTile.y}
-          color="yellow"
-        />
-      );
-    }
-
-    if (selectedStartPathTile.x !== null && selectedStartPathTile.y !== null) {
-      selectedTilesToRender.push(
-        <SelectedTile
-          key={JSON.stringify({
-            x: selectedStartPathTile.x,
-            y: selectedStartPathTile.y,
-            render: "selectedStartPathTile",
-          })}
-          x={selectedStartPathTile.x}
-          y={selectedStartPathTile.y}
-          color="red"
-          pane="markerPane"
-        />
-      );
-    }
-
-    if (selectedEndPathTile.x !== null && selectedEndPathTile.y !== null) {
-      selectedTilesToRender.push(
-        <SelectedTile
-          key={JSON.stringify({
-            x: selectedEndPathTile.x,
-            y: selectedEndPathTile.y,
-            render: "selectedEndPathTile",
-          })}
-          x={selectedEndPathTile.x}
-          y={selectedEndPathTile.y}
-          color="green"
-          pane="markerPane"
-        />
-      );
-    }
-
+    // Render selected tiles
     selectedTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: selectedTile.x,
+          y: selectedTile.y,
+          render: "selectedTile",
+        })}
+        x={selectedTile.x}
+        y={selectedTile.y}
+        color="yellow"
+      />
+    );
+
+    selectedPathTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: selectedStartPathTile.x,
+          y: selectedStartPathTile.y,
+          render: "selectedStartPathTile",
+        })}
+        x={selectedStartPathTile.x}
+        y={selectedStartPathTile.y}
+        color="red"
+        pane="markerPane"
+      />
+    );
+
+    selectedPathTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: selectedEndPathTile.x,
+          y: selectedEndPathTile.y,
+          render: "selectedEndPathTile",
+        })}
+        x={selectedEndPathTile.x}
+        y={selectedEndPathTile.y}
+        color="green"
+        pane="markerPane"
+      />
+    );
+
+    selectedPathTilesToRender.push(
       <Polyline
         key="path-in-progress-1"
         pathOptions={{
@@ -161,8 +160,9 @@ const ResourceTileLayer = ({
       />
     );
 
-    setSelectedTiles(selectedTilesToRender);
     setTiles(tilesToRender);
+    setSelectedTiles(selectedTilesToRender);
+    setSelectedPathTiles(selectedPathTilesToRender);
   }, [
     displayTileRange,
     selectedTile,
@@ -172,7 +172,13 @@ const ResourceTileLayer = ({
 
   return (
     <>
-      <LayersControl.Overlay checked={true} name="Selected Tiles">
+      <LayersControl.Overlay
+        checked={showSelectedPathTiles}
+        name="Selected Path"
+      >
+        <LayerGroup>{selectedPathTiles}</LayerGroup>
+      </LayersControl.Overlay>
+      <LayersControl.Overlay checked={true} name="Selected Tile">
         <LayerGroup>{selectedTiles}</LayerGroup>
       </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Resources">
