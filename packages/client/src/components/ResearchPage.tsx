@@ -1,20 +1,10 @@
 import { useEffect } from "react";
 import { useState } from "react";
 
-import MinerButton from "./building-icons/Miner";
-import ConveyerButton from "./building-icons/Conveyer";
 import BuildingMenuButton from "./building-icons/BuildingMenuButton";
 import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
-import ChooseTransportMenu from "./ChooseTransportMenu";
 
-//need a back button between pages
-function BuildingPage({
-  buildMinerHelper,
-  buildConveyerHelper,
-}: {
-  buildMinerHelper: () => void;
-  buildConveyerHelper: () => void;
-}) {
+function ResearchPage() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
 
   useEffect(() => {
@@ -27,13 +17,13 @@ function BuildingPage({
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
         }
-        text={"Miners"}
+        text={"Mining"}
         menuIndex={0}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
         <ChooseBuildingMenu
-          title="Build Miners"
+          title="Mining Technologies"
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
@@ -46,8 +36,8 @@ function BuildingPage({
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ChooseTransportMenu
-          title="Build Transports"
+        <ChooseBuildingMenu
+          title="Transportation technologies"
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
@@ -55,13 +45,13 @@ function BuildingPage({
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
         }
-        text={"Utility"}
+        text={"Defenses"}
         menuIndex={2}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
         <ChooseBuildingMenu
-          title="Build Utilities"
+          title="Defense technologies"
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
@@ -75,42 +65,11 @@ function BuildingPage({
         setMenuOpenIndex={setMenuOpenIndex}
       >
         <ChooseBuildingMenu
-          title="Build Factories"
+          title="Manufacturing technologies"
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
-      <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
-        text={"Weapons"}
-        menuIndex={4}
-        menuOpenIndex={menuOpenIndex}
-        setMenuOpenIndex={setMenuOpenIndex}
-      >
-        <ChooseBuildingMenu
-          title="Build Weapons"
-          setMenuOpenIndex={setMenuOpenIndex}
-        />
-      </BuildingMenuButton>
-      <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
-        text={"Defenses"}
-        menuIndex={5}
-        menuOpenIndex={menuOpenIndex}
-        setMenuOpenIndex={setMenuOpenIndex}
-      >
-        <ChooseBuildingMenu
-          title="Build Defenses"
-          setMenuOpenIndex={setMenuOpenIndex}
-        />
-      </BuildingMenuButton>
-      <MinerButton action={buildMinerHelper} />
-      <ConveyerButton action={buildConveyerHelper} />
     </div>
   );
 }
-
-export default BuildingPage;
+export default ResearchPage;

@@ -8,7 +8,7 @@ import { TbScale } from "react-icons/tb";
 
 import AttackBox from "./AttackBox";
 import ResearchBox from "./ResearchBox";
-import MarketBox from "./MarketBox";
+import MarketModal from "./MarketModal";
 import BuildingBox from "./BuildingBox";
 import DestroyBuildingBox from "./DestroyBuildingBox";
 import { useSelectedTile } from "../context/SelectedTileContext";
@@ -84,12 +84,12 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
-        text="Access market"
+        text="Resource market"
         menuIndex={2}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <MarketBox />
+        <MarketModal />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbSword size="24" />}

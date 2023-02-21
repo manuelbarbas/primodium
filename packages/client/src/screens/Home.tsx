@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import InfoBox from "../components/InfoBox";
 import ResourceBox from "../components/ResourceBox";
 import SideMenu from "../components/SideMenu";
-// import TooltipBox from "../components/TooltipBox";
+import TooltipBox from "../components/TooltipBox";
 
 import LeafletMap from "./LeafletMap";
 
@@ -30,7 +30,7 @@ export default function Home() {
         selectedTile={selectedTile}
       /> */}
       <SideMenu />
-      {/* <TooltipBox /> */}
+      <TooltipBox />
     </>
   );
 }

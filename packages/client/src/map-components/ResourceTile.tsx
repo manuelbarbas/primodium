@@ -3,13 +3,14 @@ import { memo, useMemo } from "react";
 import { Has, HasValue, EntityID, getComponentValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 
-import { Rectangle, Polyline } from "react-leaflet";
+import { Rectangle, Polyline, ImageOverlay } from "react-leaflet";
 
 // import ReactDOMServer from "react-dom/server";
 // import L from "leaflet";
 // import { Marker } from "react-leaflet";
 
-import { BlockColors } from "../util/constants";
+
+import { BlockColors, BackgroundImage } from "../util/constants";
 import { components } from "..";
 import { singletonIndex } from "..";
 import { useMud } from "../context/MudContext";
@@ -137,6 +138,9 @@ function ResourceTile({
   //   html: ReactDOMServer.renderToString(DivElement),
   // });
 
+  //!!Used for setting an image background!!
+  let imagebackground = BackgroundImage.get(topLayerKey as EntityID);
+
   return (
     <>
       {/* <Marker
@@ -157,6 +161,18 @@ function ResourceTile({
         }}
         pane="mapPane"
       />
+      {/* !!setting an image background!! */}
+      {/* <ImageOverlay
+        key={JSON.stringify({ x, y })}
+        bounds={[
+          [y, x],
+          [y + 1, x + 1],
+        ]}
+        url={imagebackground}
+        layerOptions={{
+          pane: "overlayPane",
+        }}
+      /> */}
       {pathsToRender}
     </>
   );
