@@ -22,6 +22,8 @@ contract BuildPathSystem is System {
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
+    require(!(coordStart.x == coordEnd.x && coordStart.y == coordEnd.y), "can not start and end path at same coord");
+
     // Check that the coordinates exist tiles
     uint256[] memory entitiesAtStartCoord = positionComponent.getEntitiesWithValue(coordStart);
     require(entitiesAtStartCoord.length == 1, "can not start path at empty coord");
