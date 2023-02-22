@@ -114,14 +114,29 @@ function TooltipBox() {
                   /> */}
                 </div>
                 <div className="ml-4 flex flex-col my-auto">
-                  <div className="font-bold mb-1">Iron Drill 2×2</div>
-                  <div>{BlockIdToKey[terrainTile]}</div>
-                  {builtTile && <div>{BlockIdToKey[builtTile]}</div>}
-                  {tileOwner && <div>{tileOwner}</div>}
+                  <div className="mb-1">
+                    <div>
+                      <div>
+                        {builtTile ? (
+                          <div>{BlockIdToKey[builtTile]}</div>
+                        ) : (
+                          <div>No tile built</div>
+                        )}
+                        on {BlockIdToKey[terrainTile]}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="mt-4 text-base font-bold">
-                Output Efficiency: 90%
+              <div className="flex-row">
+                <div className="flex font-bold mb-1">Owner:</div>
+                <div className="flex">
+                  {tileOwner ? (
+                    <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
+                  ) : (
+                    <div>None</div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
