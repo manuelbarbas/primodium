@@ -13,7 +13,7 @@ import { components } from "..";
 import { singletonIndex } from "..";
 import { getTopLayerKey } from "../util/tile";
 
-import { BlockIdToKey } from "../util/constants";
+import { BlockIdToKey, BlockColors } from "../util/constants";
 
 function TooltipBox() {
   // Initialize Perlin to fetch the tile information
@@ -70,6 +70,12 @@ function TooltipBox() {
     y: selectedTile.y,
   });
 
+  const tileColor = BlockColors.get(terrainTile);
+
+  const tooltipThumbnail = {
+    backgroundColor: tileColor,
+  };
+
   let builtTile: EntityID | undefined;
   let tileOwner: number | undefined;
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile && tileOwnedBy) {
@@ -97,46 +103,36 @@ function TooltipBox() {
   if (!minimized) {
     return (
       <div className="z-[999] fixed bottom-4 right-4 h-48 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className=" mt-4 ml-5 flex flex-col h-72">
+        <div className=" mt-4 ml-5 flex flex-col">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
-          <p className="text-lg font-bold mb-3">Selected Tile</p>
-          <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
-            <div className="flex flex-col">
-              <div className="flex align-center">
-                <div className="inline-block w-16 h-16">
-                  {/* <img
-                    className="w-16 h-16"
-                    src={
-                      "https://mindustrygame.github.io/wiki/images/block-unit-cargo-loader-ui.png"
-                    }
-                  /> */}
-                </div>
-                <div className="ml-4 flex flex-col my-auto">
-                  <div className="mb-1">
-                    <div>
-                      <div>
-                        {builtTile ? (
-                          <div>{BlockIdToKey[builtTile]}</div>
-                        ) : (
-                          <div>No tile built</div>
-                        )}
-                        on {BlockIdToKey[terrainTile]}
-                      </div>
-                    </div>
-                  </div>
+          <p className="text-lg font-bold mb-2">Selected Tile</p>
+          <div className="flex flex-col">
+            <div className="flex align-center mb-2">
+              <div
+                className="inline-block w-16 h-16"
+                style={tooltipThumbnail}
+              ></div>
+              <div className="ml-4 flex flex-col my-auto">
+                <div>
+                  {builtTile ? (
+                    <div>{BlockIdToKey[builtTile]}</div>
+                  ) : (
+                    <div>No tile built</div>
+                  )}
+                  on {BlockIdToKey[terrainTile]}
                 </div>
               </div>
-              <div className="flex-row">
-                <div className="flex font-bold mb-1">Owner:</div>
-                <div className="flex">
-                  {tileOwner ? (
-                    <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
-                  ) : (
-                    <div>None</div>
-                  )}
-                </div>
+            </div>
+            <div className="flex-row">
+              <div className="flex font-bold mb-1">Owner:</div>
+              <div className="flex">
+                {tileOwner ? (
+                  <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
+                ) : (
+                  <div>None</div>
+                )}
               </div>
             </div>
           </div>
