@@ -10,8 +10,6 @@ import { Rectangle, Polyline, ImageOverlay } from "react-leaflet";
 // import { Marker } from "react-leaflet";
 
 import { BlockColors, BackgroundImage } from "../util/constants";
-import { components } from "..";
-import { singletonIndex } from "..";
 import { useMud } from "../context/MudContext";
 
 // tileKey prop is the default terrain beneath any building on top.
@@ -24,7 +22,7 @@ function ResourceTile({
   y: number;
   tileKey: EntityID;
 }) {
-  const { world } = useMud();
+  const { world, components, singletonIndex } = useMud();
 
   // Get tile information
   const tilesAtPosition = useEntityQuery(

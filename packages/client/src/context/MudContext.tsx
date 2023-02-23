@@ -1,14 +1,19 @@
 import { createContext, ReactNode, useContext } from "react";
 import { TxQueue } from "@latticexyz/network";
-import { World } from "@latticexyz/recs";
+import { EntityIndex, World } from "@latticexyz/recs";
 
 import { SystemTypes } from "contracts/types/SystemTypes";
-import { components as defaultComponents } from "..";
+import {
+  defineComponents,
+  defineOffChainComponents,
+} from "../network/components";
 
 interface MudContextInterface {
   world: World;
   systems: TxQueue<SystemTypes>;
-  components: typeof defaultComponents;
+  components: ReturnType<typeof defineComponents>;
+  offChainComponents: ReturnType<typeof defineOffChainComponents>;
+  singletonIndex: EntityIndex;
 }
 
 export const MudContext = createContext<MudContextInterface | null>(null);
@@ -17,11 +22,15 @@ const MudProvider = ({
   world,
   systems,
   components,
+  offChainComponents,
+  singletonIndex,
   children,
 }: {
   world: World;
   systems: TxQueue<SystemTypes>;
-  components: typeof defaultComponents;
+  components: ReturnType<typeof defineComponents>;
+  offChainComponents: ReturnType<typeof defineOffChainComponents>;
+  singletonIndex: EntityIndex;
   children: ReactNode;
 }) => {
   return (
@@ -30,6 +39,8 @@ const MudProvider = ({
         world,
         systems,
         components,
+        offChainComponents,
+        singletonIndex,
       }}
     >
       {children}

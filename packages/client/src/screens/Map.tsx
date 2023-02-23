@@ -17,8 +17,6 @@ import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { FixedSizeGrid as Grid } from "react-window";
 import { BigNumber } from "ethers";
 
-import { singletonIndex } from "..";
-
 import {
   // getTerrainNormalizedDepth,
   // getResourceNormalizedDepth,
@@ -28,13 +26,11 @@ import { BlockColors } from "../util/constants";
 
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
-import { components } from "..";
-
 import { BlockType } from "../util/constants";
 import { useMud } from "../context/MudContext";
 
 export default function Map() {
-  const { systems } = useMud();
+  const { systems, components, singletonIndex } = useMud();
 
   const [initialized, setInitialized] = useState(false);
 
