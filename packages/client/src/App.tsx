@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import { WagmiConfig, createClient, useAccount, Connector } from "wagmi";
@@ -29,8 +29,8 @@ export default function App() {
   const { connector: activeConnector, address } = useAccount();
   const prevAddressRef = useRef<string | undefined>("");
 
-  const networkLayerReturnRef =
-    useRef<Awaited<ReturnType<typeof createNetworkLayer>>>();
+  const [networkLayerParams, setNetworkLayerParams] =
+    useState<Awaited<ReturnType<typeof createNetworkLayer>>>();
 
   const setupNetworkLayerOnChange = async (
     address: string | undefined,
@@ -38,13 +38,13 @@ export default function App() {
   ) => {
     if (!address && prevAddressRef.current !== undefined) {
       const networkLayerReturn = await setupNetworkLayer(undefined);
-      networkLayerReturnRef.current = networkLayerReturn;
+      setNetworkLayerParams(networkLayerReturn);
       prevAddressRef.current = undefined;
     } else if (address && activeConnector) {
       if (address !== prevAddressRef.current) {
         const provider = await activeConnector.getProvider();
         const networkLayerReturn = await setupNetworkLayer(provider);
-        networkLayerReturnRef.current = networkLayerReturn;
+        setNetworkLayerParams(networkLayerReturn);
         prevAddressRef.current = address;
       }
     }
@@ -54,16 +54,16 @@ export default function App() {
     setupNetworkLayerOnChange(address, activeConnector);
   }, [activeConnector, address]);
 
-  if (networkLayerReturnRef.current === undefined) {
+  if (networkLayerParams === undefined) {
     return <p>Loading...</p>;
   } else {
     return (
       <MudProvider
-        world={networkLayerReturnRef.current.world}
-        systems={networkLayerReturnRef.current.systems}
-        components={networkLayerReturnRef.current.components}
-        offChainComponents={networkLayerReturnRef.current.offChainComponents}
-        singletonIndex={networkLayerReturnRef.current.singletonIndex}
+        world={networkLayerParams.world}
+        systems={networkLayerParams.systems}
+        components={networkLayerParams.components}
+        offChainComponents={networkLayerParams.offChainComponents}
+        singletonIndex={networkLayerParams.singletonIndex}
       >
         <WagmiConfig client={wagmiClient}>
           <SelectedTileProvider>
