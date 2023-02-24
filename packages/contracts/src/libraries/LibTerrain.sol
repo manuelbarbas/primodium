@@ -77,27 +77,27 @@ library LibTerrain {
   function getResourceNormalizedDepth(Coord memory coord) public pure returns (int128) {
     int128 depth1 = getSingleDepth(coord, getPerlinSeed1(), 8);
     int128 depth2 = getSingleDepth(coord, getPerlinSeed2(), 8);
-    int128 normalizedDepth = ((depth1 + depth2) / 4) * 100;
+    int128 normalizedDepth = ((depth1 + depth2) / 4) * 10000;
     return normalizedDepth;
   }
 
   function getResourceKey(Coord memory coord) public pure returns (uint256) {
     int128 normalizedDepth = getResourceNormalizedDepth(coord);
     //base starting materials (most common)
-    if (normalizedDepth > 18 && normalizedDepth < 19) return CopperID;
-    if (normalizedDepth > 20 && normalizedDepth < 21) return LithiumID;
-    if (normalizedDepth > 24 && normalizedDepth < 25) return IronID;
+    if (normalizedDepth > 1800 && normalizedDepth < 1820) return CopperID;
+    if (normalizedDepth > 2000 && normalizedDepth < 2006) return LithiumID;
+    if (normalizedDepth > 2400 && normalizedDepth < 2418) return IronID;
 
     //mid game items
-    if (normalizedDepth < 14) return TitaniumID;
-    if (normalizedDepth > 26 && normalizedDepth < 27) return IridiumID;
-    if (normalizedDepth > 30 && normalizedDepth < 31) return OsmiumID;
-    if (normalizedDepth > 34 && normalizedDepth < 34) return TungstenID;
+    if (normalizedDepth < 1350) return TitaniumID;
+    if (normalizedDepth > 2600 && normalizedDepth < 2602) return IridiumID;
+    if (normalizedDepth > 3095 && normalizedDepth < 3100) return OsmiumID;
+    if (normalizedDepth > 3400 && normalizedDepth < 3430) return TungstenID;
 
     //late game (rarer) items
-    if (normalizedDepth > 27 && normalizedDepth < 26) return KimberliteID;
-    if (normalizedDepth > 32 && normalizedDepth < 32) return UraniniteID;
-    if (normalizedDepth > 36 && normalizedDepth < 37) return BolutiteID;
+    if (normalizedDepth > 2720 && normalizedDepth < 2721) return KimberliteID;
+    if (normalizedDepth > 3220 && normalizedDepth < 3221) return UraniniteID;
+    if (normalizedDepth > 3620 && normalizedDepth < 3622) return BolutiteID;
 
     return AirID;
   }
