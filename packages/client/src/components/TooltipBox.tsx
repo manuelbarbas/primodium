@@ -9,13 +9,14 @@ import { createPerlin, Perlin } from "@latticexyz/noise";
 import { GodID as SingletonID } from "@latticexyz/network";
 import { useSelectedTile } from "../context/SelectedTileContext";
 
-import { components } from "..";
-import { singletonIndex } from "..";
 import { getTopLayerKey } from "../util/tile";
 
 import { BlockIdToKey } from "../util/constants";
+import { useMud } from "../context/MudContext";
 
 function TooltipBox() {
+  const { components, singletonIndex } = useMud();
+
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
   const perlinRef = useRef(null as null | Perlin);
@@ -79,10 +80,6 @@ function TooltipBox() {
     builtTile = undefined;
     tileOwner = undefined;
   }
-
-  useEffect(() => {
-    console.log(builtTile);
-  }, [selectedTile]);
 
   const [minimized, setMinimize] = useState(false);
 

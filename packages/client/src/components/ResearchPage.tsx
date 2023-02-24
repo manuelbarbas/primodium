@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useState } from "react";
 
 import BuildingMenuButton from "./building-icons/BuildingMenuButton";
@@ -6,10 +5,6 @@ import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
 
 function ResearchPage() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
-
-  useEffect(() => {
-    console.log("Open Index changed here", menuOpenIndex);
-  }, [menuOpenIndex]);
 
   return (
     <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
