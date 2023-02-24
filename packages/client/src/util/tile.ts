@@ -8,7 +8,7 @@ const perlinSeed2 = 74037;
 const perlinSeed3 = 53092;
 const perlinSeed4 = 17326;
 
-export function getTerrainDepth(
+export function getSingleTerrainDepth(
   coord: Coord,
   perlin: Perlin,
   perlinSeed: number
@@ -18,7 +18,7 @@ export function getTerrainDepth(
   return depth;
 }
 
-export function getResourceDepth(
+export function getSingleResourceDepth(
   coord: Coord,
   perlin: Perlin,
   perlinSeed: number
@@ -30,10 +30,10 @@ export function getResourceDepth(
 
 //landscape blocks terrain generation
 export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
-  const depth1 = getTerrainDepth(coord, perlin, perlinSeed1);
-  const depth2 = getTerrainDepth(coord, perlin, perlinSeed2);
-  const depth3 = getTerrainDepth(coord, perlin, perlinSeed3);
-  const depth4 = getTerrainDepth(coord, perlin, perlinSeed4);
+  const depth1 = getSingleTerrainDepth(coord, perlin, perlinSeed1);
+  const depth2 = getSingleTerrainDepth(coord, perlin, perlinSeed2);
+  const depth3 = getSingleTerrainDepth(coord, perlin, perlinSeed3);
+  const depth4 = getSingleTerrainDepth(coord, perlin, perlinSeed4);
 
   const normalizedDepth = ((depth1 + depth2 + depth3 + depth4) / 5) * 100;
 
@@ -54,8 +54,8 @@ export function getTerrainKey(coord: Coord, perlin: Perlin) {
 
 //resource blocks terrain gen
 export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
-  const depth1 = getResourceDepth(coord, perlin, perlinSeed1);
-  const depth2 = getResourceDepth(coord, perlin, perlinSeed2);
+  const depth1 = getSingleResourceDepth(coord, perlin, perlinSeed1);
+  const depth2 = getSingleResourceDepth(coord, perlin, perlinSeed2);
 
   const normalizedDepth = ((depth1 + depth2) / 4) * 100;
 
