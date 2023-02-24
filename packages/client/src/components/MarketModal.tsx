@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { FaWindowClose } from "react-icons/fa";
+import AllResourcesPage from "./AllResourcesPage";
 import MarketPages from "./MarketPages";
 
 function MarketModal() {
@@ -21,8 +23,8 @@ function MarketModal() {
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaWindowClose size="24" />} />
             </button>
-            <p className="text-lg font-bold mb-4">Resource Market</p>
-            <MarketPages />
+            <p className="text-lg font-bold ">Resource Market</p>
+            <AllResourcesPage />
           </div>
         </div>
       </div>

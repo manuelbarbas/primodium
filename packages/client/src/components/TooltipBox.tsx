@@ -70,9 +70,11 @@ function TooltipBox() {
     y: selectedTile.y,
   });
 
+  //change this to BackgroundImage.get (and import it from utils) if you want this to be an image
   const tileColor = BlockColors.get(terrainTile);
 
   const tooltipThumbnail = {
+    //change this to img src and all that if you want this to be an image
     backgroundColor: tileColor,
   };
 
