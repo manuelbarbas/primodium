@@ -65,23 +65,20 @@ export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
 export function getResourceKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
   //base starting materials (most common)
-  if (normalizedDepth > 18 && normalizedDepth < 18.2) return BlockType.Copper;
-  if (normalizedDepth > 20 && normalizedDepth < 20.06) return BlockType.Lithium;
-  if (normalizedDepth > 24 && normalizedDepth < 24.18) return BlockType.Iron;
+  if (normalizedDepth > 18 && normalizedDepth < 19) return BlockType.Copper;
+  if (normalizedDepth > 20 && normalizedDepth < 21) return BlockType.Lithium;
+  if (normalizedDepth > 24 && normalizedDepth < 25) return BlockType.Iron;
 
   //mid game items
-  if (normalizedDepth < 13.5) return BlockType.Titanium;
-  if (normalizedDepth > 26 && normalizedDepth < 26.02) return BlockType.Iridium;
-  if (normalizedDepth > 30.95 && normalizedDepth < 31) return BlockType.Osmium;
-  if (normalizedDepth > 34 && normalizedDepth < 34.3) return BlockType.Tungsten;
+  if (normalizedDepth < 14) return BlockType.Titanium;
+  if (normalizedDepth > 26 && normalizedDepth < 27) return BlockType.Iridium;
+  if (normalizedDepth > 30 && normalizedDepth < 31) return BlockType.Osmium;
+  if (normalizedDepth > 34 && normalizedDepth < 34) return BlockType.Tungsten;
 
   //late game (rarer) items
-  if (normalizedDepth > 27.2 && normalizedDepth < 27.21)
-    return BlockType.Kimberlite;
-  if (normalizedDepth > 32.2 && normalizedDepth < 32.22)
-    return BlockType.Uraninite;
-  if (normalizedDepth > 36.2 && normalizedDepth < 36.22)
-    return BlockType.Bolutite;
+  if (normalizedDepth > 27 && normalizedDepth < 26) return BlockType.Kimberlite;
+  if (normalizedDepth > 32 && normalizedDepth < 32) return BlockType.Uraninite;
+  if (normalizedDepth > 36 && normalizedDepth < 37) return BlockType.Bolutite;
 
   return BlockType.Air;
 }
