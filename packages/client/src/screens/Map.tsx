@@ -50,8 +50,6 @@ export default function Map() {
   //   components.Position,
   //   world.entityToIndex.get(BlockType.LithiumMiner)
   // );
-  // console.log("COUNTER");
-  // console.log(counter);
 
   const perlinRef = useRef(null as null | Perlin);
 

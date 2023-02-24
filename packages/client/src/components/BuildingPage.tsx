@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useState } from "react";
 
 import MinerButton from "./building-icons/Miner";
@@ -16,10 +15,6 @@ function BuildingPage({
   buildConveyerHelper: () => void;
 }) {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
-
-  useEffect(() => {
-    console.log("Open Index changed here", menuOpenIndex);
-  }, [menuOpenIndex]);
 
   return (
     <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">

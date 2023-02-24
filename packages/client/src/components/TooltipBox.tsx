@@ -81,10 +81,6 @@ function TooltipBox() {
     tileOwner = undefined;
   }
 
-  useEffect(() => {
-    console.log(builtTile);
-  }, [selectedTile]);
-
   const [minimized, setMinimize] = useState(false);
 
   const minimizeBox = () => {

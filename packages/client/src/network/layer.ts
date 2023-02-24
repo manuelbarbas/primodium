@@ -33,8 +33,6 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     });
   });
 
-  console.log("started sync");
-
   startSync();
 
   return {
