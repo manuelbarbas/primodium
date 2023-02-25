@@ -59,16 +59,6 @@ export const BlockType = {
   // Resource
   MainBase: keccak256("block.MainBase") as EntityID,
   Conveyer: keccak256("block.Conveyer") as EntityID,
-
-  ConveyerUp: keccak256("block.ConveyerUp") as EntityID,
-  ConveyerDown: keccak256("block.ConveyerDown") as EntityID,
-  ConveyerLeft: keccak256("block.ConveyerLeft") as EntityID,
-  ConveyerRight: keccak256("block.ConveyerRight") as EntityID,
-
-  ConveyerUpLeft: keccak256("block.ConveyerUpLeft") as EntityID,
-  ConveyerUpRight: keccak256("block.ConveyerUpRight") as EntityID,
-  ConveyerDownLeft: keccak256("block.ConveyerDownLeft") as EntityID,
-  ConveyerDownRight: keccak256("block.ConveyerDownRight") as EntityID,
 };
 
 // From OPCraft
@@ -135,16 +125,6 @@ export const BlockColors = new Map<EntityID, string>([
   [BlockType.MainBase, "#8676c0"],
 
   [BlockType.Conveyer, "#ffcd00"],
-
-  [BlockType.ConveyerUp, "#d3816b"],
-  [BlockType.ConveyerDown, "#d3816b"],
-  [BlockType.ConveyerLeft, "#d3816b"],
-  [BlockType.ConveyerRight, "#d3816b"],
-
-  [BlockType.ConveyerUpLeft, "#d3816b"],
-  [BlockType.ConveyerUpRight, "#d3816b"],
-  [BlockType.ConveyerDownLeft, "#d3816b"],
-  [BlockType.ConveyerDownRight, "#d3816b"],
 ]);
 
 export const BackgroundImage = new Map<EntityID, string>([
@@ -171,7 +151,6 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Uraninite, "../public/img/sandstone.png"],
   [BlockType.Bolutite, "../public/img/sandstone.png"],
 ]);
-
 
 export type DisplayTile = {
   x: number;

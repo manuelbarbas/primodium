@@ -8,7 +8,7 @@ const perlinSeed2 = 74037;
 const perlinSeed3 = 53092;
 const perlinSeed4 = 17326;
 
-export function getTerrainDepth(
+export function getSingleTerrainDepth(
   coord: Coord,
   perlin: Perlin,
   perlinSeed: number
@@ -18,7 +18,7 @@ export function getTerrainDepth(
   return depth;
 }
 
-export function getResourceDepth(
+export function getSingleResourceDepth(
   coord: Coord,
   perlin: Perlin,
   perlinSeed: number
@@ -30,10 +30,10 @@ export function getResourceDepth(
 
 //landscape blocks terrain generation
 export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
-  const depth1 = getTerrainDepth(coord, perlin, perlinSeed1);
-  const depth2 = getTerrainDepth(coord, perlin, perlinSeed2);
-  const depth3 = getTerrainDepth(coord, perlin, perlinSeed3);
-  const depth4 = getTerrainDepth(coord, perlin, perlinSeed4);
+  const depth1 = getSingleTerrainDepth(coord, perlin, perlinSeed1);
+  const depth2 = getSingleTerrainDepth(coord, perlin, perlinSeed2);
+  const depth3 = getSingleTerrainDepth(coord, perlin, perlinSeed3);
+  const depth4 = getSingleTerrainDepth(coord, perlin, perlinSeed4);
 
   const normalizedDepth = ((depth1 + depth2 + depth3 + depth4) / 5) * 100;
 
@@ -54,10 +54,10 @@ export function getTerrainKey(coord: Coord, perlin: Perlin) {
 
 //resource blocks terrain gen
 export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
-  const depth1 = getResourceDepth(coord, perlin, perlinSeed1);
-  const depth2 = getResourceDepth(coord, perlin, perlinSeed2);
+  const depth1 = getSingleResourceDepth(coord, perlin, perlinSeed1);
+  const depth2 = getSingleResourceDepth(coord, perlin, perlinSeed2);
 
-  const normalizedDepth = ((depth1 + depth2) / 4) * 100;
+  const normalizedDepth = ((depth1 + depth2) / 4) * 10000;
 
   return normalizedDepth;
 }
@@ -65,23 +65,20 @@ export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
 export function getResourceKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
   //base starting materials (most common)
-  if (normalizedDepth > 18 && normalizedDepth < 18.2) return BlockType.Copper;
-  if (normalizedDepth > 20 && normalizedDepth < 20.06) return BlockType.Lithium;
-  if (normalizedDepth > 24 && normalizedDepth < 24.18) return BlockType.Iron;
+  if (normalizedDepth > 1800 && normalizedDepth < 1820) return BlockType.Copper;
+  if (normalizedDepth > 2000 && normalizedDepth < 2006) return BlockType.Lithium;
+  if (normalizedDepth > 2400 && normalizedDepth < 2418) return BlockType.Iron;
 
   //mid game items
-  if (normalizedDepth < 13.5) return BlockType.Titanium;
-  if (normalizedDepth > 26 && normalizedDepth < 26.02) return BlockType.Iridium;
-  if (normalizedDepth > 30.95 && normalizedDepth < 31) return BlockType.Osmium;
-  if (normalizedDepth > 34 && normalizedDepth < 34.3) return BlockType.Tungsten;
+  if (normalizedDepth < 1350) return BlockType.Titanium;
+  if (normalizedDepth > 2600 && normalizedDepth < 2602) return BlockType.Iridium;
+  if (normalizedDepth > 3095 && normalizedDepth < 3100) return BlockType.Osmium;
+  if (normalizedDepth > 3400 && normalizedDepth < 3430) return BlockType.Tungsten;
 
   //late game (rarer) items
-  if (normalizedDepth > 27.2 && normalizedDepth < 27.21)
-    return BlockType.Kimberlite;
-  if (normalizedDepth > 32.2 && normalizedDepth < 32.22)
-    return BlockType.Uraninite;
-  if (normalizedDepth > 36.2 && normalizedDepth < 36.22)
-    return BlockType.Bolutite;
+  if (normalizedDepth > 2720 && normalizedDepth < 2721) return BlockType.Kimberlite;
+  if (normalizedDepth > 3220 && normalizedDepth < 3222) return BlockType.Uraninite;
+  if (normalizedDepth > 3620 && normalizedDepth < 3622) return BlockType.Bolutite;
 
   return BlockType.Air;
 }
