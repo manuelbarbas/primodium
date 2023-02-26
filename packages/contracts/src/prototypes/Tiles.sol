@@ -22,6 +22,7 @@ uint256 constant KimberliteID = uint256(keccak256("block.Kimberlite"));
 uint256 constant UraniniteID = uint256(keccak256("block.Uraninite"));
 uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 
+uint256 constant MinerID = uint256(keccak256("block.Miner"));
 uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));

@@ -6,7 +6,9 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
 import { Coord } from "../types.sol";
 
@@ -16,12 +18,18 @@ contract DestroySystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory arguments) public returns (bytes memory) {
-    (Coord memory coord) = abi.decode(arguments, ( Coord));
+    Coord memory coord = abi.decode(arguments, (Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(getAddressById(components, LastBuiltAtComponentID));
+
+    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
+      getAddressById(components, LastBuiltAtComponentID)
+    );
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
@@ -37,6 +45,7 @@ contract DestroySystem is System {
     tileComponent.remove(entitiesAtPosition[0]);
     ownedByComponent.remove(entitiesAtPosition[0]);
     lastBuiltAtComponent.remove(entitiesAtPosition[0]);
+    lastClaimedAtComponent.remove(entitiesAtPosition[0]);
 
     return abi.encode(entitiesAtPosition[0]);
   }

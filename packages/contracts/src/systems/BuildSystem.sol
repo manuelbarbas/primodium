@@ -5,7 +5,9 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
 import { Coord } from "../types.sol";
 
@@ -19,13 +21,19 @@ contract BuildSystem is System {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(getAddressById(components, LastBuiltAtComponentID));
+
+    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
+      getAddressById(components, LastBuiltAtComponentID)
+    );
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "can not build at non-empty coord");
 
-    // TODO: Check that the tile is in the user's inventory. 
+    // TODO: Check that the tile is in the user's inventory.
     // Remove from user's inventory
 
     // Randomly generate IDs instead of basing on coordinate
@@ -34,6 +42,7 @@ contract BuildSystem is System {
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
     lastBuiltAtComponent.set(blockEntity, block.number);
+    lastClaimedAtComponent.set(blockEntity, block.number);
 
     return abi.encode(blockEntity);
   }

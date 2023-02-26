@@ -44,6 +44,10 @@ function BuildingBox() {
     buildTile(selectedTile, BlockType.Conveyer);
   }, [selectedTile]);
 
+  const buildMainBaseHelper = useCallback(() => {
+    buildTile(selectedTile, BlockType.MainBase);
+  }, [selectedTile]);
+
   const [minimized, setMinimize] = useState(false);
 
   const minimizeBox = () => {
@@ -65,6 +69,7 @@ function BuildingBox() {
           <BuildingPage
             buildMinerHelper={buildMinerHelper}
             buildConveyerHelper={buildConveyerHelper}
+            buildMainBaseHelper={buildMainBaseHelper}
           />
         </div>
       </div>

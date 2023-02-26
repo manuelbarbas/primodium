@@ -54,6 +54,7 @@ export const BlockType = {
   Bolutite: keccak256("block.Bolutite") as EntityID,
 
   // Utility
+  Miner: keccak256("block.Miner") as EntityID,
   LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
 
   // Resource
@@ -119,6 +120,7 @@ export const BlockColors = new Map<EntityID, string>([
   [BlockType.Bolutite, "#a21caf"],
 
   // Utility
+  [BlockType.Miner, "#cf6664"],
   [BlockType.LithiumMiner, "#cf6664"],
 
   // Resource

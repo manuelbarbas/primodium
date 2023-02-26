@@ -7,30 +7,6 @@ import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID
 import { Perlin } from "noise/Perlin.sol";
 
 library LibTerrain {
-  function getTerrainFromId(
-    int32 id
-  ) public pure returns (uint256) {
-    if (id == 0) return WaterID;
-    if (id == 1) return LithiumID;
-    if (id == 2) return RegolithID;
-    if (id == 3) return SandstoneID;
-    if (id == 4) return AlluviumID;
-    if (id == 5) return LithiumMinerID;
-    return WaterID;
-  }
-
-  function getIdFromTerrain(
-    uint256 id
-  ) public pure returns (int32) {
-    if (id == WaterID) return 0;
-    if (id == LithiumID) return 1;
-    if (id == RegolithID) return 2;
-    if (id == SandstoneID) return 3;
-    if (id == AlluviumID) return 4;
-    if (id == LithiumMinerID) return 5;
-    return 0;
-  }
-
   // Terrain precision = 12, Resource precision = 8
   function getSingleDepth(Coord memory coord, int256 perlinSeed, uint8 precision) public pure returns (int128) {
     int128 depth = Perlin.noise2d(coord.x + perlinSeed, coord.y + perlinSeed, 0, precision);
