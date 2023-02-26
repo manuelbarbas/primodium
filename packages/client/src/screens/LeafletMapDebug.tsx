@@ -11,18 +11,8 @@ import { getTopLayerKey } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
-import { useSelectedTile } from "../context/SelectedTileContext";
-
 export default function LeafletMapDebug() {
   const [initialized, setInitialized] = useState(false);
-
-  const { selectedTile } = useSelectedTile();
-
-  // See that the tile has changed
-  useEffect(() => {
-    console.log("Here is the map, tile changed.");
-    console.log(selectedTile);
-  }, [selectedTile]);
 
   const perlinRef = useRef(null as null | Perlin);
 

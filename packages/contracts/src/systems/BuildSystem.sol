@@ -6,6 +6,9 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
+import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+
 import { Coord } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
@@ -19,11 +22,18 @@ contract BuildSystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
+    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
+      getAddressById(components, LastBuiltAtComponentID)
+    );
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
+
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "can not build at non-empty coord");
 
-    // TODO: Check that the tile is in the user's inventory. 
+    // TODO: Check that the tile is in the user's inventory.
     // Remove from user's inventory
 
     // Randomly generate IDs instead of basing on coordinate
@@ -31,6 +41,8 @@ contract BuildSystem is System {
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
+    lastBuiltAtComponent.set(blockEntity, block.number);
+    lastClaimedAtComponent.set(blockEntity, block.number);
 
     return abi.encode(blockEntity);
   }

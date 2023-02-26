@@ -1,25 +1,23 @@
-import { useEffect } from "react";
 import { useState } from "react";
 
 import MinerButton from "./building-icons/Miner";
-import ConveyerButton from "./building-icons/Conveyer";
+import ConveyerButton from "./building-icons/ConveyerButton";
 import BuildingMenuButton from "./building-icons/BuildingMenuButton";
 import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
 import ChooseTransportMenu from "./ChooseTransportMenu";
+import MainBaseButton from "./building-icons/MainBaseButton";
 
 //need a back button between pages
 function BuildingPage({
   buildMinerHelper,
   buildConveyerHelper,
+  buildMainBaseHelper,
 }: {
   buildMinerHelper: () => void;
   buildConveyerHelper: () => void;
+  buildMainBaseHelper: () => void;
 }) {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
-
-  useEffect(() => {
-    console.log("Open Index changed here", menuOpenIndex);
-  }, [menuOpenIndex]);
 
   return (
     <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
@@ -93,7 +91,7 @@ function BuildingPage({
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
-      <BuildingMenuButton
+      {/* <BuildingMenuButton
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
         }
@@ -106,9 +104,10 @@ function BuildingPage({
           title="Build Defenses"
           setMenuOpenIndex={setMenuOpenIndex}
         />
-      </BuildingMenuButton>
+      </BuildingMenuButton> */}
       <MinerButton action={buildMinerHelper} />
       <ConveyerButton action={buildConveyerHelper} />
+      <MainBaseButton action={buildMainBaseHelper} />
     </div>
   );
 }

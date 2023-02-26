@@ -9,13 +9,14 @@ import { createPerlin, Perlin } from "@latticexyz/noise";
 import { GodID as SingletonID } from "@latticexyz/network";
 import { useSelectedTile } from "../context/SelectedTileContext";
 
-import { components } from "..";
-import { singletonIndex } from "..";
 import { getTopLayerKey } from "../util/tile";
 
 import { BlockIdToKey, BlockColors } from "../util/constants";
+import { useMud } from "../context/MudContext";
 
 function TooltipBox() {
+  const { components, singletonIndex } = useMud();
+
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
   const perlinRef = useRef(null as null | Perlin);
@@ -88,9 +89,15 @@ function TooltipBox() {
     tileOwner = undefined;
   }
 
-  useEffect(() => {
-    console.log(builtTile);
-  }, [selectedTile]);
+  const tileLastBuiltAt = useComponentValue(
+    components.LastBuiltAt,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
+
+  const tileLastClaimedAt = useComponentValue(
+    components.LastClaimedAt,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
 
   const [minimized, setMinimize] = useState(false);
 
@@ -104,26 +111,57 @@ function TooltipBox() {
 
   if (!minimized) {
     return (
-      <div className="z-[999] fixed bottom-4 right-4 h-48 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className=" mt-4 ml-5 flex flex-col">
+      <div className="z-[999] fixed bottom-4 right-4 h-96 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+        <div className=" mt-4 ml-5 flex flex-col h-72">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
-          <p className="text-lg font-bold mb-2">Selected Tile</p>
-          <div className="flex flex-col">
-            <div className="flex align-center mb-2">
-              <div
-                className="inline-block w-16 h-16"
-                style={tooltipThumbnail}
-              ></div>
-              <div className="ml-4 flex flex-col my-auto">
-                <div>
-                  {builtTile ? (
-                    <div>{BlockIdToKey[builtTile]}</div>
+          <p className="text-lg font-bold mb-3">Selected Tile</p>
+          <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
+            <div className="flex flex-col">
+              <div className="flex align-center">
+                <div className="inline-block w-16 h-16">
+                  {/* <img
+                    className="w-16 h-16"
+                    src={
+                      "https://mindustrygame.github.io/wiki/images/block-unit-cargo-loader-ui.png"
+                    }
+                  /> */}
+                </div>
+                <div className="ml-4 flex flex-col my-auto">
+                  <div className="mb-1">
+                    <div>
+                      <div>
+                        {builtTile ? (
+                          <div>{BlockIdToKey[builtTile]}</div>
+                        ) : (
+                          <div>No tile built</div>
+                        )}
+                        on <b>{BlockIdToKey[terrainTile]}</b>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-row">
+                <div className="flex font-bold mb-1">Owner:</div>
+                <div className="flex">
+                  {tileOwner ? (
+                    <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
                   ) : (
                     <div>No tile built</div>
                   )}
                   on {BlockIdToKey[terrainTile]}
+                </div>
+              </div>
+              <div className="flex-row">
+                <div className="flex">
+                  {tileLastBuiltAt && <div>Built: {tileLastBuiltAt.value}</div>}
+                </div>
+                <div className="flex">
+                  {tileLastClaimedAt && (
+                    <div>Claim: {tileLastClaimedAt.value}</div>
+                  )}
                 </div>
               </div>
             </div>

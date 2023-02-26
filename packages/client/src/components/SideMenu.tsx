@@ -1,4 +1,4 @@
-import { useState, useCallback, ReactNode, useEffect } from "react";
+import { useState, useCallback, ReactNode } from "react";
 
 import { IoHammerSharp } from "react-icons/io5";
 import { IoFlaskSharp } from "react-icons/io5";
@@ -57,10 +57,6 @@ function SideMenu() {
   // Only show one element at a time
   // -1 means menu not selected at all.
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
-
-  useEffect(() => {
-    console.log("Side Menu Open Index changed", menuOpenIndex);
-  }, [menuOpenIndex]);
 
   return (
     <div className="z-[1000] fixed bottom-4 left-4 selection:font-mono text-white">

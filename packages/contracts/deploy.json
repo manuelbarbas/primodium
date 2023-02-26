@@ -1,11 +1,15 @@
 {
-  "components": ["CounterComponent", "PositionComponent", "TileComponent", "ItemComponent", "OwnedByComponent", "PathComponent"],
+  "components": ["CounterComponent", "PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent", "LastBuiltAtComponent", "LastClaimedAtComponent"],
   "systems": [
     { "name": "IncrementSystem", "writeAccess": ["CounterComponent"] },
-    { "name": "BuildSystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent"] },
-    { "name": "DestroySystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent"] },
+    { "name": "BuildSystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "LastBuiltAtComponent", "LastClaimedAtComponent"] },
+    { "name": "DestroySystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "LastBuiltAtComponent", "LastClaimedAtComponent"] },
     { "name": "BuildPathSystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"] },
     { "name": "DestroyPathSystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"] }
+    ,
 
+    { "name": "ClaimSystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent", "LastBuiltAtComponent", "LastClaimedAtComponent"] }
   ]
 }
+
+
