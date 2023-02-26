@@ -4,7 +4,7 @@ import {
   defineComponentSystem,
   setComponent,
 } from "@latticexyz/recs";
-import { GodID as SingletonID } from "@latticexyz/network";
+import { SingletonID } from "@latticexyz/network";
 
 import { SystemTypes } from "contracts/types/SystemTypes";
 import { SystemAbis } from "contracts/types/SystemAbis.mjs";

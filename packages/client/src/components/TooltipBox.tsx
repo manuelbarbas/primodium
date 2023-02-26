@@ -6,7 +6,7 @@ import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
-import { GodID as SingletonID } from "@latticexyz/network";
+import { SingletonID } from "@latticexyz/network";
 import { useSelectedTile } from "../context/SelectedTileContext";
 
 import { getTopLayerKey } from "../util/tile";

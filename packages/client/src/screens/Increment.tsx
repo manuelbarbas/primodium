@@ -1,4 +1,4 @@
-import { GodID as SingletonID } from "@latticexyz/network";
+import { SingletonID } from "@latticexyz/network";
 import { useComponentValue } from "@latticexyz/react";
 import { useMud } from "../context/MudContext";
 

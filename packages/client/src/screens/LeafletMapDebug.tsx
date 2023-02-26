@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
-import { GodID as SingletonID } from "@latticexyz/network";
+import { SingletonID } from "@latticexyz/network";
 import { Coord } from "@latticexyz/utils";
 
 import { MapContainer, LayersControl } from "react-leaflet";
