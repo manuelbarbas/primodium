@@ -1,5 +1,5 @@
 {
-  "components": ["CounterComponent", "PositionComponent", "TileComponent", "ItemComponent", "OwnedByComponent", "PathComponent"],
+  "components": ["CounterComponent", "PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent", "LastBuiltComponent", "LastBuiltComponent"],
   "systems": [
     { "name": "IncrementSystem", "writeAccess": ["CounterComponent"] },
     { "name": "BuildSystem", "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent"] },
