@@ -52,13 +52,24 @@ function MarketPages() {
       </div>
       {activeTab === 1 && (
         <div className="mt-4 rounded">
-          <p>buy mode</p>
           <PrimodiumBalance balance={2000000} />
+          <div className="grid grid-cols-4 h-72 overflow-y-scroll scrollbar">
+            <div className="w-20 col-auto h-32 justify-center inline-block">
+              <div className="mt-4 w-20 h-20 flex items-center justify-center border-solid border-2 border-gray-600 bg-amber-300 rounded">
+                <img
+                  className="w-12 h-12 inline-block"
+                  src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/600cc6ca-4f52-40e6-a83c-3bcd6e94e0ee/depbq7u-8d5c23aa-8eeb-435f-89c5-a87238cb052d.png"
+                />
+              </div>
+              <div className="flex justify-center text-sm mt-2">
+                <div>Primodium</div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 2 && (
         <div className="mt-4 rounded">
-          <p>sell mode</p>
           <PrimodiumBalance balance={100000} />
         </div>
       )}
