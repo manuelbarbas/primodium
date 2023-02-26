@@ -80,14 +80,17 @@ library LibTerrain {
   }
 
   function getTopLayerKey(Coord memory coord) internal pure returns (uint256) {
-    uint256 terrainKey = getTerrainKey(coord);
-    uint256 resourceKey = getResourceKey(coord);
-    (coord);
+    return 0;
+    // // temp: doesn't call perlin mud library until compilation error is fixed
+    // // see https://github.com/latticexyz/mud/issues/439
+    // uint256 terrainKey = getTerrainKey(coord);
+    // uint256 resourceKey = getResourceKey(coord);
+    // (coord);
 
-    if (resourceKey == AirID || terrainKey == WaterID) {
-      return terrainKey;
-    } else {
-      return resourceKey;
-    }
+    // if (resourceKey == AirID || terrainKey == WaterID) {
+    //   return terrainKey;
+    // } else {
+    //   return resourceKey;
+    // }
   }
 }
