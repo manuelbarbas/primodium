@@ -164,6 +164,8 @@ contract ClaimSystem is System {
     claimConveyerTile(coordRight);
     claimConveyerTile(coordUp);
     claimConveyerTile(coordDown);
+
+    return abi.encode(0);
   }
 
   function executeTyped(Coord memory coord) public returns (bytes memory) {
