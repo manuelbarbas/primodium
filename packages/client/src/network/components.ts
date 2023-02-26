@@ -36,6 +36,16 @@ export function defineComponents(world: World) {
         contractId: "component.Item",
       },
     }),
+    LastBuiltAt: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.LastBuiltAt",
+      },
+    }),
+    LastClaimedAt: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.LastClaimedAt",
+      },
+    }),
   };
 }
 

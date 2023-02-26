@@ -81,6 +81,16 @@ function TooltipBox() {
     tileOwner = undefined;
   }
 
+  const tileLastBuiltAt = useComponentValue(
+    components.LastBuiltAt,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
+
+  const tileLastClaimedAt = useComponentValue(
+    components.LastClaimedAt,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
+
   const [minimized, setMinimize] = useState(false);
 
   const minimizeBox = () => {
@@ -93,7 +103,7 @@ function TooltipBox() {
 
   if (!minimized) {
     return (
-      <div className="z-[999] fixed bottom-4 right-4 h-48 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[999] fixed bottom-4 right-4 h-96 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col h-72">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
@@ -119,7 +129,7 @@ function TooltipBox() {
                         ) : (
                           <div>No tile built</div>
                         )}
-                        on {BlockIdToKey[terrainTile]}
+                        on <b>{BlockIdToKey[terrainTile]}</b>
                       </div>
                     </div>
                   </div>
@@ -132,6 +142,16 @@ function TooltipBox() {
                     <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
                   ) : (
                     <div>None</div>
+                  )}
+                </div>
+              </div>
+              <div className="flex-row">
+                <div className="flex">
+                  {tileLastBuiltAt && <div>Built: {tileLastBuiltAt.value}</div>}
+                </div>
+                <div className="flex">
+                  {tileLastClaimedAt && (
+                    <div>Claim: {tileLastClaimedAt.value}</div>
                   )}
                 </div>
               </div>

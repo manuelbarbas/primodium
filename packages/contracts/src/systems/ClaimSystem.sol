@@ -11,15 +11,16 @@ import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/L
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
 // Resource Components
-import { BolutiteResourceComponent, ID as BolutiteResourceComponentID } from "components/resources/BolutiteResourceComponent.sol";
-import { CopperResourceComponent, ID as CopperResourceComponentID } from "components/resources/CopperResourceComponent.sol";
-import { IridiumResourceComponent, ID as IridiumResourceComponentID } from "components/resources/IridiumResourceComponent.sol";
-import { IronResourceComponent, ID as IronResourceComponentID } from "components/resources/IronResourceComponent.sol";
-import { KimberliteResourceComponent, ID as KimberliteResourceComponentID } from "components/resources/KimberliteResourceComponent.sol";
-import { LithiumResourceComponent, ID as LithiumResourceComponentID } from "components/resources/LithiumResourceComponent.sol";
-import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "components/resources/OsmiumResourceComponent.sol";
-import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/resources/TungstenResourceComponent.sol";
-import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/resources/UraniniteResourceComponent.sol";
+import { ResourceComponents } from "../prototypes/ResourceComponents.sol";
+import { BolutiteResourceComponent, ID as BolutiteResourceComponentID } from "components/BolutiteResourceComponent.sol";
+import { CopperResourceComponent, ID as CopperResourceComponentID } from "components/CopperResourceComponent.sol";
+import { IridiumResourceComponent, ID as IridiumResourceComponentID } from "components/IridiumResourceComponent.sol";
+import { IronResourceComponent, ID as IronResourceComponentID } from "components/IronResourceComponent.sol";
+import { KimberliteResourceComponent, ID as KimberliteResourceComponentID } from "components/KimberliteResourceComponent.sol";
+import { LithiumResourceComponent, ID as LithiumResourceComponentID } from "components/LithiumResourceComponent.sol";
+import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "components/OsmiumResourceComponent.sol";
+import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
+import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
 
 import { MainBaseID, MinerID, ConveyerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
@@ -33,39 +34,31 @@ contract ClaimSystem is System {
   // TODO: Change rate to be variable based on miner
   uint256 MINE_COUNT_PER_BLOCK = 10;
 
-  // Components
-  PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
-  TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-  PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
-  OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-
-  LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(getAddressById(components, LastBuiltAtComponentID));
-  LastClaimedAtComponent lastClaimedAtComponent =
-    LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID));
-
-  // Specific Resource Components
-  BolutiteResourceComponent bolutiteResourceComponent =
-    BolutiteResourceComponent(getAddressById(components, BolutiteResourceComponentID));
-  CopperResourceComponent copperResourceComponent =
-    CopperResourceComponent(getAddressById(components, CopperResourceComponentID));
-  IridiumResourceComponent iridiumResourceComponent =
-    IridiumResourceComponent(getAddressById(components, IridiumResourceComponentID));
-  IronResourceComponent ironResourceComponent =
-    IronResourceComponent(getAddressById(components, IronResourceComponentID));
-  KimberliteResourceComponent kimberliteResourceComponent =
-    KimberliteResourceComponent(getAddressById(components, KimberliteResourceComponentID));
-  LithiumResourceComponent lithiumResourceComponent =
-    LithiumResourceComponent(getAddressById(components, LithiumResourceComponentID));
-  OsmiumResourceComponent osmiumResourceComponent =
-    OsmiumResourceComponent(getAddressById(components, OsmiumResourceComponentID));
-  TungstenResourceComponent tungstenResourceComponent =
-    TungstenResourceComponent(getAddressById(components, TungstenResourceComponentID));
-  UraniniteResourceComponent uraniniteResourceComponent =
-    UraniniteResourceComponent(getAddressById(components, UraniniteResourceComponentID));
-
   function claimMiner(Coord memory coord) public {
-    Coord memory coordLeft = Coord(coord.x - 1, coord.y);
-    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coordLeft);
+    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
+
+    ResourceComponents memory resourceComponents = ResourceComponents(
+      BolutiteResourceComponent(getAddressById(components, BolutiteResourceComponentID)),
+      CopperResourceComponent(getAddressById(components, CopperResourceComponentID)),
+      IridiumResourceComponent(getAddressById(components, IridiumResourceComponentID)),
+      IronResourceComponent(getAddressById(components, IronResourceComponentID)),
+      KimberliteResourceComponent(getAddressById(components, KimberliteResourceComponentID)),
+      LithiumResourceComponent(getAddressById(components, LithiumResourceComponentID)),
+      OsmiumResourceComponent(getAddressById(components, OsmiumResourceComponentID)),
+      TungstenResourceComponent(getAddressById(components, TungstenResourceComponentID)),
+      UraniniteResourceComponent(getAddressById(components, UraniniteResourceComponentID))
+    );
+
+    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
+
+    // Check that the coordinates is owned by the msg.sender
+    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtPosition[0]);
+    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
 
     if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == MinerID) {
       // fetch tile beneath miner.
@@ -79,32 +72,32 @@ contract ClaimSystem is System {
       uint256 incBy = MINE_COUNT_PER_BLOCK * (startClaimTime - endClaimTime);
 
       if (resourceKey == BolutiteID) {
-        uint256 cur = bolutiteResourceComponent.getValue(addressToEntity(msg.sender));
-        bolutiteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.bolutiteResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.bolutiteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == CopperID) {
-        uint256 cur = copperResourceComponent.getValue(addressToEntity(msg.sender));
-        copperResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.copperResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.copperResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == IridiumID) {
-        uint256 cur = iridiumResourceComponent.getValue(addressToEntity(msg.sender));
-        iridiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.iridiumResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.iridiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == IronID) {
-        uint256 cur = ironResourceComponent.getValue(addressToEntity(msg.sender));
-        ironResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.ironResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.ironResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == KimberliteID) {
-        uint256 cur = kimberliteResourceComponent.getValue(addressToEntity(msg.sender));
-        kimberliteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.kimberliteResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.kimberliteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == LithiumID) {
-        uint256 cur = lithiumResourceComponent.getValue(addressToEntity(msg.sender));
-        lithiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.lithiumResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.lithiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == OsmiumID) {
-        uint256 cur = osmiumResourceComponent.getValue(addressToEntity(msg.sender));
-        osmiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.osmiumResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.osmiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == TungstenID) {
-        uint256 cur = tungstenResourceComponent.getValue(addressToEntity(msg.sender));
-        tungstenResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.tungstenResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.tungstenResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       } else if (resourceKey == UraniniteID) {
-        uint256 cur = uraniniteResourceComponent.getValue(addressToEntity(msg.sender));
-        uraniniteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.uraniniteResourceComponent.getValue(addressToEntity(msg.sender));
+        resourceComponents.uraniniteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
       }
     }
   }
@@ -124,6 +117,10 @@ contract ClaimSystem is System {
 
   // pass in a coordinate of a conveyer block, which fetches all other
   function claimConveyerTile(Coord memory coord) public {
+    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+
     // check if tile component and connnect to previous path
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
 
@@ -143,6 +140,11 @@ contract ClaimSystem is System {
   }
 
   function execute(bytes memory arguments) public returns (bytes memory) {
+    // Components
+    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+
     Coord memory coord = abi.decode(arguments, (Coord));
 
     // check if main base
