@@ -61,15 +61,14 @@ contract ClaimSystem is System {
     require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
 
     if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == MinerID) {
-      // fetch tile beneath miner.
-      uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
-
       // check last claimed at time
       uint256 startClaimTime = lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
       uint256 endClaimTime = block.number;
-      lastClaimedAtComponent.set(entitiesAtPosition[0], block.number);
-
       uint256 incBy = MINE_COUNT_PER_BLOCK * (startClaimTime - endClaimTime);
+      lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
+
+      // fetch tile beneath miner.
+      uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
 
       if (resourceKey == BolutiteID) {
         uint256 cur = resourceComponents.bolutiteResourceComponent.getValue(addressToEntity(msg.sender));

@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { Coord } from "../types.sol";
 
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../prototypes/Tiles.sol";
+
 import { Perlin } from "noise/Perlin.sol";
 
 library LibTerrain {
@@ -78,7 +79,7 @@ library LibTerrain {
     return AirID;
   }
 
-  function getTopLayerKey(Coord memory coord) public pure returns (uint256) {
+  function getTopLayerKey(Coord memory coord) internal pure returns (uint256) {
     uint256 terrainKey = getTerrainKey(coord);
     uint256 resourceKey = getResourceKey(coord);
     (coord);
