@@ -11,7 +11,7 @@ import { useSelectedTile } from "../context/SelectedTileContext";
 
 import { getTopLayerKey } from "../util/tile";
 
-import { BlockIdToKey } from "../util/constants";
+import { BlockIdToKey, BlockColors } from "../util/constants";
 import { useMud } from "../context/MudContext";
 
 function TooltipBox() {
@@ -70,6 +70,14 @@ function TooltipBox() {
     x: selectedTile.x,
     y: selectedTile.y,
   });
+
+  //change this to BackgroundImage.get (and import it from utils) if you want this to be an image
+  const tileColor = BlockColors.get(terrainTile);
+
+  const tooltipThumbnail = {
+    //change this to img src and all that if you want this to be an image
+    backgroundColor: tileColor,
+  };
 
   let builtTile: EntityID | undefined;
   let tileOwner: number | undefined;
@@ -141,8 +149,9 @@ function TooltipBox() {
                   {tileOwner ? (
                     <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
                   ) : (
-                    <div>None</div>
+                    <div>No tile built</div>
                   )}
+                  on {BlockIdToKey[terrainTile]}
                 </div>
               </div>
               <div className="flex-row">
@@ -154,6 +163,16 @@ function TooltipBox() {
                     <div>Claim: {tileLastClaimedAt.value}</div>
                   )}
                 </div>
+              </div>
+            </div>
+            <div className="flex-row">
+              <div className="flex font-bold mb-1">Owner:</div>
+              <div className="flex">
+                {tileOwner ? (
+                  <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
+                ) : (
+                  <div>None</div>
+                )}
               </div>
             </div>
           </div>
