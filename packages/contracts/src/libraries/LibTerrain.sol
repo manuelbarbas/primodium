@@ -80,7 +80,8 @@ library LibTerrain {
 
   function getTopLayerKey(Coord memory coord) public pure returns (uint256) {
     uint256 terrainKey = getTerrainKey(coord);
-    uint256 resourceKey = getResourceKey(coord);(coord);
+    uint256 resourceKey = getResourceKey(coord);
+    (coord);
 
     if (resourceKey == AirID || terrainKey == WaterID) {
       return terrainKey;

@@ -4,6 +4,7 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
@@ -20,7 +21,7 @@ import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "compon
 import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/resources/TungstenResourceComponent.sol";
 import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/resources/UraniniteResourceComponent.sol";
 
-import { MainBaseID, MinerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
+import { MainBaseID, MinerID, ConveyerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { Coord } from "../types.sol";
 
@@ -35,7 +36,9 @@ contract ClaimSystem is System {
   // Components
   PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
   TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+  PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
   OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+
   LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(getAddressById(components, LastBuiltAtComponentID));
   LastClaimedAtComponent lastClaimedAtComponent =
     LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID));
@@ -107,7 +110,7 @@ contract ClaimSystem is System {
   }
 
   // pass in a coordinate of a path block, fetch all surrounding miners.
-  function getAdjacentMinersClaimable(Coord memory coord) public returns (uint256) {
+  function claimAdjacentMiners(Coord memory coord) public {
     Coord memory coordLeft = Coord(coord.x - 1, coord.y);
     Coord memory coordRight = Coord(coord.x + 1, coord.y);
     Coord memory coordUp = Coord(coord.x, coord.y + 1);
@@ -119,14 +122,28 @@ contract ClaimSystem is System {
     claimMiner(coordDown);
   }
 
-  // pass in a coordinate of a path block, which fetches all other
-  function getClaimableResourceCountPath(Coord memory coord) public returns (uint256) {
-    // check if tile component
-    // connnect to previous path
+  // pass in a coordinate of a conveyer block, which fetches all other
+  function claimConveyerTile(Coord memory coord) public {
+    // check if tile component and connnect to previous path
+    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
+
+    if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == ConveyerID) {
+      claimAdjacentMiners(coord);
+
+      // trace backwards to all paths that end at this tile.
+      // since we want the paths that end at this tile, this current tile entityID is the value
+      uint256[] memory endAtPositionPaths = pathComponent.getEntitiesWithValue(entitiesAtPosition[0]);
+
+      // claim each conveyer tile connected to the current tile. keys are the start position.
+      for (uint i = 0; i < endAtPositionPaths.length; i++) {
+        // Get the tile position
+        claimConveyerTile(positionComponent.getValue(endAtPositionPaths[i]));
+      }
+    }
   }
 
   function execute(bytes memory arguments) public returns (bytes memory) {
-    (uint256 blockType, Coord memory coord) = abi.decode(arguments, (uint256, Coord));
+    Coord memory coord = abi.decode(arguments, (Coord));
 
     // check if main base
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
@@ -138,22 +155,19 @@ contract ClaimSystem is System {
     require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
 
     // check all four adjacent tiles
-    // left tilie
-    // for (tile in tiles) {
+    Coord memory coordLeft = Coord(coord.x - 1, coord.y);
+    Coord memory coordRight = Coord(coord.x + 1, coord.y);
+    Coord memory coordUp = Coord(coord.x, coord.y + 1);
+    Coord memory coordDown = Coord(coord.x, coord.y - 1);
 
-    // }
-
-    // right tile
-
-    // up tile
-
-    // bottom tile
-
-    // while true:
+    claimConveyerTile(coordLeft);
+    claimConveyerTile(coordRight);
+    claimConveyerTile(coordUp);
+    claimConveyerTile(coordDown);
   }
 
-  function executeTyped(uint256 blockType, Coord memory coord) public returns (bytes memory) {
+  function executeTyped(Coord memory coord) public returns (bytes memory) {
     // Pass in the coordinates of the main base
-    return execute(abi.encode(blockType, coord));
+    return execute(abi.encode(coord));
   }
 }

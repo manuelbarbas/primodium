@@ -16,7 +16,7 @@ contract DestroyPathSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory arguments) public returns (bytes memory) {
-    (Coord memory coordStart) = abi.decode(arguments, (Coord));
+    Coord memory coordStart = abi.decode(arguments, (Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
@@ -36,7 +36,7 @@ contract DestroyPathSystem is System {
 
     // Check that a path doesn't already start there (each tile can only be the start of one path)
     require(ownedByComponent.has(entitiesAtStartCoord[0]), "path does not exist at the start tile");
-    
+
     // remove key
     pathComponent.remove(entitiesAtStartCoord[0]);
 
