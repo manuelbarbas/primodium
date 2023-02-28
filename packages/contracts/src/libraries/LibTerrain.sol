@@ -5,7 +5,7 @@ import { Coord } from "../types.sol";
 
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../prototypes/Tiles.sol";
 
-import { Perlin } from "noise/Perlin.sol";
+import { Perlin } from "../libraries/Perlin.sol";
 
 library LibTerrain {
   // Terrain precision = 12, Resource precision = 8
@@ -80,17 +80,17 @@ library LibTerrain {
   }
 
   function getTopLayerKey(Coord memory coord) internal pure returns (uint256) {
-    return 0;
-    // // temp: doesn't call perlin mud library until compilation error is fixed
-    // // see https://github.com/latticexyz/mud/issues/439
-    // uint256 terrainKey = getTerrainKey(coord);
-    // uint256 resourceKey = getResourceKey(coord);
-    // (coord);
+    // return 0;
+    // temp: doesn't call perlin mud library until compilation error is fixed
+    // see https://github.com/latticexyz/mud/issues/439
+    uint256 terrainKey = getTerrainKey(coord);
+    uint256 resourceKey = getResourceKey(coord);
+    (coord);
 
-    // if (resourceKey == AirID || terrainKey == WaterID) {
-    //   return terrainKey;
-    // } else {
-    //   return resourceKey;
-    // }
+    if (resourceKey == AirID || terrainKey == WaterID) {
+      return terrainKey;
+    } else {
+      return resourceKey;
+    }
   }
 }
