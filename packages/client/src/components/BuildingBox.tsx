@@ -28,7 +28,7 @@ function BuildingBox() {
           y: y,
         },
         {
-          gasLimit: 1_000_000,
+          gasLimit: 3_000_000,
         }
       );
     },
