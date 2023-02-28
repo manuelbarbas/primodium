@@ -11,7 +11,7 @@ export default function Path({
   return (
     <>
       <Polyline
-        key={`tile: ${JSON.stringify(startCoord)}`}
+        key={`sp: ${JSON.stringify(startCoord)}`}
         pathOptions={{
           weight: 5,
         }}
@@ -22,7 +22,7 @@ export default function Path({
         pane="popupPane"
       />
       <Polyline
-        key={`tile: ${JSON.stringify(startCoord)}`}
+        key={`ep: ${JSON.stringify(startCoord)}`}
         pathOptions={{
           weight: 5,
         }}
@@ -33,7 +33,7 @@ export default function Path({
         pane="popupPane"
       />
       <Circle
-        key={`tile: ${JSON.stringify(startCoord)}`}
+        key={`ec: ${JSON.stringify(startCoord)}`}
         pathOptions={{
           weight: 5,
         }}
