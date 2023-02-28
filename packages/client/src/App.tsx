@@ -42,7 +42,7 @@ export default function App() {
       prevAddressRef.current = undefined;
     } else if (address && activeConnector) {
       if (address !== prevAddressRef.current) {
-        const provider: ExternalProvider = await activeConnector.getProvider();
+        const provider = await activeConnector.getProvider();
         const networkLayerReturn = await setupNetworkLayer(provider);
         setNetworkLayerParams(networkLayerReturn);
         prevAddressRef.current = address;

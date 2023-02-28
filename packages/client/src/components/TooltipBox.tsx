@@ -147,7 +147,7 @@ function TooltipBox() {
                 <div className="flex font-bold mb-1">Owner:</div>
                 <div className="flex">
                   {tileOwner ? (
-                    <div>{tileOwner.toString().slice(0, 8) + "..."}</div>
+                    <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
                   ) : (
                     <div>No tile built</div>
                   )}
@@ -156,17 +156,11 @@ function TooltipBox() {
               </div>
               <div className="flex-row">
                 <div className="flex">
-                  {tileLastBuiltAt && (
-                    <div>
-                      Built: {parseInt(tileLastBuiltAt.value.toString(), 16)}
-                    </div>
-                  )}
+                  {tileLastBuiltAt && <div>Built: {tileLastBuiltAt.value}</div>}
                 </div>
                 <div className="flex">
                   {tileLastClaimedAt && (
-                    <div>
-                      Claim: {parseInt(tileLastClaimedAt.value.toString(), 16)}
-                    </div>
+                    <div>Claim: {tileLastClaimedAt.value}</div>
                   )}
                 </div>
               </div>
@@ -175,7 +169,7 @@ function TooltipBox() {
               <div className="flex font-bold mb-1">Owner:</div>
               <div className="flex">
                 {tileOwner ? (
-                  <div>{tileOwner.toString().slice(0, 8) + "..."}</div>
+                  <div>{tileOwner.toString().slice(0, 16) + "..."}</div>
                 ) : (
                   <div>None</div>
                 )}
