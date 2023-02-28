@@ -3,18 +3,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
-import {
-  LayersControl,
-  LayerGroup,
-  useMap,
-  useMapEvent,
-  Polyline,
-} from "react-leaflet";
+import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
 import { useSelectedTile } from "../context/SelectedTileContext";
+import SelectedPath from "./SelectedPath";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -144,19 +139,9 @@ const ResourceTileLayer = ({
     );
 
     selectedPathTilesToRender.push(
-      <Polyline
-        key="path-in-progress-1"
-        pathOptions={{
-          color: "brown",
-          dashArray: "10 30",
-          weight: 10,
-        }}
-        positions={[
-          [selectedStartPathTile.y + 0.5, selectedStartPathTile.x + 0.5],
-          [selectedEndPathTile.y + 0.5, selectedStartPathTile.x + 0.5],
-          [selectedEndPathTile.y + 0.5, selectedEndPathTile.x + 0.5],
-        ]}
-        pane="markerPane"
+      <SelectedPath
+        startCoord={selectedStartPathTile}
+        endCoord={selectedEndPathTile}
       />
     );
 

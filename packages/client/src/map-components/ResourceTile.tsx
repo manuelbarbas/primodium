@@ -11,6 +11,7 @@ import { Rectangle, Polyline, ImageOverlay } from "react-leaflet";
 
 import { BlockColors, BackgroundImage } from "../util/constants";
 import { useMud } from "../context/MudContext";
+import Path from "./Path";
 
 // tileKey prop is the default terrain beneath any building on top.
 function ResourceTile({
@@ -65,22 +66,7 @@ function ResourceTile({
 
   if (path && endPathTile) {
     // Path that starts at the current selected tile
-    pathsToRender.push(
-      <Polyline
-        key="path-in-progress-1"
-        pathOptions={{
-          color: "blue",
-          dashArray: "20 20",
-          weight: 10,
-        }}
-        positions={[
-          [y + 0.5, x + 0.5],
-          [endPathTile.y + 0.5, x + 0.5],
-          [endPathTile.y + 0.5, endPathTile.x + 0.5],
-        ]}
-        pane="overlayPane"
-      />
-    );
+    pathsToRender.push(<Path startCoord={{ x, y }} endCoord={endPathTile} />);
   }
 
   // Get all conveyer paths that end at this tile.
@@ -104,20 +90,7 @@ function ResourceTile({
     const currentStartTile = getComponentValue(components.Position, item);
     if (currentStartTile) {
       pathsToRender.push(
-        <Polyline
-          key={`tile: ${JSON.stringify(currentStartTile)}`}
-          pathOptions={{
-            color: "blue",
-            dashArray: "20 20",
-            weight: 10,
-          }}
-          positions={[
-            [currentStartTile.y + 0.5, currentStartTile.x + 0.5],
-            [y + 0.5, currentStartTile.x + 0.5],
-            [y + 0.5, x + 0.5],
-          ]}
-          pane="popupPane"
-        />
+        <Path startCoord={currentStartTile} endCoord={{ x, y }}></Path>
       );
     }
   });
