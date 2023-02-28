@@ -140,6 +140,7 @@ const ResourceTileLayer = ({
 
     selectedPathTilesToRender.push(
       <SelectedPath
+        key="selectedPath"
         startCoord={selectedStartPathTile}
         endCoord={selectedEndPathTile}
       />

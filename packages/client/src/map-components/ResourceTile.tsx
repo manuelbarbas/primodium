@@ -3,7 +3,7 @@ import { memo, useMemo } from "react";
 import { Has, HasValue, EntityID, getComponentValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 
-import { Rectangle, Polyline, ImageOverlay } from "react-leaflet";
+import { Rectangle, ImageOverlay } from "react-leaflet";
 
 // import ReactDOMServer from "react-dom/server";
 // import L from "leaflet";
@@ -90,7 +90,14 @@ function ResourceTile({
     const currentStartTile = getComponentValue(components.Position, item);
     if (currentStartTile) {
       pathsToRender.push(
-        <Path startCoord={currentStartTile} endCoord={{ x, y }}></Path>
+        <Path
+          key={`path: ${JSON.stringify(currentStartTile)} ${JSON.stringify({
+            x,
+            y,
+          })}`}
+          startCoord={currentStartTile}
+          endCoord={{ x, y }}
+        ></Path>
       );
     }
   });

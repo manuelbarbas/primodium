@@ -1,4 +1,5 @@
-import { Polyline, Circle } from "react-leaflet";
+import { Circle } from "react-leaflet";
+import TextPath from "react-leaflet-textpath";
 import { DisplayTile } from "../util/constants";
 
 export default function SelectedPath({
@@ -10,8 +11,7 @@ export default function SelectedPath({
 }) {
   return (
     <>
-      <Polyline
-        key={`ssp: ${JSON.stringify(startCoord)}`}
+      <TextPath
         pathOptions={{
           color: "brown",
           dashArray: "10 30",
@@ -21,10 +21,10 @@ export default function SelectedPath({
           [startCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, startCoord.x + 0.5],
         ]}
+        text=">"
         pane="popupPane"
       />
-      <Polyline
-        key={`sep: ${JSON.stringify(endCoord)}`}
+      <TextPath
         pathOptions={{
           color: "brown",
           dashArray: "10 30",
@@ -34,10 +34,10 @@ export default function SelectedPath({
           [endCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, endCoord.x + 0.5],
         ]}
+        text=">"
         pane="popupPane"
       />
       <Circle
-        key={`sec: ${JSON.stringify(endCoord)}`}
         pathOptions={{
           color: "brown",
           weight: 5,
