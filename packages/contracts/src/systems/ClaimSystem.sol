@@ -56,11 +56,11 @@ contract ClaimSystem is System {
 
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
 
-    // Check that the coordinates is owned by the msg.sender
-    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtPosition[0]);
-    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
-
     if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == MinerID) {
+      // Check that the coordinates is owned by the msg.sender
+      uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtPosition[0]);
+      require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
+
       // check last claimed at time
       uint256 startClaimTime = lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
       uint256 endClaimTime = block.number;
