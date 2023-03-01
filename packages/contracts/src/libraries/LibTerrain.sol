@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.0;
-import { Coord } from "../types.sol";
 
+import { Coord } from "../types.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../prototypes/Tiles.sol";
 
 import { Perlin } from "./Perlin.sol";
 
 library LibTerrain {
   // Terrain precision = 12, Resource precision = 8
-  function getSingleDepth(Coord memory coord, int256 perlinSeed, uint8 precision) public pure returns (int128) {
-    int128 depth = Perlin.noise2d(coord.x + perlinSeed, coord.y + perlinSeed, 1, precision);
+  function getSingleDepth(Coord memory coord, int256 perlinSeed, int256 denom) public pure returns (int128) {
+    int128 depth = Perlin.noise(coord.x + perlinSeed, coord.y + perlinSeed, 0, denom, 64);
     return depth;
   }
 

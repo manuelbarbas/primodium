@@ -11,7 +11,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 
-import { MainBaseID, ConveyerID, CopperID, LithiumMinerID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, ConveyerID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { Coord, VoxelCoord } from "../../types.sol";
@@ -29,14 +29,12 @@ contract BuildSystemTest is MudTest {
     vm.stopPrank();
   }
 
-  function testClaim() public {
+  function testBuild() public {
     vm.startPrank(alice);
 
-    // TEMP: tile -6, 3 has copper according to current generation seed
-    Coord memory coord = Coord({ x: -6, y: 3 });
-    console.log("TOP LAYER KEY");
-    console.log(LibTerrain.getTopLayerKey(coord));
-    // assertEq(LibTerrain.getTopLayerKey(coord), CopperID);
+    // TEMP: tile -5, 2 has iron according to current generation seed
+    Coord memory coord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(coord), IronID);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
@@ -46,7 +44,7 @@ contract BuildSystemTest is MudTest {
 
     Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
     Coord memory endPathCoord = Coord({ x: -1, y: 0 });
-    Coord memory startPathCoord = Coord({ x: -6, y: 2 });
+    Coord memory startPathCoord = Coord({ x: -5, y: 1 });
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     buildSystem.executeTyped(ConveyerID, endPathCoord);
