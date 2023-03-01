@@ -14,7 +14,7 @@ export function getSingleTerrainDepth(
   perlinSeed: number
 ) {
   const denom = 12;
-  const depth = perlin(coord.x + perlinSeed, coord.y + perlinSeed, 0, denom);
+  const depth = perlin(coord.x + perlinSeed, coord.y + perlinSeed, 1, denom);
   return depth;
 }
 
@@ -24,7 +24,7 @@ export function getSingleResourceDepth(
   perlinSeed: number
 ) {
   const denom = 8;
-  const depth = perlin(coord.x + perlinSeed, coord.y + perlinSeed, 0, denom);
+  const depth = perlin(coord.x + perlinSeed, coord.y + perlinSeed, 1, denom);
   return depth;
 }
 
@@ -66,19 +66,25 @@ export function getResourceKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
   //base starting materials (most common)
   if (normalizedDepth > 1800 && normalizedDepth < 1820) return BlockType.Copper;
-  if (normalizedDepth > 2000 && normalizedDepth < 2006) return BlockType.Lithium;
+  if (normalizedDepth > 2000 && normalizedDepth < 2006)
+    return BlockType.Lithium;
   if (normalizedDepth > 2400 && normalizedDepth < 2418) return BlockType.Iron;
 
   //mid game items
   if (normalizedDepth < 1350) return BlockType.Titanium;
-  if (normalizedDepth > 2600 && normalizedDepth < 2602) return BlockType.Iridium;
+  if (normalizedDepth > 2600 && normalizedDepth < 2602)
+    return BlockType.Iridium;
   if (normalizedDepth > 3095 && normalizedDepth < 3100) return BlockType.Osmium;
-  if (normalizedDepth > 3400 && normalizedDepth < 3430) return BlockType.Tungsten;
+  if (normalizedDepth > 3400 && normalizedDepth < 3430)
+    return BlockType.Tungsten;
 
   //late game (rarer) items
-  if (normalizedDepth > 2720 && normalizedDepth < 2721) return BlockType.Kimberlite;
-  if (normalizedDepth > 3220 && normalizedDepth < 3222) return BlockType.Uraninite;
-  if (normalizedDepth > 3620 && normalizedDepth < 3622) return BlockType.Bolutite;
+  if (normalizedDepth > 2720 && normalizedDepth < 2721)
+    return BlockType.Kimberlite;
+  if (normalizedDepth > 3220 && normalizedDepth < 3222)
+    return BlockType.Uraninite;
+  if (normalizedDepth > 3620 && normalizedDepth < 3622)
+    return BlockType.Bolutite;
 
   return BlockType.Air;
 }

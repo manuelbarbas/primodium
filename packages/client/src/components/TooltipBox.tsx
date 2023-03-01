@@ -11,8 +11,14 @@ import { useSelectedTile } from "../context/SelectedTileContext";
 
 import { getTopLayerKey } from "../util/tile";
 
-import { BlockIdToKey, BlockColors } from "../util/constants";
+import {
+  BlockIdToKey,
+  BlockColors,
+  BlockKey,
+  BlockType,
+} from "../util/constants";
 import { useMud } from "../context/MudContext";
+import ClaimButton from "./action/ClaimButton";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -99,6 +105,7 @@ function TooltipBox() {
     tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
   );
 
+  // display actions
   const [minimized, setMinimize] = useState(false);
 
   const minimizeBox = () => {
@@ -109,6 +116,8 @@ function TooltipBox() {
     }
   };
 
+  // actions
+
   if (!minimized) {
     return (
       <div className="z-[999] fixed bottom-4 right-4 h-96 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
@@ -116,7 +125,9 @@ function TooltipBox() {
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
-          <p className="text-lg font-bold mb-3">Selected Tile</p>
+          <p className="text-lg font-bold mb-3">
+            Tile ({selectedTile.x}, {selectedTile.y})
+          </p>
           <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
             <div className="flex flex-col">
               <div className="flex align-center">
@@ -171,6 +182,11 @@ function TooltipBox() {
                     </div>
                   )}
                 </div>
+              </div>
+              <div className="flex-row">
+                {builtTile && builtTile === BlockType.MainBase && (
+                  <ClaimButton x={selectedTile.x} y={selectedTile.y} />
+                )}
               </div>
             </div>
           </div>

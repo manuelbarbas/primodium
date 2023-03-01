@@ -26,6 +26,7 @@ export const BlockKey = {
   Bolutite: "Bolutite",
 
   // placeable blocks
+  MainBase: "MainBase",
   LithiumMiner: "LithiumMiner",
 };
 
