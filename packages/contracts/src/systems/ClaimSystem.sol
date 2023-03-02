@@ -55,48 +55,71 @@ contract ClaimSystem is System {
     );
 
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
+    uint256 ownerKey = addressToEntity(msg.sender);
 
     if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == MinerID) {
       // Check that the coordinates is owned by the msg.sender
       uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtPosition[0]);
-      require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
+
+      // "can not claim resource at not owned tile"
+      if (ownedEntityAtStartCoord != ownerKey) {
+        return;
+      }
 
       // check last claimed at time
       uint256 startClaimTime = lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
       uint256 endClaimTime = block.number;
-      uint256 incBy = MINE_COUNT_PER_BLOCK * (startClaimTime - endClaimTime);
+      uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
       lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
       // fetch tile beneath miner.
       uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
 
       if (resourceKey == BolutiteID) {
-        uint256 cur = resourceComponents.bolutiteResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.bolutiteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.bolutiteResourceComponent.has(ownerKey)
+          ? resourceComponents.bolutiteResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.bolutiteResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == CopperID) {
-        uint256 cur = resourceComponents.copperResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.copperResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.copperResourceComponent.has(ownerKey)
+          ? resourceComponents.copperResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.copperResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == IridiumID) {
-        uint256 cur = resourceComponents.iridiumResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.iridiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.iridiumResourceComponent.has(ownerKey)
+          ? resourceComponents.iridiumResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.iridiumResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == IronID) {
-        uint256 cur = resourceComponents.ironResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.ironResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.ironResourceComponent.has(ownerKey)
+          ? resourceComponents.ironResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.ironResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == KimberliteID) {
-        uint256 cur = resourceComponents.kimberliteResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.kimberliteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.kimberliteResourceComponent.has(ownerKey)
+          ? resourceComponents.kimberliteResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.kimberliteResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == LithiumID) {
-        uint256 cur = resourceComponents.lithiumResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.lithiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.lithiumResourceComponent.has(ownerKey)
+          ? resourceComponents.lithiumResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.lithiumResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == OsmiumID) {
-        uint256 cur = resourceComponents.osmiumResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.osmiumResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.osmiumResourceComponent.has(ownerKey)
+          ? resourceComponents.osmiumResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.osmiumResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == TungstenID) {
-        uint256 cur = resourceComponents.tungstenResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.tungstenResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.tungstenResourceComponent.has(ownerKey)
+          ? resourceComponents.tungstenResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.tungstenResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == UraniniteID) {
-        uint256 cur = resourceComponents.uraniniteResourceComponent.getValue(addressToEntity(msg.sender));
-        resourceComponents.uraniniteResourceComponent.set(addressToEntity(msg.sender), cur + incBy);
+        uint256 cur = resourceComponents.uraniniteResourceComponent.has(ownerKey)
+          ? resourceComponents.uraniniteResourceComponent.getValue(ownerKey)
+          : 0;
+        resourceComponents.uraniniteResourceComponent.set(ownerKey, cur + incBy);
       }
     }
   }

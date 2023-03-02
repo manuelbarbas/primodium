@@ -37,7 +37,7 @@ function BuildingBox() {
 
   // Helpers
   const buildMinerHelper = useCallback(() => {
-    buildTile(selectedTile, BlockType.LithiumMiner);
+    buildTile(selectedTile, BlockType.Miner);
   }, [selectedTile]);
 
   const buildConveyerHelper = useCallback(() => {

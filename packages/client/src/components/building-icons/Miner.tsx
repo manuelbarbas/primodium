@@ -5,7 +5,7 @@ function MinerButton({ action }: BlockTypeActionComponent) {
   return (
     <button
       className="w-16 h-16"
-      style={{ backgroundColor: BlockColors.get(BlockType.LithiumMiner) }}
+      style={{ backgroundColor: BlockColors.get(BlockType.Miner) }}
       onClick={action}
     >
       Miner
