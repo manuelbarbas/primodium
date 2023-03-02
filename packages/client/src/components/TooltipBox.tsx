@@ -9,7 +9,11 @@ import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
 import { useSelectedTile } from "../context/SelectedTileContext";
 
-import { getResourceNormalizedDepth, getTopLayerKey } from "../util/tile";
+import {
+  getResourceNormalizedDepth,
+  getTerrainNormalizedDepth,
+  getTopLayerKey,
+} from "../util/tile";
 
 import {
   BlockIdToKey,
@@ -42,6 +46,21 @@ function TooltipBox() {
       if (perlinRef.current !== null) {
         const perlin = perlinRef.current;
         return getTopLayerKey(coord, perlin);
+      } else {
+        return SingletonID;
+      }
+    },
+    [initialized]
+  );
+
+  const getTerrainNormalizedDepthHelper = useCallback(
+    (coord: Coord) => {
+      if (!initialized || perlinRef.current === null) {
+        return SingletonID;
+      }
+      if (perlinRef.current !== null) {
+        const perlin = perlinRef.current;
+        return getTerrainNormalizedDepth(coord, perlin);
       } else {
         return SingletonID;
       }
@@ -142,8 +161,8 @@ function TooltipBox() {
           </button>
           <p className="text-lg font-bold mb-3">
             Tile ({selectedTile.x}, {selectedTile.y})
-            <br />
-            Depth: {getResourceNormalizedDepthHelper(selectedTile)}
+            <br />R Depth: {getResourceNormalizedDepthHelper(selectedTile)}
+            <br />T Depth: {getTerrainNormalizedDepthHelper(selectedTile)}
           </p>
           <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
             <div className="flex flex-col">
