@@ -34,5 +34,6 @@ contract BuildSystemTest is MudTest {
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 17, y: 2 })), BedrockID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 15, y: 1 })), TungstenID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 16, y: 1 })), UraniniteID);
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 5, y: 25 })), LithiumID);
   }
 }
