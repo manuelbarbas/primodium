@@ -36,26 +36,26 @@ contract BuildSystemTest is MudTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
-    console.log(WaterID);
-    console.log(RegolithID);
-    console.log(SandstoneID);
-    console.log(AlluviumID);
-    console.log(LithiumMinerID);
-    console.log(BiofilmID);
-    console.log("BEDOCK HERE");
-    console.log(BedrockID);
-    console.log(AirID);
-    console.log(CopperID);
-    console.log(LithiumID);
-    console.log(IronID);
-    console.log(TitaniumID);
-    console.log(IridiumID);
-    console.log(OsmiumID);
-    console.log(TungstenID);
-    console.log(KimberliteID);
-    console.log(UraniniteID);
-    console.log(BolutiteID);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID);
+
+    console.log("test1");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: -9, y: 6 })), IronID);
+    console.log("test2");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: -3, y: 6 })), IronID);
+    console.log("test3");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: -10, y: 10 })), TungstenID);
+    console.log("test4");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: -13, y: 1 })), AlluviumID);
+    console.log("test5");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: -8, y: -6 })), TitaniumID);
+    console.log("test6");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 6, y: 12 })), OsmiumID);
+    console.log("test7");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 23, y: 24 })), BedrockID);
+    console.log("test8");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 17, y: 2 })), BedrockID);
+    console.log("test9");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 16, y: 1 })), UraniniteID);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));

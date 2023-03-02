@@ -5,6 +5,10 @@ import { Coord } from "../types.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../prototypes/Tiles.sol";
 
 import { Perlin } from "./Perlin.sol";
+import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
+
+int128 constant _4 = 4 * 2 ** 64;
+int128 constant _5 = 5 * 2 ** 64;
 
 library LibTerrain {
   // Terrain precision = 12, Resource precision = 8
@@ -30,17 +34,26 @@ library LibTerrain {
     return 17326;
   }
 
-  function getTerrainNormalizedDepth(Coord memory coord) public pure returns (int128) {
+  function avgTerrainNormalizedDepth(
+    int128 depth1,
+    int128 depth2,
+    int128 depth3,
+    int128 depth4
+  ) public pure returns (int256) {
+    int128 terrainDepthSum = Math.add(Math.add(Math.add(depth1, depth2), depth3), depth4);
+    return Math.muli(Math.div(terrainDepthSum, _5), 100);
+  }
+
+  function getTerrainNormalizedDepth(Coord memory coord) public pure returns (int256) {
     int128 depth1 = getSingleDepth(coord, getPerlinSeed1(), 12);
     int128 depth2 = getSingleDepth(coord, getPerlinSeed2(), 12);
     int128 depth3 = getSingleDepth(coord, getPerlinSeed3(), 12);
     int128 depth4 = getSingleDepth(coord, getPerlinSeed4(), 12);
-    int128 normalizedDepth = ((depth1 + depth2 + depth3 + depth4) / 5) * 100;
-    return normalizedDepth;
+    return avgTerrainNormalizedDepth(depth1, depth2, depth3, depth4);
   }
 
   function getTerrainKey(Coord memory coord) public pure returns (uint256) {
-    int128 normalizedDepth = getTerrainNormalizedDepth(coord);
+    int256 normalizedDepth = getTerrainNormalizedDepth(coord);
     if (normalizedDepth < 29) return WaterID;
     if (normalizedDepth < 32) return BiofilmID;
     if (normalizedDepth < 35) return AlluviumID;
@@ -50,15 +63,19 @@ library LibTerrain {
     return BedrockID;
   }
 
-  function getResourceNormalizedDepth(Coord memory coord) public pure returns (int128) {
+  function avgResourceNormalizedDepth(int128 depth1, int128 depth2) public pure returns (int256) {
+    int128 resourceDepthSum = Math.add(depth1, depth2);
+    return Math.muli(Math.div(resourceDepthSum, _4), 10000);
+  }
+
+  function getResourceNormalizedDepth(Coord memory coord) public pure returns (int256) {
     int128 depth1 = getSingleDepth(coord, getPerlinSeed1(), 8);
     int128 depth2 = getSingleDepth(coord, getPerlinSeed2(), 8);
-    int128 normalizedDepth = ((depth1 + depth2) / 4) * 10000;
-    return normalizedDepth;
+    return avgResourceNormalizedDepth(depth1, depth2);
   }
 
   function getResourceKey(Coord memory coord) public pure returns (uint256) {
-    int128 normalizedDepth = getResourceNormalizedDepth(coord);
+    int256 normalizedDepth = getResourceNormalizedDepth(coord);
     //base starting materials (most common)
     if (normalizedDepth > 1800 && normalizedDepth < 1820) return CopperID;
     if (normalizedDepth > 2000 && normalizedDepth < 2006) return LithiumID;
