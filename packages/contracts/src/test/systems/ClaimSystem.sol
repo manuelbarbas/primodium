@@ -11,7 +11,9 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 
-import { MainBaseID, ConveyerID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
+// import { MainBaseID, ConveyerID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, ConveyerID, LithiumMinerID } from "../../prototypes/Tiles.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { Coord, VoxelCoord } from "../../types.sol";
@@ -34,6 +36,25 @@ contract BuildSystemTest is MudTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
+    console.log(WaterID);
+    console.log(RegolithID);
+    console.log(SandstoneID);
+    console.log(AlluviumID);
+    console.log(LithiumMinerID);
+    console.log(BiofilmID);
+    console.log("BEDOCK HERE");
+    console.log(BedrockID);
+    console.log(AirID);
+    console.log(CopperID);
+    console.log(LithiumID);
+    console.log(IronID);
+    console.log(TitaniumID);
+    console.log(IridiumID);
+    console.log(OsmiumID);
+    console.log(TungstenID);
+    console.log(KimberliteID);
+    console.log(UraniniteID);
+    console.log(BolutiteID);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
