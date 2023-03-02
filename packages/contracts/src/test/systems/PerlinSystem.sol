@@ -14,9 +14,6 @@ import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol
 contract PerlinTest is MudTest {
   constructor() MudTest(new Deploy()) {}
 
-  uint256 miner1;
-  uint256 miner2;
-
   function setUp() public override {
     super.setUp();
     vm.startPrank(deployer);

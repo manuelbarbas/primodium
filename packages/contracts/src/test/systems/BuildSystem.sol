@@ -15,9 +15,6 @@ import { Coord, VoxelCoord } from "../../types.sol";
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
 
-  uint256 miner1;
-  uint256 miner2;
-
   function setUp() public override {
     super.setUp();
     vm.startPrank(deployer);
@@ -36,7 +33,7 @@ contract BuildSystemTest is MudTest {
 
     bytes memory blockEntity = buildSystem.executeTyped(LithiumMinerID, coord);
 
-    (uint256 blockEntityID) = abi.decode(blockEntity, (uint256));
+    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
 
     Coord memory position = positionComponent.getValue(blockEntityID);
     assertEq(position.x, coord.x);
@@ -48,7 +45,7 @@ contract BuildSystemTest is MudTest {
     vm.stopPrank();
   }
 
-    function testFailBuildTwiceSameCoord() public {
+  function testFailBuildTwiceSameCoord() public {
     vm.startPrank(alice);
 
     Coord memory coord = Coord({ x: 0, y: 0 });
@@ -76,8 +73,8 @@ contract BuildSystemTest is MudTest {
     bytes memory startBlockEntity = buildSystem.executeTyped(ConveyerID, startCoord);
     bytes memory endBlockEntity = buildSystem.executeTyped(ConveyerID, endCoord);
 
-    (uint256 startBlockEntityID) = abi.decode(startBlockEntity, (uint256));
-    (uint256 endBlockEntityID) = abi.decode(endBlockEntity, (uint256));
+    uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
+    uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
 
     Coord memory startPosition = positionComponent.getValue(startBlockEntityID);
     assertEq(startPosition.x, startCoord.x);
@@ -99,5 +96,4 @@ contract BuildSystemTest is MudTest {
 
     vm.stopPrank();
   }
-
 }
