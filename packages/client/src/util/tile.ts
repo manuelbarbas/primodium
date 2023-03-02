@@ -27,8 +27,7 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
   const depth4 = getSingleDepth(coord, perlin, perlinSeed4, denom);
 
   const normalizedDepth = ((depth1 + depth2 + depth3 + depth4) / 5) * 100;
-
-  return normalizedDepth;
+  return Math.floor(normalizedDepth);
 }
 
 export function getTerrainKey(coord: Coord, perlin: Perlin) {
@@ -50,14 +49,14 @@ export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
   const depth2 = getSingleDepth(coord, perlin, perlinSeed2, denom);
 
   const normalizedDepth = ((depth1 + depth2) / 4) * 10000;
-
-  return normalizedDepth;
+  return Math.floor(normalizedDepth);
 }
 
 export function getResourceKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
   //base starting materials (most common)
-  if (normalizedDepth >= 1800 && normalizedDepth <= 1820) return BlockType.Copper;
+  if (normalizedDepth >= 1800 && normalizedDepth <= 1820)
+    return BlockType.Copper;
   if (normalizedDepth >= 2000 && normalizedDepth <= 2006)
     return BlockType.Lithium;
   if (normalizedDepth >= 2400 && normalizedDepth <= 2418) return BlockType.Iron;
@@ -66,7 +65,8 @@ export function getResourceKey(coord: Coord, perlin: Perlin) {
   if (normalizedDepth <= 1350) return BlockType.Titanium;
   if (normalizedDepth >= 2600 && normalizedDepth <= 2602)
     return BlockType.Iridium;
-  if (normalizedDepth >= 3095 && normalizedDepth <= 3100) return BlockType.Osmium;
+  if (normalizedDepth >= 3095 && normalizedDepth <= 3100)
+    return BlockType.Osmium;
   if (normalizedDepth >= 3400 && normalizedDepth <= 3430)
     return BlockType.Tungsten;
 
