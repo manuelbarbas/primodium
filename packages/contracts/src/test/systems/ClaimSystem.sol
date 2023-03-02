@@ -55,6 +55,8 @@ contract BuildSystemTest is MudTest {
     console.log("test8");
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 17, y: 2 })), BedrockID);
     console.log("test9");
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 15, y: 1 })), TungstenID);
+    console.log("test10");
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 16, y: 1 })), UraniniteID);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));

@@ -89,7 +89,7 @@ library LibTerrain {
 
     //late game (rarer) items
     if (normalizedDepth > 2720 && normalizedDepth < 2721) return KimberliteID;
-    if (normalizedDepth > 3220 && normalizedDepth < 3221) return UraniniteID;
+    if (normalizedDepth > 3220 && normalizedDepth < 3222) return UraniniteID;
     if (normalizedDepth > 3620 && normalizedDepth < 3622) return BolutiteID;
 
     return AirID;
