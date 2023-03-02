@@ -54,12 +54,12 @@ library LibTerrain {
 
   function getTerrainKey(Coord memory coord) public pure returns (uint256) {
     int256 normalizedDepth = getTerrainNormalizedDepth(coord);
-    if (normalizedDepth < 29) return WaterID;
-    if (normalizedDepth < 32) return BiofilmID;
-    if (normalizedDepth < 35) return AlluviumID;
-    if (normalizedDepth < 39) return SandstoneID;
-    if (normalizedDepth < 48) return RegolithID;
-    if (normalizedDepth < 51) return BedrockID;
+    if (normalizedDepth <= 29) return WaterID;
+    if (normalizedDepth <= 32) return BiofilmID;
+    if (normalizedDepth <= 35) return AlluviumID;
+    if (normalizedDepth <= 39) return SandstoneID;
+    if (normalizedDepth <= 48) return RegolithID;
+    if (normalizedDepth <= 51) return BedrockID;
     return BedrockID;
   }
 
@@ -77,20 +77,20 @@ library LibTerrain {
   function getResourceKey(Coord memory coord) public pure returns (uint256) {
     int256 normalizedDepth = getResourceNormalizedDepth(coord);
     //base starting materials (most common)
-    if (normalizedDepth > 1800 && normalizedDepth < 1820) return CopperID;
-    if (normalizedDepth > 2000 && normalizedDepth < 2006) return LithiumID;
-    if (normalizedDepth > 2400 && normalizedDepth < 2418) return IronID;
+    if (normalizedDepth >= 1800 && normalizedDepth <= 1820) return CopperID;
+    if (normalizedDepth >= 2000 && normalizedDepth <= 2006) return LithiumID;
+    if (normalizedDepth >= 2400 && normalizedDepth <= 2418) return IronID;
 
     //mid game items
-    if (normalizedDepth < 1350) return TitaniumID;
-    if (normalizedDepth > 2600 && normalizedDepth < 2602) return IridiumID;
-    if (normalizedDepth > 3095 && normalizedDepth < 3100) return OsmiumID;
-    if (normalizedDepth > 3400 && normalizedDepth < 3430) return TungstenID;
+    if (normalizedDepth <= 1350) return TitaniumID;
+    if (normalizedDepth >= 2600 && normalizedDepth <= 2602) return IridiumID;
+    if (normalizedDepth >= 3095 && normalizedDepth <= 3100) return OsmiumID;
+    if (normalizedDepth >= 3400 && normalizedDepth <= 3430) return TungstenID;
 
     //late game (rarer) items
-    if (normalizedDepth > 2720 && normalizedDepth < 2721) return KimberliteID;
-    if (normalizedDepth > 3220 && normalizedDepth < 3222) return UraniniteID;
-    if (normalizedDepth > 3620 && normalizedDepth < 3622) return BolutiteID;
+    if (normalizedDepth >= 2720 && normalizedDepth <= 2721) return KimberliteID;
+    if (normalizedDepth >= 3220 && normalizedDepth <= 3222) return UraniniteID;
+    if (normalizedDepth >= 3620 && normalizedDepth <= 3622) return BolutiteID;
 
     return AirID;
   }

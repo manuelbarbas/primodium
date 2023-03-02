@@ -33,12 +33,12 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
 
 export function getTerrainKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
-  if (normalizedDepth < 29) return BlockType.Water;
-  if (normalizedDepth < 32) return BlockType.Biofilm;
-  if (normalizedDepth < 35) return BlockType.Alluvium;
-  if (normalizedDepth < 39) return BlockType.Sandstone;
-  if (normalizedDepth < 48) return BlockType.Regolith;
-  if (normalizedDepth < 51) return BlockType.Bedrock;
+  if (normalizedDepth <= 29) return BlockType.Water;
+  if (normalizedDepth <= 32) return BlockType.Biofilm;
+  if (normalizedDepth <= 35) return BlockType.Alluvium;
+  if (normalizedDepth <= 39) return BlockType.Sandstone;
+  if (normalizedDepth <= 48) return BlockType.Regolith;
+  if (normalizedDepth <= 51) return BlockType.Bedrock;
 
   return BlockType.Bedrock;
 }
@@ -57,25 +57,25 @@ export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
 export function getResourceKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
   //base starting materials (most common)
-  if (normalizedDepth > 1800 && normalizedDepth < 1820) return BlockType.Copper;
-  if (normalizedDepth > 2000 && normalizedDepth < 2006)
+  if (normalizedDepth >= 1800 && normalizedDepth <= 1820) return BlockType.Copper;
+  if (normalizedDepth >= 2000 && normalizedDepth <= 2006)
     return BlockType.Lithium;
-  if (normalizedDepth > 2400 && normalizedDepth < 2418) return BlockType.Iron;
+  if (normalizedDepth >= 2400 && normalizedDepth <= 2418) return BlockType.Iron;
 
   //mid game items
-  if (normalizedDepth < 1350) return BlockType.Titanium;
-  if (normalizedDepth > 2600 && normalizedDepth < 2602)
+  if (normalizedDepth <= 1350) return BlockType.Titanium;
+  if (normalizedDepth >= 2600 && normalizedDepth <= 2602)
     return BlockType.Iridium;
-  if (normalizedDepth > 3095 && normalizedDepth < 3100) return BlockType.Osmium;
-  if (normalizedDepth > 3400 && normalizedDepth < 3430)
+  if (normalizedDepth >= 3095 && normalizedDepth <= 3100) return BlockType.Osmium;
+  if (normalizedDepth >= 3400 && normalizedDepth <= 3430)
     return BlockType.Tungsten;
 
   //late game (rarer) items
-  if (normalizedDepth > 2720 && normalizedDepth < 2721)
+  if (normalizedDepth >= 2720 && normalizedDepth <= 2721)
     return BlockType.Kimberlite;
-  if (normalizedDepth > 3220 && normalizedDepth < 3222)
+  if (normalizedDepth >= 3220 && normalizedDepth <= 3222)
     return BlockType.Uraninite;
-  if (normalizedDepth > 3620 && normalizedDepth < 3622)
+  if (normalizedDepth >= 3620 && normalizedDepth <= 3622)
     return BlockType.Bolutite;
 
   return BlockType.Air;
