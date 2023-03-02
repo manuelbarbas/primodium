@@ -57,7 +57,7 @@ contract BuildSystemTest is MudTest {
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 956, y: -743 })), KimberliteID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 977, y: -747 })), AlluviumID);
     // one fail
-    // assertEq(LibTerrain.getTopLayerKey(Coord({ x: 1022, y: -765 })), BedrockID);
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 1022, y: -765 })), RegolithID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 1021, y: -791 })), UraniniteID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 1022, y: -791 })), TungstenID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 1057, y: -791 })), LithiumID);
@@ -75,12 +75,12 @@ contract BuildSystemTest is MudTest {
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 1037, y: -351 })), CopperID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 876, y: -352 })), TungstenID);
     // one fail
-    // assertEq(LibTerrain.getTopLayerKey(Coord({ x: 820, y: -305 })), BiofilmID);
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 820, y: -305 })), WaterID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 784, y: -279 })), BiofilmID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 783, y: -279 })), LithiumID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 794, y: -256 })), CopperID);
     // one fail
-    // assertEq(LibTerrain.getTopLayerKey(Coord({ x: 770, y: -303 })), BedrockID);
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: 770, y: -303 })), RegolithID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: 769, y: -289 })), TungstenID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: -31, y: -5 })), AlluviumID);
     assertEq(LibTerrain.getTopLayerKey(Coord({ x: -38, y: 0 })), RegolithID);
