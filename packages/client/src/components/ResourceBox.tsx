@@ -1,19 +1,13 @@
-import { SingletonID } from "@latticexyz/network";
-import { useComponentValue } from "@latticexyz/react";
-import { EntityID, EntityIndex } from "@latticexyz/recs";
-import { BigNumber } from "ethers";
 import { useState } from "react";
 
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
-import { useAccount } from "wagmi";
 import { useMud } from "../context/MudContext";
 
-import Resource from "./Resource";
+import ResourceLabel from "./ResourceLabel";
 
 function ResourceBox() {
-  const { world, components, singletonIndex } = useMud();
-  const { address } = useAccount();
+  const { components } = useMud();
 
   const [minimized, setMinimize] = useState(false);
   const minimizeBox = () => {
@@ -24,16 +18,6 @@ function ResourceBox() {
     }
   };
 
-  const IronResource = useComponentValue(
-    components.OwnedBy,
-    address
-      ? world.entityToIndex.get(address.toString() as EntityID)
-      : singletonIndex
-  );
-
-  console.log("IRON RESOURCE???");
-  console.log(IronResource?.value);
-
   if (!minimized) {
     return (
       <div className="z-[1000] fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
@@ -43,19 +27,41 @@ function ResourceBox() {
           </button>
           <p className="text-lg font-bold mb-3">Resources</p>
           <div className="h-64 overflow-y-scroll scrollbar">
-            <Resource
-              name={"Primodium"}
-              icon={
-                "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/600cc6ca-4f52-40e6-a83c-3bcd6e94e0ee/depbq7u-8d5c23aa-8eeb-435f-89c5-a87238cb052d.png"
-              }
-              quantity={20000}
+            <ResourceLabel
+              name={"Bolutite"}
+              resourceComponent={components.BolutiteResource}
             />
-            <Resource
+            <ResourceLabel
+              name={"Copper"}
+              resourceComponent={components.CopperResource}
+            />
+            <ResourceLabel
+              name={"Iridium"}
+              resourceComponent={components.IridiumResource}
+            />
+            <ResourceLabel
               name={"Iron"}
-              icon={
-                "https://mindustrygame.github.io/wiki/images/item-metaglass.png"
-              }
-              quantity={20000}
+              resourceComponent={components.IronResource}
+            />
+            <ResourceLabel
+              name={"Kimberlite"}
+              resourceComponent={components.KimberliteResource}
+            />
+            <ResourceLabel
+              name={"Lithium"}
+              resourceComponent={components.LithiumResource}
+            />
+            <ResourceLabel
+              name={"Osmium"}
+              resourceComponent={components.OsmiumResource}
+            />
+            <ResourceLabel
+              name={"Tungsten"}
+              resourceComponent={components.TungstenResource}
+            />
+            <ResourceLabel
+              name={"Uraninite"}
+              resourceComponent={components.UraniniteResource}
             />
           </div>
         </div>
