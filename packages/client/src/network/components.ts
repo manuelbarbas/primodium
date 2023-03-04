@@ -46,6 +46,51 @@ export function defineComponents(world: World) {
         contractId: "component.LastClaimedAt",
       },
     }),
+    BolutiteResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.BolutiteResource",
+      },
+    }),
+    CopperResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.CopperResource",
+      },
+    }),
+    IridiumResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.IridiumResource",
+      },
+    }),
+    IronResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.IronResource",
+      },
+    }),
+    KimberliteResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.KimberliteResource",
+      },
+    }),
+    LithiumResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.LithiumResource",
+      },
+    }),
+    OsmiumResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.OsmiumResource",
+      },
+    }),
+    TungstenResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.TungstenResource",
+      },
+    }),
+    UraniniteResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.UraniniteResource",
+      },
+    }),
   };
 }
 
