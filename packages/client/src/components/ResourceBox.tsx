@@ -1,13 +1,21 @@
+import { SingletonID } from "@latticexyz/network";
+import { useComponentValue } from "@latticexyz/react";
+import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { BigNumber } from "ethers";
 import { useState } from "react";
 
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
+import { useAccount } from "wagmi";
+import { useMud } from "../context/MudContext";
 
 import Resource from "./Resource";
 
 function ResourceBox() {
-  const [minimized, setMinimize] = useState(false);
+  const { world, components, singletonIndex } = useMud();
+  const { address } = useAccount();
 
+  const [minimized, setMinimize] = useState(false);
   const minimizeBox = () => {
     if (minimized) {
       setMinimize(false);
@@ -15,6 +23,16 @@ function ResourceBox() {
       setMinimize(true);
     }
   };
+
+  const IronResource = useComponentValue(
+    components.OwnedBy,
+    address
+      ? world.entityToIndex.get(address.toString() as EntityID)
+      : singletonIndex
+  );
+
+  console.log("IRON RESOURCE???");
+  console.log(IronResource?.value);
 
   if (!minimized) {
     return (

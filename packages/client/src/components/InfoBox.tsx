@@ -36,7 +36,7 @@ function InfoBox() {
 
   if (!isConnected) {
     return (
-      <div className="z-[1000] fixed top-4 left-4 h-64 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="z-[1000] fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col">
           <p className="text-xl mb-4 font-bold">Primodium</p>
           <div className="flex items-center mb-2">
@@ -82,7 +82,7 @@ function InfoBox() {
   } else {
     if (!minimized) {
       return (
-        <div className="z-[1000] fixed top-4 left-4 h-64 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+        <div className="z-[1000] fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className=" mt-4 ml-5 flex flex-col">
             <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
@@ -115,9 +115,6 @@ function InfoBox() {
                 <p className="inline-block align-middle ml-2">Discord</p>
               </a>
             </div>
-            <button className="absolute inset-x-4 bottom-16 h-10 bg-teal-600 hover:bg-teal-700 text-sm rounded font-bold">
-              Start game
-            </button>
             <button
               onClick={handleWalletLogout}
               className="absolute inset-x-4 bottom-4 h-10 bg-gray-500 hover:bg-gray-600 text-sm rounded font-bold"
@@ -129,14 +126,11 @@ function InfoBox() {
       );
     } else {
       return (
-        <div className="z-[1000] fixed top-4 left-4 h-40 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+        <div className="z-[1000] fixed top-4 left-4 h-28 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
             <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaPlusSquare size="18" />} />
-            </button>
-            <button className="absolute inset-x-4 bottom-16 h-10 bg-teal-600 hover:bg-teal-700 text-sm rounded font-bold">
-              Start game
             </button>
             <button
               onClick={handleWalletLogout}
