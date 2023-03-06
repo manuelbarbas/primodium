@@ -62,4 +62,46 @@ contract ClaimSystemTest is MudTest {
 
     vm.stopPrank();
   }
+
+  function testClaimDuplicatePaths() public {
+    vm.startPrank(alice);
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
+    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+
+    // TEMP: tile -5, 2 has iron according to current generation seed
+    Coord memory coord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(coord), IronID);
+
+    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory endPathCoord = Coord({ x: -1, y: 0 });
+    Coord memory startPathCoord = Coord({ x: -5, y: 1 });
+
+    Coord memory endPathCoord2 = Coord({ x: 0, y: 1 });
+    Coord memory startPathCoord2 = Coord({ x: -4, y: 2 });
+
+    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+
+    buildSystem.executeTyped(ConveyerID, endPathCoord);
+    buildSystem.executeTyped(ConveyerID, startPathCoord);
+    buildPathSystem.executeTyped(startPathCoord, endPathCoord);
+
+    buildSystem.executeTyped(ConveyerID, endPathCoord2);
+    buildSystem.executeTyped(ConveyerID, startPathCoord2);
+    buildPathSystem.executeTyped(startPathCoord2, endPathCoord2);
+
+    vm.roll(0);
+    buildSystem.executeTyped(MinerID, coord);
+
+    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
+    vm.roll(10);
+
+    claimSystem.executeTyped(mainBaseCoord);
+    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
+    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 100);
+
+    vm.stopPrank();
+  }
 }
