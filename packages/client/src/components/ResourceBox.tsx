@@ -9,7 +9,7 @@ import ResourceLabel from "./ResourceLabel";
 function ResourceBox() {
   const { components } = useMud();
 
-  const [minimized, setMinimize] = useState(false);
+  const [minimized, setMinimize] = useState(true);
   const minimizeBox = () => {
     if (minimized) {
       setMinimize(false);
