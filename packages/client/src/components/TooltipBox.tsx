@@ -53,36 +53,6 @@ function TooltipBox() {
     [initialized]
   );
 
-  const getTerrainNormalizedDepthHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return SingletonID;
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getTerrainNormalizedDepth(coord, perlin);
-      } else {
-        return SingletonID;
-      }
-    },
-    [initialized]
-  );
-
-  const getResourceNormalizedDepthHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return SingletonID;
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getResourceNormalizedDepth(coord, perlin);
-      } else {
-        return SingletonID;
-      }
-    },
-    [initialized]
-  );
-
   // Get information on the selected tile
   const { selectedTile } = useSelectedTile();
 
@@ -161,8 +131,6 @@ function TooltipBox() {
           </button>
           <p className="text-lg font-bold mb-3">
             Tile ({selectedTile.x}, {selectedTile.y})
-            <br />R Depth: {getResourceNormalizedDepthHelper(selectedTile)}
-            <br />T Depth: {getTerrainNormalizedDepthHelper(selectedTile)}
           </p>
           <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
             <div className="flex flex-col">
