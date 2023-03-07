@@ -9,18 +9,9 @@ import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
 import { useSelectedTile } from "../context/SelectedTileContext";
 
-import {
-  getResourceNormalizedDepth,
-  getTerrainNormalizedDepth,
-  getTopLayerKey,
-} from "../util/tile";
+import { getTopLayerKey } from "../util/tile";
 
-import {
-  BlockIdToKey,
-  BlockColors,
-  BlockKey,
-  BlockType,
-} from "../util/constants";
+import { BlockIdToKey, BlockColors, BlockType } from "../util/constants";
 import { useMud } from "../context/MudContext";
 import ClaimButton from "./action/ClaimButton";
 
