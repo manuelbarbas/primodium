@@ -6,15 +6,18 @@ import BuildingMenuButton from "./building-icons/BuildingMenuButton";
 import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
 import ChooseTransportMenu from "./ChooseTransportMenu";
 import MainBaseButton from "./building-icons/MainBaseButton";
+import BulletFactoryButton from "./building-icons/BulletFactoryButton";
 
 //need a back button between pages
 function BuildingPage({
   buildMinerHelper,
   buildConveyerHelper,
   buildMainBaseHelper,
+  buildBulletFactoryHelper,
 }: {
   buildMinerHelper: () => void;
   buildConveyerHelper: () => void;
+  buildBulletFactoryHelper: () => void;
   buildMainBaseHelper: () => void;
 }) {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
@@ -77,7 +80,7 @@ function BuildingPage({
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
-      <BuildingMenuButton
+      {/* <BuildingMenuButton
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
         }
@@ -90,7 +93,7 @@ function BuildingPage({
           title="Build Weapons"
           setMenuOpenIndex={setMenuOpenIndex}
         />
-      </BuildingMenuButton>
+      </BuildingMenuButton> */}
       {/* <BuildingMenuButton
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
@@ -108,6 +111,7 @@ function BuildingPage({
       <MinerButton action={buildMinerHelper} />
       <ConveyerButton action={buildConveyerHelper} />
       <MainBaseButton action={buildMainBaseHelper} />
+      <BulletFactoryButton action={buildBulletFactoryHelper} />
     </div>
   );
 }

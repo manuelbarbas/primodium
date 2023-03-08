@@ -48,6 +48,10 @@ function BuildingBox() {
     buildTile(selectedTile, BlockType.MainBase);
   }, [selectedTile]);
 
+  const buildBulletFactoryHelper = useCallback(() => {
+    buildTile(selectedTile, BlockType.BulletFactory);
+  }, [selectedTile]);
+
   const [minimized, setMinimize] = useState(false);
 
   const minimizeBox = () => {
@@ -70,6 +74,7 @@ function BuildingBox() {
             buildMinerHelper={buildMinerHelper}
             buildConveyerHelper={buildConveyerHelper}
             buildMainBaseHelper={buildMainBaseHelper}
+            buildBulletFactoryHelper={buildBulletFactoryHelper}
           />
         </div>
       </div>
