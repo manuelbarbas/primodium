@@ -12,7 +12,7 @@ export default function ClaimButton({ x, y }: DisplayTile) {
         y: y,
       },
       {
-        gasLimit: 20_000_000,
+        gasLimit: 30_000_000,
       }
     );
   }, []);
