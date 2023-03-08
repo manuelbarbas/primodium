@@ -61,6 +61,9 @@ export const BlockType = {
   // Resource
   MainBase: keccak256("block.MainBase") as EntityID,
   Conveyer: keccak256("block.Conveyer") as EntityID,
+
+  // Factories
+  BulletFactory: keccak256("block.BulletFactory") as EntityID,
 };
 
 // From OPCraft
@@ -126,8 +129,10 @@ export const BlockColors = new Map<EntityID, string>([
 
   // Resource
   [BlockType.MainBase, "#8676c0"],
-
   [BlockType.Conveyer, "#ffcd00"],
+
+  // Factories
+  [BlockType.BulletFactory, "#824947"],
 ]);
 
 export const BackgroundImage = new Map<EntityID, string>([
