@@ -166,6 +166,9 @@ contract ClaimSystem is System {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
 
     Coord memory coord = abi.decode(arguments, (Coord));
 
@@ -177,6 +180,9 @@ contract ClaimSystem is System {
     // Check that the coordinates is owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtPosition[0]);
     require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
+
+    uint256 endClaimTime = block.number;
+    lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
     // check all four adjacent tiles
     Coord memory coordLeft = Coord(coord.x - 1, coord.y);
