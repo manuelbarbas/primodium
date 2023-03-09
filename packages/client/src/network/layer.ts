@@ -19,13 +19,13 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   // If a contractId is provided, MUD syncs the state with the corresponding
   // component contract (in this case `CounterComponent.sol`)
 
-  const components = defineComponents(world);
+  const contractComponents = defineComponents(world);
   const offChainComponents = defineOffChainComponents(world);
 
-  const { startSync, systems } = await setupMUDNetwork<
-    typeof components,
+  const { startSync, systems, components } = await setupMUDNetwork<
+    typeof contractComponents,
     SystemTypes
-  >(config, world, components, SystemAbis);
+  >(config, world, contractComponents, SystemAbis);
 
   defineComponentSystem(world, components.Counter, (update) => {
     setComponent(offChainComponents.DoubleCounter, singletonIndex, {
