@@ -120,10 +120,6 @@ contract ClaimFactorySystemTest is MudTest {
     assertTrue(copperResourceComponent.has(bulletFactoryID));
     assertTrue(bulletCraftedComponent.has(bulletFactoryID));
 
-    console.log(ironResourceComponent.getValue(bulletFactoryID));
-    console.log(copperResourceComponent.getValue(bulletFactoryID));
-    console.log(bulletCraftedComponent.getValue(bulletFactoryID));
-
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
     assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 0);
