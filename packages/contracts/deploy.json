@@ -15,7 +15,8 @@
     "LithiumResourceComponent",
     "OsmiumResourceComponent",
     "TungstenResourceComponent",
-    "UraniniteResourceComponent"
+    "UraniniteResourceComponent",
+    "BulletCraftedComponent"
   ],
   "systems": [
     {
@@ -79,7 +80,8 @@
         "LithiumResourceComponent",
         "OsmiumResourceComponent",
         "TungstenResourceComponent",
-        "UraniniteResourceComponent"
+        "UraniniteResourceComponent",
+        "BulletCraftedComponent"
       ]
     }
   ]

@@ -22,7 +22,9 @@ import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "compon
 import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
 import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
 
-import { MainBaseID, MinerID, ConveyerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
+import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
+
+import { MainBaseID, MinerID, ConveyerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { Coord } from "../types.sol";
 
@@ -79,47 +81,47 @@ contract ClaimSystem is System {
         uint256 cur = resourceComponents.bolutiteResourceComponent.has(destination)
           ? resourceComponents.bolutiteResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.bolutiteResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.bolutiteResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == CopperID) {
         uint256 cur = resourceComponents.copperResourceComponent.has(destination)
           ? resourceComponents.copperResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.copperResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.copperResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == IridiumID) {
         uint256 cur = resourceComponents.iridiumResourceComponent.has(destination)
           ? resourceComponents.iridiumResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.iridiumResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.iridiumResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == IronID) {
         uint256 cur = resourceComponents.ironResourceComponent.has(destination)
           ? resourceComponents.ironResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.ironResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.ironResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == KimberliteID) {
         uint256 cur = resourceComponents.kimberliteResourceComponent.has(destination)
           ? resourceComponents.kimberliteResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.kimberliteResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.kimberliteResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == LithiumID) {
         uint256 cur = resourceComponents.lithiumResourceComponent.has(destination)
           ? resourceComponents.lithiumResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.lithiumResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.lithiumResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == OsmiumID) {
         uint256 cur = resourceComponents.osmiumResourceComponent.has(destination)
           ? resourceComponents.osmiumResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.osmiumResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.osmiumResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == TungstenID) {
         uint256 cur = resourceComponents.tungstenResourceComponent.has(destination)
           ? resourceComponents.tungstenResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.tungstenResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.tungstenResourceComponent.set(destination, cur + incBy);
       } else if (resourceKey == UraniniteID) {
         uint256 cur = resourceComponents.uraniniteResourceComponent.has(destination)
           ? resourceComponents.uraniniteResourceComponent.getValue(destination)
           : 0;
-        resourceComponents.uraniniteResourceComponent.set(ownerKey, cur + incBy);
+        resourceComponents.uraniniteResourceComponent.set(destination, cur + incBy);
       }
     }
   }
@@ -170,6 +172,17 @@ contract ClaimSystem is System {
       getAddressById(components, LastClaimedAtComponentID)
     );
 
+    // Factory resources (add more when needed)
+    CopperResourceComponent copperResourceComponent = CopperResourceComponent(
+      getAddressById(components, CopperResourceComponentID)
+    );
+    IronResourceComponent ironResourceComponent = IronResourceComponent(
+      getAddressById(components, IronResourceComponentID)
+    );
+    BulletCraftedComponent bulletCraftedComponent = BulletCraftedComponent(
+      getAddressById(components, BulletCraftedComponentID)
+    );
+
     Coord memory coord = abi.decode(arguments, (Coord));
 
     // check if main base
@@ -183,16 +196,36 @@ contract ClaimSystem is System {
     uint256 endClaimTime = block.number;
     lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
-    // destination is either a wallet (store item in wallet-specific global inventory) or entity ID (store item in entity, eg within a factory)
+    // destination is either a wallet (store item in wallet-specific global inventory)
+    // or entity ID (store item in entity, eg within a factory)
+
     if (tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
       // check main base, if so destination is the wallet
-      uint256 destination = addressToEntity(msg.sender);
-      // claim all four adjacent tiles
+      claimConveyerTile(Coord(coord.x - 1, coord.y), addressToEntity(msg.sender));
+      claimConveyerTile(Coord(coord.x + 1, coord.y), addressToEntity(msg.sender));
+      claimConveyerTile(Coord(coord.x, coord.y + 1), addressToEntity(msg.sender));
+      claimConveyerTile(Coord(coord.x, coord.y - 1), addressToEntity(msg.sender));
+      //
+    } else if (tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
+      // check bullet, if so destination is the entity
+      uint256 destination = entitiesAtPosition[0];
       claimConveyerTile(Coord(coord.x - 1, coord.y), destination);
       claimConveyerTile(Coord(coord.x + 1, coord.y), destination);
       claimConveyerTile(Coord(coord.x, coord.y + 1), destination);
       claimConveyerTile(Coord(coord.x, coord.y - 1), destination);
+
+      // craft bullets based on how many iron and copper the entity owns
+      uint256 curIron = ironResourceComponent.has(destination) ? ironResourceComponent.getValue(destination) : 0;
+      uint256 curCopper = copperResourceComponent.has(destination) ? copperResourceComponent.getValue(destination) : 0;
+      uint256 curBullets = bulletCraftedComponent.has(destination) ? bulletCraftedComponent.getValue(destination) : 0;
+
+      // one iron + one copper = one bullet
+      uint256 consumeBy = curIron < curCopper ? curIron : curCopper;
+      copperResourceComponent.set(destination, curCopper - consumeBy);
+      ironResourceComponent.set(destination, curIron - consumeBy);
+      bulletCraftedComponent.set(destination, curBullets + consumeBy);
     }
+    // TODO: gracefully exit
 
     return abi.encode(0);
   }

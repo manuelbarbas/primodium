@@ -91,6 +91,11 @@ export function defineComponents(world: World) {
         contractId: "component.UraniniteResource",
       },
     }),
+    BulletCrafted: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.BulletCrafted",
+      },
+    }),
   };
 }
 

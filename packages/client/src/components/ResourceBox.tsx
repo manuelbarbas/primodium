@@ -63,6 +63,10 @@ function ResourceBox() {
               name={"Uraninite"}
               resourceComponent={components.UraniniteResource}
             />
+            <ResourceLabel
+              name={"Bullet"}
+              resourceComponent={components.BulletCrafted}
+            />
           </div>
         </div>
       </div>

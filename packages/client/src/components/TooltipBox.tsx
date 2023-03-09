@@ -14,6 +14,7 @@ import { getTopLayerKey } from "../util/tile";
 import { BlockIdToKey, BlockColors, BlockType } from "../util/constants";
 import { useMud } from "../context/MudContext";
 import ClaimButton from "./action/ClaimButton";
+import ResourceLabel from "./ResourceLabel";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -163,24 +164,39 @@ function TooltipBox() {
               <br />
               <div className="flex-row">
                 <div className="flex">
-                  {tileLastBuiltAt && (
-                    <div>
-                      Built: {parseInt(tileLastBuiltAt.value.toString(), 16)}
-                    </div>
-                  )}
-                </div>
-                <div className="flex">
                   {tileLastClaimedAt && (
                     <div>
-                      Claimed:{" "}
+                      Last Claimed:{" "}
                       {parseInt(tileLastClaimedAt.value.toString(), 16)}
                     </div>
                   )}
                 </div>
               </div>
               <div className="flex-row">
-                {builtTile && builtTile === BlockType.MainBase && (
-                  <ClaimButton x={selectedTile.x} y={selectedTile.y} />
+                {builtTile &&
+                  (builtTile === BlockType.MainBase ||
+                    builtTile === BlockType.BulletFactory) && (
+                    <ClaimButton x={selectedTile.x} y={selectedTile.y} />
+                  )}
+                {builtTile && builtTile === BlockType.BulletFactory && (
+                  <>
+                    <br />
+                    <ResourceLabel
+                      name={"Copper"}
+                      resourceComponent={components.CopperResource}
+                      entityIndex={tilesAtPosition[0]}
+                    />
+                    <ResourceLabel
+                      name={"Iron"}
+                      resourceComponent={components.IronResource}
+                      entityIndex={tilesAtPosition[0]}
+                    />
+                    <ResourceLabel
+                      name={"Bullet"}
+                      resourceComponent={components.BulletCrafted}
+                      entityIndex={tilesAtPosition[0]}
+                    />
+                  </>
                 )}
               </div>
             </div>

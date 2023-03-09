@@ -19,7 +19,7 @@ export default function ClaimButton({ x, y }: DisplayTile) {
 
   return (
     <button
-      className="absolute inset-x-4 bottom-16 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
+      className="inset-x-4 bottom-16 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
       onClick={claimAction}
     >
       Claim
