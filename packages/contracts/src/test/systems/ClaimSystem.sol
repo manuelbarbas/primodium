@@ -50,15 +50,24 @@ contract ClaimSystemTest is MudTest {
     buildSystem.executeTyped(ConveyerID, startPathCoord);
     buildPathSystem.executeTyped(startPathCoord, endPathCoord);
 
+    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
+    // START CLAIMING
     vm.roll(0);
     buildSystem.executeTyped(MinerID, coord);
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
     assertTrue(ironResourceComponent.has(addressToEntity(alice)));
     assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 100);
+
+    vm.roll(20);
+    claimSystem.executeTyped(mainBaseCoord);
+    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+
+    vm.roll(30);
+    claimSystem.executeTyped(mainBaseCoord);
+    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 300);
 
     vm.stopPrank();
   }
