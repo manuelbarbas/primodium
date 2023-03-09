@@ -175,7 +175,6 @@ contract ClaimSystem is System {
     // check if main base
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 1, "can not claim base at empty coord");
-    require(tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID);
 
     // Check that the coordinates is owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtPosition[0]);
@@ -185,18 +184,15 @@ contract ClaimSystem is System {
     lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
     // destination is either a wallet (store item in wallet-specific global inventory) or entity ID (store item in entity, eg within a factory)
-    uint256 destination = addressToEntity(msg.sender);
-
-    // check all four adjacent tiles
-    Coord memory coordLeft = Coord(coord.x - 1, coord.y);
-    Coord memory coordRight = Coord(coord.x + 1, coord.y);
-    Coord memory coordUp = Coord(coord.x, coord.y + 1);
-    Coord memory coordDown = Coord(coord.x, coord.y - 1);
-
-    claimConveyerTile(coordLeft, destination);
-    claimConveyerTile(coordRight, destination);
-    claimConveyerTile(coordUp, destination);
-    claimConveyerTile(coordDown, destination);
+    if (tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
+      // check main base, if so destination is the wallet
+      uint256 destination = addressToEntity(msg.sender);
+      // claim all four adjacent tiles
+      claimConveyerTile(Coord(coord.x - 1, coord.y), destination);
+      claimConveyerTile(Coord(coord.x + 1, coord.y), destination);
+      claimConveyerTile(Coord(coord.x, coord.y + 1), destination);
+      claimConveyerTile(Coord(coord.x, coord.y - 1), destination);
+    }
 
     return abi.encode(0);
   }
