@@ -1,25 +1,13 @@
 import { useState } from "react";
 
-import MinerButton from "./building-icons/Miner";
-import ConveyerButton from "./building-icons/ConveyerButton";
 import BuildingMenuButton from "./building-icons/BuildingMenuButton";
 import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
 import ChooseTransportMenu from "./ChooseTransportMenu";
-import MainBaseButton from "./building-icons/MainBaseButton";
-import BulletFactoryButton from "./building-icons/BulletFactoryButton";
+import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { BlockType } from "../util/constants";
 
 //need a back button between pages
-function BuildingPage({
-  buildMinerHelper,
-  buildConveyerHelper,
-  buildMainBaseHelper,
-  buildBulletFactoryHelper,
-}: {
-  buildMinerHelper: () => void;
-  buildConveyerHelper: () => void;
-  buildBulletFactoryHelper: () => void;
-  buildMainBaseHelper: () => void;
-}) {
+function BuildingPage() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
 
   return (
@@ -108,10 +96,10 @@ function BuildingPage({
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton> */}
-      <MinerButton action={buildMinerHelper} />
-      <ConveyerButton action={buildConveyerHelper} />
-      <MainBaseButton action={buildMainBaseHelper} />
-      <BulletFactoryButton action={buildBulletFactoryHelper} />
+      <BuildingIconButton label="Miner" blockType={BlockType.Miner} />
+      <BuildingIconButton label="Node" blockType={BlockType.Conveyer} />
+      <BuildingIconButton label="Base" blockType={BlockType.MainBase} />
+      <BuildingIconButton label="BulF" blockType={BlockType.BulletFactory} />
     </div>
   );
 }

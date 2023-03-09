@@ -1,57 +1,8 @@
-import { useCallback } from "react";
 import { useState } from "react";
-
-import { EntityID } from "@latticexyz/recs";
-import { BigNumber } from "ethers";
-
-import { BlockType, DisplayTile } from "../util/constants";
-
-import { useSelectedTile } from "../context/SelectedTileContext";
-import { useMud } from "../context/MudContext";
-
 import { FaWindowClose } from "react-icons/fa";
 import BuildingPage from "./BuildingPage";
 
 function BuildingBox() {
-  const { systems } = useMud();
-  const { selectedTile } = useSelectedTile();
-
-  // Place action
-  const buildTile = useCallback(
-    ({ x, y }: DisplayTile, blockType: EntityID) => {
-      console.log("building on tile");
-      console.log(x, y);
-      systems["system.Build"].executeTyped(
-        BigNumber.from(blockType),
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 3_000_000,
-        }
-      );
-    },
-    []
-  );
-
-  // Helpers
-  const buildMinerHelper = useCallback(() => {
-    buildTile(selectedTile, BlockType.Miner);
-  }, [selectedTile]);
-
-  const buildConveyerHelper = useCallback(() => {
-    buildTile(selectedTile, BlockType.Conveyer);
-  }, [selectedTile]);
-
-  const buildMainBaseHelper = useCallback(() => {
-    buildTile(selectedTile, BlockType.MainBase);
-  }, [selectedTile]);
-
-  const buildBulletFactoryHelper = useCallback(() => {
-    buildTile(selectedTile, BlockType.BulletFactory);
-  }, [selectedTile]);
-
   const [minimized, setMinimize] = useState(false);
 
   const minimizeBox = () => {
@@ -70,12 +21,7 @@ function BuildingBox() {
           <button onClick={minimizeBox} className="fixed top-4 right-5">
             <LinkIcon icon={<FaWindowClose size="24" />} />
           </button>
-          <BuildingPage
-            buildMinerHelper={buildMinerHelper}
-            buildConveyerHelper={buildConveyerHelper}
-            buildMainBaseHelper={buildMainBaseHelper}
-            buildBulletFactoryHelper={buildBulletFactoryHelper}
-          />
+          <BuildingPage />
         </div>
       </div>
     );
