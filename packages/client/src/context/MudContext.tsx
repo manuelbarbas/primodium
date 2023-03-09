@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext } from "react";
 import { TxQueue } from "@latticexyz/network";
 import { EntityIndex, World } from "@latticexyz/recs";
 
+import { NetworkComponents } from "@latticexyz/std-client";
 import { SystemTypes } from "contracts/types/SystemTypes";
 import {
   defineComponents,
@@ -11,7 +12,7 @@ import {
 interface MudContextInterface {
   world: World;
   systems: TxQueue<SystemTypes>;
-  components: ReturnType<typeof defineComponents>;
+  components: NetworkComponents<ReturnType<typeof defineComponents>>;
   offChainComponents: ReturnType<typeof defineOffChainComponents>;
   singletonIndex: EntityIndex;
 }
@@ -28,7 +29,7 @@ const MudProvider = ({
 }: {
   world: World;
   systems: TxQueue<SystemTypes>;
-  components: ReturnType<typeof defineComponents>;
+  components: NetworkComponents<ReturnType<typeof defineComponents>>;
   offChainComponents: ReturnType<typeof defineOffChainComponents>;
   singletonIndex: EntityIndex;
   children: ReactNode;

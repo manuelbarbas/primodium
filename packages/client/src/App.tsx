@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import { WagmiConfig, createClient, useAccount, Connector } from "wagmi";
 import { ExternalProvider } from "@ethersproject/providers";
@@ -7,13 +6,10 @@ import { getDefaultProvider } from "ethers";
 import { getNetworkLayerConfig } from "./network/config";
 import { createNetworkLayer } from "./network/layer";
 
-import Home from "./screens/Home";
-import Increment from "./screens/Increment";
-import Map from "./screens/Map";
-import LeafletMapDebug from "./screens/LeafletMapDebug";
 import SelectedTileProvider from "./context/SelectedTileContext";
-
 import MudProvider from "./context/MudContext";
+
+import AppLoadingState from "./AppLoadingState";
 
 const wagmiClient = createClient({
   autoConnect: true,
@@ -26,6 +22,7 @@ const setupNetworkLayer = async (provider: ExternalProvider | undefined) => {
 };
 
 export default function App() {
+  // Setup network layer
   const { connector: activeConnector, address } = useAccount();
   const prevAddressRef = useRef<string | undefined>("");
 
@@ -67,14 +64,7 @@ export default function App() {
       >
         <WagmiConfig client={wagmiClient}>
           <SelectedTileProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/increment" element={<Increment />} />
-                <Route path="/map" element={<Map />} />
-                <Route path="/leaflet" element={<LeafletMapDebug />} />
-              </Routes>
-            </BrowserRouter>
+            <AppLoadingState />
           </SelectedTileProvider>
         </WagmiConfig>
       </MudProvider>
