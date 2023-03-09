@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useMud } from "../context/MudContext";
 import { useSelectedTile } from "../context/SelectedTileContext";
-import BuildingButton from "./building-icons/BuildingButton";
+import PathActionIconButton from "./building-icons/PathActionIconButton";
 
 function ChooseTransportMenu({
   title,
@@ -68,25 +68,25 @@ function ChooseTransportMenu({
     <div className="z-[1000] fixed bottom-0 w-11/12 h-72 flex flex-col bg-gray-700 text-white font-mono rounded">
       <p className="mt-4 text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
-        <BuildingButton
-          backgroundColor="red"
-          text={"Start Path"}
+        <PathActionIconButton
+          backgroundColor="#dd9871"
+          text={"Start"}
           action={startPath}
         />
-        <BuildingButton
-          backgroundColor="green"
-          text={"End Path"}
+        <PathActionIconButton
+          backgroundColor="#77c899"
+          text={"End"}
           action={endPath}
         />
-        <BuildingButton
-          backgroundColor="blue"
-          text={"Clear Path"}
-          action={clearPath}
-        />
-        <BuildingButton
-          backgroundColor="brown"
-          text={"Create Path"}
+        <PathActionIconButton
+          backgroundColor="#479dd6"
+          text={"Create"}
           action={createPath}
+        />
+        <PathActionIconButton
+          backgroundColor="#ad6b85"
+          text={"Clear"}
+          action={clearPath}
         />
       </div>
       <button

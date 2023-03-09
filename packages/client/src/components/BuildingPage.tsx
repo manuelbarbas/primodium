@@ -36,7 +36,7 @@ function BuildingPage() {
         setMenuOpenIndex={setMenuOpenIndex}
       >
         <ChooseTransportMenu
-          title="Build Transports"
+          title="Building path between nodes"
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
