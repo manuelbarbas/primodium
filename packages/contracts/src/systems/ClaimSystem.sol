@@ -34,7 +34,7 @@ contract ClaimSystem is System {
   // TODO: Change rate to be variable based on miner
   uint256 MINE_COUNT_PER_BLOCK = 10;
 
-  function claimMiner(Coord memory coord) public {
+  function claimMiner(Coord memory coord, uint256 destination) public {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
@@ -76,48 +76,48 @@ contract ClaimSystem is System {
       uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
 
       if (resourceKey == BolutiteID) {
-        uint256 cur = resourceComponents.bolutiteResourceComponent.has(ownerKey)
-          ? resourceComponents.bolutiteResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.bolutiteResourceComponent.has(destination)
+          ? resourceComponents.bolutiteResourceComponent.getValue(destination)
           : 0;
         resourceComponents.bolutiteResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == CopperID) {
-        uint256 cur = resourceComponents.copperResourceComponent.has(ownerKey)
-          ? resourceComponents.copperResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.copperResourceComponent.has(destination)
+          ? resourceComponents.copperResourceComponent.getValue(destination)
           : 0;
         resourceComponents.copperResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == IridiumID) {
-        uint256 cur = resourceComponents.iridiumResourceComponent.has(ownerKey)
-          ? resourceComponents.iridiumResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.iridiumResourceComponent.has(destination)
+          ? resourceComponents.iridiumResourceComponent.getValue(destination)
           : 0;
         resourceComponents.iridiumResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == IronID) {
-        uint256 cur = resourceComponents.ironResourceComponent.has(ownerKey)
-          ? resourceComponents.ironResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.ironResourceComponent.has(destination)
+          ? resourceComponents.ironResourceComponent.getValue(destination)
           : 0;
         resourceComponents.ironResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == KimberliteID) {
-        uint256 cur = resourceComponents.kimberliteResourceComponent.has(ownerKey)
-          ? resourceComponents.kimberliteResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.kimberliteResourceComponent.has(destination)
+          ? resourceComponents.kimberliteResourceComponent.getValue(destination)
           : 0;
         resourceComponents.kimberliteResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == LithiumID) {
-        uint256 cur = resourceComponents.lithiumResourceComponent.has(ownerKey)
-          ? resourceComponents.lithiumResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.lithiumResourceComponent.has(destination)
+          ? resourceComponents.lithiumResourceComponent.getValue(destination)
           : 0;
         resourceComponents.lithiumResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == OsmiumID) {
-        uint256 cur = resourceComponents.osmiumResourceComponent.has(ownerKey)
-          ? resourceComponents.osmiumResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.osmiumResourceComponent.has(destination)
+          ? resourceComponents.osmiumResourceComponent.getValue(destination)
           : 0;
         resourceComponents.osmiumResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == TungstenID) {
-        uint256 cur = resourceComponents.tungstenResourceComponent.has(ownerKey)
-          ? resourceComponents.tungstenResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.tungstenResourceComponent.has(destination)
+          ? resourceComponents.tungstenResourceComponent.getValue(destination)
           : 0;
         resourceComponents.tungstenResourceComponent.set(ownerKey, cur + incBy);
       } else if (resourceKey == UraniniteID) {
-        uint256 cur = resourceComponents.uraniniteResourceComponent.has(ownerKey)
-          ? resourceComponents.uraniniteResourceComponent.getValue(ownerKey)
+        uint256 cur = resourceComponents.uraniniteResourceComponent.has(destination)
+          ? resourceComponents.uraniniteResourceComponent.getValue(destination)
           : 0;
         resourceComponents.uraniniteResourceComponent.set(ownerKey, cur + incBy);
       }
@@ -125,20 +125,20 @@ contract ClaimSystem is System {
   }
 
   // pass in a coordinate of a path block, fetch all surrounding miners.
-  function claimAdjacentMiners(Coord memory coord) public {
+  function claimAdjacentMiners(Coord memory coord, uint256 destination) public {
     Coord memory coordLeft = Coord(coord.x - 1, coord.y);
     Coord memory coordRight = Coord(coord.x + 1, coord.y);
     Coord memory coordUp = Coord(coord.x, coord.y + 1);
     Coord memory coordDown = Coord(coord.x, coord.y - 1);
 
-    claimMiner(coordLeft);
-    claimMiner(coordRight);
-    claimMiner(coordUp);
-    claimMiner(coordDown);
+    claimMiner(coordLeft, destination);
+    claimMiner(coordRight, destination);
+    claimMiner(coordUp, destination);
+    claimMiner(coordDown, destination);
   }
 
   // pass in a coordinate of a conveyer block, which fetches all other
-  function claimConveyerTile(Coord memory coord) public {
+  function claimConveyerTile(Coord memory coord, uint256 destination) public {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
@@ -147,7 +147,7 @@ contract ClaimSystem is System {
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
 
     if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == ConveyerID) {
-      claimAdjacentMiners(coord);
+      claimAdjacentMiners(coord, destination);
 
       // trace backwards to all paths that end at this tile.
       // since we want the paths that end at this tile, this current tile entityID is the value
@@ -156,7 +156,7 @@ contract ClaimSystem is System {
       // claim each conveyer tile connected to the current tile. keys are the start position.
       for (uint i = 0; i < endAtPositionPaths.length; i++) {
         // Get the tile position
-        claimConveyerTile(positionComponent.getValue(endAtPositionPaths[i]));
+        claimConveyerTile(positionComponent.getValue(endAtPositionPaths[i]), destination);
       }
     }
   }
@@ -184,16 +184,19 @@ contract ClaimSystem is System {
     uint256 endClaimTime = block.number;
     lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
+    // destination is either a wallet (store item in wallet-specific global inventory) or entity ID (store item in entity, eg within a factory)
+    uint256 destination = addressToEntity(msg.sender);
+
     // check all four adjacent tiles
     Coord memory coordLeft = Coord(coord.x - 1, coord.y);
     Coord memory coordRight = Coord(coord.x + 1, coord.y);
     Coord memory coordUp = Coord(coord.x, coord.y + 1);
     Coord memory coordDown = Coord(coord.x, coord.y - 1);
 
-    claimConveyerTile(coordLeft);
-    claimConveyerTile(coordRight);
-    claimConveyerTile(coordUp);
-    claimConveyerTile(coordDown);
+    claimConveyerTile(coordLeft, destination);
+    claimConveyerTile(coordRight, destination);
+    claimConveyerTile(coordUp, destination);
+    claimConveyerTile(coordDown, destination);
 
     return abi.encode(0);
   }
