@@ -47,11 +47,11 @@ const ResourceTileLayer = ({
   useMapEvent("moveend", setNewBounds);
 
   // Zoom event listener
-  const [zoom, setZoom] = useState(map.getZoom());
-  const zoomChange = useCallback(() => {
-    setZoom(map.getZoom());
-  }, [map]);
-  useMapEvent("zoom", zoomChange);
+  // const [zoom, setZoom] = useState(map.getZoom());
+  // const zoomChange = useCallback(() => {
+  //   setZoom(map.getZoom());
+  // }, [map]);
+  // useMapEvent("zoom", zoomChange);
 
   // Select tile
   // Touch event listener on the map itself instead of each tile due to touch offset issues for zoom.
