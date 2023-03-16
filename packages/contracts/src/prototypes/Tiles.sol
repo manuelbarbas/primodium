@@ -32,3 +32,4 @@ uint256 constant MinerID = uint256(keccak256("block.Miner"));
 uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 
 uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
+uint256 constant SiloID = uint256(keccak256("block.Silo"));
