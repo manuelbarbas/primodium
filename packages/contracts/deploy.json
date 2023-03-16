@@ -7,6 +7,7 @@
     "PathComponent",
     "LastBuiltAtComponent",
     "LastClaimedAtComponent",
+    "HealthComponent",
     "BolutiteResourceComponent",
     "CopperResourceComponent",
     "IridiumResourceComponent",
@@ -19,6 +20,12 @@
     "BulletCraftedComponent"
   ],
   "systems": [
+    {
+      "name": "AttackSystem",
+      "writeAccess": [
+        "HealthComponent"
+      ]
+    },
     {
       "name": "IncrementSystem",
       "writeAccess": [
