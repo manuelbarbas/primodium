@@ -118,7 +118,7 @@ function ResourceTile({
         position={[y + 0.5, x + 0.5]}
         icon={icon}
       /> */}
-      <Rectangle
+      {/* <Rectangle
         key={JSON.stringify({ x, y })}
         bounds={[
           [y, x],
@@ -130,9 +130,10 @@ function ResourceTile({
           color: BlockColors.get(topLayerKey as EntityID),
         }}
         pane="mapPane"
-      />
+      /> */}
       {/* !!setting an image background!! */}
-      {/* <ImageOverlay
+      <ImageOverlay
+        className="pixel-images"
         key={JSON.stringify({ x, y })}
         bounds={[
           [y, x],
@@ -142,7 +143,7 @@ function ResourceTile({
         layerOptions={{
           pane: "overlayPane",
         }}
-      /> */}
+      />
       {pathsToRender}
     </>
   );
