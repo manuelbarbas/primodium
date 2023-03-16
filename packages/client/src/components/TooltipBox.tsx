@@ -128,12 +128,12 @@ function TooltipBox() {
             <div className="flex flex-col">
               <div className="flex align-center">
                 <div className="inline-block w-16 h-16">
-                  {/* <img
+                  <img
                     className="w-16 h-16"
                     src={
                       "https://mindustrygame.github.io/wiki/images/block-unit-cargo-loader-ui.png"
                     }
-                  /> */}
+                  />
                 </div>
                 <div className="ml-4 flex flex-col my-auto">
                   <div className="mb-1">
