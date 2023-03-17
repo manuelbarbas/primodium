@@ -7,7 +7,7 @@ import { Coord } from "@latticexyz/utils";
 import { MapContainer, LayersControl } from "react-leaflet";
 import L from "leaflet";
 
-import { getTopLayerKey } from "../util/tile";
+import { getTopLayerKeyPair } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 
@@ -23,16 +23,17 @@ export default function LeafletMap() {
     });
   }, []);
 
-  const getTopLayerKeyHelper = useCallback(
+  const getTopLayerKeyPairHelper = useCallback(
     (coord: Coord) => {
+      const defaultPair = { terrain: SingletonID, resource: SingletonID };
       if (!initialized || perlinRef.current === null) {
-        return SingletonID;
+        return defaultPair;
       }
       if (perlinRef.current !== null) {
         const perlin = perlinRef.current;
-        return getTopLayerKey(coord, perlin);
+        return getTopLayerKeyPair(coord, perlin);
       } else {
-        return SingletonID;
+        return defaultPair;
       }
     },
     [initialized]
@@ -55,7 +56,7 @@ export default function LeafletMap() {
       crs={L.CRS.Simple}
     >
       <LayersControl position="topleft">
-        <ResourceTileLayer getTileKey={getTopLayerKeyHelper} />
+        <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
       </LayersControl>
     </MapContainer>
   );

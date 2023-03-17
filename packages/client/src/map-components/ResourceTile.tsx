@@ -13,11 +13,13 @@ import Path from "./Path";
 function ResourceTile({
   x,
   y,
-  tileKey,
+  terrain,
+  resource,
 }: {
   x: number;
   y: number;
-  tileKey: EntityID;
+  terrain: EntityID;
+  resource: EntityID;
 }) {
   const { world, components, singletonIndex } = useMud();
 
@@ -41,7 +43,7 @@ function ResourceTile({
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
     topLayerKey = tile.value;
   } else {
-    topLayerKey = tileKey;
+    topLayerKey = terrain;
   }
 
   // Get the conveyer path that start at this tile.
