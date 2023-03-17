@@ -39,11 +39,9 @@ function ResourceTile({
     tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
   );
 
-  let topLayerKey;
+  let buildingKey: EntityID | undefined;
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
-    topLayerKey = tile.value;
-  } else {
-    topLayerKey = terrain;
+    buildingKey = tile.value as unknown as EntityID;
   }
 
   // Get the conveyer path that start at this tile.
@@ -94,13 +92,25 @@ function ResourceTile({
   });
 
   //!!Used for setting an image background!!
-  let imagebackground = BackgroundImage.get(topLayerKey as EntityID);
-  let resourceBackground = BackgroundImage.get(resource as EntityID);
+  const terrainBackground = BackgroundImage.get(terrain as EntityID);
+  const resourceBackground = BackgroundImage.get(resource as EntityID);
 
   return (
     <>
       {/* !!setting an image background!! */}
-      {resource && (
+      {buildingKey && (
+        <ImageOverlay
+          className="pixel-images"
+          key={JSON.stringify({ x, y })}
+          bounds={[
+            [y, x],
+            [y + 1, x + 1],
+          ]}
+          url={BackgroundImage.get(buildingKey)!}
+          zIndex={11}
+        />
+      )}
+      {resource && !buildingKey && (
         <ImageOverlay
           className="pixel-images"
           key={JSON.stringify({ x, y })}
@@ -119,7 +129,7 @@ function ResourceTile({
           [y, x],
           [y + 1, x + 1],
         ]}
-        url={imagebackground!}
+        url={terrainBackground!}
         zIndex={10}
       />
       {pathsToRender}

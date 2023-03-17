@@ -27,7 +27,9 @@ export const BlockKey = {
 
   // placeable blocks
   MainBase: "MainBase",
-  LithiumMiner: "LithiumMiner",
+  Miner: "Miner",
+
+  Silo: "Silo",
 };
 
 export const BlockType = {
@@ -64,6 +66,7 @@ export const BlockType = {
 
   // Factories
   BulletFactory: keccak256("block.BulletFactory") as EntityID,
+  Silo: keccak256("block.Silo") as EntityID,
 };
 
 // From OPCraft
@@ -133,6 +136,8 @@ export const BlockColors = new Map<EntityID, string>([
 
   // Factories
   [BlockType.BulletFactory, "#824947"],
+
+  [BlockType.Silo, "#bebebe"],
 ]);
 
 export const BackgroundImage = new Map<EntityID, string>([
@@ -158,6 +163,14 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Kimberlite, "../public/img/resource/kimberlite_ore_layer.png"],
   [BlockType.Uraninite, "../public/img/resource/uraninite_ore_layer.png"],
   [BlockType.Bolutite, "../public/img/resource/bolutite_ore_layer.png"],
+
+  // buildings
+  [BlockType.Miner, "../public/img/building/miner.png"],
+  [BlockType.LithiumMiner, "../public/img/building/miner.png"],
+  [BlockType.MainBase, "../public/img/building/mainbase.png"],
+  [BlockType.Conveyer, "../public/img/building/node.png"],
+  [BlockType.BulletFactory, "../public/img/building/bulletfactory.png"],
+  [BlockType.Silo, "../public/img/building/silo.png"],
 ]);
 
 export type DisplayTile = {
