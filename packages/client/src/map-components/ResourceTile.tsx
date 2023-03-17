@@ -19,7 +19,7 @@ function ResourceTile({
   x: number;
   y: number;
   terrain: EntityID;
-  resource: EntityID;
+  resource: EntityID | null;
 }) {
   const { world, components, singletonIndex } = useMud();
 
@@ -95,10 +95,23 @@ function ResourceTile({
 
   //!!Used for setting an image background!!
   let imagebackground = BackgroundImage.get(topLayerKey as EntityID);
+  let resourceBackground = BackgroundImage.get(resource as EntityID);
 
   return (
     <>
       {/* !!setting an image background!! */}
+      {resource && (
+        <ImageOverlay
+          className="pixel-images"
+          key={JSON.stringify({ x, y })}
+          bounds={[
+            [y, x],
+            [y + 1, x + 1],
+          ]}
+          url={resourceBackground!}
+          zIndex={11}
+        />
+      )}
       <ImageOverlay
         className="pixel-images"
         key={JSON.stringify({ x, y })}
@@ -107,7 +120,7 @@ function ResourceTile({
           [y + 1, x + 1],
         ]}
         url={imagebackground!}
-        zIndex={999}
+        zIndex={10}
       />
       {pathsToRender}
     </>
