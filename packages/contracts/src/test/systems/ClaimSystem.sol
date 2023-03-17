@@ -11,6 +11,7 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 import { ClaimSystem, ID as ClaimSystemID } from "../../systems/ClaimSystem.sol";
 
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
+
 import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
 
 // import { MainBaseID, ConveyerID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
