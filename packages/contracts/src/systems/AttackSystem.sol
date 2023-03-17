@@ -10,7 +10,7 @@ import { SiloID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
-uint256 constant ID = uint256(keccak256("system.BuildPath"));
+uint256 constant ID = uint256(keccak256("system.Attack"));
 
 // TEMP: to be changed when level up siloes
 int32 constant ATTACK_RADIUS = 5;
