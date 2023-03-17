@@ -11,7 +11,7 @@ import { useSelectedTile } from "../context/SelectedTileContext";
 
 import { getTopLayerKey } from "../util/tile";
 
-import { BlockIdToKey, BlockColors, BlockType } from "../util/constants";
+import { BlockIdToKey, BackgroundImage, BlockType } from "../util/constants";
 import { useMud } from "../context/MudContext";
 import ClaimButton from "./action/ClaimButton";
 import ResourceLabel from "./ResourceLabel";
@@ -74,11 +74,13 @@ function TooltipBox() {
   });
 
   //change this to BackgroundImage.get (and import it from utils) if you want this to be an image
-  const tileColor = BlockColors.get(terrainTile);
+  const tileColor = BackgroundImage.get(terrainTile);
 
   const tooltipThumbnail = {
     //change this to img src and all that if you want this to be an image
-    backgroundColor: tileColor,
+    backgroundImage: `url(${tileColor})`,
+    backgroundSize: "cover",
+    imageRendering: "pixelated",
   };
 
   let builtTile: EntityID | undefined;
@@ -126,15 +128,11 @@ function TooltipBox() {
           </p>
           <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
             <div className="flex flex-col">
-              <div className="flex align-center">
-                <div className="inline-block w-16 h-16">
-                  <img
-                    className="w-16 h-16"
-                    src={
-                      "https://mindustrygame.github.io/wiki/images/block-unit-cargo-loader-ui.png"
-                    }
-                  />
-                </div>
+              <div className="flex align-center mb-4">
+                <div
+                  className="inline-block w-16 h-16"
+                  style={tooltipThumbnail}
+                ></div>
                 <div className="ml-4 flex flex-col my-auto">
                   <div className="mb-1">
                     <div>

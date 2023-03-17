@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
@@ -10,11 +9,12 @@ import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
 import { useSelectedTile } from "../context/SelectedTileContext";
 import SelectedPath from "./SelectedPath";
+import { DisplayKeyPair } from "../util/constants";
 
 const ResourceTileLayer = ({
   getTileKey,
 }: {
-  getTileKey: (coord: Coord) => EntityID;
+  getTileKey: (coord: Coord) => DisplayKeyPair;
 }) => {
   const map = useMap();
   const {
@@ -85,12 +85,14 @@ const ResourceTileLayer = ({
           x: i,
           y: j,
         });
+
         tilesToRender.push(
           <ResourceTile
             key={JSON.stringify({ x: i, y: j, render: "tilesToRender" })}
             x={i}
             y={j}
-            tileKey={tileKey}
+            terrain={tileKey.terrain}
+            resource={tileKey.resource}
           />
         );
       }
