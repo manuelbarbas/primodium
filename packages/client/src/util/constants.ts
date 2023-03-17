@@ -164,3 +164,8 @@ export type DisplayTile = {
   x: number;
   y: number;
 };
+
+export type DisplayKeyPair = {
+  terrain: EntityID;
+  resource: EntityID | null;
+};

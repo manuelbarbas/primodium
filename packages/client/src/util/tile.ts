@@ -1,6 +1,6 @@
 import { Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
-import { BlockType } from "./constants";
+import { BlockType, DisplayKeyPair } from "./constants";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -89,5 +89,19 @@ export function getTopLayerKey(coord: Coord, perlin: Perlin) {
     return terrainKey;
   } else {
     return resourceKey;
+  }
+}
+
+export function getTopLayerKeyPair(
+  coord: Coord,
+  perlin: Perlin
+): DisplayKeyPair {
+  const terrainKey = getTerrainKey(coord, perlin);
+  const resourceKey = getResourceKey(coord, perlin);
+
+  if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
+    return { terrain: terrainKey, resource: null };
+  } else {
+    return { terrain: terrainKey, resource: resourceKey };
   }
 }

@@ -22,15 +22,11 @@
   "systems": [
     {
       "name": "AttackSystem",
-      "writeAccess": [
-        "HealthComponent"
-      ]
+      "writeAccess": ["HealthComponent"]
     },
     {
       "name": "IncrementSystem",
-      "writeAccess": [
-        "CounterComponent"
-      ]
+      "writeAccess": ["CounterComponent"]
     },
     {
       "name": "BuildSystem",
@@ -54,21 +50,11 @@
     },
     {
       "name": "BuildPathSystem",
-      "writeAccess": [
-        "PositionComponent",
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent"
-      ]
+      "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "DestroyPathSystem",
-      "writeAccess": [
-        "PositionComponent",
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent"
-      ]
+      "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "ClaimSystem",
