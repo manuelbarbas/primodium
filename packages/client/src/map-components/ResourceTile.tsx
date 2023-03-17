@@ -101,7 +101,6 @@ function ResourceTile({
       {buildingKey && (
         <ImageOverlay
           className="pixel-images"
-          key={JSON.stringify({ x, y })}
           bounds={[
             [y, x],
             [y + 1, x + 1],
@@ -113,7 +112,6 @@ function ResourceTile({
       {resource && !buildingKey && (
         <ImageOverlay
           className="pixel-images"
-          key={JSON.stringify({ x, y })}
           bounds={[
             [y, x],
             [y + 1, x + 1],
@@ -124,7 +122,6 @@ function ResourceTile({
       )}
       <ImageOverlay
         className="pixel-images"
-        key={JSON.stringify({ x, y })}
         bounds={[
           [y, x],
           [y + 1, x + 1],
