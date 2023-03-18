@@ -29,9 +29,10 @@ import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
 import { MainBaseID, MinerID, ConveyerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
-import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { Coord } from "../types.sol";
 
+import { LibTerrain } from "../libraries/LibTerrain.sol";
+import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
 uint256 constant ID = uint256(keccak256("system.Claim"));
@@ -47,7 +48,8 @@ contract ClaimSystem is System {
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),
       OwnedByComponent(getAddressById(components, OwnedByComponentID)),
-      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID))
+      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
+      HealthComponent(getAddressById(components, HealthComponentID))
     );
 
     ResourceComponents memory rc = ResourceComponents(
@@ -68,6 +70,11 @@ contract ClaimSystem is System {
 
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
     uint256 ownerKey = addressToEntity(msg.sender);
+
+    if (entitiesAtPosition.length == 1) {
+      // Check that health is not zero
+      require(LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]), "health is not zero");
+    }
 
     if (entitiesAtPosition.length == 1 && entitiesAtPosition[0] == originEntity) {
       // Prevent conveyer tiles to re-claim buildings that we originally started claiming from
@@ -145,11 +152,15 @@ contract ClaimSystem is System {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+    HealthComponent healthComponent = HealthComponent(getAddressById(components, HealthComponentID));
 
     // check if tile component and connnect to previous path
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
 
     if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == ConveyerID) {
+      // Check that health is not zero
+      require(LibHealth.checkAlive(healthComponent, entitiesAtPosition[0]), "health is not zero");
+
       claimAdjacentBuildings(coord, originEntity, destination);
 
       // trace backwards to all paths that end at this tile.
@@ -178,7 +189,8 @@ contract ClaimSystem is System {
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),
       OwnedByComponent(getAddressById(components, OwnedByComponentID)),
-      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID))
+      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
+      HealthComponent(getAddressById(components, HealthComponentID))
     );
 
     // Factory resources (add more when needed)
@@ -201,6 +213,9 @@ contract ClaimSystem is System {
     // Check that the coordinates is owned by the msg.sender
     uint256 ownedEntityAtStartCoord = c.ownedByComponent.getValue(entitiesAtPosition[0]);
     require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
+
+    // Check that health is not zero
+    require(LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]), "health is not zero");
 
     uint256 endClaimTime = block.number;
     c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
