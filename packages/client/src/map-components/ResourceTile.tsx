@@ -62,7 +62,9 @@ function ResourceTile({
 
   if (path && endPathTile) {
     // Path that starts at the current selected tile
-    pathsToRender.push(<Path startCoord={{ x, y }} endCoord={endPathTile} />);
+    pathsToRender.push(
+      <Path key="curTile" startCoord={{ x, y }} endCoord={endPathTile} />
+    );
   }
 
   // Get all conveyer paths that end at this tile.
@@ -86,7 +88,14 @@ function ResourceTile({
     const currentStartTile = getComponentValue(components.Position, item);
     if (currentStartTile) {
       pathsToRender.push(
-        <Path startCoord={currentStartTile} endCoord={{ x, y }}></Path>
+        <Path
+          key={JSON.stringify({
+            start: currentStartTile,
+            end: { x, y },
+          })}
+          startCoord={currentStartTile}
+          endCoord={{ x, y }}
+        ></Path>
       );
     }
   });
