@@ -45,7 +45,8 @@
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
-        "LastClaimedAtComponent"
+        "LastClaimedAtComponent",
+        "HealthComponent"
       ]
     },
     {
