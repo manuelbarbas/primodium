@@ -11,7 +11,7 @@ library LibHealth {
   int32 constant ATTACK_RADIUS = 5;
   uint256 constant ATTACK_DAMAGE = 20;
 
-  function checkAlive(Uint256Component component, uint256 entity) public view returns (bool) {
+  function checkAlive(Uint256Component component, uint256 entity) internal view returns (bool) {
     uint256 entityHealth = component.has(entity) ? component.getValue(entity) : MAX_HEALTH;
     return entityHealth > 0;
   }
