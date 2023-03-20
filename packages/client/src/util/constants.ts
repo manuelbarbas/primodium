@@ -142,35 +142,35 @@ export const BlockColors = new Map<EntityID, string>([
 
 export const BackgroundImage = new Map<EntityID, string>([
   //landscape blocks
-  [BlockType.Water, "../public/img/terrain/water.gif"],
-  [BlockType.Sandstone, "../public/img/terrain/sandstone.png"],
-  [BlockType.Biofilm, "../public/img/terrain/biofilm.png"],
-  [BlockType.Alluvium, "../public/img/terrain/alluvium.png"],
-  [BlockType.Regolith, "../public/img/terrain/regolith.png"],
-  [BlockType.Bedrock, "../public/img/terrain/bedrock.png"],
-  [BlockType.Air, "../public/img/terrain/air.png"],
+  [BlockType.Water, "/img/terrain/water.gif"],
+  [BlockType.Sandstone, "/img/terrain/sandstone.png"],
+  [BlockType.Biofilm, "/img/terrain/biofilm.png"],
+  [BlockType.Alluvium, "/img/terrain/alluvium.png"],
+  [BlockType.Regolith, "/img/terrain/regolith.png"],
+  [BlockType.Bedrock, "/img/terrain/bedrock.png"],
+  [BlockType.Air, "/img/terrain/air.png"],
 
   //metal ores
-  [BlockType.Lithium, "../public/img/resource/lithium_ore_layer.png"],
-  [BlockType.Iron, "../public/img/resource/iron_ore_layer.png"],
-  [BlockType.Copper, "../public/img/resource/copper_ore_layer.png"],
-  [BlockType.Titanium, "../public/img/resource/titanium_ore_layer.png"],
-  [BlockType.Iridium, "../public/img/resource/iridium_ore_layer.png"],
-  [BlockType.Osmium, "../public/img/resource/osmium_ore_layer.png"],
-  [BlockType.Tungsten, "../public/img/resource/tungsten_ore_layer.png"],
+  [BlockType.Lithium, "/img/resource/lithium_ore_layer.png"],
+  [BlockType.Iron, "/img/resource/iron_ore_layer.png"],
+  [BlockType.Copper, "/img/resource/copper_ore_layer.png"],
+  [BlockType.Titanium, "/img/resource/titanium_ore_layer.png"],
+  [BlockType.Iridium, "/img/resource/iridium_ore_layer.png"],
+  [BlockType.Osmium, "/img/resource/osmium_ore_layer.png"],
+  [BlockType.Tungsten, "/img/resource/tungsten_ore_layer.png"],
 
   //mineral ores
-  [BlockType.Kimberlite, "../public/img/resource/kimberlite_ore_layer.png"],
-  [BlockType.Uraninite, "../public/img/resource/uraninite_ore_layer.png"],
-  [BlockType.Bolutite, "../public/img/resource/bolutite_ore_layer.png"],
+  [BlockType.Kimberlite, "/img/resource/kimberlite_ore_layer.png"],
+  [BlockType.Uraninite, "/img/resource/uraninite_ore_layer.png"],
+  [BlockType.Bolutite, "/img/resource/bolutite_ore_layer.png"],
 
   // buildings
-  [BlockType.Miner, "../public/img/building/miner.png"],
-  [BlockType.LithiumMiner, "../public/img/building/miner.png"],
-  [BlockType.MainBase, "../public/img/building/mainbase.png"],
-  [BlockType.Conveyer, "../public/img/building/node.png"],
-  [BlockType.BulletFactory, "../public/img/building/bulletfactory.png"],
-  [BlockType.Silo, "../public/img/building/silo.png"],
+  [BlockType.Miner, "/img/building/miner.png"],
+  [BlockType.LithiumMiner, "/img/building/miner.png"],
+  [BlockType.MainBase, "/img/building/mainbase.png"],
+  [BlockType.Conveyer, "/img/building/node.png"],
+  [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
+  [BlockType.Silo, "/img/building/silo.png"],
 ]);
 
 export type DisplayTile = {
