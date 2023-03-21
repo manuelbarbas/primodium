@@ -22,9 +22,8 @@ uint256 constant ID = uint256(keccak256("system.Attack"));
 contract AttackSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
-    Coord memory coord = abi.decode(arguments, (Coord));
-
+  // new function that takes in coord and attacks the entity at that coord
+  function attack(Coord memory coord, uint256 attackEntity) public {
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),
@@ -37,15 +36,56 @@ contract AttackSystem is System {
       BulletCraftedComponent(getAddressById(components, BulletCraftedComponentID))
     );
 
-    // Check that the coordinates exist tiles
+    uint256[] memory curEntities = c.positionComponent.getEntitiesWithValue(coord);
+    if (curEntities.length == 1) {
+      uint256 curOwnedEntity = c.ownedByComponent.getValue(curEntities[0]);
+
+      if (curOwnedEntity != addressToEntity(msg.sender)) {
+        // check that attackEntity has enough bullets
+        if (cc.bulletCraftedComponent.has(attackEntity)) {
+          uint256 curBullets = cc.bulletCraftedComponent.getValue(attackEntity);
+          if (curBullets > 0) {
+            cc.bulletCraftedComponent.set(attackEntity, curBullets - 1);
+          } else {
+            return;
+          }
+        } else {
+          return;
+        }
+
+        // decrease by HP
+        if (c.healthComponent.has(curEntities[0])) {
+          uint256 curHealth = c.healthComponent.getValue(curEntities[0]);
+          if (curHealth > 0) {
+            c.healthComponent.set(curEntities[0], curHealth - LibHealth.ATTACK_DAMAGE);
+          }
+        } else {
+          c.healthComponent.set(curEntities[0], LibHealth.MAX_HEALTH - LibHealth.ATTACK_DAMAGE);
+        }
+      }
+    }
+  }
+
+  function execute(bytes memory arguments) public returns (bytes memory) {
+    Coord memory coord = abi.decode(arguments, (Coord));
+
+    ClaimComponents memory c = ClaimComponents(
+      PositionComponent(getAddressById(components, PositionComponentID)),
+      TileComponent(getAddressById(components, TileComponentID)),
+      OwnedByComponent(getAddressById(components, OwnedByComponentID)),
+      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
+      HealthComponent(getAddressById(components, HealthComponentID))
+    );
+
+    // Check that the coordinates exist for the silo tile
     uint256[] memory entities = c.positionComponent.getEntitiesWithValue(coord);
     require(entities.length == 1, "can not start path at empty coord");
 
-    // Check that the coordinates are both conveyer tiles
+    // Check that it is a silo tile
     uint256 tileEntity = c.tileComponent.getValue(entities[0]);
     require(tileEntity == SiloID, "can not attack from not silo tile");
 
-    // Check that the coordinates are both owned by the msg.sender
+    // Check that the coordinates is owned by the msg.sender
     uint256 ownedEntity = c.ownedByComponent.getValue(entities[0]);
     require(ownedEntity == addressToEntity(msg.sender), "can not attack from not owned tile");
 
@@ -53,29 +93,37 @@ contract AttackSystem is System {
     // deduct by x number of bullet in silo tile
     // deduct by z hp in tiles that were attacked
 
-    // TODO: silo tile bullet deduct based on how many tiles attacked
-    int32 tilesAttacked = 0;
-
-    for (int32 i = coord.x; i < coord.x + LibHealth.ATTACK_RADIUS; i++) {
-      for (int32 j = coord.y; j < coord.y + LibHealth.ATTACK_RADIUS; i++) {
-        // if entity exists and not owned tile
-        uint256[] memory curEntities = c.positionComponent.getEntitiesWithValue(Coord(i, j));
-        if (curEntities.length == 1) {
-          uint256 curOwnedEntity = c.ownedByComponent.getValue(entities[0]);
-          if (curOwnedEntity != addressToEntity(msg.sender)) {
-            // decrease by HP
-            if (c.healthComponent.has(entities[0])) {
-              uint256 curHealth = c.healthComponent.getValue(entities[0]);
-              if (curHealth > 0) {
-                c.healthComponent.set(entities[0], curHealth - LibHealth.ATTACK_DAMAGE);
-              }
-            } else {
-              c.healthComponent.set(entities[0], LibHealth.MAX_HEALTH - LibHealth.ATTACK_DAMAGE);
-            }
-            tilesAttacked++;
-          }
+    int32 i = LibHealth.ATTACK_RADIUS;
+    int32 j = LibHealth.ATTACK_RADIUS;
+    int32 totalElements = i * j;
+    int32 index = 0;
+    int32 radius = 0;
+    while (index < totalElements) {
+      for (int32 r = radius; r <= radius && index < totalElements; r++) {
+        int32 row = i / 2;
+        int32 col = j / 2;
+        for (int32 k = 0; k < r && index < totalElements; k++) {
+          row--;
+          attack(Coord({ x: row, y: col }), entities[0]);
+          index++;
+        }
+        for (int32 k = 0; k < r && index < totalElements; k++) {
+          col++;
+          attack(Coord({ x: row, y: col }), entities[0]);
+          index++;
+        }
+        for (int32 k = 0; k < r && index < totalElements; k++) {
+          row++;
+          attack(Coord({ x: row, y: col }), entities[0]);
+          index++;
+        }
+        for (int32 k = 0; k < r && index < totalElements; k++) {
+          col--;
+          attack(Coord({ x: row, y: col }), entities[0]);
+          index++;
         }
       }
+      radius++;
     }
 
     return abi.encode(entities[0]);
