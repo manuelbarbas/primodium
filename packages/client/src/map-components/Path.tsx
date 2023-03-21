@@ -35,10 +35,10 @@ export default function Path({
       <Circle
         key={`ec: ${JSON.stringify(startCoord)}`}
         pathOptions={{
-          weight: 5,
+          weight: 3,
         }}
         center={[endCoord.y + 0.5, endCoord.x + 0.5]}
-        radius={0.25}
+        radius={0.15}
         pane="popupPane"
       />
     </>
