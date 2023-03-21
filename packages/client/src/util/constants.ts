@@ -165,10 +165,10 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Bolutite, "../public/img/resource/bolutite_ore_layer.png"],
 
   // buildings
-  [BlockType.Miner, "../public/img/building/miner.png"],
-  [BlockType.LithiumMiner, "../public/img/building/miner.png"],
+  [BlockType.Miner, "../public/img/building/minerdrill.gif"],
+  [BlockType.LithiumMiner, "../public/img/building/minerdrill.png"],
   [BlockType.MainBase, "../public/img/building/mainbase.png"],
-  [BlockType.Conveyer, "../public/img/building/node.png"],
+  [BlockType.Conveyer, "../public/img/building/node.gif"],
   [BlockType.BulletFactory, "../public/img/building/bulletfactory.png"],
   [BlockType.Silo, "../public/img/building/silo.png"],
 ]);
