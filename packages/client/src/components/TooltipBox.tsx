@@ -76,13 +76,6 @@ function TooltipBox() {
   //change this to BackgroundImage.get (and import it from utils) if you want this to be an image
   const tileColor = BackgroundImage.get(terrainTile);
 
-  const tooltipThumbnail = {
-    //change this to img src and all that if you want this to be an image
-    backgroundImage: `url(${tileColor})`,
-    backgroundSize: "cover",
-    imageRendering: "pixelated",
-  };
-
   let builtTile: EntityID | undefined;
   let tileOwner: number | undefined;
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile && tileOwnedBy) {
@@ -131,7 +124,11 @@ function TooltipBox() {
               <div className="flex align-center mb-4">
                 <div
                   className="inline-block w-16 h-16"
-                  style={tooltipThumbnail}
+                  style={{
+                    backgroundImage: `url(${tileColor!})`,
+                    backgroundSize: "cover",
+                    imageRendering: "pixelated",
+                  }}
                 ></div>
                 <div className="ml-4 flex flex-col my-auto">
                   <div className="mb-1">

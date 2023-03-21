@@ -9,6 +9,7 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 
 import { ResourceComponents } from "../prototypes/ResourceComponents.sol";
 import { CraftedComponents } from "../prototypes/CraftedComponents.sol";
@@ -28,9 +29,10 @@ import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
 import { MainBaseID, MinerID, ConveyerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
-import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { Coord } from "../types.sol";
 
+import { LibTerrain } from "../libraries/LibTerrain.sol";
+import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
 uint256 constant ID = uint256(keccak256("system.Claim"));
@@ -42,14 +44,15 @@ contract ClaimSystem is System {
   uint256 MINE_COUNT_PER_BLOCK = 10;
 
   function claimBuilding(Coord memory coord, uint256 originEntity, uint256 destination) public {
-    ClaimComponents memory claimComponents = ClaimComponents(
+    ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),
       OwnedByComponent(getAddressById(components, OwnedByComponentID)),
-      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID))
+      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
+      HealthComponent(getAddressById(components, HealthComponentID))
     );
 
-    ResourceComponents memory resourceComponents = ResourceComponents(
+    ResourceComponents memory rc = ResourceComponents(
       BolutiteResourceComponent(getAddressById(components, BolutiteResourceComponentID)),
       CopperResourceComponent(getAddressById(components, CopperResourceComponentID)),
       IridiumResourceComponent(getAddressById(components, IridiumResourceComponentID)),
@@ -61,12 +64,17 @@ contract ClaimSystem is System {
       UraniniteResourceComponent(getAddressById(components, UraniniteResourceComponentID))
     );
 
-    CraftedComponents memory craftedComponents = CraftedComponents(
+    CraftedComponents memory cc = CraftedComponents(
       BulletCraftedComponent(getAddressById(components, BulletCraftedComponentID))
     );
 
-    uint256[] memory entitiesAtPosition = claimComponents.positionComponent.getEntitiesWithValue(coord);
+    uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
     uint256 ownerKey = addressToEntity(msg.sender);
+
+    if (entitiesAtPosition.length == 1) {
+      // Check that health is not zero
+      require(LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]), "health is not zero");
+    }
 
     if (entitiesAtPosition.length == 1 && entitiesAtPosition[0] == originEntity) {
       // Prevent conveyer tiles to re-claim buildings that we originally started claiming from
@@ -74,62 +82,60 @@ contract ClaimSystem is System {
       return;
     }
 
-    if (entitiesAtPosition.length == 1 && claimComponents.tileComponent.getValue(entitiesAtPosition[0]) == MinerID) {
+    if (entitiesAtPosition.length == 1 && c.tileComponent.getValue(entitiesAtPosition[0]) == MinerID) {
       // Check that the coordinates is owned by the msg.sender, "can not claim resource at not owned tile"
-      uint256 ownedEntityAtStartCoord = claimComponents.ownedByComponent.getValue(entitiesAtPosition[0]);
+      uint256 ownedEntityAtStartCoord = c.ownedByComponent.getValue(entitiesAtPosition[0]);
       if (ownedEntityAtStartCoord != ownerKey) {
         return;
       }
 
       // check last claimed at time
-      uint256 startClaimTime = claimComponents.lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
+      uint256 startClaimTime = c.lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
       uint256 endClaimTime = block.number;
       uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
-      claimComponents.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
+      c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
-      // fetch tile beneath miner.
+      // fetch tile beneath minerc.
       uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
 
       if (resourceKey == BolutiteID) {
-        LibMath.incrementBy(resourceComponents.bolutiteResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.bolutiteResourceComponent, destination, incBy);
       } else if (resourceKey == CopperID) {
-        LibMath.incrementBy(resourceComponents.copperResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.copperResourceComponent, destination, incBy);
       } else if (resourceKey == IridiumID) {
-        LibMath.incrementBy(resourceComponents.iridiumResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.iridiumResourceComponent, destination, incBy);
       } else if (resourceKey == IronID) {
-        LibMath.incrementBy(resourceComponents.ironResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.ironResourceComponent, destination, incBy);
       } else if (resourceKey == KimberliteID) {
-        LibMath.incrementBy(resourceComponents.kimberliteResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.kimberliteResourceComponent, destination, incBy);
       } else if (resourceKey == LithiumID) {
-        LibMath.incrementBy(resourceComponents.lithiumResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.lithiumResourceComponent, destination, incBy);
       } else if (resourceKey == OsmiumID) {
-        LibMath.incrementBy(resourceComponents.osmiumResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.osmiumResourceComponent, destination, incBy);
       } else if (resourceKey == TungstenID) {
-        LibMath.incrementBy(resourceComponents.tungstenResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.tungstenResourceComponent, destination, incBy);
       } else if (resourceKey == UraniniteID) {
-        LibMath.incrementBy(resourceComponents.uraniniteResourceComponent, destination, incBy);
+        LibMath.incrementBy(rc.uraniniteResourceComponent, destination, incBy);
       }
       //
-    } else if (
-      entitiesAtPosition.length == 1 && claimComponents.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID
-    ) {
+    } else if (entitiesAtPosition.length == 1 && c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
       // Check that the coordinates is owned by the msg.sender, "can not claim resource at not owned tile"
-      uint256 ownedEntityAtStartCoord = claimComponents.ownedByComponent.getValue(entitiesAtPosition[0]);
+      uint256 ownedEntityAtStartCoord = c.ownedByComponent.getValue(entitiesAtPosition[0]);
       if (ownedEntityAtStartCoord != ownerKey) {
         return;
       }
 
       // transfer all items from the bullet factory to the destination
-      LibMath.transfer(resourceComponents.bolutiteResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.copperResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.iridiumResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.ironResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.kimberliteResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.lithiumResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.osmiumResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.tungstenResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(resourceComponents.uraniniteResourceComponent, entitiesAtPosition[0], destination);
-      LibMath.transfer(craftedComponents.bulletCraftedComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.bolutiteResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.copperResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.iridiumResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.ironResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.kimberliteResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.lithiumResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.osmiumResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.tungstenResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(rc.uraniniteResourceComponent, entitiesAtPosition[0], destination);
+      LibMath.transfer(cc.bulletCraftedComponent, entitiesAtPosition[0], destination);
     }
   }
 
@@ -146,11 +152,15 @@ contract ClaimSystem is System {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+    HealthComponent healthComponent = HealthComponent(getAddressById(components, HealthComponentID));
 
     // check if tile component and connnect to previous path
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
 
     if (entitiesAtPosition.length == 1 && tileComponent.getValue(entitiesAtPosition[0]) == ConveyerID) {
+      // Check that health is not zero
+      require(LibHealth.checkAlive(healthComponent, entitiesAtPosition[0]), "health is not zero");
+
       claimAdjacentBuildings(coord, originEntity, destination);
 
       // trace backwards to all paths that end at this tile.
@@ -175,11 +185,12 @@ contract ClaimSystem is System {
 
   function execute(bytes memory arguments) public returns (bytes memory) {
     // Components
-    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
-      getAddressById(components, LastClaimedAtComponentID)
+    ClaimComponents memory c = ClaimComponents(
+      PositionComponent(getAddressById(components, PositionComponentID)),
+      TileComponent(getAddressById(components, TileComponentID)),
+      OwnedByComponent(getAddressById(components, OwnedByComponentID)),
+      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
+      HealthComponent(getAddressById(components, HealthComponentID))
     );
 
     // Factory resources (add more when needed)
@@ -196,24 +207,27 @@ contract ClaimSystem is System {
     Coord memory coord = abi.decode(arguments, (Coord));
 
     // check if main base
-    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
+    uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 1, "can not claim base at empty coord");
 
     // Check that the coordinates is owned by the msg.sender
-    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtPosition[0]);
+    uint256 ownedEntityAtStartCoord = c.ownedByComponent.getValue(entitiesAtPosition[0]);
     require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
 
+    // Check that health is not zero
+    require(LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]), "health is not zero");
+
     uint256 endClaimTime = block.number;
-    lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
+    c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
     // destination is either a wallet (store item in wallet-specific global inventory)
     // or entity ID (store item in entity, eg within a factory)
 
-    if (tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
+    if (c.tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
       // check main base, if so destination is the wallet
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
       //
-    } else if (tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
+    } else if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
       // check bullet, if so destination is the entity
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);

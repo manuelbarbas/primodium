@@ -8,16 +8,10 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { SiloID } from "../prototypes/Tiles.sol";
 
+import { LibHealth } from "../libraries/LibHealth.sol";
 import { Coord } from "../types.sol";
 
-uint256 constant ID = uint256(keccak256("system.BuildPath"));
-
-// TEMP: to be changed when level up siloes
-int32 constant ATTACK_RADIUS = 5;
-uint256 constant ATTACK_DAMAGE = 20;
-
-// TEMP: default health if health component doesn't exist.
-uint256 constant MAX_HEALTH = 100;
+uint256 constant ID = uint256(keccak256("system.Attack"));
 
 contract AttackSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
@@ -48,8 +42,8 @@ contract AttackSystem is System {
     // TODO: silo tile bullet deduct based on how many tiles attacked
     int32 tilesAttacked = 0;
 
-    for (int32 i = coord.x; i < coord.x + ATTACK_RADIUS; i++) {
-      for (int32 j = coord.y; j < coord.y + ATTACK_RADIUS; i++) {
+    for (int32 i = coord.x; i < coord.x + LibHealth.ATTACK_RADIUS; i++) {
+      for (int32 j = coord.y; j < coord.y + LibHealth.ATTACK_RADIUS; i++) {
         // if entity exists and not owned tile
         uint256[] memory curEntities = positionComponent.getEntitiesWithValue(Coord(i, j));
         if (curEntities.length == 1) {
@@ -59,10 +53,10 @@ contract AttackSystem is System {
             if (healthComponent.has(entities[0])) {
               uint256 curHealth = healthComponent.getValue(entities[0]);
               if (curHealth > 0) {
-                healthComponent.set(entities[0], curHealth - ATTACK_DAMAGE);
+                healthComponent.set(entities[0], curHealth - LibHealth.ATTACK_DAMAGE);
               }
             } else {
-              healthComponent.set(entities[0], MAX_HEALTH - ATTACK_DAMAGE);
+              healthComponent.set(entities[0], LibHealth.MAX_HEALTH - LibHealth.ATTACK_DAMAGE);
             }
             tilesAttacked++;
           }
