@@ -48,7 +48,10 @@ contract ResearchSystem is System {
         ironResourceComponent.set(addressToEntity(msg.sender), curIron - 100);
 
         c.set(addressToEntity(msg.sender));
+        return abi.encode(true);
       }
+    } else {
+      return abi.encode(false);
     }
   }
 
