@@ -28,7 +28,7 @@ import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "
 
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
-import { MainBaseID, MinerID, ConveyerID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
+import { MainBaseID, MinerID, ConveyerID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
 import { Coord } from "../types.sol";
 
 import { LibTerrain } from "../libraries/LibTerrain.sol";
@@ -226,6 +226,11 @@ contract ClaimSystem is System {
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
       // check main base, if so destination is the wallet
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
+      //
+    } else if (c.tileComponent.getValue(entitiesAtPosition[0]) == SiloID) {
+      // store items in the silo for emitting bullets
+      uint256 destination = entitiesAtPosition[0];
+      claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
       //
     } else if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
       // check bullet, if so destination is the entity
