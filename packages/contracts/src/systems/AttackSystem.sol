@@ -77,8 +77,6 @@ contract AttackSystem is System {
   function execute(bytes memory arguments) public returns (bytes memory) {
     (Coord memory coord, Coord memory targetCoord) = abi.decode(arguments, (Coord, Coord));
 
-    console.log("HERE IN ATTACK SYSTEM");
-
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),

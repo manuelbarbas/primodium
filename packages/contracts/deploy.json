@@ -17,9 +17,14 @@
     "OsmiumResourceComponent",
     "TungstenResourceComponent",
     "UraniniteResourceComponent",
-    "BulletCraftedComponent"
+    "BulletCraftedComponent",
+    "FastMinerResearchComponent"
   ],
   "systems": [
+    {
+      "name": "ResearchSystem",
+      "writeAccess": ["FastMinerResearchComponent", "IronResourceComponent", "CopperResourceComponent"]
+    },
     {
       "name": "AttackSystem",
       "writeAccess": ["HealthComponent", "BulletCraftedComponent", "IronResourceComponent", "CopperResourceComponent"]

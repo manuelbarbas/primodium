@@ -13,6 +13,7 @@ import { ClaimSystem, ID as ClaimSystemID } from "../../systems/ClaimSystem.sol"
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 
 import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
+import { CopperResourceComponent, ID as CopperResourceComponentID } from "../../components/CopperResourceComponent.sol";
 
 // import { MainBaseID, ConveyerID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 import { MainBaseID, ConveyerID, MinerID } from "../../prototypes/Tiles.sol";
@@ -111,6 +112,55 @@ contract ClaimSystemTest is MudTest {
     claimSystem.executeTyped(mainBaseCoord);
     assertTrue(ironResourceComponent.has(addressToEntity(alice)));
     assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 100);
+
+    vm.stopPrank();
+  }
+
+  // claim two resources
+  function testClaimTwoResources() public {
+    vm.startPrank(alice);
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
+    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+
+    // Resource and crafted components
+    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+    CopperResourceComponent copperResourceComponent = CopperResourceComponent(component(CopperResourceComponentID));
+
+    // TEMP: current generation seed
+    Coord memory IronCoord = Coord({ x: -5, y: 2 });
+    Coord memory CopperCoord = Coord({ x: -10, y: -4 });
+    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID);
+    assertEq(LibTerrain.getTopLayerKey(CopperCoord), CopperID);
+
+    Coord memory mainBaseCoord = Coord({ x: -5, y: -4 });
+    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+
+    // Copper to main base
+    buildSystem.executeTyped(ConveyerID, Coord({ x: -9, y: -4 }));
+    buildSystem.executeTyped(ConveyerID, Coord({ x: -6, y: -4 }));
+    buildPathSystem.executeTyped(Coord({ x: -9, y: -4 }), Coord({ x: -6, y: -4 }));
+
+    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
+    // START CLAIMING
+    vm.roll(0);
+
+    buildSystem.executeTyped(MinerID, CopperCoord);
+
+    // Iron to main base
+    buildSystem.executeTyped(MinerID, IronCoord);
+    buildSystem.executeTyped(ConveyerID, Coord({ x: -5, y: 1 }));
+    buildSystem.executeTyped(ConveyerID, Coord({ x: -5, y: -3 }));
+    buildPathSystem.executeTyped(Coord({ x: -5, y: 1 }), Coord({ x: -5, y: -3 }));
+
+    vm.roll(20);
+
+    claimSystem.executeTyped(mainBaseCoord);
+
+    assertTrue(copperResourceComponent.has(addressToEntity(alice)));
+    assertEq(copperResourceComponent.getValue(addressToEntity(alice)), 200);
+    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
 
     vm.stopPrank();
   }

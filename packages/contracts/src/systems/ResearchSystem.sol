@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
@@ -17,7 +18,7 @@ contract ResearchSystem is System {
 
     // determine what research item it is
     // if it's fast miner, then set the fast miner research component to true
-    if (researchItem == uint256(keccak256("component.FastMinerResearch"))) {
+    if (researchItem == FastMinerResearchComponentID) {
       FastMinerResearchComponent c = FastMinerResearchComponent(
         getAddressById(components, FastMinerResearchComponentID)
       );
@@ -25,6 +26,8 @@ contract ResearchSystem is System {
       if (c.has(addressToEntity(msg.sender)) && c.getValue(addressToEntity(msg.sender))) {
         return abi.encode(false);
       }
+
+      console.log("has entity");
 
       // require 100 iron and 100 copper
       CopperResourceComponent copperResourceComponent = CopperResourceComponent(
