@@ -17,7 +17,6 @@ import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "componen
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
 import { LibHealth } from "../libraries/LibHealth.sol";
-import { LibSpiral } from "../libraries/LibSpiral.sol";
 import { Coord } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("system.Attack"));
