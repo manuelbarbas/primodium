@@ -27,10 +27,6 @@ contract AttackSystem is System {
 
   // new function that takes in coord and attacks the entity at that coord
   function attack(Coord memory coord, uint256 attackEntity) public returns (uint8) {
-    console.log("ATTACKING");
-    console.logInt(coord.x);
-    console.logInt(coord.y);
-
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),
