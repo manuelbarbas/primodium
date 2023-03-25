@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+import "forge-std/console.sol";
+
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { SiloID } from "../prototypes/Tiles.sol";
@@ -15,6 +17,7 @@ import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "componen
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
 import { LibHealth } from "../libraries/LibHealth.sol";
+import { LibSpiral } from "../libraries/LibSpiral.sol";
 import { Coord } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("system.Attack"));
@@ -23,7 +26,11 @@ contract AttackSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   // new function that takes in coord and attacks the entity at that coord
-  function attack(Coord memory coord, uint256 attackEntity) public {
+  function attack(Coord memory coord, uint256 attackEntity) public returns (uint8) {
+    console.log("ATTACKING");
+    console.logInt(coord.x);
+    console.logInt(coord.y);
+
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),
@@ -47,10 +54,10 @@ contract AttackSystem is System {
           if (curBullets > 0) {
             cc.bulletCraftedComponent.set(attackEntity, curBullets - 1);
           } else {
-            return;
+            return 0;
           }
         } else {
-          return;
+          return 0;
         }
 
         // decrease by HP
@@ -62,12 +69,20 @@ contract AttackSystem is System {
         } else {
           c.healthComponent.set(curEntities[0], LibHealth.MAX_HEALTH - LibHealth.ATTACK_DAMAGE);
         }
+
+        return 1;
+      } else {
+        return 0;
       }
+    } else {
+      return 0;
     }
   }
 
   function execute(bytes memory arguments) public returns (bytes memory) {
-    Coord memory coord = abi.decode(arguments, (Coord));
+    (Coord memory coord, Coord memory targetCoord) = abi.decode(arguments, (Coord, Coord));
+
+    console.log("HERE IN ATTACK SYSTEM");
 
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
@@ -89,47 +104,10 @@ contract AttackSystem is System {
     uint256 ownedEntity = c.ownedByComponent.getValue(entities[0]);
     require(ownedEntity == addressToEntity(msg.sender), "can not attack from not owned tile");
 
-    // find all not owned tile in radius
-    // deduct by x number of bullet in silo tile
-    // deduct by z hp in tiles that were attacked
-
-    int32 i = LibHealth.ATTACK_RADIUS;
-    int32 j = LibHealth.ATTACK_RADIUS;
-    int32 totalElements = i * j;
-    int32 index = 0;
-    int32 radius = 0;
-    while (index < totalElements) {
-      for (int32 r = radius; r <= radius && index < totalElements; r++) {
-        int32 row = i / 2;
-        int32 col = j / 2;
-        for (int32 k = 0; k < r && index < totalElements; k++) {
-          row--;
-          attack(Coord({ x: row, y: col }), entities[0]);
-          index++;
-        }
-        for (int32 k = 0; k < r && index < totalElements; k++) {
-          col++;
-          attack(Coord({ x: row, y: col }), entities[0]);
-          index++;
-        }
-        for (int32 k = 0; k < r && index < totalElements; k++) {
-          row++;
-          attack(Coord({ x: row, y: col }), entities[0]);
-          index++;
-        }
-        for (int32 k = 0; k < r && index < totalElements; k++) {
-          col--;
-          attack(Coord({ x: row, y: col }), entities[0]);
-          index++;
-        }
-      }
-      radius++;
-    }
-
-    return abi.encode(entities[0]);
+    return abi.encode(attack(targetCoord, entities[0]));
   }
 
-  function executeTyped(Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(coord));
+  function executeTyped(Coord memory coord, Coord memory targetCoord) public returns (bytes memory) {
+    return execute(abi.encode(coord, targetCoord));
   }
 }

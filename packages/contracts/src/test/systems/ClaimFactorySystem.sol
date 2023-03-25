@@ -20,7 +20,7 @@ import { MainBaseID, ConveyerID, MinerID, BulletFactoryID } from "../../prototyp
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
-import { Coord, VoxelCoord } from "../../types.sol";
+import { Coord } from "../../types.sol";
 
 contract ClaimFactorySystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -219,7 +219,6 @@ contract ClaimFactorySystemTest is MudTest {
     buildPathSystem.executeTyped(startPath2Coord, endPath2Coord);
 
     // transfer iron from factory 1 to factory 2
-    console.log("Block here? should be 10");
     console.log(block.number);
 
     claimSystem.executeTyped(bulletFactory2Coord);

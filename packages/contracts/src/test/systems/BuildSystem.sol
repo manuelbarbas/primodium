@@ -10,7 +10,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { LithiumMinerID, ConveyerID } from "../../prototypes/Tiles.sol";
-import { Coord, VoxelCoord } from "../../types.sol";
+import { Coord } from "../../types.sol";
 
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}

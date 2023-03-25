@@ -9,18 +9,21 @@ import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { ClaimSystem, ID as ClaimSystemID } from "../../systems/ClaimSystem.sol";
+import { AttackSystem, ID as AttackSystemID } from "../../systems/AttackSystem.sol";
 
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
 import { CopperResourceComponent, ID as CopperResourceComponentID } from "../../components/CopperResourceComponent.sol";
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "../../components/BulletCraftedComponent.sol";
+import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 
 // import { MainBaseID, ConveyerID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 import { MainBaseID, ConveyerID, MinerID, BulletFactoryID, SiloID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
-import { Coord, VoxelCoord } from "../../types.sol";
+import { LibHealth } from "../../libraries/LibHealth.sol";
+import { Coord } from "../../types.sol";
 
 contract AttackSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -38,11 +41,13 @@ contract AttackSystemTest is MudTest {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    AttackSystem attackSystem = AttackSystem(system(AttackSystemID));
 
     // Resource and crafted components
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
     CopperResourceComponent copperResourceComponent = CopperResourceComponent(component(CopperResourceComponentID));
     BulletCraftedComponent bulletCraftedComponent = BulletCraftedComponent(component(BulletCraftedComponentID));
+    HealthComponent healthComponent = HealthComponent(component(HealthComponentID));
 
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
@@ -52,12 +57,10 @@ contract AttackSystemTest is MudTest {
 
     // Build a silo instead of a main base
     Coord memory siloCoord = Coord({ x: 0, y: 0 });
-    bytes memory siloEntity = buildSystem.executeTyped(SiloID, siloCoord);
-    uint256 siloID = abi.decode(siloEntity, (uint256));
+    uint256 siloID = abi.decode(buildSystem.executeTyped(SiloID, siloCoord), (uint256));
 
     Coord memory bulletFactoryCoord = Coord({ x: -5, y: -4 });
-    bytes memory bulletFactoryEntity = buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord);
-    uint256 bulletFactoryID = abi.decode(bulletFactoryEntity, (uint256));
+    uint256 bulletFactoryID = abi.decode(buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord), (uint256));
 
     // Copper to BulletFactory
     buildSystem.executeTyped(ConveyerID, Coord({ x: -9, y: -4 }));
@@ -121,6 +124,27 @@ contract AttackSystemTest is MudTest {
     assertEq(ironResourceComponent.getValue(siloID), 0);
     assertEq(copperResourceComponent.getValue(siloID), 100);
     assertEq(bulletCraftedComponent.getValue(siloID), 300);
+
+    vm.stopPrank();
+
+    // build a mainbase for bob
+    vm.startPrank(bob);
+    Coord memory bobMainBaseCoord = Coord({ x: 1, y: 1 });
+    uint256 bobMainBaseID = abi.decode(buildSystem.executeTyped(MainBaseID, bobMainBaseCoord), (uint256));
+    vm.stopPrank();
+
+    // alice attacks bob's mainbase
+    vm.startPrank(alice);
+    uint8 attackedEntitiesCount = abi.decode(attackSystem.executeTyped(siloCoord, bobMainBaseCoord), (uint8));
+
+    assertEq(attackedEntitiesCount, 1, "should have attacked 1 entity");
+
+    assertTrue(healthComponent.has(bobMainBaseID), "bob's mainbase should have health");
+    assertEq(
+      healthComponent.getValue(bobMainBaseID),
+      LibHealth.MAX_HEALTH - LibHealth.ATTACK_DAMAGE,
+      "bob's mainbase should have 1 attack health left"
+    );
 
     vm.stopPrank();
   }

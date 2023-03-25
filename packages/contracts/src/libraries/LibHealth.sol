@@ -8,7 +8,7 @@ library LibHealth {
   uint256 constant MAX_HEALTH = 100;
 
   // TEMP: to be changed when level up siloes
-  int32 constant ATTACK_RADIUS = 5;
+  int256 constant ATTACK_RADIUS = 5;
   uint256 constant ATTACK_DAMAGE = 20;
 
   function checkAlive(Uint256Component component, uint256 entity) internal view returns (bool) {

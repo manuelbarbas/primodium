@@ -7,7 +7,7 @@ import { MudTest } from "std-contracts/test/MudTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
 import { LibPerlin } from "../../libraries/LibPerlin.sol";
-import { Coord, VoxelCoord } from "../../types.sol";
+import { Coord } from "../../types.sol";
 
 import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 

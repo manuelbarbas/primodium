@@ -22,7 +22,7 @@
   "systems": [
     {
       "name": "AttackSystem",
-      "writeAccess": ["HealthComponent"]
+      "writeAccess": ["HealthComponent", "BulletCraftedComponent", "IronResourceComponent", "CopperResourceComponent"]
     },
     {
       "name": "IncrementSystem",

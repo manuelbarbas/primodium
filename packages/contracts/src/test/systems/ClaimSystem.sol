@@ -19,7 +19,7 @@ import { MainBaseID, ConveyerID, MinerID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
-import { Coord, VoxelCoord } from "../../types.sol";
+import { Coord } from "../../types.sol";
 
 contract ClaimSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
