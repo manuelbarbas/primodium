@@ -54,6 +54,7 @@
     "react-window": "^1.8.8",
     "react-zoom-pan-pinch": "^2.5.0",
     "threads": "^1.7.0",
-    "wagmi": "^0.10.10"
+    "wagmi": "^0.10.10",
+    "yocto-queue": "^1.0.0"
   }
 }
