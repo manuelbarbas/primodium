@@ -808,43 +808,52 @@
     zod "^3.20.6"
     zod-validation-error "^0.3.2"
 
-"@latticexyz/network@^1.41.0":
-  version "1.41.0"
-  resolved "https://registry.yarnpkg.com/@latticexyz/network/-/network-1.41.0.tgz#0dc4408772f980e29cdfcfeaca8ef678b7b7e4b6"
-  integrity sha512-ollF4vvaaE7Yz4EnqTNTEXWZ2x+EslaveXSe50dTF3pOmnoGFsugLo0Zrx5M+n3Pt830qKPqqc42bhh7d2DC1g==
+"@latticexyz/network@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/network/-/network-1.39.0.tgz#ab1bc1e39e6cd7e90fb83b4ff76066d05bbf755b"
+  integrity sha512-zFqDi/2g8ZosmFrrMnYaC5tAV4+xQDb6xXDPussRr6aZgkxHqd99kdgzFGANHiGqmSM6MqiAYVuVml1YX7uTgg==
   dependencies:
     debug "^4.3.4"
 
-"@latticexyz/noise@^1.41.0":
-  version "1.41.0"
-  resolved "https://registry.yarnpkg.com/@latticexyz/noise/-/noise-1.41.0.tgz#af5fd76f5af9c4151b90a14eddc175d5a7742083"
-  integrity sha512-oc3KQKxKEcUKnrZOioq+Ht6V1N+Z1mOnrEkbHsZI6tRyR3FcSeFRJNiKyL7nknBQSrZJuJ3tXieonqkc8W4cBA==
+"@latticexyz/noise@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/noise/-/noise-1.39.0.tgz#895f13bf9b3d8a72042764dd0535e25fa38a8d82"
+  integrity sha512-eEgf1hTKozkOzCbYC1t9dAhV0/G9mldbjWN8JOCWHvJc2K+OF34c3luz9bkfvuh8yfkRlqZFhCZvf7ArLrHFHA==
   dependencies:
     "@types/big-integer" "^0.0.31"
 
-"@latticexyz/phaserx@^1.41.0":
-  version "1.41.0"
-  resolved "https://registry.yarnpkg.com/@latticexyz/phaserx/-/phaserx-1.41.0.tgz#e6eced24862d91ae3c1c3e9b474a76a2d0acae3e"
-  integrity sha512-DYO65q8ZvrQ4FXOR3NudADIpYxT+1NXGiNJYS45rH0eJRXe5Zk6JHk+yKysLZg4f661ldJHXtx+rngki9qAFOA==
+"@latticexyz/phaserx@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/phaserx/-/phaserx-1.39.0.tgz#a9dedd5c5c8c4dcc1314666c31d1bd1cb2e7b521"
+  integrity sha512-lfqfxWlkf3DA6qI8o0cpojIO5qjmbu5s00MwD1sxdT3FwsilU/L96dFoSUUZmzpP/+yuFVj+zSvsCqKo9pvi1w==
   dependencies:
     "@use-gesture/vanilla" "10.2.9"
 
-"@latticexyz/react@^1.41.0":
-  version "1.41.0"
-  resolved "https://registry.yarnpkg.com/@latticexyz/react/-/react-1.41.0.tgz#768c5b152dc7c0ace31977421e48b0696604db76"
-  integrity sha512-qFWfVgyIpeX7+m2+r8char7ELLENhwfgDVwWPBG2lW2+Bb1m4zdfCYmkwHNQhMlHF87UU7ttq9IL0ev53Ofc9w==
+"@latticexyz/react@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/react/-/react-1.39.0.tgz#f46f875127abf17b86cb51fb56f83fc69155d94b"
+  integrity sha512-urZjhm+RlT67ngQiqwbkeUQa6fl0zh4BYIQRA1TPwNPlNm3npbLk4yh6EL3VNoK6aE+tNCVJJoxG9dVAfiyEzw==
   dependencies:
     fast-deep-equal "^3.1.3"
 
-"@latticexyz/recs@^1.41.0":
-  version "1.41.0"
-  resolved "https://registry.yarnpkg.com/@latticexyz/recs/-/recs-1.41.0.tgz#d0548b5e79baddddf97bc37743532cd6399953af"
-  integrity sha512-OAv++PbxwSrHDXSKwITJ8jCBKRAGjGhCRpvhotpY8nUg5YLovoIJ3BChXX0BJjocXrHLUhzuVJB7qEhZSLGddg==
+"@latticexyz/recs@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/recs/-/recs-1.39.0.tgz#106f3a07bd529b0d201ae6d37211dd3987e48059"
+  integrity sha512-9IPAlTjq5F4zODh6DDEaVtwu1D9PQIUjQ/nzBiix7tas56foc+RhNtTiDNncd7YN2ryUXWV3VEeCqpEjpGkrQA==
 
 "@latticexyz/schema-type@^1.41.0":
   version "1.41.0"
   resolved "https://registry.yarnpkg.com/@latticexyz/schema-type/-/schema-type-1.41.0.tgz#a3a3694489f481c4d60e854b9dfd80201ee22ea5"
   integrity sha512-tyE7+HDDGMXn1SUY+VDAJ+xYAA6AYEL6hLobzxJiT1SVSFnahDoD8IvLwSskR7qbl4xM+BdrpnFzWML/26bfMw==
+
+"@latticexyz/services@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/services/-/services-1.39.0.tgz#a347a6fea2d6996718295485cf912a1794fe3d78"
+  integrity sha512-rNwKlcePtX4dfrmHsPau6o2RpgAVC8VM0TKr/d3FZ0xeaR2bzATf8yNBDQNmGsODwLAd4zobkomvlll+R0Jh4A==
+  dependencies:
+    long "^5.2.1"
+    nice-grpc-common "^2.0.0"
+    protobufjs "^7.1.2"
 
 "@latticexyz/services@^1.41.0":
   version "1.41.0"
@@ -855,27 +864,30 @@
     nice-grpc-common "^2.0.0"
     protobufjs "^7.1.2"
 
+"@latticexyz/solecs@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/solecs/-/solecs-1.39.0.tgz#7ec86653cf4bce17499f7dcf896c765a1ea6abe4"
+  integrity sha512-MojEtWHAUV2jnARReTWU8MRbv/BnpaTQjdL7ljf/UIwOuS2C05E4k22yvzn3gk/798dLNUag/sDS/ulcWDD3Fg==
+
 "@latticexyz/solecs@^1.41.0":
   version "1.41.0"
   resolved "https://registry.yarnpkg.com/@latticexyz/solecs/-/solecs-1.41.0.tgz#e438c2cddff72a0f1864f3cfa2efb1cd634dd040"
   integrity sha512-70ti6lU5HcAWMerAn/I//XQA4ZSxyES4wVLa3bxNvi9Oah3bPRy7QsgKLjesjRnxSIRyi1e0AbU0Hca3GzHulg==
 
-"@latticexyz/std-client@^1.41.0":
-  version "1.41.0"
-  resolved "https://registry.yarnpkg.com/@latticexyz/std-client/-/std-client-1.41.0.tgz#942f88303a40d44493ba1497ee038cf0476ccc7d"
-  integrity sha512-xmjMi23lUe/6Hv76r1e1+e54bGed77YZxkX7Ni5NxKkQtvxY3KIOlCrttTuj/AZyUJotoiVblCW3foamQgCG2w==
+"@latticexyz/std-client@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/std-client/-/std-client-1.39.0.tgz#9ee4b7aeae9b673f482d8d5c49769aee4fe5485e"
+  integrity sha512-Ru4w0qe0w+86C3ff7etfDaFNH60Ice9Vj5JixSt+Ng+XtkeG53OmjQfCRfUqzL9HeVb67D+6W44LaECaZ0bKrA==
+
+"@latticexyz/std-contracts@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@latticexyz/std-contracts/-/std-contracts-1.39.0.tgz#9a5ccba9915887206d4d8274ee469b627c1e710c"
+  integrity sha512-jaP/WKleCma4x1fEu9RuYIuHHZEcRtrGorfz9JnSxvK6AN9SpreuLVwNIR84MTaUallgEDSemHfazGGqXltLiw==
 
 "@latticexyz/std-contracts@^1.41.0":
   version "1.41.0"
   resolved "https://registry.yarnpkg.com/@latticexyz/std-contracts/-/std-contracts-1.41.0.tgz#77cdffcf4d2a6ca84632debe0e15aa003b33899b"
   integrity sha512-TxiN7mGag3hadziblOfQi9/IwP09ninnpf5jz36DCFjramweg5woEGcd+/y8d19jRk0iPD/TioeuzN+LhXNFVg==
-
-"@latticexyz/utils@^1.41.0":
-  version "1.41.0"
-  resolved "https://registry.yarnpkg.com/@latticexyz/utils/-/utils-1.41.0.tgz#43e94eca0278e341263c1322dec0b545fef08b5b"
-  integrity sha512-Lih6oeWLxqu7I4+mbXzNkPWcPNbtlSRovkf+/BSulZJM4GefgMJaLsfRE4TBaMKqeDMkXnHZDukGRSK66EHzAQ==
-  dependencies:
-    typedoc-plugin-markdown "^3.13.6"
 
 "@ledgerhq/connect-kit-loader@^1.0.1":
   version "1.0.2"
@@ -2847,13 +2859,13 @@ dotenv@^16.0.3:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
   integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
+"ds-test@git+https://github.com/dapphub/ds-test.git#c9ce3f25bde29fc5eb9901842bf02850dfd2d084":
+  version "1.0.0"
+  resolved "git+https://github.com/dapphub/ds-test.git#c9ce3f25bde29fc5eb9901842bf02850dfd2d084"
+
 "ds-test@https://github.com/dapphub/ds-test.git#c7a36fb236f298e04edf28e2fee385b80f53945f":
   version "0.0.0"
   resolved "https://github.com/dapphub/ds-test.git#c7a36fb236f298e04edf28e2fee385b80f53945f"
-
-"ds-test@https://github.com/dapphub/ds-test.git#c9ce3f25bde29fc5eb9901842bf02850dfd2d084":
-  version "1.0.0"
-  resolved "https://github.com/dapphub/ds-test.git#c9ce3f25bde29fc5eb9901842bf02850dfd2d084"
 
 duplexify@^4.1.2:
   version "4.1.2"
@@ -3758,13 +3770,13 @@ for-each@^0.3.3:
   dependencies:
     is-callable "^1.1.3"
 
+"forge-std@git+https://github.com/foundry-rs/forge-std.git#b4f121555729b3afb3c5ffccb62ff4b6e2818fd3":
+  version "1.2.0"
+  resolved "git+https://github.com/foundry-rs/forge-std.git#b4f121555729b3afb3c5ffccb62ff4b6e2818fd3"
+
 "forge-std@https://github.com/foundry-rs/forge-std#fd86115ed6aba8e234ee0fb86c12fe35eff0b2a0":
   version "1.4.0"
   resolved "https://github.com/foundry-rs/forge-std#fd86115ed6aba8e234ee0fb86c12fe35eff0b2a0"
-
-"forge-std@https://github.com/foundry-rs/forge-std.git#b4f121555729b3afb3c5ffccb62ff4b6e2818fd3":
-  version "1.2.0"
-  resolved "https://github.com/foundry-rs/forge-std.git#b4f121555729b3afb3c5ffccb62ff4b6e2818fd3"
 
 fraction.js@^4.2.0:
   version "4.2.0"
@@ -3951,18 +3963,6 @@ grapheme-splitter@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
-
-handlebars@^4.7.7:
-  version "4.7.7"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.7.tgz#9ce33416aad02dbd6c8fafa8240d5d98004945a1"
-  integrity sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==
-  dependencies:
-    minimist "^1.2.5"
-    neo-async "^2.6.0"
-    source-map "^0.6.1"
-    wordwrap "^1.0.0"
-  optionalDependencies:
-    uglify-js "^3.1.4"
 
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
@@ -4779,11 +4779,6 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
-
-neo-async@^2.6.0:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
-  integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 nice-grpc-common@^2.0.0:
   version "2.0.0"
@@ -5895,9 +5890,9 @@ solidity-comments-extractor@^0.0.7:
   resolved "https://registry.yarnpkg.com/solidity-comments-extractor/-/solidity-comments-extractor-0.0.7.tgz#99d8f1361438f84019795d928b931f4e5c39ca19"
   integrity sha512-wciNMLg/Irp8OKGrh3S2tfvZiZ0NEyILfcRCXCD4mp7SgK/i9gzLfhY2hY7VMCQJ3kH9UB9BzNdibIVMchzyYw==
 
-"solmate@https://github.com/Rari-Capital/solmate.git#9cf1428245074e39090dceacb0c28b1f684f584c":
+"solmate@git+https://github.com/Rari-Capital/solmate.git#9cf1428245074e39090dceacb0c28b1f684f584c":
   version "6.5.0"
-  resolved "https://github.com/Rari-Capital/solmate.git#9cf1428245074e39090dceacb0c28b1f684f584c"
+  resolved "git+https://github.com/Rari-Capital/solmate.git#9cf1428245074e39090dceacb0c28b1f684f584c"
 
 sonic-boom@^2.2.1:
   version "2.8.0"
@@ -5910,11 +5905,6 @@ source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
-
-source-map@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
-  integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
 split-on-first@^1.0.0:
   version "1.1.0"
@@ -6328,13 +6318,6 @@ typedarray-to-buffer@3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typedoc-plugin-markdown@^3.13.6:
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.14.0.tgz#17b99ee3ab0d21046d253f185f7669e80d0d7891"
-  integrity sha512-UyQLkLRkfTFhLdhSf3RRpA3nNInGn+k6sll2vRXjflaMNwQAAiB61SYbisNZTg16t4K1dt1bPQMMGLrxS0GZ0Q==
-  dependencies:
-    handlebars "^4.7.7"
-
 typescript@^4.6.2, typescript@^4.6.4:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.3.tgz#3aea307c1746b8c384435d8ac36b8a2e580d85db"
@@ -6354,11 +6337,6 @@ typical@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/typical/-/typical-5.2.0.tgz#4daaac4f2b5315460804f0acf6cb69c52bb93066"
   integrity sha512-dvdQgNDNJo+8B2uBQoqdb11eUCE1JQXhvjC/CZtgvZseVd5TYMXnq0+vuUemXbd/Se29cTaUuPX3YIc2xgbvIg==
-
-uglify-js@^3.1.4:
-  version "3.17.4"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.17.4.tgz#61678cf5fa3f5b7eb789bb345df29afb8257c22c"
-  integrity sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==
 
 uint8arrays@3.1.0:
   version "3.1.0"
@@ -6545,11 +6523,6 @@ word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
-
-wordwrap@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
-  integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
 wordwrapjs@^4.0.0:
   version "4.0.1"
