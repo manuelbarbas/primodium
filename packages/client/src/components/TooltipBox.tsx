@@ -4,7 +4,7 @@ import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "../util/types";
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
 import { useSelectedTile } from "../context/SelectedTileContext";

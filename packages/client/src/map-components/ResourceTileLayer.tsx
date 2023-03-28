@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "../util/types";
 
 import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
