@@ -18,15 +18,15 @@ export default function ResourceLabel({
 }) {
   const resourceCount = useResourceCount(resourceComponent, entityIndex);
 
-  // if (resourceCount > 0) {
-  return (
-    <div className="flex mb-1">
-      <p className="w-24">{resourceCount}</p>
-      <img className="w-4 h-4 my-auto" src={icon}></img>
-      <p className=" ml-2 my-auto">{name}</p>
-    </div>
-  );
-  // } else {
-  //   return <></>;
-  // }
+  if (resourceCount > 0) {
+    return (
+      <div className="flex mb-1">
+        <p className="w-24">{resourceCount}</p>
+        <img className="w-4 h-4 my-auto" src={icon}></img>
+        <p className=" ml-2 my-auto">{name}</p>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 }
