@@ -10,7 +10,7 @@ import {
 import { Has, HasValue, EntityID } from "@latticexyz/recs";
 
 import { createPerlin, Perlin } from "@latticexyz/noise";
-import { Coord } from "../util/types";
+import { Coord } from "@latticexyz/utils";
 
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 

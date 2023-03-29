@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { Uint32Component } from "std-contracts/components/Uint32Component.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 
 library LibHealth {
@@ -8,7 +7,7 @@ library LibHealth {
   uint256 constant MAX_HEALTH = 100;
 
   // TEMP: to be changed when level up siloes
-  int256 constant ATTACK_RADIUS = 5;
+  int32 constant ATTACK_RADIUS = 5;
   uint256 constant ATTACK_DAMAGE = 20;
 
   function checkAlive(Uint256Component component, uint256 entity) internal view returns (bool) {

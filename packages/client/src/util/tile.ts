@@ -1,5 +1,5 @@
 import { Perlin } from "@latticexyz/noise";
-import { Coord } from "../util/types";
+import { Coord } from "@latticexyz/utils";
 import { BlockType, DisplayKeyPair } from "./constants";
 
 // TODO: randomize perlinSeed

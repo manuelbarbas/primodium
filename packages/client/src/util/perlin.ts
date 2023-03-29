@@ -1,5 +1,5 @@
 import { Perlin } from "@latticexyz/noise";
-import { Coord } from "../util/types";
+import { Coord } from "@latticexyz/utils";
 
 export function getSingleDepth(
   coord: Coord,
