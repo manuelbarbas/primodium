@@ -5,8 +5,7 @@ import { Wallet } from "ethers";
 const params = new URLSearchParams(window.location.search);
 
 export const devConfig = () => {
-  const randomWalletKey = Wallet.createRandom().privateKey;
-  console.log("randomWalletKey", randomWalletKey);
+  const randomWallet = Wallet.createRandom();
   const config: SetupContractConfig = {
     clock: {
       period: 1000,
@@ -18,7 +17,7 @@ export const devConfig = () => {
       wsRpcUrl: params.get("wsRpc") ?? "ws://localhost:8545",
       chainId: Number(params.get("chainId")) || 31337,
     },
-    privateKey: randomWalletKey,
+    privateKey: randomWallet.privateKey,
     chainId: Number(params.get("chainId")) || 31337,
     snapshotServiceUrl: params.get("snapshot") ?? undefined,
     initialBlockNumber: Number(params.get("initialBlockNumber")) || 0,

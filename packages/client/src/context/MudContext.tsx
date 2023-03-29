@@ -17,6 +17,9 @@ interface MudContextInterface {
   singletonIndex: EntityIndex;
 }
 
+// mud context type is interface and reactnode children
+type MudContextType = MudContextInterface & { children: ReactNode };
+
 export const MudContext = createContext<MudContextInterface | null>(null);
 
 const MudProvider = ({
@@ -26,14 +29,7 @@ const MudProvider = ({
   offChainComponents,
   singletonIndex,
   children,
-}: {
-  world: World;
-  systems: TxQueue<SystemTypes>;
-  components: NetworkComponents<ReturnType<typeof defineComponents>>;
-  offChainComponents: ReturnType<typeof defineOffChainComponents>;
-  singletonIndex: EntityIndex;
-  children: ReactNode;
-}) => {
+}: MudContextType) => {
   return (
     <MudContext.Provider
       value={{
