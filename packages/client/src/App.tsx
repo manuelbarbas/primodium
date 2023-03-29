@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { WagmiConfig, createClient, useAccount, Connector } from "wagmi";
 import { ExternalProvider } from "@ethersproject/providers";
 import { getDefaultProvider } from "ethers";
-import { getNetworkLayerConfig } from "./network/config";
+import { devConfig, getNetworkLayerConfig } from "./network/config";
 import { createNetworkLayer } from "./network/layer";
 
 import SelectedTileProvider from "./context/SelectedTileContext";
@@ -17,7 +17,8 @@ const wagmiClient = createClient({
 });
 
 const setupNetworkLayer = async (provider: ExternalProvider | undefined) => {
-  const networkLayerConfig = getNetworkLayerConfig(provider);
+  const networkLayerConfig =
+    provider === undefined ? devConfig() : getNetworkLayerConfig(provider);
   return await createNetworkLayer(networkLayerConfig);
 };
 
@@ -28,6 +29,8 @@ export default function App() {
 
   const [networkLayerParams, setNetworkLayerParams] =
     useState<Awaited<ReturnType<typeof createNetworkLayer>>>();
+
+  console.log(networkLayerParams);
 
   const setupNetworkLayerOnChange = async (
     address: string | undefined,

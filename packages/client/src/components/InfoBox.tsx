@@ -75,7 +75,7 @@ function InfoBox() {
           onClick={handleWalletLogin}
           className="absolute inset-x-4 bottom-4 h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold"
         >
-          Connect Wallet
+          Use External Wallet
         </button>
       </div>
     );
