@@ -24,7 +24,13 @@ const wagmiClient = createClient({
 const setupNetworkLayer = async (provider: ExternalProvider | undefined) => {
   const networkLayerConfig =
     provider === undefined ? devConfig() : getNetworkLayerConfig(provider);
-  return await createNetworkLayer(networkLayerConfig);
+  const networkLayerReturn = await createNetworkLayer(
+    networkLayerConfig.config
+  );
+  return {
+    defaultWalletAddress: networkLayerConfig.defaultWalletAddress,
+    networkLayer: networkLayerReturn,
+  };
 };
 
 export default function App() {
@@ -35,7 +41,8 @@ export default function App() {
   const [networkLayerParams, setNetworkLayerParams] =
     useState<Awaited<ReturnType<typeof createNetworkLayer>>>();
 
-  console.log(networkLayerParams);
+  // default wallet address that is provided by the browser if the user is not logged in
+  const defaultWalletAddressRef = useRef<string | undefined>(undefined);
 
   const setupNetworkLayerOnChange = async (
     address: string | undefined,
@@ -43,13 +50,18 @@ export default function App() {
   ) => {
     if (!address && prevAddressRef.current !== undefined) {
       const networkLayerReturn = await setupNetworkLayer(undefined);
-      setNetworkLayerParams(networkLayerReturn);
+      setNetworkLayerParams(networkLayerReturn.networkLayer);
+
+      defaultWalletAddressRef.current = networkLayerReturn.defaultWalletAddress;
       prevAddressRef.current = undefined;
     } else if (address && activeConnector) {
       if (address !== prevAddressRef.current) {
         const provider = await activeConnector.getProvider();
         const networkLayerReturn = await setupNetworkLayer(provider);
-        setNetworkLayerParams(networkLayerReturn);
+        setNetworkLayerParams(networkLayerReturn.networkLayer);
+
+        defaultWalletAddressRef.current =
+          networkLayerReturn.defaultWalletAddress;
         prevAddressRef.current = address;
       }
     }
@@ -69,6 +81,7 @@ export default function App() {
         components={networkLayerParams.components}
         offChainComponents={networkLayerParams.offChainComponents}
         singletonIndex={networkLayerParams.singletonIndex}
+        defaultWalletAddress={defaultWalletAddressRef.current}
       >
         <WagmiConfig client={wagmiClient}>
           <SelectedTileProvider>

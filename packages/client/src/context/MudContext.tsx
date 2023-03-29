@@ -15,6 +15,7 @@ interface MudContextInterface {
   components: NetworkComponents<ReturnType<typeof defineComponents>>;
   offChainComponents: ReturnType<typeof defineOffChainComponents>;
   singletonIndex: EntityIndex;
+  defaultWalletAddress: string | undefined;
 }
 
 // mud context type is interface and reactnode children
@@ -28,6 +29,7 @@ const MudProvider = ({
   components,
   offChainComponents,
   singletonIndex,
+  defaultWalletAddress,
   children,
 }: MudContextType) => {
   return (
@@ -38,6 +40,7 @@ const MudProvider = ({
         components,
         offChainComponents,
         singletonIndex,
+        defaultWalletAddress,
       }}
     >
       {children}

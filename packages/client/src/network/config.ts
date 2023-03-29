@@ -24,7 +24,7 @@ export const devConfig = () => {
     worldAddress: params.get("worldAddress")!,
     devMode: params.get("dev") === "true",
   };
-  return config;
+  return { defaultWalletAddress: randomWallet.address, config: config };
 };
 
 export const getNetworkLayerConfig = (
@@ -48,5 +48,5 @@ export const getNetworkLayerConfig = (
     worldAddress: params.get("worldAddress")!,
     devMode: params.get("dev") === "true",
   };
-  return config;
+  return { defaultWalletAddress: undefined, config: config };
 };
