@@ -167,7 +167,7 @@ export const BackgroundImage = new Map<EntityID, string>([
   // buildings
   [BlockType.Miner, "/img/building/minerdrill.gif"],
   [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
-  [BlockType.MainBase, "/img/building/mainbase.png"],
+  [BlockType.MainBase, "/img/building/mainbase.gif"],
   [BlockType.Conveyer, "/img/building/node.gif"],
   [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
   [BlockType.Silo, "/img/building/silo.png"],
