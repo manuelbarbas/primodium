@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-import { WagmiConfig, createClient, useAccount, Connector } from "wagmi";
+import {
+  WagmiConfig,
+  createClient,
+  useAccount as useWagmiAccount,
+  Connector,
+} from "wagmi";
 import { ExternalProvider } from "@ethersproject/providers";
 import { getDefaultProvider } from "ethers";
 import { devConfig, getNetworkLayerConfig } from "./network/config";
@@ -24,7 +29,7 @@ const setupNetworkLayer = async (provider: ExternalProvider | undefined) => {
 
 export default function App() {
   // Setup network layer
-  const { connector: activeConnector, address } = useAccount();
+  const { connector: activeConnector, address } = useWagmiAccount();
   const prevAddressRef = useRef<string | undefined>("");
 
   const [networkLayerParams, setNetworkLayerParams] =

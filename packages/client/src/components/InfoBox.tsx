@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import {
+  useAccount as useWagmiAccount,
+  useConnect,
+  useDisconnect,
+} from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
 import { BsQuestionCircle } from "react-icons/bs";
@@ -10,7 +14,7 @@ import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
 
 function InfoBox() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useWagmiAccount();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });

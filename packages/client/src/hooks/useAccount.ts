@@ -1,6 +1,6 @@
 import { useAccount as useWagmiAccount } from "wagmi";
 
-export default function useAccount() {
+export function useAccount() {
   const { address } = useWagmiAccount();
 
   return { address };

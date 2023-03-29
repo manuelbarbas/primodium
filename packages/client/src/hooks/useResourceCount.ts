@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useComponentValue } from "@latticexyz/react";
 import { Component, EntityID, EntityIndex, Type } from "@latticexyz/recs";
-import { useAccount } from "wagmi";
+import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
 
 export default function useResourceCount(
