@@ -8,8 +8,9 @@ import { DSTest } from "ds-test/test.sol";
 import { console } from "forge-std/console.sol";
 
 // Solecs 
+import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { World } from "solecs/World.sol";
-import { Component } from "solecs/Component.sol";
+import { IComponent } from "solecs/interfaces/IComponent.sol";
 import { getAddressById } from "solecs/utils.sol";
 import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ISystem } from "solecs/interfaces/ISystem.sol";
@@ -22,8 +23,22 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
+import { BolutiteResourceComponent, ID as BolutiteResourceComponentID } from "components/BolutiteResourceComponent.sol";
+import { CopperResourceComponent, ID as CopperResourceComponentID } from "components/CopperResourceComponent.sol";
+import { IridiumResourceComponent, ID as IridiumResourceComponentID } from "components/IridiumResourceComponent.sol";
+import { IronResourceComponent, ID as IronResourceComponentID } from "components/IronResourceComponent.sol";
+import { KimberliteResourceComponent, ID as KimberliteResourceComponentID } from "components/KimberliteResourceComponent.sol";
+import { LithiumResourceComponent, ID as LithiumResourceComponentID } from "components/LithiumResourceComponent.sol";
+import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "components/OsmiumResourceComponent.sol";
+import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
+import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
+import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
+import { FastMinerResearchComponent, ID as FastMinerResearchComponentID } from "components/FastMinerResearchComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
+import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
+import { AttackSystem, ID as AttackSystemID } from "systems/AttackSystem.sol";
 import { IncrementSystem, ID as IncrementSystemID } from "systems/IncrementSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "systems/DestroySystem.sol";
@@ -32,7 +47,7 @@ import { DestroyPathSystem, ID as DestroyPathSystemID } from "systems/DestroyPat
 import { ClaimSystem, ID as ClaimSystemID } from "systems/ClaimSystem.sol";
 
 struct DeployResult {
-  World world;
+  IWorld world;
   address deployer;
 }
 
@@ -49,12 +64,12 @@ library LibDeploy {
     // ------------------------
 
     // Deploy world
-    result.world = _world == address(0) ? new World() : World(_world);
+    result.world = _world == address(0) ? new World() : IWorld(_world);
     if (_world == address(0)) result.world.init(); // Init if it's a fresh world
 
     // Deploy components
     if (!_reuseComponents) {
-      Component comp;
+      IComponent comp;
 
       console.log("Deploying CounterComponent");
       comp = new CounterComponent(address(result.world));
@@ -83,6 +98,54 @@ library LibDeploy {
       console.log("Deploying LastClaimedAtComponent");
       comp = new LastClaimedAtComponent(address(result.world));
       console.log(address(comp));
+
+      console.log("Deploying HealthComponent");
+      comp = new HealthComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying BolutiteResourceComponent");
+      comp = new BolutiteResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying CopperResourceComponent");
+      comp = new CopperResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IridiumResourceComponent");
+      comp = new IridiumResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IronResourceComponent");
+      comp = new IronResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying KimberliteResourceComponent");
+      comp = new KimberliteResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying LithiumResourceComponent");
+      comp = new LithiumResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying OsmiumResourceComponent");
+      comp = new OsmiumResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying TungstenResourceComponent");
+      comp = new TungstenResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying UraniniteResourceComponent");
+      comp = new UraniniteResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying BulletCraftedComponent");
+      comp = new BulletCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying FastMinerResearchComponent");
+      comp = new FastMinerResearchComponent(address(result.world));
+      console.log(address(comp));
     } 
     
     // Deploy systems 
@@ -94,7 +157,7 @@ library LibDeploy {
     uint256 componentId,
     address writer
   ) internal {
-    Component(getAddressById(components, componentId)).authorizeWriter(writer);
+    IComponent(getAddressById(components, componentId)).authorizeWriter(writer);
   }
   
   /**
@@ -105,10 +168,27 @@ library LibDeploy {
     address _world,
     bool init
   ) internal {
-    World world = World(_world);
+    IWorld world = IWorld(_world);
     // Deploy systems
     ISystem system; 
     IUint256Component components = world.components();
+
+    console.log("Deploying ResearchSystem");
+    system = new ResearchSystem(world, address(components));
+    world.registerSystem(address(system), ResearchSystemID);
+    authorizeWriter(components, FastMinerResearchComponentID, address(system));
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, CopperResourceComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying AttackSystem");
+    system = new AttackSystem(world, address(components));
+    world.registerSystem(address(system), AttackSystemID);
+    authorizeWriter(components, HealthComponentID, address(system));
+    authorizeWriter(components, BulletCraftedComponentID, address(system));
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, CopperResourceComponentID, address(system));
+    console.log(address(system));
 
     console.log("Deploying IncrementSystem");
     system = new IncrementSystem(world, address(components));
@@ -134,6 +214,7 @@ library LibDeploy {
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, HealthComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathSystem");
@@ -163,6 +244,16 @@ library LibDeploy {
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, BolutiteResourceComponentID, address(system));
+    authorizeWriter(components, CopperResourceComponentID, address(system));
+    authorizeWriter(components, IridiumResourceComponentID, address(system));
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, KimberliteResourceComponentID, address(system));
+    authorizeWriter(components, LithiumResourceComponentID, address(system));
+    authorizeWriter(components, OsmiumResourceComponentID, address(system));
+    authorizeWriter(components, TungstenResourceComponentID, address(system));
+    authorizeWriter(components, UraniniteResourceComponentID, address(system));
+    authorizeWriter(components, BulletCraftedComponentID, address(system));
     console.log(address(system));
   }
 }
