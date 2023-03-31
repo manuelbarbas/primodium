@@ -47,7 +47,7 @@ export default function LeafletMap() {
     <MapContainer
       center={[0, 0]}
       minZoom={5}
-      maxZoom={6}
+      maxZoom={8}
       zoom={6}
       scrollWheelZoom={true}
       attributionControl={false}
