@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Circle, Polyline, useMap } from "react-leaflet";
-import L from "leaflet";
+import L, { LatLng } from "leaflet";
 
 interface MovingCirclePolylineProps {
   positions: [number, number][];
@@ -16,7 +16,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   positions,
   circleRadius = 0.5,
   circleColor = "red",
-  circleSpeed = 1,
+  circleSpeed = 3,
   lineColor = "blue",
   duration,
   ...otherProps
@@ -29,6 +29,16 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   const polylineRef = useRef<L.Polyline>();
   const circleRef = useRef<L.Circle>();
 
+  const getPolylineLength = (): number => {
+    let totalLength = 0;
+    for (let i = 0; i < positions.length - 1; i++) {
+      let from = new LatLng(positions[i][0], positions[i][1]);
+      let to = new LatLng(positions[i + 1][0], positions[i + 1][1]);
+      totalLength += from.distanceTo(to);
+    }
+    return totalLength;
+  };
+
   const moveCircle = () => {
     let nextIndex = currentIndex.current + 1;
 
@@ -39,16 +49,27 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       nextIndex = 1;
     }
 
-    const from = positions[currentIndex.current];
-    const to = positions[nextIndex];
+    let from = new LatLng(
+      positions[currentIndex.current][0],
+      positions[currentIndex.current][1]
+    );
+    let to = new LatLng(positions[nextIndex][0], positions[nextIndex][1]);
+
+    // get segment length as a percentage of the total polyline length
+    let segmentLength = from.distanceTo(to) / getPolylineLength();
 
     const startTime = performance.now();
     const move = (timestamp: number) => {
+      // time should move faster if the segment is shorter
+      // and slower if the segment is longer
       const elapsedTime = timestamp - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
+      const normalizedElapsedTime = elapsedTime / segmentLength / circleSpeed;
+      const progress = Math.min(normalizedElapsedTime / duration, 1);
+      console.log(progress);
+      // console.log(duration);
 
-      const lat = from[0] + (to[0] - from[0]) * progress;
-      const lng = from[1] + (to[1] - from[1]) * progress;
+      const lat = from.lat + (to.lat - from.lat) * progress;
+      const lng = from.lng + (to.lng - from.lng) * progress;
       setCirclePosition([lat, lng]);
 
       if (progress < 1) {
