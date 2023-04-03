@@ -18,16 +18,6 @@ export default function Path({
         positions={[
           [startCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, startCoord.x + 0.5],
-        ]}
-        pane="popupPane"
-      />
-      <Polyline
-        key={`ep: ${JSON.stringify(startCoord)}`}
-        pathOptions={{
-          weight: 5,
-        }}
-        positions={[
-          [endCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, endCoord.x + 0.5],
         ]}
         pane="popupPane"

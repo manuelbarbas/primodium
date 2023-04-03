@@ -44,13 +44,6 @@ export default function LeafletMap() {
     return <p>Initializing...</p>;
   }
 
-  const positions: [number, number][] = [
-    [0, 0],
-    [1, 8],
-    [2, 7],
-    [15, 15],
-  ];
-
   return (
     <MapContainer
       center={[0, 0]}
@@ -65,11 +58,6 @@ export default function LeafletMap() {
     >
       <LayersControl position="topleft">
         <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
-        <MovingCirclePolyline
-          positions={positions}
-          lineColor="blue"
-          duration={1000}
-        />
       </LayersControl>
     </MapContainer>
   );

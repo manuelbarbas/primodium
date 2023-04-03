@@ -20,18 +20,6 @@ export default function SelectedPath({
         positions={[
           [startCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, startCoord.x + 0.5],
-        ]}
-        pane="popupPane"
-      />
-      <Polyline
-        key={`sep: ${JSON.stringify(endCoord)}`}
-        pathOptions={{
-          color: "brown",
-          dashArray: "10 30",
-          weight: 5,
-        }}
-        positions={[
-          [endCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, endCoord.x + 0.5],
         ]}
         pane="popupPane"

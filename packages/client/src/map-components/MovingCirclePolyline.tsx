@@ -14,7 +14,7 @@ interface MovingCirclePolylineProps {
 
 const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   positions,
-  circleRadius = 0.5,
+  circleRadius = 0.25,
   circleColor = "red",
   circleSpeed = 3,
   lineColor = "blue",
