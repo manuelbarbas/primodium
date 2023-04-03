@@ -10,6 +10,7 @@ import L from "leaflet";
 import { getTopLayerKeyPair } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
+import MovingCirclePolyline from "../map-components/MovingCirclePolyline";
 
 export default function LeafletMap() {
   const [initialized, setInitialized] = useState(false);
@@ -43,6 +44,13 @@ export default function LeafletMap() {
     return <p>Initializing...</p>;
   }
 
+  const positions: [number, number][] = [
+    [0, 0],
+    [1, 2],
+    [2, 5],
+    [10, 10],
+  ];
+
   return (
     <MapContainer
       center={[0, 0]}
@@ -57,6 +65,13 @@ export default function LeafletMap() {
     >
       <LayersControl position="topleft">
         <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
+        <MovingCirclePolyline
+          positions={positions}
+          circleRadius={1}
+          circleColor="brown"
+          lineColor="blue"
+          duration={1000}
+        />
       </LayersControl>
     </MapContainer>
   );
