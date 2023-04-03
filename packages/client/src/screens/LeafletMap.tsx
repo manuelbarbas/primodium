@@ -46,9 +46,9 @@ export default function LeafletMap() {
 
   const positions: [number, number][] = [
     [0, 0],
-    [1, 2],
-    [2, 5],
-    [10, 10],
+    [1, 8],
+    [2, 7],
+    [15, 15],
   ];
 
   return (
@@ -67,8 +67,6 @@ export default function LeafletMap() {
         <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
         <MovingCirclePolyline
           positions={positions}
-          circleRadius={1}
-          circleColor="brown"
           lineColor="blue"
           duration={1000}
         />

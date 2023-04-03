@@ -4,8 +4,9 @@ import L from "leaflet";
 
 interface MovingCirclePolylineProps {
   positions: [number, number][];
-  circleRadius: number;
+  circleRadius?: number;
   circleColor?: string;
+  circleSpeed?: number;
   lineColor?: string;
   duration: number;
   [x: string]: any;
@@ -13,8 +14,9 @@ interface MovingCirclePolylineProps {
 
 const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   positions,
-  circleRadius,
+  circleRadius = 0.5,
   circleColor = "red",
+  circleSpeed = 1,
   lineColor = "blue",
   duration,
   ...otherProps
@@ -28,7 +30,15 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   const circleRef = useRef<L.Circle>();
 
   const moveCircle = () => {
-    const nextIndex = (currentIndex.current + 1) % positions.length;
+    let nextIndex = currentIndex.current + 1;
+
+    // if move to the end move the circle to the start
+    if (currentIndex.current + 1 === positions.length) {
+      setCirclePosition(positions[0]);
+      currentIndex.current = 0;
+      nextIndex = 1;
+    }
+
     const from = positions[currentIndex.current];
     const to = positions[nextIndex];
 
@@ -53,13 +63,6 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   };
 
   useEffect(() => {
-    polylineRef.current = L.polyline(positions, { color: lineColor }).addTo(
-      map
-    );
-    circleRef.current = L.circle(circlePosition, {
-      radius: circleRadius,
-      color: circleColor,
-    }).addTo(map);
     moveCircle();
 
     return () => {
