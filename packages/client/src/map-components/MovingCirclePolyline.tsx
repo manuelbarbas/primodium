@@ -8,7 +8,7 @@ interface MovingCirclePolylineProps {
   circleColor?: string;
   circleSpeed?: number;
   lineColor?: string;
-  duration: number;
+  duration?: number;
   [x: string]: any;
 }
 
@@ -18,7 +18,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   circleColor = "red",
   circleSpeed = 3,
   lineColor = "blue",
-  duration,
+  duration = 1000,
   ...otherProps
 }) => {
   const map = useMap();
@@ -66,7 +66,6 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       const normalizedElapsedTime = elapsedTime / segmentLength / circleSpeed;
       const progress = Math.min(normalizedElapsedTime / duration, 1);
       console.log(progress);
-      // console.log(duration);
 
       const lat = from.lat + (to.lat - from.lat) * progress;
       const lng = from.lng + (to.lng - from.lng) * progress;

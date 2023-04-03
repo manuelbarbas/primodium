@@ -1,5 +1,6 @@
-import { Polyline, Circle } from "react-leaflet";
+import { Circle } from "react-leaflet";
 import { DisplayTile } from "../util/constants";
+import MovingCirclePolyline from "./MovingCirclePolyline";
 
 export default function SelectedPath({
   startCoord,
@@ -10,7 +11,7 @@ export default function SelectedPath({
 }) {
   return (
     <>
-      <Polyline
+      <MovingCirclePolyline
         key={`ssp: ${JSON.stringify(startCoord)}`}
         pathOptions={{
           color: "brown",
@@ -22,6 +23,7 @@ export default function SelectedPath({
           [endCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, endCoord.x + 0.5],
         ]}
+        circleColor="brown"
         pane="popupPane"
       />
       <Circle

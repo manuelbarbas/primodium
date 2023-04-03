@@ -10,7 +10,6 @@ import L from "leaflet";
 import { getTopLayerKeyPair } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
-import MovingCirclePolyline from "../map-components/MovingCirclePolyline";
 
 export default function LeafletMap() {
   const [initialized, setInitialized] = useState(false);

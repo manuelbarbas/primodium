@@ -1,5 +1,6 @@
-import { Polyline, Circle } from "react-leaflet";
+import { Circle } from "react-leaflet";
 import { DisplayTile } from "../util/constants";
+import MovingCirclePolyline from "./MovingCirclePolyline";
 
 export default function Path({
   startCoord,
@@ -10,7 +11,7 @@ export default function Path({
 }) {
   return (
     <>
-      <Polyline
+      <MovingCirclePolyline
         key={`sp: ${JSON.stringify(startCoord)}`}
         pathOptions={{
           weight: 5,
@@ -20,6 +21,7 @@ export default function Path({
           [endCoord.y + 0.5, startCoord.x + 0.5],
           [endCoord.y + 0.5, endCoord.x + 0.5],
         ]}
+        circleColor="blue"
         pane="popupPane"
       />
       <Circle
