@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Circle, Polyline, useMap } from "react-leaflet";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { Circle, Polyline, useMap, useMapEvent } from "react-leaflet";
 import L, { LatLng } from "leaflet";
 
 interface MovingCirclePolylineProps {
   positions: [number, number][];
+  pathOptions: L.PolylineOptions;
   circleRadius?: number;
   circleColor?: string;
   circleSpeed?: number;
@@ -14,6 +15,7 @@ interface MovingCirclePolylineProps {
 
 const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   positions,
+  pathOptions,
   circleRadius = 0.25,
   circleColor = "red",
   circleSpeed = 3,
@@ -96,7 +98,14 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
 
   return (
     <>
-      <Polyline positions={positions} color={lineColor} {...otherProps} />
+      <Polyline
+        positions={positions}
+        color={lineColor}
+        pathOptions={{
+          ...pathOptions,
+        }}
+        {...otherProps}
+      />
       <Circle
         center={circlePosition}
         radius={circleRadius}
