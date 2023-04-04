@@ -164,4 +164,33 @@ contract ClaimSystemTest is MudTest {
 
     vm.stopPrank();
   }
+
+  function testClaimAdjacentMinerNodeMainBase() public {
+    vm.startPrank(alice);
+
+    // a mainbase that is directly adjacent to a miner and node, no path
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+
+    // TEMP: current generation seed
+    Coord memory IronCoord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID);
+    Coord memory nodeCoord = Coord({ x: -5, y: 1 });
+    Coord memory mainBaseCoord = Coord({ x: -5, y: 0 });
+
+    vm.roll(0);
+    buildSystem.executeTyped(MinerID, IronCoord);
+    buildSystem.executeTyped(ConveyerID, nodeCoord);
+    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+
+    // claim from main base
+    vm.roll(20);
+    claimSystem.executeTyped(mainBaseCoord);
+
+    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
+    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+
+    vm.stopPrank();
+  }
 }
