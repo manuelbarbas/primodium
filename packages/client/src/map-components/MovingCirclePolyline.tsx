@@ -74,6 +74,8 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       const lat = from.lat + (to.lat - from.lat) * progress;
       const lng = from.lng + (to.lng - from.lng) * progress;
 
+      if (isNaN(lat) || isNaN(lng)) return;
+
       setCirclePosition([lat, lng]);
 
       if (progress < 1) {
