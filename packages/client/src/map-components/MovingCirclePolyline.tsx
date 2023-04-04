@@ -101,6 +101,10 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
         center={circlePosition}
         radius={circleRadius}
         color={circleColor}
+        pathOptions={{
+          fillOpacity: 1,
+          weight: 1,
+        }}
       />
     </>
   );
