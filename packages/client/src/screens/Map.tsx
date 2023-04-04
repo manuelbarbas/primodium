@@ -275,6 +275,9 @@ export default function Map() {
       displayStyle = defaultStyle;
     }
 
+    // return blank terrain tiles for aesthetics
+    return <div style={displayStyle}></div>;
+
     return (
       <div style={displayStyle}>
         <button onClick={buildMinerHelper}>
