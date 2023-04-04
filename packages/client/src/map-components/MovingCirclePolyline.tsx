@@ -49,14 +49,17 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       nextIndex = 1;
     }
 
-    let from = new LatLng(
+    const from = new LatLng(
       positions[currentIndex.current][0],
       positions[currentIndex.current][1]
     );
-    let to = new LatLng(positions[nextIndex][0], positions[nextIndex][1]);
+    const to = new LatLng(positions[nextIndex][0], positions[nextIndex][1]);
 
     // get segment length as a percentage of the total polyline length
-    let segmentLength = from.distanceTo(to) / getPolylineLength();
+    const polylineLength = getPolylineLength();
+    if (polylineLength === 0) return;
+
+    const segmentLength = from.distanceTo(to) / polylineLength;
 
     const startTime = performance.now();
     const move = (timestamp: number) => {
@@ -65,10 +68,10 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       const elapsedTime = timestamp - startTime;
       const normalizedElapsedTime = elapsedTime / segmentLength / circleSpeed;
       const progress = Math.min(normalizedElapsedTime / duration, 1);
-      console.log(progress);
 
       const lat = from.lat + (to.lat - from.lat) * progress;
       const lng = from.lng + (to.lng - from.lng) * progress;
+
       setCirclePosition([lat, lng]);
 
       if (progress < 1) {
