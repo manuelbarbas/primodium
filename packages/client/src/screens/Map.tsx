@@ -182,7 +182,7 @@ export default function Map() {
     style: React.CSSProperties;
   }) => {
     const plotX = displayIndexToTileIndex(columnIndex);
-    const plotY = displayIndexToTileIndex(rowIndex);
+    const plotY = displayIndexToTileIndex(rowIndex) * -1;
 
     const tilesAtPosition = useEntityQuery(
       useMemo(
