@@ -19,7 +19,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   circleRadius = 0.25,
   circleColor = "red",
   circleSpeed = 3,
-  lineColor = "blue",
+  lineColor = "white",
   duration = 1000,
   ...otherProps
 }) => {
