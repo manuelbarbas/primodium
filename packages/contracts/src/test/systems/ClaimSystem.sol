@@ -193,4 +193,41 @@ contract ClaimSystemTest is MudTest {
 
     vm.stopPrank();
   }
+
+  // test case for same miner connected to main base from two distinct paths
+  // should only claim resource once
+  function testClaimMinerTwoPaths() public {
+    vm.startPrank(alice);
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
+    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+
+    // TEMP: current generation seed
+    Coord memory IronCoord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID);
+    Coord memory node1Coord1 = Coord({ x: -5, y: 1 });
+    Coord memory node1Coord2 = Coord({ x: 0, y: 1 });
+    Coord memory node2Coord1 = Coord({ x: -5, y: 3 });
+    Coord memory node2Coord2 = Coord({ x: 0, y: -1 });
+    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+
+    vm.roll(0);
+    buildSystem.executeTyped(MinerID, IronCoord);
+    buildSystem.executeTyped(ConveyerID, node1Coord1);
+    buildSystem.executeTyped(ConveyerID, node1Coord2);
+    buildSystem.executeTyped(ConveyerID, node2Coord1);
+    buildSystem.executeTyped(ConveyerID, node2Coord2);
+    buildPathSystem.executeTyped(node1Coord1, node1Coord2);
+    buildPathSystem.executeTyped(node2Coord1, node2Coord2);
+    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+
+    // claim from main base
+    vm.roll(20);
+    claimSystem.executeTyped(mainBaseCoord);
+    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
+    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+    vm.stopPrank();
+  }
 }
