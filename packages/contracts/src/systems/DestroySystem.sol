@@ -36,10 +36,17 @@ contract DestroySystem is System {
     require(entitiesAtPosition.length < 2, "can not destroy multiple tiles at once");
     require(entitiesAtPosition.length == 1, "can not destroy tile at empty coord");
 
-    // TODO: check that there is no path that starts or ends at the current location
-    require(!pathComponent.has(entitiesAtPosition[0]), "cannot destroy tile with a path that begins there");
+    // for node tiles, check for paths that start or end at the current location and destroy associated paths
+    if (pathComponent.has(entitiesAtPosition[0])) {
+      pathComponent.remove(entitiesAtPosition[0]);
+    }
+
     uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(entitiesAtPosition[0]);
-    require(pathWithEndingTile.length == 0, "cannot destroy tile with a path that ends there");
+    if (pathWithEndingTile.length > 0) {
+      for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
+        pathComponent.remove(pathWithEndingTile[i]);
+      }
+    }
 
     positionComponent.remove(entitiesAtPosition[0]);
     tileComponent.remove(entitiesAtPosition[0]);
