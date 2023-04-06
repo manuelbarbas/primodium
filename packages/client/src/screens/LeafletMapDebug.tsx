@@ -10,6 +10,7 @@ import L from "leaflet";
 import { getTopLayerKeyPair } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
+// import MovingCirclePolyline from "../map-components/MovingCirclePolyline";
 
 export default function LeafletMapDebug() {
   const [initialized, setInitialized] = useState(false);
@@ -55,6 +56,20 @@ export default function LeafletMapDebug() {
       preferCanvas={true}
       crs={L.CRS.Simple}
     >
+      {/* <MovingCirclePolyline
+        pathOptions={{
+          color: "white",
+          weight: 5,
+        }}
+        positions={[
+          [75, 25],
+          [77, 27],
+          [75, 30],
+          [75, 40],
+        ]}
+        circleColor="white"
+        pane="popupPane"
+      ></MovingCirclePolyline> */}
       <LayersControl position="bottomleft">
         <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
       </LayersControl>
