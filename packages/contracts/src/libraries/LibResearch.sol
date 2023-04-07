@@ -5,6 +5,7 @@ import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 library LibResearch {
+  // research fast miner with 100 iron and 100 copper
   function researchFastMiner(
     Uint256Component ironResourceComponent,
     Uint256Component copperResourceComponent,

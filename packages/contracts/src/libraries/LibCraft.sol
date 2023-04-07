@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 
 library LibCraft {
+  // craft bullet with 1 iron and 1 copper
   function craftBullet(
     Uint256Component ironResourceComponent,
     Uint256Component copperResourceComponent,
