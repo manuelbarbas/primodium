@@ -32,7 +32,7 @@ contract ResearchSystem is System {
     // if it's fast miner, then set the fast miner research component to true
     if (researchItem == FastMinerResearchComponentID) {
       return
-        LibResearch.craftBullet(
+        LibResearch.researchFastMiner(
           ironResourceComponent,
           copperResourceComponent,
           fastMinerResearchComponent,
