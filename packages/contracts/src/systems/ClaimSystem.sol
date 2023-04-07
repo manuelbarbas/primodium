@@ -34,6 +34,7 @@ import { Coord } from "../types.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibCraft } from "libraries/LibCraft.sol";
 
 uint256 constant ID = uint256(keccak256("system.Claim"));
 
@@ -237,16 +238,7 @@ contract ClaimSystem is System {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
 
-      // craft bullets based on how many iron and copper the entity owns
-      uint256 curIron = ironResourceComponent.has(destination) ? ironResourceComponent.getValue(destination) : 0;
-      uint256 curCopper = copperResourceComponent.has(destination) ? copperResourceComponent.getValue(destination) : 0;
-      uint256 curBullets = bulletCraftedComponent.has(destination) ? bulletCraftedComponent.getValue(destination) : 0;
-
-      // one iron + one copper = one bullet
-      uint256 consumeBy = curIron < curCopper ? curIron : curCopper;
-      copperResourceComponent.set(destination, curCopper - consumeBy);
-      ironResourceComponent.set(destination, curIron - consumeBy);
-      bulletCraftedComponent.set(destination, curBullets + consumeBy);
+      LibCraft.craftBullet(ironResourceComponent, copperResourceComponent, bulletCraftedComponent, destination);
     }
     // TODO: gracefully exit
 
