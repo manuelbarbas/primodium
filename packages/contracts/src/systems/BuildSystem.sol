@@ -9,7 +9,12 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
+import { IronResourceComponent, ID as IronResourceComponentID } from "components/IronResourceComponent.sol";
+
+import { MainBaseID, ConveyerID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { BasicMinerID } from "../prototypes/Tiles.sol";
 import { Coord } from "../types.sol";
+import { LibBuild } from "../libraries/LibBuild.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -33,7 +38,27 @@ contract BuildSystem is System {
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "can not build at non-empty coord");
 
-    // TODO: require resource when building blocks
+    // Build resource component (add more when needed)
+    IronResourceComponent ironResourceComponent = IronResourceComponent(
+      getAddressById(components, IronResourceComponentID)
+    );
+
+    // Check if the player has enough resources to build
+    // debug buildings are free: MainBaseID, ConveyerID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    if (
+      blockType == MainBaseID ||
+      blockType == ConveyerID ||
+      blockType == MinerID ||
+      blockType == LithiumMinerID ||
+      blockType == BulletFactoryID ||
+      blockType == SiloID
+    ) {
+      // do nothing
+    } else if (blockType == BasicMinerID) {
+      LibBuild.buildBasicMiner(ironResourceComponent, addressToEntity(msg.sender));
+    } else {
+      revert("unknown block type");
+    }
 
     // Randomly generate IDs instead of basing on coordinate
     uint256 blockEntity = world.getUniqueEntityId();
