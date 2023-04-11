@@ -33,8 +33,7 @@ contract BuildSystem is System {
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "can not build at non-empty coord");
 
-    // TODO: Check that the tile is in the user's inventory.
-    // Remove from user's inventory
+    // TODO: require resource when building blocks
 
     // Randomly generate IDs instead of basing on coordinate
     uint256 blockEntity = world.getUniqueEntityId();
