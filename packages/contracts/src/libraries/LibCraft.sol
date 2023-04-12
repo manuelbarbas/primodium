@@ -9,7 +9,7 @@ library LibCraft {
     Uint256Component copperResourceComponent,
     Uint256Component bulletCraftedComponent,
     uint256 entity
-  ) public {
+  ) internal {
     uint256 IRON_REQUIRED = 1;
     uint256 COPPER_REQUIRED = 1;
 

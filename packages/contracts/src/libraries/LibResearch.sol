@@ -11,7 +11,7 @@ library LibResearch {
     Uint256Component copperResourceComponent,
     BoolComponent fastMinerResearchComponent,
     uint256 entity
-  ) public returns (bytes memory) {
+  ) internal returns (bytes memory) {
     uint256 IRON_REQUIRED = 100;
     uint256 COPPER_REQUIRED = 100;
 

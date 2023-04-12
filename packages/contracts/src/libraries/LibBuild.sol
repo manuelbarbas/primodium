@@ -4,7 +4,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 
 library LibBuild {
   // build a miner with 100 iron
-  function buildBasicMiner(Uint256Component ironResourceComponent, uint256 entity) public {
+  function buildBasicMiner(Uint256Component ironResourceComponent, uint256 entity) internal {
     uint256 IRON_REQUIRED = 100;
 
     uint256 curIron = ironResourceComponent.has(entity) ? ironResourceComponent.getValue(entity) : 0;
