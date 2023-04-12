@@ -90,14 +90,18 @@ contract ClaimSystem is System {
         return;
       }
 
+      // fetch tile beneath minerc.
+      uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
+
+      // TODO: generic library for checking whether a resource is unlocked (research component)
+      if (resourceKey == BolutiteID) {}
+
+      // calculate resource to claim
       // check last claimed at time
       uint256 startClaimTime = c.lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
       uint256 endClaimTime = block.number;
       uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
       c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
-
-      // fetch tile beneath minerc.
-      uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
 
       if (resourceKey == BolutiteID) {
         LibMath.incrementBy(rc.bolutiteResourceComponent, destination, incBy);
