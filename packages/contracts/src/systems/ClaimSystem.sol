@@ -14,6 +14,7 @@ import { HealthComponent, ID as HealthComponentID } from "components/HealthCompo
 import { ResourceComponents } from "../prototypes/ResourceComponents.sol";
 import { CraftedComponents } from "../prototypes/CraftedComponents.sol";
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
+import { ResourceResearchComponents } from "../prototypes/ResourceResearchComponents.sol";
 
 // Resource Components
 import { BolutiteResourceComponent, ID as BolutiteResourceComponentID } from "components/BolutiteResourceComponent.sol";
@@ -26,6 +27,15 @@ import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "compon
 import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
 import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
 
+// Resource Research Components
+import { CopperResearchComponent, ID as CopperResearchComponentID } from "components/CopperResearchComponent.sol";
+import { LithiumResearchComponent, ID as LithiumResearchComponentID } from "components/LithiumResearchComponent.sol";
+import { TitaniumResearchComponent, ID as TitaniumResearchComponentID } from "components/TitaniumResearchComponent.sol";
+import { OsmiumResearchComponent, ID as OsmiumResearchComponentID } from "components/OsmiumResearchComponent.sol";
+import { TungstenResearchComponent, ID as TungstenResearchComponentID } from "components/TungstenResearchComponent.sol";
+import { IridiumResearchComponent, ID as IridiumResearchComponentID } from "components/IridiumResearchComponent.sol";
+import { KimberliteResearchComponent, ID as KimberliteResearchComponentID } from "components/KimberliteResearchComponent.sol";
+
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
 import { MainBaseID, MinerID, ConveyerID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
@@ -35,14 +45,12 @@ import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibCraft } from "libraries/LibCraft.sol";
+import { LibMine } from "libraries/LibMine.sol";
 
 uint256 constant ID = uint256(keccak256("system.Claim"));
 
 contract ClaimSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
-
-  // TODO: Change rate to be variable based on miner
-  uint256 MINE_COUNT_PER_BLOCK = 10;
 
   function claimBuilding(Coord memory coord, uint256 originEntity, uint256 destination) public {
     ClaimComponents memory c = ClaimComponents(
@@ -69,6 +77,16 @@ contract ClaimSystem is System {
       BulletCraftedComponent(getAddressById(components, BulletCraftedComponentID))
     );
 
+    ResourceResearchComponents memory rrc = ResourceResearchComponents(
+      CopperResearchComponent(getAddressById(components, CopperResearchComponentID)),
+      LithiumResearchComponent(getAddressById(components, LithiumResearchComponentID)),
+      TitaniumResearchComponent(getAddressById(components, TitaniumResearchComponentID)),
+      OsmiumResearchComponent(getAddressById(components, OsmiumResearchComponentID)),
+      TungstenResearchComponent(getAddressById(components, TungstenResearchComponentID)),
+      IridiumResearchComponent(getAddressById(components, IridiumResearchComponentID)),
+      KimberliteResearchComponent(getAddressById(components, KimberliteResearchComponentID))
+    );
+
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
     uint256 ownerKey = addressToEntity(msg.sender);
 
@@ -90,18 +108,9 @@ contract ClaimSystem is System {
         return;
       }
 
-      // fetch tile beneath minerc.
+      // fetch tile beneath miner, return 0 if resource is not unlocked
       uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
-
-      // TODO: generic library for checking whether a resource is unlocked (research component)
-      if (resourceKey == BolutiteID) {}
-
-      // calculate resource to claim
-      // check last claimed at time
-      uint256 startClaimTime = c.lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
-      uint256 endClaimTime = block.number;
-      uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
-      c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
+      uint256 incBy = LibMine.mine(rrc, c.lastClaimedAtComponent, resourceKey, entitiesAtPosition[0]);
 
       if (resourceKey == BolutiteID) {
         LibMath.incrementBy(rc.bolutiteResourceComponent, destination, incBy);
