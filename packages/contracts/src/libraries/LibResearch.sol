@@ -5,6 +5,9 @@ import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 library LibResearch {
+  // ###########################################################################
+  // # DEBUG
+
   // research fast miner with 100 IronResource and 100 CopperResource
   function researchFastMiner(
     Uint256Component ironResourceComponent,
@@ -32,6 +35,9 @@ library LibResearch {
       return abi.encode(true);
     }
   }
+
+  // ###########################################################################
+  // # Resources
 
   // research copper with 200 IronResource
   function researchCopper(
@@ -222,4 +228,7 @@ library LibResearch {
       return abi.encode(true);
     }
   }
+
+  // ###########################################################################
+  // # Buildings and Factory Buildings
 }

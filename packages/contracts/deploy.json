@@ -27,7 +27,26 @@
     "OsmiumResearchComponent",
     "TungstenResearchComponent",
     "IridiumResearchComponent",
-    "KimberliteResearchComponent"
+    "KimberliteResearchComponent",
+
+    "PlatingFactoryResearchComponent",
+    "BasicBatteryFactoryResearchComponent",
+    "KineticMissileFactoryResearchComponent",
+    "ProjectileLauncherResearchComponent",
+    "HardenedDrillResearchComponent",
+    "DenseMetalRefineryResearchComponent",
+    "AdvancedBatteryFactoryResearchComponent",
+    "HighTempFoundryResearchComponent",
+    "PrecisionMachineryFactoryResearchComponent",
+    "IridiumDrillbitFactoryResearchComponent",
+    "PrecisionPneumaticDrillResearchComponent",
+    "PenetratorFactoryResearchComponent",
+    "PenetratingMissileFactoryResearchComponent",
+    "MissileLaunchComplexResearchComponent",
+    "HighEnergyLaserFactoryResearchComponent",
+    "ThermobaricWarheadFactoryResearchComponent",
+    "ThermobaricMissileFactoryResearchComponent",
+    "KimberliteCatalystFactoryResearchComponent"
   ],
   "systems": [
     {
