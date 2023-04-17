@@ -9,3 +9,84 @@ yarn workspace client run dev
 ```
 
 The test page is located at `localhost:3000/increment?dev=true&worldAddress=<address>`.
+
+# Components
+
+A new int256 component is created for each resource and crafted item. A new boolean component is created for each research objective.
+
+## Core Compnents
+
+CounterComponent
+GameConfigComponent
+PositionComponent
+TileComponent
+OwnedByComponent
+PathComponent
+LastBuiltAtComponent
+LastClaimedAtComponent
+HealthComponent
+
+## Resource Compnents
+
+BolutiteResourceComponent
+CopperResourceComponent
+IridiumResourceComponent
+IronResourceComponent
+KimberliteResourceComponent
+LithiumResourceComponent
+OsmiumResourceComponent
+TungstenResourceComponent
+UraniniteResourceComponent
+
+### Crafted Components (Debug)
+
+BulletCraftedComponent
+
+### Research Components (Debug)
+
+FastMinerResearchComponent
+
+### Crafted Components (Gameplay)
+
+IronPlateCraftedComponent
+BasicPowerSourceCraftedComponent
+KineticMissileCraftedComponent
+RefinedOsmiumCraftedComponent
+AdvancedPowerSourceCraftedComponent
+PenetratingWarheadCraftedComponent
+PenetratingMissileCraftedComponent
+TungstenRodsCraftedComponent
+IridiumCrystalCraftedComponent
+IridiumDrillbitCraftedComponent
+LaserPowerSourceCraftedComponent
+ThermobaricWarheadCraftedComponent
+ThermobaricMissileCraftedComponent
+KimberliteCrystalCatalystCraftedComponent
+
+### Research Components (Gameplay)
+
+CopperResearchComponent
+PlatingFactoryResearchComponent
+LithiumResearchComponent
+BasicBatteryFactoryResearchComponent
+KineticMissileFactoryResearchComponent
+TitaniumResearchComponent
+ProjectileLauncherResearchComponent
+HardenedDrillResearchComponent
+OsmiumResearchComponent
+DenseMetalRefineryResearchComponent
+AdvancedBatteryFactoryResearchComponent
+TungstenResearchComponent
+HighTempFoundryResearchComponent
+IridiumResearchComponent
+PrecisionMachineryFactoryResearchComponent
+IridiumDrillbitFactoryResearchComponent
+PrecisionPneumaticDrillResearchComponent
+PenetratorFactoryResearchComponent
+PenetratingMissileFactoryResearchComponent
+MissileLaunchComplexResearchComponent
+High-energyLaserFactoryResearchComponent
+ThermobaricWarheadFactoryResearchComponent
+ThermobaricMissileFactoryResearchComponent
+KimberliteResearchComponent
+KimberliteCatalystFactoryResearchComponent
