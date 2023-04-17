@@ -65,6 +65,13 @@ KimberliteCrystalCatalystCraftedComponent
 
 ### Research Components (Gameplay)
 
+_Unlocked (doesn't exist)_
+IronResearchComponent
+BasicMinerResearchComponent
+ConveyorResearchComponent
+NodeResearchComponent
+
+_Locked (contracts)_
 CopperResearchComponent
 PlatingFactoryResearchComponent
 LithiumResearchComponent
@@ -90,3 +97,36 @@ ThermobaricWarheadFactoryResearchComponent
 ThermobaricMissileFactoryResearchComponent
 KimberliteResearchComponent
 KimberliteCatalystFactoryResearchComponent
+
+### Buildings (Debug)
+
+MainBase
+Conveyer
+Miner
+LithiumMiner
+BulletFactory
+Silo
+
+### Buildings (Gameplay)
+
+BasicMiner
+Conveyor (Path)
+Node
+PlatingFactory
+BasicBatteryFactory
+KineticMissileFactory
+ProjectileLauncher
+HardenedDrill
+DenseMetalRefinery
+AdvancedBatteryFactory
+HighTempFoundry
+PrecisionMachineryFactory
+IridiumDrillbitFactory
+PrecisionPneumaticDrill
+PenetratorFactory
+PenetratingMissileFactory
+MissileLaunchComplex
+High-energyLaserFactory
+ThermobaricWarheadFactory
+ThermobaricMissileFactory
+KimberliteCatalystFactory
