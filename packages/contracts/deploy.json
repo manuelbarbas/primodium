@@ -19,7 +19,15 @@
     "TungstenResourceComponent",
     "UraniniteResourceComponent",
     "BulletCraftedComponent",
-    "FastMinerResearchComponent"
+    "FastMinerResearchComponent",
+
+    "CopperResearchComponent",
+    "LithiumResearchComponent",
+    "TitaniumResearchComponent",
+    "OsmiumResearchComponent",
+    "TungstenResearchComponent",
+    "IridiumResearchComponent",
+    "KimberliteResearchComponent"
   ],
   "systems": [
     {

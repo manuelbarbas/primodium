@@ -19,54 +19,50 @@ library LibMine {
 
   function mine(
     ResourceResearchComponents memory rrc,
-    Uint256Component lastClaimedComponent,
+    Uint256Component lastClaimedAtComponent,
     uint256 resourceKey,
     uint256 entity
   ) public returns (uint256) {
     // TODO: Change rate to be variable based on miner
     uint256 MINE_COUNT_PER_BLOCK = 10;
-
+    uint256 startClaimTime = lastClaimedAtComponent.getValue(entity);
     uint256 endClaimTime = block.number;
 
-    if (resourceKey == 0) {
-      revert("invalid resource key");
-    } else if (resourceKey == IronID) {
+    if (resourceKey == IronID) {
       // iron is default unlocked
     } else if (resourceKey == CopperID) {
       // copper is unlocked for mud test
       // if (!rrc.copperResearchComponent.has(addressToEntity(msg.sender))) {
-      //   lastClaimedComponent.set(entity, endClaimTime);
+      //   lastClaimedAtComponent.set(entity, endClaimTime);
       //   return 0;
       // }
     } else if (resourceKey == LithiumID) {
       if (!rrc.lithiumResearchComponent.has(addressToEntity(msg.sender))) {
-        lastClaimedComponent.set(entity, endClaimTime);
         return 0;
       }
     } else if (resourceKey == TungstenID) {
       if (!rrc.tungstenResearchComponent.has(addressToEntity(msg.sender))) {
-        lastClaimedComponent.set(entity, endClaimTime);
         return 0;
       }
     } else if (resourceKey == OsmiumID) {
       if (!rrc.osmiumResearchComponent.has(addressToEntity(msg.sender))) {
-        lastClaimedComponent.set(entity, endClaimTime);
         return 0;
       }
     } else if (resourceKey == IridiumID) {
       if (!rrc.iridiumResearchComponent.has(addressToEntity(msg.sender))) {
-        lastClaimedComponent.set(entity, endClaimTime);
         return 0;
       }
     } else if (resourceKey == KimberliteID) {
       if (!rrc.kimberliteResearchComponent.has(addressToEntity(msg.sender))) {
-        lastClaimedComponent.set(entity, endClaimTime);
         return 0;
       }
+    } else {
+      // invalid resource
+      return 0;
     }
 
-    uint256 startClaimTime = lastClaimedComponent.getValue(entity);
     uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
+    lastClaimedAtComponent.set(entity, endClaimTime);
     return incBy;
   }
 }
