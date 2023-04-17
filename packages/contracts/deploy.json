@@ -46,7 +46,22 @@
     "HighEnergyLaserFactoryResearchComponent",
     "ThermobaricWarheadFactoryResearchComponent",
     "ThermobaricMissileFactoryResearchComponent",
-    "KimberliteCatalystFactoryResearchComponent"
+    "KimberliteCatalystFactoryResearchComponent",
+
+    "IronPlateCraftedComponent",
+    "BasicPowerSourceCraftedComponent",
+    "KineticMissileCraftedComponent",
+    "RefinedOsmiumCraftedComponent",
+    "AdvancedPowerSourceCraftedComponent",
+    "PenetratingWarheadCraftedComponent",
+    "PenetratingMissileCraftedComponent",
+    "TungstenRodsCraftedComponent",
+    "IridiumCrystalCraftedComponent",
+    "IridiumDrillbitCraftedComponent",
+    "LaserPowerSourceCraftedComponent",
+    "ThermobaricWarheadCraftedComponent",
+    "ThermobaricMissileCraftedComponent",
+    "KimberliteCrystalCatalystCraftedComponent"
   ],
   "systems": [
     {
