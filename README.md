@@ -14,6 +14,7 @@ The test page is located at `localhost:3000/increment?dev=true&worldAddress=<add
 
 A new int256 component is created for each resource and crafted item. A new boolean component is created for each research objective.
 
+```
 ## Core Compnents
 
 CounterComponent
@@ -130,3 +131,4 @@ High-energyLaserFactory
 ThermobaricWarheadFactory
 ThermobaricMissileFactory
 KimberliteCatalystFactory
+```
