@@ -108,16 +108,9 @@ contract ClaimSystem is System {
         return;
       }
 
-      // fetch tile beneath minerc.
+      // fetch tile beneath miner, return 0 if resource is not unlocked
       uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
-
       uint256 incBy = LibMine.mine(rrc, c.lastClaimedAtComponent, resourceKey, entitiesAtPosition[0]);
-
-      // TODO: generic library for checking whether a resource is unlocked (research component)
-      // uint256 startClaimTime = c.lastClaimedAtComponent.getValue(entitiesAtPosition[0]);
-      // uint256 endClaimTime = block.number;
-      // uint256 incBy = 10 * (endClaimTime - startClaimTime);
-      // c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
       if (resourceKey == BolutiteID) {
         LibMath.incrementBy(rc.bolutiteResourceComponent, destination, incBy);
