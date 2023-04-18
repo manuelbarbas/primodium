@@ -112,9 +112,9 @@ BulletFactory
 Silo
 
 ### Buildings (Gameplay)
+// NOTE: Node is like Conveyer, but costs money and not for debug.
 
 BasicMiner
-<!-- Conveyor (Path) -->
 Node
 PlatingFactory
 BasicBatteryFactory
