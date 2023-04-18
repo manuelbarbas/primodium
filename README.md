@@ -36,6 +36,7 @@ IronResourceComponent
 KimberliteResourceComponent
 LithiumResourceComponent
 OsmiumResourceComponent
+TitaniumResourceComponent
 TungstenResourceComponent
 UraniniteResourceComponent
 
