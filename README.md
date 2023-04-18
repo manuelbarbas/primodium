@@ -39,15 +39,15 @@ OsmiumResourceComponent
 TungstenResourceComponent
 UraniniteResourceComponent
 
-### Crafted Components (Debug)
+### Crafted Components (Debug) uint256
 
 BulletCraftedComponent
 
-### Research Components (Debug)
+### Research Components (Debug) bool
 
 FastMinerResearchComponent
 
-### Crafted Components (Gameplay)
+### Crafted Components (Gameplay) uint256
 
 IronPlateCraftedComponent
 BasicPowerSourceCraftedComponent
@@ -64,7 +64,7 @@ ThermobaricWarheadCraftedComponent
 ThermobaricMissileCraftedComponent
 KimberliteCrystalCatalystCraftedComponent
 
-### Research Components (Gameplay)
+### Research Components (Gameplay) bool
 
 _Unlocked (doesn't exist)_
 IronResearchComponent
@@ -113,7 +113,7 @@ Silo
 ### Buildings (Gameplay)
 
 BasicMiner
-Conveyor (Path)
+<!-- Conveyor (Path) -->
 Node
 PlatingFactory
 BasicBatteryFactory
