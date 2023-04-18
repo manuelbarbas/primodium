@@ -4,7 +4,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 
 library LibBuild {
   // Build BasicMiner with 100 IronResource
-  function buildBasicMiner(Uint256Component ironResourceComponent, uint256 entity) internal {
+  function buildBasicMiner(Uint256Component ironResourceComponent, uint256 entity) public {
     uint256 IRON_REQUIRED = 100;
 
     uint256 curIron = ironResourceComponent.has(entity) ? ironResourceComponent.getValue(entity) : 0;
@@ -17,7 +17,7 @@ library LibBuild {
   }
 
   // Build Node with 50 IronResource
-  function buildNode(Uint256Component ironResourceComponent, uint256 entity) internal {
+  function buildNode(Uint256Component ironResourceComponent, uint256 entity) public {
     uint256 IRON_REQUIRED = 50;
 
     uint256 curIron = ironResourceComponent.has(entity) ? ironResourceComponent.getValue(entity) : 0;
@@ -34,7 +34,7 @@ library LibBuild {
     Uint256Component ironResourceComponent,
     Uint256Component copperResourceComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRON_REQUIRED = 100;
     uint256 COPPER_REQUIRED = 50;
 
@@ -56,7 +56,7 @@ library LibBuild {
     Uint256Component ironPlateCraftedComponent,
     Uint256Component copperResourceComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRON_PLATE_REQUIRED = 20;
     uint256 COPPER_REQUIRED = 50;
 
@@ -79,7 +79,7 @@ library LibBuild {
     Uint256Component lithiumResourceComponent,
     Uint256Component basicPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRON_PLATE_REQUIRED = 100;
     uint256 LITHIUM_REQUIRED = 50;
     uint256 BASIC_POWER_SOURCE_REQUIRED = 10;
@@ -108,7 +108,7 @@ library LibBuild {
     Uint256Component ironPlateCraftedComponent,
     Uint256Component titaniumResourceComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRON_PLATE_REQUIRED = 100;
     uint256 TITANIUM_REQUIRED = 100;
 
@@ -131,7 +131,7 @@ library LibBuild {
     Uint256Component ironPlateCraftedComponent,
     Uint256Component basicPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 TITANIUM_REQUIRED = 100;
     uint256 IRON_PLATE_REQUIRED = 10;
     uint256 BASIC_POWER_SOURCE_REQUIRED = 5;
@@ -162,7 +162,7 @@ library LibBuild {
     Uint256Component ironPlateCraftedComponent,
     Uint256Component basicPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 OSMIUM_REQUIRED = 50;
     uint256 TITANIUM_REQUIRED = 100;
     uint256 IRON_PLATE_REQUIRED = 30;
@@ -197,7 +197,7 @@ library LibBuild {
     Uint256Component titaniumResourceComponent,
     Uint256Component basicPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 OSMIUM_REQUIRED = 150;
     uint256 TITANIUM_REQUIRED = 50;
     uint256 BASIC_POWER_SOURCE_REQUIRED = 20;
@@ -227,7 +227,7 @@ library LibBuild {
     Uint256Component refinedOsmiumComponent,
     Uint256Component advancedPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 TUNGSTEN_REQUIRED = 50;
     uint256 REFINED_OSMIUM_REQUIRED = 50;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 20;
@@ -257,7 +257,7 @@ library LibBuild {
     Uint256Component tungstenRodsCraftedComponent,
     Uint256Component advancedPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_REQUIRED = 50;
     uint256 TUNGSTEN_RODS_REQUIRED = 50;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 10;
@@ -288,7 +288,7 @@ library LibBuild {
     Uint256Component tungstenRodsCraftedComponent,
     Uint256Component laserPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 TUNGSTEN_RODS_REQUIRED = 50;
     uint256 LASER_POWER_SOURCE_REQUIRED = 5;
 
@@ -315,7 +315,7 @@ library LibBuild {
     Uint256Component osmiumResourceComponent,
     Uint256Component laserPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 TUNGSTEN_REQUIRED = 100;
     uint256 OSMIUM_REQUIRED = 100;
     uint256 LASER_POWER_SOURCE_REQUIRED = 5;
@@ -345,7 +345,7 @@ library LibBuild {
     Uint256Component ironPlateCraftedComponent,
     Uint256Component advancedPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 OSMIUM_REQUIRED = 200;
     uint256 IRON_PLATE_REQUIRED = 50;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 10;
@@ -375,7 +375,7 @@ library LibBuild {
     Uint256Component titaniumResourceComponent,
     Uint256Component advancedPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 OSMIUM_REQUIRED = 300;
     uint256 TITANIUM_REQUIRED = 100;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 15;
@@ -404,7 +404,7 @@ library LibBuild {
     Uint256Component tungstenRodsCraftedComponent,
     Uint256Component osmiumResourceComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 TUNGSTEN_RODS_REQUIRED = 100;
     uint256 OSMIUM_REQUIRED = 100;
 
@@ -429,7 +429,7 @@ library LibBuild {
     Uint256Component refinedOsmiumCraftedComponent,
     Uint256Component advancedPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 50;
     uint256 REFINED_OSMIUM_REQUIRED = 100;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 50;
@@ -463,7 +463,7 @@ library LibBuild {
     Uint256Component iridiumCrystalCraftedComponent,
     Uint256Component laserPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 REFINED_OSMIUM_REQUIRED = 200;
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 100;
     uint256 LASER_POWER_SOURCE_REQUIRED = 10;
@@ -497,7 +497,7 @@ library LibBuild {
     Uint256Component tungstenRodsCraftedComponent,
     Uint256Component laserPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 100;
     uint256 TUNGSTEN_RODS_REQUIRED = 100;
     uint256 LASER_POWER_SOURCE_REQUIRED = 20;
@@ -530,7 +530,7 @@ library LibBuild {
     Uint256Component iridiumCrystalCraftedComponent,
     Uint256Component laserPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 200;
     uint256 LASER_POWER_SOURCE_REQUIRED = 20;
 
