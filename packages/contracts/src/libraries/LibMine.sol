@@ -22,7 +22,7 @@ library LibMine {
     Uint256Component lastClaimedAtComponent,
     uint256 resourceKey,
     uint256 entity
-  ) public returns (uint256) {
+  ) internal returns (uint256) {
     // TODO: Change rate to be variable based on miner
     uint256 MINE_COUNT_PER_BLOCK = 10;
     uint256 startClaimTime = lastClaimedAtComponent.getValue(entity);
