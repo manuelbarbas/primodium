@@ -9,6 +9,7 @@
     "LastBuiltAtComponent",
     "LastClaimedAtComponent",
     "HealthComponent",
+
     "BolutiteResourceComponent",
     "CopperResourceComponent",
     "IridiumResourceComponent",
@@ -16,8 +17,10 @@
     "KimberliteResourceComponent",
     "LithiumResourceComponent",
     "OsmiumResourceComponent",
+    "TitaniumResourceComponent",
     "TungstenResourceComponent",
     "UraniniteResourceComponent",
+
     "BulletCraftedComponent",
     "FastMinerResearchComponent",
 

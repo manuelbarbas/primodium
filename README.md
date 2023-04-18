@@ -10,6 +10,10 @@ yarn workspace client run dev
 
 The test page is located at `localhost:3000/increment?dev=true&worldAddress=<address>`.
 
+# Known bugs
+
+- Factories can only transfer resources or crafted items that their recipes support to the next tile. Such resources are stuck in the factories otherwise.
+
 # Components
 
 A new int256 component is created for each resource and crafted item. A new boolean component is created for each research objective.

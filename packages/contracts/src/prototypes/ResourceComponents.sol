@@ -8,6 +8,7 @@ import { IronResourceComponent, ID as IronResourceComponentID } from "components
 import { KimberliteResourceComponent, ID as KimberliteResourceComponentID } from "components/KimberliteResourceComponent.sol";
 import { LithiumResourceComponent, ID as LithiumResourceComponentID } from "components/LithiumResourceComponent.sol";
 import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "components/OsmiumResourceComponent.sol";
+import { TitaniumResourceComponent, ID as TitaniumResourceComponentID } from "components/TitaniumResourceComponent.sol";
 import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
 import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
 
@@ -20,6 +21,7 @@ struct ResourceComponents {
   KimberliteResourceComponent kimberliteResourceComponent;
   LithiumResourceComponent lithiumResourceComponent;
   OsmiumResourceComponent osmiumResourceComponent;
+  TitaniumResourceComponent titaniumResourceComponent;
   TungstenResourceComponent tungstenResourceComponent;
   UraniniteResourceComponent uraniniteResourceComponent;
 }
