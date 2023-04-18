@@ -7,11 +7,11 @@ import { TbSword } from "react-icons/tb";
 import { TbScale } from "react-icons/tb";
 
 import AttackBox from "./AttackBox";
-import ResearchBox from "./ResearchBox";
 import MarketModal from "./MarketModal";
 import BuildingBox from "./BuildingBox";
 import DestroyBuildingBox from "./DestroyBuildingBox";
 import { useSelectedTile } from "../context/SelectedTileContext";
+import ResearchModal from "./ResearchModal";
 
 function SideBarIcon({
   icon,
@@ -76,7 +76,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ResearchBox />
+        <ResearchModal />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
