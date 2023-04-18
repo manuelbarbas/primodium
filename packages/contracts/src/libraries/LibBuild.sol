@@ -423,7 +423,7 @@ library LibBuild {
     }
   }
 
-  // Build High-energyLaserFactory with 50 IridiumCrystalCrafted 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
+  // Build HighEnergyLaserFactory with 50 IridiumCrystalCrafted 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
   function buildHighEnergyLaserFactory(
     Uint256Component iridiumCrystalCraftedComponent,
     Uint256Component refinedOsmiumCraftedComponent,

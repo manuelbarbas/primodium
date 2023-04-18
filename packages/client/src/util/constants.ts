@@ -33,7 +33,7 @@ export const BlockKey = {
 };
 
 export const BlockType = {
-  //landscape blocks
+  // Landscape blocks
   Water: keccak256("block.Water") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,
   Biofilm: keccak256("block.Biofilm") as EntityID,
@@ -42,7 +42,7 @@ export const BlockType = {
   Bedrock: keccak256("block.Bedrock") as EntityID,
   Air: keccak256("block.Air") as EntityID,
 
-  //metal ores
+  // Ores
   Lithium: keccak256("block.Lithium") as EntityID,
   Iron: keccak256("block.Iron") as EntityID,
   Copper: keccak256("block.Copper") as EntityID,
@@ -50,23 +50,51 @@ export const BlockType = {
   Iridium: keccak256("block.Iridium") as EntityID,
   Osmium: keccak256("block.Osmium") as EntityID,
   Tungsten: keccak256("block.Tungsten") as EntityID,
-
-  //mineral ores
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
   Uraninite: keccak256("block.Uraninite") as EntityID,
   Bolutite: keccak256("block.Bolutite") as EntityID,
 
-  // Utility
-  Miner: keccak256("block.Miner") as EntityID,
-  LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
-
-  // Resource
+  // Debug buildings
   MainBase: keccak256("block.MainBase") as EntityID,
   Conveyer: keccak256("block.Conveyer") as EntityID,
-
-  // Factories
+  Miner: keccak256("block.Miner") as EntityID,
+  LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
   BulletFactory: keccak256("block.BulletFactory") as EntityID,
   Silo: keccak256("block.Silo") as EntityID,
+
+  // Buildings
+  BasicMiner: keccak256("block.BasicMiner") as EntityID,
+  Node: keccak256("block.Node") as EntityID,
+  PlatingFactory: keccak256("block.PlatingFactory") as EntityID,
+  BasicBatteryFactory: keccak256("block.BasicBatteryFactory") as EntityID,
+  KineticMissileFactory: keccak256("block.KineticMissileFactory") as EntityID,
+  ProjectileLauncher: keccak256("block.ProjectileLauncher") as EntityID,
+  HardenedDrill: keccak256("block.HardenedDrill") as EntityID,
+  DenseMetalRefinery: keccak256("block.DenseMetalRefinery") as EntityID,
+  AdvancedBatteryFactory: keccak256("block.AdvancedBatteryFactory") as EntityID,
+  HighTempFoundry: keccak256("block.HighTempFoundry") as EntityID,
+  PrecisionMachineryFactory: keccak256(
+    "block.PrecisionMachineryFactory"
+  ) as EntityID,
+  IridiumDrillbitFactory: keccak256("block.IridiumDrillbitFactory") as EntityID,
+  PrecisionPneumaticDrill: keccak256(
+    "block.PrecisionPneumaticDrill"
+  ) as EntityID,
+  PenetratorFactory: keccak256("block.PenetratorFactory") as EntityID,
+  PenetratingMissileFactory: keccak256(
+    "block.PenetratingMissileFactory"
+  ) as EntityID,
+  MissileLaunchComplex: keccak256("block.MissileLaunchComplex") as EntityID,
+  HighEnergyLaserFactory: keccak256("block.HighEnergyLaserFactory") as EntityID,
+  ThermobaricWarheadFactory: keccak256(
+    "block.ThermobaricWarheadFactory"
+  ) as EntityID,
+  ThermobaricMissileFactory: keccak256(
+    "block.ThermobaricMissileFactory"
+  ) as EntityID,
+  KimberliteCatalystFactory: keccak256(
+    "block.KimberliteCatalystFactory"
+  ) as EntityID,
 };
 
 // From OPCraft

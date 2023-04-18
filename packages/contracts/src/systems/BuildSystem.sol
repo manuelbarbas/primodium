@@ -326,7 +326,7 @@ contract BuildSystem is System {
         addressToEntity(msg.sender)
       );
     }
-    // Build High-energyLaserFactory with 50 IridiumCrystalCrafted 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
+    // Build HighEnergyLaserFactory with 50 IridiumCrystalCrafted 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
     else if (blockType == HighEnergyLaserFactoryID) {
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)

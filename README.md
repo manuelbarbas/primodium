@@ -130,7 +130,7 @@ PrecisionPneumaticDrill
 PenetratorFactory
 PenetratingMissileFactory
 MissileLaunchComplex
-High-energyLaserFactory
+HighEnergyLaserFactory
 ThermobaricWarheadFactory
 ThermobaricMissileFactory
 KimberliteCatalystFactory

@@ -468,7 +468,7 @@ contract ResearchSystem is System {
           addressToEntity(msg.sender)
         );
     }
-    // Research High-energyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
+    // Research HighEnergyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
     else if (researchItem == HighEnergyLaserFactoryResearchComponentID) {
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)

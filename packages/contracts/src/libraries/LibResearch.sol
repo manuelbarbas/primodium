@@ -694,7 +694,7 @@ library LibResearch {
     }
   }
 
-  // Research High-energyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
+  // Research HighEnergyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
   function researchHighEnergyLaserFactory(
     Uint256Component iridiumCrystalCraftedComponent,
     Uint256Component advancedPowerSourceCraftedComponent,
