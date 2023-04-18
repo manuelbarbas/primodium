@@ -14,7 +14,7 @@ library LibResearch {
     Uint256Component copperResourceComponent,
     BoolComponent fastMinerResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRON_REQUIRED = 100;
     uint256 COPPER_REQUIRED = 100;
 
@@ -44,7 +44,7 @@ library LibResearch {
     Uint256Component ironResourceComponent,
     BoolComponent copperResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRON_REQUIRED = 200;
 
     if (copperResearchComponent.has(entity) && copperResearchComponent.getValue(entity)) {
@@ -69,7 +69,7 @@ library LibResearch {
     Uint256Component copperResourceComponent,
     BoolComponent lithiumResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRON_PLATE_REQUIRED = 20;
     uint256 COPPER_REQUIRED = 100;
 
@@ -96,7 +96,7 @@ library LibResearch {
     Uint256Component basicPowerSourceCraftedComponent,
     BoolComponent titaniumResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 BASIC_POWER_SOURCE_REQUIRED = 50;
 
     if (titaniumResearchComponent.has(entity) && titaniumResearchComponent.getValue(entity)) {
@@ -122,7 +122,7 @@ library LibResearch {
     Uint256Component titaniumResourceComponent,
     BoolComponent osmiumResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 TITANIUM_REQUIRED = 300;
 
     if (osmiumResearchComponent.has(entity) && osmiumResearchComponent.getValue(entity)) {
@@ -147,7 +147,7 @@ library LibResearch {
     Uint256Component titaniumResourceComponent,
     BoolComponent tungstenResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 REFINED_OSMIUM_REQUIRED = 100;
     uint256 TITANIUM_REQUIRED = 200;
 
@@ -177,7 +177,7 @@ library LibResearch {
     Uint256Component osmiumResourceComponent,
     BoolComponent iridiumResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 TUNGSTEN_ROD_REQUIRED = 100;
     uint256 OSMIUM_REQUIRED = 100;
 
@@ -205,7 +205,7 @@ library LibResearch {
     Uint256Component tungstenResourceComponent,
     BoolComponent kimberliteResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 100;
     uint256 TUNGSTEN_REQUIRED = 100;
 
@@ -238,7 +238,7 @@ library LibResearch {
     Uint256Component copperResourceComponent,
     BoolComponent platingFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRON_REQUIRED = 200;
     uint256 COPPER_REQUIRED = 200;
 
@@ -266,7 +266,7 @@ library LibResearch {
     Uint256Component lithiumResourceComponent,
     BoolComponent basicBatteryFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRON_PLATE_REQUIRED = 50;
     uint256 LITHIUM_REQUIRED = 100;
 
@@ -294,7 +294,7 @@ library LibResearch {
     Uint256Component ironResourceComponent,
     BoolComponent kineticMissileFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 BASIC_POWER_SOURCE_REQUIRED = 50;
     uint256 IRON_REQUIRED = 100;
 
@@ -324,7 +324,7 @@ library LibResearch {
     Uint256Component titaniumResourceComponent,
     BoolComponent projectileLauncherResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 BASIC_POWER_SOURCE_REQUIRED = 50;
     uint256 TITANIUM_REQUIRED = 500;
 
@@ -355,7 +355,7 @@ library LibResearch {
     Uint256Component basicPowerSourceCraftedComponent,
     BoolComponent hardenedDrillResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 TITANIUM_REQUIRED = 200;
     uint256 IRON_PLATE_REQUIRED = 500;
     uint256 BASIC_POWER_SOURCE_REQUIRED = 50;
@@ -393,7 +393,7 @@ library LibResearch {
     Uint256Component basicPowerSourceCraftedComponent,
     BoolComponent denseMetalRefineryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 OSMIUM_REQUIRED = 100;
     uint256 TITANIUM_REQUIRED = 300;
     uint256 BASIC_POWER_SOURCE_REQUIRED = 100;
@@ -431,7 +431,7 @@ library LibResearch {
     Uint256Component titaniumResourceComponent,
     BoolComponent advancedBatteryFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 OSMIUM_REQUIRED = 200;
     uint256 IRON_PLATE_REQUIRED = 100;
     uint256 TITANIUM_REQUIRED = 400;
@@ -465,7 +465,7 @@ library LibResearch {
     Uint256Component advancedPowerSourceCraftedComponent,
     BoolComponent highTempFoundryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 TUNGSTEN_REQUIRED = 200;
     uint256 OSMIUM_REQUIRED = 100;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 50;
@@ -502,7 +502,7 @@ library LibResearch {
     Uint256Component tungstenRodsCraftedComponent,
     BoolComponent precisionMachineryFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRIDIUM_REQUIRED = 200;
     uint256 TUNGSTEN_RODS_REQUIRED = 100;
 
@@ -535,7 +535,7 @@ library LibResearch {
     Uint256Component laserPowerSourceCraftedComponent,
     BoolComponent iridiumDrillbitFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 100;
     uint256 LASER_POWER_SOURCE_REQUIRED = 20;
 
@@ -569,7 +569,7 @@ library LibResearch {
     Uint256Component iridiumDrillbitCraftedComponent,
     BoolComponent precisionPneumaticDrillResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 TUNGSTEN_RODS_REQUIRED = 200;
     uint256 IRIDIUM_DRILLBIT_REQUIRED = 50;
 
@@ -603,7 +603,7 @@ library LibResearch {
     Uint256Component advancedPowerSourceCraftedComponent,
     BoolComponent penetratorFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 OSMIUM_REQUIRED = 500;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 50;
 
@@ -633,7 +633,7 @@ library LibResearch {
     Uint256Component advancedPowerSourceCraftedComponent,
     BoolComponent penetratingMissileFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 REFINED_OSMIUM_REQUIRED = 100;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 50;
 
@@ -668,7 +668,7 @@ library LibResearch {
     Uint256Component advancedPowerSourceCraftedComponent,
     BoolComponent missileLaunchComplexResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 TUNGSTEN_RODS_REQUIRED = 50;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 100;
 
@@ -700,7 +700,7 @@ library LibResearch {
     Uint256Component advancedPowerSourceCraftedComponent,
     BoolComponent highEnergyLaserFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 200;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 150;
 
@@ -733,7 +733,7 @@ library LibResearch {
     Uint256Component iridiumCrystalCraftedComponent,
     BoolComponent thermobaricWarheadFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 200;
 
     if (
@@ -763,7 +763,7 @@ library LibResearch {
     Uint256Component tungstenRodsCraftedComponent,
     BoolComponent thermobaricMissileFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 200;
     uint256 TUNGSTEN_RODS_REQUIRED = 100;
 
@@ -798,7 +798,7 @@ library LibResearch {
     Uint256Component laserPowerSourceCraftedComponent,
     BoolComponent kimberliteCatalystFactoryResearchComponent,
     uint256 entity
-  ) internal returns (bytes memory) {
+  ) public returns (bytes memory) {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 300;
     uint256 LASER_POWER_SOURCE_REQUIRED = 20;
 

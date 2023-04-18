@@ -12,7 +12,7 @@ library LibCraft {
     Uint256Component copperResourceComponent,
     Uint256Component bulletCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRON_REQUIRED = 1;
     uint256 COPPER_REQUIRED = 1;
 
@@ -40,7 +40,7 @@ library LibCraft {
     Uint256Component ironResourceComponent,
     Uint256Component ironPlateCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRON_REQUIRED = 10;
 
     uint256 curIron = ironResourceComponent.has(entity) ? ironResourceComponent.getValue(entity) : 0;
@@ -59,7 +59,7 @@ library LibCraft {
     Uint256Component ironResourceComponent,
     Uint256Component basicPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 LITHIUM_REQUIRED = 100;
     uint256 IRON_REQUIRED = 20;
 
@@ -89,7 +89,7 @@ library LibCraft {
     Uint256Component titaniumResource,
     Uint256Component kineticMissileCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 BASIC_POWER_SOURCE_REQUIRED = 10;
     uint256 TITANIUM_REQUIRED = 20;
 
@@ -120,7 +120,7 @@ library LibCraft {
     Uint256Component osmiumResourceComponent,
     Uint256Component refinedOsmiumCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 OSMIUM_REQUIRED = 10;
 
     uint256 curOsmium = osmiumResourceComponent.has(entity) ? osmiumResourceComponent.getValue(entity) : 0;
@@ -141,7 +141,7 @@ library LibCraft {
     Uint256Component basicPowerSourceCraftedComponent,
     Uint256Component advancedPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 REFINED_OSMIUM_REQUIRED = 10;
     uint256 BASIC_POWER_SOURCE_REQUIRED = 2;
 
@@ -175,7 +175,7 @@ library LibCraft {
     Uint256Component advancedPowerSourceCraftedComponent,
     Uint256Component penetratingWarheadCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 REFINED_OSMIUM_REQUIRED = 20;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 5;
 
@@ -210,7 +210,7 @@ library LibCraft {
     Uint256Component kineticMissileCraftedComponent,
     Uint256Component penetratingMissileCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 PENETRATING_WARHEAD_REQUIRED = 1;
     uint256 KINETIC_MISSILE_REQUIRED = 1;
 
@@ -243,7 +243,7 @@ library LibCraft {
     Uint256Component tungstenResourceComponent,
     Uint256Component tungstenRodsCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 TUNGSTEN_RESOURCE_REQUIRED = 10;
 
     uint256 curTungstenResource = tungstenResourceComponent.has(entity)
@@ -265,7 +265,7 @@ library LibCraft {
     Uint256Component iridiumResourceComponent,
     Uint256Component iridiumCrystalCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_RESOURCE_REQUIRED = 10;
 
     uint256 curIridiumResource = iridiumResourceComponent.has(entity) ? iridiumResourceComponent.getValue(entity) : 0;
@@ -286,7 +286,7 @@ library LibCraft {
     Uint256Component tungstenRodsCraftedComponent,
     Uint256Component iridiumDrillbitCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 5;
     uint256 TUNGSTEN_RODS_REQUIRED = 10;
 
@@ -320,7 +320,7 @@ library LibCraft {
     Uint256Component advancedPowerSourceCraftedComponent,
     Uint256Component laserPowerSourceCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_CRYSTAL_REQUIRED = 10;
     uint256 ADVANCED_POWER_SOURCE_REQUIRED = 5;
 
@@ -354,7 +354,7 @@ library LibCraft {
     Uint256Component laserPowerSourceCraftedComponent,
     Uint256Component thermobaricWarheadCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 IRIDIUM_DRILLBIT_REQUIRED = 1;
     uint256 LASER_POWER_SOURCE_REQUIRED = 1;
 
@@ -388,7 +388,7 @@ library LibCraft {
     Uint256Component thermobaricWarheadCraftedComponent,
     Uint256Component thermobaricMissileCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 PENETRATING_MISSILE_REQUIRED = 10;
     uint256 THERMOBARIC_WARHEAD_REQUIRED = 1;
 
@@ -422,7 +422,7 @@ library LibCraft {
     Uint256Component kimberliteResourceComponent,
     Uint256Component kimberliteCrystalCatalystCraftedComponent,
     uint256 entity
-  ) internal {
+  ) public {
     uint256 KIMBERLITE_RESOURCE_REQUIRED = 10;
 
     uint256 curKimberliteResource = kimberliteResourceComponent.has(entity)
