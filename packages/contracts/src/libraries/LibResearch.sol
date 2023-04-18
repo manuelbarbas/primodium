@@ -39,7 +39,7 @@ library LibResearch {
   // ###########################################################################
   // # Resources
 
-  // research copper with 200 IronResource
+  // Research Copper with 200 IronResource
   function researchCopper(
     Uint256Component ironResourceComponent,
     BoolComponent copperResearchComponent,
@@ -63,7 +63,7 @@ library LibResearch {
     }
   }
 
-  // research lithium with 20 IronPlateCrafted and 100 CopperResource
+  // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
   function researchLithium(
     Uint256Component ironPlateCraftedComponent,
     Uint256Component copperResourceComponent,
@@ -91,7 +91,7 @@ library LibResearch {
     }
   }
 
-  // research titanium with 50 BasicPowerSourceCrafted
+  // Research Titanium with 50 BasicPowerSourceCrafted
   function researchTitanium(
     Uint256Component basicPowerSourceCraftedComponent,
     BoolComponent titaniumResearchComponent,
@@ -117,7 +117,7 @@ library LibResearch {
     }
   }
 
-  // research osmium with 300 TitaniumResource
+  // Research Osmium with 300 TitaniumResource
   function researchOsmium(
     Uint256Component titaniumResourceComponent,
     BoolComponent osmiumResearchComponent,
@@ -141,7 +141,7 @@ library LibResearch {
     }
   }
 
-  // research tungsten with 100 RefinedOsmiumCrafted 200 TitaniumResource
+  // Research Tungsten with 100 RefinedOsmiumCrafted 200 TitaniumResource
   function researchTungsten(
     Uint256Component refinedOsmiumCraftedComponent,
     Uint256Component titaniumResourceComponent,
@@ -171,7 +171,7 @@ library LibResearch {
     }
   }
 
-  // research iridium with 100 TungstenRodCrafted 100 OsmiumResource
+  // Research Iridium with 100 TungstenRodCrafted 100 OsmiumResource
   function researchIridium(
     Uint256Component tungstenRodCraftedComponent,
     Uint256Component osmiumResourceComponent,
@@ -199,7 +199,7 @@ library LibResearch {
     }
   }
 
-  // research kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
+  // Research Kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
   function researchKimberlite(
     Uint256Component iridiumCrystalCraftedComponent,
     Uint256Component tungstenResourceComponent,
