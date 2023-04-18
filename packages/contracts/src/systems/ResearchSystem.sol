@@ -503,8 +503,63 @@ contract ResearchSystem is System {
         );
     }
     // Resesarch ThermobaricMissileFactory with 200 IridiumCrystalCrafted and 100 TungstenRodsCrafted
+    else if (researchItem == ThermobaricMissileFactoryResearchComponentID) {
+      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
+        getAddressById(components, IridiumCrystalCraftedComponentID)
+      );
+      TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
+        getAddressById(components, TungstenRodsCraftedComponentID)
+      );
+      ThermobaricMissileFactoryResearchComponent thermobaricMissileFactoryResearchComponent = ThermobaricMissileFactoryResearchComponent(
+          getAddressById(components, ThermobaricMissileFactoryResearchComponentID)
+        );
+      return
+        LibResearch.researchThermobaricMissileFactory(
+          iridiumCrystalCraftedComponent,
+          tungstenRodsCraftedComponent,
+          thermobaricMissileFactoryResearchComponent,
+          addressToEntity(msg.sender)
+        );
+    }
     // Research Kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
+    else if (researchItem == KimberliteResearchComponentID) {
+      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
+        getAddressById(components, IridiumCrystalCraftedComponentID)
+      );
+      TungstenResourceComponent tungstenResourceComponent = TungstenResourceComponent(
+        getAddressById(components, TungstenResourceComponentID)
+      );
+      KimberliteResearchComponent kimberliteResearchComponent = KimberliteResearchComponent(
+        getAddressById(components, KimberliteResearchComponentID)
+      );
+      return
+        LibResearch.researchKimberlite(
+          iridiumCrystalCraftedComponent,
+          tungstenResourceComponent,
+          kimberliteResearchComponent,
+          addressToEntity(msg.sender)
+        );
+    }
     // Research KimberliteCatalystFactory with 300 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
+    else if (researchItem == KimberliteCatalystFactoryResearchComponentID) {
+      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
+        getAddressById(components, IridiumCrystalCraftedComponentID)
+      );
+      LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
+        getAddressById(components, LaserPowerSourceCraftedComponentID)
+      );
+      KimberliteCatalystFactoryResearchComponent kimberliteCatalystFactoryResearchComponent = KimberliteCatalystFactoryResearchComponent(
+          getAddressById(components, KimberliteCatalystFactoryResearchComponentID)
+        );
+      return
+        LibResearch.researchKimberliteCatalystFactory(
+          iridiumCrystalCraftedComponent,
+          laserPowerSourceCraftedComponent,
+          kimberliteCatalystFactoryResearchComponent,
+          addressToEntity(msg.sender)
+        );
+    }
+    // no research item found
     else {
       return abi.encode(false);
     }
