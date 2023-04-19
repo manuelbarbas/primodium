@@ -3,16 +3,18 @@ import { EntityID } from "@latticexyz/recs";
 
 // Research Technology Tree
 
+export type TechnologyTreeNodeData = {
+  name: string;
+  id: EntityID;
+  resources: {
+    id: EntityID;
+    amount: number;
+  }[];
+};
+
 export type TechnologyTreeNode = {
   id: string;
-  data: {
-    name: string;
-    id: EntityID;
-    resources: {
-      id: EntityID;
-      amount: number;
-    }[];
-  };
+  data: TechnologyTreeNodeData;
   position: {
     x: number;
     y: number;
@@ -22,6 +24,7 @@ export type TechnologyTreeNode = {
 export const technologyTree = [
   {
     id: "1",
+    type: "techTree",
     data: {
       name: "Main Base",
       id: BlockType.MainBaseResearch,
@@ -31,6 +34,7 @@ export const technologyTree = [
   },
   {
     id: "2",
+    type: "techTree",
     data: {
       name: "Iron",
       id: BlockType.IronResearch,
@@ -41,6 +45,7 @@ export const technologyTree = [
 
   {
     id: "3",
+    type: "techTree",
     data: {
       name: "Basic Miner",
       id: BlockType.BasicMiner,
@@ -50,6 +55,7 @@ export const technologyTree = [
   },
   {
     id: "4",
+    type: "techTree",
     data: {
       name: "Conveyor",
       id: BlockType.Conveyer,
@@ -59,6 +65,7 @@ export const technologyTree = [
   },
   {
     id: "5",
+    type: "techTree",
     data: {
       name: "Node",
       id: BlockType.Node,
@@ -68,6 +75,7 @@ export const technologyTree = [
   },
   {
     id: "6",
+    type: "techTree",
     data: {
       name: "Copper",
       id: BlockType.Node,
@@ -77,6 +85,7 @@ export const technologyTree = [
   },
   {
     id: "7",
+    type: "techTree",
     data: {
       name: "Plating Factory",
       id: BlockType.PlatingFactory,
@@ -89,6 +98,7 @@ export const technologyTree = [
   },
   {
     id: "8",
+    type: "techTree",
     data: {
       name: "Lithium",
       id: BlockType.LithiumResearch,
@@ -101,6 +111,7 @@ export const technologyTree = [
   },
   {
     id: "9",
+    type: "techTree",
     data: {
       name: "Basic Battery Factory",
       id: BlockType.BasicBatteryFactoryResearch,
@@ -113,6 +124,7 @@ export const technologyTree = [
   },
   {
     id: "10",
+    type: "techTree",
     data: {
       name: "Kinetic Missile Factory",
       id: BlockType.KineticMissileFactoryResearch,
@@ -125,6 +137,7 @@ export const technologyTree = [
   },
   {
     id: "11",
+    type: "techTree",
     data: {
       name: "Titanium",
       id: BlockType.TitaniumResearch,
@@ -137,6 +150,7 @@ export const technologyTree = [
   },
   {
     id: "12",
+    type: "techTree",
     data: {
       name: "ProjectileLauncher",
       id: BlockType.ProjectileLauncherResearch,
@@ -149,6 +163,7 @@ export const technologyTree = [
   },
   {
     id: "13",
+    type: "techTree",
     data: {
       name: "HardenedDrill",
       id: BlockType.HardenedDrillResearch,
@@ -161,6 +176,7 @@ export const technologyTree = [
   },
   {
     id: "14",
+    type: "techTree",
     data: {
       name: "Osmium",
       id: BlockType.OsmiumResearch,
@@ -170,6 +186,7 @@ export const technologyTree = [
   },
   {
     id: "15",
+    type: "techTree",
     data: {
       name: "Dense Metal Refinery",
       id: BlockType.DenseMetalRefineryResearch,
@@ -183,6 +200,7 @@ export const technologyTree = [
   },
   {
     id: "16",
+    type: "techTree",
     data: {
       name: "Advanced Battery Factory",
       id: BlockType.AdvancedBatteryFactoryResearch,
@@ -196,6 +214,7 @@ export const technologyTree = [
   },
   {
     id: "17",
+    type: "techTree",
     data: {
       name: "Tungsten",
       id: BlockType.TungstenResearch,
@@ -208,6 +227,7 @@ export const technologyTree = [
   },
   {
     id: "18",
+    type: "techTree",
     data: {
       name: "High-Temp Foundry",
       id: BlockType.HighTempFoundryResearch,
@@ -221,6 +241,7 @@ export const technologyTree = [
   },
   {
     id: "19",
+    type: "techTree",
     data: {
       name: "Iridium",
       id: BlockType.IridiumResearch,
@@ -233,6 +254,7 @@ export const technologyTree = [
   },
   {
     id: "20",
+    type: "techTree",
     data: {
       name: "Precision Machinery Factory",
       id: BlockType.PrecisionMachineryFactoryResearch,
@@ -245,6 +267,7 @@ export const technologyTree = [
   },
   {
     id: "21",
+    type: "techTree",
     data: {
       name: "Iridium Drillbit Factory",
       id: BlockType.IridiumDrillbitFactoryResearch,
@@ -257,6 +280,7 @@ export const technologyTree = [
   },
   {
     id: "22",
+    type: "techTree",
     data: {
       name: "PrecisionPneumaticDrill",
       id: BlockType.PrecisionPneumaticDrillResearch,
@@ -269,6 +293,7 @@ export const technologyTree = [
   },
   {
     id: "23",
+    type: "techTree",
     data: {
       name: "Penetrator Factory",
       id: BlockType.PenetratorFactoryResearch,
@@ -281,6 +306,7 @@ export const technologyTree = [
   },
   {
     id: "24",
+    type: "techTree",
     data: {
       name: "Penetrating Missile Factory",
       id: BlockType.PenetratingMissileFactoryResearch,
@@ -293,6 +319,7 @@ export const technologyTree = [
   },
   {
     id: "25",
+    type: "techTree",
     data: {
       name: "Missile Launch Complex",
       id: BlockType.MissileLaunchComplexResearch,
@@ -305,6 +332,7 @@ export const technologyTree = [
   },
   {
     id: "26",
+    type: "techTree",
     data: {
       name: "High Energy Laser Factory",
       id: BlockType.HighEnergyLaserFactoryResearch,
@@ -317,6 +345,7 @@ export const technologyTree = [
   },
   {
     id: "27",
+    type: "techTree",
     data: {
       name: "Thermobaric Warhead Factory",
       id: BlockType.ThermobaricWarheadFactoryResearch,
@@ -326,6 +355,7 @@ export const technologyTree = [
   },
   {
     id: "28",
+    type: "techTree",
     data: {
       name: "Thermobaric Missile Factory",
       id: BlockType.ThermobaricMissileFactoryResearch,
@@ -338,6 +368,7 @@ export const technologyTree = [
   },
   {
     id: "29",
+    type: "techTree",
     data: {
       name: "Kimberlite",
       id: BlockType.KimberliteResearch,
@@ -350,6 +381,7 @@ export const technologyTree = [
   },
   {
     id: "30",
+    type: "techTree",
     data: {
       name: "Kimberlite Catalyst Factory",
       id: BlockType.KimberliteCatalystFactoryResearch,
