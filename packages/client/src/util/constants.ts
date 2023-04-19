@@ -130,7 +130,6 @@ export const BlockType = {
   ) as EntityID,
 
   // Research components
-
   MainBaseResearch: keccak256("research.MainBaseResearch") as EntityID,
   IronResearch: keccak256("research.IronResearch") as EntityID,
   BasicMinerResearch: keccak256("research.BasicMinerResearch") as EntityID,

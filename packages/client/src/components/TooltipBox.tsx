@@ -168,6 +168,7 @@ function TooltipBox() {
                 </div>
               </div>
               <div className="flex-row">
+                {/* TODO: show owned resource for every resource possible */}
                 {builtTile &&
                   (builtTile === BlockType.MainBase ||
                     builtTile === BlockType.BulletFactory) && (
