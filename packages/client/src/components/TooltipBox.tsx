@@ -14,7 +14,7 @@ import { getTopLayerKey } from "../util/tile";
 import { BlockIdToKey, BackgroundImage, BlockType } from "../util/constants";
 import { useMud } from "../context/MudContext";
 import ClaimButton from "./action/ClaimButton";
-import ResourceLabel from "./ResourceLabel";
+import ResourceLabel from "./resource-box/ResourceLabel";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -86,10 +86,10 @@ function TooltipBox() {
     tileOwner = undefined;
   }
 
-  const tileLastBuiltAt = useComponentValue(
-    components.LastBuiltAt,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  );
+  // const tileLastBuiltAt = useComponentValue(
+  //   components.LastBuiltAt,
+  //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  // );
 
   const tileLastClaimedAt = useComponentValue(
     components.LastClaimedAt,

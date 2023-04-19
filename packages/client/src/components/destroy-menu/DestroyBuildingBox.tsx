@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import { useState } from "react";
 
-import { DisplayTile } from "../util/constants";
+import { DisplayTile } from "../../util/constants";
 
 import DestroyTileButton from "./DestroyTileButton";
 
-import { useSelectedTile } from "../context/SelectedTileContext";
-import { useMud } from "../context/MudContext";
+import { useSelectedTile } from "../../context/SelectedTileContext";
+import { useMud } from "../../context/MudContext";
 
 import { FaWindowClose } from "react-icons/fa";
 

@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 import BuildingMenuButton from "./building-icons/BuildingMenuButton";
-import ChooseBuildingMenu from "../components/ChooseBuildingMenu";
+import ChooseBuildingMenu from "./ChooseBuildingMenu";
 import ChooseTransportMenu from "./ChooseTransportMenu";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
-import { BlockType } from "../util/constants";
+import { BlockType } from "../../util/constants";
 
 //need a back button between pages
 function BuildingPage() {

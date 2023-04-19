@@ -6,12 +6,12 @@ import { TbBulldozer } from "react-icons/tb";
 import { TbSword } from "react-icons/tb";
 import { TbScale } from "react-icons/tb";
 
-import AttackBox from "./AttackBox";
-import MarketModal from "./MarketModal";
-import BuildingBox from "./BuildingBox";
-import DestroyBuildingBox from "./DestroyBuildingBox";
+import AttackBox from "./attack-menu/AttackBox";
+import MarketModal from "./market-menu/MarketModal";
+import BuildingBox from "./building-menu/BuildingBox";
+import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
 import { useSelectedTile } from "../context/SelectedTileContext";
-import ResearchModal from "./ResearchModal";
+import ResearchModal from "./research-menu/ResearchModal";
 
 function SideBarIcon({
   icon,

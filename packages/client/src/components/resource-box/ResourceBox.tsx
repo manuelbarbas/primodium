@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
-import { useMud } from "../context/MudContext";
+import { useMud } from "../../context/MudContext";
 
 import ResourceLabel from "./ResourceLabel";
 

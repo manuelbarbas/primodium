@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useMud } from "../context/MudContext";
-import { useSelectedTile } from "../context/SelectedTileContext";
+import { useMud } from "../../context/MudContext";
+import { useSelectedTile } from "../../context/SelectedTileContext";
 import PathActionIconButton from "./building-icons/PathActionIconButton";
 
 function ChooseTransportMenu({

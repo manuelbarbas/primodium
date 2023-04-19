@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { FaWindowClose } from "react-icons/fa";
 import AllResourcesPage from "./AllResourcesPage";
-import MarketPages from "./MarketPages";
 
 function MarketModal() {
   const [minimized, setMinimize] = useState(false);

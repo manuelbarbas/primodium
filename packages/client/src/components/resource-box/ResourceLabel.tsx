@@ -1,5 +1,5 @@
 import { Component, EntityIndex, Type } from "@latticexyz/recs";
-import useResourceCount from "../hooks/useResourceCount";
+import useResourceCount from "../../hooks/useResourceCount";
 
 export default function ResourceLabel({
   icon,
