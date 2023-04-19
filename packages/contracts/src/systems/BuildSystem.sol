@@ -94,6 +94,7 @@ contract BuildSystem is System {
       );
       LibBuild.buildNode(ironResourceComponent, addressToEntity(msg.sender));
     }
+    // TODO: check if building has been unlocked in research for all the following.
     // Build PlatingFactory with 100 IronResource and 50 CopperResource
     else if (blockType == PlatingFactoryID) {
       IronResourceComponent ironResourceComponent = IronResourceComponent(

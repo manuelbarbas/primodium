@@ -1,18 +1,10 @@
 import { useState } from "react";
 import React, { useCallback } from "react";
-import ReactFlow, {
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  MiniMap,
-  Controls,
-} from "reactflow";
+import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
 
 import "reactflow/dist/base.css";
 
 import TechTreeNode from "./TechTreeNode";
-
-import { FaWindowClose } from "react-icons/fa";
 
 const nodeTypes = { techTree: TechTreeNode };
 const initialNodes = [

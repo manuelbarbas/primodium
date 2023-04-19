@@ -13,6 +13,7 @@ The test page is located at `localhost:3000/increment?dev=true&worldAddress=<add
 # Known bugs
 
 - Factories can only transfer resources or crafted items that their recipes support to the next tile. Such resources are stuck in the factories otherwise.
+- Need to check whether research is unlocked before allowing user to build.
 
 # Components
 
@@ -72,6 +73,7 @@ KimberliteCrystalCatalystCraftedComponent
 ### Research Components (Gameplay) bool
 
 _Unlocked (doesn't exist)_
+MainBaseResearchComponent
 IronResearchComponent
 BasicMinerResearchComponent
 ConveyorResearchComponent

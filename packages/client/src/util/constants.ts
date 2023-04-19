@@ -95,6 +95,108 @@ export const BlockType = {
   KimberliteCatalystFactory: keccak256(
     "block.KimberliteCatalystFactory"
   ) as EntityID,
+
+  // Crafted Components
+
+  IronPlateCrafted: keccak256("block.IronPlateCrafted") as EntityID,
+  BasicPowerSourceCrafted: keccak256(
+    "block.BasicPowerSourceCrafted"
+  ) as EntityID,
+  KineticMissileCrafted: keccak256("block.KineticMissileCrafted") as EntityID,
+  RefinedOsmiumCrafted: keccak256("block.RefinedOsmiumCrafted") as EntityID,
+  AdvancedPowerSourceCrafted: keccak256(
+    "block.AdvancedPowerSourceCrafted"
+  ) as EntityID,
+  PenetratingWarheadCrafted: keccak256(
+    "block.PenetratingWarheadCrafted"
+  ) as EntityID,
+  PenetratingMissileCrafted: keccak256(
+    "block.PenetratingMissileCrafted"
+  ) as EntityID,
+  TungstenRodsCrafted: keccak256("block.TungstenRodsCrafted") as EntityID,
+  IridiumCrystalCrafted: keccak256("block.IridiumCrystalCrafted") as EntityID,
+  IridiumDrillbitCrafted: keccak256("block.IridiumDrillbitCrafted") as EntityID,
+  LaserPowerSourceCrafted: keccak256(
+    "block.LaserPowerSourceCrafted"
+  ) as EntityID,
+  ThermobaricWarheadCrafted: keccak256(
+    "block.ThermobaricWarheadCrafted"
+  ) as EntityID,
+  ThermobaricMissileCrafted: keccak256(
+    "block.ThermobaricMissileCrafted"
+  ) as EntityID,
+  KimberliteCrystalCatalystCrafted: keccak256(
+    "block.KimberliteCrystalCatalystCrafted"
+  ) as EntityID,
+
+  // Research components
+
+  MainBaseResearch: keccak256("research.MainBaseResearch") as EntityID,
+  IronResearch: keccak256("research.IronResearch") as EntityID,
+  BasicMinerResearch: keccak256("research.BasicMinerResearch") as EntityID,
+  ConveyorResearch: keccak256("research.ConveyorResearch") as EntityID,
+  NodeResearch: keccak256("research.NodeResearch") as EntityID,
+  CopperResearch: keccak256("research.CopperResearch") as EntityID,
+  LithiumResearch: keccak256("research.LithiumResearch") as EntityID,
+  TitaniumResearch: keccak256("research.TitaniumResearch") as EntityID,
+  OsmiumResearch: keccak256("research.OsmiumResearch") as EntityID,
+  TungstenResearch: keccak256("research.TungstenResearch") as EntityID,
+  IridiumResearch: keccak256("research.IridiumResearch") as EntityID,
+  KimberliteResearch: keccak256("research.KimberliteResearch") as EntityID,
+  PlatingFactoryResearch: keccak256(
+    "research.PlatingFactoryResearch"
+  ) as EntityID,
+  BasicBatteryFactoryResearch: keccak256(
+    "research.BasicBatteryFactoryResearch"
+  ) as EntityID,
+  KineticMissileFactoryResearch: keccak256(
+    "research.KineticMissileFactoryResearch"
+  ) as EntityID,
+  ProjectileLauncherResearch: keccak256(
+    "research.ProjectileLauncherResearch"
+  ) as EntityID,
+  HardenedDrillResearch: keccak256(
+    "research.HardenedDrillResearch"
+  ) as EntityID,
+  DenseMetalRefineryResearch: keccak256(
+    "research.DenseMetalRefineryResearch"
+  ) as EntityID,
+  AdvancedBatteryFactoryResearch: keccak256(
+    "research.AdvancedBatteryFactoryResearch"
+  ) as EntityID,
+  HighTempFoundryResearch: keccak256(
+    "research.HighTempFoundryResearch"
+  ) as EntityID,
+  PrecisionMachineryFactoryResearch: keccak256(
+    "research.PrecisionMachineryFactoryResearch"
+  ) as EntityID,
+  IridiumDrillbitFactoryResearch: keccak256(
+    "research.IridiumDrillbitFactoryResearch"
+  ) as EntityID,
+  PrecisionPneumaticDrillResearch: keccak256(
+    "research.PrecisionPneumaticDrillResearch"
+  ) as EntityID,
+  PenetratorFactoryResearch: keccak256(
+    "research.PenetratorFactoryResearch"
+  ) as EntityID,
+  PenetratingMissileFactoryResearch: keccak256(
+    "research.PenetratingMissileFactoryResearch"
+  ) as EntityID,
+  MissileLaunchComplexResearch: keccak256(
+    "research.MissileLaunchComplexResearch"
+  ) as EntityID,
+  HighEnergyLaserFactoryResearch: keccak256(
+    "research.HighEnergyLaserFactoryResearch"
+  ) as EntityID,
+  ThermobaricWarheadFactoryResearch: keccak256(
+    "research.ThermobaricWarheadFactoryResearch"
+  ) as EntityID,
+  ThermobaricMissileFactoryResearch: keccak256(
+    "research.ThermobaricMissileFactoryResearch"
+  ) as EntityID,
+  KimberliteCatalystFactoryResearch: keccak256(
+    "research.KimberliteCatalystFactoryResearch"
+  ) as EntityID,
 };
 
 // From OPCraft
