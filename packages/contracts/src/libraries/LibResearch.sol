@@ -6,7 +6,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 library LibResearch {
   // ###########################################################################
-  // check that the user has researched a given component
+  // Check that the user has researched a given component
   function hasResearched(BoolComponent component, uint256 entity) internal view returns (bool) {
     return component.has(entity) && component.getValue(entity);
   }
@@ -14,7 +14,27 @@ library LibResearch {
   // ###########################################################################
   // Research
 
-  // research fast miner with 100 IronResource and 100 CopperResource
+  function researchWithOneItem(
+    Uint256Component item1Component,
+    uint256 item1Required,
+    BoolComponent researchComponent,
+    uint256 entity
+  ) internal returns (bytes memory) {
+    if (hasResearched(researchComponent, entity)) {
+      return abi.encode(false);
+    }
+
+    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
+
+    if (curItem1 < item1Required) {
+      return abi.encode(false);
+    } else {
+      item1Component.set(entity, curItem1 - item1Required);
+      researchComponent.set(entity);
+      return abi.encode(true);
+    }
+  }
+
   function researchWithTwoItems(
     Uint256Component item1Component,
     Uint256Component item2Component,
@@ -40,28 +60,6 @@ library LibResearch {
     }
   }
 
-  function researchWithOneItem(
-    Uint256Component item1Component,
-    uint256 item1Required,
-    BoolComponent researchComponent,
-    uint256 entity
-  ) internal returns (bytes memory) {
-    if (hasResearched(researchComponent, entity)) {
-      return abi.encode(false);
-    }
-
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-
-    if (curItem1 < item1Required) {
-      return abi.encode(false);
-    } else {
-      item1Component.set(entity, curItem1 - item1Required);
-      researchComponent.set(entity);
-      return abi.encode(true);
-    }
-  }
-
-  // Research HardenedDrill with 200 TitaniumResource, 500 IronPlateCrafted, 50 BasicPowerSourceCrafted
   function researchWithThreeItems(
     Uint256Component item1Component,
     Uint256Component item2Component,
