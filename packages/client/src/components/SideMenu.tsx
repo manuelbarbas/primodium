@@ -45,7 +45,10 @@ function SideBarIcon({
       <button className="sidebar-icon group" onClick={setMenuOpenIndexHelper}>
         {icon}
         {menuIndex !== menuOpenIndex && (
-          <div className="sidebar-tooltip group-hover:scale-100"> {text} </div>
+          <div className="sidebar-tooltip group-hover:scale-100">
+            {text}
+            {/* TODO: resource cost for building + maybe info? */}
+          </div>
         )}
       </button>
       {menuIndex === menuOpenIndex && children}

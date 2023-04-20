@@ -1,10 +1,11 @@
 import { useState } from "react";
 
 import BuildingMenuButton from "./building-icons/BuildingMenuButton";
-import ChooseBuildingMenu from "./ChooseBuildingMenu";
+import ChooseMinerMenu from "./ChooseMinerMenu";
+import ChooseDebugMenu from "./ChooseDebugMenu";
 import ChooseTransportMenu from "./ChooseTransportMenu";
-import BuildingIconButton from "./building-icons/BuildingIconButton";
-import { BlockType } from "../../util/constants";
+import ChooseFactoryMenu from "./ChooseFactoryMenu";
+import ChooseWeaponryMenu from "./ChooseWeaponryMenu";
 
 //need a back button between pages
 function BuildingPage() {
@@ -21,7 +22,7 @@ function BuildingPage() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ChooseBuildingMenu
+        <ChooseMinerMenu
           title="Build Miners"
           setMenuOpenIndex={setMenuOpenIndex}
         />
@@ -44,13 +45,13 @@ function BuildingPage() {
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
         }
-        text={"Utility"}
+        text={"Factories"}
         menuIndex={2}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ChooseBuildingMenu
-          title="Build Utilities"
+        <ChooseFactoryMenu
+          title="Build Factories"
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
@@ -58,48 +59,31 @@ function BuildingPage() {
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
         }
-        text={"Factories"}
+        text={"Weaponry"}
         menuIndex={3}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ChooseBuildingMenu
-          title="Build Factories"
+        <ChooseWeaponryMenu
+          title="Build weaponry"
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
-      {/* <BuildingMenuButton
+
+      <BuildingMenuButton
         icon={
           "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
         }
-        text={"Weapons"}
+        text={"Debug"}
         menuIndex={4}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ChooseBuildingMenu
-          title="Build Weapons"
+        <ChooseDebugMenu
+          title="Debug menu"
           setMenuOpenIndex={setMenuOpenIndex}
         />
-      </BuildingMenuButton> */}
-      {/* <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
-        text={"Defenses"}
-        menuIndex={5}
-        menuOpenIndex={menuOpenIndex}
-        setMenuOpenIndex={setMenuOpenIndex}
-      >
-        <ChooseBuildingMenu
-          title="Build Defenses"
-          setMenuOpenIndex={setMenuOpenIndex}
-        />
-      </BuildingMenuButton> */}
-      <BuildingIconButton label="Miner" blockType={BlockType.Miner} />
-      <BuildingIconButton label="Node" blockType={BlockType.Conveyer} />
-      <BuildingIconButton label="Base" blockType={BlockType.MainBase} />
-      <BuildingIconButton label="BulF" blockType={BlockType.BulletFactory} />
+      </BuildingMenuButton>
     </div>
   );
 }

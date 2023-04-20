@@ -293,13 +293,35 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Uraninite, "/img/resource/uraninite_ore_layer.png"],
   [BlockType.Bolutite, "/img/resource/bolutite_ore_layer.png"],
 
-  // buildings
+  // debug buildings
   [BlockType.Miner, "/img/building/minerdrill.gif"],
   [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
   [BlockType.MainBase, "/img/building/mainbase.gif"],
   [BlockType.Conveyer, "/img/building/node.gif"],
   [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
   [BlockType.Silo, "/img/building/silo.png"],
+
+  //actual buildings
+  [BlockType.BasicMiner, "/img/building/minerdrill.gif"],
+  [BlockType.Node, "/img/building/minerdrill.gif"],
+  [BlockType.PlatingFactory, "/img/building/minerdrill.gif"],
+  [BlockType.BasicBatteryFactory, "/img/building/minerdrill.gif"],
+  [BlockType.KineticMissileFactory, "/img/building/minerdrill.gif"],
+  [BlockType.ProjectileLauncher, "/img/building/minerdrill.gif"],
+  [BlockType.HardenedDrill, "/img/building/minerdrill.gif"],
+  [BlockType.DenseMetalRefinery, "/img/building/minerdrill.gif"],
+  [BlockType.AdvancedBatteryFactory, "/img/building/minerdrill.gif"],
+  [BlockType.HighTempFoundry, "/img/building/minerdrill.gif"],
+  [BlockType.PrecisionMachineryFactory, "/img/building/minerdrill.gif"],
+  [BlockType.IridiumDrillbitFactory, "/img/building/minerdrill.gif"],
+  [BlockType.PrecisionPneumaticDrill, "/img/building/minerdrill.gif"],
+  [BlockType.PenetratorFactory, "/img/building/minerdrill.gif"],
+  [BlockType.PenetratingMissileFactory, "/img/building/minerdrill.gif"],
+  [BlockType.MissileLaunchComplex, "/img/building/minerdrill.gif"],
+  [BlockType.HighEnergyLaserFactory, "/img/building/minerdrill.gif"],
+  [BlockType.ThermobaricWarheadFactory, "/img/building/minerdrill.gif"],
+  [BlockType.ThermobaricMissileFactory, "/img/building/minerdrill.gif"],
+  [BlockType.KimberliteCatalystFactory, "/img/building/minerdrill.gif"],
 ]);
 
 export type DisplayTile = {

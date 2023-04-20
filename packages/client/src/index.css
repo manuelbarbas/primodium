@@ -35,6 +35,10 @@
     @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-gray-700 font-mono font-bold transition-none origin-left
   }
 
+  .building-tooltip {
+    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 mt-3 mr-3 mb-3 ml-10 min-w-max rounded shadow-xl text-gray-700 font-mono font-bold
+  }
+
   .pixel-images {
     image-rendering: pixelated;
   }
