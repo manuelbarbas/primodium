@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
+import { LibMath } from "./LibMath.sol";
 
 library LibResearch {
   // ###########################################################################
@@ -24,7 +25,7 @@ library LibResearch {
       return abi.encode(false);
     }
 
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
 
     if (curItem1 < item1Required) {
       return abi.encode(false);
@@ -47,8 +48,8 @@ library LibResearch {
       return abi.encode(false);
     }
 
-    uint256 curitem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-    uint256 curitem2 = item2Component.has(entity) ? item2Component.getValue(entity) : 0;
+    uint256 curitem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 curitem2 = LibMath.getSafeUint256Value(item2Component, entity);
 
     if (curitem1 < item1Required || curitem2 < item2Required) {
       return abi.encode(false);
@@ -74,9 +75,9 @@ library LibResearch {
       return abi.encode(false);
     }
 
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-    uint256 curItem2 = item2Component.has(entity) ? item2Component.getValue(entity) : 0;
-    uint256 curItem3 = item3Component.has(entity) ? item3Component.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
+    uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
 
     if (curItem1 < item1Required || curItem2 < item2Required || curItem3 < item3Required) {
       return abi.encode(false);

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+import { LibMath } from "./LibMath.sol";
 
 library LibCraft {
   // ###########################################################################
@@ -12,8 +13,8 @@ library LibCraft {
     Uint256Component craftedComponent,
     uint256 entity
   ) internal {
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-    uint256 curCrafted = craftedComponent.has(entity) ? craftedComponent.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 curCrafted = LibMath.getSafeUint256Value(craftedComponent, entity);
 
     uint256 maxCrafted = curItem1 / item1Required;
     uint256 consumeItem1By = maxCrafted * item1Required;
@@ -30,9 +31,9 @@ library LibCraft {
     Uint256Component craftedComponent,
     uint256 entity
   ) internal {
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-    uint256 curItem2 = item2Component.has(entity) ? item2Component.getValue(entity) : 0;
-    uint256 curCrafted = craftedComponent.has(entity) ? craftedComponent.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
+    uint256 curCrafted = LibMath.getSafeUint256Value(craftedComponent, entity);
 
     uint256 maxCraftedFromItem1 = curItem1 / item1Required;
     uint256 maxCraftedFromItem2 = curItem2 / item2Required;

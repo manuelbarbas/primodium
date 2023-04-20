@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+import { LibMath } from "./LibMath.sol";
 
 library LibBuild {
   function buildWithOneItem(Uint256Component item1Component, uint256 item1Required, uint256 entity) internal {
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
 
     if (curItem1 < item1Required) {
       revert("not enough item1");
@@ -20,8 +21,8 @@ library LibBuild {
     uint256 item2Required,
     uint256 entity
   ) internal {
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-    uint256 curItem2 = item2Component.has(entity) ? item2Component.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
 
     if (curItem1 < item1Required) {
       revert("not enough item1");
@@ -42,9 +43,9 @@ library LibBuild {
     uint256 item3Required,
     uint256 entity
   ) internal {
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-    uint256 curItem2 = item2Component.has(entity) ? item2Component.getValue(entity) : 0;
-    uint256 curItem3 = item3Component.has(entity) ? item3Component.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
+    uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
 
     if (curItem1 < item1Required) {
       revert("not enough item1");
@@ -70,10 +71,10 @@ library LibBuild {
     uint256 item4Required,
     uint256 entity
   ) internal {
-    uint256 curItem1 = item1Component.has(entity) ? item1Component.getValue(entity) : 0;
-    uint256 curItem2 = item2Component.has(entity) ? item2Component.getValue(entity) : 0;
-    uint256 curItem3 = item3Component.has(entity) ? item3Component.getValue(entity) : 0;
-    uint256 curItem4 = item4Component.has(entity) ? item4Component.getValue(entity) : 0;
+    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
+    uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
+    uint256 curItem4 = LibMath.getSafeUint256Value(item4Component, entity);
 
     if (curItem1 < item1Required) {
       revert("not enough item1");
