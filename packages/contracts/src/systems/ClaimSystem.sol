@@ -440,7 +440,14 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftBullet(ironResourceComponent, copperResourceComponent, bulletCraftedComponent, destination);
+      LibCraft.craftWithTwoItems(
+        copperResourceComponent,
+        ironResourceComponent,
+        1,
+        1,
+        bulletCraftedComponent,
+        destination
+      );
     }
     // Craft 1 IronPlate with 10 IronResource in PlatingFactory
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PlatingFactoryID) {
@@ -452,7 +459,7 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftIronPlate(ironResourceComponent, ironPlateCraftedComponent, destination);
+      LibCraft.craftWithOneItem(ironResourceComponent, 10, ironPlateCraftedComponent, destination);
     }
     // Craft 1 BasicPowerSource with 100 LithiumResource and 20 IronResource in BasicBatteryFactory
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == BasicBatteryFactoryID) {
@@ -467,9 +474,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftBasicPowerSource(
+      LibCraft.craftWithTwoItems(
         lithiumResourceComponent,
         ironResourceComponent,
+        100,
+        20,
         basicPowerSourceCraftedComponent,
         destination
       );
@@ -487,9 +496,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftKineticMissile(
+      LibCraft.craftWithTwoItems(
         basicPowerSourceCraftedComponent,
         titaniumResourceComponent,
+        10,
+        20,
         kineticMissileCraftedComponent,
         destination
       );
@@ -504,7 +515,7 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftRefinedOsmium(osmiumResourceComponent, refinedOsmiumCraftedComponent, destination);
+      LibCraft.craftWithOneItem(osmiumResourceComponent, 10, refinedOsmiumCraftedComponent, destination);
     }
     // Craft 1 AdvancedPowerSource with 10 RefinedOsmiumCrafted and 2 BasicPowerSourceCrafted in AdvancedBatteryFactory
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == AdvancedBatteryFactoryID) {
@@ -519,9 +530,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftAdvancedPowerSource(
+      LibCraft.craftWithTwoItems(
         refinedOsmiumCraftedComponent,
         basicPowerSourceCraftedComponent,
+        10,
+        2,
         advancedPowerSourceCraftedComponent,
         destination
       );
@@ -539,9 +552,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftPenetratingWarhead(
+      LibCraft.craftWithTwoItems(
         refinedOsmiumCraftedComponent,
         advancedPowerSourceCraftedComponent,
+        20,
+        5,
         penetratingWarheadCraftedComponent,
         destination
       );
@@ -559,9 +574,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftPenetratingMissile(
+      LibCraft.craftWithTwoItems(
         penetratingWarheadCraftedComponent,
         kineticMissileCraftedComponent,
+        1,
+        1,
         penetratingMissileCraftedComponent,
         destination
       );
@@ -576,7 +593,7 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftTungstenRods(tungstenResourceComponent, tungstenRodsCraftedComponent, destination);
+      LibCraft.craftWithOneItem(tungstenResourceComponent, 10, tungstenRodsCraftedComponent, destination);
     }
     // Craft 1 IridiumCrystal with 10 IridiumResource in PrecisionMachineryFactory
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PrecisionMachineryFactoryID) {
@@ -588,7 +605,7 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftIridiumCrystal(iridiumResourceComponent, iridiumCrystalCraftedComponent, destination);
+      LibCraft.craftWithOneItem(iridiumResourceComponent, 10, iridiumCrystalCraftedComponent, destination);
     }
     // Craft 1 IridiumDrillbit with 5 IridiumCrystalCrafted and 10 TungstenRodsCrafted in IridiumDrillbitFactory
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == IridiumDrillbitFactoryID) {
@@ -603,9 +620,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftIridiumDrillbit(
+      LibCraft.craftWithTwoItems(
         iridiumCrystalCraftedComponent,
         tungstenRodsCraftedComponent,
+        5,
+        10,
         iridiumDrillbitCraftedComponent,
         destination
       );
@@ -623,9 +642,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftLaserPowerSource(
+      LibCraft.craftWithTwoItems(
         iridiumCrystalCraftedComponent,
         advancedPowerSourceCraftedComponent,
+        10,
+        5,
         laserPowerSourceCraftedComponent,
         destination
       );
@@ -643,9 +664,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftThermobaricWarhead(
+      LibCraft.craftWithTwoItems(
         iridiumDrillbitCraftedComponent,
         laserPowerSourceCraftedComponent,
+        1,
+        1,
         thermobaricWarheadCraftedComponent,
         destination
       );
@@ -663,9 +686,11 @@ contract ClaimSystem is System {
       );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftThermobaricMissile(
+      LibCraft.craftWithTwoItems(
         penetratingMissileCraftedComponent,
         thermobaricWarheadCraftedComponent,
+        10,
+        1,
         thermobaricMissileCraftedComponent,
         destination
       );
@@ -680,8 +705,9 @@ contract ClaimSystem is System {
         );
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      LibCraft.craftKimberliteCrystalCatalyst(
+      LibCraft.craftWithOneItem(
         kimberliteResourceComponent,
+        10,
         kimberliteCrystalCatalystCraftedComponent,
         destination
       );
