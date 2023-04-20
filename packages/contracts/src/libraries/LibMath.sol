@@ -17,14 +17,57 @@ library LibMath {
   }
 
   function incrementBy(Uint256Component component, uint256 entity, uint256 incBy) internal {
-    uint256 current = component.has(entity) ? component.getValue(entity) : 0;
+    uint256 current = getSafeUint256Value(component, entity);
     component.set(entity, current + incBy);
   }
 
   function transfer(Uint256Component component, uint256 origin, uint256 destination) internal {
-    uint256 curOrigin = component.has(origin) ? component.getValue(origin) : 0;
-    uint256 curDestination = component.has(destination) ? component.getValue(destination) : 0;
+    uint256 curOrigin = getSafeUint256Value(component, origin);
+    uint256 curDestination = getSafeUint256Value(component, destination);
     component.set(origin, 0);
     component.set(destination, curDestination + curOrigin);
+  }
+
+  function transferTwoComponents(
+    Uint256Component component1,
+    Uint256Component component2,
+    uint256 origin,
+    uint256 destination
+  ) internal {
+    uint256 curOrigin1 = getSafeUint256Value(component1, origin);
+    uint256 curOrigin2 = getSafeUint256Value(component2, origin);
+
+    uint256 curDestination1 = getSafeUint256Value(component1, destination);
+    uint256 curDestination2 = getSafeUint256Value(component2, destination);
+
+    component1.set(origin, 0);
+    component2.set(origin, 0);
+
+    component1.set(destination, curDestination1 + curOrigin1);
+    component2.set(destination, curDestination2 + curOrigin2);
+  }
+
+  function transferThreeComponents(
+    Uint256Component component1,
+    Uint256Component component2,
+    Uint256Component component3,
+    uint256 origin,
+    uint256 destination
+  ) internal {
+    uint256 curOrigin1 = getSafeUint256Value(component1, origin);
+    uint256 curOrigin2 = getSafeUint256Value(component2, origin);
+    uint256 curOrigin3 = getSafeUint256Value(component3, origin);
+
+    uint256 curDestination1 = getSafeUint256Value(component1, destination);
+    uint256 curDestination2 = getSafeUint256Value(component2, destination);
+    uint256 curDestination3 = getSafeUint256Value(component3, destination);
+
+    component1.set(origin, 0);
+    component2.set(origin, 0);
+    component3.set(origin, 0);
+
+    component1.set(destination, curDestination1 + curOrigin1);
+    component2.set(destination, curDestination2 + curOrigin2);
+    component3.set(destination, curDestination3 + curOrigin3);
   }
 }
