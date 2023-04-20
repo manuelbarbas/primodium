@@ -85,14 +85,14 @@ contract BuildSystem is System {
       IronResourceComponent ironResourceComponent = IronResourceComponent(
         getAddressById(components, IronResourceComponentID)
       );
-      LibBuild.buildBasicMiner(ironResourceComponent, addressToEntity(msg.sender));
+      LibBuild.buildWithOneItem(ironResourceComponent, 100, addressToEntity(msg.sender));
     }
     // Build Node with 50 IronResource
     else if (blockType == NodeID) {
       IronResourceComponent ironResourceComponent = IronResourceComponent(
         getAddressById(components, IronResourceComponentID)
       );
-      LibBuild.buildNode(ironResourceComponent, addressToEntity(msg.sender));
+      LibBuild.buildWithOneItem(ironResourceComponent, 50, addressToEntity(msg.sender));
     }
     // TODO: check if building has been unlocked in research for all the following.
     // Build PlatingFactory with 100 IronResource and 50 CopperResource
@@ -103,7 +103,7 @@ contract BuildSystem is System {
       CopperResourceComponent copperResourceComponent = CopperResourceComponent(
         getAddressById(components, CopperResourceComponentID)
       );
-      LibBuild.buildPlatingFactory(ironResourceComponent, copperResourceComponent, addressToEntity(msg.sender));
+      LibBuild.buildWithTwoItems(ironResourceComponent, copperResourceComponent, 100, 50, addressToEntity(msg.sender));
     }
     // Build BasicBatteryFactory with 20 IronPlateCrafted and 50 CopperResource
     else if (blockType == BasicBatteryFactoryID) {
@@ -113,9 +113,11 @@ contract BuildSystem is System {
       CopperResourceComponent copperResourceComponent = CopperResourceComponent(
         getAddressById(components, CopperResourceComponentID)
       );
-      LibBuild.buildBasicBatteryFactory(
+      LibBuild.buildWithTwoItems(
         ironPlateCraftedComponent,
         copperResourceComponent,
+        20,
+        50,
         addressToEntity(msg.sender)
       );
     }
@@ -130,10 +132,13 @@ contract BuildSystem is System {
       BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
         getAddressById(components, BasicPowerSourceCraftedComponentID)
       );
-      LibBuild.buildKineticMissileFactory(
+      LibBuild.buildWithThreeItems(
         ironPlateCraftedComponent,
         lithiumResourceComponent,
         basicPowerSourceCraftedComponent,
+        100,
+        50,
+        10,
         addressToEntity(msg.sender)
       );
     }
@@ -145,9 +150,11 @@ contract BuildSystem is System {
       TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
         getAddressById(components, TitaniumResourceComponentID)
       );
-      LibBuild.buildProjectileLauncher(
+      LibBuild.buildWithTwoItems(
         ironPlateCraftedComponent,
         titaniumResourceComponent,
+        100,
+        100,
         addressToEntity(msg.sender)
       );
     }
@@ -162,10 +169,13 @@ contract BuildSystem is System {
       BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
         getAddressById(components, BasicPowerSourceCraftedComponentID)
       );
-      LibBuild.buildHardenedDrill(
+      LibBuild.buildWithThreeItems(
         titaniumResourceComponent,
         ironPlateCraftedComponent,
         basicPowerSourceCraftedComponent,
+        100,
+        10,
+        5,
         addressToEntity(msg.sender)
       );
     }
@@ -183,11 +193,15 @@ contract BuildSystem is System {
       BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
         getAddressById(components, BasicPowerSourceCraftedComponentID)
       );
-      LibBuild.buildDenseMetalRefinery(
+      LibBuild.buildWithFourItems(
         osmiumResourceComponent,
         titaniumResourceComponent,
         ironPlateCraftedComponent,
         basicPowerSourceCraftedComponent,
+        50,
+        100,
+        30,
+        10,
         addressToEntity(msg.sender)
       );
     }
@@ -202,10 +216,13 @@ contract BuildSystem is System {
       BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
         getAddressById(components, BasicPowerSourceCraftedComponentID)
       );
-      LibBuild.buildAdvancedBatteryFactory(
+      LibBuild.buildWithThreeItems(
         osmiumResourceComponent,
         titaniumResourceComponent,
         basicPowerSourceCraftedComponent,
+        150,
+        50,
+        20,
         addressToEntity(msg.sender)
       );
     }
@@ -220,10 +237,13 @@ contract BuildSystem is System {
       AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
         getAddressById(components, AdvancedPowerSourceCraftedComponentID)
       );
-      LibBuild.buildHighTempFoundry(
+      LibBuild.buildWithThreeItems(
         tungstenResourceComponent,
         refinedOsmiumCraftedComponent,
         advancedPowerSourceCraftedComponent,
+        50,
+        50,
+        20,
         addressToEntity(msg.sender)
       );
     }
@@ -238,10 +258,13 @@ contract BuildSystem is System {
       AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
         getAddressById(components, AdvancedPowerSourceCraftedComponentID)
       );
-      LibBuild.buildPrecisionMachineryFactory(
+      LibBuild.buildWithThreeItems(
         iridiumResourceComponent,
         tungstenRodsCraftedComponent,
         advancedPowerSourceCraftedComponent,
+        50,
+        50,
+        10,
         addressToEntity(msg.sender)
       );
     }
@@ -253,9 +276,11 @@ contract BuildSystem is System {
       LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
         getAddressById(components, LaserPowerSourceCraftedComponentID)
       );
-      LibBuild.buildIridiumDrillbitFactory(
+      LibBuild.buildWithTwoItems(
         tungstenRodsCraftedComponent,
         laserPowerSourceCraftedComponent,
+        50,
+        5,
         addressToEntity(msg.sender)
       );
     }
@@ -270,10 +295,13 @@ contract BuildSystem is System {
       LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
         getAddressById(components, LaserPowerSourceCraftedComponentID)
       );
-      LibBuild.buildPrecisionPneumaticDrill(
+      LibBuild.buildWithThreeItems(
         tungstenResourceComponent,
         osmiumResourceComponent,
         laserPowerSourceCraftedComponent,
+        100,
+        100,
+        5,
         addressToEntity(msg.sender)
       );
     }
@@ -288,10 +316,13 @@ contract BuildSystem is System {
       AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
         getAddressById(components, AdvancedPowerSourceCraftedComponentID)
       );
-      LibBuild.buildPenetratorFactory(
+      LibBuild.buildWithThreeItems(
         osmiumResourceComponent,
         ironPlateCraftedComponent,
         advancedPowerSourceCraftedComponent,
+        200,
+        50,
+        10,
         addressToEntity(msg.sender)
       );
     }
@@ -306,10 +337,13 @@ contract BuildSystem is System {
       AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
         getAddressById(components, AdvancedPowerSourceCraftedComponentID)
       );
-      LibBuild.buildPenetratingMissileFactory(
+      LibBuild.buildWithThreeItems(
         osmiumResourceComponent,
         titaniumResourceComponent,
         advancedPowerSourceCraftedComponent,
+        300,
+        100,
+        15,
         addressToEntity(msg.sender)
       );
     }
@@ -321,9 +355,11 @@ contract BuildSystem is System {
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
       );
-      LibBuild.buildMissileLaunchComplex(
+      LibBuild.buildWithTwoItems(
         tungstenRodsCraftedComponent,
         osmiumResourceComponent,
+        100,
+        100,
         addressToEntity(msg.sender)
       );
     }
@@ -338,10 +374,13 @@ contract BuildSystem is System {
       AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
         getAddressById(components, AdvancedPowerSourceCraftedComponentID)
       );
-      LibBuild.buildHighEnergyLaserFactory(
+      LibBuild.buildWithThreeItems(
         iridiumCrystalCraftedComponent,
         refinedOsmiumCraftedComponent,
         advancedPowerSourceCraftedComponent,
+        50,
+        100,
+        50,
         addressToEntity(msg.sender)
       );
     }
@@ -356,10 +395,13 @@ contract BuildSystem is System {
       LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
         getAddressById(components, LaserPowerSourceCraftedComponentID)
       );
-      LibBuild.buildThermobaricWarheadFactory(
+      LibBuild.buildWithThreeItems(
         refinedOsmiumCraftedComponent,
         iridiumCrystalCraftedComponent,
         laserPowerSourceCraftedComponent,
+        200,
+        100,
+        10,
         addressToEntity(msg.sender)
       );
     }
@@ -374,10 +416,13 @@ contract BuildSystem is System {
       LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
         getAddressById(components, LaserPowerSourceCraftedComponentID)
       );
-      LibBuild.buildThermobaricMissileFactory(
+      LibBuild.buildWithThreeItems(
         iridiumCrystalCraftedComponent,
         tungstenRodsCraftedComponent,
         laserPowerSourceCraftedComponent,
+        100,
+        100,
+        20,
         addressToEntity(msg.sender)
       );
     }
@@ -389,9 +434,11 @@ contract BuildSystem is System {
       LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
         getAddressById(components, LaserPowerSourceCraftedComponentID)
       );
-      LibBuild.buildKimberliteCatalystFactory(
+      LibBuild.buildWithTwoItems(
         iridiumCrystalCraftedComponent,
         laserPowerSourceCraftedComponent,
+        200,
+        20,
         addressToEntity(msg.sender)
       );
     } else {
