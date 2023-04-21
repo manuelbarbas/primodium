@@ -38,7 +38,10 @@ function BuildingIconButton({
       // style={{ backgroundColor: BlockColors.get(blockType) }}
       onClick={buildTile}
     >
-      <div className="building-tooltip group-hover:scale-100">{label}</div>
+      <div className="building-tooltip group-hover:scale-100">
+        {label}
+        {/* todo: resources? tooltip? */}
+      </div>
       <img
         src={BackgroundImage.get(blockType)}
         className="w-16 h-16 pixel-images"
