@@ -14,9 +14,7 @@ function BuildingPage() {
   return (
     <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
       <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
+        icon={"/img/icons/minersicon.png"}
         text={"Miners"}
         menuIndex={0}
         menuOpenIndex={menuOpenIndex}
@@ -28,9 +26,7 @@ function BuildingPage() {
         />
       </BuildingMenuButton>
       <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
+        icon={"/img/icons/transporticon.png"}
         text={"Transport"}
         menuIndex={1}
         menuOpenIndex={menuOpenIndex}
@@ -42,9 +38,7 @@ function BuildingPage() {
         />
       </BuildingMenuButton>
       <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
+        icon={"/img/icons/factoriesicon.png"}
         text={"Factories"}
         menuIndex={2}
         menuOpenIndex={menuOpenIndex}
@@ -56,9 +50,7 @@ function BuildingPage() {
         />
       </BuildingMenuButton>
       <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
+        icon={"/img/icons/weaponryicon.png"}
         text={"Weaponry"}
         menuIndex={3}
         menuOpenIndex={menuOpenIndex}
@@ -71,9 +63,7 @@ function BuildingPage() {
       </BuildingMenuButton>
 
       <BuildingMenuButton
-        icon={
-          "https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"
-        }
+        icon={"/img/icons/debugicon.png"}
         text={"Debug"}
         menuIndex={4}
         menuOpenIndex={menuOpenIndex}

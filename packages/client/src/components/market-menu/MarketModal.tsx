@@ -23,7 +23,8 @@ function MarketModal() {
               <LinkIcon icon={<FaWindowClose size="24" />} />
             </button>
             <p className="text-lg font-bold ">Resource Market</p>
-            <AllResourcesPage />
+            {/* <AllResourcesPage /> */}
+            <p>Coming soon!</p>
           </div>
         </div>
       </div>

@@ -40,7 +40,7 @@ function BuildingIconButton({
     >
       <div className="building-tooltip group-hover:scale-100">
         {label}
-        {/* todo: resources? tooltip? */}
+        {/* todo: resource cost? tooltip? */}
       </div>
       <img
         src={BackgroundImage.get(blockType)}
