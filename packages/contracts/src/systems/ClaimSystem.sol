@@ -485,13 +485,33 @@ contract ClaimSystem is System {
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == SiloID) {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-      //
-    } else {
+    }
+    // claim for all other factories
+    else if (
+      c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == BasicBatteryFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == KineticMissileFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == ProjectileLauncherID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == HardenedDrillID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == DenseMetalRefineryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == AdvancedBatteryFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == HighTempFoundryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == PrecisionMachineryFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == IridiumDrillbitFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == PrecisionPneumaticDrillID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == PenetratorFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == PenetratingMissileFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == MissileLaunchComplexID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == HighEnergyLaserFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == ThermobaricWarheadFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == ThermobaricMissileFactoryID ||
+      c.tileComponent.getValue(entitiesAtPosition[0]) == KimberliteCatalystFactoryID
+    ) {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
+    } else {
+      revert("can not claim resource or crafted component at tile");
     }
-
-    // TODO: gracefully exit
 
     return abi.encode(0);
   }
