@@ -1,6 +1,8 @@
 import { useCallback } from "react";
+import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { BlockType } from "../../util/constants";
 
-function ChooseBuildingMenu({
+function ChooseMinerMenu({
   title,
   setMenuOpenIndex,
 }: {
@@ -15,9 +17,18 @@ function ChooseBuildingMenu({
     <div className="z-[1000] fixed bottom-0 w-11/12 h-72 flex flex-col bg-gray-700 text-white font-mono rounded">
       <p className="mt-4 text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
-        <button className="w-16 h-16 text-xs">
-          <img src="https://mindustrygame.github.io/wiki/images/block-surge-smelter-ui.png"></img>
-        </button>
+        <BuildingIconButton
+          label="Basic miner"
+          blockType={BlockType.BasicMiner}
+        />
+        <BuildingIconButton
+          label="Hardened drill"
+          blockType={BlockType.HardenedDrill}
+        />
+        <BuildingIconButton
+          label="Precision pneumatic drill"
+          blockType={BlockType.PrecisionPneumaticDrill}
+        />
       </div>
       <button
         onClick={closeMenuHelper}
@@ -29,4 +40,4 @@ function ChooseBuildingMenu({
   );
 }
 
-export default ChooseBuildingMenu;
+export default ChooseMinerMenu;

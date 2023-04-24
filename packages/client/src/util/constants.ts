@@ -293,13 +293,35 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Uraninite, "/img/resource/uraninite_ore_layer.png"],
   [BlockType.Bolutite, "/img/resource/bolutite_ore_layer.png"],
 
-  // buildings
+  // debug buildings
   [BlockType.Miner, "/img/building/minerdrill.gif"],
   [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
   [BlockType.MainBase, "/img/building/mainbase.gif"],
   [BlockType.Conveyer, "/img/building/node.gif"],
   [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
   [BlockType.Silo, "/img/building/silo.png"],
+
+  //actual buildings
+  [BlockType.BasicMiner, "/img/building/minerdrill.gif"],
+  [BlockType.Node, "/img/building/node.gif"],
+  [BlockType.PlatingFactory, "/img/building/newplatingfactory.gif"],
+  [BlockType.BasicBatteryFactory, "/img/building/newbasicbatteryfactory.gif"],
+  [BlockType.KineticMissileFactory, "/img/building/minerdrill.gif"],
+  [BlockType.ProjectileLauncher, "/img/building/minerdrill.gif"],
+  [BlockType.HardenedDrill, "/img/building/hardeneddrill.gif"],
+  [BlockType.DenseMetalRefinery, "/img/building/densemetalrefinery.gif"],
+  [BlockType.AdvancedBatteryFactory, "/img/building/advancedbatteryfactory.gif"],
+  [BlockType.HighTempFoundry, "/img/building/hightempfoundry.gif"],
+  [BlockType.PrecisionMachineryFactory, "/img/building/precisionmachineryfactory.gif"],
+  [BlockType.IridiumDrillbitFactory, "/img/building/iridiumdrillbitfactory.gif"],
+  [BlockType.PrecisionPneumaticDrill, "/img/building/precisionpneumaticdrill.gif"],
+  [BlockType.PenetratorFactory, "/img/building/minerdrill.gif"],
+  [BlockType.PenetratingMissileFactory, "/img/building/minerdrill.gif"],
+  [BlockType.MissileLaunchComplex, "/img/building/minerdrill.gif"],
+  [BlockType.HighEnergyLaserFactory, "/img/building/laserfactory.gif"],
+  [BlockType.ThermobaricWarheadFactory, "/img/building/minerdrill.gif"],
+  [BlockType.ThermobaricMissileFactory, "/img/building/minerdrill.gif"],
+  [BlockType.KimberliteCatalystFactory, "/img/building/kimberlitecatalyst.gif"],
 ]);
 
 export type DisplayTile = {

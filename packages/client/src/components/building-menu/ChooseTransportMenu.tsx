@@ -2,6 +2,8 @@ import { useCallback, useEffect } from "react";
 import { useMud } from "../../context/MudContext";
 import { useSelectedTile } from "../../context/SelectedTileContext";
 import PathActionIconButton from "./building-icons/PathActionIconButton";
+import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { BlockType } from "../../util/constants";
 
 function ChooseTransportMenu({
   title,
@@ -88,6 +90,7 @@ function ChooseTransportMenu({
           text={"Clear"}
           action={clearPath}
         />
+        <BuildingIconButton label="Node" blockType={BlockType.Node} />
       </div>
       <button
         onClick={closeMenuHelper}

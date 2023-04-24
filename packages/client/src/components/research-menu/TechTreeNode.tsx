@@ -9,7 +9,7 @@ function TechTreeNode({ data }: { data: TechnologyTreeNodeData }) {
   console.log(data);
   const tileColor = BackgroundImage.get(data.id as EntityID);
   return (
-    <div className="w-48 px-2 py-3 shadow-md rounded-md bg-white border border-stone-400">
+    <div className="group w-48 px-2 py-3 shadow-md rounded-md bg-white border border-stone-400 -z-10">
       <div className="flex w-48">
         <div className="flex justify-center items-center flex-shrink-0">
           {/* thumbnail */}
@@ -26,7 +26,7 @@ function TechTreeNode({ data }: { data: TechnologyTreeNodeData }) {
       <div className="mt-2">
         {/* <div className="text-gray-500 text-xs">{Test Description}</div> */}
       </div>
-      <div className="mt-2 text-center text-gray-900 text-sm">
+      <div className="research-tooltip group-hover:scale-100 mt-2 text-center text-gray-900 text-sm">
         {data.resources.map((resource) => {
           const tileColor = BackgroundImage.get(resource.id);
           return (

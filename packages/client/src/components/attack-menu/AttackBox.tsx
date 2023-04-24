@@ -19,10 +19,7 @@ function AttackBox() {
             <LinkIcon icon={<FaWindowClose size="24" />} />
           </button>
           <p className="text-lg font-bold mb-3">Attack others</p>
-          <p>
-            First select a tile on the map, then click on "Demolish" to remove
-            the building.
-          </p>
+          <p>Coming soon! Build missile factories and silos to get ready. </p>
         </div>
       </div>
     );
