@@ -310,11 +310,23 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.ProjectileLauncher, "/img/building/minerdrill.gif"],
   [BlockType.HardenedDrill, "/img/building/hardeneddrill.gif"],
   [BlockType.DenseMetalRefinery, "/img/building/densemetalrefinery.gif"],
-  [BlockType.AdvancedBatteryFactory, "/img/building/advancedbatteryfactory.gif"],
+  [
+    BlockType.AdvancedBatteryFactory,
+    "/img/building/advancedbatteryfactory.gif",
+  ],
   [BlockType.HighTempFoundry, "/img/building/hightempfoundry.gif"],
-  [BlockType.PrecisionMachineryFactory, "/img/building/precisionmachineryfactory.gif"],
-  [BlockType.IridiumDrillbitFactory, "/img/building/iridiumdrillbitfactory.gif"],
-  [BlockType.PrecisionPneumaticDrill, "/img/building/precisionpneumaticdrill.gif"],
+  [
+    BlockType.PrecisionMachineryFactory,
+    "/img/building/precisionmachineryfactory.gif",
+  ],
+  [
+    BlockType.IridiumDrillbitFactory,
+    "/img/building/iridiumdrillbitfactory.gif",
+  ],
+  [
+    BlockType.PrecisionPneumaticDrill,
+    "/img/building/precisionpneumaticdrill.gif",
+  ],
   [BlockType.PenetratorFactory, "/img/building/minerdrill.gif"],
   [BlockType.PenetratingMissileFactory, "/img/building/minerdrill.gif"],
   [BlockType.MissileLaunchComplex, "/img/building/minerdrill.gif"],

@@ -1,20 +1,10 @@
 import { BlockType } from "./constants";
-import { EntityID } from "@latticexyz/recs";
+import { ResourceCostData } from "./resource";
 
 // Research Technology Tree
-
-export type TechnologyTreeNodeData = {
-  name: string;
-  id: EntityID;
-  resources: {
-    id: EntityID;
-    amount: number;
-  }[];
-};
-
 export type TechnologyTreeNode = {
   id: string;
-  data: TechnologyTreeNodeData;
+  data: ResourceCostData;
   position: {
     x: number;
     y: number;

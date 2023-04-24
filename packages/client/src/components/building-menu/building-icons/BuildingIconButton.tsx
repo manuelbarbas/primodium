@@ -4,7 +4,6 @@ import { EntityID } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
 import { useMud } from "../../../context/MudContext";
 import { useSelectedTile } from "../../../context/SelectedTileContext";
-import { BlockColors } from "../../../util/constants";
 import { BackgroundImage } from "../../../util/constants";
 
 // Builds a specific blockType
@@ -28,9 +27,6 @@ function BuildingIconButton({
       }
     );
   }, [selectedTile]);
-
-  const imageUrl = BackgroundImage.get(blockType);
-  console.log("Image URL:", imageUrl);
 
   return (
     <button
