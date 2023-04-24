@@ -8,7 +8,7 @@ import { addressToEntity } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { ClaimSystem, ID as ClaimSystemID } from "../../systems/ClaimSystem.sol";
+import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
 
 import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
@@ -41,7 +41,7 @@ contract ResearchSystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
 
     // alice researches fast miner
     researchSystem.executeTyped(FastMinerResearchComponentID);

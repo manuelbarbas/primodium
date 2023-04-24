@@ -8,7 +8,7 @@ import { addressToEntity } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { ClaimSystem, ID as ClaimSystemID } from "../../systems/ClaimSystem.sol";
+import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 
@@ -36,7 +36,7 @@ contract ClaimSystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
@@ -79,7 +79,7 @@ contract ClaimSystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
@@ -122,7 +122,7 @@ contract ClaimSystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
 
     // Resource and crafted components
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
@@ -170,7 +170,7 @@ contract ClaimSystemTest is MudTest {
 
     // a mainbase that is directly adjacent to a miner and node, no path
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
 
     // TEMP: current generation seed
@@ -200,7 +200,7 @@ contract ClaimSystemTest is MudTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
 

@@ -109,7 +109,7 @@
       "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
-      "name": "ClaimSystem",
+      "name": "ClaimFromMineSystem",
       "writeAccess": [
         "PositionComponent",
         "TileComponent",
@@ -126,7 +126,94 @@
         "OsmiumResourceComponent",
         "TungstenResourceComponent",
         "UraniniteResourceComponent",
-        "BulletCraftedComponent"
+        "BulletCraftedComponent",
+
+        "IronPlateCraftedComponent",
+        "BasicPowerSourceCraftedComponent",
+        "KineticMissileCraftedComponent",
+        "RefinedOsmiumCraftedComponent",
+        "AdvancedPowerSourceCraftedComponent",
+        "PenetratingWarheadCraftedComponent",
+        "PenetratingMissileCraftedComponent",
+        "TungstenRodsCraftedComponent",
+        "IridiumCrystalCraftedComponent",
+        "IridiumDrillbitCraftedComponent",
+        "LaserPowerSourceCraftedComponent",
+        "ThermobaricWarheadCraftedComponent",
+        "ThermobaricMissileCraftedComponent",
+        "KimberliteCrystalCatalystCraftedComponent"
+      ]
+    },
+    {
+      "name": "ClaimFromFactorySystem",
+      "writeAccess": [
+        "PositionComponent",
+        "TileComponent",
+        "OwnedByComponent",
+        "PathComponent",
+        "LastBuiltAtComponent",
+        "LastClaimedAtComponent",
+        "BolutiteResourceComponent",
+        "CopperResourceComponent",
+        "IridiumResourceComponent",
+        "IronResourceComponent",
+        "KimberliteResourceComponent",
+        "LithiumResourceComponent",
+        "OsmiumResourceComponent",
+        "TungstenResourceComponent",
+        "UraniniteResourceComponent",
+        "BulletCraftedComponent",
+
+        "IronPlateCraftedComponent",
+        "BasicPowerSourceCraftedComponent",
+        "KineticMissileCraftedComponent",
+        "RefinedOsmiumCraftedComponent",
+        "AdvancedPowerSourceCraftedComponent",
+        "PenetratingWarheadCraftedComponent",
+        "PenetratingMissileCraftedComponent",
+        "TungstenRodsCraftedComponent",
+        "IridiumCrystalCraftedComponent",
+        "IridiumDrillbitCraftedComponent",
+        "LaserPowerSourceCraftedComponent",
+        "ThermobaricWarheadCraftedComponent",
+        "ThermobaricMissileCraftedComponent",
+        "KimberliteCrystalCatalystCraftedComponent"
+      ]
+    },
+    {
+      "name": "CraftSystem",
+      "writeAccess": [
+        "PositionComponent",
+        "TileComponent",
+        "OwnedByComponent",
+        "PathComponent",
+        "LastBuiltAtComponent",
+        "LastClaimedAtComponent",
+        "BolutiteResourceComponent",
+        "CopperResourceComponent",
+        "IridiumResourceComponent",
+        "IronResourceComponent",
+        "KimberliteResourceComponent",
+        "LithiumResourceComponent",
+        "OsmiumResourceComponent",
+        "TungstenResourceComponent",
+        "UraniniteResourceComponent",
+        "BulletCraftedComponent",
+
+        "IronPlateCraftedComponent",
+        "BasicPowerSourceCraftedComponent",
+        "KineticMissileCraftedComponent",
+        "RefinedOsmiumCraftedComponent",
+        "AdvancedPowerSourceCraftedComponent",
+        "PenetratingWarheadCraftedComponent",
+        "PenetratingMissileCraftedComponent",
+        "TungstenRodsCraftedComponent",
+        "IridiumCrystalCraftedComponent",
+        "IridiumDrillbitCraftedComponent",
+        "LaserPowerSourceCraftedComponent",
+        "ThermobaricWarheadCraftedComponent",
+        "ThermobaricMissileCraftedComponent",
+        "KimberliteCrystalCatalystCraftedComponent"
       ]
     }
   ]

@@ -10,9 +10,20 @@ yarn workspace client run dev
 
 The test page is located at `localhost:3000/increment?dev=true&worldAddress=<address>`.
 
+# Design
+
+To craft from factory
+
+- ClaimSystem: Claiming Resources from Mine.
+  - Called from factories (mines -> factories), main base (mines -> main base)
+- ClaimFactory: Claiming finished crafted items from factory.
+  - Called from factories (factories -> factories), main base (factories -> main base)
+- CraftSystem: Crafting Items (called from factories)
+  - Called from factories (items already in factories, no resource flows)
+
 # Known bugs
 
-- Factories can only transfer resources or crafted items that their recipes support to the next tile. Such resources are stuck in the factories otherwise.
+- Factories can only transfer resources or crafted items that their recipes support to the next tile. Such resources are stuck in the factories otherwise. CHANGE 2023-04-24: Only the resulting crafted item is transferred to the destination.
 - Need to check whether research is unlocked before allowing user to build.
 
 # Components
