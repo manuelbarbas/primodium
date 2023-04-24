@@ -70,9 +70,10 @@ import { Coord } from "../types.sol";
 
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibHealth } from "../libraries/LibHealth.sol";
-import { LibMath } from "libraries/LibMath.sol";
-import { LibCraft } from "libraries/LibCraft.sol";
-import { LibMine } from "libraries/LibMine.sol";
+import { LibMath } from "../libraries/LibMath.sol";
+import { LibCraft } from "../libraries/LibCraft.sol";
+import { LibClaim } from "../libraries/LibClaim.sol";
+import { LibMine } from "../libraries/LibMine.sol";
 
 uint256 constant ID = uint256(keccak256("system.Claim"));
 
@@ -487,26 +488,7 @@ contract ClaimSystem is System {
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
     }
     // claim for all other factories
-    else if (
-      c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == BasicBatteryFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == KineticMissileFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == ProjectileLauncherID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == HardenedDrillID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == DenseMetalRefineryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == AdvancedBatteryFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == HighTempFoundryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == PrecisionMachineryFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == IridiumDrillbitFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == PrecisionPneumaticDrillID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == PenetratorFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == PenetratingMissileFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == MissileLaunchComplexID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == HighEnergyLaserFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == ThermobaricWarheadFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == ThermobaricMissileFactoryID ||
-      c.tileComponent.getValue(entitiesAtPosition[0]) == KimberliteCatalystFactoryID
-    ) {
+    else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
     } else {
