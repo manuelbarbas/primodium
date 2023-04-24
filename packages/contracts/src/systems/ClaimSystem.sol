@@ -164,6 +164,10 @@ contract ClaimSystem is System {
         return;
       }
       // Craft 1 Bullet with 1 IronResource and 1 CopperResource in BulletFactory
+      // special case for debug where recipe resources are transferred to the destination
+      // staging for future factories once we can find a better strategy to reduce contract size.
+      // see below for reference
+      // https://github.com/primodiumxyz/primodium-mud/blob/f8bfc32baedbba555c500dc4c315376927690f66/packages/contracts/src/systems/ClaimSystem.sol#L166
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
         BulletCraftedComponent bulletCraftedComponent = BulletCraftedComponent(
           getAddressById(components, BulletCraftedComponentID)
@@ -176,227 +180,104 @@ contract ClaimSystem is System {
           destination
         );
       }
+      // Production factories, only transfer final crafted result.
       // Craft 1 IronPlate with 10 IronResource in PlatingFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PlatingFactoryID) {
         IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
           getAddressById(components, IronPlateCraftedComponentID)
         );
-        LibMath.transferTwoComponents(
-          rc.ironResourceComponent,
-          ironPlateCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(ironPlateCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 BasicPowerSource with 100 LithiumResource and 20 IronResource in BasicBatteryFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == BasicBatteryFactoryID) {
         BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
           getAddressById(components, BasicPowerSourceCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          rc.lithiumResourceComponent,
-          rc.ironResourceComponent,
-          basicPowerSourceCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(basicPowerSourceCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 KineticMissile with 10 BasicPowerSourceCrafted and 20 TitaniumResource in KineticMissileFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == KineticMissileFactoryID) {
-        BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
-          getAddressById(components, BasicPowerSourceCraftedComponentID)
-        );
         KineticMissileCraftedComponent kineticMissileCraftedComponent = KineticMissileCraftedComponent(
           getAddressById(components, KineticMissileCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          rc.titaniumResourceComponent,
-          basicPowerSourceCraftedComponent,
-          kineticMissileCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(kineticMissileCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 RefinedOsmium with 10 OsmiumResource in DenseMetalRefinery
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == DenseMetalRefineryID) {
         RefinedOsmiumCraftedComponent refinedOsmiumCraftedComponent = RefinedOsmiumCraftedComponent(
           getAddressById(components, RefinedOsmiumCraftedComponentID)
         );
-        LibMath.transferTwoComponents(
-          rc.osmiumResourceComponent,
-          refinedOsmiumCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(refinedOsmiumCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 AdvancedPowerSource with 10 RefinedOsmiumCrafted and 2 BasicPowerSourceCrafted in AdvancedBatteryFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == AdvancedBatteryFactoryID) {
-        RefinedOsmiumCraftedComponent refinedOsmiumCraftedComponent = RefinedOsmiumCraftedComponent(
-          getAddressById(components, RefinedOsmiumCraftedComponentID)
-        );
-        BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
-          getAddressById(components, BasicPowerSourceCraftedComponentID)
-        );
         AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
           getAddressById(components, AdvancedPowerSourceCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          refinedOsmiumCraftedComponent,
-          basicPowerSourceCraftedComponent,
-          advancedPowerSourceCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(advancedPowerSourceCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 PenetratingWarhead with 20 RefinedOsmiumCrafted and 5 AdvancedPowerSourceCrafted in PenetratorFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PenetratorFactoryID) {
-        RefinedOsmiumCraftedComponent refinedOsmiumCraftedComponent = RefinedOsmiumCraftedComponent(
-          getAddressById(components, RefinedOsmiumCraftedComponentID)
-        );
-        AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
-          getAddressById(components, AdvancedPowerSourceCraftedComponentID)
-        );
         PenetratingWarheadCraftedComponent penetratingWarheadCraftedComponent = PenetratingWarheadCraftedComponent(
           getAddressById(components, PenetratingWarheadCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          refinedOsmiumCraftedComponent,
-          advancedPowerSourceCraftedComponent,
-          penetratingWarheadCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(penetratingWarheadCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 PenetratingMissile with 1 PenetratingWarheadCrafted and 1 KineticMissileCrafted in PenetratingMissileFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PenetratingMissileFactoryID) {
-        PenetratingWarheadCraftedComponent penetratingWarheadCraftedComponent = PenetratingWarheadCraftedComponent(
-          getAddressById(components, PenetratingWarheadCraftedComponentID)
-        );
-        KineticMissileCraftedComponent kineticMissileCraftedComponent = KineticMissileCraftedComponent(
-          getAddressById(components, KineticMissileCraftedComponentID)
-        );
         PenetratingMissileCraftedComponent penetratingMissileCraftedComponent = PenetratingMissileCraftedComponent(
           getAddressById(components, PenetratingMissileCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          penetratingWarheadCraftedComponent,
-          kineticMissileCraftedComponent,
-          penetratingMissileCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(penetratingMissileCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 TungstenRods with 10 TungstenResource in HighTempFoundry
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == HighTempFoundryID) {
         TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
           getAddressById(components, TungstenRodsCraftedComponentID)
         );
-        LibMath.transferTwoComponents(
-          rc.tungstenResourceComponent,
-          tungstenRodsCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(tungstenRodsCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 IridiumCrystal with 10 IridiumResource in PrecisionMachineryFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PrecisionMachineryFactoryID) {
         IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
           getAddressById(components, IridiumCrystalCraftedComponentID)
         );
-        LibMath.transferTwoComponents(
-          rc.iridiumResourceComponent,
-          iridiumCrystalCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(iridiumCrystalCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 IridiumDrillbit with 5 IridiumCrystalCrafted and 10 TungstenRodsCrafted in IridiumDrillbitFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == IridiumDrillbitFactoryID) {
-        IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-          getAddressById(components, IridiumCrystalCraftedComponentID)
-        );
-        TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
-          getAddressById(components, TungstenRodsCraftedComponentID)
-        );
         IridiumDrillbitCraftedComponent iridiumDrillbitCraftedComponent = IridiumDrillbitCraftedComponent(
           getAddressById(components, IridiumDrillbitCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          iridiumCrystalCraftedComponent,
-          tungstenRodsCraftedComponent,
-          iridiumDrillbitCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(iridiumDrillbitCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 LaserPowerSource with 10 IridiumCrystalCrafted and 5 AdvancedPowerSource in HighEnergyLaserFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == HighEnergyLaserFactoryID) {
-        IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-          getAddressById(components, IridiumCrystalCraftedComponentID)
-        );
-        AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
-          getAddressById(components, AdvancedPowerSourceCraftedComponentID)
-        );
         LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
           getAddressById(components, LaserPowerSourceCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          iridiumCrystalCraftedComponent,
-          advancedPowerSourceCraftedComponent,
-          laserPowerSourceCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(laserPowerSourceCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 ThermobaricWarhead with 1 IridiumDrillbitCrafted and 1 LaserPowerSourceCrafted in ThermobaricWarheadFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == ThermobaricWarheadFactoryID) {
-        IridiumDrillbitCraftedComponent iridiumDrillbitCraftedComponent = IridiumDrillbitCraftedComponent(
-          getAddressById(components, IridiumDrillbitCraftedComponentID)
-        );
-        LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
-          getAddressById(components, LaserPowerSourceCraftedComponentID)
-        );
         ThermobaricWarheadCraftedComponent thermobaricWarheadCraftedComponent = ThermobaricWarheadCraftedComponent(
           getAddressById(components, ThermobaricWarheadCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          iridiumDrillbitCraftedComponent,
-          laserPowerSourceCraftedComponent,
-          thermobaricWarheadCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(thermobaricWarheadCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 ThermobaricMissile with 10 PenetratingMissileCrafted and 1 ThermobaricWarheadCrafted in ThermobaricMissileFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == ThermobaricMissileFactoryID) {
-        PenetratingMissileCraftedComponent penetratingMissileCraftedComponent = PenetratingMissileCraftedComponent(
-          getAddressById(components, PenetratingMissileCraftedComponentID)
-        );
-        ThermobaricWarheadCraftedComponent thermobaricWarheadCraftedComponent = ThermobaricWarheadCraftedComponent(
-          getAddressById(components, ThermobaricWarheadCraftedComponentID)
-        );
         ThermobaricMissileCraftedComponent thermobaricMissileCraftedComponent = ThermobaricMissileCraftedComponent(
           getAddressById(components, ThermobaricMissileCraftedComponentID)
         );
-        LibMath.transferThreeComponents(
-          penetratingMissileCraftedComponent,
-          thermobaricWarheadCraftedComponent,
-          thermobaricMissileCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(thermobaricMissileCraftedComponent, entitiesAtPosition[0], destination);
       }
       // Craft 1 KimberliteCrystalCatalyst with 10 KimberliteResource in KimberliteCatalystFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == KimberliteCatalystFactoryID) {
         KimberliteCrystalCatalystCraftedComponent kimberliteCrystalCatalystCraftedComponent = KimberliteCrystalCatalystCraftedComponent(
             getAddressById(components, KimberliteCrystalCatalystCraftedComponentID)
           );
-        LibMath.transferTwoComponents(
-          rc.kimberliteResourceComponent,
-          kimberliteCrystalCatalystCraftedComponent,
-          entitiesAtPosition[0],
-          destination
-        );
+        LibMath.transfer(kimberliteCrystalCatalystCraftedComponent, entitiesAtPosition[0], destination);
       }
     }
   }
