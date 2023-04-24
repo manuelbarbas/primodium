@@ -17,6 +17,7 @@ import { ISystem } from "solecs/interfaces/ISystem.sol";
 
 // Components (requires 'components=...' remapping in project's remappings.txt)
 import { CounterComponent, ID as CounterComponentID } from "components/CounterComponent.sol";
+import { GameConfigComponent, ID as GameConfigComponentID } from "components/GameConfigComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -31,10 +32,50 @@ import { IronResourceComponent, ID as IronResourceComponentID } from "components
 import { KimberliteResourceComponent, ID as KimberliteResourceComponentID } from "components/KimberliteResourceComponent.sol";
 import { LithiumResourceComponent, ID as LithiumResourceComponentID } from "components/LithiumResourceComponent.sol";
 import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "components/OsmiumResourceComponent.sol";
+import { TitaniumResourceComponent, ID as TitaniumResourceComponentID } from "components/TitaniumResourceComponent.sol";
 import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
 import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 import { FastMinerResearchComponent, ID as FastMinerResearchComponentID } from "components/FastMinerResearchComponent.sol";
+import { CopperResearchComponent, ID as CopperResearchComponentID } from "components/CopperResearchComponent.sol";
+import { LithiumResearchComponent, ID as LithiumResearchComponentID } from "components/LithiumResearchComponent.sol";
+import { TitaniumResearchComponent, ID as TitaniumResearchComponentID } from "components/TitaniumResearchComponent.sol";
+import { OsmiumResearchComponent, ID as OsmiumResearchComponentID } from "components/OsmiumResearchComponent.sol";
+import { TungstenResearchComponent, ID as TungstenResearchComponentID } from "components/TungstenResearchComponent.sol";
+import { IridiumResearchComponent, ID as IridiumResearchComponentID } from "components/IridiumResearchComponent.sol";
+import { KimberliteResearchComponent, ID as KimberliteResearchComponentID } from "components/KimberliteResearchComponent.sol";
+import { PlatingFactoryResearchComponent, ID as PlatingFactoryResearchComponentID } from "components/PlatingFactoryResearchComponent.sol";
+import { BasicBatteryFactoryResearchComponent, ID as BasicBatteryFactoryResearchComponentID } from "components/BasicBatteryFactoryResearchComponent.sol";
+import { KineticMissileFactoryResearchComponent, ID as KineticMissileFactoryResearchComponentID } from "components/KineticMissileFactoryResearchComponent.sol";
+import { ProjectileLauncherResearchComponent, ID as ProjectileLauncherResearchComponentID } from "components/ProjectileLauncherResearchComponent.sol";
+import { HardenedDrillResearchComponent, ID as HardenedDrillResearchComponentID } from "components/HardenedDrillResearchComponent.sol";
+import { DenseMetalRefineryResearchComponent, ID as DenseMetalRefineryResearchComponentID } from "components/DenseMetalRefineryResearchComponent.sol";
+import { AdvancedBatteryFactoryResearchComponent, ID as AdvancedBatteryFactoryResearchComponentID } from "components/AdvancedBatteryFactoryResearchComponent.sol";
+import { HighTempFoundryResearchComponent, ID as HighTempFoundryResearchComponentID } from "components/HighTempFoundryResearchComponent.sol";
+import { PrecisionMachineryFactoryResearchComponent, ID as PrecisionMachineryFactoryResearchComponentID } from "components/PrecisionMachineryFactoryResearchComponent.sol";
+import { IridiumDrillbitFactoryResearchComponent, ID as IridiumDrillbitFactoryResearchComponentID } from "components/IridiumDrillbitFactoryResearchComponent.sol";
+import { PrecisionPneumaticDrillResearchComponent, ID as PrecisionPneumaticDrillResearchComponentID } from "components/PrecisionPneumaticDrillResearchComponent.sol";
+import { PenetratorFactoryResearchComponent, ID as PenetratorFactoryResearchComponentID } from "components/PenetratorFactoryResearchComponent.sol";
+import { PenetratingMissileFactoryResearchComponent, ID as PenetratingMissileFactoryResearchComponentID } from "components/PenetratingMissileFactoryResearchComponent.sol";
+import { MissileLaunchComplexResearchComponent, ID as MissileLaunchComplexResearchComponentID } from "components/MissileLaunchComplexResearchComponent.sol";
+import { HighEnergyLaserFactoryResearchComponent, ID as HighEnergyLaserFactoryResearchComponentID } from "components/HighEnergyLaserFactoryResearchComponent.sol";
+import { ThermobaricWarheadFactoryResearchComponent, ID as ThermobaricWarheadFactoryResearchComponentID } from "components/ThermobaricWarheadFactoryResearchComponent.sol";
+import { ThermobaricMissileFactoryResearchComponent, ID as ThermobaricMissileFactoryResearchComponentID } from "components/ThermobaricMissileFactoryResearchComponent.sol";
+import { KimberliteCatalystFactoryResearchComponent, ID as KimberliteCatalystFactoryResearchComponentID } from "components/KimberliteCatalystFactoryResearchComponent.sol";
+import { IronPlateCraftedComponent, ID as IronPlateCraftedComponentID } from "components/IronPlateCraftedComponent.sol";
+import { BasicPowerSourceCraftedComponent, ID as BasicPowerSourceCraftedComponentID } from "components/BasicPowerSourceCraftedComponent.sol";
+import { KineticMissileCraftedComponent, ID as KineticMissileCraftedComponentID } from "components/KineticMissileCraftedComponent.sol";
+import { RefinedOsmiumCraftedComponent, ID as RefinedOsmiumCraftedComponentID } from "components/RefinedOsmiumCraftedComponent.sol";
+import { AdvancedPowerSourceCraftedComponent, ID as AdvancedPowerSourceCraftedComponentID } from "components/AdvancedPowerSourceCraftedComponent.sol";
+import { PenetratingWarheadCraftedComponent, ID as PenetratingWarheadCraftedComponentID } from "components/PenetratingWarheadCraftedComponent.sol";
+import { PenetratingMissileCraftedComponent, ID as PenetratingMissileCraftedComponentID } from "components/PenetratingMissileCraftedComponent.sol";
+import { TungstenRodsCraftedComponent, ID as TungstenRodsCraftedComponentID } from "components/TungstenRodsCraftedComponent.sol";
+import { IridiumCrystalCraftedComponent, ID as IridiumCrystalCraftedComponentID } from "components/IridiumCrystalCraftedComponent.sol";
+import { IridiumDrillbitCraftedComponent, ID as IridiumDrillbitCraftedComponentID } from "components/IridiumDrillbitCraftedComponent.sol";
+import { LaserPowerSourceCraftedComponent, ID as LaserPowerSourceCraftedComponentID } from "components/LaserPowerSourceCraftedComponent.sol";
+import { ThermobaricWarheadCraftedComponent, ID as ThermobaricWarheadCraftedComponentID } from "components/ThermobaricWarheadCraftedComponent.sol";
+import { ThermobaricMissileCraftedComponent, ID as ThermobaricMissileCraftedComponentID } from "components/ThermobaricMissileCraftedComponent.sol";
+import { KimberliteCrystalCatalystCraftedComponent, ID as KimberliteCrystalCatalystCraftedComponentID } from "components/KimberliteCrystalCatalystCraftedComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
@@ -44,7 +85,9 @@ import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "systems/DestroySystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "systems/BuildPathSystem.sol";
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "systems/DestroyPathSystem.sol";
-import { ClaimSystem, ID as ClaimSystemID } from "systems/ClaimSystem.sol";
+import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
+import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "systems/ClaimFromFactorySystem.sol";
+import { CraftSystem, ID as CraftSystemID } from "systems/CraftSystem.sol";
 
 struct DeployResult {
   IWorld world;
@@ -73,6 +116,10 @@ library LibDeploy {
 
       console.log("Deploying CounterComponent");
       comp = new CounterComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying GameConfigComponent");
+      comp = new GameConfigComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying PositionComponent");
@@ -131,6 +178,10 @@ library LibDeploy {
       comp = new OsmiumResourceComponent(address(result.world));
       console.log(address(comp));
 
+      console.log("Deploying TitaniumResourceComponent");
+      comp = new TitaniumResourceComponent(address(result.world));
+      console.log(address(comp));
+
       console.log("Deploying TungstenResourceComponent");
       comp = new TungstenResourceComponent(address(result.world));
       console.log(address(comp));
@@ -145,6 +196,162 @@ library LibDeploy {
 
       console.log("Deploying FastMinerResearchComponent");
       comp = new FastMinerResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying CopperResearchComponent");
+      comp = new CopperResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying LithiumResearchComponent");
+      comp = new LithiumResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying TitaniumResearchComponent");
+      comp = new TitaniumResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying OsmiumResearchComponent");
+      comp = new OsmiumResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying TungstenResearchComponent");
+      comp = new TungstenResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IridiumResearchComponent");
+      comp = new IridiumResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying KimberliteResearchComponent");
+      comp = new KimberliteResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PlatingFactoryResearchComponent");
+      comp = new PlatingFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying BasicBatteryFactoryResearchComponent");
+      comp = new BasicBatteryFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying KineticMissileFactoryResearchComponent");
+      comp = new KineticMissileFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying ProjectileLauncherResearchComponent");
+      comp = new ProjectileLauncherResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying HardenedDrillResearchComponent");
+      comp = new HardenedDrillResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying DenseMetalRefineryResearchComponent");
+      comp = new DenseMetalRefineryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying AdvancedBatteryFactoryResearchComponent");
+      comp = new AdvancedBatteryFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying HighTempFoundryResearchComponent");
+      comp = new HighTempFoundryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PrecisionMachineryFactoryResearchComponent");
+      comp = new PrecisionMachineryFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IridiumDrillbitFactoryResearchComponent");
+      comp = new IridiumDrillbitFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PrecisionPneumaticDrillResearchComponent");
+      comp = new PrecisionPneumaticDrillResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PenetratorFactoryResearchComponent");
+      comp = new PenetratorFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PenetratingMissileFactoryResearchComponent");
+      comp = new PenetratingMissileFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying MissileLaunchComplexResearchComponent");
+      comp = new MissileLaunchComplexResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying HighEnergyLaserFactoryResearchComponent");
+      comp = new HighEnergyLaserFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying ThermobaricWarheadFactoryResearchComponent");
+      comp = new ThermobaricWarheadFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying ThermobaricMissileFactoryResearchComponent");
+      comp = new ThermobaricMissileFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying KimberliteCatalystFactoryResearchComponent");
+      comp = new KimberliteCatalystFactoryResearchComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IronPlateCraftedComponent");
+      comp = new IronPlateCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying BasicPowerSourceCraftedComponent");
+      comp = new BasicPowerSourceCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying KineticMissileCraftedComponent");
+      comp = new KineticMissileCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying RefinedOsmiumCraftedComponent");
+      comp = new RefinedOsmiumCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying AdvancedPowerSourceCraftedComponent");
+      comp = new AdvancedPowerSourceCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PenetratingWarheadCraftedComponent");
+      comp = new PenetratingWarheadCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PenetratingMissileCraftedComponent");
+      comp = new PenetratingMissileCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying TungstenRodsCraftedComponent");
+      comp = new TungstenRodsCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IridiumCrystalCraftedComponent");
+      comp = new IridiumCrystalCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IridiumDrillbitCraftedComponent");
+      comp = new IridiumDrillbitCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying LaserPowerSourceCraftedComponent");
+      comp = new LaserPowerSourceCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying ThermobaricWarheadCraftedComponent");
+      comp = new ThermobaricWarheadCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying ThermobaricMissileCraftedComponent");
+      comp = new ThermobaricMissileCraftedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying KimberliteCrystalCatalystCraftedComponent");
+      comp = new KimberliteCrystalCatalystCraftedComponent(address(result.world));
       console.log(address(comp));
     } 
     
@@ -235,9 +442,9 @@ library LibDeploy {
     authorizeWriter(components, PathComponentID, address(system));
     console.log(address(system));
 
-    console.log("Deploying ClaimSystem");
-    system = new ClaimSystem(world, address(components));
-    world.registerSystem(address(system), ClaimSystemID);
+    console.log("Deploying ClaimFromMineSystem");
+    system = new ClaimFromMineSystem(world, address(components));
+    world.registerSystem(address(system), ClaimFromMineSystemID);
     authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
@@ -254,6 +461,90 @@ library LibDeploy {
     authorizeWriter(components, TungstenResourceComponentID, address(system));
     authorizeWriter(components, UraniniteResourceComponentID, address(system));
     authorizeWriter(components, BulletCraftedComponentID, address(system));
+    authorizeWriter(components, IronPlateCraftedComponentID, address(system));
+    authorizeWriter(components, BasicPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, KineticMissileCraftedComponentID, address(system));
+    authorizeWriter(components, RefinedOsmiumCraftedComponentID, address(system));
+    authorizeWriter(components, AdvancedPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingMissileCraftedComponentID, address(system));
+    authorizeWriter(components, TungstenRodsCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumCrystalCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumDrillbitCraftedComponentID, address(system));
+    authorizeWriter(components, LaserPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricMissileCraftedComponentID, address(system));
+    authorizeWriter(components, KimberliteCrystalCatalystCraftedComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying ClaimFromFactorySystem");
+    system = new ClaimFromFactorySystem(world, address(components));
+    world.registerSystem(address(system), ClaimFromFactorySystemID);
+    authorizeWriter(components, PositionComponentID, address(system));
+    authorizeWriter(components, TileComponentID, address(system));
+    authorizeWriter(components, OwnedByComponentID, address(system));
+    authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, LastBuiltAtComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, BolutiteResourceComponentID, address(system));
+    authorizeWriter(components, CopperResourceComponentID, address(system));
+    authorizeWriter(components, IridiumResourceComponentID, address(system));
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, KimberliteResourceComponentID, address(system));
+    authorizeWriter(components, LithiumResourceComponentID, address(system));
+    authorizeWriter(components, OsmiumResourceComponentID, address(system));
+    authorizeWriter(components, TungstenResourceComponentID, address(system));
+    authorizeWriter(components, UraniniteResourceComponentID, address(system));
+    authorizeWriter(components, BulletCraftedComponentID, address(system));
+    authorizeWriter(components, IronPlateCraftedComponentID, address(system));
+    authorizeWriter(components, BasicPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, KineticMissileCraftedComponentID, address(system));
+    authorizeWriter(components, RefinedOsmiumCraftedComponentID, address(system));
+    authorizeWriter(components, AdvancedPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingMissileCraftedComponentID, address(system));
+    authorizeWriter(components, TungstenRodsCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumCrystalCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumDrillbitCraftedComponentID, address(system));
+    authorizeWriter(components, LaserPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricMissileCraftedComponentID, address(system));
+    authorizeWriter(components, KimberliteCrystalCatalystCraftedComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying CraftSystem");
+    system = new CraftSystem(world, address(components));
+    world.registerSystem(address(system), CraftSystemID);
+    authorizeWriter(components, PositionComponentID, address(system));
+    authorizeWriter(components, TileComponentID, address(system));
+    authorizeWriter(components, OwnedByComponentID, address(system));
+    authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, LastBuiltAtComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, BolutiteResourceComponentID, address(system));
+    authorizeWriter(components, CopperResourceComponentID, address(system));
+    authorizeWriter(components, IridiumResourceComponentID, address(system));
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, KimberliteResourceComponentID, address(system));
+    authorizeWriter(components, LithiumResourceComponentID, address(system));
+    authorizeWriter(components, OsmiumResourceComponentID, address(system));
+    authorizeWriter(components, TungstenResourceComponentID, address(system));
+    authorizeWriter(components, UraniniteResourceComponentID, address(system));
+    authorizeWriter(components, BulletCraftedComponentID, address(system));
+    authorizeWriter(components, IronPlateCraftedComponentID, address(system));
+    authorizeWriter(components, BasicPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, KineticMissileCraftedComponentID, address(system));
+    authorizeWriter(components, RefinedOsmiumCraftedComponentID, address(system));
+    authorizeWriter(components, AdvancedPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingMissileCraftedComponentID, address(system));
+    authorizeWriter(components, TungstenRodsCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumCrystalCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumDrillbitCraftedComponentID, address(system));
+    authorizeWriter(components, LaserPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricMissileCraftedComponentID, address(system));
+    authorizeWriter(components, KimberliteCrystalCatalystCraftedComponentID, address(system));
     console.log(address(system));
   }
 }

@@ -6,7 +6,16 @@ export default function ClaimButton({ x, y }: DisplayTile) {
   const { systems } = useMud();
 
   const claimAction = useCallback(() => {
-    systems["system.Claim"].executeTyped(
+    systems["system.ClaimFromMine"].executeTyped(
+      {
+        x: x,
+        y: y,
+      },
+      {
+        gasLimit: 30_000_000,
+      }
+    );
+    systems["system.ClaimFromFactory"].executeTyped(
       {
         x: x,
         y: y,

@@ -3,7 +3,7 @@ import { TxQueue } from "@latticexyz/network";
 import { EntityIndex, World } from "@latticexyz/recs";
 
 import { NetworkComponents } from "@latticexyz/std-client";
-import { SystemTypes } from "contracts/types/SystemTypes";
+import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import {
   defineComponents,
   defineOffChainComponents,
