@@ -1,20 +1,23 @@
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
-import { TechnologyTreeNodeData } from "../../util/research";
+import { ResourceCostData } from "../../util/resource";
 
-import { BlockIdToKey, BackgroundImage } from "../../util/constants";
+import {
+  BlockIdToKey,
+  ResearchImage,
+  BackgroundImage,
+} from "../../util/constants";
 import { EntityID } from "@latticexyz/recs";
 
-function TechTreeNode({ data }: { data: TechnologyTreeNodeData }) {
-  console.log(data);
-  const tileColor = BackgroundImage.get(data.id as EntityID);
+function TechTreeNode({ data }: { data: ResourceCostData }) {
+  const researchImage = ResearchImage.get(data.id as EntityID);
   return (
     <div className="group w-48 px-2 py-3 shadow-md rounded-md bg-white border border-stone-400 -z-10">
       <div className="flex w-48">
         <div className="flex justify-center items-center flex-shrink-0">
           {/* thumbnail */}
           <img
-            src={`url(${tileColor!})`}
+            src={researchImage}
             style={{ imageRendering: "pixelated" }}
             className="w-5 h-5"
           />
@@ -28,14 +31,11 @@ function TechTreeNode({ data }: { data: TechnologyTreeNodeData }) {
       </div>
       <div className="research-tooltip group-hover:scale-100 mt-2 text-center text-gray-900 text-sm">
         {data.resources.map((resource) => {
-          const tileColor = BackgroundImage.get(resource.id);
+          const resourceImage = BackgroundImage.get(resource.id);
           return (
             <span className="mr-2" key={resource.id}>
               {BlockIdToKey[resource.id]}
-              <img
-                src={`url(${tileColor!})`}
-                className="w-4 h-4 inline-block mr-1"
-              />
+              <img src={resourceImage} className="w-4 h-4 inline-block mr-1" />
               {resource.amount}
             </span>
           );

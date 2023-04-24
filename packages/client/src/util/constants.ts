@@ -336,6 +336,62 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.KimberliteCatalystFactory, "/img/building/kimberlitecatalyst.gif"],
 ]);
 
+export const ResearchImage = new Map<EntityID, string>([
+  [BlockType.MainBaseResearch, "/img/building/mainbase.png"],
+  [BlockType.IronResearch, "/img/resource/iron_resource.png"],
+  [BlockType.BasicMinerResearch, "/img/building/minerdrill.gif"],
+  [BlockType.ConveyorResearch, "/img/building/node.gif"],
+  [BlockType.NodeResearch, "/img/building/node.gif"],
+
+  [BlockType.CopperResearch, "/img/resource/copper_resource.png"],
+  [BlockType.LithiumResearch, "/img/resource/lithium_resource.png"],
+  [BlockType.TitaniumResearch, "/img/resource/titanium_resource.png"],
+  [BlockType.OsmiumResearch, "/img/resource/osmium_resource.png"],
+  [BlockType.TungstenResearch, "/img/resource/tungsten_resource.png"],
+  [BlockType.IridiumResearch, "/img/resource/iridium_resource.png"],
+  [BlockType.KimberliteResearch, "/img/resource/kimberlite_resource.png"],
+
+  [BlockType.PlatingFactoryResearch, "/img/building/newplatingfactory.gif"],
+  [
+    BlockType.BasicBatteryFactoryResearch,
+    "/img/building/newbasicbatteryfactory.gif",
+  ],
+  [BlockType.KineticMissileFactoryResearch, "/img/building/minerdrill.gif"],
+  [BlockType.ProjectileLauncherResearch, "/img/building/minerdrill.gif"],
+  [BlockType.HardenedDrillResearch, "/img/building/hardeneddrill.gif"],
+  [
+    BlockType.DenseMetalRefineryResearch,
+    "/img/building/densemetalrefinery.gif",
+  ],
+  [
+    BlockType.AdvancedBatteryFactoryResearch,
+    "/img/building/advancedbatteryfactory.gif",
+  ],
+  [BlockType.HighTempFoundryResearch, "/img/building/hightempfoundry.gif"],
+  [
+    BlockType.PrecisionMachineryFactoryResearch,
+    "/img/building/precisionmachineryfactory.gif",
+  ],
+  [
+    BlockType.IridiumDrillbitFactoryResearch,
+    "/img/building/iridiumdrillbitfactory.gif",
+  ],
+  [
+    BlockType.PrecisionPneumaticDrillResearch,
+    "/img/building/precisionpneumaticdrill.gif",
+  ],
+  [BlockType.PenetratorFactoryResearch, "/img/building/minerdrill.gif"],
+  [BlockType.PenetratingMissileFactoryResearch, "/img/building/minerdrill.gif"],
+  [BlockType.MissileLaunchComplexResearch, "/img/building/minerdrill.gif"],
+  [BlockType.HighEnergyLaserFactoryResearch, "/img/building/laserfactory.gif"],
+  [BlockType.ThermobaricWarheadFactoryResearch, "/img/building/minerdrill.gif"],
+  [BlockType.ThermobaricMissileFactoryResearch, "/img/building/minerdrill.gif"],
+  [
+    BlockType.KimberliteCatalystFactoryResearch,
+    "/img/building/kimberlitecatalyst.gif",
+  ],
+]);
+
 export type DisplayTile = {
   x: number;
   y: number;
