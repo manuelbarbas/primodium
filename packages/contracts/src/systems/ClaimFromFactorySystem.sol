@@ -44,15 +44,6 @@ import { ThermobaricWarheadCraftedComponent, ID as ThermobaricWarheadCraftedComp
 import { ThermobaricMissileCraftedComponent, ID as ThermobaricMissileCraftedComponentID } from "components/ThermobaricMissileCraftedComponent.sol";
 import { KimberliteCrystalCatalystCraftedComponent, ID as KimberliteCrystalCatalystCraftedComponentID } from "components/KimberliteCrystalCatalystCraftedComponent.sol";
 
-// Resource Research Components
-import { CopperResearchComponent, ID as CopperResearchComponentID } from "components/CopperResearchComponent.sol";
-import { LithiumResearchComponent, ID as LithiumResearchComponentID } from "components/LithiumResearchComponent.sol";
-import { TitaniumResearchComponent, ID as TitaniumResearchComponentID } from "components/TitaniumResearchComponent.sol";
-import { OsmiumResearchComponent, ID as OsmiumResearchComponentID } from "components/OsmiumResearchComponent.sol";
-import { TungstenResearchComponent, ID as TungstenResearchComponentID } from "components/TungstenResearchComponent.sol";
-import { IridiumResearchComponent, ID as IridiumResearchComponentID } from "components/IridiumResearchComponent.sol";
-import { KimberliteResearchComponent, ID as KimberliteResearchComponentID } from "components/KimberliteResearchComponent.sol";
-
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
 // Debug Buildings
@@ -75,9 +66,9 @@ import { LibCraft } from "../libraries/LibCraft.sol";
 import { LibClaim } from "../libraries/LibClaim.sol";
 import { LibMine } from "../libraries/LibMine.sol";
 
-uint256 constant ID = uint256(keccak256("system.Claim"));
+uint256 constant ID = uint256(keccak256("system.ClaimFromFactory"));
 
-contract ClaimSystem is System {
+contract ClaimFromFactorySystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function claimBuilding(Coord memory coord, uint256 originEntity, uint256 destination) public {
@@ -102,16 +93,6 @@ contract ClaimSystem is System {
       UraniniteResourceComponent(getAddressById(components, UraniniteResourceComponentID))
     );
 
-    ResourceResearchComponents memory rrc = ResourceResearchComponents(
-      CopperResearchComponent(getAddressById(components, CopperResearchComponentID)),
-      LithiumResearchComponent(getAddressById(components, LithiumResearchComponentID)),
-      TitaniumResearchComponent(getAddressById(components, TitaniumResearchComponentID)),
-      OsmiumResearchComponent(getAddressById(components, OsmiumResearchComponentID)),
-      TungstenResearchComponent(getAddressById(components, TungstenResearchComponentID)),
-      IridiumResearchComponent(getAddressById(components, IridiumResearchComponentID)),
-      KimberliteResearchComponent(getAddressById(components, KimberliteResearchComponentID))
-    );
-
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
     uint256 ownerKey = addressToEntity(msg.sender);
 
@@ -131,40 +112,8 @@ contract ClaimSystem is System {
         return;
       }
 
-      // Miners
-      if (
-        c.tileComponent.getValue(entitiesAtPosition[0]) == MinerID ||
-        c.tileComponent.getValue(entitiesAtPosition[0]) == BasicMinerID
-      ) {
-        // fetch tile beneath miner, return 0 if resource is not unlocked via LibMine.mine
-        uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
-        uint256 incBy = LibMine.mine(rrc, c.lastClaimedAtComponent, resourceKey, entitiesAtPosition[0]);
-
-        if (resourceKey == BolutiteID) {
-          LibMath.incrementBy(rc.bolutiteResourceComponent, destination, incBy);
-        } else if (resourceKey == CopperID) {
-          LibMath.incrementBy(rc.copperResourceComponent, destination, incBy);
-        } else if (resourceKey == IridiumID) {
-          LibMath.incrementBy(rc.iridiumResourceComponent, destination, incBy);
-        } else if (resourceKey == IronID) {
-          LibMath.incrementBy(rc.ironResourceComponent, destination, incBy);
-        } else if (resourceKey == KimberliteID) {
-          LibMath.incrementBy(rc.kimberliteResourceComponent, destination, incBy);
-        } else if (resourceKey == LithiumID) {
-          LibMath.incrementBy(rc.lithiumResourceComponent, destination, incBy);
-        } else if (resourceKey == OsmiumID) {
-          LibMath.incrementBy(rc.osmiumResourceComponent, destination, incBy);
-        } else if (resourceKey == TitaniumID) {
-          LibMath.incrementBy(rc.titaniumResourceComponent, destination, incBy);
-        } else if (resourceKey == TungstenID) {
-          LibMath.incrementBy(rc.tungstenResourceComponent, destination, incBy);
-        } else if (resourceKey == UraniniteID) {
-          LibMath.incrementBy(rc.uraniniteResourceComponent, destination, incBy);
-        }
-        return;
-      }
       // Craft 1 Bullet with 1 IronResource and 1 CopperResource in BulletFactory
-      else if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
+      if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
         BulletCraftedComponent bulletCraftedComponent = BulletCraftedComponent(
           getAddressById(components, BulletCraftedComponentID)
         );
@@ -475,9 +424,6 @@ contract ClaimSystem is System {
     uint256 endClaimTime = block.number;
     c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
 
-    // destination is either a wallet (store item in wallet-specific global inventory)
-    // or entity ID (store item in entity, eg within a factory)
-
     // Check main base, if so destination is the wallet
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
@@ -486,13 +432,11 @@ contract ClaimSystem is System {
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == SiloID) {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
-    }
-    // claim for all other factories
-    else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
+    } else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
     } else {
-      revert("can not claim resource or crafted component at tile");
+      revert("not a factory");
     }
 
     return abi.encode(0);

@@ -8,7 +8,8 @@ import { addressToEntity } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { ClaimSystem, ID as ClaimSystemID } from "../../systems/ClaimSystem.sol";
+import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
+import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "../../systems/ClaimFromFactorySystem.sol";
 import { CraftSystem, ID as CraftSystemID } from "../../systems/CraftSystem.sol";
 import { AttackSystem, ID as AttackSystemID } from "../../systems/AttackSystem.sol";
 
@@ -41,7 +42,8 @@ contract AttackSystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
+    ClaimFromFactorySystem claimFactorySystem = ClaimFromFactorySystem(system(ClaimFromFactorySystemID));
     CraftSystem craftSystem = CraftSystem(system(CraftSystemID));
     AttackSystem attackSystem = AttackSystem(system(AttackSystemID));
 
@@ -78,6 +80,7 @@ contract AttackSystemTest is MudTest {
     vm.roll(10);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertTrue(ironResourceComponent.has(bulletFactoryID));
     assertTrue(copperResourceComponent.has(bulletFactoryID));
@@ -96,6 +99,7 @@ contract AttackSystemTest is MudTest {
     vm.roll(20);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
@@ -109,6 +113,7 @@ contract AttackSystemTest is MudTest {
     vm.roll(30);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
@@ -117,12 +122,14 @@ contract AttackSystemTest is MudTest {
     vm.roll(40);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
     assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 300);
 
     claimSystem.executeTyped(siloCoord);
+    claimFactorySystem.executeTyped(siloCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 0);

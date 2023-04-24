@@ -8,7 +8,8 @@ import { addressToEntity } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { ClaimSystem, ID as ClaimSystemID } from "../../systems/ClaimSystem.sol";
+import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
+import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "../../systems/ClaimFromFactorySystem.sol";
 import { CraftSystem, ID as CraftSystemID } from "../../systems/CraftSystem.sol";
 
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
@@ -37,13 +38,14 @@ contract ClaimFactorySystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
+    // ClaimFromFactorySystem claimFactorySystem = ClaimFromFactorySystem(system(ClaimFromFactorySystemID));
     CraftSystem craftSystem = CraftSystem(system(CraftSystemID));
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID);
+    // Coord memory coord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: -5, y: 2 })), IronID);
 
     Coord memory bulletFactoryCoord = Coord({ x: 0, y: 0 });
     Coord memory endPathCoord = Coord({ x: -1, y: 0 });
@@ -59,7 +61,7 @@ contract ClaimFactorySystemTest is MudTest {
     // START CLAIMING
     vm.roll(0);
 
-    buildSystem.executeTyped(MinerID, coord);
+    buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
     assertTrue(!ironResourceComponent.has(bulletFactoryID));
 
     vm.roll(10);
@@ -87,7 +89,8 @@ contract ClaimFactorySystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
+    ClaimFromFactorySystem claimFactorySystem = ClaimFromFactorySystem(system(ClaimFromFactorySystemID));
     CraftSystem craftSystem = CraftSystem(system(CraftSystemID));
 
     // Resource and crafted components
@@ -122,6 +125,7 @@ contract ClaimFactorySystemTest is MudTest {
     vm.roll(10);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertTrue(ironResourceComponent.has(bulletFactoryID));
     assertTrue(copperResourceComponent.has(bulletFactoryID));
@@ -140,6 +144,7 @@ contract ClaimFactorySystemTest is MudTest {
     vm.roll(20);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
@@ -153,6 +158,7 @@ contract ClaimFactorySystemTest is MudTest {
     vm.roll(30);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
@@ -161,12 +167,14 @@ contract ClaimFactorySystemTest is MudTest {
     vm.roll(40);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
     assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 300);
 
     claimSystem.executeTyped(mainBaseCoord);
+    claimFactorySystem.executeTyped(mainBaseCoord);
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(copperResourceComponent.getValue(bulletFactoryID), 0);
     assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 0);
@@ -187,13 +195,14 @@ contract ClaimFactorySystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimSystem claimSystem = ClaimSystem(system(ClaimSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
+    ClaimFromFactorySystem claimFactorySystem = ClaimFromFactorySystem(system(ClaimFromFactorySystemID));
     CraftSystem craftSystem = CraftSystem(system(CraftSystemID));
     IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID);
+    // Coord memory coord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(Coord({ x: -5, y: 2 })), IronID);
 
     Coord memory bulletFactoryCoord = Coord({ x: 0, y: 0 });
     Coord memory endPathCoord = Coord({ x: -1, y: 0 });
@@ -209,12 +218,13 @@ contract ClaimFactorySystemTest is MudTest {
     // START CLAIMING
     vm.roll(0);
 
-    buildSystem.executeTyped(MinerID, coord);
+    buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
     assertTrue(!ironResourceComponent.has(bulletFactoryID));
 
     vm.roll(10);
 
     claimSystem.executeTyped(bulletFactoryCoord);
+    claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertTrue(ironResourceComponent.has(bulletFactoryID));
     assertEq(ironResourceComponent.getValue(bulletFactoryID), 100);
@@ -230,17 +240,20 @@ contract ClaimFactorySystemTest is MudTest {
     buildSystem.executeTyped(ConveyerID, startPath2Coord);
     buildPathSystem.executeTyped(startPath2Coord, endPath2Coord);
 
-    // transfer iron from factory 1 to factory 2
     console.log(block.number);
 
+    // transfer iron from mine to factory 2
     claimSystem.executeTyped(bulletFactory2Coord);
+    claimFactorySystem.executeTyped(bulletFactory2Coord);
     assertTrue(ironResourceComponent.has(bulletFactory2ID));
     assertEq(ironResourceComponent.getValue(bulletFactory2ID), 100);
 
     vm.roll(20);
 
+    // transfer iron from factory 1 to factory 2
     // no through claiming. factory 2 claim -> doesn't claim from mines connected to factory 1
     claimSystem.executeTyped(bulletFactory2Coord);
+    claimFactorySystem.executeTyped(bulletFactory2Coord);
     assertTrue(ironResourceComponent.has(bulletFactory2ID));
     assertEq(ironResourceComponent.getValue(bulletFactory2ID), 100);
 
