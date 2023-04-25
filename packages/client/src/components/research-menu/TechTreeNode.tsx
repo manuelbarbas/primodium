@@ -12,7 +12,7 @@ import { EntityID } from "@latticexyz/recs";
 function TechTreeNode({ data }: { data: ResourceCostData }) {
   const researchImage = ResearchImage.get(data.id as EntityID);
   return (
-    <div className="group w-48 px-2 py-3 shadow-md rounded-md bg-white border border-stone-400 -z-10">
+    <div className="group w-48 h-32 px-2 py-3 shadow-md rounded-md bg-white border border-stone-400 -z-10">
       <div className="flex w-48">
         <div className="flex justify-center items-center flex-shrink-0">
           {/* thumbnail */}
@@ -34,14 +34,16 @@ function TechTreeNode({ data }: { data: ResourceCostData }) {
           const resourceImage = BackgroundImage.get(resource.id);
           return (
             <span className="mr-2" key={resource.id}>
-              {BlockIdToKey[resource.id]}
+              {/* {BlockIdToKey[resource.id]} */}
               <img src={resourceImage} className="w-4 h-4 inline-block mr-1" />
               {resource.amount}
             </span>
           );
         })}
+        {/*todo: add description info like data.description? */}
+        <div>test description</div>
       </div>
-      <button className="bg-teal-600 text-sm w-full py-2 rounded shadow mt-3 ">
+      <button className="absolute bottom-4 inset-x-4 h-10 inline-block mx-auto bg-teal-600 text-sm py-2 rounded shadow">
         Research
       </button>
       <Handle type="target" position={Position.Top} />
