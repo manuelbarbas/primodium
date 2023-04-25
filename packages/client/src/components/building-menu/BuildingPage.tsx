@@ -6,6 +6,7 @@ import ChooseDebugMenu from "./ChooseDebugMenu";
 import ChooseTransportMenu from "./ChooseTransportMenu";
 import ChooseFactoryMenu from "./ChooseFactoryMenu";
 import ChooseWeaponryMenu from "./ChooseWeaponryMenu";
+import ChooseMainBaseMenu from "./ChooseMainbaseMenu";
 
 //need a back button between pages
 function BuildingPage() {
@@ -14,9 +15,22 @@ function BuildingPage() {
   return (
     <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
       <BuildingMenuButton
+        icon={"/img/icons/mainbaseicon.png"}
+        text={"Base"}
+        menuIndex={0}
+        menuOpenIndex={menuOpenIndex}
+        setMenuOpenIndex={setMenuOpenIndex}
+      >
+        <ChooseMainBaseMenu
+          title="Build Main Base"
+          setMenuOpenIndex={setMenuOpenIndex}
+        />
+      </BuildingMenuButton>
+
+      <BuildingMenuButton
         icon={"/img/icons/minersicon.png"}
         text={"Miners"}
-        menuIndex={0}
+        menuIndex={1}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
@@ -28,7 +42,7 @@ function BuildingPage() {
       <BuildingMenuButton
         icon={"/img/icons/transporticon.png"}
         text={"Transport"}
-        menuIndex={1}
+        menuIndex={2}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
@@ -40,7 +54,7 @@ function BuildingPage() {
       <BuildingMenuButton
         icon={"/img/icons/factoriesicon.png"}
         text={"Factories"}
-        menuIndex={2}
+        menuIndex={3}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
@@ -52,7 +66,7 @@ function BuildingPage() {
       <BuildingMenuButton
         icon={"/img/icons/weaponryicon.png"}
         text={"Weaponry"}
-        menuIndex={3}
+        menuIndex={4}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
@@ -65,7 +79,7 @@ function BuildingPage() {
       <BuildingMenuButton
         icon={"/img/icons/debugicon.png"}
         text={"Debug"}
-        menuIndex={4}
+        menuIndex={5}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
