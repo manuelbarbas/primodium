@@ -393,6 +393,29 @@ export const ResearchImage = new Map<EntityID, string>([
     "/img/building/kimberlitecatalyst.gif",
   ],
 ]);
+//images of resource items (think of them like minecraft entities)
+export const ResourceImage = new Map<EntityID, string>([
+  [BlockType.Iron, "/img/resource/iron_resource.png"],
+  [BlockType.Copper, "/img/resource/copper_resource.png"],
+  [BlockType.Lithium, "/img/resource/lithium_resource.png"],
+  [BlockType.Titanium, "/img/resource/titanium_resource.png"],
+  [BlockType.Osmium, "/img/resource/osmium_resource.png"],
+  [BlockType.Tungsten, "/img/resource/tungsten_resource.png"],
+  [BlockType.Iridium, "/img/resource/iridium_resource.png"],
+  [BlockType.Kimberlite, "/img/resource/kimberlite_resource.png"],
+  [BlockType.Uraninite, "/img/resource/uraninite_resource.png"],
+  [BlockType.Bolutite, "/img/resource/bolutite_resource.png"],
+  [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
+  [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
+  [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/advancedbattery.png"],
+  [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
+  [BlockType.IridiumDrillbitCrafted, "/img/crafted/iridiumdrillbit.png"],
+  [BlockType.LaserPowerSourceCrafted, "/img/crafted/laserbattery.png"],
+  [BlockType.KimberliteCrystalCatalystCrafted, "/img/crafted/kimberlitecrystal.png"],
+  [BlockType.RefinedOsmiumCrafted, "/img/crafted/refinedosmium.png"],
+  [BlockType.TungstenRodsCrafted, "/img/crafted/tungstenrod.png"],
+
+])
 
 export type DisplayTile = {
   x: number;

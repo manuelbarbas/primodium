@@ -10,7 +10,7 @@ function TechTreeItem({
   resourcecost: any;
 }) {
   return (
-    <div className="group w-24 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3">
+    <div className="relative group w-24 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3">
       <div className="mt-1 w-12 h-12 mx-auto">
         <img src={icon} className="w-12 h-12 mx-auto pixel-images"></img>
       </div>
