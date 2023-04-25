@@ -111,7 +111,7 @@ function TooltipBox() {
 
   if (!minimized) {
     return (
-      <div className="z-[999] fixed bottom-4 right-4 h-96 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[9999] fixed bottom-4 right-4 h-96 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col h-72">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
@@ -202,7 +202,7 @@ function TooltipBox() {
     );
   } else {
     return (
-      <div className="z-[999] fixed bottom-4 right-4 h-14 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[9999] fixed bottom-4 right-4 h-14 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaPlusSquare size="18" />} />

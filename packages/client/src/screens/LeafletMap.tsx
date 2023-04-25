@@ -55,7 +55,7 @@ export default function LeafletMap() {
       preferCanvas={true}
       crs={L.CRS.Simple}
     >
-      <LayersControl position="topleft">
+      <LayersControl position="bottomright">
         <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
       </LayersControl>
     </MapContainer>
