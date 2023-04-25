@@ -18,7 +18,7 @@ export const technologyTree = [
     data: {
       name: "Main Base",
       id: BlockType.MainBaseResearch,
-      description: "Main Base Description",
+      description: "The heart of your operation, protect it at all costs.",
       resources: [],
     },
     position: { x: 150, y: 50 },
@@ -29,6 +29,7 @@ export const technologyTree = [
     data: {
       name: "Iron",
       id: BlockType.IronResearch,
+      description: "A common metal. Allows you to mine iron ore and store iron.",
       resources: [],
     },
     position: { x: 250, y: 275 },
@@ -40,6 +41,7 @@ export const technologyTree = [
     data: {
       name: "Basic Miner",
       id: BlockType.BasicMinerResearch,
+      description: "Mines ores slowly.",
       resources: [],
     },
     position: { x: 50, y: 275 },
@@ -50,6 +52,7 @@ export const technologyTree = [
     data: {
       name: "Conveyor",
       id: BlockType.ConveyorResearch,
+      description: "Connects nodes together to move material.",
       resources: [],
     },
     position: { x: -150, y: 275 },
@@ -60,6 +63,7 @@ export const technologyTree = [
     data: {
       name: "Node",
       id: BlockType.NodeResearch,
+      description: "Allows input/output of materials from miners and factories.",
       resources: [],
     },
     position: { x: 450, y: 275 },
@@ -70,6 +74,7 @@ export const technologyTree = [
     data: {
       name: "Copper",
       id: BlockType.CopperResearch,
+      description: "A versatile and conductive metal. Researching allows you to mine copper ore and store copper.",
       resources: [{ id: BlockType.Iron, amount: 200 }],
     },
     position: { x: 150, y: 500 },
@@ -80,6 +85,7 @@ export const technologyTree = [
     data: {
       name: "Plating Factory",
       id: BlockType.PlatingFactoryResearch,
+      description: "Makes iron plates from iron.",
       resources: [
         { id: BlockType.Iron, amount: 200 },
         { id: BlockType.Copper, amount: 200 },
@@ -93,6 +99,7 @@ export const technologyTree = [
     data: {
       name: "Lithium",
       id: BlockType.LithiumResearch,
+      description: "A highly reactive metal. Researching allows you to mine lithium ore and store lithium.",
       resources: [
         { id: BlockType.IronPlateCrafted, amount: 20 },
         { id: BlockType.Copper, amount: 100 },
@@ -106,6 +113,7 @@ export const technologyTree = [
     data: {
       name: "Basic Battery Factory",
       id: BlockType.BasicBatteryFactoryResearch,
+      description: "Builds Basic Power Sources with lithium and iron.",
       resources: [
         { id: BlockType.IronPlateCrafted, amount: 50 },
         { id: BlockType.Lithium, amount: 100 },
@@ -119,6 +127,7 @@ export const technologyTree = [
     data: {
       name: "Kinetic Missile Factory",
       id: BlockType.KineticMissileFactoryResearch,
+      description: "Builds kinetic missiles with basic power source and titanium.",
       resources: [
         { id: BlockType.BasicPowerSourceCrafted, amount: 50 },
         { id: BlockType.Iron, amount: 100 },
@@ -132,6 +141,7 @@ export const technologyTree = [
     data: {
       name: "Titanium",
       id: BlockType.TitaniumResearch,
+      description: "A light but sturdy metal. Researching allows you to mine titanium ore and store titanium.",
       resources: [
         { id: BlockType.Iron, amount: 100 },
         { id: BlockType.Lithium, amount: 100 },
@@ -145,6 +155,7 @@ export const technologyTree = [
     data: {
       name: "Projectile Launcher",
       id: BlockType.ProjectileLauncherResearch,
+      description: "Launches projectiles at your enemies with limited range.",
       resources: [
         { id: BlockType.Iron, amount: 100 },
         { id: BlockType.Titanium, amount: 100 },
@@ -158,6 +169,7 @@ export const technologyTree = [
     data: {
       name: "Hardened Drill",
       id: BlockType.HardenedDrillResearch,
+      description: "Mines ores at a slightly faster rate.",
       resources: [
         { id: BlockType.Iron, amount: 100 },
         { id: BlockType.Titanium, amount: 100 },
@@ -171,6 +183,7 @@ export const technologyTree = [
     data: {
       name: "Osmium",
       id: BlockType.OsmiumResearch,
+      description: "A dense metal. Researching allows you to mine and store osmium.",
       resources: [{ id: BlockType.Titanium, amount: 300 }],
     },
     position: { x: 350, y: 1850 },
@@ -181,6 +194,7 @@ export const technologyTree = [
     data: {
       name: "Dense Metal Refinery",
       id: BlockType.DenseMetalRefineryResearch,
+      description: "Refines osmium into Refined Osmium. Used for advanced machinery.",
       resources: [
         { id: BlockType.Osmium, amount: 100 },
         { id: BlockType.Titanium, amount: 300 },
@@ -195,6 +209,7 @@ export const technologyTree = [
     data: {
       name: "Advanced Battery Factory",
       id: BlockType.AdvancedBatteryFactoryResearch,
+      description: "Builds advanced power sources with refined osmium and basic power source.",
       resources: [
         { id: BlockType.Osmium, amount: 200 },
         { id: BlockType.IronPlateCrafted, amount: 100 },
@@ -209,6 +224,7 @@ export const technologyTree = [
     data: {
       name: "Tungsten",
       id: BlockType.TungstenResearch,
+      description: "A metal with a high melting point. Researching allows you to mine and store tungsten.",
       resources: [
         { id: BlockType.RefinedOsmiumCrafted, amount: 100 },
         { id: BlockType.Titanium, amount: 200 },
@@ -222,6 +238,7 @@ export const technologyTree = [
     data: {
       name: "High-Temp Foundry",
       id: BlockType.HighTempFoundryResearch,
+      description: "Melts tungsten into tungsten rods. Used for even more advanced recipes.",
       resources: [
         { id: BlockType.Tungsten, amount: 200 },
         { id: BlockType.Osmium, amount: 100 },
@@ -236,6 +253,7 @@ export const technologyTree = [
     data: {
       name: "Iridium",
       id: BlockType.IridiumResearch,
+      description: "A rare metal from the cosmos. Researching allows you to mine and store iridium.",
       resources: [
         { id: BlockType.TungstenRodsCrafted, amount: 100 },
         { id: BlockType.Osmium, amount: 100 },
@@ -249,6 +267,7 @@ export const technologyTree = [
     data: {
       name: "Precision Machinery Factory",
       id: BlockType.PrecisionMachineryFactoryResearch,
+      description: "Creates iridium crystals from iridium metal through an esoteric process.",
       resources: [
         { id: BlockType.Iridium, amount: 200 },
         { id: BlockType.TungstenRodsCrafted, amount: 100 },
@@ -262,6 +281,7 @@ export const technologyTree = [
     data: {
       name: "Iridium Drillbit Factory",
       id: BlockType.IridiumDrillbitFactoryResearch,
+      description: "Crafts iridium-tipped drillbits with iridium crystals.",
       resources: [
         { id: BlockType.IridiumCrystalCrafted, amount: 100 },
         { id: BlockType.LaserPowerSourceCrafted, amount: 20 },
@@ -275,6 +295,7 @@ export const technologyTree = [
     data: {
       name: "Precision Pneumatic Drill",
       id: BlockType.PrecisionPneumaticDrillResearch,
+      description: "An advanced drill with few mechanical parts. Mines quickly.",
       resources: [
         { id: BlockType.TungstenRodsCrafted, amount: 200 },
         { id: BlockType.IridiumDrillbitCrafted, amount: 50 },
@@ -288,6 +309,7 @@ export const technologyTree = [
     data: {
       name: "Penetrator Factory",
       id: BlockType.PenetratorFactoryResearch,
+      description: "Builds penetrating warheads out of osmium and advanced power sources.",
       resources: [
         { id: BlockType.Osmium, amount: 500 },
         { id: BlockType.AdvancedPowerSourceCrafted, amount: 50 },
@@ -301,6 +323,7 @@ export const technologyTree = [
     data: {
       name: "Penetrating Missile Factory",
       id: BlockType.PenetratingMissileFactoryResearch,
+      description: "Builds penetrating missiles with penetrating warheads and kinetic missiles.",
       resources: [
         { id: BlockType.RefinedOsmiumCrafted, amount: 100 },
         { id: BlockType.AdvancedPowerSourceCrafted, amount: 50 },
@@ -314,6 +337,7 @@ export const technologyTree = [
     data: {
       name: "Missile Launch Complex",
       id: BlockType.MissileLaunchComplexResearch,
+      description: "A launch complex with longer range than the projectile launcher.",
       resources: [
         { id: BlockType.TungstenRodsCrafted, amount: 50 },
         { id: BlockType.AdvancedPowerSourceCrafted, amount: 100 },
@@ -327,6 +351,7 @@ export const technologyTree = [
     data: {
       name: "High Energy Laser Factory",
       id: BlockType.HighEnergyLaserFactoryResearch,
+      description: "Builds high-energy power sources with lasers. Used for high-energy machinery.",
       resources: [
         { id: BlockType.IridiumCrystalCrafted, amount: 200 },
         { id: BlockType.AdvancedPowerSourceCrafted, amount: 150 },
@@ -340,6 +365,7 @@ export const technologyTree = [
     data: {
       name: "Thermobaric Warhead Factory",
       id: BlockType.ThermobaricWarheadFactoryResearch,
+      description: "Builds thermobaric warheads with iridium drillbits and high-energy laser power sources.",
       resources: [{ id: BlockType.IridiumCrystalCrafted, amount: 200 }],
     },
     position: { x: 150, y: 3425 },
@@ -350,6 +376,7 @@ export const technologyTree = [
     data: {
       name: "Thermobaric Missile Factory",
       id: BlockType.ThermobaricMissileFactoryResearch,
+      description: "Assembles thermobaric missiles with thermobaric warheads and penetrating missiles.",
       resources: [
         { id: BlockType.IridiumCrystalCrafted, amount: 200 },
         { id: BlockType.TungstenRodsCrafted, amount: 100 },
@@ -363,6 +390,7 @@ export const technologyTree = [
     data: {
       name: "Kimberlite",
       id: BlockType.KimberliteResearch,
+      description: "A precious and extremely hard ore. Researching allows you to mine and store kimberlite",
       resources: [
         { id: BlockType.IridiumCrystalCrafted, amount: 100 },
         { id: BlockType.Tungsten, amount: 100 },
@@ -376,6 +404,7 @@ export const technologyTree = [
     data: {
       name: "Kimberlite Catalyst Factory",
       id: BlockType.KimberliteCatalystFactoryResearch,
+      description: "Refines raw kimberlite into usable material for advanced machinery.",
       resources: [
         { id: BlockType.IridiumCrystalCrafted, amount: 300 },
         { id: BlockType.LaserPowerSourceCrafted, amount: 20 },
