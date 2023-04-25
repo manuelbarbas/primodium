@@ -37,6 +37,27 @@ import { ThermobaricWarheadCraftedComponent, ID as ThermobaricWarheadCraftedComp
 import { ThermobaricMissileCraftedComponent, ID as ThermobaricMissileCraftedComponentID } from "components/ThermobaricMissileCraftedComponent.sol";
 import { KimberliteCrystalCatalystCraftedComponent, ID as KimberliteCrystalCatalystCraftedComponentID } from "components/KimberliteCrystalCatalystCraftedComponent.sol";
 
+// check if building is unlocked
+// import all factory research components:
+import { PlatingFactoryResearchComponent, ID as PlatingFactoryResearchComponentID } from "components/PlatingFactoryResearchComponent.sol";
+import { BasicBatteryFactoryResearchComponent, ID as BasicBatteryFactoryResearchComponentID } from "components/BasicBatteryFactoryResearchComponent.sol";
+import { KineticMissileFactoryResearchComponent, ID as KineticMissileFactoryResearchComponentID } from "components/KineticMissileFactoryResearchComponent.sol";
+import { ProjectileLauncherResearchComponent, ID as ProjectileLauncherResearchComponentID } from "components/ProjectileLauncherResearchComponent.sol";
+import { HardenedDrillResearchComponent, ID as HardenedDrillResearchComponentID } from "components/HardenedDrillResearchComponent.sol";
+import { DenseMetalRefineryResearchComponent, ID as DenseMetalRefineryResearchComponentID } from "components/DenseMetalRefineryResearchComponent.sol";
+import { AdvancedBatteryFactoryResearchComponent, ID as AdvancedBatteryFactoryResearchComponentID } from "components/AdvancedBatteryFactoryResearchComponent.sol";
+import { HighTempFoundryResearchComponent, ID as HighTempFoundryResearchComponentID } from "components/HighTempFoundryResearchComponent.sol";
+import { PrecisionMachineryFactoryResearchComponent, ID as PrecisionMachineryFactoryResearchComponentID } from "components/PrecisionMachineryFactoryResearchComponent.sol";
+import { IridiumDrillbitFactoryResearchComponent, ID as IridiumDrillbitFactoryResearchComponentID } from "components/IridiumDrillbitFactoryResearchComponent.sol";
+import { PrecisionPneumaticDrillResearchComponent, ID as PrecisionPneumaticDrillResearchComponentID } from "components/PrecisionPneumaticDrillResearchComponent.sol";
+import { PenetratorFactoryResearchComponent, ID as PenetratorFactoryResearchComponentID } from "components/PenetratorFactoryResearchComponent.sol";
+import { PenetratingMissileFactoryResearchComponent, ID as PenetratingMissileFactoryResearchComponentID } from "components/PenetratingMissileFactoryResearchComponent.sol";
+import { MissileLaunchComplexResearchComponent, ID as MissileLaunchComplexResearchComponentID } from "components/MissileLaunchComplexResearchComponent.sol";
+import { HighEnergyLaserFactoryResearchComponent, ID as HighEnergyLaserFactoryResearchComponentID } from "components/HighEnergyLaserFactoryResearchComponent.sol";
+import { ThermobaricWarheadFactoryResearchComponent, ID as ThermobaricWarheadFactoryResearchComponentID } from "components/ThermobaricWarheadFactoryResearchComponent.sol";
+import { ThermobaricMissileFactoryResearchComponent, ID as ThermobaricMissileFactoryResearchComponentID } from "components/ThermobaricMissileFactoryResearchComponent.sol";
+import { KimberliteCatalystFactoryResearchComponent, ID as KimberliteCatalystFactoryResearchComponentID } from "components/KimberliteCatalystFactoryResearchComponent.sol";
+
 // debug buildings
 import { MainBaseID, ConveyerID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
@@ -45,6 +66,7 @@ import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticM
 
 import { Coord } from "../types.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
+import { LibResearch } from "../libraries/LibResearch.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -94,9 +116,15 @@ contract BuildSystem is System {
       );
       LibBuild.buildWithOneItem(ironResourceComponent, 50, addressToEntity(msg.sender));
     }
-    // TODO: check if building has been unlocked in research for all the following.
+    // Check if building has been unlocked in research for all the following.
     // Build PlatingFactory with 100 IronResource and 50 CopperResource
     else if (blockType == PlatingFactoryID) {
+      PlatingFactoryResearchComponent platingFactoryResearchComponent = PlatingFactoryResearchComponent(
+        getAddressById(components, PlatingFactoryResearchComponentID)
+      );
+      if (!LibResearch.hasResearched(platingFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched PlatingFactory");
+      }
       IronResourceComponent ironResourceComponent = IronResourceComponent(
         getAddressById(components, IronResourceComponentID)
       );
@@ -107,6 +135,12 @@ contract BuildSystem is System {
     }
     // Build BasicBatteryFactory with 20 IronPlateCrafted and 50 CopperResource
     else if (blockType == BasicBatteryFactoryID) {
+      BasicBatteryFactoryResearchComponent basicBatteryFactoryResearchComponent = BasicBatteryFactoryResearchComponent(
+        getAddressById(components, BasicBatteryFactoryResearchComponentID)
+      );
+      if (!LibResearch.hasResearched(basicBatteryFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched BasicBatteryFactory");
+      }
       IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
         getAddressById(components, IronPlateCraftedComponentID)
       );
@@ -123,6 +157,12 @@ contract BuildSystem is System {
     }
     // Build KineticMissileFactory with 100 IronPlateCrafted 50 LithiumResource and 10 BasicPowerSourceCrafted
     else if (blockType == KineticMissileFactoryID) {
+      KineticMissileFactoryResearchComponent kineticMissileFactoryResearchComponent = KineticMissileFactoryResearchComponent(
+          getAddressById(components, KineticMissileFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(kineticMissileFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched KineticMissileFactory");
+      }
       IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
         getAddressById(components, IronPlateCraftedComponentID)
       );
@@ -144,6 +184,12 @@ contract BuildSystem is System {
     }
     // Build ProjectileLauncher with 100 IronPlateCrafted and 100 TitaniumResource
     else if (blockType == ProjectileLauncherID) {
+      ProjectileLauncherResearchComponent projectileLauncherResearchComponent = ProjectileLauncherResearchComponent(
+        getAddressById(components, ProjectileLauncherResearchComponentID)
+      );
+      if (!LibResearch.hasResearched(projectileLauncherResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched ProjectileLauncher");
+      }
       IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
         getAddressById(components, IronPlateCraftedComponentID)
       );
@@ -160,6 +206,12 @@ contract BuildSystem is System {
     }
     // Build HardenedDrill with 100 TitaniumResource 10 IronPlateCrafted 5 BasicPowerSourceCrafted
     else if (blockType == HardenedDrillID) {
+      HardenedDrillResearchComponent hardenedDrillResearchComponent = HardenedDrillResearchComponent(
+        getAddressById(components, HardenedDrillResearchComponentID)
+      );
+      if (!LibResearch.hasResearched(hardenedDrillResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched HardenDrill");
+      }
       TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
         getAddressById(components, TitaniumResourceComponentID)
       );
@@ -181,6 +233,12 @@ contract BuildSystem is System {
     }
     // Build DenseMetalRefinery with 50 OsmiumResource 100 TitaniumResource 30 IronPlateCrafted 10 BasicPowerSourceCrafted
     else if (blockType == DenseMetalRefineryID) {
+      DenseMetalRefineryResearchComponent denseMetalRefineryResearchComponent = DenseMetalRefineryResearchComponent(
+        getAddressById(components, DenseMetalRefineryResearchComponentID)
+      );
+      if (!LibResearch.hasResearched(denseMetalRefineryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched DenseMetalRefinery");
+      }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
       );
@@ -207,6 +265,12 @@ contract BuildSystem is System {
     }
     // Build AdvancedBatteryFactory with 150 OsmiumResource 50 TitaniumResource and 20 BasicPowerSourceCrafted
     else if (blockType == AdvancedBatteryFactoryID) {
+      AdvancedBatteryFactoryResearchComponent advancedBatteryFactoryResearchComponent = AdvancedBatteryFactoryResearchComponent(
+          getAddressById(components, AdvancedBatteryFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(advancedBatteryFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched AdvancedBatteryFactory");
+      }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
       );
@@ -228,6 +292,12 @@ contract BuildSystem is System {
     }
     // Build HighTempFoundry with 50 TungstenResource 50 RefinedOsmium and 20 AdvancedPowerSourceCrafted
     else if (blockType == HighTempFoundryID) {
+      HighTempFoundryResearchComponent highTempFoundryResearchComponent = HighTempFoundryResearchComponent(
+        getAddressById(components, HighTempFoundryResearchComponentID)
+      );
+      if (!LibResearch.hasResearched(highTempFoundryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched HighTempFoundry");
+      }
       TungstenResourceComponent tungstenResourceComponent = TungstenResourceComponent(
         getAddressById(components, TungstenResourceComponentID)
       );
@@ -249,6 +319,12 @@ contract BuildSystem is System {
     }
     // Build PrecisionMachineryFactory with 50 IridiumResource 50 TungstenRodsCrafted and 10 AdvancedPowerSourceCrafted
     else if (blockType == PrecisionMachineryFactoryID) {
+      PrecisionMachineryFactoryResearchComponent precisionMachineryFactoryResearchComponent = PrecisionMachineryFactoryResearchComponent(
+          getAddressById(components, PrecisionMachineryFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(precisionMachineryFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched PrecisionMachineryFactory");
+      }
       IridiumResourceComponent iridiumResourceComponent = IridiumResourceComponent(
         getAddressById(components, IridiumResourceComponentID)
       );
@@ -270,6 +346,12 @@ contract BuildSystem is System {
     }
     // Build IridiumDrillbitFactory with 50 TungstenRodsCrafted and 5 LaserPowerSourceCrafted
     else if (blockType == IridiumDrillbitFactoryID) {
+      IridiumDrillbitFactoryResearchComponent iridiumDrillbitFactoryResearchComponent = IridiumDrillbitFactoryResearchComponent(
+          getAddressById(components, IridiumDrillbitFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(iridiumDrillbitFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched IridiumDrillbitFactory");
+      }
       TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
         getAddressById(components, TungstenRodsCraftedComponentID)
       );
@@ -286,6 +368,12 @@ contract BuildSystem is System {
     }
     // Build PrecisionPneumaticDrill with 100 TungstenResource 100 OsmiumResource and 5 LaserPowerSourceCrafted
     else if (blockType == PrecisionPneumaticDrillID) {
+      PrecisionPneumaticDrillResearchComponent precisionPneumaticDrillResearchComponent = PrecisionPneumaticDrillResearchComponent(
+          getAddressById(components, PrecisionPneumaticDrillResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(precisionPneumaticDrillResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched PrecisionPneumaticDrill");
+      }
       TungstenResourceComponent tungstenResourceComponent = TungstenResourceComponent(
         getAddressById(components, TungstenResourceComponentID)
       );
@@ -307,6 +395,12 @@ contract BuildSystem is System {
     }
     // Build PenetratorFactory with 200 OsmiumResource 50 IronPlateCrafted and 10 AdvancedPowerSourceCrafted
     else if (blockType == PenetratorFactoryID) {
+      PenetratorFactoryResearchComponent penetratorFactoryResearchComponent = PenetratorFactoryResearchComponent(
+        getAddressById(components, PenetratorFactoryResearchComponentID)
+      );
+      if (!LibResearch.hasResearched(penetratorFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched PenetratorFactory");
+      }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
       );
@@ -328,6 +422,12 @@ contract BuildSystem is System {
     }
     // Build PenetratingMissileFactory with 300 OsmiumResource 100 TitaniumResource and 15 AdvancedPowerSourceCrafted
     else if (blockType == PenetratingMissileFactoryID) {
+      PenetratingMissileFactoryResearchComponent penetratingMissileFactoryResearchComponent = PenetratingMissileFactoryResearchComponent(
+          getAddressById(components, PenetratingMissileFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(penetratingMissileFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched PenetratingMissileFactory");
+      }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
       );
@@ -349,6 +449,12 @@ contract BuildSystem is System {
     }
     // Build MissileLaunchComplex with 100 TungstenRodsCrafted and 100 OsmiumResource
     else if (blockType == MissileLaunchComplexID) {
+      MissileLaunchComplexResearchComponent missileLaunchComplexResearchComponent = MissileLaunchComplexResearchComponent(
+          getAddressById(components, MissileLaunchComplexResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(missileLaunchComplexResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched MissileLaunchComplex");
+      }
       TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
         getAddressById(components, TungstenRodsCraftedComponentID)
       );
@@ -365,6 +471,12 @@ contract BuildSystem is System {
     }
     // Build HighEnergyLaserFactory with 50 IridiumCrystalCrafted 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
     else if (blockType == HighEnergyLaserFactoryID) {
+      HighEnergyLaserFactoryResearchComponent highEnergyLaserFactoryResearchComponent = HighEnergyLaserFactoryResearchComponent(
+          getAddressById(components, HighEnergyLaserFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(highEnergyLaserFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched HighEnergyLaserFactory");
+      }
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)
       );
@@ -386,6 +498,12 @@ contract BuildSystem is System {
     }
     // Build ThermobaricWarheadFactory with 200 RefinedOsmiumCrafted 100 IridiumCrystalCrafted and 10 LaserPowerSourceCrafted
     else if (blockType == ThermobaricWarheadFactoryID) {
+      ThermobaricWarheadFactoryResearchComponent thermobaricWarheadFactoryResearchComponent = ThermobaricWarheadFactoryResearchComponent(
+          getAddressById(components, ThermobaricWarheadFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(thermobaricWarheadFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched ThermobaricWarheadFactory");
+      }
       RefinedOsmiumCraftedComponent refinedOsmiumCraftedComponent = RefinedOsmiumCraftedComponent(
         getAddressById(components, RefinedOsmiumCraftedComponentID)
       );
@@ -407,6 +525,12 @@ contract BuildSystem is System {
     }
     // Build ThermobaricMissileFactory with 100 IridiumCrystalCrafted 100 TungstenRodsCrafted and 20 LaserPowerSourceCrafted
     else if (blockType == ThermobaricMissileFactoryID) {
+      ThermobaricMissileFactoryResearchComponent thermobaricMissileFactoryResearchComponent = ThermobaricMissileFactoryResearchComponent(
+          getAddressById(components, ThermobaricMissileFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(thermobaricMissileFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched ThermobaricMissileFactory");
+      }
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)
       );
@@ -428,6 +552,12 @@ contract BuildSystem is System {
     }
     // Build KimberliteCatalystFactory with 200 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
     else if (blockType == KimberliteCatalystFactoryID) {
+      KimberliteCatalystFactoryResearchComponent kimberliteCatalystFactoryResearchComponent = KimberliteCatalystFactoryResearchComponent(
+          getAddressById(components, KimberliteCatalystFactoryResearchComponentID)
+        );
+      if (!LibResearch.hasResearched(kimberliteCatalystFactoryResearchComponent, addressToEntity(msg.sender))) {
+        revert("player has not researched KimberliteCatalystFactory");
+      }
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)
       );
