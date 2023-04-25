@@ -143,7 +143,7 @@ export const technologyTree = [
     id: "12",
     type: "techTree",
     data: {
-      name: "ProjectileLauncher",
+      name: "Projectile Launcher",
       id: BlockType.ProjectileLauncherResearch,
       resources: [
         { id: BlockType.Iron, amount: 100 },
@@ -156,7 +156,7 @@ export const technologyTree = [
     id: "13",
     type: "techTree",
     data: {
-      name: "HardenedDrill",
+      name: "Hardened Drill",
       id: BlockType.HardenedDrillResearch,
       resources: [
         { id: BlockType.Iron, amount: 100 },
@@ -273,7 +273,7 @@ export const technologyTree = [
     id: "22",
     type: "techTree",
     data: {
-      name: "PrecisionPneumaticDrill",
+      name: "Precision Pneumatic Drill",
       id: BlockType.PrecisionPneumaticDrillResearch,
       resources: [
         { id: BlockType.TungstenRodsCrafted, amount: 200 },
