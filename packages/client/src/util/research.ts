@@ -38,7 +38,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Basic Miner",
-      id: BlockType.BasicMiner,
+      id: BlockType.BasicMinerResearch,
       resources: [],
     },
     position: { x: 50, y: 275 },
@@ -48,7 +48,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Conveyor",
-      id: BlockType.Conveyer,
+      id: BlockType.ConveyorResearch,
       resources: [],
     },
     position: { x: -150, y: 275 },
@@ -58,7 +58,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Node",
-      id: BlockType.Node,
+      id: BlockType.NodeResearch,
       resources: [],
     },
     position: { x: 450, y: 275 },
@@ -68,7 +68,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Copper",
-      id: BlockType.Node,
+      id: BlockType.CopperResearch,
       resources: [{ id: BlockType.Iron, amount: 200 }],
     },
     position: { x: 150, y: 500 },
@@ -78,7 +78,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Plating Factory",
-      id: BlockType.PlatingFactory,
+      id: BlockType.PlatingFactoryResearch,
       resources: [
         { id: BlockType.Iron, amount: 200 },
         { id: BlockType.Copper, amount: 200 },

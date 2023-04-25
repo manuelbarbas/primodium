@@ -337,7 +337,7 @@ export const BackgroundImage = new Map<EntityID, string>([
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
-  [BlockType.MainBaseResearch, "/img/building/mainbase.png"],
+  [BlockType.MainBaseResearch, "/img/building/mainbase.gif"],
   [BlockType.IronResearch, "/img/resource/iron_resource.png"],
   [BlockType.BasicMinerResearch, "/img/building/minerdrill.gif"],
   [BlockType.ConveyorResearch, "/img/building/node.gif"],

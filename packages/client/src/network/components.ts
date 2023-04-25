@@ -100,92 +100,128 @@ export function defineComponents(world: World) {
     }),
 
     // Research Components
-    PlatingFactoryResearch: defineNumberComponent(world, {
+    CopperResearch: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.CopperResearch",
+      },
+    }),
+    LithiumResearch: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.LithiumResearch",
+      },
+    }),
+    TitaniumResearch: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.TitaniumResearch",
+      },
+    }),
+    OsmiumResearch: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.OsmiumResearch",
+      },
+    }),
+    TungstenResearch: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.TungstenResearch",
+      },
+    }),
+    IridiumResearch: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.IridiumResearch",
+      },
+    }),
+    KimberliteResearch: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.KimberliteResearch",
+      },
+    }),
+
+    PlatingFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.PlatingFactoryResearch",
       },
     }),
-    BasicBatteryFactoryResearch: defineNumberComponent(world, {
+    BasicBatteryFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.BasicBatteryFactoryResearch",
       },
     }),
-    KineticMissileFactoryResearch: defineNumberComponent(world, {
+    KineticMissileFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.KineticMissileFactoryResearch",
       },
     }),
-    ProjectileLauncherResearch: defineNumberComponent(world, {
+    ProjectileLauncherResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.ProjectileLauncherResearch",
       },
     }),
-    HardenedDrillResearch: defineNumberComponent(world, {
+    HardenedDrillResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.HardenedDrillResearch",
       },
     }),
-    DenseMetalRefineryResearch: defineNumberComponent(world, {
+    DenseMetalRefineryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.DenseMetalRefineryResearch",
       },
     }),
-    AdvancedBatteryFactoryResearch: defineNumberComponent(world, {
+    AdvancedBatteryFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.AdvancedBatteryFactoryResearch",
       },
     }),
-    HighTempFoundryResearch: defineNumberComponent(world, {
+    HighTempFoundryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.HighTempFoundryResearch",
       },
     }),
-    PrecisionMachineryFactoryResearch: defineNumberComponent(world, {
+    PrecisionMachineryFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.PrecisionMachineryFactoryResearch",
       },
     }),
-    IridiumDrillbitFactoryResearch: defineNumberComponent(world, {
+    IridiumDrillbitFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.IridiumDrillbitFactoryResearch",
       },
     }),
-    PrecisionPneumaticDrillResearch: defineNumberComponent(world, {
+    PrecisionPneumaticDrillResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.PrecisionPneumaticDrillResearch",
       },
     }),
-    PenetratorFactoryResearch: defineNumberComponent(world, {
+    PenetratorFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.PenetratorFactoryResearch",
       },
     }),
-    PenetratingMissileFactoryResearch: defineNumberComponent(world, {
+    PenetratingMissileFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.PenetratingMissileFactoryResearch",
       },
     }),
-    MissileLaunchComplexResearch: defineNumberComponent(world, {
+    MissileLaunchComplexResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.MissileLaunchComplexResearch",
       },
     }),
-    HighEnergyLaserFactoryResearch: defineNumberComponent(world, {
+    HighEnergyLaserFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.HighEnergyLaserFactoryResearch",
       },
     }),
-    ThermobaricWarheadFactoryResearch: defineNumberComponent(world, {
+    ThermobaricWarheadFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.ThermobaricWarheadFactoryResearch",
       },
     }),
-    ThermobaricMissileFactoryResearch: defineNumberComponent(world, {
+    ThermobaricMissileFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.ThermobaricMissileFactoryResearch",
       },
     }),
-    KimberliteCatalystFactoryResearch: defineNumberComponent(world, {
+    KimberliteCatalystFactoryResearch: defineBoolComponent(world, {
       metadata: {
         contractId: "component.KimberliteCatalystFactoryResearch",
       },
