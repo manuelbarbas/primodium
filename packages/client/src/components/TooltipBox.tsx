@@ -181,17 +181,20 @@ function TooltipBox() {
                       name={"Copper"}
                       resourceComponent={components.CopperResource}
                       entityIndex={tilesAtPosition[0]}
+                      resourceId={BlockType.Copper}
                     />
                     <ResourceLabel
                       name={"Iron"}
                       resourceComponent={components.IronResource}
                       entityIndex={tilesAtPosition[0]}
+                      resourceId={BlockType.Iron}
                     />
-                    <ResourceLabel
+                    {/* <ResourceLabel
                       name={"Bullet"}
                       resourceComponent={components.BulletCrafted}
                       entityIndex={tilesAtPosition[0]}
-                    />
+                      resourceId={BlockType.Bullet}
+                    /> */}
                   </>
                 )}
               </div>

@@ -5,6 +5,7 @@ import { FaPlusSquare } from "react-icons/fa";
 import { useMud } from "../../context/MudContext";
 
 import ResourceLabel from "./ResourceLabel";
+import { BlockType } from "../../util/constants";
 
 function ResourceBox() {
   const { components } = useMud();
@@ -30,43 +31,53 @@ function ResourceBox() {
             <ResourceLabel
               name={"Bolutite"}
               resourceComponent={components.BolutiteResource}
+              resourceId={BlockType.Iron}
             />
             <ResourceLabel
               name={"Copper"}
               resourceComponent={components.CopperResource}
+              resourceId={BlockType.Copper}
             />
             <ResourceLabel
               name={"Iridium"}
               resourceComponent={components.IridiumResource}
+              resourceId={BlockType.Iridium}
             />
             <ResourceLabel
               name={"Iron"}
               resourceComponent={components.IronResource}
+              resourceId={BlockType.Iron}
             />
             <ResourceLabel
               name={"Kimberlite"}
               resourceComponent={components.KimberliteResource}
+              resourceId={BlockType.Kimberlite}
             />
             <ResourceLabel
               name={"Lithium"}
               resourceComponent={components.LithiumResource}
+              resourceId={BlockType.Lithium}
             />
             <ResourceLabel
               name={"Osmium"}
               resourceComponent={components.OsmiumResource}
+              resourceId={BlockType.Osmium}
             />
             <ResourceLabel
               name={"Tungsten"}
               resourceComponent={components.TungstenResource}
+              resourceId={BlockType.Tungsten}
             />
             <ResourceLabel
               name={"Uraninite"}
               resourceComponent={components.UraniniteResource}
+              resourceId={BlockType.Uraninite}
             />
-            <ResourceLabel
+            {/* <ResourceLabel
               name={"Bullet"}
               resourceComponent={components.BulletCrafted}
-            />
+              resourceId={BlockType.Bullet}
+            /> */}
           </div>
         </div>
       </div>
