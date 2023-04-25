@@ -64,7 +64,9 @@
     "LaserPowerSourceCraftedComponent",
     "ThermobaricWarheadCraftedComponent",
     "ThermobaricMissileCraftedComponent",
-    "KimberliteCrystalCatalystCraftedComponent"
+    "KimberliteCrystalCatalystCraftedComponent",
+
+    "MainBaseInitializedComponent"
   ],
   "systems": [
     {
