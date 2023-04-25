@@ -4,6 +4,7 @@ import { BlockType } from "./constants";
 export type ResourceCostData = {
   name: string;
   id: EntityID;
+  description?: string;
   resources: {
     id: EntityID;
     amount: number;

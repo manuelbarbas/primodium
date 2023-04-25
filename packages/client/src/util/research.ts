@@ -18,6 +18,7 @@ export const technologyTree = [
     data: {
       name: "Main Base",
       id: BlockType.MainBaseResearch,
+      description: "Main Base Description",
       resources: [],
     },
     position: { x: 150, y: 50 },
