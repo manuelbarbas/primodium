@@ -40,7 +40,7 @@
   }
 
   .research-tooltip {
-    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute h-auto w-48 p-3 mr-0 ml-48 rounded shadow-xl text-gray-700 font-mono font-bold
+    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute h-auto w-36 p-2 ml-3 rounded shadow-xl
   }
   .pixel-images {
     image-rendering: pixelated;

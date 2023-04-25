@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { FaWindowClose } from "react-icons/fa";
 import TechTree from "./TechTree";
+import ResearchPage from "./ResearchPage";
 
 function ResearchModal() {
   const [minimized, setMinimize] = useState(false);
@@ -25,7 +26,8 @@ function ResearchModal() {
             <p className="text-lg font-bold mt-4 ml-5  ">
               Research technologies
             </p>
-            <TechTree />
+            {/* <TechTree /> */}
+            <ResearchPage />
           </div>
         </div>
       </div>
