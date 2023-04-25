@@ -334,6 +334,8 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.ThermobaricWarheadFactory, "/img/building/minerdrill.gif"],
   [BlockType.ThermobaricMissileFactory, "/img/building/minerdrill.gif"],
   [BlockType.KimberliteCatalystFactory, "/img/building/kimberlitecatalyst.gif"],
+
+  // TODO: crafted items
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
