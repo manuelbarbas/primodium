@@ -61,6 +61,8 @@ import { KimberliteCatalystFactoryResearchComponent, ID as KimberliteCatalystFac
 // debug buildings
 import { MainBaseID, ConveyerID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+
 // production buildings
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
@@ -91,9 +93,9 @@ contract BuildSystem is System {
     require(entitiesAtPosition.length == 0, "can not build at non-empty coord");
 
     // Check if the player has enough resources to build
-    // debug buildings are free: MainBaseID, ConveyerID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    // debug buildings are free:  ConveyerID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (
-      blockType == MainBaseID ||
       blockType == ConveyerID ||
       blockType == MinerID ||
       blockType == LithiumMinerID ||
@@ -101,6 +103,16 @@ contract BuildSystem is System {
       blockType == SiloID
     ) {
       // debug buildings, do nothing
+    } else if (blockType == MainBaseID) {
+      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
+        getAddressById(components, MainBaseInitializedComponentID)
+      );
+
+      if (LibResearch.hasResearched(mainBaseInitializedComponent, addressToEntity(msg.sender))) {
+        revert("cannot build more than one main base per wallet");
+      } else {
+        mainBaseInitializedComponent.set(addressToEntity(msg.sender));
+      }
     }
     // Build BasicMiner with 100 IronResource
     else if (blockType == BasicMinerID) {

@@ -9,7 +9,7 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-import { LithiumMinerID, ConveyerID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, LithiumMinerID, ConveyerID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 
 contract BuildSystemTest is MudTest {
@@ -53,6 +53,18 @@ contract BuildSystemTest is MudTest {
     buildSystem.executeTyped(LithiumMinerID, coord);
     buildSystem.executeTyped(LithiumMinerID, coord);
 
+    vm.stopPrank();
+  }
+
+  function testFailBuildTwiceMainBase() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = Coord({ x: 0, y: 0 });
+    Coord memory coord2 = Coord({ x: 0, y: 1 });
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, coord2);
     vm.stopPrank();
   }
 
