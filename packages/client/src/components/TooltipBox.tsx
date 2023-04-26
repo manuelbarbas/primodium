@@ -178,6 +178,7 @@ function TooltipBox() {
                 {/* TODO: show owned resource for every resource possible */}
                 {builtTile && (
                   <>
+                    <ClaimButton x={selectedTile.x} y={selectedTile.y} />
                     <ResourceLabel
                       name={"Iron"}
                       resourceComponent={components.IronResource}
