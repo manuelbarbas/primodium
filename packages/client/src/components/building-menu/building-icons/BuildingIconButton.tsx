@@ -39,22 +39,24 @@ function BuildingIconButton({
     <button className="w-16 h-16 text-sm group" onClick={buildTile}>
       <div className="building-tooltip group-hover:scale-100">
         {label}
-        {recipe ? (
-          recipe[0].resources.map((resource) => {
-            const resourceImage = ResourceImage.get(resource.id);
-            return (
-              <div className="mr-2" key={resource.id}>
-                <img
-                  src={resourceImage}
-                  className="w-4 h-4 inline-block mr-1 pixel-images"
-                />
-                {resource.amount}
-              </div>
-            );
-          })
-        ) : (
-          <></>
-        )}
+        <div className="flex-col">
+          {recipe ? (
+            recipe[0].resources.map((resource) => {
+              const resourceImage = ResourceImage.get(resource.id);
+              return (
+                <div className="mr-2 inline-block" key={resource.id}>
+                  <img
+                    src={resourceImage}
+                    className="w-4 h-4 inline-block mr-1 pixel-images"
+                  />
+                  {resource.amount}
+                </div>
+              );
+            })
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
       <img
         src={BackgroundImage.get(blockType)}
