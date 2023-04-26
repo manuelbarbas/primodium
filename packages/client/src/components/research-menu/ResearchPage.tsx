@@ -22,6 +22,7 @@ function ResearchPage() {
           });
           return (
             <TechTreeItem
+              data={item.data}
               key={item.data.id}
               icon={resourceIcon}
               name={item.data.name}

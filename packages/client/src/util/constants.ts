@@ -130,71 +130,71 @@ export const BlockType = {
   ) as EntityID,
 
   // Research components
-  MainBaseResearch: keccak256("research.MainBaseResearch") as EntityID,
-  IronResearch: keccak256("research.IronResearch") as EntityID,
-  BasicMinerResearch: keccak256("research.BasicMinerResearch") as EntityID,
-  ConveyorResearch: keccak256("research.ConveyorResearch") as EntityID,
-  NodeResearch: keccak256("research.NodeResearch") as EntityID,
-  CopperResearch: keccak256("research.CopperResearch") as EntityID,
-  LithiumResearch: keccak256("research.LithiumResearch") as EntityID,
-  TitaniumResearch: keccak256("research.TitaniumResearch") as EntityID,
-  OsmiumResearch: keccak256("research.OsmiumResearch") as EntityID,
-  TungstenResearch: keccak256("research.TungstenResearch") as EntityID,
-  IridiumResearch: keccak256("research.IridiumResearch") as EntityID,
-  KimberliteResearch: keccak256("research.KimberliteResearch") as EntityID,
+  MainBaseResearch: keccak256("component.MainBaseResearch") as EntityID,
+  IronResearch: keccak256("component.IronResearch") as EntityID,
+  BasicMinerResearch: keccak256("component.BasicMinerResearch") as EntityID,
+  ConveyorResearch: keccak256("component.ConveyorResearch") as EntityID,
+  NodeResearch: keccak256("component.NodeResearch") as EntityID,
+  CopperResearch: keccak256("component.CopperResearch") as EntityID,
+  LithiumResearch: keccak256("component.LithiumResearch") as EntityID,
+  TitaniumResearch: keccak256("component.TitaniumResearch") as EntityID,
+  OsmiumResearch: keccak256("component.OsmiumResearch") as EntityID,
+  TungstenResearch: keccak256("component.TungstenResearch") as EntityID,
+  IridiumResearch: keccak256("component.IridiumResearch") as EntityID,
+  KimberliteResearch: keccak256("component.KimberliteResearch") as EntityID,
   PlatingFactoryResearch: keccak256(
-    "research.PlatingFactoryResearch"
+    "component.PlatingFactoryResearch"
   ) as EntityID,
   BasicBatteryFactoryResearch: keccak256(
-    "research.BasicBatteryFactoryResearch"
+    "component.BasicBatteryFactoryResearch"
   ) as EntityID,
   KineticMissileFactoryResearch: keccak256(
-    "research.KineticMissileFactoryResearch"
+    "component.KineticMissileFactoryResearch"
   ) as EntityID,
   ProjectileLauncherResearch: keccak256(
-    "research.ProjectileLauncherResearch"
+    "component.ProjectileLauncherResearch"
   ) as EntityID,
   HardenedDrillResearch: keccak256(
-    "research.HardenedDrillResearch"
+    "component.HardenedDrillResearch"
   ) as EntityID,
   DenseMetalRefineryResearch: keccak256(
-    "research.DenseMetalRefineryResearch"
+    "component.DenseMetalRefineryResearch"
   ) as EntityID,
   AdvancedBatteryFactoryResearch: keccak256(
-    "research.AdvancedBatteryFactoryResearch"
+    "component.AdvancedBatteryFactoryResearch"
   ) as EntityID,
   HighTempFoundryResearch: keccak256(
-    "research.HighTempFoundryResearch"
+    "component.HighTempFoundryResearch"
   ) as EntityID,
   PrecisionMachineryFactoryResearch: keccak256(
-    "research.PrecisionMachineryFactoryResearch"
+    "component.PrecisionMachineryFactoryResearch"
   ) as EntityID,
   IridiumDrillbitFactoryResearch: keccak256(
-    "research.IridiumDrillbitFactoryResearch"
+    "component.IridiumDrillbitFactoryResearch"
   ) as EntityID,
   PrecisionPneumaticDrillResearch: keccak256(
-    "research.PrecisionPneumaticDrillResearch"
+    "component.PrecisionPneumaticDrillResearch"
   ) as EntityID,
   PenetratorFactoryResearch: keccak256(
-    "research.PenetratorFactoryResearch"
+    "component.PenetratorFactoryResearch"
   ) as EntityID,
   PenetratingMissileFactoryResearch: keccak256(
-    "research.PenetratingMissileFactoryResearch"
+    "component.PenetratingMissileFactoryResearch"
   ) as EntityID,
   MissileLaunchComplexResearch: keccak256(
-    "research.MissileLaunchComplexResearch"
+    "component.MissileLaunchComplexResearch"
   ) as EntityID,
   HighEnergyLaserFactoryResearch: keccak256(
-    "research.HighEnergyLaserFactoryResearch"
+    "component.HighEnergyLaserFactoryResearch"
   ) as EntityID,
   ThermobaricWarheadFactoryResearch: keccak256(
-    "research.ThermobaricWarheadFactoryResearch"
+    "component.ThermobaricWarheadFactoryResearch"
   ) as EntityID,
   ThermobaricMissileFactoryResearch: keccak256(
-    "research.ThermobaricMissileFactoryResearch"
+    "component.ThermobaricMissileFactoryResearch"
   ) as EntityID,
   KimberliteCatalystFactoryResearch: keccak256(
-    "research.KimberliteCatalystFactoryResearch"
+    "component.KimberliteCatalystFactoryResearch"
   ) as EntityID,
 };
 
@@ -411,11 +411,13 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
   [BlockType.IridiumDrillbitCrafted, "/img/crafted/iridiumdrillbit.png"],
   [BlockType.LaserPowerSourceCrafted, "/img/crafted/laserbattery.png"],
-  [BlockType.KimberliteCrystalCatalystCrafted, "/img/crafted/kimberlitecrystal.png"],
+  [
+    BlockType.KimberliteCrystalCatalystCrafted,
+    "/img/crafted/kimberlitecrystal.png",
+  ],
   [BlockType.RefinedOsmiumCrafted, "/img/crafted/refinedosmium.png"],
   [BlockType.TungstenRodsCrafted, "/img/crafted/tungstenrod.png"],
-
-])
+]);
 
 export type DisplayTile = {
   x: number;
