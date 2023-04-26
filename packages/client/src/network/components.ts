@@ -82,6 +82,11 @@ export function defineComponents(world: World) {
         contractId: "component.OsmiumResource",
       },
     }),
+    TitaniumResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.TitaniumResource",
+      },
+    }),
     TungstenResource: defineNumberComponent(world, {
       metadata: {
         contractId: "component.TungstenResource",
@@ -228,72 +233,72 @@ export function defineComponents(world: World) {
     }),
 
     // Crafted Components
-    IronPlateCrafted: defineBoolComponent(world, {
+    IronPlateCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.IronPlateCrafted",
       },
     }),
-    BasicPowerSourceCrafted: defineBoolComponent(world, {
+    BasicPowerSourceCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.BasicPowerSourceCrafted",
       },
     }),
-    KineticMissileCrafted: defineBoolComponent(world, {
+    KineticMissileCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.KineticMissileCrafted",
       },
     }),
-    RefinedOsmiumCrafted: defineBoolComponent(world, {
+    RefinedOsmiumCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.RefinedOsmiumCrafted",
       },
     }),
-    AdvancedPowerSourceCrafted: defineBoolComponent(world, {
+    AdvancedPowerSourceCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.AdvancedPowerSourceCrafted",
       },
     }),
-    PenetratingWarheadCrafted: defineBoolComponent(world, {
+    PenetratingWarheadCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.PenetratingWarheadCrafted",
       },
     }),
-    PenetratingMissileCrafted: defineBoolComponent(world, {
+    PenetratingMissileCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.PenetratingMissileCrafted",
       },
     }),
-    TungstenRodsCrafted: defineBoolComponent(world, {
+    TungstenRodsCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.TungstenRodsCrafted",
       },
     }),
-    IridiumCrystalCrafted: defineBoolComponent(world, {
+    IridiumCrystalCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.IridiumCrystalCrafted",
       },
     }),
-    IridiumDrillbitCrafted: defineBoolComponent(world, {
+    IridiumDrillbitCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.IridiumDrillbitCrafted",
       },
     }),
-    LaserPowerSourceCrafted: defineBoolComponent(world, {
+    LaserPowerSourceCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.LaserPowerSourceCrafted",
       },
     }),
-    ThermobaricWarheadCrafted: defineBoolComponent(world, {
+    ThermobaricWarheadCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.ThermobaricWarheadCrafted",
       },
     }),
-    ThermobaricMissileCrafted: defineBoolComponent(world, {
+    ThermobaricMissileCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.ThermobaricMissileCrafted",
       },
     }),
-    KimberliteCrystalCatalystCrafted: defineBoolComponent(world, {
+    KimberliteCrystalCatalystCrafted: defineNumberComponent(world, {
       metadata: {
         contractId: "component.KimberliteCrystalCatalystCrafted",
       },

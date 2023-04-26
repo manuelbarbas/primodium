@@ -91,14 +91,20 @@ contract CraftSystem is System {
 
     Coord memory coord = abi.decode(arguments, (Coord));
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 1, "can not craft at empty coord");
+    require(entitiesAtPosition.length == 1, "[CraftSystem] Cannot craft at an empty coordinate");
 
     // Check that the coordinates is owned by the msg.sender
     uint256 ownedEntityAtStartCoord = c.ownedByComponent.getValue(entitiesAtPosition[0]);
-    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
+    require(
+      ownedEntityAtStartCoord == addressToEntity(msg.sender),
+      "[CraftSystem] Cannot craft at a tile you do not own"
+    );
 
     // Check that health is not zero
-    require(LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]), "health can not be zero");
+    require(
+      LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]),
+      "[CraftSystem] Cannot craft at a tile with zero health"
+    );
 
     // Craft 1 Bullet with 1 IronResource and 1 CopperResource in BulletFactory
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
@@ -385,7 +391,7 @@ contract CraftSystem is System {
         destination
       );
     } else {
-      revert("Invalid factory");
+      revert("[CraftSystem] Cannot craft from a non-factory tile");
     }
 
     // TODO: gracefully exit

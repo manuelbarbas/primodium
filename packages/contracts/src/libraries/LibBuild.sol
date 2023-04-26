@@ -8,7 +8,7 @@ library LibBuild {
     uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
 
     if (curItem1 < item1Required) {
-      revert("not enough item1");
+      revert("[BuildSystem] Not enough resources");
     } else {
       item1Component.set(entity, curItem1 - item1Required);
     }
@@ -25,9 +25,9 @@ library LibBuild {
     uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
 
     if (curItem1 < item1Required) {
-      revert("not enough item1");
+      revert("[BuildSystem] Not enough resources");
     } else if (curItem2 < item2Required) {
-      revert("not enough item2");
+      revert("[BuildSystem] Not enough resources");
     } else {
       item1Component.set(entity, curItem1 - item1Required);
       item2Component.set(entity, curItem2 - item2Required);
@@ -48,11 +48,11 @@ library LibBuild {
     uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
 
     if (curItem1 < item1Required) {
-      revert("not enough item1");
+      revert("[BuildSystem] Not enough resources");
     } else if (curItem2 < item2Required) {
-      revert("not enough item2");
+      revert("[BuildSystem] Not enough resources");
     } else if (curItem3 < item3Required) {
-      revert("not enough item3");
+      revert("[BuildSystem] Not enough resources");
     } else {
       item1Component.set(entity, curItem1 - item1Required);
       item2Component.set(entity, curItem2 - item2Required);
@@ -77,13 +77,13 @@ library LibBuild {
     uint256 curItem4 = LibMath.getSafeUint256Value(item4Component, entity);
 
     if (curItem1 < item1Required) {
-      revert("not enough item1");
+      revert("[BuildSystem] Not enough resources");
     } else if (curItem2 < item2Required) {
-      revert("not enough item2");
+      revert("[BuildSystem] Not enough resources");
     } else if (curItem3 < item3Required) {
-      revert("not enough item3");
+      revert("[BuildSystem] Not enough resources");
     } else if (curItem4 < item4Required) {
-      revert("not enough item4");
+      revert("[BuildSystem] Not enough resources");
     } else {
       item1Component.set(entity, curItem1 - item1Required);
       item2Component.set(entity, curItem2 - item2Required);

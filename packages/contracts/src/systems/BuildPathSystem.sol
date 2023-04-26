@@ -6,7 +6,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ConveyerID } from "../prototypes/Tiles.sol";
+import { ConveyerID, NodeID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
@@ -22,28 +22,46 @@ contract BuildPathSystem is System {
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
-    require(!(coordStart.x == coordEnd.x && coordStart.y == coordEnd.y), "can not start and end path at same coord");
+    require(
+      !(coordStart.x == coordEnd.x && coordStart.y == coordEnd.y),
+      "[BuildPathSystem] Cannot start and end path at the same coordinate"
+    );
 
     // Check that the coordinates exist tiles
     uint256[] memory entitiesAtStartCoord = positionComponent.getEntitiesWithValue(coordStart);
-    require(entitiesAtStartCoord.length == 1, "can not start path at empty coord");
+    require(entitiesAtStartCoord.length == 1, "[BuildPathSystem] Cannot start path at an empty coordinate");
     uint256[] memory entitiesAtEndCoord = positionComponent.getEntitiesWithValue(coordEnd);
-    require(entitiesAtEndCoord.length == 1, "can not end path at empty coord");
+    require(entitiesAtEndCoord.length == 1, "[BuildPathSystem] Cannot end path at an empty coordinate");
 
     // Check that the coordinates are both conveyer tiles
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
-    require(tileEntityAtStartCoord == ConveyerID, "can not start path at not conveyer tile");
+    require(
+      tileEntityAtStartCoord == ConveyerID || tileEntityAtStartCoord == NodeID,
+      "[BuildPathSystem] Cannot start path at a supported tile (Conveyer, Node)"
+    );
     uint256 tileEntityAtEndCoord = tileComponent.getValue(entitiesAtEndCoord[0]);
-    require(tileEntityAtEndCoord == ConveyerID, "can not start path at not conveyer tile");
+    require(
+      tileEntityAtEndCoord == ConveyerID || tileEntityAtStartCoord == NodeID,
+      "[BuildPathSystem] Cannot end path at a supported tile (Conveyer, Node)"
+    );
 
     // Check that the coordinates are both owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtStartCoord[0]);
-    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not start path at not owned tile");
+    require(
+      ownedEntityAtStartCoord == addressToEntity(msg.sender),
+      "[BuildPathSystem] Cannot start path at a tile you do not own"
+    );
     uint256 ownedEntityAtEndCoord = ownedByComponent.getValue(entitiesAtEndCoord[0]);
-    require(ownedEntityAtEndCoord == addressToEntity(msg.sender), "can not end path at not owned tile");
+    require(
+      ownedEntityAtEndCoord == addressToEntity(msg.sender),
+      "[BuildPathSystem] Cannot end path at a tile you do not own"
+    );
 
     // Check that a path doesn't already start there (each tile can only be the start of one path)
-    require(!pathComponent.has(entitiesAtStartCoord[0]), "can not start more than one path at the same tile");
+    require(
+      !pathComponent.has(entitiesAtStartCoord[0]),
+      "[BuildPathSystem] Cannot start more than one path from the same tile"
+    );
 
     // Add key
     pathComponent.set(entitiesAtStartCoord[0], entitiesAtEndCoord[0]);

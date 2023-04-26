@@ -60,10 +60,6 @@ UraniniteResourceComponent
 
 BulletCraftedComponent
 
-### Research Components (Debug) bool
-
-FastMinerResearchComponent
-
 ### Crafted Components (Gameplay) uint256
 
 IronPlateCraftedComponent
@@ -80,6 +76,10 @@ LaserPowerSourceCraftedComponent
 ThermobaricWarheadCraftedComponent
 ThermobaricMissileCraftedComponent
 KimberliteCrystalCatalystCraftedComponent
+
+### Research Components (Debug) bool
+
+FastMinerResearchComponent
 
 ### Research Components (Gameplay) bool
 
@@ -151,4 +151,7 @@ HighEnergyLaserFactory
 ThermobaricWarheadFactory
 ThermobaricMissileFactory
 KimberliteCatalystFactory
+
+## Main base
+MainBaseInitializedComponent
 ```

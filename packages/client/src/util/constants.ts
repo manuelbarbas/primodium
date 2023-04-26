@@ -97,6 +97,7 @@ export const BlockType = {
   ) as EntityID,
 
   // Crafted Components
+  BulletCrafted: keccak256("block.BulletCrafted") as EntityID,
 
   IronPlateCrafted: keccak256("block.IronPlateCrafted") as EntityID,
   BasicPowerSourceCrafted: keccak256(
@@ -405,6 +406,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.Kimberlite, "/img/resource/kimberlite_resource.png"],
   [BlockType.Uraninite, "/img/resource/uraninite_resource.png"],
   [BlockType.Bolutite, "/img/resource/bolutite_resource.png"],
+  [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
   [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
   [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/advancedbattery.png"],

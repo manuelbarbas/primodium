@@ -4,8 +4,9 @@ import { EntityID } from "@latticexyz/recs";
 
 import { useMud } from "../../../context/MudContext";
 import { useSelectedTile } from "../../../context/SelectedTileContext";
-import { BackgroundImage } from "../../../util/constants";
+import { BackgroundImage, ResourceImage } from "../../../util/constants";
 import { execute } from "../../../network/actions";
+import { BuildingReceipe } from "../../../util/resource";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -32,15 +33,30 @@ function BuildingIconButton({
     );
   }, [selectedTile]);
 
+  const recipe = BuildingReceipe.get(blockType);
+
   return (
-    <button
-      className="w-16 h-16 text-sm group"
-      // style={{ backgroundColor: BlockColors.get(blockType) }}
-      onClick={buildTile}
-    >
+    <button className="w-16 h-16 text-sm group" onClick={buildTile}>
       <div className="building-tooltip group-hover:scale-100">
         {label}
-        {/* todo: resource cost? tooltip? */}
+        <div className="flex-col">
+          {recipe ? (
+            recipe[0].resources.map((resource) => {
+              const resourceImage = ResourceImage.get(resource.id);
+              return (
+                <div className="mr-2 inline-block" key={resource.id}>
+                  <img
+                    src={resourceImage}
+                    className="w-4 h-4 inline-block mr-1 pixel-images"
+                  />
+                  {resource.amount}
+                </div>
+              );
+            })
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
       <img
         src={BackgroundImage.get(blockType)}

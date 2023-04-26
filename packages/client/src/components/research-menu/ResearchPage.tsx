@@ -4,8 +4,8 @@ import { ResearchImage, ResourceImage } from "../../util/constants";
 
 function ResearchPage() {
   return (
-    <div className="mx-5 mt-3 overflow-y-auto overflow-x-visible scrollbar inset-y-3">
-      <div className="grid grid-cols-4 pb-36 w-11/12">
+    <div className="mx-5 mt-3 overflow-y-scroll scrollbar inset-y-3">
+      <div className="grid grid-cols-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pb-5">
         {technologyTree.map((item) => {
           const resourceIcon = ResearchImage.get(item.data.id);
           const ResourceCostDisplay = item.data.resources.map((resource) => {

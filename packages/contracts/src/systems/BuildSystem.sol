@@ -90,7 +90,7 @@ contract BuildSystem is System {
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 0, "can not build at non-empty coord");
+    require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
 
     // Check if the player has enough resources to build
     // debug buildings are free:  ConveyerID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -109,10 +109,15 @@ contract BuildSystem is System {
       );
 
       if (LibResearch.hasResearched(mainBaseInitializedComponent, addressToEntity(msg.sender))) {
-        revert("cannot build more than one main base per wallet");
+        revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
         mainBaseInitializedComponent.set(addressToEntity(msg.sender));
       }
+      // give starter pack of 200 iron to each new player that builds a main base
+      // IronResourceComponent ironResourceComponent = IronResourceComponent(
+      //   getAddressById(components, IronResourceComponentID)
+      // );
+      // LibMath.incrementBy(ironResourceComponent, addressToEntity(msg.sender), 200);
     }
     // Build BasicMiner with 100 IronResource
     else if (blockType == BasicMinerID) {
@@ -135,7 +140,7 @@ contract BuildSystem is System {
         getAddressById(components, PlatingFactoryResearchComponentID)
       );
       if (!LibResearch.hasResearched(platingFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched PlatingFactory");
+        revert("[BuildSystem] You have not researched PlatingFactory");
       }
       IronResourceComponent ironResourceComponent = IronResourceComponent(
         getAddressById(components, IronResourceComponentID)
@@ -151,7 +156,7 @@ contract BuildSystem is System {
         getAddressById(components, BasicBatteryFactoryResearchComponentID)
       );
       if (!LibResearch.hasResearched(basicBatteryFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched BasicBatteryFactory");
+        revert("[BuildSystem] You have not researched BasicBatteryFactory");
       }
       IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
         getAddressById(components, IronPlateCraftedComponentID)
@@ -173,7 +178,7 @@ contract BuildSystem is System {
           getAddressById(components, KineticMissileFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(kineticMissileFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched KineticMissileFactory");
+        revert("[BuildSystem] You have not researched KineticMissileFactory");
       }
       IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
         getAddressById(components, IronPlateCraftedComponentID)
@@ -200,7 +205,7 @@ contract BuildSystem is System {
         getAddressById(components, ProjectileLauncherResearchComponentID)
       );
       if (!LibResearch.hasResearched(projectileLauncherResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched ProjectileLauncher");
+        revert("[BuildSystem] You have not researched ProjectileLauncher");
       }
       IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
         getAddressById(components, IronPlateCraftedComponentID)
@@ -222,7 +227,7 @@ contract BuildSystem is System {
         getAddressById(components, HardenedDrillResearchComponentID)
       );
       if (!LibResearch.hasResearched(hardenedDrillResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched HardenDrill");
+        revert("[BuildSystem] You have not researched HardenDrill");
       }
       TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
         getAddressById(components, TitaniumResourceComponentID)
@@ -249,7 +254,7 @@ contract BuildSystem is System {
         getAddressById(components, DenseMetalRefineryResearchComponentID)
       );
       if (!LibResearch.hasResearched(denseMetalRefineryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched DenseMetalRefinery");
+        revert("[BuildSystem] You have not researched DenseMetalRefinery");
       }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
@@ -281,7 +286,7 @@ contract BuildSystem is System {
           getAddressById(components, AdvancedBatteryFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(advancedBatteryFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched AdvancedBatteryFactory");
+        revert("[BuildSystem] You have not researched AdvancedBatteryFactory");
       }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
@@ -308,7 +313,7 @@ contract BuildSystem is System {
         getAddressById(components, HighTempFoundryResearchComponentID)
       );
       if (!LibResearch.hasResearched(highTempFoundryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched HighTempFoundry");
+        revert("[BuildSystem] You have not researched HighTempFoundry");
       }
       TungstenResourceComponent tungstenResourceComponent = TungstenResourceComponent(
         getAddressById(components, TungstenResourceComponentID)
@@ -335,7 +340,7 @@ contract BuildSystem is System {
           getAddressById(components, PrecisionMachineryFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(precisionMachineryFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched PrecisionMachineryFactory");
+        revert("[BuildSystem] You have not researched PrecisionMachineryFactory");
       }
       IridiumResourceComponent iridiumResourceComponent = IridiumResourceComponent(
         getAddressById(components, IridiumResourceComponentID)
@@ -362,7 +367,7 @@ contract BuildSystem is System {
           getAddressById(components, IridiumDrillbitFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(iridiumDrillbitFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched IridiumDrillbitFactory");
+        revert("[BuildSystem] You have not researched IridiumDrillbitFactory");
       }
       TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
         getAddressById(components, TungstenRodsCraftedComponentID)
@@ -384,7 +389,7 @@ contract BuildSystem is System {
           getAddressById(components, PrecisionPneumaticDrillResearchComponentID)
         );
       if (!LibResearch.hasResearched(precisionPneumaticDrillResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched PrecisionPneumaticDrill");
+        revert("[BuildSystem] You have not researched PrecisionPneumaticDrill");
       }
       TungstenResourceComponent tungstenResourceComponent = TungstenResourceComponent(
         getAddressById(components, TungstenResourceComponentID)
@@ -411,7 +416,7 @@ contract BuildSystem is System {
         getAddressById(components, PenetratorFactoryResearchComponentID)
       );
       if (!LibResearch.hasResearched(penetratorFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched PenetratorFactory");
+        revert("[BuildSystem] You have not researched PenetratorFactory");
       }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
@@ -438,7 +443,7 @@ contract BuildSystem is System {
           getAddressById(components, PenetratingMissileFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(penetratingMissileFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched PenetratingMissileFactory");
+        revert("[BuildSystem] You have not researched PenetratingMissileFactory");
       }
       OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
         getAddressById(components, OsmiumResourceComponentID)
@@ -465,7 +470,7 @@ contract BuildSystem is System {
           getAddressById(components, MissileLaunchComplexResearchComponentID)
         );
       if (!LibResearch.hasResearched(missileLaunchComplexResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched MissileLaunchComplex");
+        revert("[BuildSystem] You have not researched MissileLaunchComplex");
       }
       TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
         getAddressById(components, TungstenRodsCraftedComponentID)
@@ -487,7 +492,7 @@ contract BuildSystem is System {
           getAddressById(components, HighEnergyLaserFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(highEnergyLaserFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched HighEnergyLaserFactory");
+        revert("[BuildSystem] You have not researched HighEnergyLaserFactory");
       }
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)
@@ -514,7 +519,7 @@ contract BuildSystem is System {
           getAddressById(components, ThermobaricWarheadFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(thermobaricWarheadFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched ThermobaricWarheadFactory");
+        revert("[BuildSystem] You have not researched ThermobaricWarheadFactory");
       }
       RefinedOsmiumCraftedComponent refinedOsmiumCraftedComponent = RefinedOsmiumCraftedComponent(
         getAddressById(components, RefinedOsmiumCraftedComponentID)
@@ -541,7 +546,7 @@ contract BuildSystem is System {
           getAddressById(components, ThermobaricMissileFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(thermobaricMissileFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched ThermobaricMissileFactory");
+        revert("[BuildSystem] You have not researched ThermobaricMissileFactory");
       }
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)
@@ -568,7 +573,7 @@ contract BuildSystem is System {
           getAddressById(components, KimberliteCatalystFactoryResearchComponentID)
         );
       if (!LibResearch.hasResearched(kimberliteCatalystFactoryResearchComponent, addressToEntity(msg.sender))) {
-        revert("player has not researched KimberliteCatalystFactory");
+        revert("[BuildSystem] You have not researched KimberliteCatalystFactory");
       }
       IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
         getAddressById(components, IridiumCrystalCraftedComponentID)
@@ -584,7 +589,7 @@ contract BuildSystem is System {
         addressToEntity(msg.sender)
       );
     } else {
-      revert("unknown block type");
+      revert("[BuildSystem] Invalid block type");
     }
 
     // Randomly generate IDs instead of basing on coordinate
