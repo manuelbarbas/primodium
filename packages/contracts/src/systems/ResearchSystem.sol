@@ -622,7 +622,7 @@ contract ResearchSystem is System {
     }
     // no research item found
     else {
-      revert("[ResearchSystem] No research item found");
+      return abi.encode(false);
     }
   }
 

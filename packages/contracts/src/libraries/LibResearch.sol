@@ -22,13 +22,13 @@ library LibResearch {
     uint256 entity
   ) internal returns (bytes memory) {
     if (hasResearched(researchComponent, entity)) {
-      revert("[ResearchSystem] Item already researched");
+      return abi.encode(false);
     }
 
     uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
 
     if (curItem1 < item1Required) {
-      revert("[ResearchSystem] Not enough resources");
+      return abi.encode(false);
     } else {
       item1Component.set(entity, curItem1 - item1Required);
       researchComponent.set(entity);
@@ -45,14 +45,14 @@ library LibResearch {
     uint256 entity
   ) internal returns (bytes memory) {
     if (hasResearched(researchComponent, entity)) {
-      revert("[ResearchSystem] Item already researched");
+      return abi.encode(false);
     }
 
     uint256 curitem1 = LibMath.getSafeUint256Value(item1Component, entity);
     uint256 curitem2 = LibMath.getSafeUint256Value(item2Component, entity);
 
     if (curitem1 < item1Required || curitem2 < item2Required) {
-      revert("[ResearchSystem] Not enough resources");
+      return abi.encode(false);
     } else {
       item1Component.set(entity, curitem1 - item1Required);
       item2Component.set(entity, curitem2 - item2Required);
@@ -72,7 +72,7 @@ library LibResearch {
     uint256 entity
   ) internal returns (bytes memory) {
     if (hasResearched(researchComponent, entity)) {
-      revert("[ResearchSystem] Item already researched");
+      return abi.encode(false);
     }
 
     uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
@@ -80,7 +80,7 @@ library LibResearch {
     uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
 
     if (curItem1 < item1Required || curItem2 < item2Required || curItem3 < item3Required) {
-      revert("[ResearchSystem] Not enough resources");
+      return abi.encode(false);
     } else {
       item1Component.set(entity, curItem1 - item1Required);
       item2Component.set(entity, curItem2 - item2Required);

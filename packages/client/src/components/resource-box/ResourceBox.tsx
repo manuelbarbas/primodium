@@ -78,7 +78,7 @@ function ResourceBox() {
               resourceComponent={components.BulletCrafted}
               resourceId={BlockType.Bullet}
             /> */}
-            <p className="text-sm mb-3 mt-3">
+            <p className="text-sm mb-3">
               Close and re-open this box to refresh resources.
             </p>
           </div>
