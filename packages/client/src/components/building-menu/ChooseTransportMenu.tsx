@@ -4,6 +4,7 @@ import { useSelectedTile } from "../../context/SelectedTileContext";
 import PathActionIconButton from "./building-icons/PathActionIconButton";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
 import { BlockType } from "../../util/constants";
+import { execute } from "../../network/actions";
 
 function ChooseTransportMenu({
   title,
@@ -12,7 +13,7 @@ function ChooseTransportMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const { systems } = useMud();
+  const { systems, providers } = useMud();
 
   // Set start and end paths for conveyers
   const {
@@ -49,19 +50,22 @@ function ChooseTransportMenu({
   // Select tile to end path, executeTyped
   const createPath = useCallback(() => {
     if (selectedStartPathTile !== null && selectedEndPathTile !== null) {
-      systems["system.BuildPath"].executeTyped(
-        {
-          x: selectedStartPathTile.x,
-          y: selectedStartPathTile.y,
-        },
-        {
-          x: selectedEndPathTile.x,
-          y: selectedEndPathTile.y,
-        },
+      execute(
+        systems["system.BuildPath"].executeTyped(
+          {
+            x: selectedStartPathTile.x,
+            y: selectedStartPathTile.y,
+          },
+          {
+            x: selectedEndPathTile.x,
+            y: selectedEndPathTile.y,
+          },
 
-        {
-          gasLimit: 1_000_000,
-        }
+          {
+            gasLimit: 1_000_000,
+          }
+        ),
+        providers
       );
     }
   }, [selectedStartPathTile, selectedEndPathTile]);

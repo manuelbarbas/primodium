@@ -9,20 +9,24 @@ import { useSelectedTile } from "../../context/SelectedTileContext";
 import { useMud } from "../../context/MudContext";
 
 import { FaWindowClose } from "react-icons/fa";
+import { execute } from "../../network/actions";
 
 function DestroyBuildingBox() {
-  const { systems } = useMud();
+  const { systems, providers } = useMud();
   const { selectedTile } = useSelectedTile();
 
   const destroyTile = useCallback(({ x, y }: DisplayTile) => {
-    systems["system.Destroy"].executeTyped(
-      {
-        x: x,
-        y: y,
-      },
-      {
-        gasLimit: 1_000_000,
-      }
+    execute(
+      systems["system.Destroy"].executeTyped(
+        {
+          x: x,
+          y: y,
+        },
+        {
+          gasLimit: 1_000_000,
+        }
+      ),
+      providers
     );
   }, []);
 

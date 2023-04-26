@@ -1,28 +1,35 @@
 import { useCallback } from "react";
 import { useMud } from "../../context/MudContext";
 import { DisplayTile } from "../../util/constants";
+import { execute } from "../../network/actions";
 
 export default function ClaimButton({ x, y }: DisplayTile) {
-  const { systems } = useMud();
+  const { systems, providers } = useMud();
 
-  const claimAction = useCallback(() => {
-    systems["system.ClaimFromMine"].executeTyped(
-      {
-        x: x,
-        y: y,
-      },
-      {
-        gasLimit: 30_000_000,
-      }
+  const claimAction = useCallback(async () => {
+    await execute(
+      systems["system.ClaimFromMine"].executeTyped(
+        {
+          x: x,
+          y: y,
+        },
+        {
+          gasLimit: 30_000_000,
+        }
+      ),
+      providers
     );
-    systems["system.ClaimFromFactory"].executeTyped(
-      {
-        x: x,
-        y: y,
-      },
-      {
-        gasLimit: 30_000_000,
-      }
+    await execute(
+      systems["system.ClaimFromFactory"].executeTyped(
+        {
+          x: x,
+          y: y,
+        },
+        {
+          gasLimit: 30_000_000,
+        }
+      ),
+      providers
     );
   }, []);
 
