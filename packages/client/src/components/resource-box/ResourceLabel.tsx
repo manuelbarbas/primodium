@@ -1,6 +1,6 @@
 import { Component, EntityID, EntityIndex, Type } from "@latticexyz/recs";
 import useResourceCount from "../../hooks/useResourceCount";
-import { BackgroundImage } from "../../util/constants";
+import { ResourceImage } from "../../util/constants";
 
 export default function ResourceLabel({
   entityIndex,
@@ -19,7 +19,7 @@ export default function ResourceLabel({
   >;
 }) {
   const resourceCount = useResourceCount(resourceComponent, entityIndex);
-  const resourceIcon = BackgroundImage.get(resourceId);
+  const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceCount > 0) {
     return (
