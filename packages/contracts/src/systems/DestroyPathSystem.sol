@@ -6,7 +6,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ConveyerID } from "../prototypes/Tiles.sol";
+import { ConveyerID, NodeID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
@@ -24,18 +24,27 @@ contract DestroyPathSystem is System {
 
     // Check that the coordinates exist tiles
     uint256[] memory entitiesAtStartCoord = positionComponent.getEntitiesWithValue(coordStart);
-    require(entitiesAtStartCoord.length == 1, "can not destroy start path at empty coord");
+    require(entitiesAtStartCoord.length == 1, "[DestroyPathSystem] Cannot destroy path from an empty coordinate");
 
     // Check that the coordinates is a conveyer tile
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
-    require(tileEntityAtStartCoord == ConveyerID, "can not destroy start path at not conveyer tile");
+    require(
+      tileEntityAtStartCoord == ConveyerID || tileEntityAtStartCoord == NodeID,
+      "[DestroyPathSystem] Cannot destroy path from an empty coordinate"
+    );
 
     // Check that the coordinates are both owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(entitiesAtStartCoord[0]);
-    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not destroy start path at not owned tile");
+    require(
+      ownedEntityAtStartCoord == addressToEntity(msg.sender),
+      "[DestroyPathSystem] Cannot destroy path from a tile you do not own"
+    );
 
     // Check that a path doesn't already start there (each tile can only be the start of one path)
-    require(ownedByComponent.has(entitiesAtStartCoord[0]), "path does not exist at the start tile");
+    require(
+      ownedByComponent.has(entitiesAtStartCoord[0]),
+      "[DestroyPathSystem] Path does not exist at the selected tile"
+    );
 
     // remove key
     pathComponent.remove(entitiesAtStartCoord[0]);

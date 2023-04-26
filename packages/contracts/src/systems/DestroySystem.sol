@@ -33,8 +33,8 @@ contract DestroySystem is System {
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length < 2, "can not destroy multiple tiles at once");
-    require(entitiesAtPosition.length == 1, "can not destroy tile at empty coord");
+    require(entitiesAtPosition.length < 2, "[DestroySystem] Cannot destroy multiple tiles at once");
+    require(entitiesAtPosition.length == 1, "[DestroySystem] Cannot destroy tile at an empty coordinate");
 
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(entitiesAtPosition[0])) {

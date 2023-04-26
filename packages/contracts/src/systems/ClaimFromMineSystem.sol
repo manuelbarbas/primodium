@@ -212,14 +212,20 @@ contract ClaimFromMineSystem is System {
 
     // check if main base
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 1, "can not claim base at empty coord");
+    require(entitiesAtPosition.length == 1, "[ClaimFromMineSystem] Cannot claim from mines on an empty coordinate");
 
     // Check that the coordinates is owned by the msg.sender
     uint256 ownedEntityAtStartCoord = c.ownedByComponent.getValue(entitiesAtPosition[0]);
-    require(ownedEntityAtStartCoord == addressToEntity(msg.sender), "can not claim resource at not owned tile");
+    require(
+      ownedEntityAtStartCoord == addressToEntity(msg.sender),
+      "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
+    );
 
     // Check that health is not zero
-    require(LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]), "health is not zero");
+    require(
+      LibHealth.checkAlive(c.healthComponent, entitiesAtPosition[0]),
+      "[ClaimFromMineSystem] Cannot claim from mines on a tile with zero health"
+    );
 
     uint256 endClaimTime = block.number;
     c.lastClaimedAtComponent.set(entitiesAtPosition[0], endClaimTime);
@@ -236,7 +242,7 @@ contract ClaimFromMineSystem is System {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentConveyerTiles(coord, entitiesAtPosition[0], destination);
     } else {
-      revert("can not claim resource or crafted component at tile");
+      revert("[ClaimFromMineSystem] Cannot store items in selected tile");
     }
 
     return abi.encode(0);

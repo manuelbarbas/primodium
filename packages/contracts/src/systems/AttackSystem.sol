@@ -87,15 +87,15 @@ contract AttackSystem is System {
 
     // Check that the coordinates exist for the silo tile
     uint256[] memory entities = c.positionComponent.getEntitiesWithValue(coord);
-    require(entities.length == 1, "can not start path at empty coord");
+    require(entities.length == 1, "[AttackSystem] Cannot attack from an empty tile");
 
     // Check that it is a silo tile
     uint256 tileEntity = c.tileComponent.getValue(entities[0]);
-    require(tileEntity == SiloID, "can not attack from not silo tile");
+    require(tileEntity == SiloID, "[AttackSystem] Cannot attack from a non-silo tile");
 
     // Check that the coordinates is owned by the msg.sender
     uint256 ownedEntity = c.ownedByComponent.getValue(entities[0]);
-    require(ownedEntity == addressToEntity(msg.sender), "can not attack from not owned tile");
+    require(ownedEntity == addressToEntity(msg.sender), "[AttackSystem] Cannot attack from a tile you do not own");
 
     return abi.encode(attack(targetCoord, entities[0]));
   }
