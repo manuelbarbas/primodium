@@ -19,8 +19,8 @@ function TechTreeItem({
       </button>
       <div className="research-tooltip group-hover:scale-100 mt-2">
         <div className="font-bold text-gray-900 text-sm"> {name}</div>
-        <div className="text-sm">{description}</div>
-        <div className="text-sm">{resourcecost}</div>
+        <div className="mt-1 text-sm grid grid-cols-2">{resourcecost}</div>
+        <div className="mt-1 text-xs">{description}</div>
       </div>
     </div>
   );
