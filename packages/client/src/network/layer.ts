@@ -4,11 +4,14 @@ import {
   defineComponentSystem,
   setComponent,
 } from "@latticexyz/recs";
+import { createFaucetService } from "@latticexyz/network";
 import { SingletonID } from "@latticexyz/network";
+import { utils } from "ethers";
 
-import { SystemTypes } from "contracts/types/SystemTypes";
-import { SystemAbis } from "contracts/types/SystemAbis.mjs";
+import { SystemTypes } from "../../../contracts/types/SystemTypes";
+import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { defineComponents, defineOffChainComponents } from "./components";
+import { defaultParams } from "./config";
 
 export async function createNetworkLayer(config: SetupContractConfig) {
   // The world contains references to all entities, all components and disposers.
@@ -22,7 +25,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   const contractComponents = defineComponents(world);
   const offChainComponents = defineOffChainComponents(world);
 
-  const { startSync, systems, components } = await setupMUDNetwork<
+  const { startSync, systems, components, network } = await setupMUDNetwork<
     typeof contractComponents,
     SystemTypes
   >(config, world, contractComponents, SystemAbis);
@@ -32,6 +35,20 @@ export async function createNetworkLayer(config: SetupContractConfig) {
       value: update.value[0]!.value * 2,
     });
   });
+
+  // Faucet setup
+  const faucet = defaultParams.faucet
+    ? createFaucetService(defaultParams.faucet)
+    : undefined;
+
+  const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
+    utils.parseEther("0.005")
+  );
+  if (playerIsBroke) {
+    console.info("[Dev Faucet] Dripping funds to player");
+    const address = network.connectedAddress.get();
+    address && (await faucet?.dripDev({ address }));
+  }
 
   startSync();
 

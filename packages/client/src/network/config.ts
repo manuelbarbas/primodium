@@ -50,3 +50,19 @@ export const getNetworkLayerConfig = (
   };
   return { defaultWalletAddress: undefined, config: config };
 };
+
+// from opcraft, for deploying on mud testnet
+export const defaultParams = {
+  chainId: "4242",
+  worldAddress: "0xc1c15CCE34E16684d36B0F76B9fa4f74b3a279f4",
+  rpc: "https://follower.testnet-chain.linfra.xyz",
+  wsRpc: "wss://follower.testnet-chain.linfra.xyz",
+  initialBlockNumber: "1443526",
+  snapshot: "https://ecs-snapshot.testnet-mud-services.linfra.xyz",
+  stream: "https://ecs-stream.testnet-mud-services.linfra.xyz",
+  relay: "https://ecs-relay.testnet-mud-services.linfra.xyz",
+  faucet: "https://faucet.testnet-mud-services.linfra.xyz",
+  blockTime: "1000",
+  blockExplorer: "https://explorer.testnet-chain.linfra.xyz",
+  dev: "false",
+};
