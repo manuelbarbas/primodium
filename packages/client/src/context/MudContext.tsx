@@ -1,8 +1,10 @@
 import { createContext, ReactNode, useContext } from "react";
 import { TxQueue } from "@latticexyz/network";
 import { EntityIndex, World } from "@latticexyz/recs";
-
 import { NetworkComponents } from "@latticexyz/std-client";
+import { IComputedValue } from "mobx";
+import { WebSocketProvider } from "@ethersproject/providers";
+
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import {
   defineComponents,
@@ -16,6 +18,10 @@ interface MudContextInterface {
   offChainComponents: ReturnType<typeof defineOffChainComponents>;
   singletonIndex: EntityIndex;
   defaultWalletAddress: string | undefined;
+  providers: IComputedValue<{
+    json: any;
+    ws: WebSocketProvider | undefined;
+  }>;
 }
 
 // mud context type is interface and reactnode children
@@ -30,6 +36,7 @@ const MudProvider = ({
   offChainComponents,
   singletonIndex,
   defaultWalletAddress,
+  providers,
   children,
 }: MudContextType) => {
   return (
@@ -41,6 +48,7 @@ const MudProvider = ({
         offChainComponents,
         singletonIndex,
         defaultWalletAddress,
+        providers: providers,
       }}
     >
       {children}

@@ -1,7 +1,9 @@
 import { useCallback } from "react";
-
-import { EntityID } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
+import { EntityID } from "@latticexyz/recs";
+import { getRevertReason } from "@latticexyz/network";
+import { TransactionResponse } from "@ethersproject/providers";
+
 import { useMud } from "../../../context/MudContext";
 import { useSelectedTile } from "../../../context/SelectedTileContext";
 import { BackgroundImage } from "../../../util/constants";
@@ -14,18 +16,27 @@ function BuildingIconButton({
   label: string;
   blockType: EntityID;
 }) {
-  const { systems } = useMud();
+  const { systems, providers } = useMud();
   const { selectedTile } = useSelectedTile();
 
   // Place action
-  const buildTile = useCallback(() => {
-    systems["system.Build"].executeTyped(
-      BigNumber.from(blockType),
-      selectedTile,
-      {
-        gasLimit: 3_000_000,
-      }
-    );
+  const buildTile = useCallback(async () => {
+    try {
+      const tx = await systems["system.Build"].executeTyped(
+        BigNumber.from(blockType),
+        selectedTile,
+        {
+          gasLimit: 3_000_000,
+        }
+      );
+      await tx.wait();
+    } catch (error: TransactionResponse | any) {
+      const reason = await getRevertReason(
+        error.transactionHash,
+        providers.get().json
+      );
+      alert(reason);
+    }
   }, [selectedTile]);
 
   return (

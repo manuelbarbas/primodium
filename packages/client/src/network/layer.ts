@@ -58,5 +58,6 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     components,
     offChainComponents,
     singletonIndex,
+    providers: network.providers,
   };
 }

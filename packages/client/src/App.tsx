@@ -82,6 +82,7 @@ export default function App() {
         offChainComponents={networkLayerParams.offChainComponents}
         singletonIndex={networkLayerParams.singletonIndex}
         defaultWalletAddress={defaultWalletAddressRef.current}
+        providers={networkLayerParams.providers}
       >
         <WagmiConfig client={wagmiClient}>
           <SelectedTileProvider>
