@@ -153,33 +153,35 @@ function TechTreeItem({
 
   if (isDefaultUnlocked || isResearched?.value) {
     return (
-      <div className="relative group w-24 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
-        <div className="mt-1 w-12 h-12 mx-auto">
-          <img src={icon} className="w-12 h-12 mx-auto pixel-images"></img>
+      <div className="relative group w-64 h-64 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
+        <div className="mt-1 w-20 h-20 mx-auto">
+          <img src={icon} className="w-20 h-20 mx-auto pixel-images"></img>
         </div>
         {/* <div className="research-tooltip group-hover:scale-100 mt-2"> */}
-        <div className="font-bold text-gray-900 text-sm"> {name}</div>
-        <div className="mt-1 text-sm grid grid-cols-2">{resourcecost}</div>
+        <div className="mt-2 text-center font-bold text-gray-900">{name}</div>
+        <div className="mt-1 text-sm grid grid-cols-3">{resourcecost}</div>
         <div className="mt-1 text-xs">{description}</div>
         {/* </div> */}
-        <button className="text-white font-bold h-8 w-20 inline-block m-2 bg-teal-600 text-xs py-2 rounded shadow">
-          Unlocked by Default
+        <button className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-gray-600  py-2 rounded shadow">
+          Unlocked
         </button>
       </div>
     );
   } else {
     return (
-      <div className="relative group w-24 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
-        <div className="mt-1 w-12 h-12 mx-auto">
-          <img src={icon} className="w-12 h-12 mx-auto pixel-images"></img>
+      <div className="relative group w-64 h-64 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
+        <div className="mt-1 w-16 h-16 mx-auto">
+          <img src={icon} className="w-16 h-16 mx-auto pixel-images"></img>
         </div>
         {/* <div className="research-tooltip group-hover:scale-100 mt-2"> */}
-        <div className="font-bold text-gray-900 text-sm"> {name}</div>
-        <div className="mt-1 text-sm grid grid-cols-2">{resourcecost}</div>
+        <div className="mt-2 text-center font-bold text-gray-900">{name}</div>
+        <div className="mt-1 text-sm grid grid-cols-3 justify-center">
+          {resourcecost}
+        </div>
         <div className="mt-1 text-xs">{description}</div>
         {/* </div> */}
         <button
-          className="text-white font-bold h-8 w-20 inline-block m-2 bg-teal-600 text-xs py-2 rounded shadow"
+          className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-teal-600  py-2 rounded shadow"
           onClick={research}
         >
           Research

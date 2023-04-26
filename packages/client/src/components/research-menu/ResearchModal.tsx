@@ -17,8 +17,8 @@ function ResearchModal() {
 
   if (!minimized) {
     return (
-      <div className="z-[999] bg-black bg-opacity-75 fixed inset-0 flex">
-        <div className="z-[1000] fixed inset-y-24 inset-x-48 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="z-[100000] bg-black bg-opacity-75 fixed inset-0 flex">
+        <div className="z-[100000] fixed inset-y-24 inset-x-32 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className=" flex flex-col h-full">
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaWindowClose size="24" />} />

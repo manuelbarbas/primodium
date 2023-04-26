@@ -145,9 +145,9 @@ function TooltipBox() {
                   </div>
                 </div>
               </div>
-              <div className="flex-row">
-                <div className="flex font-bold mb-1">Owner:</div>
-                <div className="flex">
+              <div className="flex-col">
+                <div className="inline-block font-bold mb-1">Owner:</div>
+                <div className="ml-2 inline-block">
                   {tileOwner ? (
                     <div>{tileOwner.toString().slice(0, 8) + "..."}</div>
                   ) : (
@@ -156,8 +156,15 @@ function TooltipBox() {
                   {/* on {BlockIdToKey[terrainTile]} */}
                 </div>
               </div>
-              <br />
-              <div className="flex-row">
+              <div>
+                <div className="mb-1">recipe -{">"} recipe</div>
+              </div>
+
+              <div>
+                <div className="font-bold mb-1">Stored resources:</div>
+                <div>test resource count </div>
+              </div>
+              {/* <div className="flex-row">
                 <div className="flex">
                   {tileLastClaimedAt && (
                     <div>
@@ -166,7 +173,7 @@ function TooltipBox() {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
               <div className="flex-row">
                 {/* TODO: show owned resource for every resource possible */}
                 {builtTile &&

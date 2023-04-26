@@ -18,7 +18,7 @@ export const technologyTree = [
     data: {
       name: "Main Base",
       id: BlockType.MainBaseResearch,
-      description: "The heart of your operation, protect it at all costs.",
+      description: "Unlocked by default. The heart of your operation, protect it at all costs.",
       resources: [],
     },
     position: { x: 150, y: 50 },
@@ -29,7 +29,7 @@ export const technologyTree = [
     data: {
       name: "Iron",
       id: BlockType.IronResearch,
-      description: "A common metal. Allows you to mine iron ore and store iron.",
+      description: "Unlocked by default. A common metal. Allows you to mine iron ore and store iron.",
       resources: [],
     },
     position: { x: 250, y: 275 },
@@ -41,7 +41,7 @@ export const technologyTree = [
     data: {
       name: "Basic Miner",
       id: BlockType.BasicMinerResearch,
-      description: "Mines ores slowly.",
+      description: "Unlocked by default. Mines ores slowly.",
       resources: [],
     },
     position: { x: 50, y: 275 },
@@ -52,7 +52,7 @@ export const technologyTree = [
     data: {
       name: "Conveyor",
       id: BlockType.ConveyorResearch,
-      description: "Connects nodes together to move material.",
+      description: "Unlocked by default. Connects nodes together to move material.",
       resources: [],
     },
     position: { x: -150, y: 275 },
@@ -63,7 +63,7 @@ export const technologyTree = [
     data: {
       name: "Node",
       id: BlockType.NodeResearch,
-      description: "Allows input/output of materials from miners and factories.",
+      description: "Unlocked by default. Allows input/output of materials from miners and factories.",
       resources: [],
     },
     position: { x: 450, y: 275 },
