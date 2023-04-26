@@ -5,26 +5,30 @@ import { ResourceResearchComponents } from "../prototypes/ResourceResearchCompon
 
 import { addressToEntity } from "solecs/utils.sol";
 
-import { MainBaseID, MinerID, ConveyerID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
+import { MainBaseID, MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionMachineryFactoryID, ConveyerID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
 
 library LibMine {
   // allow mine resource if unlocked.
-  // CopperResearchComponent
-  // LithiumResearchComponent
-  // TitaniumResearchComponent
-  // OsmiumResearchComponent
-  // TungstenResearchComponent
-  // IridiumResearchComponent
-  // KimberliteResearchComponent
-
   function mine(
     ResourceResearchComponents memory rrc,
+    uint256 minerType,
     Uint256Component lastClaimedAtComponent,
     uint256 resourceKey,
     uint256 entity
   ) internal returns (uint256) {
     // TODO: Change rate to be variable based on miner
     uint256 MINE_COUNT_PER_BLOCK = 10;
+
+    if (minerType == MinerID || minerType == LithiumMinerID) {
+      MINE_COUNT_PER_BLOCK = 10;
+    } else if (minerType == BasicMinerID) {
+      MINE_COUNT_PER_BLOCK = 1;
+    } else if (minerType == HardenedDrillID) {
+      MINE_COUNT_PER_BLOCK = 2;
+    } else if (minerType == PrecisionMachineryFactoryID) {
+      MINE_COUNT_PER_BLOCK = 3;
+    }
+
     uint256 startClaimTime = lastClaimedAtComponent.getValue(entity);
     uint256 endClaimTime = block.number;
 

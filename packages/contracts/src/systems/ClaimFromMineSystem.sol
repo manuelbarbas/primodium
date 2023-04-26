@@ -43,7 +43,7 @@ import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "componen
 import { MainBaseID, ConveyerID, MinerID, LithiumMinerID, SiloID } from "../prototypes/Tiles.sol";
 
 // Production Buildings
-import { BasicMinerID, NodeID } from "../prototypes/Tiles.sol";
+import { BasicMinerID, PrecisionMachineryFactoryID, HardenedDrillID, NodeID } from "../prototypes/Tiles.sol";
 
 // resources
 import { BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TitaniumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
@@ -118,11 +118,20 @@ contract ClaimFromMineSystem is System {
       // Miners
       if (
         c.tileComponent.getValue(entitiesAtPosition[0]) == MinerID ||
-        c.tileComponent.getValue(entitiesAtPosition[0]) == BasicMinerID
+        c.tileComponent.getValue(entitiesAtPosition[0]) == LithiumMinerID ||
+        c.tileComponent.getValue(entitiesAtPosition[0]) == BasicMinerID ||
+        c.tileComponent.getValue(entitiesAtPosition[0]) == PrecisionMachineryFactoryID ||
+        c.tileComponent.getValue(entitiesAtPosition[0]) == HardenedDrillID
       ) {
         // fetch tile beneath miner, return 0 if resource is not unlocked via LibMine.mine
         uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
-        uint256 incBy = LibMine.mine(rrc, c.lastClaimedAtComponent, resourceKey, entitiesAtPosition[0]);
+        uint256 incBy = LibMine.mine(
+          rrc,
+          c.tileComponent.getValue(entitiesAtPosition[0]),
+          c.lastClaimedAtComponent,
+          resourceKey,
+          entitiesAtPosition[0]
+        );
 
         if (resourceKey == BolutiteID) {
           LibMath.incrementBy(rc.bolutiteResourceComponent, destination, incBy);
