@@ -88,7 +88,9 @@
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
-        "LastClaimedAtComponent"
+        "LastClaimedAtComponent",
+
+        "MainBaseInitializedComponent"
       ]
     },
     {
