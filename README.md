@@ -151,4 +151,7 @@ HighEnergyLaserFactory
 ThermobaricWarheadFactory
 ThermobaricMissileFactory
 KimberliteCatalystFactory
+
+## Main base
+MainBaseInitializedComponent
 ```
