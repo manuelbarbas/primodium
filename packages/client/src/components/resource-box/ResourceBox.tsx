@@ -28,51 +28,6 @@ function ResourceBox() {
           </button>
           <p className="text-lg font-bold mb-3">Resources</p>
           <div className="h-64 overflow-y-scroll scrollbar">
-            <ResourceLabel
-              name={"Bolutite"}
-              resourceComponent={components.BolutiteResource}
-              resourceId={BlockType.Iron}
-            />
-            <ResourceLabel
-              name={"Copper"}
-              resourceComponent={components.CopperResource}
-              resourceId={BlockType.Copper}
-            />
-            <ResourceLabel
-              name={"Iridium"}
-              resourceComponent={components.IridiumResource}
-              resourceId={BlockType.Iridium}
-            />
-            <ResourceLabel
-              name={"Iron"}
-              resourceComponent={components.IronResource}
-              resourceId={BlockType.Iron}
-            />
-            <ResourceLabel
-              name={"Kimberlite"}
-              resourceComponent={components.KimberliteResource}
-              resourceId={BlockType.Kimberlite}
-            />
-            <ResourceLabel
-              name={"Lithium"}
-              resourceComponent={components.LithiumResource}
-              resourceId={BlockType.Lithium}
-            />
-            <ResourceLabel
-              name={"Osmium"}
-              resourceComponent={components.OsmiumResource}
-              resourceId={BlockType.Osmium}
-            />
-            <ResourceLabel
-              name={"Tungsten"}
-              resourceComponent={components.TungstenResource}
-              resourceId={BlockType.Tungsten}
-            />
-            <ResourceLabel
-              name={"Uraninite"}
-              resourceComponent={components.UraniniteResource}
-              resourceId={BlockType.Uraninite}
-            />
             <>
               <ResourceLabel
                 name={"Iron"}
@@ -199,7 +154,7 @@ function ResourceBox() {
                 resourceComponent={components.KimberliteCrystalCatalystCrafted}
                 resourceId={BlockType.KimberliteCrystalCatalystCrafted}
               />
-            </>{" "}
+            </>
             <p className="text-sm mb-3 mt-3">
               Close and re-open this box to refresh resources.
             </p>

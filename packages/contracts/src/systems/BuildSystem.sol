@@ -67,7 +67,6 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
-import { LibMath } from "../libraries/LibMath.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 

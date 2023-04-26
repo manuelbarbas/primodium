@@ -5,7 +5,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 
 library LibMath {
   // ###########################################################################
-  // Debug increment function, only used by IncrementSystem
+  // Debug Increment function
   function increment(Uint32Component component, uint256 entity) internal {
     uint32 current = component.has(entity) ? component.getValue(entity) : 0;
     component.set(entity, current + 1);
