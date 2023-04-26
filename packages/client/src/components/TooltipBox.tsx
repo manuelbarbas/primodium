@@ -159,25 +159,11 @@ function TooltipBox() {
               <div>
                 <div className="mb-1">recipe -{">"} recipe</div>
               </div>
-
-              <div>
-                <div className="font-bold mb-1">Stored resources:</div>
-                <div>test resource count </div>
-              </div>
-              {/* <div className="flex-row">
-                <div className="flex">
-                  {tileLastClaimedAt && (
-                    <div>
-                      Last Claimed:{" "}
-                      {parseInt(tileLastClaimedAt.value.toString(), 16)}
-                    </div>
-                  )}
-                </div>
-              </div> */}
               <div className="flex-row">
                 {/* TODO: show owned resource for every resource possible */}
                 {builtTile && (
                   <>
+                    <div className="font-bold mb-1">Stored resources:</div>
                     <ClaimButton x={selectedTile.x} y={selectedTile.y} />
                     <ResourceLabel
                       name={"Iron"}
