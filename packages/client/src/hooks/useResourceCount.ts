@@ -27,7 +27,7 @@ export default function useResourceCount(
     } else {
       return singletonIndex;
     }
-  }, []);
+  }, [entityIndex, address, singletonIndex, world]);
 
   const resource = useComponentValue(resourceComponent, resourceOwner);
 

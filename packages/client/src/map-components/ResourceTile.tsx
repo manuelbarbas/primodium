@@ -79,7 +79,7 @@ function ResourceTile({
               : 0,
         }),
       ],
-      [components.Path, tilesAtPosition]
+      [components.Path, tilesAtPosition, world]
     )
   );
 

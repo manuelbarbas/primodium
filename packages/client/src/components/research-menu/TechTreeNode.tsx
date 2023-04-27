@@ -27,7 +27,7 @@ function TechTreeNode({ data }: { data: ResourceCostData }) {
     } else {
       return singletonIndex;
     }
-  }, []);
+  }, [address, singletonIndex, world]);
 
   const [researchComponent, setResearchComponent] = useState(
     components.CopperResearch

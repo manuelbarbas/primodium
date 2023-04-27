@@ -35,7 +35,7 @@ function TechTreeItem({
     } else {
       return singletonIndex;
     }
-  }, []);
+  }, [address, singletonIndex, world]);
 
   const [researchComponent, setResearchComponent] = useState(
     components.CopperResearch
