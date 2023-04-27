@@ -26,9 +26,16 @@ export default function AppLoadingState() {
 
   if (loadingState.state !== SyncState.LIVE) {
     return (
-      <p>
-        {loadingState.msg} ({Math.floor(loadingState.percentage)}%)
-      </p>
+      <>
+        <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">Primodium</h1>
+            <p className="text-lg">
+              {loadingState.msg} ({Math.floor(loadingState.percentage)}%)
+            </p>
+          </div>
+        </div>
+      </>
     );
   } else {
     return (
