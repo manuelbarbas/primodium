@@ -151,6 +151,32 @@
         "LastBuiltAtComponent",
         "LastClaimedAtComponent",
 
+        "BolutiteResourceComponent",
+        "CopperResourceComponent",
+        "IridiumResourceComponent",
+        "IronResourceComponent",
+        "KimberliteResourceComponent",
+        "LithiumResourceComponent",
+        "OsmiumResourceComponent",
+        "TitaniumResourceComponent",
+        "TungstenResourceComponent",
+        "UraniniteResourceComponent",
+
+        "IronPlateCraftedComponent",
+        "BasicPowerSourceCraftedComponent",
+        "KineticMissileCraftedComponent",
+        "RefinedOsmiumCraftedComponent",
+        "AdvancedPowerSourceCraftedComponent",
+        "PenetratingWarheadCraftedComponent",
+        "PenetratingMissileCraftedComponent",
+        "TungstenRodsCraftedComponent",
+        "IridiumCrystalCraftedComponent",
+        "IridiumDrillbitCraftedComponent",
+        "LaserPowerSourceCraftedComponent",
+        "ThermobaricWarheadCraftedComponent",
+        "ThermobaricMissileCraftedComponent",
+        "KimberliteCrystalCatalystCraftedComponent",
+
         "MainBaseInitializedComponent"
       ]
     },
