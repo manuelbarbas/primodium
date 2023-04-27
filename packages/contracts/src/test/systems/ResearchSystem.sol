@@ -30,8 +30,7 @@ contract ResearchSystemTest is MudTest {
     vm.stopPrank();
   }
 
-  // adapted from testClaim
-  function testResearchFastMiner() public {
+  function testFailResearchFastMiner() public {
     vm.startPrank(alice);
 
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
@@ -45,9 +44,22 @@ contract ResearchSystemTest is MudTest {
 
     // alice researches fast miner
     researchSystem.executeTyped(FastMinerResearchComponentID);
-
     // not enough resources
-    assertTrue(!fastMinerResearchComponent.has(addressToEntity(alice)));
+    vm.stopPrank();
+  }
+
+  // adapted from testClaim
+  function testResearchFastMiner() public {
+    vm.startPrank(alice);
+
+    ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
+    FastMinerResearchComponent fastMinerResearchComponent = FastMinerResearchComponent(
+      component(FastMinerResearchComponentID)
+    );
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
 
     // ================================================================================================
     // Resource and crafted components
