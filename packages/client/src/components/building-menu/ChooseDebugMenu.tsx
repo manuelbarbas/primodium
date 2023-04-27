@@ -21,7 +21,7 @@ function ChooseDebugMenu({
       <p className="mt-4 text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
         <BuildingIconButton label="Miner" blockType={BlockType.Miner} />
-        <BuildingIconButton label="Node" blockType={BlockType.Conveyer} />
+        <BuildingIconButton label="Node" blockType={BlockType.Conveyor} />
         <BuildingIconButton label="Base" blockType={BlockType.MainBase} />
         <BuildingIconButton label="BulF" blockType={BlockType.BulletFactory} />
       </div>

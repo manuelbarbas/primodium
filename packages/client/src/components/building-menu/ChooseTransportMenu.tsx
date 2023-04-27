@@ -15,7 +15,7 @@ function ChooseTransportMenu({
 }) {
   const { systems, providers } = useMud();
 
-  // Set start and end paths for conveyers
+  // Set start and end paths for conveyors
   const {
     selectedTile,
     selectedStartPathTile,

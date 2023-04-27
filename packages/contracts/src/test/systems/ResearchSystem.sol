@@ -19,7 +19,7 @@ import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibHealth } from "../../libraries/LibHealth.sol";
 import { Coord } from "../../types.sol";
 
-import { MainBaseID, ConveyerID, MinerID, IronID, CopperID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, ConveyorID, MinerID, IronID, CopperID } from "../../prototypes/Tiles.sol";
 
 contract ResearchSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -64,8 +64,8 @@ contract ResearchSystemTest is MudTest {
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
     // Copper to main base
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -9, y: -4 }));
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -6, y: -4 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -9, y: -4 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -6, y: -4 }));
     buildPathSystem.executeTyped(Coord({ x: -9, y: -4 }), Coord({ x: -6, y: -4 }));
 
     // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
@@ -76,8 +76,8 @@ contract ResearchSystemTest is MudTest {
 
     // Iron to main base
     buildSystem.executeTyped(MinerID, IronCoord);
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -5, y: 1 }));
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -5, y: -3 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: 1 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: -3 }));
     buildPathSystem.executeTyped(Coord({ x: -5, y: 1 }), Coord({ x: -5, y: -3 }));
 
     vm.roll(10);

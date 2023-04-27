@@ -17,8 +17,8 @@ import { IronResourceComponent, ID as IronResourceComponentID } from "../../comp
 import { CopperResourceComponent, ID as CopperResourceComponentID } from "../../components/CopperResourceComponent.sol";
 import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "../../components/BulletCraftedComponent.sol";
 
-// import { MainBaseID, ConveyerID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, ConveyerID, MinerID, BulletFactoryID } from "../../prototypes/Tiles.sol";
+// import { MainBaseID, ConveyorID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, ConveyorID, MinerID, BulletFactoryID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
@@ -53,8 +53,8 @@ contract ClaimFactorySystemTest is MudTest {
 
     bytes memory bulletFactoryEntity = buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord);
     uint256 bulletFactoryID = abi.decode(bulletFactoryEntity, (uint256));
-    buildSystem.executeTyped(ConveyerID, endPathCoord);
-    buildSystem.executeTyped(ConveyerID, startPathCoord);
+    buildSystem.executeTyped(ConveyorID, endPathCoord);
+    buildSystem.executeTyped(ConveyorID, startPathCoord);
     buildPathSystem.executeTyped(startPathCoord, endPathCoord);
 
     // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
@@ -112,8 +112,8 @@ contract ClaimFactorySystemTest is MudTest {
     uint256 bulletFactoryID = abi.decode(bulletFactoryEntity, (uint256));
 
     // Copper to BulletFactory
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -9, y: -4 }));
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -6, y: -4 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -9, y: -4 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -6, y: -4 }));
     buildPathSystem.executeTyped(Coord({ x: -9, y: -4 }), Coord({ x: -6, y: -4 }));
 
     // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
@@ -137,8 +137,8 @@ contract ClaimFactorySystemTest is MudTest {
 
     // Iron to BulletFactory
     buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -5, y: 1 }));
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -5, y: -3 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: 1 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: -3 }));
     buildPathSystem.executeTyped(Coord({ x: -5, y: 1 }), Coord({ x: -5, y: -3 }));
 
     vm.roll(20);
@@ -151,8 +151,8 @@ contract ClaimFactorySystemTest is MudTest {
     assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 100);
 
     // BulletFactory to MainBase
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -4, y: -4 }));
-    buildSystem.executeTyped(ConveyerID, Coord({ x: -1, y: 0 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -4, y: -4 }));
+    buildSystem.executeTyped(ConveyorID, Coord({ x: -1, y: 0 }));
     buildPathSystem.executeTyped(Coord({ x: -4, y: -4 }), Coord({ x: -1, y: 0 }));
 
     vm.roll(30);
@@ -210,8 +210,8 @@ contract ClaimFactorySystemTest is MudTest {
 
     bytes memory bulletFactoryEntity = buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord);
     uint256 bulletFactoryID = abi.decode(bulletFactoryEntity, (uint256));
-    buildSystem.executeTyped(ConveyerID, endPathCoord);
-    buildSystem.executeTyped(ConveyerID, startPathCoord);
+    buildSystem.executeTyped(ConveyorID, endPathCoord);
+    buildSystem.executeTyped(ConveyorID, startPathCoord);
     buildPathSystem.executeTyped(startPathCoord, endPathCoord);
 
     // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
@@ -236,8 +236,8 @@ contract ClaimFactorySystemTest is MudTest {
 
     bytes memory bulletFactory2Entity = buildSystem.executeTyped(BulletFactoryID, bulletFactory2Coord);
     uint256 bulletFactory2ID = abi.decode(bulletFactory2Entity, (uint256));
-    buildSystem.executeTyped(ConveyerID, endPath2Coord);
-    buildSystem.executeTyped(ConveyerID, startPath2Coord);
+    buildSystem.executeTyped(ConveyorID, endPath2Coord);
+    buildSystem.executeTyped(ConveyorID, startPath2Coord);
     buildPathSystem.executeTyped(startPath2Coord, endPath2Coord);
 
     console.log(block.number);

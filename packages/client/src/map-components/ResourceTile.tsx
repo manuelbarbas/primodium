@@ -44,7 +44,7 @@ function ResourceTile({
     buildingKey = tile.value as unknown as EntityID;
   }
 
-  // Get the conveyer path that start at this tile.
+  // Get the conveyor path that start at this tile.
   let pathsToRender: JSX.Element[] = [];
 
   const path = useComponentValue(
@@ -52,7 +52,7 @@ function ResourceTile({
     tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
   );
 
-  // Get the tile at the end of the conveyer path.
+  // Get the tile at the end of the conveyor path.
   const endPathTile = useComponentValue(
     components.Position,
     path
@@ -67,8 +67,8 @@ function ResourceTile({
     );
   }
 
-  // Get all conveyer paths that end at this tile.
-  const endingConveyerPaths = useEntityQuery(
+  // Get all conveyor paths that end at this tile.
+  const endingConveyorPaths = useEntityQuery(
     useMemo(
       () => [
         Has(components.Path),
@@ -83,7 +83,7 @@ function ResourceTile({
     )
   );
 
-  endingConveyerPaths.map((item) => {
+  endingConveyorPaths.map((item) => {
     // Paths that ends at the current tile
     const currentStartTile = getComponentValue(components.Position, item);
     if (currentStartTile) {

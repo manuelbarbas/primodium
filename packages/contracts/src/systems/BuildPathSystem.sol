@@ -6,7 +6,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ConveyerID, NodeID } from "../prototypes/Tiles.sol";
+import { ConveyorID, NodeID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
@@ -33,16 +33,16 @@ contract BuildPathSystem is System {
     uint256[] memory entitiesAtEndCoord = positionComponent.getEntitiesWithValue(coordEnd);
     require(entitiesAtEndCoord.length == 1, "[BuildPathSystem] Cannot end path at an empty coordinate");
 
-    // Check that the coordinates are both conveyer tiles
+    // Check that the coordinates are both conveyor tiles
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
     require(
-      tileEntityAtStartCoord == ConveyerID || tileEntityAtStartCoord == NodeID,
-      "[BuildPathSystem] Cannot start path at a supported tile (Conveyer, Node)"
+      tileEntityAtStartCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
+      "[BuildPathSystem] Cannot start path at a supported tile (Conveyor, Node)"
     );
     uint256 tileEntityAtEndCoord = tileComponent.getValue(entitiesAtEndCoord[0]);
     require(
-      tileEntityAtEndCoord == ConveyerID || tileEntityAtStartCoord == NodeID,
-      "[BuildPathSystem] Cannot end path at a supported tile (Conveyer, Node)"
+      tileEntityAtEndCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
+      "[BuildPathSystem] Cannot end path at a supported tile (Conveyor, Node)"
     );
 
     // Check that the coordinates are both owned by the msg.sender

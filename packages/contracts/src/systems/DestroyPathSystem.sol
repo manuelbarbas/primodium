@@ -6,7 +6,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ConveyerID, NodeID } from "../prototypes/Tiles.sol";
+import { ConveyorID, NodeID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
@@ -26,10 +26,10 @@ contract DestroyPathSystem is System {
     uint256[] memory entitiesAtStartCoord = positionComponent.getEntitiesWithValue(coordStart);
     require(entitiesAtStartCoord.length == 1, "[DestroyPathSystem] Cannot destroy path from an empty coordinate");
 
-    // Check that the coordinates is a conveyer tile
+    // Check that the coordinates is a conveyor tile
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
     require(
-      tileEntityAtStartCoord == ConveyerID || tileEntityAtStartCoord == NodeID,
+      tileEntityAtStartCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
       "[DestroyPathSystem] Cannot destroy path from an empty coordinate"
     );
 

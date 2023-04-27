@@ -56,7 +56,7 @@ export const BlockType = {
 
   // Debug buildings
   MainBase: keccak256("block.MainBase") as EntityID,
-  Conveyer: keccak256("block.Conveyer") as EntityID,
+  Conveyor: keccak256("block.Conveyor") as EntityID,
   Miner: keccak256("block.Miner") as EntityID,
   LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
   BulletFactory: keccak256("block.BulletFactory") as EntityID,
@@ -262,7 +262,7 @@ export const BlockColors = new Map<EntityID, string>([
 
   // Resource
   [BlockType.MainBase, "#8676c0"],
-  [BlockType.Conveyer, "#ffcd00"],
+  [BlockType.Conveyor, "#ffcd00"],
 
   // Factories
   [BlockType.BulletFactory, "#824947"],
@@ -298,7 +298,7 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Miner, "/img/building/minerdrill.gif"],
   [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
   [BlockType.MainBase, "/img/building/mainbase.gif"],
-  [BlockType.Conveyer, "/img/building/node.gif"],
+  [BlockType.Conveyor, "/img/building/node.gif"],
   [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
   [BlockType.Silo, "/img/building/silo.png"],
 

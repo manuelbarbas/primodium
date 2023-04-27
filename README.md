@@ -122,14 +122,14 @@ KimberliteCatalystFactoryResearchComponent
 ### Buildings (Debug)
 
 MainBase
-Conveyer
+Conveyor
 Miner
 LithiumMiner
 BulletFactory
 Silo
 
 ### Buildings (Gameplay)
-// NOTE: Node is like Conveyer, but costs money and not for debug.
+// NOTE: Node is like Conveyor, but costs money and not for debug.
 
 BasicMiner
 Node

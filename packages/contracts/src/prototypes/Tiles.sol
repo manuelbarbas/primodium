@@ -26,7 +26,7 @@ uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 
 // Special blocks
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));
-uint256 constant ConveyerID = uint256(keccak256("block.Conveyer"));
+uint256 constant ConveyorID = uint256(keccak256("block.Conveyor"));
 
 uint256 constant MinerID = uint256(keccak256("block.Miner"));
 uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
@@ -35,7 +35,7 @@ uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
 uint256 constant SiloID = uint256(keccak256("block.Silo"));
 
 // in-game blocks
-// NOTE: Node is like Conveyer, but costs money and not for debug.
+// NOTE: Node is like Conveyor, but costs money and not for debug.
 uint256 constant BasicMinerID = uint256(keccak256("block.BasicMiner"));
 uint256 constant NodeID = uint256(keccak256("block.Node"));
 uint256 constant PlatingFactoryID = uint256(keccak256("block.PlatingFactory"));

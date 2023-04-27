@@ -8,5 +8,5 @@ contract PathComponent is Uint256Component {
   constructor(address world) Uint256Component(world, ID) {}
 }
 
-// entity id: the start conveyer tile
-// value: the end conveyer tile
+// entity id: the start conveyor tile
+// value: the end conveyor tile
