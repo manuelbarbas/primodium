@@ -14,6 +14,7 @@ library LibClaim {
   function isClaimableFactory(uint256 tileId) internal pure returns (bool) {
     return
       tileId == BulletFactoryID ||
+      tileId == PlatingFactoryID ||
       tileId == BasicBatteryFactoryID ||
       tileId == KineticMissileFactoryID ||
       tileId == ProjectileLauncherID ||

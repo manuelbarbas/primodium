@@ -464,6 +464,7 @@ export function isClaimable(tileId: EntityID) {
 export function isClaimableFactory(tileId: EntityID) {
   return (
     tileId == BlockType.BulletFactory ||
+    tileId == BlockType.PlatingFactory ||
     tileId == BlockType.BasicBatteryFactory ||
     tileId == BlockType.KineticMissileFactory ||
     tileId == BlockType.ProjectileLauncher ||
