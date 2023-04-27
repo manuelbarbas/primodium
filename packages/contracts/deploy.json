@@ -66,7 +66,8 @@
     "ThermobaricMissileCraftedComponent",
     "KimberliteCrystalCatalystCraftedComponent",
 
-    "MainBaseInitializedComponent"
+    "MainBaseInitializedComponent",
+    "StarterPackInitializedComponent"
   ],
   "systems": [
     {
@@ -128,6 +129,10 @@
         "ThermobaricMissileCraftedComponent",
         "KimberliteCrystalCatalystCraftedComponent"
       ]
+    },
+    {
+      "name": "StarterPackSystem",
+      "writeAccess": ["IronResourceComponent", "StarterPackInitializedComponent"]
     },
     {
       "name": "AttackSystem",

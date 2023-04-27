@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { FaWindowClose } from "react-icons/fa";
-import TechTree from "./TechTree";
 import ResearchPage from "./ResearchPage";
 
 function ResearchModal() {

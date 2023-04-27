@@ -303,6 +303,13 @@ export function defineComponents(world: World) {
         contractId: "component.KimberliteCrystalCatalystCrafted",
       },
     }),
+
+    // starter pack initialized
+    StarterPackInitialized: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.StarterPackInitialized",
+      },
+    }),
   };
 }
 

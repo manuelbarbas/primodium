@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { EntityID } from "@latticexyz/recs";
+import { useComponentValue } from "@latticexyz/react";
 
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
+
 import { useMud } from "../../context/MudContext";
+import { BlockType } from "../../util/constants";
+import { useAccount } from "../../hooks/useAccount";
 
 import ResourceLabel from "./ResourceLabel";
-import { BlockType } from "../../util/constants";
+import StarterPackButton from "../StarterPackButton";
 
 function ResourceBox() {
-  const { components } = useMud();
-
   const [minimized, setMinimize] = useState(true);
   const minimizeBox = () => {
     if (minimized) {
@@ -18,6 +21,17 @@ function ResourceBox() {
       setMinimize(true);
     }
   };
+
+  // Check if user has claimed starter pack
+  const { components, world, singletonIndex } = useMud();
+  const { address } = useAccount();
+
+  const claimedStarterPack = useComponentValue(
+    components.StarterPackInitialized,
+    address
+      ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
+      : singletonIndex
+  );
 
   if (!minimized) {
     return (
@@ -158,6 +172,7 @@ function ResourceBox() {
             <p className="text-sm mb-3 mt-3">
               Close and re-open this box to refresh resources.
             </p>
+            {!claimedStarterPack ? <StarterPackButton /> : <></>}
           </div>
         </div>
       </div>
