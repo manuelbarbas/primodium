@@ -46,11 +46,13 @@ function InfoBox() {
     return (
       <div className="z-[1000] fixed top-4 left-4 h-40 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col">
-          <p className="text-xl mb-4 font-bold">Primodium</p>
-          {transactionLoading && <Spinner />}
+          <div className="flex flex-row">
+            <div className="text-xl mb-4 font-bold inline-block">Primodium</div>
+            {transactionLoading && <Spinner />}
+          </div>
           <div className="flex items-center mb-2">
             <a
-              href="https://www.google.com"
+              href="https://tutorial.primodium.com"
               target="_blank"
               className="text-sm inline-block hover:text-gray-300"
             >
@@ -61,7 +63,7 @@ function InfoBox() {
           <div className="flex items-center mb-2">
             <a
               target="_blank"
-              href="https://www.google.com"
+              href="https://twitter.com/primodiumgame"
               className="text-sm inline-block hover:text-gray-300"
             >
               <LinkIcon icon={<ImTwitter size="16" />} />
@@ -71,7 +73,7 @@ function InfoBox() {
           <div className="flex items-center mb-2">
             <a
               target="_blank"
-              href="https://www.google.com"
+              href="https://discord.com/invite/bn7eSSKFWV"
               className="text-sm inline-block hover:text-gray-300"
             >
               <LinkIcon icon={<FaDiscord size="16" />} />
