@@ -3,7 +3,7 @@ import { useMud } from "../../context/MudContext";
 import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 
-export default function ClaimButton({ x, y }: DisplayTile) {
+export default function CraftButton({ x, y }: DisplayTile) {
   const { systems, providers } = useMud();
 
   const claimAction = useCallback(async () => {
@@ -35,10 +35,10 @@ export default function ClaimButton({ x, y }: DisplayTile) {
 
   return (
     <button
-      className="inset-x-4 absolute bottom-16 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
+      className="inset-x-4 absolute bottom-4 h-10 bg-orange-600 hover:bg-orange-700 text-sm rounded font-bold"
       onClick={claimAction}
     >
-      Claim
+      Craft
     </button>
   );
 }
