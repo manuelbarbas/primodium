@@ -37,12 +37,12 @@ contract BuildPathSystem is System {
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
     require(
       tileEntityAtStartCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
-      "[BuildPathSystem] Cannot start path at a supported tile (Conveyor, Node)"
+      "[BuildPathSystem] Cannot start path at a non-supported tile (Conveyor, Node)"
     );
     uint256 tileEntityAtEndCoord = tileComponent.getValue(entitiesAtEndCoord[0]);
     require(
-      tileEntityAtEndCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
-      "[BuildPathSystem] Cannot end path at a supported tile (Conveyor, Node)"
+      tileEntityAtEndCoord == ConveyorID || tileEntityAtEndCoord == NodeID,
+      "[BuildPathSystem] Cannot end path at a non-supported tile (Conveyor, Node)"
     );
 
     // Check that the coordinates are both owned by the msg.sender
