@@ -14,6 +14,19 @@ export type ResourceCostData = {
 // crafting an item in factories require resources
 export const CraftRecipe = new Map<EntityID, ResourceCostData[]>([
   [
+    BlockType.BulletFactory,
+    [
+      {
+        name: "-1",
+        id: BlockType.BulletCrafted,
+        resources: [
+          { id: BlockType.Iron, amount: 1 },
+          { id: BlockType.Copper, amount: 1 },
+        ],
+      },
+    ],
+  ],
+  [
     BlockType.PlatingFactory,
     [
       {

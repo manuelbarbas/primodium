@@ -16,7 +16,8 @@ import { useMud } from "../context/MudContext";
 import ClaimButton from "./action/ClaimButton";
 import CraftButton from "./action/CraftButton";
 import ResourceLabel from "./resource-box/ResourceLabel";
-import { isClaimable, isClaimableFactory } from "../util/resource";
+import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
+import StaticResourceLabel from "./resource-box/StaticResourceLabel";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -93,10 +94,10 @@ function TooltipBox() {
   //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
   // );
 
-  const tileLastClaimedAt = useComponentValue(
-    components.LastClaimedAt,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  );
+  // const tileLastClaimedAt = useComponentValue(
+  //   components.LastClaimedAt,
+  //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  // );
 
   // display actions
   const [minimized, setMinimize] = useState(false);
@@ -106,6 +107,38 @@ function TooltipBox() {
       setMinimize(false);
     } else {
       setMinimize(true);
+    }
+  };
+
+  const CraftRecipeDisplay = () => {
+    if (builtTile && isClaimableFactory(builtTile)) {
+      const craftRecipe = CraftRecipe.get(builtTile);
+      if (craftRecipe) {
+        return (
+          <>
+            <div className="mb-1">Crafts</div>
+            <StaticResourceLabel
+              name={BlockIdToKey[craftRecipe[0].id]}
+              resourceId={craftRecipe[0].id}
+              count={1}
+            ></StaticResourceLabel>
+            <div className="mb-1">From</div>
+            {craftRecipe[0].resources.map((item) => {
+              return (
+                <StaticResourceLabel
+                  name={BlockIdToKey[item.id]}
+                  resourceId={item.id}
+                  count={item.amount}
+                ></StaticResourceLabel>
+              );
+            })}
+          </>
+        );
+      } else {
+        return <></>;
+      }
+    } else {
+      return <></>;
     }
   };
 
@@ -159,7 +192,7 @@ function TooltipBox() {
                 </div>
               </div>
               <div>
-                <div className="mb-1">recipe -{">"} recipe</div>
+                <CraftRecipeDisplay />
               </div>
               <div className="flex-row">
                 {/* TODO: show owned resource for every resource possible */}

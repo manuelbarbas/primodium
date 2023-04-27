@@ -8,7 +8,6 @@ export default function ResourceLabel({
   resourceId,
   resourceComponent,
 }: {
-  icon?: any;
   entityIndex?: EntityIndex;
   name: string;
   resourceId: EntityID;
