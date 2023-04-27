@@ -188,7 +188,8 @@
         "OwnedByComponent",
         "LastBuiltAtComponent",
         "LastClaimedAtComponent",
-        "HealthComponent"
+        "HealthComponent",
+        "PathComponent"
       ]
     },
     {
