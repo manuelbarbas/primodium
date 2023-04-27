@@ -1,16 +1,21 @@
 import { useCallback } from "react";
 import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
+import { useTransactionLoading } from "../context/TransactionLoadingContext";
 
 export default function StarterPackButton() {
   const { systems, providers } = useMud();
+  const { setTransactionLoading } = useTransactionLoading();
+
   const claimStarterPack = useCallback(async () => {
+    setTransactionLoading(true);
     await execute(
       systems["system.StarterPackSystem"].executeTyped({
         gasLimit: 30_000_000,
       }),
       providers
     );
+    setTransactionLoading(false);
   }, []);
 
   return (
