@@ -16,6 +16,7 @@ import { useMud } from "../context/MudContext";
 import ClaimButton from "./action/ClaimButton";
 import CraftButton from "./action/CraftButton";
 import ResourceLabel from "./resource-box/ResourceLabel";
+import { isClaimable, isClaimableFactory } from "../util/resource";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -165,9 +166,16 @@ function TooltipBox() {
                 {builtTile && (
                   <>
                     <div className="font-bold mb-1">Stored resources:</div>
-                    <ClaimButton x={selectedTile.x} y={selectedTile.y} />
-
-                    <CraftButton x={selectedTile.x} y={selectedTile.y} />
+                    {isClaimable(builtTile) &&
+                      !isClaimableFactory(builtTile) && (
+                        <ClaimButton x={selectedTile.x} y={selectedTile.y} />
+                      )}
+                    {isClaimableFactory(builtTile) && (
+                      <>
+                        <ClaimButton x={selectedTile.x} y={selectedTile.y} />
+                        <CraftButton x={selectedTile.x} y={selectedTile.y} />
+                      </>
+                    )}
                     <ResourceLabel
                       name={"Iron"}
                       resourceComponent={components.IronResource}

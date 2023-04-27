@@ -456,3 +456,30 @@ export const BuildingReceipe = new Map<EntityID, ResourceCostData[]>([
 
 // researching an item requires resources
 // refer to research.ts for the actual research tree
+
+export function isClaimable(tileId: EntityID) {
+  return tileId == BlockType.MainBase;
+}
+
+export function isClaimableFactory(tileId: EntityID) {
+  return (
+    tileId == BlockType.BulletFactory ||
+    tileId == BlockType.BasicBatteryFactory ||
+    tileId == BlockType.KineticMissileFactory ||
+    tileId == BlockType.ProjectileLauncher ||
+    tileId == BlockType.HardenedDrill ||
+    tileId == BlockType.DenseMetalRefinery ||
+    tileId == BlockType.AdvancedBatteryFactory ||
+    tileId == BlockType.HighTempFoundry ||
+    tileId == BlockType.PrecisionMachineryFactory ||
+    tileId == BlockType.IridiumDrillbitFactory ||
+    tileId == BlockType.PrecisionPneumaticDrill ||
+    tileId == BlockType.PenetratorFactory ||
+    tileId == BlockType.PenetratingMissileFactory ||
+    tileId == BlockType.MissileLaunchComplex ||
+    tileId == BlockType.HighEnergyLaserFactory ||
+    tileId == BlockType.ThermobaricWarheadFactory ||
+    tileId == BlockType.ThermobaricMissileFactory ||
+    tileId == BlockType.KimberliteCatalystFactory
+  );
+}
