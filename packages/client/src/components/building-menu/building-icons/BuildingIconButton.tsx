@@ -7,6 +7,7 @@ import { useSelectedTile } from "../../../context/SelectedTileContext";
 import { BackgroundImage, ResourceImage } from "../../../util/constants";
 import { execute } from "../../../network/actions";
 import { BuildingReceipe } from "../../../util/resource";
+import { useTransactionLoading } from "../../../context/TransactionLoadingContext";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -18,10 +19,12 @@ function BuildingIconButton({
 }) {
   const { systems, providers } = useMud();
   const { selectedTile } = useSelectedTile();
+  const { setTransactionLoading } = useTransactionLoading();
 
   // Place action
   const buildTile = useCallback(async () => {
-    execute(
+    setTransactionLoading(true);
+    await execute(
       systems["system.Build"].executeTyped(
         BigNumber.from(blockType),
         selectedTile,
@@ -31,6 +34,7 @@ function BuildingIconButton({
       ),
       providers
     );
+    setTransactionLoading(false);
   }, [selectedTile]);
 
   const recipe = BuildingReceipe.get(blockType);

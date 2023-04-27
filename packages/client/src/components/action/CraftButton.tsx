@@ -2,11 +2,14 @@ import { useCallback } from "react";
 import { useMud } from "../../context/MudContext";
 import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
+import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 
 export default function CraftButton({ x, y }: DisplayTile) {
   const { systems, providers } = useMud();
+  const { setTransactionLoading } = useTransactionLoading();
 
   const claimAction = useCallback(async () => {
+    setTransactionLoading(true);
     await execute(
       systems["system.Craft"].executeTyped(
         {
@@ -19,6 +22,7 @@ export default function CraftButton({ x, y }: DisplayTile) {
       ),
       providers
     );
+    setTransactionLoading(false);
   }, []);
 
   return (

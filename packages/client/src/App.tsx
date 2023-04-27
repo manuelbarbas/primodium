@@ -15,6 +15,7 @@ import SelectedTileProvider from "./context/SelectedTileContext";
 import MudProvider from "./context/MudContext";
 
 import AppLoadingState from "./AppLoadingState";
+import TransactionLoadingProvider from "./context/TransactionLoadingContext";
 
 const wagmiClient = createClient({
   autoConnect: true,
@@ -93,11 +94,13 @@ export default function App() {
         defaultWalletAddress={defaultWalletAddressRef.current}
         providers={networkLayerParams.providers}
       >
-        <WagmiConfig client={wagmiClient}>
-          <SelectedTileProvider>
-            <AppLoadingState />
-          </SelectedTileProvider>
-        </WagmiConfig>
+        <TransactionLoadingProvider>
+          <WagmiConfig client={wagmiClient}>
+            <SelectedTileProvider>
+              <AppLoadingState />
+            </SelectedTileProvider>
+          </WagmiConfig>
+        </TransactionLoadingProvider>
       </MudProvider>
     );
   }

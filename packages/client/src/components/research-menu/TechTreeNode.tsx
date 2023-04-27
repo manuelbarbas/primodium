@@ -7,7 +7,6 @@ import { ResourceCostData } from "../../util/resource";
 
 import {
   BlockType,
-  BlockIdToKey,
   ResearchImage,
   BackgroundImage,
 } from "../../util/constants";

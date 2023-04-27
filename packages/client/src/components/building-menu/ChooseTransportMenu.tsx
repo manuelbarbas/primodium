@@ -5,6 +5,7 @@ import PathActionIconButton from "./building-icons/PathActionIconButton";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
 import { BlockType } from "../../util/constants";
 import { execute } from "../../network/actions";
+import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 
 function ChooseTransportMenu({
   title,
@@ -47,10 +48,13 @@ function ChooseTransportMenu({
     console.log("clearPath");
   }, []);
 
+  const { setTransactionLoading } = useTransactionLoading();
+
   // Select tile to end path, executeTyped
-  const createPath = useCallback(() => {
+  const createPath = useCallback(async () => {
     if (selectedStartPathTile !== null && selectedEndPathTile !== null) {
-      execute(
+      setTransactionLoading(true);
+      await execute(
         systems["system.BuildPath"].executeTyped(
           {
             x: selectedStartPathTile.x,
@@ -67,6 +71,7 @@ function ChooseTransportMenu({
         ),
         providers
       );
+      setTransactionLoading(false);
     }
   }, [selectedStartPathTile, selectedEndPathTile]);
 

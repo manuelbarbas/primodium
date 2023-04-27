@@ -12,6 +12,8 @@ import { ImTwitter } from "react-icons/im";
 import { FaDiscord } from "react-icons/fa";
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
+import Spinner from "./Spinner";
+import { useTransactionLoading } from "../context/TransactionLoadingContext";
 
 function InfoBox() {
   const { address, isConnected } = useWagmiAccount();
@@ -38,11 +40,14 @@ function InfoBox() {
     }
   };
 
+  const { transactionLoading } = useTransactionLoading();
+
   if (!isConnected) {
     return (
       <div className="z-[1000] fixed top-4 left-4 h-40 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col">
           <p className="text-xl mb-4 font-bold">Primodium</p>
+          {transactionLoading && <Spinner />}
           <div className="flex items-center mb-2">
             <a
               href="https://www.google.com"

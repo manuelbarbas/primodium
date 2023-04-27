@@ -10,13 +10,16 @@ import { useMud } from "../../context/MudContext";
 
 import { FaWindowClose } from "react-icons/fa";
 import { execute } from "../../network/actions";
+import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 
 function DestroyBuildingBox() {
   const { systems, providers } = useMud();
   const { selectedTile } = useSelectedTile();
+  const { setTransactionLoading } = useTransactionLoading();
 
-  const destroyTile = useCallback(({ x, y }: DisplayTile) => {
-    execute(
+  const destroyTile = useCallback(async ({ x, y }: DisplayTile) => {
+    setTransactionLoading(true);
+    await execute(
       systems["system.Destroy"].executeTyped(
         {
           x: x,
@@ -28,6 +31,7 @@ function DestroyBuildingBox() {
       ),
       providers
     );
+    setTransactionLoading(false);
   }, []);
 
   // Helpers
