@@ -154,8 +154,8 @@ function TechTreeItem({
   if (isDefaultUnlocked || isResearched?.value) {
     return (
       <div className="relative group w-64 h-64 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
-        <div className="mt-1 w-20 h-20 mx-auto">
-          <img src={icon} className="w-20 h-20 mx-auto pixel-images"></img>
+        <div className="mt-1 w-16 h-16 mx-auto">
+          <img src={icon} className="w-16 h-16 mx-auto pixel-images"></img>
         </div>
         {/* <div className="research-tooltip group-hover:scale-100 mt-2"> */}
         <div className="mt-2 text-center font-bold text-gray-900">{name}</div>

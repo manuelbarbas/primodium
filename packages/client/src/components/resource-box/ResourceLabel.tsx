@@ -24,9 +24,9 @@ export default function ResourceLabel({
   if (resourceCount > 0) {
     return (
       <div className="flex mb-1">
-        <p className="w-24">{resourceCount}</p>
+        <p className="w-16 text-sm">{resourceCount}</p>
         <img className="w-4 h-4 my-auto" src={resourceIcon}></img>
-        <p className=" ml-2 my-auto">{name}</p>
+        <p className=" ml-2 my-auto text-sm">{name}</p>
       </div>
     );
   } else {

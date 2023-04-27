@@ -113,8 +113,8 @@ function TooltipBox() {
 
   if (!minimized) {
     return (
-      <div className="z-[9999] fixed bottom-4 right-4 h-96 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className=" mt-4 ml-5 flex flex-col h-72">
+      <div className="z-[9999] fixed bottom-4 right-4 h-96 w-64  flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+        <div className=" mt-4 ml-5 flex flex-col overflow-y-scroll scrollbar h-64">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
@@ -125,7 +125,7 @@ function TooltipBox() {
             <div className="flex flex-col">
               <div className="flex align-center mb-4">
                 <div
-                  className="inline-block w-16 h-16"
+                  className="inline-block w-16 h-16 flex-shrink-0"
                   style={{
                     backgroundImage: `url(${tileColor!})`,
                     backgroundSize: "cover",
@@ -166,6 +166,7 @@ function TooltipBox() {
                 {builtTile && (
                   <>
                     <div className="font-bold mb-1">Stored resources:</div>
+
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
                         <ClaimButton x={selectedTile.x} y={selectedTile.y} />
