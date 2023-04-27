@@ -24,9 +24,7 @@ library LibBuild {
     uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
     uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
 
-    if (curItem1 < item1Required) {
-      revert("[BuildSystem] Not enough resources");
-    } else if (curItem2 < item2Required) {
+    if (curItem1 < item1Required || curItem2 < item2Required) {
       revert("[BuildSystem] Not enough resources");
     } else {
       item1Component.set(entity, curItem1 - item1Required);
@@ -47,11 +45,7 @@ library LibBuild {
     uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
     uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
 
-    if (curItem1 < item1Required) {
-      revert("[BuildSystem] Not enough resources");
-    } else if (curItem2 < item2Required) {
-      revert("[BuildSystem] Not enough resources");
-    } else if (curItem3 < item3Required) {
+    if (curItem1 < item1Required || curItem2 < item2Required || curItem3 < item3Required) {
       revert("[BuildSystem] Not enough resources");
     } else {
       item1Component.set(entity, curItem1 - item1Required);
@@ -76,13 +70,7 @@ library LibBuild {
     uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
     uint256 curItem4 = LibMath.getSafeUint256Value(item4Component, entity);
 
-    if (curItem1 < item1Required) {
-      revert("[BuildSystem] Not enough resources");
-    } else if (curItem2 < item2Required) {
-      revert("[BuildSystem] Not enough resources");
-    } else if (curItem3 < item3Required) {
-      revert("[BuildSystem] Not enough resources");
-    } else if (curItem4 < item4Required) {
+    if (curItem1 < item1Required || curItem2 < item2Required || curItem3 < item3Required || curItem4 < item4Required) {
       revert("[BuildSystem] Not enough resources");
     } else {
       item1Component.set(entity, curItem1 - item1Required);
