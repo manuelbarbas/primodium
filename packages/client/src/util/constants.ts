@@ -307,8 +307,8 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Node, "/img/building/node.gif"],
   [BlockType.PlatingFactory, "/img/building/newplatingfactory.gif"],
   [BlockType.BasicBatteryFactory, "/img/building/newbasicbatteryfactory.gif"],
-  [BlockType.KineticMissileFactory, "/img/building/minerdrill.gif"],
-  [BlockType.ProjectileLauncher, "/img/building/minerdrill.gif"],
+  [BlockType.KineticMissileFactory, "/img/building/kineticmissilefactory.png"],
+  [BlockType.ProjectileLauncher, "/img/building/projectilelauncher.png"],
   [BlockType.HardenedDrill, "/img/building/hardeneddrill.gif"],
   [BlockType.DenseMetalRefinery, "/img/building/densemetalrefinery.gif"],
   [
@@ -328,12 +328,12 @@ export const BackgroundImage = new Map<EntityID, string>([
     BlockType.PrecisionPneumaticDrill,
     "/img/building/precisionpneumaticdrill.gif",
   ],
-  [BlockType.PenetratorFactory, "/img/building/minerdrill.gif"],
-  [BlockType.PenetratingMissileFactory, "/img/building/minerdrill.gif"],
-  [BlockType.MissileLaunchComplex, "/img/building/minerdrill.gif"],
+  [BlockType.PenetratorFactory, "/img/building/penetratorfactory.png"],
+  [BlockType.PenetratingMissileFactory, "/img/building/penetratingmissilefactory.png"],
+  [BlockType.MissileLaunchComplex, "/img/building/missilelaunchcomplex.gif"],
   [BlockType.HighEnergyLaserFactory, "/img/building/laserfactory.gif"],
-  [BlockType.ThermobaricWarheadFactory, "/img/building/minerdrill.gif"],
-  [BlockType.ThermobaricMissileFactory, "/img/building/minerdrill.gif"],
+  [BlockType.ThermobaricWarheadFactory, "/img/building/thermobaricwarheadfactory.png"],
+  [BlockType.ThermobaricMissileFactory, "/img/building/thermobaricmissilefactory.png"],
   [BlockType.KimberliteCatalystFactory, "/img/building/kimberlitecatalyst.gif"],
 
   // TODO: crafted items
@@ -343,7 +343,7 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.MainBaseResearch, "/img/building/mainbase.gif"],
   [BlockType.IronResearch, "/img/resource/iron_resource.png"],
   [BlockType.BasicMinerResearch, "/img/building/minerdrill.gif"],
-  [BlockType.ConveyorResearch, "/img/building/node.gif"],
+  [BlockType.ConveyorResearch, "/img/building/conveyor.gif"],
   [BlockType.NodeResearch, "/img/building/node.gif"],
 
   [BlockType.CopperResearch, "/img/resource/copper_resource.png"],
@@ -359,8 +359,8 @@ export const ResearchImage = new Map<EntityID, string>([
     BlockType.BasicBatteryFactoryResearch,
     "/img/building/newbasicbatteryfactory.gif",
   ],
-  [BlockType.KineticMissileFactoryResearch, "/img/building/minerdrill.gif"],
-  [BlockType.ProjectileLauncherResearch, "/img/building/minerdrill.gif"],
+  [BlockType.KineticMissileFactoryResearch, "/img/building/kineticmissilefactory.png"],
+  [BlockType.ProjectileLauncherResearch, "/img/building/projectilelauncher.png"],
   [BlockType.HardenedDrillResearch, "/img/building/hardeneddrill.gif"],
   [
     BlockType.DenseMetalRefineryResearch,
@@ -383,12 +383,12 @@ export const ResearchImage = new Map<EntityID, string>([
     BlockType.PrecisionPneumaticDrillResearch,
     "/img/building/precisionpneumaticdrill.gif",
   ],
-  [BlockType.PenetratorFactoryResearch, "/img/building/minerdrill.gif"],
-  [BlockType.PenetratingMissileFactoryResearch, "/img/building/minerdrill.gif"],
-  [BlockType.MissileLaunchComplexResearch, "/img/building/minerdrill.gif"],
+  [BlockType.PenetratorFactoryResearch, "/img/building/penetratorfactory.png"],
+  [BlockType.PenetratingMissileFactoryResearch, "/img/building/penetratingmissilefactory.png"],
+  [BlockType.MissileLaunchComplexResearch, "/img/building/missilelaunchcomplex.gif"],
   [BlockType.HighEnergyLaserFactoryResearch, "/img/building/laserfactory.gif"],
-  [BlockType.ThermobaricWarheadFactoryResearch, "/img/building/minerdrill.gif"],
-  [BlockType.ThermobaricMissileFactoryResearch, "/img/building/minerdrill.gif"],
+  [BlockType.ThermobaricWarheadFactoryResearch, "/img/building/thermobaricwarheadfactory.png"],
+  [BlockType.ThermobaricMissileFactoryResearch, "/img/building/thermobaricmissilefactory.png"],
   [
     BlockType.KimberliteCatalystFactoryResearch,
     "/img/building/kimberlitecatalyst.gif",
@@ -419,6 +419,11 @@ export const ResourceImage = new Map<EntityID, string>([
   ],
   [BlockType.RefinedOsmiumCrafted, "/img/crafted/refinedosmium.png"],
   [BlockType.TungstenRodsCrafted, "/img/crafted/tungstenrod.png"],
+  [BlockType.KineticMissileCrafted, "/img/crafted/kineticmissile.png"],
+  [BlockType.PenetratingWarheadCrafted, "/img/crafted/penetratingwarhead.png"],
+  [BlockType.PenetratingMissileCrafted, "/img/crafted/penetratingmissile.png"],
+  [BlockType.ThermobaricWarheadCrafted, "/img/crafted/thermobaricwarhead.png"],
+  [BlockType.ThermobaricMissileCrafted, "/img/crafted/thermobaricmissile.png"],
 ]);
 
 export type DisplayTile = {
