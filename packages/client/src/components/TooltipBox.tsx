@@ -116,22 +116,24 @@ function TooltipBox() {
       if (craftRecipe) {
         return (
           <>
-            <div className="mb-1">Crafts</div>
-            <StaticResourceLabel
-              name={BlockIdToKey[craftRecipe[0].id]}
-              resourceId={craftRecipe[0].id}
-              count={1}
-            ></StaticResourceLabel>
-            <div className="mb-1">From</div>
-            {craftRecipe[0].resources.map((item) => {
-              return (
-                <StaticResourceLabel
-                  name={BlockIdToKey[item.id]}
-                  resourceId={item.id}
-                  count={item.amount}
-                ></StaticResourceLabel>
-              );
-            })}
+            <div className="flex-row mb-1 flex">
+              <div className="">Crafts</div>
+              <StaticResourceLabel
+                name={BlockIdToKey[craftRecipe[0].id]}
+                resourceId={craftRecipe[0].id}
+                count={1}
+              ></StaticResourceLabel>
+              <div className="">from</div>
+              {craftRecipe[0].resources.map((item) => {
+                return (
+                  <StaticResourceLabel
+                    name={BlockIdToKey[item.id]}
+                    resourceId={item.id}
+                    count={item.amount}
+                  ></StaticResourceLabel>
+                );
+              })}
+            </div>
           </>
         );
       } else {
@@ -146,7 +148,7 @@ function TooltipBox() {
 
   if (!minimized) {
     return (
-      <div className="z-[9999] fixed bottom-4 right-4 h-96 w-64  flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[9999] fixed bottom-4 right-4 h-96 w-80  flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col overflow-y-scroll scrollbar h-64">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
@@ -170,7 +172,11 @@ function TooltipBox() {
                     <div>
                       <div>
                         {builtTile ? (
-                          <div>{BlockIdToKey[builtTile]}</div>
+                          <div>
+                            {BlockIdToKey[builtTile]
+                              .replace(/([A-Z]+)/g, " $1")
+                              .replace(/([A-Z][a-z])/g, " $1")}
+                          </div>
                         ) : (
                           <div>No tile built</div>
                         )}

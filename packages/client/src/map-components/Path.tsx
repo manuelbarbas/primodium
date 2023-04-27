@@ -13,7 +13,7 @@ export default function Path({
       key={`sp: ${JSON.stringify(startCoord)}`}
       pathOptions={{
         color: "white",
-        weight: 5,
+        weight: 3,
       }}
       positions={[
         [startCoord.y + 0.5, startCoord.x + 0.5],
