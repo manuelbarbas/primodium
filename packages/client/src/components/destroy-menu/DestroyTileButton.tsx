@@ -1,4 +1,4 @@
-import { BlockTypeActionComponent } from "../util/types";
+import { BlockTypeActionComponent } from "../../util/types";
 
 function DestroyTileButton({ action }: BlockTypeActionComponent) {
   return (

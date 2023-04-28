@@ -82,12 +82,12 @@ function InfoBox() {
           </div>
         </div>
 
-        {/* <button
+        <button
           onClick={handleWalletLogin}
-          className="absolute inset-x-4 bottom-4 h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold"
+          className="absolute inset-x-4 bottom-4 h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold scale-0"
         >
           Use External Wallet
-        </button> */}
+        </button>
       </div>
     );
   } else {

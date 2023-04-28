@@ -2,7 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { ResourceImage } from "../../util/constants";
 
 export default function StaticResourceLabel({
-  name,
+  // name,
   resourceId,
   count,
 }: {
