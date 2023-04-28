@@ -1,0 +1,133 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "ast": {
+    "absolutePath": "src/prototypes/CraftedComponents.sol",
+    "id": 28603,
+    "exportedSymbols": {
+      "BulletCraftedComponent": [
+        21498
+      ],
+      "BulletCraftedComponentID": [
+        21485
+      ],
+      "CraftedComponents": [
+        28602
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:250:157",
+    "nodes": [
+      {
+        "id": 28595,
+        "nodeType": "PragmaDirective",
+        "src": "32:24:157",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 28598,
+        "nodeType": "ImportDirective",
+        "src": "58:111:157",
+        "nodes": [],
+        "absolutePath": "src/components/BulletCraftedComponent.sol",
+        "file": "components/BulletCraftedComponent.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 28603,
+        "sourceUnit": 21499,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 28596,
+              "name": "BulletCraftedComponent",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 21498,
+              "src": "67:22:157",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          },
+          {
+            "foreign": {
+              "id": 28597,
+              "name": "ID",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 21485,
+              "src": "91:2:157",
+              "typeDescriptions": {}
+            },
+            "local": "BulletCraftedComponentID",
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 28602,
+        "nodeType": "StructDefinition",
+        "src": "204:77:157",
+        "nodes": [],
+        "canonicalName": "CraftedComponents",
+        "members": [
+          {
+            "constant": false,
+            "id": 28601,
+            "mutability": "mutable",
+            "name": "bulletCraftedComponent",
+            "nameLocation": "256:22:157",
+            "nodeType": "VariableDeclaration",
+            "scope": 28602,
+            "src": "233:45:157",
+            "stateVariable": false,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_BulletCraftedComponent_$21498",
+              "typeString": "contract BulletCraftedComponent"
+            },
+            "typeName": {
+              "id": 28600,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 28599,
+                "name": "BulletCraftedComponent",
+                "nameLocations": [
+                  "233:22:157"
+                ],
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 21498,
+                "src": "233:22:157"
+              },
+              "referencedDeclaration": 21498,
+              "src": "233:22:157",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_BulletCraftedComponent_$21498",
+                "typeString": "contract BulletCraftedComponent"
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "name": "CraftedComponents",
+        "nameLocation": "211:17:157",
+        "scope": 28603,
+        "visibility": "public"
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 157
+}

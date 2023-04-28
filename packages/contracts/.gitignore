@@ -4,7 +4,7 @@ node_modules/
 bindings/
 artifacts/
 deployments
-abi/
-types/
+# abi/
+# types/
 broadcast/
 .env
