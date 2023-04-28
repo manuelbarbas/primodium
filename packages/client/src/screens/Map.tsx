@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { FixedSizeGrid as Grid } from "react-window";
 import { Has, HasValue, EntityID } from "@latticexyz/recs";
 import { createPerlin, Perlin } from "@latticexyz/noise";
@@ -57,15 +57,10 @@ export default function Map() {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex) * -1;
 
-    const tilesAtPosition = useEntityQuery(
-      useMemo(
-        () => [
-          Has(components.Tile),
-          HasValue(components.Position, { x: plotX, y: plotY }),
-        ],
-        [components.Tile, components.Position]
-      )
-    );
+    const tilesAtPosition = useEntityQuery([
+      Has(components.Tile),
+      HasValue(components.Position, { x: plotX, y: plotY }),
+    ]);
 
     const tile = useComponentValue(
       components.Tile,

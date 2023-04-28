@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
@@ -51,15 +51,10 @@ function TooltipBox() {
   // Get information on the selected tile
   const { selectedTile } = useSelectedTile();
 
-  const tilesAtPosition = useEntityQuery(
-    useMemo(
-      () => [
-        Has(components.Tile),
-        HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
-      ],
-      [components.Tile, components.Position, selectedTile]
-    )
-  );
+  const tilesAtPosition = useEntityQuery([
+    Has(components.Tile),
+    HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
+  ]);
 
   const tile = useComponentValue(
     components.Tile,
