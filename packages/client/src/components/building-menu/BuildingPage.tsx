@@ -26,7 +26,6 @@ function BuildingPage() {
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
-
       <BuildingMenuButton
         icon={"/img/icons/minersicon.png"}
         text={"Miners"}
@@ -75,19 +74,20 @@ function BuildingPage() {
           setMenuOpenIndex={setMenuOpenIndex}
         />
       </BuildingMenuButton>
-
-      <BuildingMenuButton
-        icon={"/img/icons/debugicon.png"}
-        text={"Debug"}
-        menuIndex={5}
-        menuOpenIndex={menuOpenIndex}
-        setMenuOpenIndex={setMenuOpenIndex}
-      >
-        <ChooseDebugMenu
-          title="Debug menu"
+      {import.meta.env.VITE_DEV === "true" && (
+        <BuildingMenuButton
+          icon={"/img/icons/debugicon.png"}
+          text={"Debug"}
+          menuIndex={5}
+          menuOpenIndex={menuOpenIndex}
           setMenuOpenIndex={setMenuOpenIndex}
-        />
-      </BuildingMenuButton>
+        >
+          <ChooseDebugMenu
+            title="Debug menu"
+            setMenuOpenIndex={setMenuOpenIndex}
+          />
+        </BuildingMenuButton>
+      )}
     </div>
   );
 }
