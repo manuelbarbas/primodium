@@ -1135,7 +1135,7 @@
         1134
       ],
       "LibTypes": [
-        43534
+        43558
       ],
       "Uint256Component": [
         1105
@@ -1430,8 +1430,8 @@
         ],
         "canonicalName": "UraniniteResourceComponent",
         "contractDependencies": [
-          43727,
-          43893
+          43751,
+          43917
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -1440,26 +1440,26 @@
           1105,
           1134,
           262,
-          43495,
-          46281,
-          43931,
+          43519,
+          46305,
+          43955,
           2359,
-          45837,
-          46337,
-          45713,
-          45580,
-          46326,
+          45861,
+          46361,
+          45737,
+          45604,
+          46350,
           2402,
-          45847
+          45871
         ],
         "name": "UraniniteResourceComponent",
         "nameLocation": "197:26:144",
         "scope": 23008,
         "usedErrors": [
-          43295,
-          46206,
-          46334,
-          46336
+          43319,
+          46230,
+          46358,
+          46360
         ]
       }
     ],

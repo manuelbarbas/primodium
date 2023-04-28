@@ -10,7 +10,7 @@
   },
   "ast": {
     "absolutePath": "src/prototypes/ResourceResearchComponents.sol",
-    "id": 28711,
+    "id": 28731,
     "exportedSymbols": {
       "CopperResearchComponent": [
         21522
@@ -43,7 +43,7 @@
         22229
       ],
       "ResourceResearchComponents": [
-        28710
+        28730
       ],
       "TitaniumResearchComponent": [
         22887
@@ -62,7 +62,7 @@
     "src": "32:1333:159",
     "nodes": [
       {
-        "id": 28667,
+        "id": 28687,
         "nodeType": "PragmaDirective",
         "src": "32:24:159",
         "nodes": [],
@@ -74,19 +74,19 @@
         ]
       },
       {
-        "id": 28670,
+        "id": 28690,
         "nodeType": "ImportDirective",
         "src": "81:114:159",
         "nodes": [],
         "absolutePath": "src/components/CopperResearchComponent.sol",
         "file": "components/CopperResearchComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28711,
+        "scope": 28731,
         "sourceUnit": 21523,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28668,
+              "id": 28688,
               "name": "CopperResearchComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -98,7 +98,7 @@
           },
           {
             "foreign": {
-              "id": 28669,
+              "id": 28689,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -113,19 +113,19 @@
         "unitAlias": ""
       },
       {
-        "id": 28673,
+        "id": 28693,
         "nodeType": "ImportDirective",
         "src": "196:117:159",
         "nodes": [],
         "absolutePath": "src/components/LithiumResearchComponent.sol",
         "file": "components/LithiumResearchComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28711,
+        "scope": 28731,
         "sourceUnit": 22147,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28671,
+              "id": 28691,
               "name": "LithiumResearchComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -137,7 +137,7 @@
           },
           {
             "foreign": {
-              "id": 28672,
+              "id": 28692,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -152,19 +152,19 @@
         "unitAlias": ""
       },
       {
-        "id": 28676,
+        "id": 28696,
         "nodeType": "ImportDirective",
         "src": "314:120:159",
         "nodes": [],
         "absolutePath": "src/components/TitaniumResearchComponent.sol",
         "file": "components/TitaniumResearchComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28711,
+        "scope": 28731,
         "sourceUnit": 22888,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28674,
+              "id": 28694,
               "name": "TitaniumResearchComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -176,7 +176,7 @@
           },
           {
             "foreign": {
-              "id": 28675,
+              "id": 28695,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -191,19 +191,19 @@
         "unitAlias": ""
       },
       {
-        "id": 28679,
+        "id": 28699,
         "nodeType": "ImportDirective",
         "src": "435:114:159",
         "nodes": [],
         "absolutePath": "src/components/OsmiumResearchComponent.sol",
         "file": "components/OsmiumResearchComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28711,
+        "scope": 28731,
         "sourceUnit": 22243,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28677,
+              "id": 28697,
               "name": "OsmiumResearchComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -215,7 +215,7 @@
           },
           {
             "foreign": {
-              "id": 28678,
+              "id": 28698,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -230,19 +230,19 @@
         "unitAlias": ""
       },
       {
-        "id": 28682,
+        "id": 28702,
         "nodeType": "ImportDirective",
         "src": "550:120:159",
         "nodes": [],
         "absolutePath": "src/components/TungstenResearchComponent.sol",
         "file": "components/TungstenResearchComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28711,
+        "scope": 28731,
         "sourceUnit": 22936,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28680,
+              "id": 28700,
               "name": "TungstenResearchComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -254,7 +254,7 @@
           },
           {
             "foreign": {
-              "id": 28681,
+              "id": 28701,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -269,19 +269,19 @@
         "unitAlias": ""
       },
       {
-        "id": 28685,
+        "id": 28705,
         "nodeType": "ImportDirective",
         "src": "671:117:159",
         "nodes": [],
         "absolutePath": "src/components/IridiumResearchComponent.sol",
         "file": "components/IridiumResearchComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28711,
+        "scope": 28731,
         "sourceUnit": 21835,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28683,
+              "id": 28703,
               "name": "IridiumResearchComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -293,7 +293,7 @@
           },
           {
             "foreign": {
-              "id": 28684,
+              "id": 28704,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -308,19 +308,19 @@
         "unitAlias": ""
       },
       {
-        "id": 28688,
+        "id": 28708,
         "nodeType": "ImportDirective",
         "src": "789:126:159",
         "nodes": [],
         "absolutePath": "src/components/KimberliteResearchComponent.sol",
         "file": "components/KimberliteResearchComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28711,
+        "scope": 28731,
         "sourceUnit": 21979,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28686,
+              "id": 28706,
               "name": "KimberliteResearchComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -332,7 +332,7 @@
           },
           {
             "foreign": {
-              "id": 28687,
+              "id": 28707,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -347,7 +347,7 @@
         "unitAlias": ""
       },
       {
-        "id": 28710,
+        "id": 28730,
         "nodeType": "StructDefinition",
         "src": "950:414:159",
         "nodes": [],
@@ -355,12 +355,12 @@
         "members": [
           {
             "constant": false,
-            "id": 28691,
+            "id": 28711,
             "mutability": "mutable",
             "name": "copperResearchComponent",
             "nameLocation": "1012:23:159",
             "nodeType": "VariableDeclaration",
-            "scope": 28710,
+            "scope": 28730,
             "src": "988:47:159",
             "stateVariable": false,
             "storageLocation": "default",
@@ -369,10 +369,10 @@
               "typeString": "contract CopperResearchComponent"
             },
             "typeName": {
-              "id": 28690,
+              "id": 28710,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28689,
+                "id": 28709,
                 "name": "CopperResearchComponent",
                 "nameLocations": [
                   "988:23:159"
@@ -392,12 +392,12 @@
           },
           {
             "constant": false,
-            "id": 28694,
+            "id": 28714,
             "mutability": "mutable",
             "name": "lithiumResearchComponent",
             "nameLocation": "1064:24:159",
             "nodeType": "VariableDeclaration",
-            "scope": 28710,
+            "scope": 28730,
             "src": "1039:49:159",
             "stateVariable": false,
             "storageLocation": "default",
@@ -406,10 +406,10 @@
               "typeString": "contract LithiumResearchComponent"
             },
             "typeName": {
-              "id": 28693,
+              "id": 28713,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28692,
+                "id": 28712,
                 "name": "LithiumResearchComponent",
                 "nameLocations": [
                   "1039:24:159"
@@ -429,12 +429,12 @@
           },
           {
             "constant": false,
-            "id": 28697,
+            "id": 28717,
             "mutability": "mutable",
             "name": "titaniumResearchComponent",
             "nameLocation": "1118:25:159",
             "nodeType": "VariableDeclaration",
-            "scope": 28710,
+            "scope": 28730,
             "src": "1092:51:159",
             "stateVariable": false,
             "storageLocation": "default",
@@ -443,10 +443,10 @@
               "typeString": "contract TitaniumResearchComponent"
             },
             "typeName": {
-              "id": 28696,
+              "id": 28716,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28695,
+                "id": 28715,
                 "name": "TitaniumResearchComponent",
                 "nameLocations": [
                   "1092:25:159"
@@ -466,12 +466,12 @@
           },
           {
             "constant": false,
-            "id": 28700,
+            "id": 28720,
             "mutability": "mutable",
             "name": "osmiumResearchComponent",
             "nameLocation": "1171:23:159",
             "nodeType": "VariableDeclaration",
-            "scope": 28710,
+            "scope": 28730,
             "src": "1147:47:159",
             "stateVariable": false,
             "storageLocation": "default",
@@ -480,10 +480,10 @@
               "typeString": "contract OsmiumResearchComponent"
             },
             "typeName": {
-              "id": 28699,
+              "id": 28719,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28698,
+                "id": 28718,
                 "name": "OsmiumResearchComponent",
                 "nameLocations": [
                   "1147:23:159"
@@ -503,12 +503,12 @@
           },
           {
             "constant": false,
-            "id": 28703,
+            "id": 28723,
             "mutability": "mutable",
             "name": "tungstenResearchComponent",
             "nameLocation": "1224:25:159",
             "nodeType": "VariableDeclaration",
-            "scope": 28710,
+            "scope": 28730,
             "src": "1198:51:159",
             "stateVariable": false,
             "storageLocation": "default",
@@ -517,10 +517,10 @@
               "typeString": "contract TungstenResearchComponent"
             },
             "typeName": {
-              "id": 28702,
+              "id": 28722,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28701,
+                "id": 28721,
                 "name": "TungstenResearchComponent",
                 "nameLocations": [
                   "1198:25:159"
@@ -540,12 +540,12 @@
           },
           {
             "constant": false,
-            "id": 28706,
+            "id": 28726,
             "mutability": "mutable",
             "name": "iridiumResearchComponent",
             "nameLocation": "1278:24:159",
             "nodeType": "VariableDeclaration",
-            "scope": 28710,
+            "scope": 28730,
             "src": "1253:49:159",
             "stateVariable": false,
             "storageLocation": "default",
@@ -554,10 +554,10 @@
               "typeString": "contract IridiumResearchComponent"
             },
             "typeName": {
-              "id": 28705,
+              "id": 28725,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28704,
+                "id": 28724,
                 "name": "IridiumResearchComponent",
                 "nameLocations": [
                   "1253:24:159"
@@ -577,12 +577,12 @@
           },
           {
             "constant": false,
-            "id": 28709,
+            "id": 28729,
             "mutability": "mutable",
             "name": "kimberliteResearchComponent",
             "nameLocation": "1334:27:159",
             "nodeType": "VariableDeclaration",
-            "scope": 28710,
+            "scope": 28730,
             "src": "1306:55:159",
             "stateVariable": false,
             "storageLocation": "default",
@@ -591,10 +591,10 @@
               "typeString": "contract KimberliteResearchComponent"
             },
             "typeName": {
-              "id": 28708,
+              "id": 28728,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28707,
+                "id": 28727,
                 "name": "KimberliteResearchComponent",
                 "nameLocations": [
                   "1306:27:159"
@@ -615,7 +615,7 @@
         ],
         "name": "ResourceResearchComponents",
         "nameLocation": "957:26:159",
-        "scope": 28711,
+        "scope": 28731,
         "visibility": "public"
       }
     ],

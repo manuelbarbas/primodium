@@ -36,10 +36,10 @@ library LibMine {
       // iron is default unlocked
     } else if (resourceKey == CopperID) {
       // copper is unlocked for mud test
-      // if (!rrc.copperResearchComponent.has(addressToEntity(msg.sender))) {
-      //   lastClaimedAtComponent.set(entity, endClaimTime);
-      //   return 0;
-      // }
+      if (!rrc.copperResearchComponent.has(addressToEntity(msg.sender))) {
+        lastClaimedAtComponent.set(entity, endClaimTime);
+        return 0;
+      }
     } else if (resourceKey == LithiumID) {
       if (!rrc.lithiumResearchComponent.has(addressToEntity(msg.sender))) {
         return 0;
