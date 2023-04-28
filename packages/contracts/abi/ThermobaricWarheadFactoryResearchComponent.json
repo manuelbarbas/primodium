@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/ThermobaricWarheadFactoryResearchComponent.sol",
-    "id": 22840,
+    "id": 22818,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "ID": [
-        22826
+        22804
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "Set": [
-        43917
+        43895
       ],
       "ThermobaricWarheadFactoryResearchComponent": [
-        22839
+        22817
       ]
     },
     "nodeType": "SourceUnit",
     "src": "33:299:137",
     "nodes": [
       {
-        "id": 22817,
+        "id": 22795,
         "nodeType": "PragmaDirective",
         "src": "33:24:137",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 22818,
+        "id": 22796,
         "nodeType": "ImportDirective",
         "src": "58:52:137",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22840,
+        "scope": 22818,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22826,
+        "id": 22804,
         "nodeType": "VariableDeclaration",
         "src": "112:87:137",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "129:2:137",
-        "scope": 22840,
+        "scope": 22818,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22819,
+          "id": 22797,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "112:7:137",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e546865726d6f626172696357617268656164466163746f72795265736561726368",
-                  "id": 22823,
+                  "id": 22801,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.ThermobaricWarheadFactoryResearch\""
                   }
                 ],
-                "id": 22822,
+                "id": 22800,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22824,
+              "id": 22802,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22821,
+            "id": 22799,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22820,
+              "id": 22798,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "134:7:137",
               "typeDescriptions": {}
             }
           },
-          "id": 22825,
+          "id": 22803,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22839,
+        "id": 22817,
         "nodeType": "ContractDefinition",
         "src": "202:129:137",
         "nodes": [
           {
-            "id": 22838,
+            "id": 22816,
             "nodeType": "FunctionDefinition",
             "src": "275:54:137",
             "nodes": [],
             "body": {
-              "id": 22837,
+              "id": 22815,
               "nodeType": "Block",
               "src": "327:2:137",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22833,
+                    "id": 22811,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22830,
+                    "referencedDeclaration": 22808,
                     "src": "316:5:137",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 22834,
+                    "id": 22812,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22826,
+                    "referencedDeclaration": 22804,
                     "src": "323:2:137",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 22835,
+                "id": 22813,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22832,
+                  "id": 22810,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "302:13:137"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22831,
+              "id": 22809,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22830,
+                  "id": 22808,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "295:5:137",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22838,
+                  "scope": 22816,
                   "src": "287:13:137",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22829,
+                    "id": 22807,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "287:7:137",
@@ -1393,12 +1393,12 @@
               "src": "286:15:137"
             },
             "returnParameters": {
-              "id": 22836,
+              "id": 22814,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "327:0:137"
             },
-            "scope": 22839,
+            "scope": 22817,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22827,
+              "id": 22805,
               "name": "BoolComponent",
               "nameLocations": [
                 "257:13:137"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "257:13:137"
             },
-            "id": 22828,
+            "id": 22806,
             "nodeType": "InheritanceSpecifier",
             "src": "257:13:137"
           }
         ],
         "canonicalName": "ThermobaricWarheadFactoryResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22839,
+          22817,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "ThermobaricWarheadFactoryResearchComponent",
         "nameLocation": "211:42:137",
-        "scope": 22840,
+        "scope": 22818,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

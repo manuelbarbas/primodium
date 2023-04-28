@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/HardenedDrillResearchComponent.sol",
-    "id": 21667,
+    "id": 21645,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "HardenedDrillResearchComponent": [
-        21666
+        21644
       ],
       "ID": [
-        21653
+        21631
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "Set": [
-        43917
+        43895
       ]
     },
     "nodeType": "SourceUnit",
     "src": "33:275:94",
     "nodes": [
       {
-        "id": 21644,
+        "id": 21622,
         "nodeType": "PragmaDirective",
         "src": "33:24:94",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 21645,
+        "id": 21623,
         "nodeType": "ImportDirective",
         "src": "58:52:94",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21667,
+        "scope": 21645,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21653,
+        "id": 21631,
         "nodeType": "VariableDeclaration",
         "src": "112:75:94",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "129:2:94",
-        "scope": 21667,
+        "scope": 21645,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21646,
+          "id": 21624,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "112:7:94",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e48617264656e65644472696c6c5265736561726368",
-                  "id": 21650,
+                  "id": 21628,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.HardenedDrillResearch\""
                   }
                 ],
-                "id": 21649,
+                "id": 21627,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21651,
+              "id": 21629,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21648,
+            "id": 21626,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21647,
+              "id": 21625,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "134:7:94",
               "typeDescriptions": {}
             }
           },
-          "id": 21652,
+          "id": 21630,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21666,
+        "id": 21644,
         "nodeType": "ContractDefinition",
         "src": "190:117:94",
         "nodes": [
           {
-            "id": 21665,
+            "id": 21643,
             "nodeType": "FunctionDefinition",
             "src": "251:54:94",
             "nodes": [],
             "body": {
-              "id": 21664,
+              "id": 21642,
               "nodeType": "Block",
               "src": "303:2:94",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21660,
+                    "id": 21638,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21657,
+                    "referencedDeclaration": 21635,
                     "src": "292:5:94",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 21661,
+                    "id": 21639,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21653,
+                    "referencedDeclaration": 21631,
                     "src": "299:2:94",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 21662,
+                "id": 21640,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21659,
+                  "id": 21637,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "278:13:94"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21658,
+              "id": 21636,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21657,
+                  "id": 21635,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "271:5:94",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21665,
+                  "scope": 21643,
                   "src": "263:13:94",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21656,
+                    "id": 21634,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "263:7:94",
@@ -1393,12 +1393,12 @@
               "src": "262:15:94"
             },
             "returnParameters": {
-              "id": 21663,
+              "id": 21641,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "303:0:94"
             },
-            "scope": 21666,
+            "scope": 21644,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21654,
+              "id": 21632,
               "name": "BoolComponent",
               "nameLocations": [
                 "233:13:94"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "233:13:94"
             },
-            "id": 21655,
+            "id": 21633,
             "nodeType": "InheritanceSpecifier",
             "src": "233:13:94"
           }
         ],
         "canonicalName": "HardenedDrillResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21666,
+          21644,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "HardenedDrillResearchComponent",
         "nameLocation": "199:30:94",
-        "scope": 21667,
+        "scope": 21645,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

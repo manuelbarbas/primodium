@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/PrecisionMachineryFactoryResearchComponent.sol",
-    "id": 22483,
+    "id": 22461,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "ID": [
-        22469
+        22447
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "PrecisionMachineryFactoryResearchComponent": [
-        22482
+        22460
       ],
       "Set": [
-        43917
+        43895
       ]
     },
     "nodeType": "SourceUnit",
     "src": "33:299:128",
     "nodes": [
       {
-        "id": 22460,
+        "id": 22438,
         "nodeType": "PragmaDirective",
         "src": "33:24:128",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 22461,
+        "id": 22439,
         "nodeType": "ImportDirective",
         "src": "58:52:128",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22483,
+        "scope": 22461,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22469,
+        "id": 22447,
         "nodeType": "VariableDeclaration",
         "src": "112:87:128",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "129:2:128",
-        "scope": 22483,
+        "scope": 22461,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22462,
+          "id": 22440,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "112:7:128",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e507265636973696f6e4d616368696e657279466163746f72795265736561726368",
-                  "id": 22466,
+                  "id": 22444,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.PrecisionMachineryFactoryResearch\""
                   }
                 ],
-                "id": 22465,
+                "id": 22443,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22467,
+              "id": 22445,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22464,
+            "id": 22442,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22463,
+              "id": 22441,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "134:7:128",
               "typeDescriptions": {}
             }
           },
-          "id": 22468,
+          "id": 22446,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22482,
+        "id": 22460,
         "nodeType": "ContractDefinition",
         "src": "202:129:128",
         "nodes": [
           {
-            "id": 22481,
+            "id": 22459,
             "nodeType": "FunctionDefinition",
             "src": "275:54:128",
             "nodes": [],
             "body": {
-              "id": 22480,
+              "id": 22458,
               "nodeType": "Block",
               "src": "327:2:128",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22476,
+                    "id": 22454,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22473,
+                    "referencedDeclaration": 22451,
                     "src": "316:5:128",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 22477,
+                    "id": 22455,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22469,
+                    "referencedDeclaration": 22447,
                     "src": "323:2:128",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 22478,
+                "id": 22456,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22475,
+                  "id": 22453,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "302:13:128"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22474,
+              "id": 22452,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22473,
+                  "id": 22451,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "295:5:128",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22481,
+                  "scope": 22459,
                   "src": "287:13:128",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22472,
+                    "id": 22450,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "287:7:128",
@@ -1393,12 +1393,12 @@
               "src": "286:15:128"
             },
             "returnParameters": {
-              "id": 22479,
+              "id": 22457,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "327:0:128"
             },
-            "scope": 22482,
+            "scope": 22460,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22470,
+              "id": 22448,
               "name": "BoolComponent",
               "nameLocations": [
                 "257:13:128"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "257:13:128"
             },
-            "id": 22471,
+            "id": 22449,
             "nodeType": "InheritanceSpecifier",
             "src": "257:13:128"
           }
         ],
         "canonicalName": "PrecisionMachineryFactoryResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22482,
+          22460,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "PrecisionMachineryFactoryResearchComponent",
         "nameLocation": "211:42:128",
-        "scope": 22483,
+        "scope": 22461,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

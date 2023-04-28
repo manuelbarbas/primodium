@@ -1123,32 +1123,32 @@
   },
   "ast": {
     "absolutePath": "src/components/UraniniteResourceComponent.sol",
-    "id": 23008,
+    "id": 22986,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        22994
+        22972
       ],
       "IUint256Component": [
         1134
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "Uint256Component": [
         1105
       ],
       "UraniniteResourceComponent": [
-        23007
+        22985
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:275:144",
     "nodes": [
       {
-        "id": 22985,
+        "id": 22963,
         "nodeType": "PragmaDirective",
         "src": "32:24:144",
         "nodes": [],
@@ -1160,20 +1160,20 @@
         ]
       },
       {
-        "id": 22986,
+        "id": 22964,
         "nodeType": "ImportDirective",
         "src": "57:55:144",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 23008,
+        "scope": 22986,
         "sourceUnit": 1889,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22994,
+        "id": 22972,
         "nodeType": "VariableDeclaration",
         "src": "114:71:144",
         "nodes": [],
@@ -1181,7 +1181,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:144",
-        "scope": 23008,
+        "scope": 22986,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1189,7 +1189,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22987,
+          "id": 22965,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:144",
@@ -1204,7 +1204,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e5572616e696e6974655265736f75726365",
-                  "id": 22991,
+                  "id": 22969,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1226,7 +1226,7 @@
                     "typeString": "literal_string \"component.UraniniteResource\""
                   }
                 ],
-                "id": 22990,
+                "id": 22968,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1237,7 +1237,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22992,
+              "id": 22970,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1261,7 +1261,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22989,
+            "id": 22967,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1273,14 +1273,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22988,
+              "id": 22966,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:144",
               "typeDescriptions": {}
             }
           },
-          "id": 22993,
+          "id": 22971,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1299,17 +1299,17 @@
         "visibility": "internal"
       },
       {
-        "id": 23007,
+        "id": 22985,
         "nodeType": "ContractDefinition",
         "src": "188:119:144",
         "nodes": [
           {
-            "id": 23006,
+            "id": 22984,
             "nodeType": "FunctionDefinition",
             "src": "248:57:144",
             "nodes": [],
             "body": {
-              "id": 23005,
+              "id": 22983,
               "nodeType": "Block",
               "src": "303:2:144",
               "nodes": [],
@@ -1321,11 +1321,11 @@
               {
                 "arguments": [
                   {
-                    "id": 23001,
+                    "id": 22979,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22998,
+                    "referencedDeclaration": 22976,
                     "src": "292:5:144",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1333,11 +1333,11 @@
                     }
                   },
                   {
-                    "id": 23002,
+                    "id": 22980,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22994,
+                    "referencedDeclaration": 22972,
                     "src": "299:2:144",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1345,10 +1345,10 @@
                     }
                   }
                 ],
-                "id": 23003,
+                "id": 22981,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 23000,
+                  "id": 22978,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "275:16:144"
@@ -1364,17 +1364,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22999,
+              "id": 22977,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22998,
+                  "id": 22976,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "268:5:144",
                   "nodeType": "VariableDeclaration",
-                  "scope": 23006,
+                  "scope": 22984,
                   "src": "260:13:144",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1383,7 +1383,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22997,
+                    "id": 22975,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "260:7:144",
@@ -1399,12 +1399,12 @@
               "src": "259:15:144"
             },
             "returnParameters": {
-              "id": 23004,
+              "id": 22982,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "303:0:144"
             },
-            "scope": 23007,
+            "scope": 22985,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1414,7 +1414,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22995,
+              "id": 22973,
               "name": "Uint256Component",
               "nameLocations": [
                 "227:16:144"
@@ -1423,43 +1423,43 @@
               "referencedDeclaration": 1105,
               "src": "227:16:144"
             },
-            "id": 22996,
+            "id": 22974,
             "nodeType": "InheritanceSpecifier",
             "src": "227:16:144"
           }
         ],
         "canonicalName": "UraniniteResourceComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          23007,
+          22985,
           1105,
           1134,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "UraniniteResourceComponent",
         "nameLocation": "197:26:144",
-        "scope": 23008,
+        "scope": 22986,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],
