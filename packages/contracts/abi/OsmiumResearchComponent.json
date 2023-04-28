@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/OsmiumResearchComponent.sol",
-    "id": 22243,
+    "id": 22221,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "ID": [
-        22229
+        22207
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "OsmiumResearchComponent": [
-        22242
+        22220
       ],
       "Set": [
-        43917
+        43895
       ]
     },
     "nodeType": "SourceUnit",
     "src": "86:261:118",
     "nodes": [
       {
-        "id": 22220,
+        "id": 22198,
         "nodeType": "PragmaDirective",
         "src": "86:24:118",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 22221,
+        "id": 22199,
         "nodeType": "ImportDirective",
         "src": "111:52:118",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22243,
+        "scope": 22221,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22229,
+        "id": 22207,
         "nodeType": "VariableDeclaration",
         "src": "165:68:118",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "182:2:118",
-        "scope": 22243,
+        "scope": 22221,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22222,
+          "id": 22200,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "165:7:118",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4f736d69756d5265736561726368",
-                  "id": 22226,
+                  "id": 22204,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.OsmiumResearch\""
                   }
                 ],
-                "id": 22225,
+                "id": 22203,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22227,
+              "id": 22205,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22224,
+            "id": 22202,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22223,
+              "id": 22201,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "187:7:118",
               "typeDescriptions": {}
             }
           },
-          "id": 22228,
+          "id": 22206,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22242,
+        "id": 22220,
         "nodeType": "ContractDefinition",
         "src": "236:110:118",
         "nodes": [
           {
-            "id": 22241,
+            "id": 22219,
             "nodeType": "FunctionDefinition",
             "src": "290:54:118",
             "nodes": [],
             "body": {
-              "id": 22240,
+              "id": 22218,
               "nodeType": "Block",
               "src": "342:2:118",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22236,
+                    "id": 22214,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22233,
+                    "referencedDeclaration": 22211,
                     "src": "331:5:118",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 22237,
+                    "id": 22215,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22229,
+                    "referencedDeclaration": 22207,
                     "src": "338:2:118",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 22238,
+                "id": 22216,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22235,
+                  "id": 22213,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "317:13:118"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22234,
+              "id": 22212,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22233,
+                  "id": 22211,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "310:5:118",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22241,
+                  "scope": 22219,
                   "src": "302:13:118",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22232,
+                    "id": 22210,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "302:7:118",
@@ -1393,12 +1393,12 @@
               "src": "301:15:118"
             },
             "returnParameters": {
-              "id": 22239,
+              "id": 22217,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "342:0:118"
             },
-            "scope": 22242,
+            "scope": 22220,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22230,
+              "id": 22208,
               "name": "BoolComponent",
               "nameLocations": [
                 "272:13:118"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "272:13:118"
             },
-            "id": 22231,
+            "id": 22209,
             "nodeType": "InheritanceSpecifier",
             "src": "272:13:118"
           }
         ],
         "canonicalName": "OsmiumResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22242,
+          22220,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "OsmiumResearchComponent",
         "nameLocation": "245:23:118",
-        "scope": 22243,
+        "scope": 22221,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

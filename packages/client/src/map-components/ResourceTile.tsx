@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 import { Has, HasValue, EntityID, getComponentValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
@@ -24,15 +24,10 @@ function ResourceTile({
   const { world, components, singletonIndex } = useMud();
 
   // Get tile information
-  const tilesAtPosition = useEntityQuery(
-    useMemo(
-      () => [
-        Has(components.Tile),
-        HasValue(components.Position, { x: x, y: y }),
-      ],
-      [components.Tile, components.Position]
-    )
-  );
+  const tilesAtPosition = useEntityQuery([
+    Has(components.Tile),
+    HasValue(components.Position, { x: x, y: y }),
+  ]);
 
   const tile = useComponentValue(
     components.Tile,
@@ -68,20 +63,15 @@ function ResourceTile({
   }
 
   // Get all conveyor paths that end at this tile.
-  const endingConveyorPaths = useEntityQuery(
-    useMemo(
-      () => [
-        Has(components.Path),
-        HasValue(components.Path, {
-          value:
-            tilesAtPosition.length > 0
-              ? (world.entities[tilesAtPosition[0]] as unknown as number)
-              : 0,
-        }),
-      ],
-      [components.Path, tilesAtPosition, world]
-    )
-  );
+  const endingConveyorPaths = useEntityQuery([
+    Has(components.Path),
+    HasValue(components.Path, {
+      value:
+        tilesAtPosition.length > 0
+          ? (world.entities[tilesAtPosition[0]] as unknown as number)
+          : 0,
+    }),
+  ]);
 
   endingConveyorPaths.map((item) => {
     // Paths that ends at the current tile

@@ -10,77 +10,77 @@
   },
   "ast": {
     "absolutePath": "src/prototypes/ResourceComponents.sol",
-    "id": 28686,
+    "id": 28664,
     "exportedSymbols": {
       "BolutiteResourceComponent": [
-        21474
+        21452
       ],
       "BolutiteResourceComponentID": [
-        21461
+        21439
       ],
       "CopperResourceComponent": [
-        21546
+        21524
       ],
       "CopperResourceComponentID": [
-        21533
+        21511
       ],
       "IridiumResourceComponent": [
-        21858
+        21836
       ],
       "IridiumResourceComponentID": [
-        21845
+        21823
       ],
       "IronResourceComponent": [
-        21906
+        21884
       ],
       "IronResourceComponentID": [
-        21893
+        21871
       ],
       "KimberliteResourceComponent": [
-        22002
+        21980
       ],
       "KimberliteResourceComponentID": [
-        21989
+        21967
       ],
       "LithiumResourceComponent": [
-        22170
+        22148
       ],
       "LithiumResourceComponentID": [
-        22157
+        22135
       ],
       "OsmiumResourceComponent": [
-        22266
+        22244
       ],
       "OsmiumResourceComponentID": [
-        22253
+        22231
       ],
       "ResourceComponents": [
-        28685
+        28663
       ],
       "TitaniumResourceComponent": [
-        22911
+        22889
       ],
       "TitaniumResourceComponentID": [
-        22898
+        22876
       ],
       "TungstenResourceComponent": [
-        22959
+        22937
       ],
       "TungstenResourceComponentID": [
-        22946
+        22924
       ],
       "UraniniteResourceComponent": [
-        23007
+        22985
       ],
       "UraniniteResourceComponentID": [
-        22994
+        22972
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:1815:158",
     "nodes": [
       {
-        "id": 28624,
+        "id": 28602,
         "nodeType": "PragmaDirective",
         "src": "32:24:158",
         "nodes": [],
@@ -92,23 +92,23 @@
         ]
       },
       {
-        "id": 28627,
+        "id": 28605,
         "nodeType": "ImportDirective",
         "src": "58:120:158",
         "nodes": [],
         "absolutePath": "src/components/BolutiteResourceComponent.sol",
         "file": "components/BolutiteResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 21475,
+        "scope": 28664,
+        "sourceUnit": 21453,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28625,
+              "id": 28603,
               "name": "BolutiteResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21474,
+              "referencedDeclaration": 21452,
               "src": "67:25:158",
               "typeDescriptions": {}
             },
@@ -116,11 +116,11 @@
           },
           {
             "foreign": {
-              "id": 28626,
+              "id": 28604,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21461,
+              "referencedDeclaration": 21439,
               "src": "94:2:158",
               "typeDescriptions": {}
             },
@@ -131,23 +131,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28630,
+        "id": 28608,
         "nodeType": "ImportDirective",
         "src": "179:114:158",
         "nodes": [],
         "absolutePath": "src/components/CopperResourceComponent.sol",
         "file": "components/CopperResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 21547,
+        "scope": 28664,
+        "sourceUnit": 21525,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28628,
+              "id": 28606,
               "name": "CopperResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21546,
+              "referencedDeclaration": 21524,
               "src": "188:23:158",
               "typeDescriptions": {}
             },
@@ -155,11 +155,11 @@
           },
           {
             "foreign": {
-              "id": 28629,
+              "id": 28607,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21533,
+              "referencedDeclaration": 21511,
               "src": "213:2:158",
               "typeDescriptions": {}
             },
@@ -170,23 +170,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28633,
+        "id": 28611,
         "nodeType": "ImportDirective",
         "src": "294:117:158",
         "nodes": [],
         "absolutePath": "src/components/IridiumResourceComponent.sol",
         "file": "components/IridiumResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 21859,
+        "scope": 28664,
+        "sourceUnit": 21837,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28631,
+              "id": 28609,
               "name": "IridiumResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21858,
+              "referencedDeclaration": 21836,
               "src": "303:24:158",
               "typeDescriptions": {}
             },
@@ -194,11 +194,11 @@
           },
           {
             "foreign": {
-              "id": 28632,
+              "id": 28610,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21845,
+              "referencedDeclaration": 21823,
               "src": "329:2:158",
               "typeDescriptions": {}
             },
@@ -209,23 +209,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28636,
+        "id": 28614,
         "nodeType": "ImportDirective",
         "src": "412:108:158",
         "nodes": [],
         "absolutePath": "src/components/IronResourceComponent.sol",
         "file": "components/IronResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 21907,
+        "scope": 28664,
+        "sourceUnit": 21885,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28634,
+              "id": 28612,
               "name": "IronResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21906,
+              "referencedDeclaration": 21884,
               "src": "421:21:158",
               "typeDescriptions": {}
             },
@@ -233,11 +233,11 @@
           },
           {
             "foreign": {
-              "id": 28635,
+              "id": 28613,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21893,
+              "referencedDeclaration": 21871,
               "src": "444:2:158",
               "typeDescriptions": {}
             },
@@ -248,23 +248,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28639,
+        "id": 28617,
         "nodeType": "ImportDirective",
         "src": "521:126:158",
         "nodes": [],
         "absolutePath": "src/components/KimberliteResourceComponent.sol",
         "file": "components/KimberliteResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 22003,
+        "scope": 28664,
+        "sourceUnit": 21981,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28637,
+              "id": 28615,
               "name": "KimberliteResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22002,
+              "referencedDeclaration": 21980,
               "src": "530:27:158",
               "typeDescriptions": {}
             },
@@ -272,11 +272,11 @@
           },
           {
             "foreign": {
-              "id": 28638,
+              "id": 28616,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21989,
+              "referencedDeclaration": 21967,
               "src": "559:2:158",
               "typeDescriptions": {}
             },
@@ -287,23 +287,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28642,
+        "id": 28620,
         "nodeType": "ImportDirective",
         "src": "648:117:158",
         "nodes": [],
         "absolutePath": "src/components/LithiumResourceComponent.sol",
         "file": "components/LithiumResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 22171,
+        "scope": 28664,
+        "sourceUnit": 22149,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28640,
+              "id": 28618,
               "name": "LithiumResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22170,
+              "referencedDeclaration": 22148,
               "src": "657:24:158",
               "typeDescriptions": {}
             },
@@ -311,11 +311,11 @@
           },
           {
             "foreign": {
-              "id": 28641,
+              "id": 28619,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22157,
+              "referencedDeclaration": 22135,
               "src": "683:2:158",
               "typeDescriptions": {}
             },
@@ -326,23 +326,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28645,
+        "id": 28623,
         "nodeType": "ImportDirective",
         "src": "766:114:158",
         "nodes": [],
         "absolutePath": "src/components/OsmiumResourceComponent.sol",
         "file": "components/OsmiumResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 22267,
+        "scope": 28664,
+        "sourceUnit": 22245,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28643,
+              "id": 28621,
               "name": "OsmiumResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22266,
+              "referencedDeclaration": 22244,
               "src": "775:23:158",
               "typeDescriptions": {}
             },
@@ -350,11 +350,11 @@
           },
           {
             "foreign": {
-              "id": 28644,
+              "id": 28622,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22253,
+              "referencedDeclaration": 22231,
               "src": "800:2:158",
               "typeDescriptions": {}
             },
@@ -365,23 +365,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28648,
+        "id": 28626,
         "nodeType": "ImportDirective",
         "src": "881:120:158",
         "nodes": [],
         "absolutePath": "src/components/TitaniumResourceComponent.sol",
         "file": "components/TitaniumResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 22912,
+        "scope": 28664,
+        "sourceUnit": 22890,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28646,
+              "id": 28624,
               "name": "TitaniumResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22911,
+              "referencedDeclaration": 22889,
               "src": "890:25:158",
               "typeDescriptions": {}
             },
@@ -389,11 +389,11 @@
           },
           {
             "foreign": {
-              "id": 28647,
+              "id": 28625,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22898,
+              "referencedDeclaration": 22876,
               "src": "917:2:158",
               "typeDescriptions": {}
             },
@@ -404,23 +404,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28651,
+        "id": 28629,
         "nodeType": "ImportDirective",
         "src": "1002:120:158",
         "nodes": [],
         "absolutePath": "src/components/TungstenResourceComponent.sol",
         "file": "components/TungstenResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 22960,
+        "scope": 28664,
+        "sourceUnit": 22938,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28649,
+              "id": 28627,
               "name": "TungstenResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22959,
+              "referencedDeclaration": 22937,
               "src": "1011:25:158",
               "typeDescriptions": {}
             },
@@ -428,11 +428,11 @@
           },
           {
             "foreign": {
-              "id": 28650,
+              "id": 28628,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22946,
+              "referencedDeclaration": 22924,
               "src": "1038:2:158",
               "typeDescriptions": {}
             },
@@ -443,23 +443,23 @@
         "unitAlias": ""
       },
       {
-        "id": 28654,
+        "id": 28632,
         "nodeType": "ImportDirective",
         "src": "1123:123:158",
         "nodes": [],
         "absolutePath": "src/components/UraniniteResourceComponent.sol",
         "file": "components/UraniniteResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28686,
-        "sourceUnit": 23008,
+        "scope": 28664,
+        "sourceUnit": 22986,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28652,
+              "id": 28630,
               "name": "UraniniteResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 23007,
+              "referencedDeclaration": 22985,
               "src": "1132:26:158",
               "typeDescriptions": {}
             },
@@ -467,11 +467,11 @@
           },
           {
             "foreign": {
-              "id": 28653,
+              "id": 28631,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22994,
+              "referencedDeclaration": 22972,
               "src": "1160:2:158",
               "typeDescriptions": {}
             },
@@ -482,7 +482,7 @@
         "unitAlias": ""
       },
       {
-        "id": 28685,
+        "id": 28663,
         "nodeType": "StructDefinition",
         "src": "1281:565:158",
         "nodes": [],
@@ -490,36 +490,36 @@
         "members": [
           {
             "constant": false,
-            "id": 28657,
+            "id": 28635,
             "mutability": "mutable",
             "name": "bolutiteResourceComponent",
             "nameLocation": "1337:25:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1311:51:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_BolutiteResourceComponent_$21474",
+              "typeIdentifier": "t_contract$_BolutiteResourceComponent_$21452",
               "typeString": "contract BolutiteResourceComponent"
             },
             "typeName": {
-              "id": 28656,
+              "id": 28634,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28655,
+                "id": 28633,
                 "name": "BolutiteResourceComponent",
                 "nameLocations": [
                   "1311:25:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 21474,
+                "referencedDeclaration": 21452,
                 "src": "1311:25:158"
               },
-              "referencedDeclaration": 21474,
+              "referencedDeclaration": 21452,
               "src": "1311:25:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_BolutiteResourceComponent_$21474",
+                "typeIdentifier": "t_contract$_BolutiteResourceComponent_$21452",
                 "typeString": "contract BolutiteResourceComponent"
               }
             },
@@ -527,36 +527,36 @@
           },
           {
             "constant": false,
-            "id": 28660,
+            "id": 28638,
             "mutability": "mutable",
             "name": "copperResourceComponent",
             "nameLocation": "1390:23:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1366:47:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_CopperResourceComponent_$21546",
+              "typeIdentifier": "t_contract$_CopperResourceComponent_$21524",
               "typeString": "contract CopperResourceComponent"
             },
             "typeName": {
-              "id": 28659,
+              "id": 28637,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28658,
+                "id": 28636,
                 "name": "CopperResourceComponent",
                 "nameLocations": [
                   "1366:23:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 21546,
+                "referencedDeclaration": 21524,
                 "src": "1366:23:158"
               },
-              "referencedDeclaration": 21546,
+              "referencedDeclaration": 21524,
               "src": "1366:23:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_CopperResourceComponent_$21546",
+                "typeIdentifier": "t_contract$_CopperResourceComponent_$21524",
                 "typeString": "contract CopperResourceComponent"
               }
             },
@@ -564,36 +564,36 @@
           },
           {
             "constant": false,
-            "id": 28663,
+            "id": 28641,
             "mutability": "mutable",
             "name": "iridiumResourceComponent",
             "nameLocation": "1442:24:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1417:49:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IridiumResourceComponent_$21858",
+              "typeIdentifier": "t_contract$_IridiumResourceComponent_$21836",
               "typeString": "contract IridiumResourceComponent"
             },
             "typeName": {
-              "id": 28662,
+              "id": 28640,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28661,
+                "id": 28639,
                 "name": "IridiumResourceComponent",
                 "nameLocations": [
                   "1417:24:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 21858,
+                "referencedDeclaration": 21836,
                 "src": "1417:24:158"
               },
-              "referencedDeclaration": 21858,
+              "referencedDeclaration": 21836,
               "src": "1417:24:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IridiumResourceComponent_$21858",
+                "typeIdentifier": "t_contract$_IridiumResourceComponent_$21836",
                 "typeString": "contract IridiumResourceComponent"
               }
             },
@@ -601,36 +601,36 @@
           },
           {
             "constant": false,
-            "id": 28666,
+            "id": 28644,
             "mutability": "mutable",
             "name": "ironResourceComponent",
             "nameLocation": "1492:21:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1470:43:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_IronResourceComponent_$21906",
+              "typeIdentifier": "t_contract$_IronResourceComponent_$21884",
               "typeString": "contract IronResourceComponent"
             },
             "typeName": {
-              "id": 28665,
+              "id": 28643,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28664,
+                "id": 28642,
                 "name": "IronResourceComponent",
                 "nameLocations": [
                   "1470:21:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 21906,
+                "referencedDeclaration": 21884,
                 "src": "1470:21:158"
               },
-              "referencedDeclaration": 21906,
+              "referencedDeclaration": 21884,
               "src": "1470:21:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IronResourceComponent_$21906",
+                "typeIdentifier": "t_contract$_IronResourceComponent_$21884",
                 "typeString": "contract IronResourceComponent"
               }
             },
@@ -638,36 +638,36 @@
           },
           {
             "constant": false,
-            "id": 28669,
+            "id": 28647,
             "mutability": "mutable",
             "name": "kimberliteResourceComponent",
             "nameLocation": "1545:27:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1517:55:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_KimberliteResourceComponent_$22002",
+              "typeIdentifier": "t_contract$_KimberliteResourceComponent_$21980",
               "typeString": "contract KimberliteResourceComponent"
             },
             "typeName": {
-              "id": 28668,
+              "id": 28646,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28667,
+                "id": 28645,
                 "name": "KimberliteResourceComponent",
                 "nameLocations": [
                   "1517:27:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22002,
+                "referencedDeclaration": 21980,
                 "src": "1517:27:158"
               },
-              "referencedDeclaration": 22002,
+              "referencedDeclaration": 21980,
               "src": "1517:27:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_KimberliteResourceComponent_$22002",
+                "typeIdentifier": "t_contract$_KimberliteResourceComponent_$21980",
                 "typeString": "contract KimberliteResourceComponent"
               }
             },
@@ -675,36 +675,36 @@
           },
           {
             "constant": false,
-            "id": 28672,
+            "id": 28650,
             "mutability": "mutable",
             "name": "lithiumResourceComponent",
             "nameLocation": "1601:24:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1576:49:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_LithiumResourceComponent_$22170",
+              "typeIdentifier": "t_contract$_LithiumResourceComponent_$22148",
               "typeString": "contract LithiumResourceComponent"
             },
             "typeName": {
-              "id": 28671,
+              "id": 28649,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28670,
+                "id": 28648,
                 "name": "LithiumResourceComponent",
                 "nameLocations": [
                   "1576:24:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22170,
+                "referencedDeclaration": 22148,
                 "src": "1576:24:158"
               },
-              "referencedDeclaration": 22170,
+              "referencedDeclaration": 22148,
               "src": "1576:24:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_LithiumResourceComponent_$22170",
+                "typeIdentifier": "t_contract$_LithiumResourceComponent_$22148",
                 "typeString": "contract LithiumResourceComponent"
               }
             },
@@ -712,36 +712,36 @@
           },
           {
             "constant": false,
-            "id": 28675,
+            "id": 28653,
             "mutability": "mutable",
             "name": "osmiumResourceComponent",
             "nameLocation": "1653:23:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1629:47:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_OsmiumResourceComponent_$22266",
+              "typeIdentifier": "t_contract$_OsmiumResourceComponent_$22244",
               "typeString": "contract OsmiumResourceComponent"
             },
             "typeName": {
-              "id": 28674,
+              "id": 28652,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28673,
+                "id": 28651,
                 "name": "OsmiumResourceComponent",
                 "nameLocations": [
                   "1629:23:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22266,
+                "referencedDeclaration": 22244,
                 "src": "1629:23:158"
               },
-              "referencedDeclaration": 22266,
+              "referencedDeclaration": 22244,
               "src": "1629:23:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_OsmiumResourceComponent_$22266",
+                "typeIdentifier": "t_contract$_OsmiumResourceComponent_$22244",
                 "typeString": "contract OsmiumResourceComponent"
               }
             },
@@ -749,36 +749,36 @@
           },
           {
             "constant": false,
-            "id": 28678,
+            "id": 28656,
             "mutability": "mutable",
             "name": "titaniumResourceComponent",
             "nameLocation": "1706:25:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1680:51:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_TitaniumResourceComponent_$22911",
+              "typeIdentifier": "t_contract$_TitaniumResourceComponent_$22889",
               "typeString": "contract TitaniumResourceComponent"
             },
             "typeName": {
-              "id": 28677,
+              "id": 28655,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28676,
+                "id": 28654,
                 "name": "TitaniumResourceComponent",
                 "nameLocations": [
                   "1680:25:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22911,
+                "referencedDeclaration": 22889,
                 "src": "1680:25:158"
               },
-              "referencedDeclaration": 22911,
+              "referencedDeclaration": 22889,
               "src": "1680:25:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_TitaniumResourceComponent_$22911",
+                "typeIdentifier": "t_contract$_TitaniumResourceComponent_$22889",
                 "typeString": "contract TitaniumResourceComponent"
               }
             },
@@ -786,36 +786,36 @@
           },
           {
             "constant": false,
-            "id": 28681,
+            "id": 28659,
             "mutability": "mutable",
             "name": "tungstenResourceComponent",
             "nameLocation": "1761:25:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1735:51:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_TungstenResourceComponent_$22959",
+              "typeIdentifier": "t_contract$_TungstenResourceComponent_$22937",
               "typeString": "contract TungstenResourceComponent"
             },
             "typeName": {
-              "id": 28680,
+              "id": 28658,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28679,
+                "id": 28657,
                 "name": "TungstenResourceComponent",
                 "nameLocations": [
                   "1735:25:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22959,
+                "referencedDeclaration": 22937,
                 "src": "1735:25:158"
               },
-              "referencedDeclaration": 22959,
+              "referencedDeclaration": 22937,
               "src": "1735:25:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_TungstenResourceComponent_$22959",
+                "typeIdentifier": "t_contract$_TungstenResourceComponent_$22937",
                 "typeString": "contract TungstenResourceComponent"
               }
             },
@@ -823,36 +823,36 @@
           },
           {
             "constant": false,
-            "id": 28684,
+            "id": 28662,
             "mutability": "mutable",
             "name": "uraniniteResourceComponent",
             "nameLocation": "1817:26:158",
             "nodeType": "VariableDeclaration",
-            "scope": 28685,
+            "scope": 28663,
             "src": "1790:53:158",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_UraniniteResourceComponent_$23007",
+              "typeIdentifier": "t_contract$_UraniniteResourceComponent_$22985",
               "typeString": "contract UraniniteResourceComponent"
             },
             "typeName": {
-              "id": 28683,
+              "id": 28661,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28682,
+                "id": 28660,
                 "name": "UraniniteResourceComponent",
                 "nameLocations": [
                   "1790:26:158"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 23007,
+                "referencedDeclaration": 22985,
                 "src": "1790:26:158"
               },
-              "referencedDeclaration": 23007,
+              "referencedDeclaration": 22985,
               "src": "1790:26:158",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_UraniniteResourceComponent_$23007",
+                "typeIdentifier": "t_contract$_UraniniteResourceComponent_$22985",
                 "typeString": "contract UraniniteResourceComponent"
               }
             },
@@ -861,7 +861,7 @@
         ],
         "name": "ResourceComponents",
         "nameLocation": "1288:18:158",
-        "scope": 28686,
+        "scope": 28664,
         "visibility": "public"
       }
     ],

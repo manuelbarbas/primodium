@@ -1123,22 +1123,22 @@
   },
   "ast": {
     "absolutePath": "src/components/KimberliteResourceComponent.sol",
-    "id": 22003,
+    "id": 21981,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        21989
+        21967
       ],
       "IUint256Component": [
         1134
       ],
       "KimberliteResourceComponent": [
-        22002
+        21980
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "Uint256Component": [
         1105
@@ -1148,7 +1148,7 @@
     "src": "32:277:108",
     "nodes": [
       {
-        "id": 21980,
+        "id": 21958,
         "nodeType": "PragmaDirective",
         "src": "32:24:108",
         "nodes": [],
@@ -1160,20 +1160,20 @@
         ]
       },
       {
-        "id": 21981,
+        "id": 21959,
         "nodeType": "ImportDirective",
         "src": "57:55:108",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22003,
+        "scope": 21981,
         "sourceUnit": 1889,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21989,
+        "id": 21967,
         "nodeType": "VariableDeclaration",
         "src": "114:72:108",
         "nodes": [],
@@ -1181,7 +1181,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:108",
-        "scope": 22003,
+        "scope": 21981,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1189,7 +1189,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21982,
+          "id": 21960,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:108",
@@ -1204,7 +1204,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4b696d6265726c6974655265736f75726365",
-                  "id": 21986,
+                  "id": 21964,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1226,7 +1226,7 @@
                     "typeString": "literal_string \"component.KimberliteResource\""
                   }
                 ],
-                "id": 21985,
+                "id": 21963,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1237,7 +1237,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21987,
+              "id": 21965,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1261,7 +1261,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21984,
+            "id": 21962,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1273,14 +1273,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21983,
+              "id": 21961,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:108",
               "typeDescriptions": {}
             }
           },
-          "id": 21988,
+          "id": 21966,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1299,17 +1299,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22002,
+        "id": 21980,
         "nodeType": "ContractDefinition",
         "src": "189:120:108",
         "nodes": [
           {
-            "id": 22001,
+            "id": 21979,
             "nodeType": "FunctionDefinition",
             "src": "250:57:108",
             "nodes": [],
             "body": {
-              "id": 22000,
+              "id": 21978,
               "nodeType": "Block",
               "src": "305:2:108",
               "nodes": [],
@@ -1321,11 +1321,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21996,
+                    "id": 21974,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21993,
+                    "referencedDeclaration": 21971,
                     "src": "294:5:108",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1333,11 +1333,11 @@
                     }
                   },
                   {
-                    "id": 21997,
+                    "id": 21975,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21989,
+                    "referencedDeclaration": 21967,
                     "src": "301:2:108",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1345,10 +1345,10 @@
                     }
                   }
                 ],
-                "id": 21998,
+                "id": 21976,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21995,
+                  "id": 21973,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "277:16:108"
@@ -1364,17 +1364,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21994,
+              "id": 21972,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21993,
+                  "id": 21971,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "270:5:108",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22001,
+                  "scope": 21979,
                   "src": "262:13:108",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1383,7 +1383,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21992,
+                    "id": 21970,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "262:7:108",
@@ -1399,12 +1399,12 @@
               "src": "261:15:108"
             },
             "returnParameters": {
-              "id": 21999,
+              "id": 21977,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "305:0:108"
             },
-            "scope": 22002,
+            "scope": 21980,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1414,7 +1414,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21990,
+              "id": 21968,
               "name": "Uint256Component",
               "nameLocations": [
                 "229:16:108"
@@ -1423,43 +1423,43 @@
               "referencedDeclaration": 1105,
               "src": "229:16:108"
             },
-            "id": 21991,
+            "id": 21969,
             "nodeType": "InheritanceSpecifier",
             "src": "229:16:108"
           }
         ],
         "canonicalName": "KimberliteResourceComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22002,
+          21980,
           1105,
           1134,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "KimberliteResourceComponent",
         "nameLocation": "198:27:108",
-        "scope": 22003,
+        "scope": 21981,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

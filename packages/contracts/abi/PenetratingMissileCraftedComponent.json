@@ -1123,22 +1123,22 @@
   },
   "ast": {
     "absolutePath": "src/components/PenetratingMissileCraftedComponent.sol",
-    "id": 22339,
+    "id": 22317,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        22325
+        22303
       ],
       "IUint256Component": [
         1134
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "PenetratingMissileCraftedComponent": [
-        22338
+        22316
       ],
       "Uint256Component": [
         1105
@@ -1148,7 +1148,7 @@
     "src": "32:292:122",
     "nodes": [
       {
-        "id": 22316,
+        "id": 22294,
         "nodeType": "PragmaDirective",
         "src": "32:24:122",
         "nodes": [],
@@ -1160,20 +1160,20 @@
         ]
       },
       {
-        "id": 22317,
+        "id": 22295,
         "nodeType": "ImportDirective",
         "src": "57:55:122",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22339,
+        "scope": 22317,
         "sourceUnit": 1889,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22325,
+        "id": 22303,
         "nodeType": "VariableDeclaration",
         "src": "114:79:122",
         "nodes": [],
@@ -1181,7 +1181,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:122",
-        "scope": 22339,
+        "scope": 22317,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1189,7 +1189,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22318,
+          "id": 22296,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:122",
@@ -1204,7 +1204,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e50656e6574726174696e674d697373696c6543726166746564",
-                  "id": 22322,
+                  "id": 22300,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1226,7 +1226,7 @@
                     "typeString": "literal_string \"component.PenetratingMissileCrafted\""
                   }
                 ],
-                "id": 22321,
+                "id": 22299,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1237,7 +1237,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22323,
+              "id": 22301,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1261,7 +1261,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22320,
+            "id": 22298,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1273,14 +1273,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22319,
+              "id": 22297,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:122",
               "typeDescriptions": {}
             }
           },
-          "id": 22324,
+          "id": 22302,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1299,17 +1299,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22338,
+        "id": 22316,
         "nodeType": "ContractDefinition",
         "src": "196:127:122",
         "nodes": [
           {
-            "id": 22337,
+            "id": 22315,
             "nodeType": "FunctionDefinition",
             "src": "264:57:122",
             "nodes": [],
             "body": {
-              "id": 22336,
+              "id": 22314,
               "nodeType": "Block",
               "src": "319:2:122",
               "nodes": [],
@@ -1321,11 +1321,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22332,
+                    "id": 22310,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22329,
+                    "referencedDeclaration": 22307,
                     "src": "308:5:122",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1333,11 +1333,11 @@
                     }
                   },
                   {
-                    "id": 22333,
+                    "id": 22311,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22325,
+                    "referencedDeclaration": 22303,
                     "src": "315:2:122",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1345,10 +1345,10 @@
                     }
                   }
                 ],
-                "id": 22334,
+                "id": 22312,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22331,
+                  "id": 22309,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "291:16:122"
@@ -1364,17 +1364,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22330,
+              "id": 22308,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22329,
+                  "id": 22307,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "284:5:122",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22337,
+                  "scope": 22315,
                   "src": "276:13:122",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1383,7 +1383,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22328,
+                    "id": 22306,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "276:7:122",
@@ -1399,12 +1399,12 @@
               "src": "275:15:122"
             },
             "returnParameters": {
-              "id": 22335,
+              "id": 22313,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "319:0:122"
             },
-            "scope": 22338,
+            "scope": 22316,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1414,7 +1414,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22326,
+              "id": 22304,
               "name": "Uint256Component",
               "nameLocations": [
                 "243:16:122"
@@ -1423,43 +1423,43 @@
               "referencedDeclaration": 1105,
               "src": "243:16:122"
             },
-            "id": 22327,
+            "id": 22305,
             "nodeType": "InheritanceSpecifier",
             "src": "243:16:122"
           }
         ],
         "canonicalName": "PenetratingMissileCraftedComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22338,
+          22316,
           1105,
           1134,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "PenetratingMissileCraftedComponent",
         "nameLocation": "205:34:122",
-        "scope": 22339,
+        "scope": 22317,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

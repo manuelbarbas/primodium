@@ -1123,22 +1123,22 @@
   },
   "ast": {
     "absolutePath": "src/components/IridiumDrillbitCraftedComponent.sol",
-    "id": 21787,
+    "id": 21765,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        21773
+        21751
       ],
       "IUint256Component": [
         1134
       ],
       "IridiumDrillbitCraftedComponent": [
-        21786
+        21764
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "Uint256Component": [
         1105
@@ -1148,7 +1148,7 @@
     "src": "32:286:99",
     "nodes": [
       {
-        "id": 21764,
+        "id": 21742,
         "nodeType": "PragmaDirective",
         "src": "32:24:99",
         "nodes": [],
@@ -1160,20 +1160,20 @@
         ]
       },
       {
-        "id": 21765,
+        "id": 21743,
         "nodeType": "ImportDirective",
         "src": "57:55:99",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21787,
+        "scope": 21765,
         "sourceUnit": 1889,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21773,
+        "id": 21751,
         "nodeType": "VariableDeclaration",
         "src": "114:76:99",
         "nodes": [],
@@ -1181,7 +1181,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:99",
-        "scope": 21787,
+        "scope": 21765,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1189,7 +1189,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21766,
+          "id": 21744,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:99",
@@ -1204,7 +1204,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4972696469756d4472696c6c62697443726166746564",
-                  "id": 21770,
+                  "id": 21748,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1226,7 +1226,7 @@
                     "typeString": "literal_string \"component.IridiumDrillbitCrafted\""
                   }
                 ],
-                "id": 21769,
+                "id": 21747,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1237,7 +1237,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21771,
+              "id": 21749,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1261,7 +1261,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21768,
+            "id": 21746,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1273,14 +1273,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21767,
+              "id": 21745,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:99",
               "typeDescriptions": {}
             }
           },
-          "id": 21772,
+          "id": 21750,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1299,17 +1299,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21786,
+        "id": 21764,
         "nodeType": "ContractDefinition",
         "src": "193:124:99",
         "nodes": [
           {
-            "id": 21785,
+            "id": 21763,
             "nodeType": "FunctionDefinition",
             "src": "258:57:99",
             "nodes": [],
             "body": {
-              "id": 21784,
+              "id": 21762,
               "nodeType": "Block",
               "src": "313:2:99",
               "nodes": [],
@@ -1321,11 +1321,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21780,
+                    "id": 21758,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21777,
+                    "referencedDeclaration": 21755,
                     "src": "302:5:99",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1333,11 +1333,11 @@
                     }
                   },
                   {
-                    "id": 21781,
+                    "id": 21759,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21773,
+                    "referencedDeclaration": 21751,
                     "src": "309:2:99",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1345,10 +1345,10 @@
                     }
                   }
                 ],
-                "id": 21782,
+                "id": 21760,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21779,
+                  "id": 21757,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "285:16:99"
@@ -1364,17 +1364,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21778,
+              "id": 21756,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21777,
+                  "id": 21755,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "278:5:99",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21785,
+                  "scope": 21763,
                   "src": "270:13:99",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1383,7 +1383,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21776,
+                    "id": 21754,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "270:7:99",
@@ -1399,12 +1399,12 @@
               "src": "269:15:99"
             },
             "returnParameters": {
-              "id": 21783,
+              "id": 21761,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "313:0:99"
             },
-            "scope": 21786,
+            "scope": 21764,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1414,7 +1414,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21774,
+              "id": 21752,
               "name": "Uint256Component",
               "nameLocations": [
                 "237:16:99"
@@ -1423,43 +1423,43 @@
               "referencedDeclaration": 1105,
               "src": "237:16:99"
             },
-            "id": 21775,
+            "id": 21753,
             "nodeType": "InheritanceSpecifier",
             "src": "237:16:99"
           }
         ],
         "canonicalName": "IridiumDrillbitCraftedComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21786,
+          21764,
           1105,
           1134,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "IridiumDrillbitCraftedComponent",
         "nameLocation": "202:31:99",
-        "scope": 21787,
+        "scope": 21765,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

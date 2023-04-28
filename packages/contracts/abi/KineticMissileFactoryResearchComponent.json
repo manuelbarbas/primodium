@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/KineticMissileFactoryResearchComponent.sol",
-    "id": 22051,
+    "id": 22029,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "ID": [
-        22037
+        22015
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "KineticMissileFactoryResearchComponent": [
-        22050
+        22028
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "Set": [
-        43917
+        43895
       ]
     },
     "nodeType": "SourceUnit",
     "src": "33:291:110",
     "nodes": [
       {
-        "id": 22028,
+        "id": 22006,
         "nodeType": "PragmaDirective",
         "src": "33:24:110",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 22029,
+        "id": 22007,
         "nodeType": "ImportDirective",
         "src": "58:52:110",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22051,
+        "scope": 22029,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22037,
+        "id": 22015,
         "nodeType": "VariableDeclaration",
         "src": "112:83:110",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "129:2:110",
-        "scope": 22051,
+        "scope": 22029,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22030,
+          "id": 22008,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "112:7:110",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4b696e657469634d697373696c65466163746f72795265736561726368",
-                  "id": 22034,
+                  "id": 22012,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.KineticMissileFactoryResearch\""
                   }
                 ],
-                "id": 22033,
+                "id": 22011,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22035,
+              "id": 22013,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22032,
+            "id": 22010,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22031,
+              "id": 22009,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "134:7:110",
               "typeDescriptions": {}
             }
           },
-          "id": 22036,
+          "id": 22014,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22050,
+        "id": 22028,
         "nodeType": "ContractDefinition",
         "src": "198:125:110",
         "nodes": [
           {
-            "id": 22049,
+            "id": 22027,
             "nodeType": "FunctionDefinition",
             "src": "267:54:110",
             "nodes": [],
             "body": {
-              "id": 22048,
+              "id": 22026,
               "nodeType": "Block",
               "src": "319:2:110",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22044,
+                    "id": 22022,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22041,
+                    "referencedDeclaration": 22019,
                     "src": "308:5:110",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 22045,
+                    "id": 22023,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22037,
+                    "referencedDeclaration": 22015,
                     "src": "315:2:110",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 22046,
+                "id": 22024,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22043,
+                  "id": 22021,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "294:13:110"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22042,
+              "id": 22020,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22041,
+                  "id": 22019,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "287:5:110",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22049,
+                  "scope": 22027,
                   "src": "279:13:110",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22040,
+                    "id": 22018,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "279:7:110",
@@ -1393,12 +1393,12 @@
               "src": "278:15:110"
             },
             "returnParameters": {
-              "id": 22047,
+              "id": 22025,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "319:0:110"
             },
-            "scope": 22050,
+            "scope": 22028,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22038,
+              "id": 22016,
               "name": "BoolComponent",
               "nameLocations": [
                 "249:13:110"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "249:13:110"
             },
-            "id": 22039,
+            "id": 22017,
             "nodeType": "InheritanceSpecifier",
             "src": "249:13:110"
           }
         ],
         "canonicalName": "KineticMissileFactoryResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22050,
+          22028,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "KineticMissileFactoryResearchComponent",
         "nameLocation": "207:38:110",
-        "scope": 22051,
+        "scope": 22029,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

@@ -1123,22 +1123,22 @@
   },
   "ast": {
     "absolutePath": "src/components/RefinedOsmiumCraftedComponent.sol",
-    "id": 22555,
+    "id": 22533,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        22541
+        22519
       ],
       "IUint256Component": [
         1134
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "RefinedOsmiumCraftedComponent": [
-        22554
+        22532
       ],
       "Uint256Component": [
         1105
@@ -1148,7 +1148,7 @@
     "src": "32:282:131",
     "nodes": [
       {
-        "id": 22532,
+        "id": 22510,
         "nodeType": "PragmaDirective",
         "src": "32:24:131",
         "nodes": [],
@@ -1160,20 +1160,20 @@
         ]
       },
       {
-        "id": 22533,
+        "id": 22511,
         "nodeType": "ImportDirective",
         "src": "57:55:131",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22555,
+        "scope": 22533,
         "sourceUnit": 1889,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22541,
+        "id": 22519,
         "nodeType": "VariableDeclaration",
         "src": "114:74:131",
         "nodes": [],
@@ -1181,7 +1181,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:131",
-        "scope": 22555,
+        "scope": 22533,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1189,7 +1189,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22534,
+          "id": 22512,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:131",
@@ -1204,7 +1204,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e526566696e65644f736d69756d43726166746564",
-                  "id": 22538,
+                  "id": 22516,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1226,7 +1226,7 @@
                     "typeString": "literal_string \"component.RefinedOsmiumCrafted\""
                   }
                 ],
-                "id": 22537,
+                "id": 22515,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1237,7 +1237,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22539,
+              "id": 22517,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1261,7 +1261,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22536,
+            "id": 22514,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1273,14 +1273,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22535,
+              "id": 22513,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:131",
               "typeDescriptions": {}
             }
           },
-          "id": 22540,
+          "id": 22518,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1299,17 +1299,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22554,
+        "id": 22532,
         "nodeType": "ContractDefinition",
         "src": "191:122:131",
         "nodes": [
           {
-            "id": 22553,
+            "id": 22531,
             "nodeType": "FunctionDefinition",
             "src": "254:57:131",
             "nodes": [],
             "body": {
-              "id": 22552,
+              "id": 22530,
               "nodeType": "Block",
               "src": "309:2:131",
               "nodes": [],
@@ -1321,11 +1321,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22548,
+                    "id": 22526,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22545,
+                    "referencedDeclaration": 22523,
                     "src": "298:5:131",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1333,11 +1333,11 @@
                     }
                   },
                   {
-                    "id": 22549,
+                    "id": 22527,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22541,
+                    "referencedDeclaration": 22519,
                     "src": "305:2:131",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1345,10 +1345,10 @@
                     }
                   }
                 ],
-                "id": 22550,
+                "id": 22528,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22547,
+                  "id": 22525,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "281:16:131"
@@ -1364,17 +1364,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22546,
+              "id": 22524,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22545,
+                  "id": 22523,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "274:5:131",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22553,
+                  "scope": 22531,
                   "src": "266:13:131",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1383,7 +1383,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22544,
+                    "id": 22522,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "266:7:131",
@@ -1399,12 +1399,12 @@
               "src": "265:15:131"
             },
             "returnParameters": {
-              "id": 22551,
+              "id": 22529,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "309:0:131"
             },
-            "scope": 22554,
+            "scope": 22532,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1414,7 +1414,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22542,
+              "id": 22520,
               "name": "Uint256Component",
               "nameLocations": [
                 "233:16:131"
@@ -1423,43 +1423,43 @@
               "referencedDeclaration": 1105,
               "src": "233:16:131"
             },
-            "id": 22543,
+            "id": 22521,
             "nodeType": "InheritanceSpecifier",
             "src": "233:16:131"
           }
         ],
         "canonicalName": "RefinedOsmiumCraftedComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22554,
+          22532,
           1105,
           1134,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "RefinedOsmiumCraftedComponent",
         "nameLocation": "200:29:131",
-        "scope": 22555,
+        "scope": 22533,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/TungstenResearchComponent.sol",
-    "id": 22936,
+    "id": 22914,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "ID": [
-        22922
+        22900
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "Set": [
-        43917
+        43895
       ],
       "TungstenResearchComponent": [
-        22935
+        22913
       ]
     },
     "nodeType": "SourceUnit",
     "src": "90:265:141",
     "nodes": [
       {
-        "id": 22913,
+        "id": 22891,
         "nodeType": "PragmaDirective",
         "src": "90:24:141",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 22914,
+        "id": 22892,
         "nodeType": "ImportDirective",
         "src": "115:52:141",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22936,
+        "scope": 22914,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22922,
+        "id": 22900,
         "nodeType": "VariableDeclaration",
         "src": "169:70:141",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "186:2:141",
-        "scope": 22936,
+        "scope": 22914,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22915,
+          "id": 22893,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "169:7:141",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e54756e677374656e5265736561726368",
-                  "id": 22919,
+                  "id": 22897,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.TungstenResearch\""
                   }
                 ],
-                "id": 22918,
+                "id": 22896,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22920,
+              "id": 22898,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22917,
+            "id": 22895,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22916,
+              "id": 22894,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "191:7:141",
               "typeDescriptions": {}
             }
           },
-          "id": 22921,
+          "id": 22899,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22935,
+        "id": 22913,
         "nodeType": "ContractDefinition",
         "src": "242:112:141",
         "nodes": [
           {
-            "id": 22934,
+            "id": 22912,
             "nodeType": "FunctionDefinition",
             "src": "298:54:141",
             "nodes": [],
             "body": {
-              "id": 22933,
+              "id": 22911,
               "nodeType": "Block",
               "src": "350:2:141",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22929,
+                    "id": 22907,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22926,
+                    "referencedDeclaration": 22904,
                     "src": "339:5:141",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 22930,
+                    "id": 22908,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22922,
+                    "referencedDeclaration": 22900,
                     "src": "346:2:141",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 22931,
+                "id": 22909,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22928,
+                  "id": 22906,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "325:13:141"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22927,
+              "id": 22905,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22926,
+                  "id": 22904,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "318:5:141",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22934,
+                  "scope": 22912,
                   "src": "310:13:141",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22925,
+                    "id": 22903,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "310:7:141",
@@ -1393,12 +1393,12 @@
               "src": "309:15:141"
             },
             "returnParameters": {
-              "id": 22932,
+              "id": 22910,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "350:0:141"
             },
-            "scope": 22935,
+            "scope": 22913,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22923,
+              "id": 22901,
               "name": "BoolComponent",
               "nameLocations": [
                 "280:13:141"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "280:13:141"
             },
-            "id": 22924,
+            "id": 22902,
             "nodeType": "InheritanceSpecifier",
             "src": "280:13:141"
           }
         ],
         "canonicalName": "TungstenResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22935,
+          22913,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "TungstenResearchComponent",
         "nameLocation": "251:25:141",
-        "scope": 22936,
+        "scope": 22914,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

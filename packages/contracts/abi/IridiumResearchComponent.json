@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/IridiumResearchComponent.sol",
-    "id": 21835,
+    "id": 21813,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "ID": [
-        21821
+        21799
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "IridiumResearchComponent": [
-        21834
+        21812
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "Set": [
-        43917
+        43895
       ]
     },
     "nodeType": "SourceUnit",
     "src": "88:263:101",
     "nodes": [
       {
-        "id": 21812,
+        "id": 21790,
         "nodeType": "PragmaDirective",
         "src": "88:24:101",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 21813,
+        "id": 21791,
         "nodeType": "ImportDirective",
         "src": "113:52:101",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21835,
+        "scope": 21813,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21821,
+        "id": 21799,
         "nodeType": "VariableDeclaration",
         "src": "167:69:101",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "184:2:101",
-        "scope": 21835,
+        "scope": 21813,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21814,
+          "id": 21792,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "167:7:101",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4972696469756d5265736561726368",
-                  "id": 21818,
+                  "id": 21796,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.IridiumResearch\""
                   }
                 ],
-                "id": 21817,
+                "id": 21795,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21819,
+              "id": 21797,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21816,
+            "id": 21794,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21815,
+              "id": 21793,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "189:7:101",
               "typeDescriptions": {}
             }
           },
-          "id": 21820,
+          "id": 21798,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21834,
+        "id": 21812,
         "nodeType": "ContractDefinition",
         "src": "239:111:101",
         "nodes": [
           {
-            "id": 21833,
+            "id": 21811,
             "nodeType": "FunctionDefinition",
             "src": "294:54:101",
             "nodes": [],
             "body": {
-              "id": 21832,
+              "id": 21810,
               "nodeType": "Block",
               "src": "346:2:101",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21828,
+                    "id": 21806,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21825,
+                    "referencedDeclaration": 21803,
                     "src": "335:5:101",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 21829,
+                    "id": 21807,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21821,
+                    "referencedDeclaration": 21799,
                     "src": "342:2:101",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 21830,
+                "id": 21808,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21827,
+                  "id": 21805,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "321:13:101"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21826,
+              "id": 21804,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21825,
+                  "id": 21803,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "314:5:101",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21833,
+                  "scope": 21811,
                   "src": "306:13:101",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21824,
+                    "id": 21802,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "306:7:101",
@@ -1393,12 +1393,12 @@
               "src": "305:15:101"
             },
             "returnParameters": {
-              "id": 21831,
+              "id": 21809,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "346:0:101"
             },
-            "scope": 21834,
+            "scope": 21812,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21822,
+              "id": 21800,
               "name": "BoolComponent",
               "nameLocations": [
                 "276:13:101"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "276:13:101"
             },
-            "id": 21823,
+            "id": 21801,
             "nodeType": "InheritanceSpecifier",
             "src": "276:13:101"
           }
         ],
         "canonicalName": "IridiumResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21834,
+          21812,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "IridiumResearchComponent",
         "nameLocation": "248:24:101",
-        "scope": 21835,
+        "scope": 21813,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

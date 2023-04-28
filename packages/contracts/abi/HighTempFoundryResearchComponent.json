@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/HighTempFoundryResearchComponent.sol",
-    "id": 21739,
+    "id": 21717,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "HighTempFoundryResearchComponent": [
-        21738
+        21716
       ],
       "ID": [
-        21725
+        21703
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "Set": [
-        43917
+        43895
       ]
     },
     "nodeType": "SourceUnit",
     "src": "33:279:97",
     "nodes": [
       {
-        "id": 21716,
+        "id": 21694,
         "nodeType": "PragmaDirective",
         "src": "33:24:97",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 21717,
+        "id": 21695,
         "nodeType": "ImportDirective",
         "src": "58:52:97",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21739,
+        "scope": 21717,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21725,
+        "id": 21703,
         "nodeType": "VariableDeclaration",
         "src": "112:77:97",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "129:2:97",
-        "scope": 21739,
+        "scope": 21717,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21718,
+          "id": 21696,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "112:7:97",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4869676854656d70466f756e6472795265736561726368",
-                  "id": 21722,
+                  "id": 21700,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.HighTempFoundryResearch\""
                   }
                 ],
-                "id": 21721,
+                "id": 21699,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21723,
+              "id": 21701,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21720,
+            "id": 21698,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21719,
+              "id": 21697,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "134:7:97",
               "typeDescriptions": {}
             }
           },
-          "id": 21724,
+          "id": 21702,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21738,
+        "id": 21716,
         "nodeType": "ContractDefinition",
         "src": "192:119:97",
         "nodes": [
           {
-            "id": 21737,
+            "id": 21715,
             "nodeType": "FunctionDefinition",
             "src": "255:54:97",
             "nodes": [],
             "body": {
-              "id": 21736,
+              "id": 21714,
               "nodeType": "Block",
               "src": "307:2:97",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21732,
+                    "id": 21710,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21729,
+                    "referencedDeclaration": 21707,
                     "src": "296:5:97",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 21733,
+                    "id": 21711,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21725,
+                    "referencedDeclaration": 21703,
                     "src": "303:2:97",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 21734,
+                "id": 21712,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21731,
+                  "id": 21709,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "282:13:97"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21730,
+              "id": 21708,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21729,
+                  "id": 21707,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "275:5:97",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21737,
+                  "scope": 21715,
                   "src": "267:13:97",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21728,
+                    "id": 21706,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "267:7:97",
@@ -1393,12 +1393,12 @@
               "src": "266:15:97"
             },
             "returnParameters": {
-              "id": 21735,
+              "id": 21713,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "307:0:97"
             },
-            "scope": 21738,
+            "scope": 21716,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21726,
+              "id": 21704,
               "name": "BoolComponent",
               "nameLocations": [
                 "237:13:97"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "237:13:97"
             },
-            "id": 21727,
+            "id": 21705,
             "nodeType": "InheritanceSpecifier",
             "src": "237:13:97"
           }
         ],
         "canonicalName": "HighTempFoundryResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21738,
+          21716,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "HighTempFoundryResearchComponent",
         "nameLocation": "201:32:97",
-        "scope": 21739,
+        "scope": 21717,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

@@ -1105,10 +1105,10 @@
   },
   "ast": {
     "absolutePath": "src/components/TitaniumResearchComponent.sol",
-    "id": 22888,
+    "id": 22866,
     "exportedSymbols": {
       "BareComponent": [
-        43519
+        43497
       ],
       "BoolComponent": [
         1627
@@ -1117,32 +1117,32 @@
         262
       ],
       "ID": [
-        22874
+        22852
       ],
       "IEntityIndexer": [
-        43936
+        43914
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        43558
+        43536
       ],
       "MapSet": [
-        43751
+        43729
       ],
       "Set": [
-        43917
+        43895
       ],
       "TitaniumResearchComponent": [
-        22887
+        22865
       ]
     },
     "nodeType": "SourceUnit",
     "src": "90:265:139",
     "nodes": [
       {
-        "id": 22865,
+        "id": 22843,
         "nodeType": "PragmaDirective",
         "src": "90:24:139",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 22866,
+        "id": 22844,
         "nodeType": "ImportDirective",
         "src": "115:52:139",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 22888,
+        "scope": 22866,
         "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 22874,
+        "id": 22852,
         "nodeType": "VariableDeclaration",
         "src": "169:70:139",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "186:2:139",
-        "scope": 22888,
+        "scope": 22866,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 22867,
+          "id": 22845,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "169:7:139",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e546974616e69756d5265736561726368",
-                  "id": 22871,
+                  "id": 22849,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.TitaniumResearch\""
                   }
                 ],
-                "id": 22870,
+                "id": 22848,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 22872,
+              "id": 22850,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 22869,
+            "id": 22847,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 22868,
+              "id": 22846,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "191:7:139",
               "typeDescriptions": {}
             }
           },
-          "id": 22873,
+          "id": 22851,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 22887,
+        "id": 22865,
         "nodeType": "ContractDefinition",
         "src": "242:112:139",
         "nodes": [
           {
-            "id": 22886,
+            "id": 22864,
             "nodeType": "FunctionDefinition",
             "src": "298:54:139",
             "nodes": [],
             "body": {
-              "id": 22885,
+              "id": 22863,
               "nodeType": "Block",
               "src": "350:2:139",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 22881,
+                    "id": 22859,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22878,
+                    "referencedDeclaration": 22856,
                     "src": "339:5:139",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 22882,
+                    "id": 22860,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 22874,
+                    "referencedDeclaration": 22852,
                     "src": "346:2:139",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,10 +1339,10 @@
                     }
                   }
                 ],
-                "id": 22883,
+                "id": 22861,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 22880,
+                  "id": 22858,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "325:13:139"
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 22879,
+              "id": 22857,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22878,
+                  "id": 22856,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "318:5:139",
                   "nodeType": "VariableDeclaration",
-                  "scope": 22886,
+                  "scope": 22864,
                   "src": "310:13:139",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 22877,
+                    "id": 22855,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "310:7:139",
@@ -1393,12 +1393,12 @@
               "src": "309:15:139"
             },
             "returnParameters": {
-              "id": 22884,
+              "id": 22862,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "350:0:139"
             },
-            "scope": 22887,
+            "scope": 22865,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,7 +1408,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 22875,
+              "id": 22853,
               "name": "BoolComponent",
               "nameLocations": [
                 "280:13:139"
@@ -1417,42 +1417,42 @@
               "referencedDeclaration": 1627,
               "src": "280:13:139"
             },
-            "id": 22876,
+            "id": 22854,
             "nodeType": "InheritanceSpecifier",
             "src": "280:13:139"
           }
         ],
         "canonicalName": "TitaniumResearchComponent",
         "contractDependencies": [
-          43751,
-          43917
+          43729,
+          43895
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          22887,
+          22865,
           1627,
           262,
-          43519,
-          46305,
-          43955,
+          43497,
+          46283,
+          43933,
           2359,
-          45861,
-          46361,
-          45737,
-          45604,
-          46350,
+          45839,
+          46339,
+          45715,
+          45582,
+          46328,
           2402,
-          45871
+          45849
         ],
         "name": "TitaniumResearchComponent",
         "nameLocation": "251:25:139",
-        "scope": 22888,
+        "scope": 22866,
         "usedErrors": [
-          43319,
-          46230,
-          46358,
-          46360
+          43297,
+          46208,
+          46336,
+          46338
         ]
       }
     ],

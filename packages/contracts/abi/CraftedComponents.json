@@ -10,23 +10,23 @@
   },
   "ast": {
     "absolutePath": "src/prototypes/CraftedComponents.sol",
-    "id": 28623,
+    "id": 28601,
     "exportedSymbols": {
       "BulletCraftedComponent": [
-        21498
+        21476
       ],
       "BulletCraftedComponentID": [
-        21485
+        21463
       ],
       "CraftedComponents": [
-        28622
+        28600
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:250:157",
     "nodes": [
       {
-        "id": 28615,
+        "id": 28593,
         "nodeType": "PragmaDirective",
         "src": "32:24:157",
         "nodes": [],
@@ -38,23 +38,23 @@
         ]
       },
       {
-        "id": 28618,
+        "id": 28596,
         "nodeType": "ImportDirective",
         "src": "58:111:157",
         "nodes": [],
         "absolutePath": "src/components/BulletCraftedComponent.sol",
         "file": "components/BulletCraftedComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 28623,
-        "sourceUnit": 21499,
+        "scope": 28601,
+        "sourceUnit": 21477,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 28616,
+              "id": 28594,
               "name": "BulletCraftedComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21498,
+              "referencedDeclaration": 21476,
               "src": "67:22:157",
               "typeDescriptions": {}
             },
@@ -62,11 +62,11 @@
           },
           {
             "foreign": {
-              "id": 28617,
+              "id": 28595,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 21485,
+              "referencedDeclaration": 21463,
               "src": "91:2:157",
               "typeDescriptions": {}
             },
@@ -77,7 +77,7 @@
         "unitAlias": ""
       },
       {
-        "id": 28622,
+        "id": 28600,
         "nodeType": "StructDefinition",
         "src": "204:77:157",
         "nodes": [],
@@ -85,36 +85,36 @@
         "members": [
           {
             "constant": false,
-            "id": 28621,
+            "id": 28599,
             "mutability": "mutable",
             "name": "bulletCraftedComponent",
             "nameLocation": "256:22:157",
             "nodeType": "VariableDeclaration",
-            "scope": 28622,
+            "scope": 28600,
             "src": "233:45:157",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_BulletCraftedComponent_$21498",
+              "typeIdentifier": "t_contract$_BulletCraftedComponent_$21476",
               "typeString": "contract BulletCraftedComponent"
             },
             "typeName": {
-              "id": 28620,
+              "id": 28598,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 28619,
+                "id": 28597,
                 "name": "BulletCraftedComponent",
                 "nameLocations": [
                   "233:22:157"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 21498,
+                "referencedDeclaration": 21476,
                 "src": "233:22:157"
               },
-              "referencedDeclaration": 21498,
+              "referencedDeclaration": 21476,
               "src": "233:22:157",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_BulletCraftedComponent_$21498",
+                "typeIdentifier": "t_contract$_BulletCraftedComponent_$21476",
                 "typeString": "contract BulletCraftedComponent"
               }
             },
@@ -123,7 +123,7 @@
         ],
         "name": "CraftedComponents",
         "nameLocation": "211:17:157",
-        "scope": 28623,
+        "scope": 28601,
         "visibility": "public"
       }
     ],
