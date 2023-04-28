@@ -62,7 +62,7 @@ export const devConfig = () => {
       chainId: 4242,
       snapshotServiceUrl:
         "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
-      initialBlockNumber: 12947793,
+      initialBlockNumber: 8981673,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
       privateKey: randomWallet.privateKey,
@@ -110,7 +110,7 @@ export const getNetworkLayerConfig = (
       chainId: 4242,
       snapshotServiceUrl:
         "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
-      initialBlockNumber: 12947793,
+      initialBlockNumber: 8981673,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
     };
