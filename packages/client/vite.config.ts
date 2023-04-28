@@ -15,6 +15,7 @@ export default defineConfig({
     },
     exclude: ["@latticexyz/network", "@latticexyz/noise"],
     include: [
+      "../contracts/types",
       "proxy-deep",
       "ethers/lib/utils",
       "bn.js",
