@@ -28,6 +28,19 @@ export const defaultParams = {
   dev: "false",
 };
 
+// from skystrife
+
+export const defaultParamsSkyStrife = {
+  chainId: 4242,
+  blockTime: 1,
+  chainGasLimit: 100000000,
+  rpc: "https://miner.skystrife-chain.linfra.xyz",
+  wsRpc: "wss://follower.skystrife-chain.linfra.xyz",
+  faucet: "https://faucet.skystrife-mud-services.linfra.xyz",
+  snapshot: "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
+  dev: "false",
+};
+
 // change flag before deployment
 const DEV = import.meta.env.VITE_DEV === "true";
 
@@ -42,13 +55,13 @@ export const devConfig = () => {
         syncInterval: 60_000,
       },
       provider: {
-        jsonRpcUrl: "https://follower.testnet-chain.linfra.xyz",
-        wsRpcUrl: "wss://follower.testnet-chain.linfra.xyz",
+        jsonRpcUrl: "https://follower.skystrife-chain.linfra.xyz",
+        wsRpcUrl: "wss://follower.skystrife-chain.linfra.xyz",
         chainId: 4242,
       },
       chainId: 4242,
       snapshotServiceUrl:
-        "https://ecs-snapshot.testnet-mud-services.linfra.xyz",
+        "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
       initialBlockNumber: 12947793,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
@@ -89,14 +102,14 @@ export const getNetworkLayerConfig = (
         syncInterval: 60_000,
       },
       provider: {
-        jsonRpcUrl: "https://follower.testnet-chain.linfra.xyz",
-        wsRpcUrl: "wss://follower.testnet-chain.linfra.xyz",
+        jsonRpcUrl: "https://follower.skystrife-chain.linfra.xyz",
+        wsRpcUrl: "wss://follower.skystrife-chain.linfra.xyz",
         chainId: 4242,
         externalProvider: externalProvider,
       },
       chainId: 4242,
       snapshotServiceUrl:
-        "https://ecs-snapshot.testnet-mud-services.linfra.xyz",
+        "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
       initialBlockNumber: 12947793,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
