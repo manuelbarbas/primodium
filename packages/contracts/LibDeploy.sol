@@ -76,9 +76,12 @@ import { LaserPowerSourceCraftedComponent, ID as LaserPowerSourceCraftedComponen
 import { ThermobaricWarheadCraftedComponent, ID as ThermobaricWarheadCraftedComponentID } from "components/ThermobaricWarheadCraftedComponent.sol";
 import { ThermobaricMissileCraftedComponent, ID as ThermobaricMissileCraftedComponentID } from "components/ThermobaricMissileCraftedComponent.sol";
 import { KimberliteCrystalCatalystCraftedComponent, ID as KimberliteCrystalCatalystCraftedComponentID } from "components/KimberliteCrystalCatalystCraftedComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
+import { StarterPackSystem, ID as StarterPackSystemID } from "systems/StarterPackSystem.sol";
 import { AttackSystem, ID as AttackSystemID } from "systems/AttackSystem.sol";
 import { IncrementSystem, ID as IncrementSystemID } from "systems/IncrementSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
@@ -353,6 +356,14 @@ library LibDeploy {
       console.log("Deploying KimberliteCrystalCatalystCraftedComponent");
       comp = new KimberliteCrystalCatalystCraftedComponent(address(result.world));
       console.log(address(comp));
+
+      console.log("Deploying MainBaseInitializedComponent");
+      comp = new MainBaseInitializedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying StarterPackInitializedComponent");
+      comp = new StarterPackInitializedComponent(address(result.world));
+      console.log(address(comp));
     } 
     
     // Deploy systems 
@@ -383,9 +394,64 @@ library LibDeploy {
     console.log("Deploying ResearchSystem");
     system = new ResearchSystem(world, address(components));
     world.registerSystem(address(system), ResearchSystemID);
-    authorizeWriter(components, FastMinerResearchComponentID, address(system));
-    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, BolutiteResourceComponentID, address(system));
     authorizeWriter(components, CopperResourceComponentID, address(system));
+    authorizeWriter(components, IridiumResourceComponentID, address(system));
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, KimberliteResourceComponentID, address(system));
+    authorizeWriter(components, LithiumResourceComponentID, address(system));
+    authorizeWriter(components, OsmiumResourceComponentID, address(system));
+    authorizeWriter(components, TitaniumResourceComponentID, address(system));
+    authorizeWriter(components, TungstenResourceComponentID, address(system));
+    authorizeWriter(components, UraniniteResourceComponentID, address(system));
+    authorizeWriter(components, BulletCraftedComponentID, address(system));
+    authorizeWriter(components, FastMinerResearchComponentID, address(system));
+    authorizeWriter(components, CopperResearchComponentID, address(system));
+    authorizeWriter(components, LithiumResearchComponentID, address(system));
+    authorizeWriter(components, TitaniumResearchComponentID, address(system));
+    authorizeWriter(components, OsmiumResearchComponentID, address(system));
+    authorizeWriter(components, TungstenResearchComponentID, address(system));
+    authorizeWriter(components, IridiumResearchComponentID, address(system));
+    authorizeWriter(components, KimberliteResearchComponentID, address(system));
+    authorizeWriter(components, PlatingFactoryResearchComponentID, address(system));
+    authorizeWriter(components, BasicBatteryFactoryResearchComponentID, address(system));
+    authorizeWriter(components, KineticMissileFactoryResearchComponentID, address(system));
+    authorizeWriter(components, ProjectileLauncherResearchComponentID, address(system));
+    authorizeWriter(components, HardenedDrillResearchComponentID, address(system));
+    authorizeWriter(components, DenseMetalRefineryResearchComponentID, address(system));
+    authorizeWriter(components, AdvancedBatteryFactoryResearchComponentID, address(system));
+    authorizeWriter(components, HighTempFoundryResearchComponentID, address(system));
+    authorizeWriter(components, PrecisionMachineryFactoryResearchComponentID, address(system));
+    authorizeWriter(components, IridiumDrillbitFactoryResearchComponentID, address(system));
+    authorizeWriter(components, PrecisionPneumaticDrillResearchComponentID, address(system));
+    authorizeWriter(components, PenetratorFactoryResearchComponentID, address(system));
+    authorizeWriter(components, PenetratingMissileFactoryResearchComponentID, address(system));
+    authorizeWriter(components, MissileLaunchComplexResearchComponentID, address(system));
+    authorizeWriter(components, HighEnergyLaserFactoryResearchComponentID, address(system));
+    authorizeWriter(components, ThermobaricWarheadFactoryResearchComponentID, address(system));
+    authorizeWriter(components, ThermobaricMissileFactoryResearchComponentID, address(system));
+    authorizeWriter(components, KimberliteCatalystFactoryResearchComponentID, address(system));
+    authorizeWriter(components, IronPlateCraftedComponentID, address(system));
+    authorizeWriter(components, BasicPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, KineticMissileCraftedComponentID, address(system));
+    authorizeWriter(components, RefinedOsmiumCraftedComponentID, address(system));
+    authorizeWriter(components, AdvancedPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingMissileCraftedComponentID, address(system));
+    authorizeWriter(components, TungstenRodsCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumCrystalCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumDrillbitCraftedComponentID, address(system));
+    authorizeWriter(components, LaserPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricMissileCraftedComponentID, address(system));
+    authorizeWriter(components, KimberliteCrystalCatalystCraftedComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying StarterPackSystem");
+    system = new StarterPackSystem(world, address(components));
+    world.registerSystem(address(system), StarterPackSystemID);
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, StarterPackInitializedComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying AttackSystem");
@@ -411,6 +477,31 @@ library LibDeploy {
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, BolutiteResourceComponentID, address(system));
+    authorizeWriter(components, CopperResourceComponentID, address(system));
+    authorizeWriter(components, IridiumResourceComponentID, address(system));
+    authorizeWriter(components, IronResourceComponentID, address(system));
+    authorizeWriter(components, KimberliteResourceComponentID, address(system));
+    authorizeWriter(components, LithiumResourceComponentID, address(system));
+    authorizeWriter(components, OsmiumResourceComponentID, address(system));
+    authorizeWriter(components, TitaniumResourceComponentID, address(system));
+    authorizeWriter(components, TungstenResourceComponentID, address(system));
+    authorizeWriter(components, UraniniteResourceComponentID, address(system));
+    authorizeWriter(components, IronPlateCraftedComponentID, address(system));
+    authorizeWriter(components, BasicPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, KineticMissileCraftedComponentID, address(system));
+    authorizeWriter(components, RefinedOsmiumCraftedComponentID, address(system));
+    authorizeWriter(components, AdvancedPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, PenetratingMissileCraftedComponentID, address(system));
+    authorizeWriter(components, TungstenRodsCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumCrystalCraftedComponentID, address(system));
+    authorizeWriter(components, IridiumDrillbitCraftedComponentID, address(system));
+    authorizeWriter(components, LaserPowerSourceCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricWarheadCraftedComponentID, address(system));
+    authorizeWriter(components, ThermobaricMissileCraftedComponentID, address(system));
+    authorizeWriter(components, KimberliteCrystalCatalystCraftedComponentID, address(system));
+    authorizeWriter(components, MainBaseInitializedComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DestroySystem");
@@ -422,6 +513,7 @@ library LibDeploy {
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, HealthComponentID, address(system));
+    authorizeWriter(components, PathComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathSystem");

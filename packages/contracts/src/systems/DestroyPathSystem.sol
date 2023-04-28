@@ -15,8 +15,8 @@ uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 contract DestroyPathSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
-    Coord memory coordStart = abi.decode(arguments, (Coord));
+  function execute(bytes memory args) public returns (bytes memory) {
+    Coord memory coordStart = abi.decode(args, (Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));

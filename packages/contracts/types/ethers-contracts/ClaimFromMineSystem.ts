@@ -206,7 +206,7 @@ export interface ClaimFromMineSystem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -252,7 +252,7 @@ export interface ClaimFromMineSystem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   execute(
-    arguments: PromiseOrValue<BytesLike>,
+    args: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -298,7 +298,7 @@ export interface ClaimFromMineSystem extends BaseContract {
     ): Promise<void>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -356,7 +356,7 @@ export interface ClaimFromMineSystem extends BaseContract {
     ): Promise<BigNumber>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -403,7 +403,7 @@ export interface ClaimFromMineSystem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

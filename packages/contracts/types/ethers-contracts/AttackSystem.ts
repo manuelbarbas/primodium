@@ -135,7 +135,7 @@ export interface AttackSystem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -160,7 +160,7 @@ export interface AttackSystem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   execute(
-    arguments: PromiseOrValue<BytesLike>,
+    args: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -185,7 +185,7 @@ export interface AttackSystem extends BaseContract {
     ): Promise<number>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -222,7 +222,7 @@ export interface AttackSystem extends BaseContract {
     ): Promise<BigNumber>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -248,7 +248,7 @@ export interface AttackSystem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

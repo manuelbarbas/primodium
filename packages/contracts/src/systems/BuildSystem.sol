@@ -75,8 +75,8 @@ uint256 constant ID = uint256(keccak256("system.Build"));
 contract BuildSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
-    (uint256 blockType, Coord memory coord) = abi.decode(arguments, (uint256, Coord));
+  function execute(bytes memory args) public returns (bytes memory) {
+    (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));

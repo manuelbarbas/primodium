@@ -398,7 +398,7 @@ contract ClaimFromFactorySystem is System {
     claimConveyorTile(Coord(coord.x, coord.y - 1), originEntity, destination);
   }
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
+  function execute(bytes memory args) public returns (bytes memory) {
     // Components
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
@@ -408,7 +408,7 @@ contract ClaimFromFactorySystem is System {
       HealthComponent(getAddressById(components, HealthComponentID))
     );
 
-    Coord memory coord = abi.decode(arguments, (Coord));
+    Coord memory coord = abi.decode(args, (Coord));
 
     // check if main base
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);

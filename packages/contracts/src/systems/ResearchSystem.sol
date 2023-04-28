@@ -71,8 +71,8 @@ uint256 constant ID = uint256(keccak256("system.Research"));
 contract ResearchSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
-    uint256 researchItem = abi.decode(arguments, (uint256));
+  function execute(bytes memory args) public returns (bytes memory) {
+    uint256 researchItem = abi.decode(args, (uint256));
 
     // Research FastMiner with 100 IronResource and 100 CopperResource
     if (researchItem == FastMinerResearchComponentID) {

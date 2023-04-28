@@ -122,7 +122,7 @@ export interface BuildPathSystem extends BaseContract {
 
   functions: {
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -141,7 +141,7 @@ export interface BuildPathSystem extends BaseContract {
   };
 
   execute(
-    arguments: PromiseOrValue<BytesLike>,
+    args: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -160,7 +160,7 @@ export interface BuildPathSystem extends BaseContract {
 
   callStatic: {
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -191,7 +191,7 @@ export interface BuildPathSystem extends BaseContract {
 
   estimateGas: {
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -211,7 +211,7 @@ export interface BuildPathSystem extends BaseContract {
 
   populateTransaction: {
     execute(
-      arguments: PromiseOrValue<BytesLike>,
+      args: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -74,8 +74,8 @@ contract AttackSystem is System {
     }
   }
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
-    (Coord memory coord, Coord memory targetCoord) = abi.decode(arguments, (Coord, Coord));
+  function execute(bytes memory args) public returns (bytes memory) {
+    (Coord memory coord, Coord memory targetCoord) = abi.decode(args, (Coord, Coord));
 
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),

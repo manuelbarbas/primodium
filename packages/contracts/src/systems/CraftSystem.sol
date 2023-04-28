@@ -79,7 +79,7 @@ uint256 constant ID = uint256(keccak256("system.Craft"));
 contract CraftSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
+  function execute(bytes memory args) public returns (bytes memory) {
     // Components
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
@@ -89,7 +89,7 @@ contract CraftSystem is System {
       HealthComponent(getAddressById(components, HealthComponentID))
     );
 
-    Coord memory coord = abi.decode(arguments, (Coord));
+    Coord memory coord = abi.decode(args, (Coord));
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 1, "[CraftSystem] Cannot craft at an empty coordinate");
 

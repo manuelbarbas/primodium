@@ -12,7 +12,7 @@ uint256 constant ID = uint256(keccak256("system.StarterPackSystem"));
 contract StarterPackSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function execute(bytes memory arguments) public returns (bytes memory) {
+  function execute(bytes memory args) public returns (bytes memory) {
     StarterPackInitializedComponent starterPackInitializedComponent = StarterPackInitializedComponent(
       getAddressById(components, StarterPackInitializedComponentID)
     );
