@@ -58,7 +58,18 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     ? createFaucetService(defaultParamsSkyStrife.faucet)
     : undefined;
 
-  setInterval(async () => {
+  // initial drip
+  const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
+    utils.parseEther("0.9")
+  );
+  if (playerIsBroke) {
+    console.info("[Dev Faucet] Dripping funds to player");
+    const address = network.connectedAddress.get();
+    address && (await faucet?.dripDev({ address }));
+  }
+
+  // interval drip
+  const intervalId2 = setInterval(async () => {
     const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
       utils.parseEther("0.9")
     );
@@ -70,6 +81,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
       console.info("[Dev Faucet] Player has enough funds");
     }
   }, 20000);
+  world.registerDisposer(() => clearInterval(intervalId2));
 
   startSync();
 
