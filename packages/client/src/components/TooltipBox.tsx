@@ -199,7 +199,9 @@ function TooltipBox() {
                 {/* TODO: show owned resource for every resource possible */}
                 {builtTile && (
                   <>
-                    <div className="font-bold mb-1">Stored resources:</div>
+                    {isClaimableFactory(builtTile) && (
+                      <div className="font-bold mb-1">Stored resources:</div>
+                    )}
 
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
