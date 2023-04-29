@@ -25,10 +25,27 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   const contractComponents = defineComponents(world);
   const offChainComponents = defineOffChainComponents(world);
 
-  const { startSync, systems, components, network } = await setupMUDNetwork<
-    typeof contractComponents,
-    SystemTypes
-  >(config, world, contractComponents, SystemAbis);
+  const { startSync, systems, components, network, gasPriceInput$ } =
+    await setupMUDNetwork<typeof contractComponents, SystemTypes>(
+      config,
+      world,
+      contractComponents,
+      SystemAbis
+    );
+
+  const intervalId = setInterval(async () => {
+    const gasPrice = Math.ceil(
+      (await network.providers.get().json.getGasPrice()).toNumber() * 1.1
+    );
+    console.log(
+      "[GAS] Adjusted gas price to " +
+        Math.ceil(gasPrice / 1_000_000_000) +
+        " gwei"
+    );
+    gasPriceInput$.next(gasPrice);
+  }, 5000);
+
+  world.registerDisposer(() => clearInterval(intervalId));
 
   defineComponentSystem(world, components.Counter, (update) => {
     setComponent(offChainComponents.DoubleCounter, singletonIndex, {
@@ -42,7 +59,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     : undefined;
 
   const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-    utils.parseEther("0.005")
+    utils.parseEther("0.9")
   );
   if (playerIsBroke) {
     console.info("[Dev Faucet] Dripping funds to player");
