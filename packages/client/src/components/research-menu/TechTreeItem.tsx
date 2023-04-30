@@ -181,7 +181,7 @@ function TechTreeItem({
         <div className="mt-1 text-xs">{description}</div>
         {/* </div> */}
         <button
-          className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-teal-600  py-2 rounded shadow"
+          className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-teal-600 hover:bg-teal-700  py-2 rounded shadow"
           onClick={research}
         >
           Research
