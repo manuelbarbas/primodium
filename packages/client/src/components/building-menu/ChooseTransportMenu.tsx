@@ -66,7 +66,7 @@ function ChooseTransportMenu({
           },
 
           {
-            gasLimit: 1_000_000,
+            gasLimit: 500_000,
           }
         ),
         providers

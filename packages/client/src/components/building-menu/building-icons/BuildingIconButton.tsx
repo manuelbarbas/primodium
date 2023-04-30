@@ -29,7 +29,7 @@ function BuildingIconButton({
         BigNumber.from(blockType),
         selectedTile,
         {
-          gasLimit: 3_000_000,
+          gasLimit: 1_500_000,
         }
       ),
       providers

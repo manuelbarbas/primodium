@@ -11,15 +11,10 @@ export default function CraftButton({ x, y }: DisplayTile) {
   const claimAction = useCallback(async () => {
     setTransactionLoading(true);
     await execute(
-      systems["system.Craft"].executeTyped(
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 30_000_000,
-        }
-      ),
+      systems["system.Craft"].executeTyped({
+        x: x,
+        y: y,
+      }),
       providers
     );
     setTransactionLoading(false);
