@@ -145,7 +145,7 @@ function TechTreeItem({
   const research = useCallback(async () => {
     await execute(
       systems["system.Research"].executeTyped(BigNumber.from(data.id), {
-        gasLimit: 1_000_000,
+        gasLimit: 500_000,
       }),
       providers
     );
