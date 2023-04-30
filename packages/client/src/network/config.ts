@@ -45,7 +45,16 @@ export const defaultParamsSkyStrife = {
 const DEV = import.meta.env.VITE_DEV === "true";
 
 export const devConfig = () => {
-  const randomWallet = Wallet.createRandom();
+  let address = localStorage.getItem("address");
+  let privateKey = localStorage.getItem("privateKey");
+
+  if (!address || !privateKey) {
+    const randomWallet = Wallet.createRandom();
+    address = randomWallet.address;
+    privateKey = randomWallet.privateKey;
+    localStorage.setItem("address", randomWallet.address);
+    localStorage.setItem("privateKey", randomWallet.privateKey);
+  }
 
   if (!DEV) {
     const config: SetupContractConfig = {
@@ -65,9 +74,9 @@ export const devConfig = () => {
       initialBlockNumber: 8981673,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
-      privateKey: randomWallet.privateKey,
+      privateKey: privateKey,
     };
-    return { defaultWalletAddress: randomWallet.address, config: config };
+    return { defaultWalletAddress: address, config: config };
   } else {
     const config: SetupContractConfig = {
       clock: {
@@ -85,9 +94,9 @@ export const devConfig = () => {
       initialBlockNumber: Number(params.get("initialBlockNumber")) || 0,
       worldAddress: params.get("worldAddress")!,
       devMode: params.get("dev") === "true",
-      privateKey: randomWallet.privateKey,
+      privateKey: privateKey,
     };
-    return { defaultWalletAddress: randomWallet.address, config: config };
+    return { defaultWalletAddress: address, config: config };
   }
 };
 
