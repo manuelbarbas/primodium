@@ -21,11 +21,6 @@ To craft from factory
 - CraftSystem: Crafting Items (called from factories)
   - Called from factories (items already in factories, no resource flows)
 
-# Known bugs
-
-- Factories can only transfer resources or crafted items that their recipes support to the next tile. Such resources are stuck in the factories otherwise. CHANGE 2023-04-24: Only the resulting crafted item is transferred to the destination.
-- Need to check whether research is unlocked before allowing user to build.
-
 # Components
 
 A new int256 component is created for each resource and crafted item. A new boolean component is created for each research objective.
