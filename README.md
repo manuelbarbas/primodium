@@ -25,6 +25,34 @@ To craft from factory
 
 A new int256 component is created for each resource and crafted item. A new boolean component is created for each research objective.
 
+# New Component Structure (post-initial launch)
+
+OwnedByComponent is for the buildings and ItemComponent is for items mined or crafted.
+
+## Core Compnents
+
+CounterComponent
+GameConfigComponent
+PositionComponent
+TileComponent
+OwnedByComponent
+PathComponent
+LastBuiltAtComponent
+LastClaimedAtComponent
+HealthComponent
+
+## Resource and Research
+
+ItemComponent
+ResearchComponent
+
+## Game mechanics
+
+MainBaseInitializedComponent
+StarterPackInitializedComponent
+
+# Old Component Structure
+
 ```
 ## Core Compnents
 
