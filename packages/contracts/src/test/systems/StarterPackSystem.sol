@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+import "forge-std/console.sol";
 
 import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { StarterPackSystem, ID as StarterPackSystemID } from "../../systems/StarterPackSystem.sol";
-import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { Coord } from "../../types.sol";
+import { LibEncode } from "../../libraries/LibEncode.sol";
+
+import { IronResourceItemID } from "../../prototypes/Keys.sol";
 
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -25,8 +29,8 @@ contract BuildSystemTest is MudTest {
     starterPackSystem.executeTyped();
     starterPackSystem.executeTyped();
     starterPackSystem.executeTyped();
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, alice)), 200);
     vm.stopPrank();
   }
 

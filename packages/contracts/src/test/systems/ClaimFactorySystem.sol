@@ -4,7 +4,7 @@ import "forge-std/console.sol";
 
 import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
-import { addressToEntity } from "solecs/utils.sol";
+import { addressToEntity, entityToAddress } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
@@ -13,15 +13,16 @@ import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "../../sy
 import { CraftSystem, ID as CraftSystemID } from "../../systems/CraftSystem.sol";
 
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
-import { CopperResourceComponent, ID as CopperResourceComponentID } from "../../components/CopperResourceComponent.sol";
-import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "../../components/BulletCraftedComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
 // import { MainBaseID, ConveyorID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 import { MainBaseID, ConveyorID, MinerID, BulletFactoryID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
+import { IronResourceItemID, CopperResourceItemID, BulletCraftedItemID } from "../../prototypes/Keys.sol";
+
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
+import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
 contract ClaimFactorySystemTest is MudTest {
@@ -41,7 +42,7 @@ contract ClaimFactorySystemTest is MudTest {
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     // ClaimFromFactorySystem claimFactorySystem = ClaimFromFactorySystem(system(ClaimFromFactorySystemID));
     CraftSystem craftSystem = CraftSystem(system(CraftSystemID));
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     // Coord memory coord = Coord({ x: -5, y: 2 });
@@ -62,24 +63,25 @@ contract ClaimFactorySystemTest is MudTest {
     vm.roll(0);
 
     buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
-    assertTrue(!ironResourceComponent.has(bulletFactoryID));
+    uint256 hashedBulletFactoryKey = LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactoryID));
+    assertTrue(!itemComponent.has(hashedBulletFactoryKey));
 
     vm.roll(10);
 
     claimSystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertTrue(ironResourceComponent.has(bulletFactoryID));
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 100);
+    assertTrue(itemComponent.has(hashedBulletFactoryKey));
+    assertEq(itemComponent.getValue(hashedBulletFactoryKey), 100);
 
     vm.roll(20);
     claimSystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 200);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKey), 200);
 
     vm.roll(30);
     claimSystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 300);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKey), 300);
 
     vm.stopPrank();
   }
@@ -94,9 +96,7 @@ contract ClaimFactorySystemTest is MudTest {
     CraftSystem craftSystem = CraftSystem(system(CraftSystemID));
 
     // Resource and crafted components
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
-    CopperResourceComponent copperResourceComponent = CopperResourceComponent(component(CopperResourceComponentID));
-    BulletCraftedComponent bulletCraftedComponent = BulletCraftedComponent(component(BulletCraftedComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: current generation seed
     // Coord memory IronCoord = Coord({ x: -5, y: 2 });
@@ -110,6 +110,19 @@ contract ClaimFactorySystemTest is MudTest {
     Coord memory bulletFactoryCoord = Coord({ x: -5, y: -4 });
     bytes memory bulletFactoryEntity = buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord);
     uint256 bulletFactoryID = abi.decode(bulletFactoryEntity, (uint256));
+
+    uint256 hashedBulletFactoryKeyIron = LibEncode.hashFromAddress(
+      IronResourceItemID,
+      entityToAddress(bulletFactoryID)
+    );
+    uint256 hashedBulletFactoryKeyCopper = LibEncode.hashFromAddress(
+      CopperResourceItemID,
+      entityToAddress(bulletFactoryID)
+    );
+    uint256 hashedBulletFactoryKeyBullet = LibEncode.hashFromAddress(
+      BulletCraftedItemID,
+      entityToAddress(bulletFactoryID)
+    );
 
     // Copper to BulletFactory
     buildSystem.executeTyped(ConveyorID, Coord({ x: -9, y: -4 }));
@@ -127,13 +140,20 @@ contract ClaimFactorySystemTest is MudTest {
     claimSystem.executeTyped(bulletFactoryCoord);
     claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertTrue(ironResourceComponent.has(bulletFactoryID));
-    assertTrue(copperResourceComponent.has(bulletFactoryID));
-    assertTrue(bulletCraftedComponent.has(bulletFactoryID));
 
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
-    assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
-    assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 0);
+    console.log(hashedBulletFactoryKeyIron);
+    console.log(hashedBulletFactoryKeyCopper);
+    console.log(hashedBulletFactoryKeyBullet);
+
+    // all three values exist because they are set when we craft items in the factory in craftSystem.
+    // even when there are no bullets
+    assertTrue(itemComponent.has(hashedBulletFactoryKeyIron));
+    assertTrue(itemComponent.has(hashedBulletFactoryKeyCopper));
+    assertTrue(itemComponent.has(hashedBulletFactoryKeyBullet));
+
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyIron), 0);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyCopper), 100);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyBullet), 0);
 
     // Iron to BulletFactory
     buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
@@ -146,9 +166,9 @@ contract ClaimFactorySystemTest is MudTest {
     claimSystem.executeTyped(bulletFactoryCoord);
     claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
-    assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
-    assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 100);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyIron), 0);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyCopper), 100);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyBullet), 100);
 
     // BulletFactory to MainBase
     buildSystem.executeTyped(ConveyorID, Coord({ x: -4, y: -4 }));
@@ -160,32 +180,28 @@ contract ClaimFactorySystemTest is MudTest {
     claimSystem.executeTyped(bulletFactoryCoord);
     claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
-    assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
-    assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 200);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyIron), 0);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyCopper), 100);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyBullet), 200);
 
     vm.roll(40);
 
     claimSystem.executeTyped(bulletFactoryCoord);
     claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
-    assertEq(copperResourceComponent.getValue(bulletFactoryID), 100);
-    assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 300);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyIron), 0);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyCopper), 100);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyBullet), 300);
 
     claimSystem.executeTyped(mainBaseCoord);
     claimFactorySystem.executeTyped(mainBaseCoord);
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 0);
-    assertEq(copperResourceComponent.getValue(bulletFactoryID), 0);
-    assertEq(bulletCraftedComponent.getValue(bulletFactoryID), 0);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyIron), 0);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyCopper), 0);
+    assertEq(itemComponent.getValue(hashedBulletFactoryKeyBullet), 0);
 
-    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
-    assertTrue(copperResourceComponent.has(addressToEntity(alice)));
-    assertTrue(bulletCraftedComponent.has(addressToEntity(alice)));
-
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 0);
-    assertEq(copperResourceComponent.getValue(addressToEntity(alice)), 100);
-    assertEq(bulletCraftedComponent.getValue(addressToEntity(alice)), 300);
+    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, alice)), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(CopperResourceItemID, alice)), 100);
+    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(BulletCraftedItemID, alice)), 300);
 
     vm.stopPrank();
   }
@@ -198,7 +214,8 @@ contract ClaimFactorySystemTest is MudTest {
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ClaimFromFactorySystem claimFactorySystem = ClaimFromFactorySystem(system(ClaimFromFactorySystemID));
     CraftSystem craftSystem = CraftSystem(system(CraftSystemID));
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     // Coord memory coord = Coord({ x: -5, y: 2 });
@@ -219,15 +236,19 @@ contract ClaimFactorySystemTest is MudTest {
     vm.roll(0);
 
     buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
-    assertTrue(!ironResourceComponent.has(bulletFactoryID));
+    // uint256 hashedBulletFactoryKey = LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactoryID));
+    assertTrue(!itemComponent.has(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactoryID))));
 
     vm.roll(10);
 
     claimSystem.executeTyped(bulletFactoryCoord);
     claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
-    assertTrue(ironResourceComponent.has(bulletFactoryID));
-    assertEq(ironResourceComponent.getValue(bulletFactoryID), 100);
+    assertTrue(itemComponent.has(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactoryID))));
+    assertEq(
+      itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactoryID))),
+      100
+    );
 
     // new bullet factory to transfer resources to
     Coord memory bulletFactory2Coord = Coord({ x: 0, y: 10 });
@@ -245,8 +266,12 @@ contract ClaimFactorySystemTest is MudTest {
     // transfer iron from mine to factory 2
     claimSystem.executeTyped(bulletFactory2Coord);
     claimFactorySystem.executeTyped(bulletFactory2Coord);
-    assertTrue(ironResourceComponent.has(bulletFactory2ID));
-    assertEq(ironResourceComponent.getValue(bulletFactory2ID), 100);
+    // uint256 hashedBulletFactory2Key = LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactory2ID));
+    assertTrue(itemComponent.has(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactory2ID))));
+    assertEq(
+      itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactory2ID))),
+      100
+    );
 
     vm.roll(20);
 
@@ -254,8 +279,11 @@ contract ClaimFactorySystemTest is MudTest {
     // no through claiming. factory 2 claim -> doesn't claim from mines connected to factory 1
     claimSystem.executeTyped(bulletFactory2Coord);
     claimFactorySystem.executeTyped(bulletFactory2Coord);
-    assertTrue(ironResourceComponent.has(bulletFactory2ID));
-    assertEq(ironResourceComponent.getValue(bulletFactory2ID), 100);
+    assertTrue(itemComponent.has(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactory2ID))));
+    assertEq(
+      itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(bulletFactory2ID))),
+      100
+    );
 
     vm.stopPrank();
   }

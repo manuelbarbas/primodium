@@ -2,10 +2,12 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { IronResourceComponent, ID as IronResourceComponentID } from "components/IronResourceComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
 
+import { IronResourceItemID } from "../prototypes/Keys.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
 
 uint256 constant ID = uint256(keccak256("system.StarterPackSystem"));
 
@@ -24,10 +26,8 @@ contract StarterPackSystem is System {
     ) {
       return abi.encode(false);
     } else {
-      IronResourceComponent ironResourceComponent = IronResourceComponent(
-        getAddressById(components, IronResourceComponentID)
-      );
-      LibMath.incrementBy(ironResourceComponent, addressToEntity(msg.sender), 200);
+      ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+      LibMath.incrementBy(itemComponent, LibEncode.hashFromAddress(IronResourceItemID, msg.sender), 200);
       starterPackInitializedComponent.set(addressToEntity(msg.sender));
       return abi.encode(true);
     }

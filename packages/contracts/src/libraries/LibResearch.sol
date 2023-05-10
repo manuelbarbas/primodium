@@ -2,8 +2,9 @@
 pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
-import { getAddressById, addressToEntity } from "solecs/utils.sol";
+import { entityToAddress } from "solecs/utils.sol";
 import { LibMath } from "./LibMath.sol";
+import { LibEncode } from "./LibEncode.sol";
 
 library LibResearch {
   // ###########################################################################
@@ -12,80 +13,119 @@ library LibResearch {
     return component.has(entity) && component.getValue(entity);
   }
 
+  function hasResearchedWithKey(
+    BoolComponent component,
+    uint256 researchKey,
+    uint256 entity
+  ) internal view returns (bool) {
+    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(entity));
+    return component.has(hashedResearchKey) && component.getValue(hashedResearchKey);
+  }
+
   // ###########################################################################
   // Research
 
   function researchWithOneItem(
-    Uint256Component item1Component,
-    uint256 item1Required,
+    Uint256Component itemComponent,
     BoolComponent researchComponent,
+    uint256 item1Key,
+    uint256 item1Required,
+    uint256 researchKey,
     uint256 entity
   ) internal returns (bytes memory) {
-    if (hasResearched(researchComponent, entity)) {
+    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(entity));
+    if (hasResearched(researchComponent, hashedResearchKey)) {
       revert("[ResearchSystem] Item already researched");
     }
 
-    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
+    uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
+    uint256 curItem1 = LibMath.getSafeUint256Value(itemComponent, hashedItem1Key);
 
     if (curItem1 < item1Required) {
       revert("[ResearchSystem] Not enough resources");
     } else {
-      item1Component.set(entity, curItem1 - item1Required);
-      researchComponent.set(entity);
+      researchComponent.set(hashedResearchKey);
+      itemComponent.set(hashedItem1Key, curItem1 - item1Required);
       return abi.encode(true);
     }
   }
 
   function researchWithTwoItems(
-    Uint256Component item1Component,
-    Uint256Component item2Component,
-    uint256 item1Required,
-    uint256 item2Required,
+    Uint256Component itemComponent,
     BoolComponent researchComponent,
+    uint256 item1Key,
+    uint256 item1Required,
+    uint256 item2Key,
+    uint256 item2Required,
+    uint256 researchKey,
     uint256 entity
   ) internal returns (bytes memory) {
-    if (hasResearched(researchComponent, entity)) {
+    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(entity));
+    if (hasResearched(researchComponent, hashedResearchKey)) {
       revert("[ResearchSystem] Item already researched");
     }
 
-    uint256 curitem1 = LibMath.getSafeUint256Value(item1Component, entity);
-    uint256 curitem2 = LibMath.getSafeUint256Value(item2Component, entity);
+    // uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
+    // uint256 hashedItem2Key = LibEncode.hashFromAddress(item2Key, entityToAddress(entity));
+    uint256 curItem1 = LibMath.getSafeUint256Value(
+      itemComponent,
+      LibEncode.hashFromAddress(item1Key, entityToAddress(entity))
+    );
+    uint256 curItem2 = LibMath.getSafeUint256Value(
+      itemComponent,
+      LibEncode.hashFromAddress(item2Key, entityToAddress(entity))
+    );
 
-    if (curitem1 < item1Required || curitem2 < item2Required) {
+    if (curItem1 < item1Required || curItem2 < item2Required) {
       revert("[ResearchSystem] Not enough resources");
     } else {
-      item1Component.set(entity, curitem1 - item1Required);
-      item2Component.set(entity, curitem2 - item2Required);
-      researchComponent.set(entity);
+      researchComponent.set(hashedResearchKey);
+      itemComponent.set(LibEncode.hashFromAddress(item1Key, entityToAddress(entity)), curItem1 - item1Required);
+      itemComponent.set(LibEncode.hashFromAddress(item2Key, entityToAddress(entity)), curItem2 - item2Required);
       return abi.encode(true);
     }
   }
 
   function researchWithThreeItems(
-    Uint256Component item1Component,
-    Uint256Component item2Component,
-    Uint256Component item3Component,
-    uint256 item1Required,
-    uint256 item2Required,
-    uint256 item3Required,
+    Uint256Component itemComponent,
     BoolComponent researchComponent,
+    uint256 item1Key,
+    uint256 item1Required,
+    uint256 item2Key,
+    uint256 item2Required,
+    uint256 item3Key,
+    uint256 item3Required,
+    uint256 researchKey,
     uint256 entity
   ) internal returns (bytes memory) {
-    if (hasResearched(researchComponent, entity)) {
+    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(entity));
+    if (hasResearched(researchComponent, hashedResearchKey)) {
       revert("[ResearchSystem] Item already researched");
     }
 
-    uint256 curItem1 = LibMath.getSafeUint256Value(item1Component, entity);
-    uint256 curItem2 = LibMath.getSafeUint256Value(item2Component, entity);
-    uint256 curItem3 = LibMath.getSafeUint256Value(item3Component, entity);
+    // uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
+    // uint256 hashedItem2Key = LibEncode.hashFromAddress(item2Key, entityToAddress(entity));
+    // uint256 hashedItem3Key = LibEncode.hashFromAddress(item3Key, entityToAddress(entity));
+    uint256 curItem1 = LibMath.getSafeUint256Value(
+      itemComponent,
+      LibEncode.hashFromAddress(item1Key, entityToAddress(entity))
+    );
+    uint256 curItem2 = LibMath.getSafeUint256Value(
+      itemComponent,
+      LibEncode.hashFromAddress(item2Key, entityToAddress(entity))
+    );
+    uint256 curItem3 = LibMath.getSafeUint256Value(
+      itemComponent,
+      LibEncode.hashFromAddress(item3Key, entityToAddress(entity))
+    );
 
     if (curItem1 < item1Required || curItem2 < item2Required || curItem3 < item3Required) {
       revert("[ResearchSystem] Not enough resources");
     } else {
-      item1Component.set(entity, curItem1 - item1Required);
-      item2Component.set(entity, curItem2 - item2Required);
-      item3Component.set(entity, curItem3 - item3Required);
-      researchComponent.set(entity);
+      researchComponent.set(hashedResearchKey);
+      itemComponent.set(LibEncode.hashFromAddress(item1Key, entityToAddress(entity)), curItem1 - item1Required);
+      itemComponent.set(LibEncode.hashFromAddress(item2Key, entityToAddress(entity)), curItem2 - item2Required);
+      itemComponent.set(LibEncode.hashFromAddress(item3Key, entityToAddress(entity)), curItem3 - item3Required);
       return abi.encode(true);
     }
   }

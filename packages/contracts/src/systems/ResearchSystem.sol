@@ -4,67 +4,15 @@ import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
-// import all resources
-import { BolutiteResourceComponent, ID as BolutiteResourceComponentID } from "components/BolutiteResourceComponent.sol";
-import { CopperResourceComponent, ID as CopperResourceComponentID } from "components/CopperResourceComponent.sol";
-import { IridiumResourceComponent, ID as IridiumResourceComponentID } from "components/IridiumResourceComponent.sol";
-import { IronResourceComponent, ID as IronResourceComponentID } from "components/IronResourceComponent.sol";
-import { KimberliteResourceComponent, ID as KimberliteResourceComponentID } from "components/KimberliteResourceComponent.sol";
-import { LithiumResourceComponent, ID as LithiumResourceComponentID } from "components/LithiumResourceComponent.sol";
-import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "components/OsmiumResourceComponent.sol";
-import { TitaniumResourceComponent, ID as TitaniumResourceComponentID } from "components/TitaniumResourceComponent.sol";
-import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
-import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 
-// import all crafted components
-import { IronPlateCraftedComponent, ID as IronPlateCraftedComponentID } from "components/IronPlateCraftedComponent.sol";
-import { BasicPowerSourceCraftedComponent, ID as BasicPowerSourceCraftedComponentID } from "components/BasicPowerSourceCraftedComponent.sol";
-import { KineticMissileCraftedComponent, ID as KineticMissileCraftedComponentID } from "components/KineticMissileCraftedComponent.sol";
-import { RefinedOsmiumCraftedComponent, ID as RefinedOsmiumCraftedComponentID } from "components/RefinedOsmiumCraftedComponent.sol";
-import { AdvancedPowerSourceCraftedComponent, ID as AdvancedPowerSourceCraftedComponentID } from "components/AdvancedPowerSourceCraftedComponent.sol";
-import { PenetratingWarheadCraftedComponent, ID as PenetratingWarheadCraftedComponentID } from "components/PenetratingWarheadCraftedComponent.sol";
-import { PenetratingMissileCraftedComponent, ID as PenetratingMissileCraftedComponentID } from "components/PenetratingMissileCraftedComponent.sol";
-import { TungstenRodsCraftedComponent, ID as TungstenRodsCraftedComponentID } from "components/TungstenRodsCraftedComponent.sol";
-import { IridiumCrystalCraftedComponent, ID as IridiumCrystalCraftedComponentID } from "components/IridiumCrystalCraftedComponent.sol";
-import { IridiumDrillbitCraftedComponent, ID as IridiumDrillbitCraftedComponentID } from "components/IridiumDrillbitCraftedComponent.sol";
-import { LaserPowerSourceCraftedComponent, ID as LaserPowerSourceCraftedComponentID } from "components/LaserPowerSourceCraftedComponent.sol";
-import { ThermobaricWarheadCraftedComponent, ID as ThermobaricWarheadCraftedComponentID } from "components/ThermobaricWarheadCraftedComponent.sol";
-import { ThermobaricMissileCraftedComponent, ID as ThermobaricMissileCraftedComponentID } from "components/ThermobaricMissileCraftedComponent.sol";
-import { KimberliteCrystalCatalystCraftedComponent, ID as KimberliteCrystalCatalystCraftedComponentID } from "components/KimberliteCrystalCatalystCraftedComponent.sol";
+import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
-// import all resource research components
-import { CopperResearchComponent, ID as CopperResearchComponentID } from "components/CopperResearchComponent.sol";
-import { LithiumResearchComponent, ID as LithiumResearchComponentID } from "components/LithiumResearchComponent.sol";
-import { TitaniumResearchComponent, ID as TitaniumResearchComponentID } from "components/TitaniumResearchComponent.sol";
-import { OsmiumResearchComponent, ID as OsmiumResearchComponentID } from "components/OsmiumResearchComponent.sol";
-import { TungstenResearchComponent, ID as TungstenResearchComponentID } from "components/TungstenResearchComponent.sol";
-import { IridiumResearchComponent, ID as IridiumResearchComponentID } from "components/IridiumResearchComponent.sol";
-import { KimberliteResearchComponent, ID as KimberliteResearchComponentID } from "components/KimberliteResearchComponent.sol";
-
-// import all factory research components:
-import { PlatingFactoryResearchComponent, ID as PlatingFactoryResearchComponentID } from "components/PlatingFactoryResearchComponent.sol";
-import { BasicBatteryFactoryResearchComponent, ID as BasicBatteryFactoryResearchComponentID } from "components/BasicBatteryFactoryResearchComponent.sol";
-import { KineticMissileFactoryResearchComponent, ID as KineticMissileFactoryResearchComponentID } from "components/KineticMissileFactoryResearchComponent.sol";
-import { ProjectileLauncherResearchComponent, ID as ProjectileLauncherResearchComponentID } from "components/ProjectileLauncherResearchComponent.sol";
-import { HardenedDrillResearchComponent, ID as HardenedDrillResearchComponentID } from "components/HardenedDrillResearchComponent.sol";
-import { DenseMetalRefineryResearchComponent, ID as DenseMetalRefineryResearchComponentID } from "components/DenseMetalRefineryResearchComponent.sol";
-import { AdvancedBatteryFactoryResearchComponent, ID as AdvancedBatteryFactoryResearchComponentID } from "components/AdvancedBatteryFactoryResearchComponent.sol";
-import { HighTempFoundryResearchComponent, ID as HighTempFoundryResearchComponentID } from "components/HighTempFoundryResearchComponent.sol";
-import { PrecisionMachineryFactoryResearchComponent, ID as PrecisionMachineryFactoryResearchComponentID } from "components/PrecisionMachineryFactoryResearchComponent.sol";
-import { IridiumDrillbitFactoryResearchComponent, ID as IridiumDrillbitFactoryResearchComponentID } from "components/IridiumDrillbitFactoryResearchComponent.sol";
-import { PrecisionPneumaticDrillResearchComponent, ID as PrecisionPneumaticDrillResearchComponentID } from "components/PrecisionPneumaticDrillResearchComponent.sol";
-import { PenetratorFactoryResearchComponent, ID as PenetratorFactoryResearchComponentID } from "components/PenetratorFactoryResearchComponent.sol";
-import { PenetratingMissileFactoryResearchComponent, ID as PenetratingMissileFactoryResearchComponentID } from "components/PenetratingMissileFactoryResearchComponent.sol";
-import { MissileLaunchComplexResearchComponent, ID as MissileLaunchComplexResearchComponentID } from "components/MissileLaunchComplexResearchComponent.sol";
-import { HighEnergyLaserFactoryResearchComponent, ID as HighEnergyLaserFactoryResearchComponentID } from "components/HighEnergyLaserFactoryResearchComponent.sol";
-import { ThermobaricWarheadFactoryResearchComponent, ID as ThermobaricWarheadFactoryResearchComponentID } from "components/ThermobaricWarheadFactoryResearchComponent.sol";
-import { ThermobaricMissileFactoryResearchComponent, ID as ThermobaricMissileFactoryResearchComponentID } from "components/ThermobaricMissileFactoryResearchComponent.sol";
-import { KimberliteCatalystFactoryResearchComponent, ID as KimberliteCatalystFactoryResearchComponentID } from "components/KimberliteCatalystFactoryResearchComponent.sol";
-
-// debug
-import { FastMinerResearchComponent, ID as FastMinerResearchComponentID } from "components/FastMinerResearchComponent.sol";
+import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
 
 import { LibResearch } from "libraries/LibResearch.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
 
 uint256 constant ID = uint256(keccak256("system.Research"));
 
@@ -74,555 +22,375 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
+    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
+
     // Research FastMiner with 100 IronResource and 100 CopperResource
-    if (researchItem == FastMinerResearchComponentID) {
-      CopperResourceComponent copperResourceComponent = CopperResourceComponent(
-        getAddressById(components, CopperResourceComponentID)
+    if (LibEncode.hashEqual(researchItem, FastMinerResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IronResourceItemID,
+        100,
+        CopperResourceItemID,
+        100,
+        FastMinerResearchID,
+        addressToEntity(msg.sender)
       );
-      IronResourceComponent ironResourceComponent = IronResourceComponent(
-        getAddressById(components, IronResourceComponentID)
-      );
-      FastMinerResearchComponent fastMinerResearchComponent = FastMinerResearchComponent(
-        getAddressById(components, FastMinerResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          ironResourceComponent,
-          copperResourceComponent,
-          100,
-          100,
-          fastMinerResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      (world, msg.sender, FastMinerResearchID);
+      return abi.encode(true);
     }
     // Research Copper with 200 IronResource
-    else if (researchItem == CopperResearchComponentID) {
-      IronResourceComponent ironResourceComponent = IronResourceComponent(
-        getAddressById(components, IronResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, CopperResearchID)) {
+      LibResearch.researchWithOneItem(
+        itemComponent,
+        researchComponent,
+        IronResourceItemID,
+        200,
+        CopperResearchID,
+        addressToEntity(msg.sender)
       );
-      CopperResearchComponent copperResearchComponent = CopperResearchComponent(
-        getAddressById(components, CopperResearchComponentID)
-      );
-      return
-        LibResearch.researchWithOneItem(
-          ironResourceComponent,
-          200,
-          copperResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research PlatingFactory with 200 IronResource and 200 CopperResource
-    else if (researchItem == PlatingFactoryResearchComponentID) {
-      IronResourceComponent ironResourceComponent = IronResourceComponent(
-        getAddressById(components, IronResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, PlatingFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IronResourceItemID,
+        200,
+        CopperResourceItemID,
+        200,
+        PlatingFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      CopperResourceComponent copperResourceComponent = CopperResourceComponent(
-        getAddressById(components, CopperResourceComponentID)
-      );
-      PlatingFactoryResearchComponent platingFactoryResearchComponent = PlatingFactoryResearchComponent(
-        getAddressById(components, PlatingFactoryResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          ironResourceComponent,
-          copperResourceComponent,
-          200,
-          200,
-          platingFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
-    else if (researchItem == LithiumResearchComponentID) {
-      IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
-        getAddressById(components, IronPlateCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, LithiumResearchID)) {
+      LibResearch.researchWithOneItem(
+        itemComponent,
+        researchComponent,
+        IronPlateCraftedItemID,
+        20,
+        LithiumResearchID,
+        addressToEntity(msg.sender)
       );
-      CopperResourceComponent copperResourceComponent = CopperResourceComponent(
-        getAddressById(components, CopperResourceComponentID)
-      );
-      LithiumResearchComponent lithiumResearchComponent = LithiumResearchComponent(
-        getAddressById(components, LithiumResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          ironPlateCraftedComponent,
-          copperResourceComponent,
-          20,
-          100,
-          lithiumResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research BasicBatteryFactory with 50 IronPlateCrafted and 100 LithiumResource
-    else if (researchItem == BasicBatteryFactoryResearchComponentID) {
-      IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
-        getAddressById(components, IronPlateCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, BasicBatteryFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IronPlateCraftedItemID,
+        50,
+        LithiumResourceItemID,
+        100,
+        BasicBatteryFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      LithiumResourceComponent lithiumResourceComponent = LithiumResourceComponent(
-        getAddressById(components, LithiumResourceComponentID)
-      );
-      BasicBatteryFactoryResearchComponent basicBatteryFactoryResearchComponent = BasicBatteryFactoryResearchComponent(
-        getAddressById(components, BasicBatteryFactoryResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          ironPlateCraftedComponent,
-          lithiumResourceComponent,
-          50,
-          100,
-          basicBatteryFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research KineticMissileFactory with 50 BasicPowerSourceCrafted and 100 IronResource
-    else if (researchItem == KineticMissileFactoryResearchComponentID) {
-      BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
-        getAddressById(components, BasicPowerSourceCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, KineticMissileFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        BasicPowerSourceCraftedItemID,
+        50,
+        IronResourceItemID,
+        100,
+        KineticMissileFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      IronResourceComponent ironResourceComponent = IronResourceComponent(
-        getAddressById(components, IronResourceComponentID)
-      );
-      KineticMissileFactoryResearchComponent kineticMissileFactoryResearchComponent = KineticMissileFactoryResearchComponent(
-          getAddressById(components, KineticMissileFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          basicPowerSourceCraftedComponent,
-          ironResourceComponent,
-          50,
-          100,
-          kineticMissileFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research Titanium with 50 BasicPowerSourceCrafted
-    else if (researchItem == TitaniumResearchComponentID) {
-      BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
-        getAddressById(components, BasicPowerSourceCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, TitaniumResearchID)) {
+      LibResearch.researchWithOneItem(
+        itemComponent,
+        researchComponent,
+        BasicPowerSourceCraftedItemID,
+        50,
+        TitaniumResearchID,
+        addressToEntity(msg.sender)
       );
-      TitaniumResearchComponent titaniumResearchComponent = TitaniumResearchComponent(
-        getAddressById(components, TitaniumResearchComponentID)
-      );
-      return
-        LibResearch.researchWithOneItem(
-          basicPowerSourceCraftedComponent,
-          50,
-          titaniumResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research ProjectileLauncher with 50 BasicPowerSourceCrafted and 500 TitaniumResource
-    else if (researchItem == ProjectileLauncherResearchComponentID) {
-      BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
-        getAddressById(components, BasicPowerSourceCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, ProjectileLauncherResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        BasicPowerSourceCraftedItemID,
+        50,
+        TitaniumResourceItemID,
+        500,
+        ProjectileLauncherResearchID,
+        addressToEntity(msg.sender)
       );
-      TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
-        getAddressById(components, TitaniumResourceComponentID)
-      );
-      ProjectileLauncherResearchComponent projectileLauncherResearchComponent = ProjectileLauncherResearchComponent(
-        getAddressById(components, ProjectileLauncherResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          basicPowerSourceCraftedComponent,
-          titaniumResourceComponent,
-          50,
-          500,
-          projectileLauncherResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research HardenedDrill with 200 TitaniumResource, 500 IronPlateCrafted, and 50 BasicPowerSourceCrafted
-    else if (researchItem == HardenedDrillResearchComponentID) {
-      TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
-        getAddressById(components, TitaniumResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, HardenedDrillResearchID)) {
+      LibResearch.researchWithThreeItems(
+        itemComponent,
+        researchComponent,
+        TitaniumResourceItemID,
+        200,
+        IronPlateCraftedItemID,
+        500,
+        BasicPowerSourceCraftedItemID,
+        50,
+        HardenedDrillResearchID,
+        addressToEntity(msg.sender)
       );
-      IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
-        getAddressById(components, IronPlateCraftedComponentID)
-      );
-      BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
-        getAddressById(components, BasicPowerSourceCraftedComponentID)
-      );
-      HardenedDrillResearchComponent hardenedDrillResearchComponent = HardenedDrillResearchComponent(
-        getAddressById(components, HardenedDrillResearchComponentID)
-      );
-      return
-        LibResearch.researchWithThreeItems(
-          titaniumResourceComponent,
-          ironPlateCraftedComponent,
-          basicPowerSourceCraftedComponent,
-          200,
-          500,
-          50,
-          hardenedDrillResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research Osmium with 300 TitaniumResource
-    else if (researchItem == OsmiumResearchComponentID) {
-      TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
-        getAddressById(components, TitaniumResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, OsmiumResearchID)) {
+      LibResearch.researchWithOneItem(
+        itemComponent,
+        researchComponent,
+        TitaniumResourceItemID,
+        300,
+        OsmiumResearchID,
+        addressToEntity(msg.sender)
       );
-      OsmiumResearchComponent osmiumResearchComponent = OsmiumResearchComponent(
-        getAddressById(components, OsmiumResearchComponentID)
-      );
-      return
-        LibResearch.researchWithOneItem(
-          titaniumResourceComponent,
-          300,
-          osmiumResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research DenseMetalRefinery with 100 OsmiumResource, 300 TitaniumResource, and 100 BasicPowerSourceCrafted
-    else if (researchItem == DenseMetalRefineryResearchComponentID) {
-      OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
-        getAddressById(components, OsmiumResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, DenseMetalRefineryResearchID)) {
+      LibResearch.researchWithThreeItems(
+        itemComponent,
+        researchComponent,
+        OsmiumResourceItemID,
+        100,
+        TitaniumResourceItemID,
+        300,
+        BasicPowerSourceCraftedItemID,
+        100,
+        DenseMetalRefineryResearchID,
+        addressToEntity(msg.sender)
       );
-      TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
-        getAddressById(components, TitaniumResourceComponentID)
-      );
-      BasicPowerSourceCraftedComponent basicPowerSourceCraftedComponent = BasicPowerSourceCraftedComponent(
-        getAddressById(components, BasicPowerSourceCraftedComponentID)
-      );
-      DenseMetalRefineryResearchComponent denseMetalRefineryResearchComponent = DenseMetalRefineryResearchComponent(
-        getAddressById(components, DenseMetalRefineryResearchComponentID)
-      );
-      return
-        LibResearch.researchWithThreeItems(
-          osmiumResourceComponent,
-          titaniumResourceComponent,
-          basicPowerSourceCraftedComponent,
-          100,
-          300,
-          100,
-          denseMetalRefineryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research AdvancedBatteryFactory with 200 OsmiumResource, 100 IronPlateCrafted, and 400 TitaniumResource
-    else if (researchItem == AdvancedBatteryFactoryResearchComponentID) {
-      OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
-        getAddressById(components, OsmiumResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, AdvancedBatteryFactoryResearchID)) {
+      LibResearch.researchWithThreeItems(
+        itemComponent,
+        researchComponent,
+        OsmiumResourceItemID,
+        200,
+        IronPlateCraftedItemID,
+        100,
+        TitaniumResourceItemID,
+        400,
+        AdvancedBatteryFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      IronPlateCraftedComponent ironPlateCraftedComponent = IronPlateCraftedComponent(
-        getAddressById(components, IronPlateCraftedComponentID)
-      );
-      TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
-        getAddressById(components, TitaniumResourceComponentID)
-      );
-      AdvancedBatteryFactoryResearchComponent advancedBatteryFactoryResearchComponent = AdvancedBatteryFactoryResearchComponent(
-          getAddressById(components, AdvancedBatteryFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithThreeItems(
-          osmiumResourceComponent,
-          ironPlateCraftedComponent,
-          titaniumResourceComponent,
-          200,
-          100,
-          400,
-          advancedBatteryFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research Tungsten with 100 RefinedOsmiumCrafted 200 TitaniumResource
-    else if (researchItem == TungstenResearchComponentID) {
-      RefinedOsmiumCraftedComponent refinedOsmiumCraftedComponent = RefinedOsmiumCraftedComponent(
-        getAddressById(components, RefinedOsmiumCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, TungstenResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        RefinedOsmiumCraftedItemID,
+        100,
+        TitaniumResourceItemID,
+        200,
+        TungstenResearchID,
+        addressToEntity(msg.sender)
       );
-      TitaniumResourceComponent titaniumResourceComponent = TitaniumResourceComponent(
-        getAddressById(components, TitaniumResourceComponentID)
-      );
-      TungstenResearchComponent tungstenResearchComponent = TungstenResearchComponent(
-        getAddressById(components, TungstenResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          refinedOsmiumCraftedComponent,
-          titaniumResourceComponent,
-          100,
-          200,
-          tungstenResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research HighTempFoundry with 200 TungstenResource, 100 OsmiumResource, 50 AdvancedPowerSourceCrafted
-    else if (researchItem == HighTempFoundryResearchComponentID) {
-      TungstenResourceComponent tungstenResourceComponent = TungstenResourceComponent(
-        getAddressById(components, TungstenResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, HighTempFoundryResearchID)) {
+      LibResearch.researchWithThreeItems(
+        itemComponent,
+        researchComponent,
+        TungstenResourceItemID,
+        200,
+        OsmiumResourceItemID,
+        100,
+        AdvancedPowerSourceCraftedItemID,
+        50,
+        HighTempFoundryResearchID,
+        addressToEntity(msg.sender)
       );
-      OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
-        getAddressById(components, OsmiumResourceComponentID)
-      );
-      AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
-        getAddressById(components, AdvancedPowerSourceCraftedComponentID)
-      );
-      HighTempFoundryResearchComponent highTempFoundryResearchComponent = HighTempFoundryResearchComponent(
-        getAddressById(components, HighTempFoundryResearchComponentID)
-      );
-      return
-        LibResearch.researchWithThreeItems(
-          tungstenResourceComponent,
-          osmiumResourceComponent,
-          advancedPowerSourceCraftedComponent,
-          200,
-          100,
-          50,
-          highTempFoundryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research Iridium with 100 TungstenRodCrafted 100 OsmiumResource
-    else if (researchItem == IridiumResearchComponentID) {
-      TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
-        getAddressById(components, TungstenRodsCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, IridiumResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        TungstenRodsCraftedItemID,
+        100,
+        OsmiumResourceItemID,
+        100,
+        IridiumResearchID,
+        addressToEntity(msg.sender)
       );
-      OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
-        getAddressById(components, OsmiumResourceComponentID)
-      );
-      IridiumResearchComponent iridiumResearchComponent = IridiumResearchComponent(
-        getAddressById(components, IridiumResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          tungstenRodsCraftedComponent,
-          osmiumResourceComponent,
-          100,
-          100,
-          iridiumResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research PrecisionMachineryFactory with 200 IridiumResource and 100 TungstenRodsCrafted
-    else if (researchItem == PrecisionMachineryFactoryResearchComponentID) {
-      IridiumResourceComponent iridiumResourceComponent = IridiumResourceComponent(
-        getAddressById(components, IridiumResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, PrecisionMachineryFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IridiumResourceItemID,
+        200,
+        TungstenRodsCraftedItemID,
+        100,
+        PrecisionMachineryFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
-        getAddressById(components, TungstenRodsCraftedComponentID)
-      );
-      PrecisionMachineryFactoryResearchComponent precisionMachineryFactoryResearchComponent = PrecisionMachineryFactoryResearchComponent(
-          getAddressById(components, PrecisionMachineryFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          iridiumResourceComponent,
-          tungstenRodsCraftedComponent,
-          200,
-          100,
-          precisionMachineryFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research IridiumDrillbitFactory with 100 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
-    else if (researchItem == IridiumDrillbitFactoryResearchComponentID) {
-      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-        getAddressById(components, IridiumCrystalCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, IridiumDrillbitFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IridiumCrystalCraftedItemID,
+        100,
+        LaserPowerSourceCraftedItemID,
+        20,
+        IridiumDrillbitFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
-        getAddressById(components, LaserPowerSourceCraftedComponentID)
-      );
-      IridiumDrillbitFactoryResearchComponent iridiumDrillbitFactoryResearchComponent = IridiumDrillbitFactoryResearchComponent(
-          getAddressById(components, IridiumDrillbitFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          iridiumCrystalCraftedComponent,
-          laserPowerSourceCraftedComponent,
-          100,
-          20,
-          iridiumDrillbitFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research PrecisionPneumaticDrill with 200 TungstenRodsCrafted and 50 IridiumDrillbitCrafted
-    else if (researchItem == PrecisionPneumaticDrillResearchComponentID) {
-      TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
-        getAddressById(components, TungstenRodsCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, PrecisionPneumaticDrillResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        TungstenRodsCraftedItemID,
+        200,
+        IridiumDrillbitCraftedItemID,
+        50,
+        PrecisionPneumaticDrillResearchID,
+        addressToEntity(msg.sender)
       );
-      IridiumDrillbitCraftedComponent iridiumDrillbitCraftedComponent = IridiumDrillbitCraftedComponent(
-        getAddressById(components, IridiumDrillbitCraftedComponentID)
-      );
-      PrecisionPneumaticDrillResearchComponent precisionPneumaticDrillResearchComponent = PrecisionPneumaticDrillResearchComponent(
-          getAddressById(components, PrecisionPneumaticDrillResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          tungstenRodsCraftedComponent,
-          iridiumDrillbitCraftedComponent,
-          200,
-          50,
-          precisionPneumaticDrillResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research PenetratorFactory with 500 OsmiumResource and 50 AdvancedPowerSourceCrafted
-    else if (researchItem == PenetratorFactoryResearchComponentID) {
-      OsmiumResourceComponent osmiumResourceComponent = OsmiumResourceComponent(
-        getAddressById(components, OsmiumResourceComponentID)
+    else if (LibEncode.hashEqual(researchItem, PenetratorFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        OsmiumResourceItemID,
+        500,
+        AdvancedPowerSourceCraftedItemID,
+        50,
+        PenetratorFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
-        getAddressById(components, AdvancedPowerSourceCraftedComponentID)
-      );
-      PenetratorFactoryResearchComponent penetratorFactoryResearchComponent = PenetratorFactoryResearchComponent(
-        getAddressById(components, PenetratorFactoryResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          osmiumResourceComponent,
-          advancedPowerSourceCraftedComponent,
-          500,
-          50,
-          penetratorFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research PenetratingMissileFactory with 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
-    else if (researchItem == PenetratingMissileFactoryResearchComponentID) {
-      RefinedOsmiumCraftedComponent refinedOsmiumCraftedComponent = RefinedOsmiumCraftedComponent(
-        getAddressById(components, RefinedOsmiumCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, PenetratingMissileFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        RefinedOsmiumCraftedItemID,
+        100,
+        AdvancedPowerSourceCraftedItemID,
+        50,
+        PenetratingMissileFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
-        getAddressById(components, AdvancedPowerSourceCraftedComponentID)
-      );
-      PenetratingMissileFactoryResearchComponent penetratingMissileFactoryResearchComponent = PenetratingMissileFactoryResearchComponent(
-          getAddressById(components, PenetratingMissileFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          refinedOsmiumCraftedComponent,
-          advancedPowerSourceCraftedComponent,
-          100,
-          50,
-          penetratingMissileFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research MissileLaunchComplex with 50 TungstenRodsCrafted and 100 AdvancedPowerSourceCrafted
-    else if (researchItem == MissileLaunchComplexResearchComponentID) {
-      TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
-        getAddressById(components, TungstenRodsCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, MissileLaunchComplexResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        TungstenRodsCraftedItemID,
+        50,
+        AdvancedPowerSourceCraftedItemID,
+        100,
+        MissileLaunchComplexResearchID,
+        addressToEntity(msg.sender)
       );
-      AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
-        getAddressById(components, AdvancedPowerSourceCraftedComponentID)
-      );
-      MissileLaunchComplexResearchComponent missileLaunchComplexResearchComponent = MissileLaunchComplexResearchComponent(
-          getAddressById(components, MissileLaunchComplexResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          tungstenRodsCraftedComponent,
-          advancedPowerSourceCraftedComponent,
-          50,
-          100,
-          missileLaunchComplexResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research HighEnergyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
-    else if (researchItem == HighEnergyLaserFactoryResearchComponentID) {
-      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-        getAddressById(components, IridiumCrystalCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, HighEnergyLaserFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IridiumCrystalCraftedItemID,
+        200,
+        AdvancedPowerSourceCraftedItemID,
+        150,
+        HighEnergyLaserFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      AdvancedPowerSourceCraftedComponent advancedPowerSourceCraftedComponent = AdvancedPowerSourceCraftedComponent(
-        getAddressById(components, AdvancedPowerSourceCraftedComponentID)
-      );
-      HighEnergyLaserFactoryResearchComponent highEnergyLaserFactoryResearchComponent = HighEnergyLaserFactoryResearchComponent(
-          getAddressById(components, HighEnergyLaserFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          iridiumCrystalCraftedComponent,
-          advancedPowerSourceCraftedComponent,
-          200,
-          150,
-          highEnergyLaserFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research ThermobaricWarheadFactory with 200 IridiumCrystalCrafted
-    else if (researchItem == ThermobaricWarheadFactoryResearchComponentID) {
-      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-        getAddressById(components, IridiumCrystalCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, ThermobaricWarheadFactoryResearchID)) {
+      LibResearch.researchWithOneItem(
+        itemComponent,
+        researchComponent,
+        IridiumCrystalCraftedItemID,
+        200,
+        ThermobaricWarheadFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      ThermobaricWarheadFactoryResearchComponent thermobaricWarheadFactoryResearchComponent = ThermobaricWarheadFactoryResearchComponent(
-          getAddressById(components, ThermobaricWarheadFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithOneItem(
-          iridiumCrystalCraftedComponent,
-          200,
-          thermobaricWarheadFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Resesarch ThermobaricMissileFactory with 200 IridiumCrystalCrafted and 100 TungstenRodsCrafted
-    else if (researchItem == ThermobaricMissileFactoryResearchComponentID) {
-      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-        getAddressById(components, IridiumCrystalCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, ThermobaricMissileFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IridiumCrystalCraftedItemID,
+        200,
+        TungstenRodsCraftedItemID,
+        100,
+        ThermobaricMissileFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      TungstenRodsCraftedComponent tungstenRodsCraftedComponent = TungstenRodsCraftedComponent(
-        getAddressById(components, TungstenRodsCraftedComponentID)
-      );
-      ThermobaricMissileFactoryResearchComponent thermobaricMissileFactoryResearchComponent = ThermobaricMissileFactoryResearchComponent(
-          getAddressById(components, ThermobaricMissileFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          iridiumCrystalCraftedComponent,
-          tungstenRodsCraftedComponent,
-          200,
-          100,
-          thermobaricMissileFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research Kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
-    else if (researchItem == KimberliteResearchComponentID) {
-      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-        getAddressById(components, IridiumCrystalCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, KimberliteResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IridiumCrystalCraftedItemID,
+        100,
+        TungstenResourceItemID,
+        100,
+        KimberliteResearchID,
+        addressToEntity(msg.sender)
       );
-      TungstenResourceComponent tungstenResourceComponent = TungstenResourceComponent(
-        getAddressById(components, TungstenResourceComponentID)
-      );
-      KimberliteResearchComponent kimberliteResearchComponent = KimberliteResearchComponent(
-        getAddressById(components, KimberliteResearchComponentID)
-      );
-      return
-        LibResearch.researchWithTwoItems(
-          iridiumCrystalCraftedComponent,
-          tungstenResourceComponent,
-          100,
-          100,
-          kimberliteResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // Research KimberliteCatalystFactory with 300 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
-    else if (researchItem == KimberliteCatalystFactoryResearchComponentID) {
-      IridiumCrystalCraftedComponent iridiumCrystalCraftedComponent = IridiumCrystalCraftedComponent(
-        getAddressById(components, IridiumCrystalCraftedComponentID)
+    else if (LibEncode.hashEqual(researchItem, KimberliteCatalystFactoryResearchID)) {
+      LibResearch.researchWithTwoItems(
+        itemComponent,
+        researchComponent,
+        IridiumCrystalCraftedItemID,
+        300,
+        LaserPowerSourceCraftedItemID,
+        20,
+        KimberliteCatalystFactoryResearchID,
+        addressToEntity(msg.sender)
       );
-      LaserPowerSourceCraftedComponent laserPowerSourceCraftedComponent = LaserPowerSourceCraftedComponent(
-        getAddressById(components, LaserPowerSourceCraftedComponentID)
-      );
-      KimberliteCatalystFactoryResearchComponent kimberliteCatalystFactoryResearchComponent = KimberliteCatalystFactoryResearchComponent(
-          getAddressById(components, KimberliteCatalystFactoryResearchComponentID)
-        );
-      return
-        LibResearch.researchWithTwoItems(
-          iridiumCrystalCraftedComponent,
-          laserPowerSourceCraftedComponent,
-          300,
-          20,
-          kimberliteCatalystFactoryResearchComponent,
-          addressToEntity(msg.sender)
-        );
+      return abi.encode(true);
     }
     // no research item found
     else {
-      return abi.encode(false);
+      revert("[ResearchSystem] Not a valid research objective ID");
     }
   }
 

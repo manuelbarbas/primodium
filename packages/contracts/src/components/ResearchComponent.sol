@@ -1,10 +1,9 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import "std-contracts/components/BoolComponent.sol";
 
-uint256 constant ID = uint256(keccak256("component.PlatingFactoryResearch"));
+uint256 constant ID = uint256(keccak256("component.Research"));
 
-contract PlatingFactoryResearchComponent is BoolComponent {
+contract ResearchComponent is BoolComponent {
   constructor(address world) BoolComponent(world, ID) {}
 }

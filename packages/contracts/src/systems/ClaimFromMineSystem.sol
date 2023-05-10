@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity } from "solecs/utils.sol";
+import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -11,33 +11,9 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 
-import { ResourceComponents } from "../prototypes/ResourceComponents.sol";
-import { CraftedComponents } from "../prototypes/CraftedComponents.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
-import { ResourceResearchComponents } from "../prototypes/ResourceResearchComponents.sol";
-
-// Resource Components
-import { BolutiteResourceComponent, ID as BolutiteResourceComponentID } from "components/BolutiteResourceComponent.sol";
-import { CopperResourceComponent, ID as CopperResourceComponentID } from "components/CopperResourceComponent.sol";
-import { IridiumResourceComponent, ID as IridiumResourceComponentID } from "components/IridiumResourceComponent.sol";
-import { IronResourceComponent, ID as IronResourceComponentID } from "components/IronResourceComponent.sol";
-import { KimberliteResourceComponent, ID as KimberliteResourceComponentID } from "components/KimberliteResourceComponent.sol";
-import { LithiumResourceComponent, ID as LithiumResourceComponentID } from "components/LithiumResourceComponent.sol";
-import { OsmiumResourceComponent, ID as OsmiumResourceComponentID } from "components/OsmiumResourceComponent.sol";
-import { TitaniumResourceComponent, ID as TitaniumResourceComponentID } from "components/TitaniumResourceComponent.sol";
-import { TungstenResourceComponent, ID as TungstenResourceComponentID } from "components/TungstenResourceComponent.sol";
-import { UraniniteResourceComponent, ID as UraniniteResourceComponentID } from "components/UraniniteResourceComponent.sol";
-
-// Resource Research Components
-import { CopperResearchComponent, ID as CopperResearchComponentID } from "components/CopperResearchComponent.sol";
-import { LithiumResearchComponent, ID as LithiumResearchComponentID } from "components/LithiumResearchComponent.sol";
-import { TitaniumResearchComponent, ID as TitaniumResearchComponentID } from "components/TitaniumResearchComponent.sol";
-import { OsmiumResearchComponent, ID as OsmiumResearchComponentID } from "components/OsmiumResearchComponent.sol";
-import { TungstenResearchComponent, ID as TungstenResearchComponentID } from "components/TungstenResearchComponent.sol";
-import { IridiumResearchComponent, ID as IridiumResearchComponentID } from "components/IridiumResearchComponent.sol";
-import { KimberliteResearchComponent, ID as KimberliteResearchComponentID } from "components/KimberliteResearchComponent.sol";
-
-import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
 
 // Debug Buildings
 import { MainBaseID, ConveyorID, MinerID, LithiumMinerID, SiloID } from "../prototypes/Tiles.sol";
@@ -58,6 +34,7 @@ import { LibMath } from "../libraries/LibMath.sol";
 import { LibCraft } from "../libraries/LibCraft.sol";
 import { LibClaim } from "../libraries/LibClaim.sol";
 import { LibMine } from "../libraries/LibMine.sol";
+import { LibEncode } from "../libraries/LibEncode.sol";
 
 uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));
 
@@ -71,29 +48,6 @@ contract ClaimFromMineSystem is System {
       OwnedByComponent(getAddressById(components, OwnedByComponentID)),
       LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
       HealthComponent(getAddressById(components, HealthComponentID))
-    );
-
-    ResourceComponents memory rc = ResourceComponents(
-      BolutiteResourceComponent(getAddressById(components, BolutiteResourceComponentID)),
-      CopperResourceComponent(getAddressById(components, CopperResourceComponentID)),
-      IridiumResourceComponent(getAddressById(components, IridiumResourceComponentID)),
-      IronResourceComponent(getAddressById(components, IronResourceComponentID)),
-      KimberliteResourceComponent(getAddressById(components, KimberliteResourceComponentID)),
-      LithiumResourceComponent(getAddressById(components, LithiumResourceComponentID)),
-      OsmiumResourceComponent(getAddressById(components, OsmiumResourceComponentID)),
-      TitaniumResourceComponent(getAddressById(components, TitaniumResourceComponentID)),
-      TungstenResourceComponent(getAddressById(components, TungstenResourceComponentID)),
-      UraniniteResourceComponent(getAddressById(components, UraniniteResourceComponentID))
-    );
-
-    ResourceResearchComponents memory rrc = ResourceResearchComponents(
-      CopperResearchComponent(getAddressById(components, CopperResearchComponentID)),
-      LithiumResearchComponent(getAddressById(components, LithiumResearchComponentID)),
-      TitaniumResearchComponent(getAddressById(components, TitaniumResearchComponentID)),
-      OsmiumResearchComponent(getAddressById(components, OsmiumResearchComponentID)),
-      TungstenResearchComponent(getAddressById(components, TungstenResearchComponentID)),
-      IridiumResearchComponent(getAddressById(components, IridiumResearchComponentID)),
-      KimberliteResearchComponent(getAddressById(components, KimberliteResearchComponentID))
     );
 
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
@@ -125,35 +79,21 @@ contract ClaimFromMineSystem is System {
       ) {
         // fetch tile beneath miner, return 0 if resource is not unlocked via LibMine.mine
         uint256 resourceKey = LibTerrain.getTopLayerKey(coord);
+
         uint256 incBy = LibMine.mine(
-          rrc,
-          c.tileComponent.getValue(entitiesAtPosition[0]),
           c.lastClaimedAtComponent,
+          ResearchComponent(getAddressById(components, ResearchComponentID)),
+          c.tileComponent.getValue(entitiesAtPosition[0]),
+          resourceKey,
           resourceKey,
           entitiesAtPosition[0]
         );
 
-        if (resourceKey == BolutiteID) {
-          LibMath.incrementBy(rc.bolutiteResourceComponent, destination, incBy);
-        } else if (resourceKey == CopperID) {
-          LibMath.incrementBy(rc.copperResourceComponent, destination, incBy);
-        } else if (resourceKey == IridiumID) {
-          LibMath.incrementBy(rc.iridiumResourceComponent, destination, incBy);
-        } else if (resourceKey == IronID) {
-          LibMath.incrementBy(rc.ironResourceComponent, destination, incBy);
-        } else if (resourceKey == KimberliteID) {
-          LibMath.incrementBy(rc.kimberliteResourceComponent, destination, incBy);
-        } else if (resourceKey == LithiumID) {
-          LibMath.incrementBy(rc.lithiumResourceComponent, destination, incBy);
-        } else if (resourceKey == OsmiumID) {
-          LibMath.incrementBy(rc.osmiumResourceComponent, destination, incBy);
-        } else if (resourceKey == TitaniumID) {
-          LibMath.incrementBy(rc.titaniumResourceComponent, destination, incBy);
-        } else if (resourceKey == TungstenID) {
-          LibMath.incrementBy(rc.tungstenResourceComponent, destination, incBy);
-        } else if (resourceKey == UraniniteID) {
-          LibMath.incrementBy(rc.uraniniteResourceComponent, destination, incBy);
-        }
+        LibMath.incrementBy(
+          ItemComponent(getAddressById(components, ItemComponentID)),
+          LibEncode.hashFromAddress(resourceKey, entityToAddress(destination)),
+          incBy
+        );
         return;
       }
     }
