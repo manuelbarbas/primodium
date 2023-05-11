@@ -11,7 +11,7 @@ export default function StarterPackButton() {
     setTransactionLoading(true);
     await execute(
       systems["system.StarterPackSystem"].executeTyped({
-        gasLimit: 500_000,
+        gasLimit: 1_000_000,
       }),
       providers
     );

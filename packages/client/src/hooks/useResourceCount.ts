@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import { useComponentValue } from "@latticexyz/react";
 import { Component, EntityID, EntityIndex, Type } from "@latticexyz/recs";
+
 import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
+import { applyUint160Mask, hashFromAddress } from "../util/encode";
 
 export default function useResourceCount(
   resourceComponent: Component<
@@ -10,6 +12,7 @@ export default function useResourceCount(
     { contractId: string },
     undefined
   >,
+  resourceId: EntityID,
   entityIndex?: EntityIndex
 ) {
   const { world, singletonIndex } = useMud();
@@ -17,19 +20,24 @@ export default function useResourceCount(
 
   // if provide an entityId, use as owner
   // else try to use wallet, otherwise use default index
-  const resourceOwner = useMemo(() => {
+  const resourceKey: EntityIndex = useMemo(() => {
     if (entityIndex) {
-      return entityIndex;
+      const encodedEntityId = hashFromAddress(
+        resourceId,
+        applyUint160Mask(world.entities[entityIndex])
+      ) as EntityID;
+      return world.entityToIndex.get(encodedEntityId)!;
     } else if (address) {
+      const encodedEntityId = hashFromAddress(resourceId, address) as EntityID;
       return world.entityToIndex.get(
-        address.toString().toLowerCase() as EntityID
-      );
+        encodedEntityId.toString().toLowerCase() as EntityID
+      )!;
     } else {
       return singletonIndex;
     }
-  }, [entityIndex, address, singletonIndex, world]);
+  }, [resourceId, entityIndex, address, singletonIndex, world]);
 
-  const resource = useComponentValue(resourceComponent, resourceOwner);
+  const resource = useComponentValue(resourceComponent, resourceKey);
 
   if (resource) {
     return parseInt(resource.value.toString());

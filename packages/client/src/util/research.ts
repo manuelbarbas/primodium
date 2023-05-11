@@ -78,7 +78,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Copper",
-      id: BlockType.CopperResearch,
+      id: BlockType.Copper,
       description:
         "A versatile and conductive metal. Researching allows you to mine copper ore and store copper.",
       resources: [{ id: BlockType.Iron, amount: 200 }],
@@ -106,7 +106,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Lithium",
-      id: BlockType.LithiumResearch,
+      id: BlockType.Lithium,
       description:
         "A highly reactive metal. Researching allows you to mine lithium ore and store lithium.",
       resources: [
@@ -153,7 +153,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Titanium",
-      id: BlockType.TitaniumResearch,
+      id: BlockType.Titanium,
       description:
         "A light but sturdy metal. Researching allows you to mine titanium ore and store titanium.",
       resources: [{ id: BlockType.BasicPowerSourceCrafted, amount: 50 }],
@@ -197,7 +197,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Osmium",
-      id: BlockType.OsmiumResearch,
+      id: BlockType.Osmium,
       description:
         "A dense metal. Researching allows you to mine and store osmium.",
       resources: [{ id: BlockType.Titanium, amount: 300 }],
@@ -244,7 +244,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Tungsten",
-      id: BlockType.TungstenResearch,
+      id: BlockType.Tungsten,
       description:
         "A metal with a high melting point. Researching allows you to mine and store tungsten.",
       resources: [
@@ -277,7 +277,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Iridium",
-      id: BlockType.IridiumResearch,
+      id: BlockType.Iridium,
       description:
         "A rare metal from the cosmos. Researching allows you to mine and store iridium.",
       resources: [
@@ -433,7 +433,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Kimberlite",
-      id: BlockType.KimberliteResearch,
+      id: BlockType.Kimberlite,
       description:
         "A precious and extremely hard ore. Researching allows you to mine and store kimberlite",
       resources: [

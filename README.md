@@ -66,7 +66,7 @@ LastBuiltAtComponent
 LastClaimedAtComponent
 HealthComponent
 
-## Resource Compnents
+## Resource Components
 
 BolutiteResourceComponent
 CopperResourceComponent

@@ -1,23 +1,24 @@
-import { Component, EntityID, EntityIndex, Type } from "@latticexyz/recs";
+import { EntityID, EntityIndex } from "@latticexyz/recs";
 import useResourceCount from "../../hooks/useResourceCount";
 import { ResourceImage } from "../../util/constants";
+import { useMud } from "../../context/MudContext";
 
 export default function ResourceLabel({
-  entityIndex,
   name,
   resourceId,
-  resourceComponent,
+  entityIndex,
 }: {
-  entityIndex?: EntityIndex;
   name: string;
   resourceId: EntityID;
-  resourceComponent: Component<
-    { value: Type.Number },
-    { contractId: string },
-    undefined
-  >;
+  entityIndex?: EntityIndex;
 }) {
-  const resourceCount = useResourceCount(resourceComponent, entityIndex);
+  const { components } = useMud();
+
+  const resourceCount = useResourceCount(
+    components.Item,
+    resourceId,
+    entityIndex
+  );
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceCount > 0) {

@@ -9,6 +9,7 @@ import { ResourceCostData } from "../../util/resource";
 import { BlockType } from "../../util/constants";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
+import { hashFromAddress } from "../../util/encode";
 
 function TechTreeItem({
   data,
@@ -29,20 +30,18 @@ function TechTreeItem({
 
   const researchOwner = useMemo(() => {
     if (address) {
-      return world.entityToIndex.get(
-        address.toString().toLowerCase() as EntityID
-      );
+      const encodedEntityId = hashFromAddress(
+        data.id,
+        address.toString().toLowerCase()
+      ) as EntityID;
+      return world.entityToIndex.get(encodedEntityId)!;
     } else {
       return singletonIndex;
     }
   }, [address, singletonIndex, world]);
 
-  const [researchComponent, setResearchComponent] = useState(
-    components.CopperResearch
-  );
-
   const [isDefaultUnlocked, setIsDefaultUnlocked] = useState(false);
-  const isResearched = useComponentValue(researchComponent, researchOwner);
+  const isResearched = useComponentValue(components.Research, researchOwner);
 
   useEffect(() => {
     // default researched components
@@ -61,81 +60,6 @@ function TechTreeItem({
         break;
       case BlockType.NodeResearch:
         setIsDefaultUnlocked(true);
-        break;
-      case BlockType.CopperResearch:
-        setResearchComponent(components.CopperResearch);
-        break;
-      case BlockType.LithiumResearch:
-        setResearchComponent(components.LithiumResearch);
-        break;
-      case BlockType.TitaniumResearch:
-        setResearchComponent(components.TitaniumResearch);
-        break;
-      case BlockType.OsmiumResearch:
-        setResearchComponent(components.OsmiumResearch);
-        break;
-      case BlockType.TungstenResearch:
-        setResearchComponent(components.TungstenResearch);
-        break;
-      case BlockType.IridiumResearch:
-        setResearchComponent(components.IridiumResearch);
-        break;
-      case BlockType.KimberliteResearch:
-        setResearchComponent(components.KimberliteResearch);
-        break;
-      case BlockType.PlatingFactoryResearch:
-        setResearchComponent(components.PlatingFactoryResearch);
-        break;
-      case BlockType.BasicBatteryFactoryResearch:
-        setResearchComponent(components.BasicBatteryFactoryResearch);
-        break;
-      case BlockType.KineticMissileFactoryResearch:
-        setResearchComponent(components.KineticMissileFactoryResearch);
-        break;
-      case BlockType.ProjectileLauncherResearch:
-        setResearchComponent(components.ProjectileLauncherResearch);
-        break;
-      case BlockType.HardenedDrillResearch:
-        setResearchComponent(components.HardenedDrillResearch);
-        break;
-      case BlockType.DenseMetalRefineryResearch:
-        setResearchComponent(components.DenseMetalRefineryResearch);
-        break;
-      case BlockType.AdvancedBatteryFactoryResearch:
-        setResearchComponent(components.AdvancedBatteryFactoryResearch);
-        break;
-      case BlockType.HighTempFoundryResearch:
-        setResearchComponent(components.HighTempFoundryResearch);
-        break;
-      case BlockType.PrecisionMachineryFactoryResearch:
-        setResearchComponent(components.PrecisionMachineryFactoryResearch);
-        break;
-      case BlockType.IridiumDrillbitFactoryResearch:
-        setResearchComponent(components.IridiumDrillbitFactoryResearch);
-        break;
-      case BlockType.PrecisionPneumaticDrillResearch:
-        setResearchComponent(components.PrecisionPneumaticDrillResearch);
-        break;
-      case BlockType.PenetratorFactoryResearch:
-        setResearchComponent(components.PenetratorFactoryResearch);
-        break;
-      case BlockType.PenetratingMissileFactoryResearch:
-        setResearchComponent(components.PenetratingMissileFactoryResearch);
-        break;
-      case BlockType.MissileLaunchComplexResearch:
-        setResearchComponent(components.MissileLaunchComplexResearch);
-        break;
-      case BlockType.HighEnergyLaserFactoryResearch:
-        setResearchComponent(components.HighEnergyLaserFactoryResearch);
-        break;
-      case BlockType.ThermobaricWarheadFactoryResearch:
-        setResearchComponent(components.ThermobaricWarheadFactoryResearch);
-        break;
-      case BlockType.ThermobaricMissileFactoryResearch:
-        setResearchComponent(components.ThermobaricMissileFactoryResearch);
-        break;
-      case BlockType.KimberliteCatalystFactoryResearch:
-        setResearchComponent(components.KimberliteCatalystFactoryResearch);
         break;
       default:
       // Default case, when no other case matches
