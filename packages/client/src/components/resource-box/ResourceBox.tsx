@@ -43,129 +43,89 @@ function ResourceBox() {
           <p className="text-lg font-bold mb-3">Resources</p>
           <div className="h-64 overflow-y-scroll scrollbar">
             <>
-              <ResourceLabel
-                name={"Iron"}
-                resourceComponent={components.IronResource}
-                resourceId={BlockType.Iron}
-              />
-              <ResourceLabel
-                name={"Copper"}
-                resourceComponent={components.CopperResource}
-                resourceId={BlockType.Copper}
-              />
+              <ResourceLabel name={"Iron"} resourceId={BlockType.Iron} />
+              <ResourceLabel name={"Copper"} resourceId={BlockType.Copper} />
               <ResourceLabel
                 name={"Bolutite"}
-                resourceComponent={components.BolutiteResource}
                 resourceId={BlockType.Bolutite}
               />
-              <ResourceLabel
-                name={"Iridium"}
-                resourceComponent={components.IridiumResource}
-                resourceId={BlockType.Iridium}
-              />
+              <ResourceLabel name={"Iridium"} resourceId={BlockType.Iridium} />
               <ResourceLabel
                 name={"Kimberlite"}
-                resourceComponent={components.KimberliteResource}
                 resourceId={BlockType.Kimberlite}
               />
-              <ResourceLabel
-                name={"Lithium"}
-                resourceComponent={components.LithiumResource}
-                resourceId={BlockType.Lithium}
-              />
-              <ResourceLabel
-                name={"Osmium"}
-                resourceComponent={components.OsmiumResource}
-                resourceId={BlockType.Osmium}
-              />
+              <ResourceLabel name={"Lithium"} resourceId={BlockType.Lithium} />
+              <ResourceLabel name={"Osmium"} resourceId={BlockType.Osmium} />
               <ResourceLabel
                 name={"Titanium"}
-                resourceComponent={components.TitaniumResource}
                 resourceId={BlockType.Titanium}
               />
               <ResourceLabel
                 name={"Tungsten"}
-                resourceComponent={components.TungstenResource}
                 resourceId={BlockType.Tungsten}
               />
               <ResourceLabel
                 name={"Uraninite"}
-                resourceComponent={components.UraniniteResource}
                 resourceId={BlockType.Uraninite}
               />
               <ResourceLabel
                 name={"Bullet"}
-                resourceComponent={components.BulletCrafted}
                 resourceId={BlockType.BulletCrafted}
               />
               <ResourceLabel
                 name={"Iron Plate"}
-                resourceComponent={components.IronPlateCrafted}
                 resourceId={BlockType.IronPlateCrafted}
               />
               <ResourceLabel
                 name={"Basic Power Source"}
-                resourceComponent={components.BasicPowerSourceCrafted}
                 resourceId={BlockType.BasicPowerSourceCrafted}
               />
               <ResourceLabel
                 name={"Kinetic Missile"}
-                resourceComponent={components.KineticMissileCrafted}
                 resourceId={BlockType.KineticMissileCrafted}
               />
               <ResourceLabel
                 name={"Refined Osmium"}
-                resourceComponent={components.RefinedOsmiumCrafted}
                 resourceId={BlockType.RefinedOsmiumCrafted}
               />
               <ResourceLabel
                 name={"Advanced Power Source"}
-                resourceComponent={components.AdvancedPowerSourceCrafted}
                 resourceId={BlockType.AdvancedPowerSourceCrafted}
               />
               <ResourceLabel
                 name={"Penetrating Warhead"}
-                resourceComponent={components.PenetratingWarheadCrafted}
                 resourceId={BlockType.PenetratingWarheadCrafted}
               />
               <ResourceLabel
                 name={"Penetrating Missile"}
-                resourceComponent={components.PenetratingMissileCrafted}
                 resourceId={BlockType.PenetratingMissileCrafted}
               />
               <ResourceLabel
                 name={"Tungsten Rods"}
-                resourceComponent={components.TungstenRodsCrafted}
                 resourceId={BlockType.TungstenRodsCrafted}
               />
               <ResourceLabel
                 name={"Iridium Crystal"}
-                resourceComponent={components.IridiumCrystalCrafted}
                 resourceId={BlockType.IridiumCrystalCrafted}
               />
               <ResourceLabel
                 name={"Iridium Drillbit"}
-                resourceComponent={components.IridiumDrillbitCrafted}
                 resourceId={BlockType.IridiumDrillbitCrafted}
               />
               <ResourceLabel
                 name={"Laser Power Source"}
-                resourceComponent={components.LaserPowerSourceCrafted}
                 resourceId={BlockType.LaserPowerSourceCrafted}
               />
               <ResourceLabel
                 name={"Thermobaric Warhead"}
-                resourceComponent={components.ThermobaricWarheadCrafted}
                 resourceId={BlockType.ThermobaricWarheadCrafted}
               />
               <ResourceLabel
                 name={"Thermobaric Missile"}
-                resourceComponent={components.ThermobaricMissileCrafted}
                 resourceId={BlockType.ThermobaricMissileCrafted}
               />
               <ResourceLabel
                 name={"Kimberlite Crystal Catalyst"}
-                resourceComponent={components.KimberliteCrystalCatalystCrafted}
                 resourceId={BlockType.KimberliteCrystalCatalystCrafted}
               />
             </>

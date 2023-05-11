@@ -3,10 +3,9 @@ pragma solidity >=0.8.0;
 import "forge-std/console.sol";
 
 import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity } from "solecs/utils.sol";
+import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { SiloID } from "../prototypes/Tiles.sol";
 
-import { CraftedComponents } from "../prototypes/CraftedComponents.sol";
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -14,9 +13,12 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
-import { BulletCraftedComponent, ID as BulletCraftedComponentID } from "components/BulletCraftedComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+
+import { BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 import { LibHealth } from "../libraries/LibHealth.sol";
+import { LibEncode } from "../libraries/LibEncode.sol";
 import { Coord } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("system.Attack"));
@@ -34,9 +36,7 @@ contract AttackSystem is System {
       HealthComponent(getAddressById(components, HealthComponentID))
     );
 
-    CraftedComponents memory cc = CraftedComponents(
-      BulletCraftedComponent(getAddressById(components, BulletCraftedComponentID))
-    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
     uint256[] memory curEntities = c.positionComponent.getEntitiesWithValue(coord);
     if (curEntities.length == 1) {
@@ -44,10 +44,11 @@ contract AttackSystem is System {
 
       if (curOwnedEntity != addressToEntity(msg.sender)) {
         // check that attackEntity has enough bullets
-        if (cc.bulletCraftedComponent.has(attackEntity)) {
-          uint256 curBullets = cc.bulletCraftedComponent.getValue(attackEntity);
+        uint hashedAttackEntity = LibEncode.hashFromAddress(BulletCraftedItemID, entityToAddress(attackEntity));
+        if (itemComponent.has(hashedAttackEntity)) {
+          uint256 curBullets = itemComponent.getValue(hashedAttackEntity);
           if (curBullets > 0) {
-            cc.bulletCraftedComponent.set(attackEntity, curBullets - 1);
+            itemComponent.set(hashedAttackEntity, curBullets - 1);
           } else {
             return 0;
           }

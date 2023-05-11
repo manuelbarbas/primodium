@@ -122,6 +122,7 @@ function TooltipBox() {
               {craftRecipe[0].resources.map((item) => {
                 return (
                   <StaticResourceLabel
+                    key={BlockIdToKey[item.id]}
                     name={BlockIdToKey[item.id]}
                     resourceId={item.id}
                     count={item.amount}
@@ -215,153 +216,126 @@ function TooltipBox() {
                     )}
                     <ResourceLabel
                       name={"Iron"}
-                      resourceComponent={components.IronResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Iron}
                     />
                     <ResourceLabel
                       name={"Copper"}
-                      resourceComponent={components.CopperResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Copper}
                     />
                     <ResourceLabel
                       name={"Bolutite"}
-                      resourceComponent={components.BolutiteResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Bolutite}
                     />
                     <ResourceLabel
                       name={"Iridium"}
-                      resourceComponent={components.IridiumResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Iridium}
                     />
                     <ResourceLabel
                       name={"Kimberlite"}
-                      resourceComponent={components.KimberliteResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Kimberlite}
                     />
                     <ResourceLabel
                       name={"Lithium"}
-                      resourceComponent={components.LithiumResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Lithium}
                     />
                     <ResourceLabel
                       name={"Osmium"}
-                      resourceComponent={components.OsmiumResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Osmium}
                     />
                     <ResourceLabel
                       name={"Titanium"}
-                      resourceComponent={components.TitaniumResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Titanium}
                     />
                     <ResourceLabel
                       name={"Tungsten"}
-                      resourceComponent={components.TungstenResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Tungsten}
                     />
                     <ResourceLabel
                       name={"Uraninite"}
-                      resourceComponent={components.UraniniteResource}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.Uraninite}
                     />
                     <ResourceLabel
                       name={"Bullet"}
-                      resourceComponent={components.BulletCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.BulletCrafted}
                     />
                     <ResourceLabel
                       name={"Iron Plate"}
-                      resourceComponent={components.IronPlateCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.IronPlateCrafted}
                     />
                     <ResourceLabel
                       name={"Basic Power Source"}
-                      resourceComponent={components.BasicPowerSourceCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.BasicPowerSourceCrafted}
                     />
                     <ResourceLabel
                       name={"Kinetic Missile"}
-                      resourceComponent={components.KineticMissileCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.KineticMissileCrafted}
                     />
                     <ResourceLabel
                       name={"Refined Osmium"}
-                      resourceComponent={components.RefinedOsmiumCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.RefinedOsmiumCrafted}
                     />
                     <ResourceLabel
                       name={"Advanced Power Source"}
-                      resourceComponent={components.AdvancedPowerSourceCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.AdvancedPowerSourceCrafted}
                     />
                     <ResourceLabel
                       name={"Penetrating Warhead"}
-                      resourceComponent={components.PenetratingWarheadCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.PenetratingWarheadCrafted}
                     />
                     <ResourceLabel
                       name={"Penetrating Missile"}
-                      resourceComponent={components.PenetratingMissileCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.PenetratingMissileCrafted}
                     />
                     <ResourceLabel
                       name={"Tungsten Rods"}
-                      resourceComponent={components.TungstenRodsCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.TungstenRodsCrafted}
                     />
                     <ResourceLabel
                       name={"Iridium Crystal"}
-                      resourceComponent={components.IridiumCrystalCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.IridiumCrystalCrafted}
                     />
                     <ResourceLabel
                       name={"Iridium Drillbit"}
-                      resourceComponent={components.IridiumDrillbitCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.IridiumDrillbitCrafted}
                     />
                     <ResourceLabel
                       name={"Laser Power Source"}
-                      resourceComponent={components.LaserPowerSourceCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.LaserPowerSourceCrafted}
                     />
                     <ResourceLabel
                       name={"Thermobaric Warhead"}
-                      resourceComponent={components.ThermobaricWarheadCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.ThermobaricWarheadCrafted}
                     />
                     <ResourceLabel
                       name={"Thermobaric Missile"}
-                      resourceComponent={components.ThermobaricMissileCrafted}
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.ThermobaricMissileCrafted}
                     />
                     <ResourceLabel
                       name={"Kimberlite Crystal Catalyst"}
-                      resourceComponent={
-                        components.KimberliteCrystalCatalystCrafted
-                      }
                       entityIndex={tilesAtPosition[0]}
                       resourceId={BlockType.KimberliteCrystalCatalystCrafted}
                     />

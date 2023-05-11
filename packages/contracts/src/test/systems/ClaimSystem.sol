@@ -11,15 +11,14 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-
-import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
-import { CopperResourceComponent, ID as CopperResourceComponentID } from "../../components/CopperResourceComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
 // import { MainBaseID, ConveyorID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 import { MainBaseID, ConveyorID, MinerID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
+import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
 contract ClaimSystemTest is MudTest {
@@ -37,7 +36,7 @@ contract ClaimSystemTest is MudTest {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
@@ -60,16 +59,17 @@ contract ClaimSystemTest is MudTest {
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
-    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 100);
+    uint256 hashedAliceKey = LibEncode.hashFromAddress(IronID, alice);
+    assertTrue(itemComponent.has(hashedAliceKey));
+    assertEq(itemComponent.getValue(hashedAliceKey), 100);
 
     vm.roll(20);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+    assertEq(itemComponent.getValue(hashedAliceKey), 200);
 
     vm.roll(30);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 300);
+    assertEq(itemComponent.getValue(hashedAliceKey), 300);
 
     vm.stopPrank();
   }
@@ -80,7 +80,7 @@ contract ClaimSystemTest is MudTest {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
@@ -110,8 +110,9 @@ contract ClaimSystemTest is MudTest {
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
-    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 100);
+    uint256 hashedAliceKey = LibEncode.hashFromAddress(IronID, alice);
+    assertTrue(itemComponent.has(hashedAliceKey));
+    assertEq(itemComponent.getValue(hashedAliceKey), 100);
 
     vm.stopPrank();
   }
@@ -125,8 +126,7 @@ contract ClaimSystemTest is MudTest {
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
 
     // Resource and crafted components
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
-    CopperResourceComponent copperResourceComponent = CopperResourceComponent(component(CopperResourceComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
@@ -157,10 +157,11 @@ contract ClaimSystemTest is MudTest {
     vm.roll(20);
 
     claimSystem.executeTyped(mainBaseCoord);
-
-    assertTrue(copperResourceComponent.has(addressToEntity(alice)));
-    assertEq(copperResourceComponent.getValue(addressToEntity(alice)), 200);
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
+    uint256 hashedAliceCopperKey = LibEncode.hashFromAddress(CopperID, alice);
+    assertTrue(itemComponent.has(hashedAliceCopperKey));
+    assertEq(itemComponent.getValue(hashedAliceCopperKey), 200);
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 200);
 
     vm.stopPrank();
   }
@@ -171,7 +172,7 @@ contract ClaimSystemTest is MudTest {
     // a mainbase that is directly adjacent to a miner and node, no path
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
@@ -188,8 +189,9 @@ contract ClaimSystemTest is MudTest {
     vm.roll(20);
     claimSystem.executeTyped(mainBaseCoord);
 
-    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
+    assertTrue(itemComponent.has(hashedAliceIronKey));
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 200);
 
     vm.stopPrank();
   }
@@ -202,7 +204,7 @@ contract ClaimSystemTest is MudTest {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
@@ -226,8 +228,9 @@ contract ClaimSystemTest is MudTest {
     // claim from main base
     vm.roll(20);
     claimSystem.executeTyped(mainBaseCoord);
-    assertTrue(ironResourceComponent.has(addressToEntity(alice)));
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 200);
+    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
+    assertTrue(itemComponent.has(hashedAliceIronKey));
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 200);
     vm.stopPrank();
   }
 }

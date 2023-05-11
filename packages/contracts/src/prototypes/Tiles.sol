@@ -11,7 +11,7 @@ uint256 constant AlluviumID = uint256(keccak256("block.Alluvium"));
 uint256 constant RegolithID = uint256(keccak256("block.Regolith"));
 uint256 constant BedrockID = uint256(keccak256("block.Bedrock"));
 
-// Resource blocks
+// Resource blocks: matching with research and item IDs
 uint256 constant LithiumID = uint256(keccak256("block.Lithium"));
 uint256 constant IronID = uint256(keccak256("block.Iron"));
 uint256 constant CopperID = uint256(keccak256("block.Copper"));
@@ -19,7 +19,6 @@ uint256 constant TitaniumID = uint256(keccak256("block.Titanium"));
 uint256 constant IridiumID = uint256(keccak256("block.Iridium"));
 uint256 constant OsmiumID = uint256(keccak256("block.Osmium"));
 uint256 constant TungstenID = uint256(keccak256("block.Tungsten"));
-
 uint256 constant KimberliteID = uint256(keccak256("block.Kimberlite"));
 uint256 constant UraniniteID = uint256(keccak256("block.Uraninite"));
 uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
@@ -34,7 +33,7 @@ uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
 uint256 constant SiloID = uint256(keccak256("block.Silo"));
 
-// in-game blocks
+// in-game blocks/factories
 // NOTE: Node is like Conveyor, but costs money and not for debug.
 uint256 constant BasicMinerID = uint256(keccak256("block.BasicMiner"));
 uint256 constant NodeID = uint256(keccak256("block.Node"));

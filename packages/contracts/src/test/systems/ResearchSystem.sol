@@ -11,15 +11,16 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
 
-import { IronResourceComponent, ID as IronResourceComponentID } from "../../components/IronResourceComponent.sol";
-import { CopperResourceComponent, ID as CopperResourceComponentID } from "../../components/CopperResourceComponent.sol";
-import { FastMinerResearchComponent, ID as FastMinerResearchComponentID } from "../../components/FastMinerResearchComponent.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "../../components/ResearchComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibHealth } from "../../libraries/LibHealth.sol";
+import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
 import { MainBaseID, ConveyorID, MinerID, IronID, CopperID } from "../../prototypes/Tiles.sol";
+import { FastMinerResearchID } from "../../prototypes/Keys.sol";
 
 contract ResearchSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -30,20 +31,20 @@ contract ResearchSystemTest is MudTest {
     vm.stopPrank();
   }
 
+  function testFailResearchInvalidID() public {
+    vm.startPrank(alice);
+    ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
+    // arbitrary ID
+    researchSystem.executeTyped(5);
+    vm.stopPrank();
+  }
+
   function testFailResearchFastMiner() public {
     vm.startPrank(alice);
 
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
-    FastMinerResearchComponent fastMinerResearchComponent = FastMinerResearchComponent(
-      component(FastMinerResearchComponentID)
-    );
-
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
-
     // alice researches fast miner
-    researchSystem.executeTyped(FastMinerResearchComponentID);
+    researchSystem.executeTyped(FastMinerResearchID);
     // not enough resources
     vm.stopPrank();
   }
@@ -53,9 +54,6 @@ contract ResearchSystemTest is MudTest {
     vm.startPrank(alice);
 
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
-    FastMinerResearchComponent fastMinerResearchComponent = FastMinerResearchComponent(
-      component(FastMinerResearchComponentID)
-    );
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
@@ -63,8 +61,12 @@ contract ResearchSystemTest is MudTest {
 
     // ================================================================================================
     // Resource and crafted components
-    IronResourceComponent ironResourceComponent = IronResourceComponent(component(IronResourceComponentID));
-    CopperResourceComponent copperResourceComponent = CopperResourceComponent(component(CopperResourceComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
+    uint256 hashedAliceCopperKey = LibEncode.hashFromAddress(CopperID, alice);
+
+    ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
+    uint256 hashedAliceFastMinerKey = LibEncode.hashFromAddress(FastMinerResearchID, alice);
 
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
@@ -96,18 +98,27 @@ contract ResearchSystemTest is MudTest {
 
     claimSystem.executeTyped(mainBaseCoord);
 
-    assertTrue(copperResourceComponent.has(addressToEntity(alice)));
-    assertEq(copperResourceComponent.getValue(addressToEntity(alice)), 100);
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 100);
+    console.log("start claiming1");
+    assertTrue(itemComponent.has(hashedAliceCopperKey));
+    assertEq(itemComponent.getValue(hashedAliceCopperKey), 100);
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 100);
 
+    console.log("end claiming 1");
     // ================================================================================================
     // alice researches fast miner
-    researchSystem.executeTyped(FastMinerResearchComponentID);
+    researchSystem.executeTyped(FastMinerResearchID);
 
-    assertTrue(fastMinerResearchComponent.has(addressToEntity(alice)));
-    assertTrue(fastMinerResearchComponent.getValue(addressToEntity(alice)));
-    assertEq(ironResourceComponent.getValue(addressToEntity(alice)), 0);
-    assertEq(copperResourceComponent.getValue(addressToEntity(alice)), 0);
+    console.log("start claiming 2");
+    console.log("alice has fastminer");
+    assertTrue(researchComponent.has(hashedAliceFastMinerKey));
+    console.log("alice has fastmine2r");
+    assertTrue(researchComponent.getValue(hashedAliceFastMinerKey));
+    console.log("alice has fastminer3");
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 0);
+    console.log("alice has fastminer4");
+    assertEq(itemComponent.getValue(hashedAliceCopperKey), 0);
+
+    console.log("end claiming 2");
 
     vm.stopPrank();
   }
