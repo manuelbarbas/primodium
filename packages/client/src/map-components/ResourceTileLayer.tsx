@@ -63,7 +63,6 @@ const ResourceTileLayer = ({
 
   // Navigating to selected tile when navigateToTile is set to true
   useEffect(() => {
-    console.log("Navigating to tile", navigateToTile);
     if (navigateToTile) {
       map.flyTo([selectedTile.y, selectedTile.x]);
       setNavigateToTile(false);
