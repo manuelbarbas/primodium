@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
@@ -28,17 +28,23 @@ function TechTreeItem({
   const { components, world, singletonIndex, systems, providers } = useMud();
   const { address } = useAccount();
 
-  const researchOwner = useMemo(() => {
-    if (address) {
-      const encodedEntityId = hashFromAddress(
-        data.id,
-        address.toString().toLowerCase()
-      ) as EntityID;
-      return world.entityToIndex.get(encodedEntityId)!;
-    } else {
-      return singletonIndex;
-    }
-  }, [address, singletonIndex, world]);
+  // const researchOwner = useMemo(() => {
+  //   if (address) {
+  //     const encodedEntityId = hashFromAddress(
+  //       data.id,
+  //       address.toString().toLowerCase()
+  //     ) as EntityID;
+  //     return world.entityToIndex.get(encodedEntityId)!;
+  //   } else {
+  //     return singletonIndex;
+  //   }
+  // }, [address, singletonIndex, world]);
+
+  const researchOwner = address
+    ? world.entityToIndex.get(
+        hashFromAddress(data.id, address.toString().toLowerCase()) as EntityID
+      )!
+    : singletonIndex;
 
   const [isDefaultUnlocked, setIsDefaultUnlocked] = useState(false);
   const isResearched = useComponentValue(components.Research, researchOwner);
