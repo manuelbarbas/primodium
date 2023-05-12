@@ -16,7 +16,7 @@ library LibMine {
     uint256 minerType,
     uint256 resourceKey,
     uint256 researchKey,
-    uint256 entity
+    uint256 ownerKey
   ) internal returns (uint256) {
     uint256 MINE_COUNT_PER_BLOCK = 10;
     uint256 MINE_COUNT_MAX = 10000;
@@ -34,9 +34,9 @@ library LibMine {
       MINE_COUNT_MAX = 3000;
     }
 
-    uint256 startClaimTime = lastClaimedAtComponent.getValue(entity);
+    uint256 startClaimTime = lastClaimedAtComponent.getValue(ownerKey);
     uint256 endClaimTime = block.number;
-    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(entity));
+    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(ownerKey));
 
     if (resourceKey == IronID) {
       // iron is default unlocked
@@ -50,7 +50,7 @@ library LibMine {
       }
     }
 
-    lastClaimedAtComponent.set(entity, endClaimTime);
+    lastClaimedAtComponent.set(ownerKey, endClaimTime);
 
     uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
     if (incBy > MINE_COUNT_MAX) {
