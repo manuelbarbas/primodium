@@ -10,6 +10,8 @@ interface SelectedTileContextInterface {
   setSelectedEndPathTile: React.Dispatch<React.SetStateAction<DisplayTile>>;
   showSelectedPathTiles: boolean;
   setShowSelectedPathTiles: React.Dispatch<React.SetStateAction<boolean>>;
+  navigateToTile: boolean;
+  setNavigateToTile: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const SelectedTileContext = createContext<SelectedTileContextInterface>({
@@ -30,6 +32,8 @@ export const SelectedTileContext = createContext<SelectedTileContextInterface>({
   setSelectedEndPathTile: () => {},
   showSelectedPathTiles: false,
   setShowSelectedPathTiles: () => {},
+  navigateToTile: false,
+  setNavigateToTile: () => {},
 });
 
 const SelectedTileProvider = ({ children }: { children: ReactNode }) => {
@@ -48,6 +52,9 @@ const SelectedTileProvider = ({ children }: { children: ReactNode }) => {
     y: 0,
   } as DisplayTile);
 
+  // Setting to true navigates to the selectedTile in ResourceTileLayer
+  const [navigateToTile, setNavigateToTile] = useState(false);
+
   return (
     <SelectedTileContext.Provider
       value={{
@@ -59,6 +66,8 @@ const SelectedTileProvider = ({ children }: { children: ReactNode }) => {
         setSelectedEndPathTile,
         showSelectedPathTiles,
         setShowSelectedPathTiles,
+        navigateToTile,
+        setNavigateToTile,
       }}
     >
       {children}

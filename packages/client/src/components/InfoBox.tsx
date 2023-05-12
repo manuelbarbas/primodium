@@ -14,6 +14,7 @@ import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { useTransactionLoading } from "../context/TransactionLoadingContext";
+import NavigateMainBaseButton from "./action/NavigateMainBaseButton";
 
 function InfoBox() {
   const { address, isConnected } = useWagmiAccount();
@@ -44,7 +45,7 @@ function InfoBox() {
 
   if (!isConnected) {
     return (
-      <div className="z-[1000] fixed top-4 left-4 h-40 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="z-[1000] fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col">
           <div className="flex flex-row">
             <div className="text-xl mb-4 font-bold inline-block">Primodium</div>
@@ -82,6 +83,9 @@ function InfoBox() {
           </div>
         </div>
 
+        <NavigateMainBaseButton />
+
+        {/* External wallet button is hiden */}
         <button
           onClick={handleWalletLogin}
           className="absolute inset-x-4 bottom-4 h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold scale-0"

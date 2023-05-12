@@ -23,6 +23,8 @@ const ResourceTileLayer = ({
     selectedStartPathTile,
     selectedEndPathTile,
     showSelectedPathTiles,
+    navigateToTile,
+    setNavigateToTile,
   } = useSelectedTile();
 
   const [displayTileRange, setDisplayTileRange] = useState({
@@ -58,6 +60,15 @@ const ResourceTileLayer = ({
     [map]
   );
   useMapEvent("click", clickEvent);
+
+  // Navigating to selected tile when navigateToTile is set to true
+  useEffect(() => {
+    console.log("Navigating to tile", navigateToTile);
+    if (navigateToTile) {
+      map.flyTo([selectedTile.y, selectedTile.x]);
+      setNavigateToTile(false);
+    }
+  }, [navigateToTile]);
 
   // Displaying tiles
   const [tiles, setTiles] = useState<JSX.Element[]>([]);

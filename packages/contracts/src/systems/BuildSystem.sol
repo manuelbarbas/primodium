@@ -71,10 +71,10 @@ contract BuildSystem is System {
         getAddressById(components, MainBaseInitializedComponentID)
       );
 
-      if (LibResearch.hasResearched(mainBaseInitializedComponent, addressToEntity(msg.sender))) {
+      if (mainBaseInitializedComponent.has(addressToEntity(msg.sender))) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
-        mainBaseInitializedComponent.set(addressToEntity(msg.sender));
+        mainBaseInitializedComponent.set(addressToEntity(msg.sender), coord);
       }
     }
     // Build BasicMiner with 100 IronResource

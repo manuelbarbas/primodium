@@ -58,6 +58,12 @@ export function defineComponents(world: World) {
         contractId: "component.StarterPackInitialized",
       },
     }),
+    // main base initialized
+    MainBaseInitialized: defineCoordComponent(world, {
+      metadata: {
+        contractId: "component.MainBaseInitialized",
+      },
+    }),
   };
 }
 

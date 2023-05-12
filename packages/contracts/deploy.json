@@ -56,7 +56,9 @@
         "LastBuiltAtComponent",
         "LastClaimedAtComponent",
         "HealthComponent",
-        "PathComponent"
+        "PathComponent",
+
+        "MainBaseInitializedComponent"
       ]
     },
     {

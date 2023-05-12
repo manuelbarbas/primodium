@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
-import { getAddressById } from "solecs/utils.sol";
+import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
@@ -9,6 +9,9 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
@@ -46,6 +49,14 @@ contract DestroySystem is System {
       for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
         pathComponent.remove(pathWithEndingTile[i]);
       }
+    }
+
+    // for main base tile, remove main base initialized.
+    if (tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
+      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
+        getAddressById(components, MainBaseInitializedComponentID)
+      );
+      mainBaseInitializedComponent.remove(addressToEntity(msg.sender));
     }
 
     positionComponent.remove(entitiesAtPosition[0]);

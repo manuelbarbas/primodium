@@ -21,37 +21,41 @@ To craft from factory
 - CraftSystem: Crafting Items (called from factories)
   - Called from factories (items already in factories, no resource flows)
 
-# Components
-
-A new int256 component is created for each resource and crafted item. A new boolean component is created for each research objective.
-
-# New Component Structure (post-initial launch)
+# Component Structure
 
 OwnedByComponent is for the buildings and ItemComponent is for items mined or crafted.
 
 ## Core Compnents
 
-CounterComponent
-GameConfigComponent
-PositionComponent
-TileComponent
-OwnedByComponent
-PathComponent
-LastBuiltAtComponent
-LastClaimedAtComponent
-HealthComponent
+```
+  CounterComponent
+  GameConfigComponent
+  PositionComponent
+  TileComponent
+  OwnedByComponent
+  PathComponent
+  LastBuiltAtComponent
+  LastClaimedAtComponent
+  HealthComponent
+```
 
 ## Resource and Research
 
-ItemComponent
-ResearchComponent
+```
+  ItemComponent
+  ResearchComponent
+```
 
 ## Game mechanics
 
-MainBaseInitializedComponent
-StarterPackInitializedComponent
+```
+  MainBaseInitializedComponent
+  StarterPackInitializedComponent
+```
 
-# Old Component Structure
+# Old Component Structure (Deprecated)
+
+Before, a new int256 component is created for each resource and crafted item, and a new boolean component is created for each research objective.
 
 ```
 ## Core Compnents

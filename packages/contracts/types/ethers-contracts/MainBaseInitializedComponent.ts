@@ -27,12 +27,19 @@ import type {
   PromiseOrValue,
 } from "./common";
 
+export type CoordStruct = {
+  x: PromiseOrValue<BigNumberish>;
+  y: PromiseOrValue<BigNumberish>;
+};
+
+export type CoordStructOutput = [number, number] & { x: number; y: number };
+
 export interface MainBaseInitializedComponentInterface extends utils.Interface {
   functions: {
     "authorizeWriter(address)": FunctionFragment;
     "getEntities()": FunctionFragment;
-    "getEntitiesWithValue(bool)": FunctionFragment;
     "getEntitiesWithValue(bytes)": FunctionFragment;
+    "getEntitiesWithValue((int32,int32))": FunctionFragment;
     "getRawValue(uint256)": FunctionFragment;
     "getSchema()": FunctionFragment;
     "getValue(uint256)": FunctionFragment;
@@ -42,8 +49,8 @@ export interface MainBaseInitializedComponentInterface extends utils.Interface {
     "registerIndexer(address)": FunctionFragment;
     "registerWorld(address)": FunctionFragment;
     "remove(uint256)": FunctionFragment;
-    "set(uint256)": FunctionFragment;
     "set(uint256,bytes)": FunctionFragment;
+    "set(uint256,(int32,int32))": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unauthorizeWriter(address)": FunctionFragment;
     "world()": FunctionFragment;
@@ -54,8 +61,8 @@ export interface MainBaseInitializedComponentInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "authorizeWriter"
       | "getEntities"
-      | "getEntitiesWithValue(bool)"
       | "getEntitiesWithValue(bytes)"
+      | "getEntitiesWithValue((int32,int32))"
       | "getRawValue"
       | "getSchema"
       | "getValue"
@@ -65,8 +72,8 @@ export interface MainBaseInitializedComponentInterface extends utils.Interface {
       | "registerIndexer"
       | "registerWorld"
       | "remove"
-      | "set(uint256)"
       | "set(uint256,bytes)"
+      | "set(uint256,(int32,int32))"
       | "transferOwnership"
       | "unauthorizeWriter"
       | "world"
@@ -82,12 +89,12 @@ export interface MainBaseInitializedComponentInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getEntitiesWithValue(bool)",
-    values: [PromiseOrValue<boolean>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "getEntitiesWithValue(bytes)",
     values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getEntitiesWithValue((int32,int32))",
+    values: [CoordStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "getRawValue",
@@ -117,12 +124,12 @@ export interface MainBaseInitializedComponentInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "set(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "set(uint256,bytes)",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "set(uint256,(int32,int32))",
+    values: [PromiseOrValue<BigNumberish>, CoordStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -147,11 +154,11 @@ export interface MainBaseInitializedComponentInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue(bool)",
+    functionFragment: "getEntitiesWithValue(bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue(bytes)",
+    functionFragment: "getEntitiesWithValue((int32,int32))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -173,11 +180,11 @@ export interface MainBaseInitializedComponentInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "remove", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256)",
+    functionFragment: "set(uint256,bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256,bytes)",
+    functionFragment: "set(uint256,(int32,int32))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -247,13 +254,13 @@ export interface MainBaseInitializedComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((int32,int32))"(
+      coord: CoordStruct,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
@@ -269,7 +276,7 @@ export interface MainBaseInitializedComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[CoordStructOutput]>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -295,14 +302,15 @@ export interface MainBaseInitializedComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "set(uint256,(int32,int32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: CoordStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -331,13 +339,13 @@ export interface MainBaseInitializedComponent extends BaseContract {
 
   getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue(bool)"(
-    value: PromiseOrValue<boolean>,
+  "getEntitiesWithValue(bytes)"(
+    value: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue(bytes)"(
-    value: PromiseOrValue<BytesLike>,
+  "getEntitiesWithValue((int32,int32))"(
+    coord: CoordStruct,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
@@ -353,7 +361,7 @@ export interface MainBaseInitializedComponent extends BaseContract {
   getValue(
     entity: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<CoordStructOutput>;
 
   has(
     entity: PromiseOrValue<BigNumberish>,
@@ -379,14 +387,15 @@ export interface MainBaseInitializedComponent extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "set(uint256)"(
-    entity: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   "set(uint256,bytes)"(
     entity: PromiseOrValue<BigNumberish>,
     value: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "set(uint256,(int32,int32))"(
+    entity: PromiseOrValue<BigNumberish>,
+    value: CoordStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -415,13 +424,13 @@ export interface MainBaseInitializedComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((int32,int32))"(
+      coord: CoordStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
@@ -437,7 +446,7 @@ export interface MainBaseInitializedComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<CoordStructOutput>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -463,14 +472,15 @@ export interface MainBaseInitializedComponent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "set(uint256,(int32,int32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: CoordStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -511,13 +521,13 @@ export interface MainBaseInitializedComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((int32,int32))"(
+      coord: CoordStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -557,14 +567,15 @@ export interface MainBaseInitializedComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "set(uint256,(int32,int32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: CoordStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -594,13 +605,13 @@ export interface MainBaseInitializedComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((int32,int32))"(
+      coord: CoordStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -640,14 +651,15 @@ export interface MainBaseInitializedComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "set(uint256,(int32,int32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: CoordStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
