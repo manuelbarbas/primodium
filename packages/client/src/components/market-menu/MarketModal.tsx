@@ -22,9 +22,11 @@ function MarketModal() {
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaWindowClose size="24" />} />
             </button>
-            <p className="text-lg font-bold ">Resource Market</p>
+            <p className="text-lg font-bold mb-2">Resource Market</p>
             {/* <AllResourcesPage /> */}
-            <p>Coming soon!</p>
+            {/* <div className="my-auto mx-auto w-32 text-center"> */}
+            <p className="">Coming soon!</p>
+            {/* </div> */}
           </div>
         </div>
       </div>

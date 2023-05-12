@@ -89,7 +89,7 @@ function TechTreeItem({
 
   if (isDefaultUnlocked || isResearched?.value) {
     return (
-      <div className="relative group w-64 h-64 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
+      <div className="relative group min-w-64 h-64 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
         <div className="mt-1 w-16 h-16 mx-auto">
           <img src={icon} className="w-16 h-16 mx-auto pixel-images"></img>
         </div>
@@ -105,7 +105,7 @@ function TechTreeItem({
     );
   } else {
     return (
-      <div className="relative group w-64 h-64 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
+      <div className="relative group min-w-64 h-64 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
         <div className="mt-1 w-16 h-16 mx-auto">
           <img src={icon} className="w-16 h-16 mx-auto pixel-images"></img>
         </div>

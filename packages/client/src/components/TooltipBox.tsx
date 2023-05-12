@@ -18,6 +18,8 @@ import CraftButton from "./action/CraftButton";
 import ResourceLabel from "./resource-box/ResourceLabel";
 import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
 import StaticResourceLabel from "./resource-box/StaticResourceLabel";
+import { useTransactionLoading } from "../context/TransactionLoadingContext";
+import Spinner from "./Spinner";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -141,6 +143,7 @@ function TooltipBox() {
   };
 
   // actions
+  const { transactionLoading } = useTransactionLoading();
 
   if (!minimized) {
     return (
@@ -198,7 +201,8 @@ function TooltipBox() {
               </div>
               <div className="flex-row">
                 {/* TODO: show owned resource for every resource possible */}
-                {builtTile && (
+                {builtTile && transactionLoading && <Spinner />}
+                {builtTile && !transactionLoading && (
                   <>
                     {isClaimableFactory(builtTile) && (
                       <div className="font-bold mb-1">Stored resources:</div>

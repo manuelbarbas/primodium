@@ -58,9 +58,9 @@ export default function NavigateMainBaseButton() {
     return (
       <button
         onClick={navigateMainBase}
-        className="absolute inset-x-4 bottom-4 h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold"
+        className="absolute inset-x-4 bottom-4 h-10 bg-green-600 hover:bg-green-700 text-sm rounded font-bold"
       >
-        Visit Base ({mainBaseCoord.x},{mainBaseCoord.y})
+        Main Base ({mainBaseCoord.x},{mainBaseCoord.y})
       </button>
     );
   } else {

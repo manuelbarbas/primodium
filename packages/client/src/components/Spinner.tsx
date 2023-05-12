@@ -1,6 +1,6 @@
 export default function Spinner() {
   return (
-    <div role="status" className="ml-3 inline-block">
+    <div role="status" className="inline-block">
       <svg
         aria-hidden="true"
         className="w-6 h-6 mr-2 text-gray-200 animate-spin dark:text-gray-400 fill-yellow-100"

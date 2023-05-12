@@ -11,6 +11,9 @@ import { useAccount } from "../../hooks/useAccount";
 
 import ResourceLabel from "./ResourceLabel";
 import StarterPackButton from "../StarterPackButton";
+import Spinner from "../Spinner";
+import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+import { transaction } from "mobx";
 
 function ResourceBox() {
   const [minimized, setMinimize] = useState(true);
@@ -33,7 +36,21 @@ function ResourceBox() {
       : singletonIndex
   );
 
-  if (!minimized) {
+  const { transactionLoading } = useTransactionLoading();
+
+  if (transactionLoading) {
+    return (
+      <div className="z-[1000] fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+        <div className=" mt-4 ml-5 flex flex-col h-56">
+          <button onClick={minimizeBox} className="fixed right-9">
+            <LinkIcon icon={<FaMinusSquare size="18" />} />
+          </button>
+          <p className="text-lg font-bold mb-3">Resources</p>
+          <Spinner />
+        </div>
+      </div>
+    );
+  } else if (!minimized) {
     return (
       <div className="z-[1000] fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col h-56">

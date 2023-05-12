@@ -22,7 +22,7 @@ function ResearchModal() {
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaWindowClose size="24" />} />
             </button>
-            <p className="text-lg font-bold mt-4 ml-5  ">
+            <p className="text-lg font-bold mt-4 ml-5 ">
               Research Technologies
             </p>
             {/* <TechTree /> */}
