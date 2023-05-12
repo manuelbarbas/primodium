@@ -1187,47 +1187,47 @@
   },
   "ast": {
     "absolutePath": "src/components/MainBaseInitializedComponent.sol",
-    "id": 21501,
+    "id": 21585,
     "exportedSymbols": {
       "BareComponent": [
-        40498
+        42029
       ],
       "Component": [
         262
       ],
       "Coord": [
-        1635
+        1719
       ],
       "CoordComponent": [
-        1771
+        1855
       ],
       "ID": [
-        21487
+        21571
       ],
       "IEntityIndexer": [
-        40915
+        42446
       ],
       "IWorld": [
-        1247
+        1331
       ],
       "LibTypes": [
-        40537
+        42068
       ],
       "MainBaseInitializedComponent": [
-        21500
+        21584
       ],
       "MapSet": [
-        40730
+        42261
       ],
       "Set": [
-        40896
+        42427
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:274:88",
     "nodes": [
       {
-        "id": 21478,
+        "id": 21562,
         "nodeType": "PragmaDirective",
         "src": "32:24:88",
         "nodes": [],
@@ -1239,20 +1239,20 @@
         ]
       },
       {
-        "id": 21479,
+        "id": 21563,
         "nodeType": "ImportDirective",
         "src": "57:53:88",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/CoordComponent.sol",
         "file": "std-contracts/components/CoordComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21501,
-        "sourceUnit": 1772,
+        "scope": 21585,
+        "sourceUnit": 1856,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21487,
+        "id": 21571,
         "nodeType": "VariableDeclaration",
         "src": "112:73:88",
         "nodes": [],
@@ -1260,7 +1260,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "129:2:88",
-        "scope": 21501,
+        "scope": 21585,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1268,7 +1268,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21480,
+          "id": 21564,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "112:7:88",
@@ -1283,7 +1283,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4d61696e42617365496e697469616c697a6564",
-                  "id": 21484,
+                  "id": 21568,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1305,7 +1305,7 @@
                     "typeString": "literal_string \"component.MainBaseInitialized\""
                   }
                 ],
-                "id": 21483,
+                "id": 21567,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1316,7 +1316,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21485,
+              "id": 21569,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1340,7 +1340,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21482,
+            "id": 21566,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1352,14 +1352,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21481,
+              "id": 21565,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "134:7:88",
               "typeDescriptions": {}
             }
           },
-          "id": 21486,
+          "id": 21570,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1378,17 +1378,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21500,
+        "id": 21584,
         "nodeType": "ContractDefinition",
         "src": "188:117:88",
         "nodes": [
           {
-            "id": 21499,
+            "id": 21583,
             "nodeType": "FunctionDefinition",
             "src": "248:55:88",
             "nodes": [],
             "body": {
-              "id": 21498,
+              "id": 21582,
               "nodeType": "Block",
               "src": "301:2:88",
               "nodes": [],
@@ -1400,11 +1400,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21494,
+                    "id": 21578,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21491,
+                    "referencedDeclaration": 21575,
                     "src": "290:5:88",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1412,11 +1412,11 @@
                     }
                   },
                   {
-                    "id": 21495,
+                    "id": 21579,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21487,
+                    "referencedDeclaration": 21571,
                     "src": "297:2:88",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1424,16 +1424,16 @@
                     }
                   }
                 ],
-                "id": 21496,
+                "id": 21580,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21493,
+                  "id": 21577,
                   "name": "CoordComponent",
                   "nameLocations": [
                     "275:14:88"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1771,
+                  "referencedDeclaration": 1855,
                   "src": "275:14:88"
                 },
                 "nodeType": "ModifierInvocation",
@@ -1443,17 +1443,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21492,
+              "id": 21576,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21491,
+                  "id": 21575,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "268:5:88",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21499,
+                  "scope": 21583,
                   "src": "260:13:88",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1462,7 +1462,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21490,
+                    "id": 21574,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "260:7:88",
@@ -1478,12 +1478,12 @@
               "src": "259:15:88"
             },
             "returnParameters": {
-              "id": 21497,
+              "id": 21581,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "301:0:88"
             },
-            "scope": 21500,
+            "scope": 21584,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1493,51 +1493,51 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21488,
+              "id": 21572,
               "name": "CoordComponent",
               "nameLocations": [
                 "229:14:88"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1771,
+              "referencedDeclaration": 1855,
               "src": "229:14:88"
             },
-            "id": 21489,
+            "id": 21573,
             "nodeType": "InheritanceSpecifier",
             "src": "229:14:88"
           }
         ],
         "canonicalName": "MainBaseInitializedComponent",
         "contractDependencies": [
-          40730,
-          40896
+          42261,
+          42427
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21500,
-          1771,
+          21584,
+          1855,
           262,
-          40498,
-          43284,
-          40934,
-          2359,
-          42840,
-          43340,
-          42716,
-          42583,
-          43329,
-          2402,
-          42850
+          42029,
+          44752,
+          42465,
+          2443,
+          44308,
+          44787,
+          44184,
+          1175,
+          44047,
+          2486,
+          44318
         ],
         "name": "MainBaseInitializedComponent",
         "nameLocation": "197:28:88",
-        "scope": 21501,
+        "scope": 21585,
         "usedErrors": [
-          40298,
-          43209,
-          43337,
-          43339
+          41829,
+          44677,
+          44784,
+          44786
         ]
       }
     ],
