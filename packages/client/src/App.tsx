@@ -8,7 +8,7 @@ import {
 } from "wagmi";
 import { ExternalProvider } from "@ethersproject/providers";
 import { getDefaultProvider } from "ethers";
-import { devConfig, getNetworkLayerConfig } from "./network/configSkystrife";
+import { devConfig, getNetworkLayerConfig } from "./network/config";
 import { createNetworkLayer } from "./network/layer";
 
 import SelectedTileProvider from "./context/SelectedTileContext";
