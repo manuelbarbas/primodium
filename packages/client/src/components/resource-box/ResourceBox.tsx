@@ -13,7 +13,6 @@ import ResourceLabel from "./ResourceLabel";
 import StarterPackButton from "../StarterPackButton";
 import Spinner from "../Spinner";
 import { useTransactionLoading } from "../../context/TransactionLoadingContext";
-import { transaction } from "mobx";
 
 function ResourceBox() {
   const [minimized, setMinimize] = useState(true);
