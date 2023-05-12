@@ -11,7 +11,7 @@ import { utils } from "ethers";
 import { SystemTypes } from "contracts/types/SystemTypes";
 import { SystemAbis } from "contracts/types/SystemAbis.mjs";
 import { defineComponents, defineOffChainComponents } from "./components";
-import { defaultParamsSkyStrife } from "./config";
+import { faucetUrl } from "./config";
 
 export async function createNetworkLayer(config: SetupContractConfig) {
   // The world contains references to all entities, all components and disposers.
@@ -54,9 +54,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   });
 
   // Faucet setup
-  const faucet = defaultParamsSkyStrife.faucet
-    ? createFaucetService(defaultParamsSkyStrife.faucet)
-    : undefined;
+  const faucet = faucetUrl ? createFaucetService(faucetUrl) : undefined;
 
   // initial drip
   const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
