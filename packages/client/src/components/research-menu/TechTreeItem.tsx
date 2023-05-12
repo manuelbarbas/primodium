@@ -10,6 +10,8 @@ import { BlockType } from "../../util/constants";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
 import { hashFromAddress } from "../../util/encode";
+import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+import Spinner from "../Spinner";
 
 function TechTreeItem({
   data,
@@ -72,13 +74,17 @@ function TechTreeItem({
     }
   }, []);
 
+  const { transactionLoading, setTransactionLoading } = useTransactionLoading();
+
   const research = useCallback(async () => {
+    setTransactionLoading(true);
     await execute(
       systems["system.Research"].executeTyped(BigNumber.from(data.id), {
         gasLimit: 1_000_000,
       }),
       providers
     );
+    setTransactionLoading(false);
   }, []);
 
   if (isDefaultUnlocked || isResearched?.value) {
@@ -110,11 +116,12 @@ function TechTreeItem({
         </div>
         <div className="mt-1 text-xs">{description}</div>
         {/* </div> */}
+
         <button
           className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-teal-600 hover:bg-teal-700  py-2 rounded shadow"
           onClick={research}
         >
-          Research
+          {transactionLoading ? <Spinner /> : "Research"}
         </button>
       </div>
     );

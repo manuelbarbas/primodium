@@ -23,7 +23,7 @@ function ResearchModal() {
               <LinkIcon icon={<FaWindowClose size="24" />} />
             </button>
             <p className="text-lg font-bold mt-4 ml-5  ">
-              Research technologies
+              Research Technologies
             </p>
             {/* <TechTree /> */}
             <ResearchPage />
