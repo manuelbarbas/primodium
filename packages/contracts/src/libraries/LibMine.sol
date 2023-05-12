@@ -18,17 +18,20 @@ library LibMine {
     uint256 researchKey,
     uint256 entity
   ) internal returns (uint256) {
-    // TODO: Change rate to be variable based on miner
     uint256 MINE_COUNT_PER_BLOCK = 10;
+    uint256 MINE_COUNT_MAX = 10000;
 
     if (minerType == MinerID || minerType == LithiumMinerID) {
       MINE_COUNT_PER_BLOCK = 10;
     } else if (minerType == BasicMinerID) {
       MINE_COUNT_PER_BLOCK = 1;
+      MINE_COUNT_MAX = 1000;
     } else if (minerType == HardenedDrillID) {
       MINE_COUNT_PER_BLOCK = 2;
+      MINE_COUNT_MAX = 2000;
     } else if (minerType == PrecisionMachineryFactoryID) {
       MINE_COUNT_PER_BLOCK = 3;
+      MINE_COUNT_MAX = 3000;
     }
 
     uint256 startClaimTime = lastClaimedAtComponent.getValue(entity);
@@ -47,8 +50,12 @@ library LibMine {
       }
     }
 
-    uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
     lastClaimedAtComponent.set(entity, endClaimTime);
+
+    uint256 incBy = MINE_COUNT_PER_BLOCK * (endClaimTime - startClaimTime);
+    if (incBy > MINE_COUNT_MAX) {
+      incBy = MINE_COUNT_MAX;
+    }
     return incBy;
   }
 }
