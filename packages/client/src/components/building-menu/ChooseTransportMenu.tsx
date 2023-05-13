@@ -112,7 +112,7 @@ function ChooseTransportMenu({
         />
         <PathActionIconButton
           backgroundColor="#ad6b85"
-          text="Destroy"
+          text="Clear"
           action={destroyPath}
         />
         <BuildingIconButton label="Node" blockType={BlockType.Node} />
