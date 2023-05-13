@@ -1115,44 +1115,44 @@
   },
   "ast": {
     "absolutePath": "src/components/GameConfigComponent.sol",
-    "id": 21465,
+    "id": 21381,
     "exportedSymbols": {
       "BareComponent": [
-        42029
+        40520
       ],
       "Component": [
         262
       ],
       "GameConfigComponent": [
-        21464
+        21380
       ],
       "ID": [
-        21451
+        21367
       ],
       "IEntityIndexer": [
-        42446
+        40937
       ],
       "IWorld": [
-        1331
+        1247
       ],
       "LibTypes": [
-        42068
+        40559
       ],
       "MapSet": [
-        42261
+        40752
       ],
       "Set": [
-        42427
+        40918
       ],
       "Uint256ArrayComponent": [
-        1969
+        1885
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:277:83",
     "nodes": [
       {
-        "id": 21442,
+        "id": 21358,
         "nodeType": "PragmaDirective",
         "src": "32:24:83",
         "nodes": [],
@@ -1164,20 +1164,20 @@
         ]
       },
       {
-        "id": 21443,
+        "id": 21359,
         "nodeType": "ImportDirective",
         "src": "57:60:83",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256ArrayComponent.sol",
         "file": "std-contracts/components/Uint256ArrayComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21465,
-        "sourceUnit": 1970,
+        "scope": 21381,
+        "sourceUnit": 1886,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21451,
+        "id": 21367,
         "nodeType": "VariableDeclaration",
         "src": "119:64:83",
         "nodes": [],
@@ -1185,7 +1185,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "136:2:83",
-        "scope": 21465,
+        "scope": 21381,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1193,7 +1193,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21444,
+          "id": 21360,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "119:7:83",
@@ -1208,7 +1208,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e47616d65436f6e666967",
-                  "id": 21448,
+                  "id": 21364,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1230,7 +1230,7 @@
                     "typeString": "literal_string \"component.GameConfig\""
                   }
                 ],
-                "id": 21447,
+                "id": 21363,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1241,7 +1241,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21449,
+              "id": 21365,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1265,7 +1265,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21446,
+            "id": 21362,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1277,14 +1277,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21445,
+              "id": 21361,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "141:7:83",
               "typeDescriptions": {}
             }
           },
-          "id": 21450,
+          "id": 21366,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1303,17 +1303,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21464,
+        "id": 21380,
         "nodeType": "ContractDefinition",
         "src": "186:122:83",
         "nodes": [
           {
-            "id": 21463,
+            "id": 21379,
             "nodeType": "FunctionDefinition",
             "src": "244:62:83",
             "nodes": [],
             "body": {
-              "id": 21462,
+              "id": 21378,
               "nodeType": "Block",
               "src": "304:2:83",
               "nodes": [],
@@ -1325,11 +1325,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21458,
+                    "id": 21374,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21455,
+                    "referencedDeclaration": 21371,
                     "src": "293:5:83",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1337,11 +1337,11 @@
                     }
                   },
                   {
-                    "id": 21459,
+                    "id": 21375,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21451,
+                    "referencedDeclaration": 21367,
                     "src": "300:2:83",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1349,16 +1349,16 @@
                     }
                   }
                 ],
-                "id": 21460,
+                "id": 21376,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21457,
+                  "id": 21373,
                   "name": "Uint256ArrayComponent",
                   "nameLocations": [
                     "271:21:83"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1969,
+                  "referencedDeclaration": 1885,
                   "src": "271:21:83"
                 },
                 "nodeType": "ModifierInvocation",
@@ -1368,17 +1368,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21456,
+              "id": 21372,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21455,
+                  "id": 21371,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "264:5:83",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21463,
+                  "scope": 21379,
                   "src": "256:13:83",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1387,7 +1387,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21454,
+                    "id": 21370,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "256:7:83",
@@ -1403,12 +1403,12 @@
               "src": "255:15:83"
             },
             "returnParameters": {
-              "id": 21461,
+              "id": 21377,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "304:0:83"
             },
-            "scope": 21464,
+            "scope": 21380,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1418,51 +1418,51 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21452,
+              "id": 21368,
               "name": "Uint256ArrayComponent",
               "nameLocations": [
                 "218:21:83"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1969,
+              "referencedDeclaration": 1885,
               "src": "218:21:83"
             },
-            "id": 21453,
+            "id": 21369,
             "nodeType": "InheritanceSpecifier",
             "src": "218:21:83"
           }
         ],
         "canonicalName": "GameConfigComponent",
         "contractDependencies": [
-          42261,
-          42427
+          40752,
+          40918
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21464,
-          1969,
+          21380,
+          1885,
           262,
-          42029,
-          44752,
-          42465,
-          2443,
-          44308,
-          44787,
-          44184,
-          1175,
-          44047,
-          2486,
-          44318
+          40520,
+          43306,
+          40956,
+          2359,
+          42862,
+          43362,
+          42738,
+          42605,
+          43351,
+          2402,
+          42872
         ],
         "name": "GameConfigComponent",
         "nameLocation": "195:19:83",
-        "scope": 21465,
+        "scope": 21381,
         "usedErrors": [
-          41829,
-          44677,
-          44784,
-          44786
+          40320,
+          43231,
+          43359,
+          43361
         ]
       }
     ],

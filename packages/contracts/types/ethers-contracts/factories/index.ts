@@ -36,7 +36,6 @@ export { System__factory } from "./System__factory";
 export { SystemStorage__factory } from "./SystemStorage__factory";
 export { TileComponent__factory } from "./TileComponent__factory";
 export { Uint256ArrayComponent__factory } from "./Uint256ArrayComponent__factory";
-export { Uint256Component__factory } from "./Uint256Component__factory";
 export { Uint32Component__factory } from "./Uint32Component__factory";
 export { VoxelCoordComponent__factory } from "./VoxelCoordComponent__factory";
 export { World__factory } from "./World__factory";

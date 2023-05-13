@@ -86,7 +86,8 @@ contract ClaimFromMineSystem is System {
           c.tileComponent.getValue(entitiesAtPosition[0]),
           resourceKey,
           resourceKey,
-          ownerKey
+          ownerKey,
+          entitiesAtPosition[0]
         );
 
         LibMath.incrementBy(
