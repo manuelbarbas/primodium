@@ -9,9 +9,10 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 
 import { BsQuestionCircle } from "react-icons/bs";
 import { ImTwitter } from "react-icons/im";
-import { FaDiscord } from "react-icons/fa";
+import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
+import { FaFlagCheckered } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { useTransactionLoading } from "../context/TransactionLoadingContext";
 import NavigateMainBaseButton from "./action/NavigateMainBaseButton";
@@ -45,14 +46,33 @@ function InfoBox() {
 
   if (!isConnected) {
     return (
-      <div className="z-[1000] fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="z-[1000] fixed top-4 left-4 h-44 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className=" mt-4 ml-5 flex flex-col">
           <div className="flex flex-row">
-            <div className="text-xl mb-4 font-bold inline-block mr-3">
-              Primodium
+            <div className="flex items-center mb-2">
+              <p className="inline-block align-middle text-xl font-bold">
+                Primodium
+              </p>
+              <div>
+                <a
+                  href="https://discord.com/invite/bn7eSSKFWV"
+                  target="_blank"
+                  className="text-sm inline-block hover:text-gray-300 ml-3"
+                >
+                  <LinkIcon icon={<FaDiscord size="16" />} />
+                </a>
+                <a
+                  href="hhttps://twitter.com/primodiumgame"
+                  target="_blank"
+                  className="text-sm inline-block hover:text-gray-300 ml-3"
+                >
+                  <LinkIcon icon={<FaTwitter size="16" />} />
+                </a>
+              </div>
             </div>
-            {transactionLoading && <Spinner />}
+            <div className="ml-3">{transactionLoading && <Spinner />}</div>
           </div>
+          <div className="flex"></div>
           <div className="flex items-center mb-2">
             <a
               href="https://tutorial.primodium.com"
@@ -66,21 +86,11 @@ function InfoBox() {
           <div className="flex items-center mb-2">
             <a
               target="_blank"
-              href="https://twitter.com/primodiumgame"
+              href="https://www.primodium.com/seasons"
               className="text-sm inline-block hover:text-gray-300"
             >
-              <LinkIcon icon={<ImTwitter size="16" />} />
-              <p className="inline-block align-middle ml-2">Twitter</p>
-            </a>
-          </div>
-          <div className="flex items-center mb-2">
-            <a
-              target="_blank"
-              href="https://discord.com/invite/bn7eSSKFWV"
-              className="text-sm inline-block hover:text-gray-300"
-            >
-              <LinkIcon icon={<FaDiscord size="16" />} />
-              <p className="inline-block align-middle ml-2">Discord</p>
+              <LinkIcon icon={<FaFlagCheckered size="16" />} />
+              <p className="inline-block align-middle ml-2">Past seasons</p>
             </a>
           </div>
         </div>
@@ -107,7 +117,7 @@ function InfoBox() {
             </button>
             <div className="flex items-center mb-2">
               <a
-                href="https://www.google.com"
+                href="https://tutorial.primodium.com"
                 className="text-sm inline-block hover:text-gray-300"
               >
                 <LinkIcon icon={<BsQuestionCircle size="16" />} />
@@ -116,7 +126,7 @@ function InfoBox() {
             </div>
             <div className="flex items-center mb-2">
               <a
-                href="https://www.google.com"
+                href="https://twitter.com/primodiumgame"
                 className="text-sm inline-block hover:text-gray-300"
               >
                 <LinkIcon icon={<ImTwitter size="16" />} />
@@ -125,7 +135,7 @@ function InfoBox() {
             </div>
             <div className="flex items-center mb-2">
               <a
-                href="https://www.google.com"
+                href="https://discord.com/invite/bn7eSSKFWV"
                 className="text-sm inline-block hover:text-gray-300"
               >
                 <LinkIcon icon={<FaDiscord size="16" />} />
@@ -163,7 +173,7 @@ function InfoBox() {
 }
 
 const LinkIcon = ({ icon }: { icon: any }) => (
-  <div className="link-icon inline-block align-middle">{icon}</div>
+  <div className="link-icon inline-block align-middle my-auto">{icon}</div>
 );
 
 export default InfoBox;
