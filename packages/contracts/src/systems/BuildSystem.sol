@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity } from "solecs/utils.sol";
+import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -443,7 +443,11 @@ contract BuildSystem is System {
     }
 
     // Randomly generate IDs instead of basing on coordinate
-    uint256 blockEntity = world.getUniqueEntityId();
+    uint256 newBlockEntity = world.getUniqueEntityId();
+
+    // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
+    uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
+
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
