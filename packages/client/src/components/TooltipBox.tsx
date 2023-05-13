@@ -205,7 +205,7 @@ function TooltipBox() {
                 {builtTile && !transactionLoading && (
                   <>
                     {isClaimableFactory(builtTile) && (
-                      <div className="font-bold mb-1">Stored resources:</div>
+                      <div className="font-bold mt-1 mb-1">Storage:</div>
                     )}
 
                     {isClaimable(builtTile) &&

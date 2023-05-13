@@ -22,10 +22,10 @@ export default function CraftButton({ x, y }: DisplayTile) {
 
   return (
     <button
-      className="inset-x-4 absolute bottom-16 h-10 bg-orange-600 hover:bg-orange-700 text-sm rounded font-bold"
+      className="inset-x-4 absolute bottom-16 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
       onClick={claimAction}
     >
-      Craft
+      Craft from storage
     </button>
   );
 }
