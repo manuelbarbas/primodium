@@ -6,7 +6,7 @@ function PathActionIconButton({
   action,
 }: {
   icon?: any;
-  backgroundColor?: any;
+  backgroundColor: string;
   text: string;
   action: () => void;
   children?: ReactNode;

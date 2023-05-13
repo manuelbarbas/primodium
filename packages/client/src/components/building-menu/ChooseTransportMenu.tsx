@@ -44,10 +44,6 @@ function ChooseTransportMenu({
     setSelectedEndPathTile(selectedTile);
   }, [selectedTile]);
 
-  const clearPath = useCallback(() => {
-    console.log("clearPath");
-  }, []);
-
   const { setTransactionLoading } = useTransactionLoading();
 
   // Select tile to end path, executeTyped
@@ -75,29 +71,49 @@ function ChooseTransportMenu({
     }
   }, [selectedStartPathTile, selectedEndPathTile]);
 
+  // delete path
+  const destroyPath = useCallback(async () => {
+    if (selectedStartPathTile !== null && selectedEndPathTile !== null) {
+      setTransactionLoading(true);
+      await execute(
+        systems["system.DestroyPath"].executeTyped(
+          {
+            x: selectedStartPathTile.x,
+            y: selectedStartPathTile.y,
+          },
+          {
+            gasLimit: 500_000,
+          }
+        ),
+        providers
+      );
+      setTransactionLoading(false);
+    }
+  }, [selectedStartPathTile, selectedEndPathTile]);
+
   return (
     <div className="z-[1000] fixed bottom-0 w-11/12 h-72 flex flex-col bg-gray-700 text-white font-mono rounded">
       <p className="mt-4 text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
         <PathActionIconButton
           backgroundColor="#dd9871"
-          text={"Start"}
+          text="Start"
           action={startPath}
         />
         <PathActionIconButton
           backgroundColor="#77c899"
-          text={"End"}
+          text="End"
           action={endPath}
         />
         <PathActionIconButton
           backgroundColor="#479dd6"
-          text={"Create"}
+          text="Create"
           action={createPath}
         />
         <PathActionIconButton
           backgroundColor="#ad6b85"
-          text={"Clear"}
-          action={clearPath}
+          text="Destroy"
+          action={destroyPath}
         />
         <BuildingIconButton label="Node" blockType={BlockType.Node} />
       </div>
