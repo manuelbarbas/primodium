@@ -11,17 +11,27 @@ export default function ClaimButton({ x, y }: DisplayTile) {
   const claimAction = useCallback(async () => {
     setTransactionLoading(true);
     await execute(
-      systems["system.ClaimFromMine"].executeTyped({
-        x: x,
-        y: y,
-      }),
+      systems["system.ClaimFromMine"].executeTyped(
+        {
+          x: x,
+          y: y,
+        },
+        {
+          gasLimit: 30_000_000,
+        }
+      ),
       providers
     );
     await execute(
-      systems["system.ClaimFromFactory"].executeTyped({
-        x: x,
-        y: y,
-      }),
+      systems["system.ClaimFromFactory"].executeTyped(
+        {
+          x: x,
+          y: y,
+        },
+        {
+          gasLimit: 30_000_000,
+        }
+      ),
       providers
     );
     setTransactionLoading(false);
