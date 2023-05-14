@@ -44,6 +44,14 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
 
   const polylineLength = useMemo(() => getPolylineLength(), [positions]);
 
+  const circlePathOptions = useMemo(
+    () => ({
+      fillOpacity: 1,
+      weight: 1,
+    }),
+    []
+  );
+
   const moveCircle = () => {
     let nextIndex = currentIndex.current + 1;
 
@@ -62,7 +70,6 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
 
     // get segment length as a percentage of the total polyline length
     if (polylineLength === 0) return;
-
     const segmentLength = from.distanceTo(to) / polylineLength;
 
     const startTime = performance.now();
@@ -108,19 +115,14 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       <Polyline
         positions={positions}
         color={lineColor}
-        pathOptions={{
-          ...pathOptions,
-        }}
+        pathOptions={pathOptions}
         {...otherProps}
       />
       <Circle
         center={circlePosition}
         radius={circleRadius}
         color={circleColor}
-        pathOptions={{
-          fillOpacity: 1,
-          weight: 1,
-        }}
+        pathOptions={circlePathOptions}
       />
     </>
   );
