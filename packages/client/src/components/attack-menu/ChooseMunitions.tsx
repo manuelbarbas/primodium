@@ -1,31 +1,18 @@
+import MunitionsButton from "./MunitionsButton";
+
 function ChooseMunitions() {
   return (
     <div className="pr-4">
       <div className="mb-3">Select munition used for launch </div>
-      <button className="w-16 h-16 ">
-        <img
-          className="w-16 h-16 pixel-images"
-          src="/img/crafted/kineticmissile.png"
-        ></img>
-        <div className="h-2"></div>
-        12
-      </button>
-      <button className="w-16 h-16 ">
-        <img
-          className="w-16 h-16 pixel-images"
-          src="/img/crafted/penetratingmissile.png"
-        ></img>
-        <div className="h-2"></div>4
-      </button>
-
-      <button className="w-16 h-16 ">
-        <img
-          className="w-16 h-16 pixel-images"
-          src="/img/crafted/thermobaricmissile.png"
-        ></img>
-        <div className="h-2"></div>
-        19
-      </button>
+      <MunitionsButton icon={"/img/crafted/kineticmissile.png"} quantity={6} />
+      <MunitionsButton
+        icon={"/img/crafted/penetratingmissile.png"}
+        quantity={116}
+      />
+      <MunitionsButton
+        icon={"/img/crafted/thermobaricmissile.png"}
+        quantity={96}
+      />
       <button className="absolute bottom-4 right-4 text-center h-10 w-24 bg-red-600 hover:bg-red-700 font-bold rounded text-sm">
         Fire
       </button>
