@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
+import AttackPage from "./AttackPage";
 
 function AttackBox() {
   const [minimized, setMinimize] = useState(false);
@@ -19,7 +20,7 @@ function AttackBox() {
             <LinkIcon icon={<FaWindowClose size="24" />} />
           </button>
           <p className="text-lg font-bold mb-3">Attack others</p>
-          <p>Coming soon! Build missile factories and silos to get ready. </p>
+          <AttackPage />
         </div>
       </div>
     );
