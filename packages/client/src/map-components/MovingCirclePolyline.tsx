@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Circle, Polyline, useMap } from "react-leaflet";
 import L, { LatLng } from "leaflet";
 
@@ -30,6 +30,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   const currentIndex = useRef(0);
   const polylineRef = useRef<L.Polyline>();
   const circleRef = useRef<L.Circle>();
+  const requestId = useRef<number | null>(null);
 
   const getPolylineLength = (): number => {
     let totalLength = 0;
@@ -40,6 +41,8 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
     }
     return totalLength;
   };
+
+  const polylineLength = useMemo(() => getPolylineLength(), [positions]);
 
   const moveCircle = () => {
     let nextIndex = currentIndex.current + 1;
@@ -58,7 +61,6 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
     const to = new LatLng(positions[nextIndex][0], positions[nextIndex][1]);
 
     // get segment length as a percentage of the total polyline length
-    const polylineLength = getPolylineLength();
     if (polylineLength === 0) return;
 
     const segmentLength = from.distanceTo(to) / polylineLength;
@@ -79,20 +81,23 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       setCirclePosition([lat, lng]);
 
       if (progress < 1) {
-        requestAnimationFrame(move);
+        requestId.current = requestAnimationFrame(move);
       } else {
         currentIndex.current = nextIndex;
         moveCircle();
       }
     };
 
-    requestAnimationFrame(move);
+    requestId.current = requestAnimationFrame(move);
   };
 
   useEffect(() => {
     moveCircle();
 
     return () => {
+      if (requestId.current !== null) {
+        cancelAnimationFrame(requestId.current);
+      }
       if (polylineRef.current) map.removeLayer(polylineRef.current);
       if (circleRef.current) map.removeLayer(circleRef.current);
     };
