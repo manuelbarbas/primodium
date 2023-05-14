@@ -1,4 +1,9 @@
-import { solidityKeccak256, getAddress } from "ethers/lib/utils";
+import {
+  solidityKeccak256,
+  getAddress,
+  zeroPad,
+  hexlify,
+} from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 
 import { EntityID } from "@latticexyz/recs";
@@ -17,10 +22,16 @@ export function applyUint160Mask(key: EntityID): string {
   // Apply the mask using the bitwise AND operation
   const uint160Value: BigNumber = entity.and(uint160Mask);
 
-  // Convert the resulting BigNumber to a hexadecimal string representing the address
-  const addr: string = uint160Value.toHexString();
+  // Pad the BigNumber to 20 bytes (160 bits) to ensure a valid Ethereum address
+  const paddedAddressBytes = zeroPad(uint160Value.toHexString(), 20);
 
-  return getAddress(addr);
+  // Convert the padded bytes to a hexadecimal string
+  const paddedAddressHexString = hexlify(paddedAddressBytes);
+
+  // Convert the padded bytes to a valid Ethereum address
+  const validAddress = getAddress(paddedAddressHexString);
+
+  return validAddress;
 }
 
 // Identical to hashFromAddress in packages/contracts/src/libraries/LibHash.sol
