@@ -119,15 +119,17 @@ function ResourceTile({
           zIndex={11}
         />
       )}
-      <ImageOverlay
-        className="pixel-images"
-        bounds={[
-          [y, x],
-          [y + 1, x + 1],
-        ]}
-        url={terrainBackground!}
-        zIndex={10}
-      />
+      {!buildingKey && (
+        <ImageOverlay
+          className="pixel-images"
+          bounds={[
+            [y, x],
+            [y + 1, x + 1],
+          ]}
+          url={terrainBackground!}
+          zIndex={10}
+        />
+      )}
       {pathsToRender}
     </>
   );
