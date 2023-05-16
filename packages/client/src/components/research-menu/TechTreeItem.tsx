@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
@@ -6,10 +6,7 @@ import { BigNumber } from "ethers";
 import { useMud } from "../../context/MudContext";
 import { ResourceCostData } from "../../util/resource";
 
-import {
-  BlockType,
-  BuildingResearchRequirementsDefaultUnlocked,
-} from "../../util/constants";
+import { BuildingResearchRequirementsDefaultUnlocked } from "../../util/constants";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
 import { hashFromAddress } from "../../util/encode";
