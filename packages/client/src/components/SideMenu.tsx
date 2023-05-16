@@ -70,7 +70,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <BuildingBox></BuildingBox>
+        <BuildingBox />
       </SideBarIcon>
       <SideBarIcon
         icon={<IoFlaskSharp size="24" />}
@@ -79,7 +79,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ResearchModal />
+        <ResearchModal setMenuOpenIndex={setMenuOpenIndex} />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
@@ -88,7 +88,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <MarketModal />
+        <MarketModal setMenuOpenIndex={setMenuOpenIndex} />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbSword size="24" />}
