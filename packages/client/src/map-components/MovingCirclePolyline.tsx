@@ -97,7 +97,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
         requestId.current = requestAnimationFrame(move);
       } else {
         currentIndex.current = nextIndex;
-        moveCircle();
+        requestId.current = requestAnimationFrame(moveCircle);
       }
     };
 
