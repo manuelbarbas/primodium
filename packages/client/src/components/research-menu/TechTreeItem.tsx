@@ -6,7 +6,10 @@ import { BigNumber } from "ethers";
 import { useMud } from "../../context/MudContext";
 import { ResourceCostData } from "../../util/resource";
 
-import { BlockType } from "../../util/constants";
+import {
+  BlockType,
+  BuildingResearchRequirementsDefaultUnlocked,
+} from "../../util/constants";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
 import { hashFromAddress } from "../../util/encode";
@@ -48,31 +51,10 @@ function TechTreeItem({
       )!
     : singletonIndex;
 
-  const [isDefaultUnlocked, setIsDefaultUnlocked] = useState(false);
+  const isDefaultUnlocked = BuildingResearchRequirementsDefaultUnlocked.has(
+    data.id
+  );
   const isResearched = useComponentValue(components.Research, researchOwner);
-
-  useEffect(() => {
-    // default researched components
-    switch (data.id) {
-      case BlockType.MainBaseResearch:
-        setIsDefaultUnlocked(true);
-        break;
-      case BlockType.IronResearch:
-        setIsDefaultUnlocked(true);
-        break;
-      case BlockType.BasicMinerResearch:
-        setIsDefaultUnlocked(true);
-        break;
-      case BlockType.ConveyorResearch:
-        setIsDefaultUnlocked(true);
-        break;
-      case BlockType.NodeResearch:
-        setIsDefaultUnlocked(true);
-        break;
-      default:
-      // Default case, when no other case matches
-    }
-  }, []);
 
   const { transactionLoading, setTransactionLoading } = useTransactionLoading();
 

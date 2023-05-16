@@ -29,7 +29,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Iron",
-      id: BlockType.IronResearch,
+      id: BlockType.Iron,
       description:
         "Unlocked by default. A common metal. Allows you to mine iron ore and store iron.",
       resources: [],
