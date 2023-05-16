@@ -64,7 +64,7 @@ function BuildingIconButton({
       </div>
       <img
         src={BackgroundImage.get(blockType)}
-        className="w-16 h-16 pixel-images"
+        className="w-16 h-16 pixel-images hover:brightness-75"
       ></img>
       <div className="h-2"></div>
     </button>

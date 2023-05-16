@@ -25,7 +25,10 @@ function BuildingMenuButton({
 
   return (
     <>
-      <button className="w-16 h-16 text-xs" onClick={setMenuOpenIndexHelper}>
+      <button
+        className="w-16 h-16 text-xs hover:brightness-75"
+        onClick={setMenuOpenIndexHelper}
+      >
         <img className="w-16 h-16 pixel-images" src={icon}></img>
         <div className="h-2"></div>
         {text}
