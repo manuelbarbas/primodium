@@ -7,18 +7,19 @@ import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
+
+import { useTransactionLoading } from "../context/TransactionLoadingContext";
 import { useSelectedTile } from "../context/SelectedTileContext";
+import { useMud } from "../context/MudContext";
 
 import { getTopLayerKey } from "../util/tile";
+import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
+import { BlockIdToKey, BackgroundImage } from "../util/constants";
 
-import { BlockIdToKey, BackgroundImage, BlockType } from "../util/constants";
-import { useMud } from "../context/MudContext";
 import ClaimButton from "./action/ClaimButton";
 import CraftButton from "./action/CraftButton";
-import ResourceLabel from "./resource-box/ResourceLabel";
-import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
 import StaticResourceLabel from "./resource-box/StaticResourceLabel";
-import { useTransactionLoading } from "../context/TransactionLoadingContext";
+import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
 
 function TooltipBox() {
@@ -207,142 +208,23 @@ function TooltipBox() {
                     {isClaimableFactory(builtTile) && (
                       <div className="font-bold mt-1 mb-1">Storage:</div>
                     )}
-
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
-                        <ClaimButton x={selectedTile.x} y={selectedTile.y} />
+                        <ClaimButton
+                          builtTile={builtTile}
+                          coords={selectedTile}
+                        />
                       )}
                     {isClaimableFactory(builtTile) && (
                       <>
-                        <ClaimButton x={selectedTile.x} y={selectedTile.y} />
+                        <ClaimButton
+                          builtTile={builtTile}
+                          coords={selectedTile}
+                        />
                         <CraftButton x={selectedTile.x} y={selectedTile.y} />
                       </>
                     )}
-                    <ResourceLabel
-                      name={"Iron"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Iron}
-                    />
-                    <ResourceLabel
-                      name={"Copper"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Copper}
-                    />
-                    <ResourceLabel
-                      name={"Bolutite"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Bolutite}
-                    />
-                    <ResourceLabel
-                      name={"Iridium"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Iridium}
-                    />
-                    <ResourceLabel
-                      name={"Kimberlite"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Kimberlite}
-                    />
-                    <ResourceLabel
-                      name={"Lithium"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Lithium}
-                    />
-                    <ResourceLabel
-                      name={"Osmium"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Osmium}
-                    />
-                    <ResourceLabel
-                      name={"Titanium"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Titanium}
-                    />
-                    <ResourceLabel
-                      name={"Tungsten"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Tungsten}
-                    />
-                    <ResourceLabel
-                      name={"Uraninite"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.Uraninite}
-                    />
-                    <ResourceLabel
-                      name={"Bullet"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.BulletCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Iron Plate"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.IronPlateCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Basic Power Source"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.BasicPowerSourceCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Kinetic Missile"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.KineticMissileCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Refined Osmium"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.RefinedOsmiumCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Advanced Power Source"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.AdvancedPowerSourceCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Penetrating Warhead"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.PenetratingWarheadCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Penetrating Missile"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.PenetratingMissileCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Tungsten Rods"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.TungstenRodsCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Iridium Crystal"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.IridiumCrystalCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Iridium Drillbit"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.IridiumDrillbitCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Laser Power Source"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.LaserPowerSourceCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Thermobaric Warhead"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.ThermobaricWarheadCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Thermobaric Missile"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.ThermobaricMissileCrafted}
-                    />
-                    <ResourceLabel
-                      name={"Kimberlite Crystal Catalyst"}
-                      entityIndex={tilesAtPosition[0]}
-                      resourceId={BlockType.KimberliteCrystalCatalystCrafted}
-                    />
+                    <AllResourceLabels entityIndex={tilesAtPosition[0]} />
                   </>
                 )}
               </div>

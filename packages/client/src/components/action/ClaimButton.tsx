@@ -1,10 +1,17 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useMud } from "../../context/MudContext";
-import { DisplayTile } from "../../util/constants";
+import { BlockType, DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+import { EntityID } from "@latticexyz/recs";
 
-export default function ClaimButton({ x, y }: DisplayTile) {
+export default function ClaimButton({
+  coords: { x, y },
+  builtTile,
+}: {
+  coords: DisplayTile;
+  builtTile: EntityID;
+}) {
   const { systems, providers } = useMud();
   const { setTransactionLoading } = useTransactionLoading();
 
@@ -37,12 +44,20 @@ export default function ClaimButton({ x, y }: DisplayTile) {
     setTransactionLoading(false);
   }, []);
 
+  const claimText = useMemo(() => {
+    if (builtTile === BlockType.MainBase) {
+      return "Claim to inventory";
+    } else {
+      return "Claim to storage";
+    }
+  }, [builtTile]);
+
   return (
     <button
       className="inset-x-4 absolute bottom-4 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
       onClick={claimAction}
     >
-      Claim
+      {claimText}
     </button>
   );
 }
