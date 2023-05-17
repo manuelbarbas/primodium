@@ -92,7 +92,7 @@ function BuildingPage() {
             menuOpenIndex={menuOpenIndex}
             setMenuOpenIndex={setMenuOpenIndex}
           ></BuildingMenuButton>
-          {"true" === "true" && (
+          {import.meta.env.VITE_DEV === "true" && (
             <BuildingMenuButton
               icon={"/img/icons/debugicon.png"}
               label={"Debug"}
