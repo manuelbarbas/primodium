@@ -62,7 +62,7 @@ function InfoBox() {
                   <LinkIcon icon={<FaDiscord size="16" />} />
                 </a>
                 <a
-                  href="hhttps://twitter.com/primodiumgame"
+                  href="https://twitter.com/primodiumgame"
                   target="_blank"
                   className="text-sm inline-block hover:text-gray-300 ml-3"
                 >
