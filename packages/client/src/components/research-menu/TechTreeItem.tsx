@@ -80,7 +80,7 @@ function TechTreeItem({
       <div className="mt-2 flex justify-center items-center text-sm">
         {resourcecost}
       </div>
-      <div className="mt-2 text-xs">{description}</div>
+      <div className="mt-3 text-xs">{description}</div>
       {isUnlocked ? (
         <button className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-gray-600 py-2 rounded shadow">
           Unlocked

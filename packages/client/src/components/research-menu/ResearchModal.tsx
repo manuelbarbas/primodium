@@ -20,20 +20,27 @@ function ResearchModal({
 
   return (
     <div
-      className="z-[1000] bg-black bg-opacity-75 fixed inset-0 flex"
+      className="z-[1000] bg-black bg-opacity-75 fixed inset-0"
       onClick={hideModalHelper}
     >
-      <div
-        className="z-[1000] fixed inset-y-24 inset-x-32 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded"
-        onClick={stopPropagation}
-      >
-        <div className=" flex flex-col h-full">
-          <button onClick={hideModalHelper} className="fixed top-4 right-5">
-            <LinkIcon icon={<FaWindowClose size="24" />} />
-          </button>
-          <p className="text-lg font-bold mt-4 ml-5 ">Research Technologies</p>
-          {/* <TechTree /> */}
-          <ResearchPage />
+      <div className="flex justify-center items-center h-full">
+        <div
+          className="z-[1000] fixed inset-y-24 inset-x-24 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded"
+          onClick={stopPropagation}
+        >
+          <div className="flex flex-col h-full relative">
+            <button
+              onClick={hideModalHelper}
+              className="absolute top-4 right-5"
+            >
+              <LinkIcon icon={<FaWindowClose size="24" />} />
+            </button>
+            <p className="text-lg font-bold mt-4 ml-5 ">
+              Research Technologies
+            </p>
+            {/* <TechTree /> */}
+            <ResearchPage />
+          </div>
         </div>
       </div>
     </div>
