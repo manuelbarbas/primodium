@@ -30,7 +30,7 @@ contract DestroyPathSystem is System {
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
     require(
       tileEntityAtStartCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
-      "[DestroyPathSystem] Cannot destroy path from an empty coordinate"
+      "[DestroyPathSystem] Cannot destroy path at a non-supported tile (Conveyor, Node)"
     );
 
     // Check that the coordinates are both owned by the msg.sender

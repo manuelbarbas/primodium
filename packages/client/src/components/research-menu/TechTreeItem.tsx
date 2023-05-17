@@ -73,10 +73,12 @@ function TechTreeItem({
   return (
     <div className="relative group min-w-64 h-72 pt-1 bg-gray-200 rounded shadow text-black mb-3 mr-3 p-3">
       <div className="mt-4 w-16 h-16 mx-auto">
-        <img src={icon} className="w-16 h-16 mx-auto pixel-images"></img>
+        <img
+          src={icon}
+          className="w-16 h-16 mx-auto pixel-images bg-gray-300"
+        ></img>
       </div>
       <div className="mt-4 text-center font-bold text-gray-900">{name}</div>
-      {/* <div className="mt-2 text-sm grid grid-cols-3">{resourcecost}</div> */}
       <div className="mt-2 flex justify-center items-center text-sm">
         {resourcecost}
       </div>
