@@ -119,13 +119,15 @@ function BuildingPage() {
               setMenuOpenIndex={setMenuOpenIndex}
             ></BuildingMenuButton>
           ) : (
-            <BuildingMenuButton
-              icon={"/img/icons/blankicon.png"}
-              label={"\u00A0"} // for vertical spacing
-              menuIndex={6}
-              menuOpenIndex={menuOpenIndex}
-              setMenuOpenIndex={doNothing}
-            ></BuildingMenuButton>
+            <div className="pointer-events-none">
+              <BuildingMenuButton
+                icon={"/img/icons/blankicon.png"}
+                label={"\u00A0"} // for vertical spacing
+                menuIndex={6}
+                menuOpenIndex={menuOpenIndex}
+                setMenuOpenIndex={doNothing}
+              ></BuildingMenuButton>
+            </div>
           )}
         </div>
       </BuildingContentBox>
