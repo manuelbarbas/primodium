@@ -435,7 +435,7 @@ export const technologyTree = [
       name: "Kimberlite",
       id: BlockType.Kimberlite,
       description:
-        "A precious and extremely hard ore. Researching allows you to mine and store kimberlite",
+        "A precious and extremely hard ore. Researching allows you to mine and store kimberlite.",
       resources: [
         { id: BlockType.IridiumCrystalCrafted, amount: 100 },
         { id: BlockType.Tungsten, amount: 100 },

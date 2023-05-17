@@ -1,4 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+
+import { useAccount } from "../../hooks/useAccount";
+import { EntityID } from "@latticexyz/recs";
+import { useMud } from "../../context/MudContext";
+import { useComponentValue } from "@latticexyz/react";
 
 import BuildingMenuButton from "./building-icons/BuildingMenuButton";
 import ChooseMinerMenu from "./ChooseMinerMenu";
@@ -9,9 +14,20 @@ import ChooseWeaponryMenu from "./ChooseWeaponryMenu";
 import ChooseMainBaseMenu from "./ChooseMainbaseMenu";
 import BuildingContentBox from "./BuildingBox";
 
-//need a back button between pages
 function BuildingPage() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
+  const doNothing = useCallback(() => {}, []);
+
+  // determine if there is a main base
+  const { world, components, singletonIndex } = useMud();
+  const { address } = useAccount();
+  const resourceKey = address
+    ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
+    : singletonIndex;
+  const mainBaseCoord = useComponentValue(
+    components.MainBaseInitialized,
+    resourceKey
+  );
 
   if (menuOpenIndex === 0) {
     return (
@@ -57,13 +73,15 @@ function BuildingPage() {
       <BuildingContentBox>
         <p className="text-lg font-bold mb-3">Build</p>
         <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
-          <BuildingMenuButton
-            icon={"/img/icons/mainbaseicon.png"}
-            label={"Base"}
-            menuIndex={0}
-            menuOpenIndex={menuOpenIndex}
-            setMenuOpenIndex={setMenuOpenIndex}
-          ></BuildingMenuButton>
+          {!mainBaseCoord && (
+            <BuildingMenuButton
+              icon={"/img/icons/mainbaseicon.png"}
+              label={"Base"}
+              menuIndex={0}
+              menuOpenIndex={menuOpenIndex}
+              setMenuOpenIndex={setMenuOpenIndex}
+            ></BuildingMenuButton>
+          )}
           <BuildingMenuButton
             icon={"/img/icons/minersicon.png"}
             label={"Miners"}
@@ -92,13 +110,21 @@ function BuildingPage() {
             menuOpenIndex={menuOpenIndex}
             setMenuOpenIndex={setMenuOpenIndex}
           ></BuildingMenuButton>
-          {import.meta.env.VITE_DEV === "true" && (
+          {import.meta.env.VITE_DEV === "true" ? (
             <BuildingMenuButton
               icon={"/img/icons/debugicon.png"}
               label={"Debug"}
               menuIndex={5}
               menuOpenIndex={menuOpenIndex}
               setMenuOpenIndex={setMenuOpenIndex}
+            ></BuildingMenuButton>
+          ) : (
+            <BuildingMenuButton
+              icon={"/img/icons/blankicon.png"}
+              label={"\u00A0"} // for vertical spacing
+              menuIndex={6}
+              menuOpenIndex={menuOpenIndex}
+              setMenuOpenIndex={doNothing}
             ></BuildingMenuButton>
           )}
         </div>
