@@ -130,6 +130,11 @@ export const BlockType = {
     "item.KimberliteCrystalCatalystCrafted"
   ) as EntityID,
 
+  // debug
+  BulletFactoryResearch: keccak256(
+    "research.BulletFactoryResearch"
+  ) as EntityID,
+
   // Research components
   MainBaseResearch: keccak256("research.MainBase") as EntityID,
   BasicMinerResearch: keccak256("research.BasicMiner") as EntityID,
@@ -465,6 +470,9 @@ export const BuildingResearchRequirements = new Map<EntityID, EntityID[]>([
   [BlockType.Node, [BlockType.NodeResearch]],
   [BlockType.Conveyor, [BlockType.ConveyorResearch]],
 
+  [BlockType.Miner, [BlockType.BasicMinerResearch]],
+  [BlockType.BulletFactory, [BlockType.BulletFactoryResearch]],
+
   [BlockType.PlatingFactory, [BlockType.PlatingFactoryResearch]],
   [BlockType.BasicBatteryFactory, [BlockType.BasicBatteryFactoryResearch]],
   [BlockType.KineticMissileFactory, [BlockType.KineticMissileFactoryResearch]],
@@ -518,4 +526,5 @@ export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
   BlockType.BasicMinerResearch,
   BlockType.NodeResearch,
   BlockType.ConveyorResearch,
+  BlockType.BulletFactoryResearch,
 ]);

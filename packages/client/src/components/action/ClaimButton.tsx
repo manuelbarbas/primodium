@@ -46,9 +46,9 @@ export default function ClaimButton({
 
   const claimText = useMemo(() => {
     if (builtTile === BlockType.MainBase) {
-      return "Claim to inventory";
+      return "Claim to Inventory";
     } else {
-      return "Claim to storage";
+      return "Claim to Storage";
     }
   }, [builtTile]);
 

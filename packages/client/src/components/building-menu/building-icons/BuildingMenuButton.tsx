@@ -2,14 +2,14 @@ import { useCallback, ReactNode } from "react";
 
 function BuildingMenuButton({
   icon,
-  text,
+  label,
   menuIndex,
   menuOpenIndex,
   setMenuOpenIndex,
   children,
 }: {
   icon: any;
-  text: string;
+  label: string;
   menuIndex: number;
   menuOpenIndex: number;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -26,12 +26,11 @@ function BuildingMenuButton({
   return (
     <>
       <button
-        className="w-16 h-16 text-xs hover:brightness-75"
+        className="w-16 h-18 flex flex-col items-center justify-center text-xs hover:brightness-75"
         onClick={setMenuOpenIndexHelper}
       >
-        <img className="w-16 h-16 pixel-images" src={icon}></img>
-        <div className="h-2"></div>
-        {text}
+        <img className="w-14 h-14 pixel-images" src={icon} alt="Icon"></img>
+        <p className="mt-2">{label}</p>
       </button>
       {menuIndex === menuOpenIndex && children}
     </>

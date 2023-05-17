@@ -8,7 +8,7 @@ import { TbScale } from "react-icons/tb";
 
 import AttackBox from "./attack-menu/AttackBox";
 import MarketModal from "./market-menu/MarketModal";
-import BuildingBox from "./building-menu/BuildingBox";
+import BuildingPage from "./building-menu/BuildingPage";
 import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
 import { useSelectedTile } from "../context/SelectedTileContext";
 import ResearchModal from "./research-menu/ResearchModal";
@@ -70,7 +70,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <BuildingBox />
+        <BuildingPage />
       </SideBarIcon>
       <SideBarIcon
         icon={<IoFlaskSharp size="24" />}
