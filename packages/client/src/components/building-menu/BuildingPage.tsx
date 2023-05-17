@@ -71,7 +71,7 @@ function BuildingPage() {
   } else {
     return (
       <BuildingContentBox>
-        <p className="text-lg font-bold mb-3">Build</p>
+        <p className="text-lg font-bold mb-1">Build</p>
         <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
           {!mainBaseCoord && (
             <BuildingMenuButton
