@@ -186,17 +186,14 @@ function TooltipBox() {
                   </div>
                 </div>
               </div>
-              <div className="flex-col">
-                <div className="inline-block font-bold mb-1">Owner:</div>
-                <div className="mx-2 inline-block">
-                  {tileOwner ? (
+              {tileOwner && (
+                <div className="flex-col">
+                  <div className="inline-block font-bold mb-1">Owner:</div>
+                  <div className="mx-2 inline-block">
                     <div>{tileOwner.toString().slice(0, 8) + "..."}</div>
-                  ) : (
-                    <div>No tile built</div>
-                  )}
-                  {/* on {BlockIdToKey[terrainTile]} */}
+                  </div>
                 </div>
-              </div>
+              )}
               <div>
                 <CraftRecipeDisplay />
               </div>
