@@ -1,16 +1,13 @@
 import { useCallback } from "react";
-import { useState } from "react";
-
-import { DisplayTile } from "../../util/constants";
-
-import DestroyTileButton from "./DestroyTileButton";
 
 import { useSelectedTile } from "../../context/SelectedTileContext";
 import { useMud } from "../../context/MudContext";
-
-import { FaWindowClose } from "react-icons/fa";
-import { execute } from "../../network/actions";
 import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+
+import { execute } from "../../network/actions";
+import { DisplayTile } from "../../util/constants";
+
+import DestroyTileButton from "./DestroyTileButton";
 
 function DestroyBuildingBox() {
   const { systems, providers } = useMud();
@@ -39,38 +36,18 @@ function DestroyBuildingBox() {
     destroyTile(selectedTile);
   }, [selectedTile]);
 
-  const [minimized, setMinimize] = useState(false);
-
-  const minimizeBox = () => {
-    if (minimized) {
-      setMinimize(false);
-    } else {
-      setMinimize(true);
-    }
-  };
-  if (!minimized) {
-    return (
-      <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
-        <div className="mt-4 mx-5 flex flex-col h-72">
-          <button onClick={minimizeBox} className="fixed top-4 right-5">
-            <LinkIcon icon={<FaWindowClose size="24" />} />
-          </button>
-          <p className="text-lg font-bold mb-3">Demolish</p>
-          <p>
-            Select your building on the map and click <i>Demolish</i> to remove
-            it.
-          </p>
-          <DestroyTileButton action={destroyTileHelper} />
-        </div>
+  return (
+    <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="mt-4 mx-5 flex flex-col h-72">
+        <p className="text-lg font-bold mb-3">Demolish</p>
+        <p>
+          Select your building on the map and click <i>Demolish</i> to remove
+          it.
+        </p>
+        <DestroyTileButton action={destroyTileHelper} />
       </div>
-    );
-  } else {
-    return <div></div>;
-  }
+    </div>
+  );
 }
-
-const LinkIcon = ({ icon }: { icon: any }) => (
-  <div className="link-icon inline-block align-middle">{icon}</div>
-);
 
 export default DestroyBuildingBox;
