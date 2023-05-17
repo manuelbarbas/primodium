@@ -25,7 +25,7 @@ export default function CraftButton({ x, y }: DisplayTile) {
       className="inset-x-4 absolute bottom-16 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
       onClick={claimAction}
     >
-      Craft from storage
+      Craft from Storage
     </button>
   );
 }
