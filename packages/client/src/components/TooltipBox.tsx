@@ -237,7 +237,9 @@ function TooltipBox() {
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaPlusSquare size="18" />} />
           </button>
-          <p className="text-lg font-bold mb-3">Selected Tile</p>
+          <p className="text-lg font-bold mb-3">
+            Tile ({selectedTile.x}, {selectedTile.y})
+          </p>
         </div>
       </div>
     );
