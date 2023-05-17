@@ -188,7 +188,7 @@ function TooltipBox() {
               </div>
               <div className="flex-col">
                 <div className="inline-block font-bold mb-1">Owner:</div>
-                <div className="ml-2 inline-block">
+                <div className="mx-2 inline-block">
                   {tileOwner ? (
                     <div>{tileOwner.toString().slice(0, 8) + "..."}</div>
                   ) : (
@@ -200,13 +200,13 @@ function TooltipBox() {
               <div>
                 <CraftRecipeDisplay />
               </div>
-              <div className="flex-row">
+              <div className="flex-row mt-2 mb-2">
                 {/* TODO: show owned resource for every resource possible */}
                 {builtTile && transactionLoading && <Spinner />}
                 {builtTile && !transactionLoading && (
                   <>
                     {isClaimableFactory(builtTile) && (
-                      <div className="font-bold mt-1 mb-1">Storage:</div>
+                      <div className="font-bold mb-1">Storage:</div>
                     )}
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
