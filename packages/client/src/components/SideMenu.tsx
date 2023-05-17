@@ -62,7 +62,7 @@ function SideMenu() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
 
   return (
-    <div className="z-[1000] fixed bottom-4 left-4 selection:font-mono text-white">
+    <div className="z-[1000] viewport-container fixed bottom-4 left-4 selection:font-mono text-white">
       <SideBarIcon
         icon={<IoHammerSharp size="24" />}
         text={"Build"}

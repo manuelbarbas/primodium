@@ -27,33 +27,38 @@
     height: 100vh;
   }
 
+  .viewport-container {
+    margin-top: env(safe-area-inset-top);
+    margin-right: env(safe-area-inset-right);
+    margin-bottom: env(safe-area-inset-bottom);
+    margin-left: env(safe-area-inset-left);
+  }
+
   .sidebar-icon {
-    @apply bg-gray-700 w-12 h-12 mt-3 text-white shadow-xl rounded items-center relative flex justify-center hover:text-yellow-100 focus:text-yellow-300
+    @apply bg-gray-700 w-12 h-12 mt-3 text-white shadow-xl rounded items-center relative flex justify-center hover:text-yellow-100 focus:text-yellow-300;
   }
 
   .sidebar-tooltip {
-    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-gray-700 font-mono font-bold transition-none origin-left
+    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-gray-700 font-mono font-bold transition-none origin-left;
   }
 
   .building-tooltip {
-    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 mt-3 mr-3 mb-3 ml-10 min-w-max rounded shadow-xl text-gray-700 font-mono font-bold
+    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 mt-3 mr-3 mb-3 ml-10 min-w-max rounded shadow-xl text-gray-700 font-mono font-bold;
   }
 
   .research-tooltip {
     @apply bg-slate-50 z-[10000] scale-0 inline-block absolute h-auto w-40 p-2 rounded shadow-xl;
-  top: 90%;
-  left: 0%;
-
+    top: 90%;
+    left: 0%;
   }
   .pixel-images {
     image-rendering: pixelated;
   }
   /* .react-flow__connection-path {
-    @apply bg-white z-[1000] text-white
+    @apply bg-white z-[1000] viewport-container text-white
   } */
 
   .map-container {
     background-color: rgb(100 116 139);
   }
 }
-

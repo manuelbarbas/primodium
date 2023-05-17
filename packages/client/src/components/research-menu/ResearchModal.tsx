@@ -25,7 +25,7 @@ function ResearchModal({
     >
       <div className="flex justify-center items-center h-full">
         <div
-          className="z-[1000] fixed inset-y-24 inset-x-24 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded"
+          className="z-[1000] viewport-container fixed inset-y-24 inset-x-24 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded"
           onClick={stopPropagation}
         >
           <div className="flex flex-col h-full relative">

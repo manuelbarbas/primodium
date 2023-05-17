@@ -50,7 +50,7 @@ function DestroyBuildingBox() {
   };
   if (!minimized) {
     return (
-      <div className="z-[1000] fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">
           <button onClick={minimizeBox} className="fixed top-4 right-5">
             <LinkIcon icon={<FaWindowClose size="24" />} />

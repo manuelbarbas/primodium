@@ -46,7 +46,7 @@ function InfoBox() {
 
   if (!isConnected) {
     return (
-      <div className="z-[1000] fixed top-4 left-4 h-44 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="z-[1000] viewport-container fixed top-4 left-4 h-44 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col">
           <div className="flex flex-row">
             <div className="flex items-center mb-2">
@@ -109,7 +109,7 @@ function InfoBox() {
   } else {
     if (!minimized) {
       return (
-        <div className="z-[1000] fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+        <div className="z-[1000] viewport-container fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
             <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
@@ -153,7 +153,7 @@ function InfoBox() {
       );
     } else {
       return (
-        <div className="z-[1000] fixed top-4 left-4 h-28 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+        <div className="z-[1000] viewport-container fixed top-4 left-4 h-28 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
             <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
