@@ -65,7 +65,7 @@ function SideMenu() {
     <div className="z-[1000] fixed bottom-4 left-4 selection:font-mono text-white">
       <SideBarIcon
         icon={<IoHammerSharp size="24" />}
-        text={"Construct buildings"}
+        text={"Build"}
         menuIndex={0}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
@@ -74,7 +74,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<IoFlaskSharp size="24" />}
-        text="Research techs"
+        text="Research"
         menuIndex={1}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
@@ -83,7 +83,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
-        text="Resource market"
+        text="Trade"
         menuIndex={2}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
@@ -101,7 +101,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<TbBulldozer size="24" />}
-        text="Demolish buildings"
+        text="Demolish"
         menuIndex={4}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}

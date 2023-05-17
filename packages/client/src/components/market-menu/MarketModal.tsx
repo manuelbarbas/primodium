@@ -27,7 +27,7 @@ function MarketModal({
         className="z-[1000] fixed inset-y-24 inset-x-1/4 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded"
         onClick={stopPropagation}
       >
-        <div className=" mt-4 ml-5 flex flex-col h-72">
+        <div className="mt-4 ml-5 flex flex-col h-72">
           <button onClick={hideModalHelper} className="fixed top-4 right-5">
             <LinkIcon icon={<FaWindowClose size="24" />} />
           </button>

@@ -30,7 +30,7 @@ function BuildingPage() {
   } else if (menuOpenIndex === 2) {
     return (
       <ChooseTransportMenu
-        title="Building path between nodes"
+        title="Build a path between nodes"
         setMenuOpenIndex={setMenuOpenIndex}
       />
     );
@@ -44,7 +44,7 @@ function BuildingPage() {
   } else if (menuOpenIndex === 4) {
     return (
       <ChooseWeaponryMenu
-        title="Build weaponry"
+        title="Build Weaponry"
         setMenuOpenIndex={setMenuOpenIndex}
       />
     );
@@ -55,7 +55,7 @@ function BuildingPage() {
   } else {
     return (
       <BuildingContentBox>
-        <p className="text-lg font-bold mb-3">Construct Buildings</p>
+        <p className="text-lg font-bold mb-3">Build</p>
         <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
           <BuildingMenuButton
             icon={"/img/icons/mainbaseicon.png"}

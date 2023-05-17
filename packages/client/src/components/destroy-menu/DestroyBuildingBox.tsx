@@ -51,14 +51,14 @@ function DestroyBuildingBox() {
   if (!minimized) {
     return (
       <div className="z-[1000] fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
-        <div className=" mt-4 mx-5 flex flex-col h-72">
+        <div className="mt-4 mx-5 flex flex-col h-72">
           <button onClick={minimizeBox} className="fixed top-4 right-5">
             <LinkIcon icon={<FaWindowClose size="24" />} />
           </button>
-          <p className="text-lg font-bold mb-3">Demolish Buildings</p>
+          <p className="text-lg font-bold mb-3">Demolish</p>
           <p>
-            First select a tile on the map, then click on "Demolish" to remove
-            the building.
+            Select your building on the map and click <i>Demolish</i> to remove
+            it.
           </p>
           <DestroyTileButton action={destroyTileHelper} />
         </div>

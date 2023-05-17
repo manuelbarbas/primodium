@@ -39,7 +39,7 @@ function ResourceBox() {
   if (transactionLoading) {
     return (
       <div className="z-[1000] fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className=" mt-4 ml-5 flex flex-col h-56">
+        <div className="mt-4 ml-5 flex flex-col h-56">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
@@ -51,7 +51,7 @@ function ResourceBox() {
   } else if (!minimized) {
     return (
       <div className="z-[1000] fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className=" mt-4 ml-5 flex flex-col h-56">
+        <div className="mt-4 ml-5 flex flex-col h-56">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
@@ -69,7 +69,7 @@ function ResourceBox() {
   } else {
     return (
       <div className="z-[1000] fixed top-4 right-4 h-14 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className=" mt-4 ml-5 flex flex-col h-56">
+        <div className="mt-4 ml-5 flex flex-col h-56">
           <button onClick={minimizeBox} className="fixed right-9">
             <LinkIcon icon={<FaPlusSquare size="18" />} />
           </button>

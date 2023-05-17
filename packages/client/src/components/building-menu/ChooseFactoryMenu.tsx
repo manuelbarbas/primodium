@@ -59,7 +59,7 @@ function ChooseFactoryMenu({
         onClick={closeMenuHelper}
         className="absolute bottom-4 text-center right-4 h-10 w-36 bg-teal-600 hover:bg-teal-700 font-bold rounded text-sm"
       >
-        <p className="inline-block">Return to menu</p>
+        <p className="inline-block">Other Buildings</p>
       </button>
     </BuildingContentBox>
   );
