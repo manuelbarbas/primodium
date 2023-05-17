@@ -1,39 +1,49 @@
-import { useState } from "react";
-
+import { useCallback } from "react";
 import { FaWindowClose } from "react-icons/fa";
 // import AllResourcesPage from "./AllResourcesPage";
 
-function MarketModal() {
-  const [minimized, setMinimize] = useState(false);
+function MarketModal({
+  setMenuOpenIndex,
+}: {
+  setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const hideModalHelper = useCallback(() => {
+    setMenuOpenIndex(-1);
+  }, []);
 
-  const minimizeBox = () => {
-    if (minimized) {
-      setMinimize(false);
-    } else {
-      setMinimize(true);
-    }
-  };
+  const stopPropagation = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      e.stopPropagation();
+    },
+    []
+  );
 
-  if (!minimized) {
-    return (
-      <div className="z-[999] bg-black bg-opacity-75 fixed inset-0 flex">
-        <div className="z-[1000] fixed inset-y-24 inset-x-1/4 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
-          <div className=" mt-4 ml-5 flex flex-col h-72">
-            <button onClick={minimizeBox} className="fixed top-4 right-5">
+  return (
+    <div
+      className="z-[1000] bg-black bg-opacity-75 fixed inset-0"
+      onClick={hideModalHelper}
+    >
+      <div className="flex justify-center items-center h-full">
+        <div
+          className="z-[1000] viewport-container fixed inset-y-24 inset-x-24 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded"
+          onClick={stopPropagation}
+        >
+          <div className="flex flex-col h-full relative">
+            <button
+              onClick={hideModalHelper}
+              className="absolute top-4 right-5"
+            >
               <LinkIcon icon={<FaWindowClose size="24" />} />
             </button>
-            <p className="text-lg font-bold mb-2">Resource Market</p>
+            <p className="text-lg font-bold mt-4 mx-5">Resource Market</p>
+            <p className="mt-2 mx-5">Coming soon!</p>
+            {/* <TechTree /> */}
             {/* <AllResourcesPage /> */}
-            {/* <div className="my-auto mx-auto w-32 text-center"> */}
-            <p className="">Coming soon!</p>
-            {/* </div> */}
           </div>
         </div>
       </div>
-    );
-  } else {
-    return <></>;
-  }
+    </div>
+  );
 }
 
 const LinkIcon = ({ icon }: { icon: any }) => (

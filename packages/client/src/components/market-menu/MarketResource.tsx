@@ -83,7 +83,7 @@ function MarketResource({
           </div>
         </div>
         <button className="fixed bottom-5" onClick={closeTab}>
-          <LinkIcon icon={<FaArrowLeft size="18" />} /> Return to menu
+          <LinkIcon icon={<FaArrowLeft size="18" />} /> Other Buildings
         </button>
       </div>
     );

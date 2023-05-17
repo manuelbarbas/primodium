@@ -46,8 +46,8 @@ function InfoBox() {
 
   if (!isConnected) {
     return (
-      <div className="z-[1000] fixed top-4 left-4 h-44 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
-        <div className=" mt-4 ml-5 flex flex-col">
+      <div className="z-[1000] viewport-container fixed top-4 left-4 h-44 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+        <div className="mt-4 ml-5 flex flex-col">
           <div className="flex flex-row">
             <div className="flex items-center mb-2">
               <p className="inline-block align-middle text-xl font-bold">
@@ -62,7 +62,7 @@ function InfoBox() {
                   <LinkIcon icon={<FaDiscord size="16" />} />
                 </a>
                 <a
-                  href="hhttps://twitter.com/primodiumgame"
+                  href="https://twitter.com/primodiumgame"
                   target="_blank"
                   className="text-sm inline-block hover:text-gray-300 ml-3"
                 >
@@ -109,8 +109,8 @@ function InfoBox() {
   } else {
     if (!minimized) {
       return (
-        <div className="z-[1000] fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
-          <div className=" mt-4 ml-5 flex flex-col">
+        <div className="z-[1000] viewport-container fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+          <div className="mt-4 ml-5 flex flex-col">
             <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaMinusSquare size="18" />} />
@@ -153,7 +153,7 @@ function InfoBox() {
       );
     } else {
       return (
-        <div className="z-[1000] fixed top-4 left-4 h-28 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+        <div className="z-[1000] viewport-container fixed top-4 left-4 h-28 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
             <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">

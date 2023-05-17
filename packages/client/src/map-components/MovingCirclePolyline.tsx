@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { Circle, Polyline, useMap } from "react-leaflet";
 import L, { LatLng } from "leaflet";
 
@@ -32,7 +38,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   const circleRef = useRef<L.Circle>();
   const requestId = useRef<number | null>(null);
 
-  const getPolylineLength = (): number => {
+  const getPolylineLength = useCallback((): number => {
     let totalLength = 0;
     for (let i = 0; i < positions.length - 1; i++) {
       let from = new LatLng(positions[i][0], positions[i][1]);
@@ -40,7 +46,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       totalLength += from.distanceTo(to);
     }
     return totalLength;
-  };
+  }, [positions]);
 
   const polylineLength = useMemo(() => getPolylineLength(), [positions]);
 
@@ -52,7 +58,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
     []
   );
 
-  const moveCircle = () => {
+  const moveCircle = useCallback(() => {
     let nextIndex = currentIndex.current + 1;
 
     // if move to the end move the circle to the start
@@ -91,12 +97,12 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
         requestId.current = requestAnimationFrame(move);
       } else {
         currentIndex.current = nextIndex;
-        moveCircle();
+        requestId.current = requestAnimationFrame(moveCircle);
       }
     };
 
     requestId.current = requestAnimationFrame(move);
-  };
+  }, [positions, polylineLength, circleSpeed, duration]);
 
   useEffect(() => {
     moveCircle();
@@ -108,7 +114,7 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
       if (polylineRef.current) map.removeLayer(polylineRef.current);
       if (circleRef.current) map.removeLayer(circleRef.current);
     };
-  }, [positions, circleRadius, circleColor, lineColor, map]);
+  }, [positions, circleRadius, circleColor, lineColor, map, moveCircle]);
 
   return (
     <>
@@ -128,4 +134,4 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   );
 };
 
-export default MovingCirclePolyline;
+export default React.memo(MovingCirclePolyline);

@@ -8,7 +8,7 @@ import { TbScale } from "react-icons/tb";
 
 import AttackBox from "./attack-menu/AttackBox";
 import MarketModal from "./market-menu/MarketModal";
-import BuildingBox from "./building-menu/BuildingBox";
+import BuildingPage from "./building-menu/BuildingPage";
 import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
 import { useSelectedTile } from "../context/SelectedTileContext";
 import ResearchModal from "./research-menu/ResearchModal";
@@ -62,33 +62,33 @@ function SideMenu() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
 
   return (
-    <div className="z-[1000] fixed bottom-4 left-4 selection:font-mono text-white">
+    <div className="z-[1000] viewport-container fixed bottom-4 left-4 selection:font-mono text-white">
       <SideBarIcon
         icon={<IoHammerSharp size="24" />}
-        text={"Construct buildings"}
+        text={"Build"}
         menuIndex={0}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <BuildingBox></BuildingBox>
+        <BuildingPage />
       </SideBarIcon>
       <SideBarIcon
         icon={<IoFlaskSharp size="24" />}
-        text="Research techs"
+        text="Research"
         menuIndex={1}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <ResearchModal />
+        <ResearchModal setMenuOpenIndex={setMenuOpenIndex} />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbScale size="24" />}
-        text="Resource market"
+        text="Trade"
         menuIndex={2}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <MarketModal />
+        <MarketModal setMenuOpenIndex={setMenuOpenIndex} />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbSword size="24" />}
@@ -101,7 +101,7 @@ function SideMenu() {
       </SideBarIcon>
       <SideBarIcon
         icon={<TbBulldozer size="24" />}
-        text="Demolish buildings"
+        text="Demolish"
         menuIndex={4}
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}

@@ -29,7 +29,7 @@ export const technologyTree = [
     type: "techTree",
     data: {
       name: "Iron",
-      id: BlockType.IronResearch,
+      id: BlockType.Iron,
       description:
         "Unlocked by default. A common metal. Allows you to mine iron ore and store iron.",
       resources: [],
@@ -435,7 +435,7 @@ export const technologyTree = [
       name: "Kimberlite",
       id: BlockType.Kimberlite,
       description:
-        "A precious and extremely hard ore. Researching allows you to mine and store kimberlite",
+        "A precious and extremely hard ore. Researching allows you to mine and store kimberlite.",
       resources: [
         { id: BlockType.IridiumCrystalCrafted, amount: 100 },
         { id: BlockType.Tungsten, amount: 100 },

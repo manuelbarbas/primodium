@@ -13,7 +13,7 @@ function PathActionIconButton({
 }) {
   return (
     <button
-      className="w-16 h-16"
+      className="w-16 h-16 hover:brightness-75"
       style={{ backgroundColor: backgroundColor }}
       onClick={action}
     >
