@@ -36,9 +36,9 @@ export type CoordStructOutput = [number, number] & { x: number; y: number };
 
 export interface AttackSystemInterface extends utils.Interface {
   functions: {
-    "attack((int32,int32),uint256)": FunctionFragment;
+    "attack(uint256,(int32,int32),uint256)": FunctionFragment;
     "execute(bytes)": FunctionFragment;
-    "executeTyped((int32,int32),(int32,int32))": FunctionFragment;
+    "executeTyped((int32,int32),(int32,int32),uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -54,7 +54,11 @@ export interface AttackSystemInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "attack",
-    values: [CoordStruct, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BigNumberish>,
+      CoordStruct,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "execute",
@@ -62,7 +66,7 @@ export interface AttackSystemInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "executeTyped",
-    values: [CoordStruct, CoordStruct]
+    values: [CoordStruct, CoordStruct, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -129,8 +133,9 @@ export interface AttackSystem extends BaseContract {
 
   functions: {
     attack(
-      coord: CoordStruct,
       attackEntity: PromiseOrValue<BigNumberish>,
+      targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -142,6 +147,7 @@ export interface AttackSystem extends BaseContract {
     executeTyped(
       coord: CoordStruct,
       targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -154,8 +160,9 @@ export interface AttackSystem extends BaseContract {
   };
 
   attack(
-    coord: CoordStruct,
     attackEntity: PromiseOrValue<BigNumberish>,
+    targetCoord: CoordStruct,
+    weaponKey: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -167,6 +174,7 @@ export interface AttackSystem extends BaseContract {
   executeTyped(
     coord: CoordStruct,
     targetCoord: CoordStruct,
+    weaponKey: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -179,8 +187,9 @@ export interface AttackSystem extends BaseContract {
 
   callStatic: {
     attack(
-      coord: CoordStruct,
       attackEntity: PromiseOrValue<BigNumberish>,
+      targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<number>;
 
@@ -192,6 +201,7 @@ export interface AttackSystem extends BaseContract {
     executeTyped(
       coord: CoordStruct,
       targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -216,8 +226,9 @@ export interface AttackSystem extends BaseContract {
 
   estimateGas: {
     attack(
-      coord: CoordStruct,
       attackEntity: PromiseOrValue<BigNumberish>,
+      targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -229,6 +240,7 @@ export interface AttackSystem extends BaseContract {
     executeTyped(
       coord: CoordStruct,
       targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -242,8 +254,9 @@ export interface AttackSystem extends BaseContract {
 
   populateTransaction: {
     attack(
-      coord: CoordStruct,
       attackEntity: PromiseOrValue<BigNumberish>,
+      targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -255,6 +268,7 @@ export interface AttackSystem extends BaseContract {
     executeTyped(
       coord: CoordStruct,
       targetCoord: CoordStruct,
+      weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
