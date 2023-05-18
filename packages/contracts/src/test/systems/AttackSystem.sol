@@ -26,6 +26,7 @@ import { IronResourceItemID, CopperResourceItemID, BulletCraftedItemID } from ".
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibHealth } from "../../libraries/LibHealth.sol";
+import { LibAttack } from "../../libraries/LibAttack.sol";
 import { Coord } from "../../types.sol";
 
 contract AttackSystemTest is MudTest {
@@ -168,14 +169,17 @@ contract AttackSystemTest is MudTest {
 
     // alice attacks bob's mainbase
     vm.startPrank(alice);
-    uint8 attackedEntitiesCount = abi.decode(attackSystem.executeTyped(mainBaseCoord, Coord({ x: 1, y: 1 })), (uint8));
+    uint8 attackedEntitiesCount = abi.decode(
+      attackSystem.executeTyped(mainBaseCoord, Coord({ x: 1, y: 1 }), BulletCraftedItemID),
+      (uint8)
+    );
 
     assertEq(attackedEntitiesCount, 1, "should have attacked 1 entity");
 
     assertTrue(healthComponent.has(bobMainBaseID), "bob's mainbase should have health");
     assertEq(
       healthComponent.getValue(bobMainBaseID),
-      LibHealth.MAX_HEALTH - LibHealth.ATTACK_DAMAGE,
+      LibHealth.getBuildingMaxHealth(MainBaseID) - LibAttack.getAttackDamage(BulletCraftedItemID),
       "bob's mainbase should have 1 attack health left"
     );
 

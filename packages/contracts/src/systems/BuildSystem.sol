@@ -65,7 +65,7 @@ contract BuildSystem is System {
       blockType == SiloID
     ) {
       // debug buildings, do nothing
-      revert("[BuildSystem] Debug buildings are not allowed to be built");
+      // revert("[BuildSystem] Debug buildings are not allowed to be built");
     } else if (blockType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getAddressById(components, MainBaseInitializedComponentID)

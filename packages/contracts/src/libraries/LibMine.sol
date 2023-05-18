@@ -43,7 +43,7 @@ library LibMine {
       // iron is default unlocked
     }
     // copper is unlocked for mud test
-    // else if (resourceKey == CopperID) {}
+    else if (resourceKey == CopperID) {}
     // all other resources, including copper in production, require research
     else {
       if (!researchComponent.has(hashedResearchKey)) {
