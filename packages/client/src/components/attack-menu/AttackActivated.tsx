@@ -1,5 +1,3 @@
-// executeTyped(Coord memory coord, Coord memory targetCoord, uint256 weaponKey)
-
 function AttackActivated() {
   return (
     <div className="pr-4">
