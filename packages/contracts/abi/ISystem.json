@@ -283,7 +283,7 @@
         "file": "./IERC173.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 1190,
-        "sourceUnit": 46647,
+        "sourceUnit": 58340,
         "symbolAliases": [
           {
             "foreign": {
@@ -415,7 +415,7 @@
         "linearizedBaseContracts": [
           1189,
           2332,
-          46787
+          58480
         ],
         "name": "ISystem",
         "nameLocation": "274:7:19",

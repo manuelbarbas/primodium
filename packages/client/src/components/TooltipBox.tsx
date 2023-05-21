@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, memo } from "react";
 
 import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
@@ -100,15 +100,15 @@ function TooltipBox() {
   // display actions
   const [minimized, setMinimize] = useState(false);
 
-  const minimizeBox = () => {
+  const minimizeBox = useCallback(() => {
     if (minimized) {
       setMinimize(false);
     } else {
       setMinimize(true);
     }
-  };
+  }, [minimized]);
 
-  const CraftRecipeDisplay = () => {
+  const CraftRecipeDisplay = memo(() => {
     if (builtTile && isClaimableFactory(builtTile)) {
       const craftRecipe = CraftRecipe.get(builtTile);
       if (craftRecipe) {
@@ -141,7 +141,7 @@ function TooltipBox() {
     } else {
       return <></>;
     }
-  };
+  });
 
   // actions
   const { transactionLoading } = useTransactionLoading();
@@ -211,6 +211,7 @@ function TooltipBox() {
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
                         <ClaimButton
+                          key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
                         />
@@ -218,10 +219,15 @@ function TooltipBox() {
                     {isClaimableFactory(builtTile) && (
                       <>
                         <ClaimButton
+                          key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
                         />
-                        <CraftButton x={selectedTile.x} y={selectedTile.y} />
+                        <CraftButton
+                          key={JSON.stringify(selectedTile)}
+                          x={selectedTile.x}
+                          y={selectedTile.y}
+                        />
                       </>
                     )}
                     <AllResourceLabels entityIndex={tilesAtPosition[0]} />
