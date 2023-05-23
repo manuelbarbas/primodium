@@ -1,18 +1,14 @@
 import { useCallback, useMemo } from "react";
-import { BigNumber } from "ethers";
 import { EntityID } from "@latticexyz/recs";
 
 import { useMud } from "../../../context/MudContext";
-import { useSelectedTile } from "../../../context/SelectedTileContext";
 import {
   BackgroundImage,
   BuildingResearchRequirements,
   BuildingResearchRequirementsDefaultUnlocked,
   ResourceImage,
 } from "../../../util/constants";
-import { execute } from "../../../network/actions";
 import { BuildingReceipe } from "../../../util/resource";
-import { useTransactionLoading } from "../../../context/TransactionLoadingContext";
 import { useComponentValue } from "@latticexyz/react";
 import { hashFromAddress } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
@@ -26,9 +22,7 @@ function BuildingIconButton({
   label: string;
   blockType: EntityID;
 }) {
-  const { components, systems, world, providers, singletonIndex } = useMud();
-  const { selectedTile } = useSelectedTile();
-  const { setTransactionLoading } = useTransactionLoading();
+  const { components, world, singletonIndex } = useMud();
   const [setSelectedBlock, selectedBlock] = useGameStore((state) => [
     state.setSelectedBlock,
     state.selectedBlock,
