@@ -133,13 +133,11 @@ const ResourceTileLayer = ({
   const [selectedPathTiles, setSelectedPathTiles] = useState<JSX.Element[]>([]);
   const [hoveredTiles, setHoveredTiles] = useState<JSX.Element[]>([]);
 
+  // Render tiles
   useEffect(() => {
     if (!map) return;
 
     const tilesToRender: JSX.Element[] = [];
-    const selectedTilesToRender: JSX.Element[] = [];
-    const selectedPathTilesToRender: JSX.Element[] = [];
-    const hoveredTilesToRender: JSX.Element[] = [];
 
     // Render tiles and paths that start and end at displayed tiles
     for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
@@ -161,6 +159,16 @@ const ResourceTileLayer = ({
       }
     }
 
+    setTiles(tilesToRender);
+  }, [displayTileRange]);
+
+  //Render select tiles
+  useEffect(() => {
+    if (!map) return;
+
+    const selectedTilesToRender: JSX.Element[] = [];
+    const selectedPathTilesToRender: JSX.Element[] = [];
+
     // Render selected tiles
     selectedTilesToRender.push(
       <SelectedTile
@@ -172,19 +180,6 @@ const ResourceTileLayer = ({
         x={selectedTile.x}
         y={selectedTile.y}
         color="yellow"
-      />
-    );
-
-    hoveredTilesToRender.push(
-      <SelectedTile
-        key={JSON.stringify({
-          x: hoveredTile.x,
-          y: hoveredTile.y,
-          render: "hoveredTile",
-        })}
-        x={hoveredTile.x}
-        y={hoveredTile.y}
-        color="pink"
       />
     );
 
@@ -224,18 +219,30 @@ const ResourceTileLayer = ({
       />
     );
 
-    setTiles(tilesToRender);
     setSelectedTiles(selectedTilesToRender);
     setSelectedPathTiles(selectedPathTilesToRender);
+  }, [selectedTile, selectedStartPathTile, selectedEndPathTile]);
+
+  //Render hover tiles
+  useEffect(() => {
+    if (!map) return;
+    const hoveredTilesToRender: JSX.Element[] = [];
+
+    hoveredTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: hoveredTile.x,
+          y: hoveredTile.y,
+          render: "hoveredTile",
+        })}
+        x={hoveredTile.x}
+        y={hoveredTile.y}
+        color="pink"
+      />
+    );
+
     setHoveredTiles(hoveredTilesToRender);
-  }, [
-    displayTileRange,
-    hoveredTile,
-    selectedTile,
-    selectedStartPathTile,
-    selectedEndPathTile,
-    hoveredTile,
-  ]);
+  }, [hoveredTile]);
 
   return (
     <>
