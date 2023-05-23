@@ -16,6 +16,7 @@ import { useTransactionLoading } from "../../../context/TransactionLoadingContex
 import { useComponentValue } from "@latticexyz/react";
 import { hashFromAddress } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
+import { useGameStore } from "../../../store/GameStore";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -28,6 +29,10 @@ function BuildingIconButton({
   const { components, systems, world, providers, singletonIndex } = useMud();
   const { selectedTile } = useSelectedTile();
   const { setTransactionLoading } = useTransactionLoading();
+  const [setSelectedBlock, selectedBlock] = useGameStore((state) => [
+    state.setSelectedBlock,
+    state.selectedBlock,
+  ]);
 
   const { address } = useAccount();
 
@@ -51,20 +56,20 @@ function BuildingIconButton({
   }, [isResearched, researchRequirement]);
 
   // Place action
-  const buildTile = useCallback(async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Build"].executeTyped(
-        BigNumber.from(blockType),
-        selectedTile,
-        {
-          gasLimit: 1_800_000,
-        }
-      ),
-      providers
-    );
-    setTransactionLoading(false);
-  }, [selectedTile]);
+  // const buildTile = useCallback(async () => {
+  //   setTransactionLoading(true);
+  //   await execute(
+  //     systems["system.Build"].executeTyped(
+  //       BigNumber.from(blockType),
+  //       selectedTile,
+  //       {
+  //         gasLimit: 1_800_000,
+  //       }
+  //     ),
+  //     providers
+  //   );
+  //   setTransactionLoading(false);
+  // }, [selectedTile]);
 
   const cannotBuildTile = useCallback(() => {}, []);
 
@@ -73,7 +78,9 @@ function BuildingIconButton({
   return (
     <button
       className="w-16 h-16 text-sm group"
-      onClick={buildingLocked ? cannotBuildTile : buildTile}
+      onClick={
+        buildingLocked ? cannotBuildTile : () => setSelectedBlock(blockType)
+      }
     >
       <div
         className={`building-tooltip group-hover:scale-100 ${
@@ -103,8 +110,10 @@ function BuildingIconButton({
       <div className="relative">
         <img
           src={BackgroundImage.get(blockType)}
-          className="w-16 h-16 pixel-images hover:brightness-75"
-        ></img>
+          className={`"w-16 h-16 pixel-images hover:brightness-75 ${
+            selectedBlock === blockType ? "border-4 border-yellow-300" : ""
+          }`}
+        />
         {buildingLocked && (
           <div
             style={{ backgroundColor: "rgba(240, 103, 100, 0.5)" }}
