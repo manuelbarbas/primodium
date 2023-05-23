@@ -113,7 +113,7 @@ const ResourceTileLayer = ({
         y: Math.floor(event.latlng.lat),
       });
     },
-    [map, setHoveredTile]
+    [map]
   );
 
   useMapEvent("click", clickEvent);
@@ -136,10 +136,10 @@ const ResourceTileLayer = ({
   useEffect(() => {
     if (!map) return;
 
-    let tilesToRender: JSX.Element[] = [];
-    let selectedTilesToRender: JSX.Element[] = [];
-    let selectedPathTilesToRender: JSX.Element[] = [];
-    let hoveredTilesToRender: JSX.Element[] = [];
+    const tilesToRender: JSX.Element[] = [];
+    const selectedTilesToRender: JSX.Element[] = [];
+    const selectedPathTilesToRender: JSX.Element[] = [];
+    const hoveredTilesToRender: JSX.Element[] = [];
 
     // Render tiles and paths that start and end at displayed tiles
     for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
@@ -175,20 +175,18 @@ const ResourceTileLayer = ({
       />
     );
 
-    if (hoveredTile) {
-      hoveredTilesToRender.push(
-        <SelectedTile
-          key={JSON.stringify({
-            x: hoveredTile.x,
-            y: hoveredTile.y,
-            render: "hoveredTile",
-          })}
-          x={hoveredTile.x}
-          y={hoveredTile.y}
-          color="pink"
-        />
-      );
-    }
+    hoveredTilesToRender.push(
+      <SelectedTile
+        key={JSON.stringify({
+          x: hoveredTile.x,
+          y: hoveredTile.y,
+          render: "hoveredTile",
+        })}
+        x={hoveredTile.x}
+        y={hoveredTile.y}
+        color="pink"
+      />
+    );
 
     selectedPathTilesToRender.push(
       <SelectedTile
@@ -236,6 +234,7 @@ const ResourceTileLayer = ({
     selectedTile,
     selectedStartPathTile,
     selectedEndPathTile,
+    hoveredTile,
   ]);
 
   return (
