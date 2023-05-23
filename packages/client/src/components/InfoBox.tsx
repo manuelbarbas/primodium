@@ -58,6 +58,7 @@ function InfoBox() {
                   href="https://discord.com/invite/bn7eSSKFWV"
                   target="_blank"
                   className="text-sm inline-block hover:text-gray-300 ml-3"
+                  rel="noreferrer"
                 >
                   <LinkIcon icon={<FaDiscord size="16" />} />
                 </a>
@@ -65,6 +66,7 @@ function InfoBox() {
                   href="https://twitter.com/primodiumgame"
                   target="_blank"
                   className="text-sm inline-block hover:text-gray-300 ml-3"
+                  rel="noreferrer"
                 >
                   <LinkIcon icon={<FaTwitter size="16" />} />
                 </a>
@@ -78,6 +80,7 @@ function InfoBox() {
               href="https://tutorial.primodium.com"
               target="_blank"
               className="text-sm inline-block hover:text-gray-300"
+              rel="noreferrer"
             >
               <LinkIcon icon={<BsQuestionCircle size="16" />} />
               <p className="inline-block align-middle ml-2">How to play</p>
@@ -88,6 +91,7 @@ function InfoBox() {
               target="_blank"
               href="https://www.primodium.com/seasons"
               className="text-sm inline-block hover:text-gray-300"
+              rel="noreferrer"
             >
               <LinkIcon icon={<FaFlagCheckered size="16" />} />
               <p className="inline-block align-middle ml-2">Past seasons</p>

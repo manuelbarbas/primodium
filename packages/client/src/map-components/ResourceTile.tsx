@@ -40,7 +40,7 @@ function ResourceTile({
   }
 
   // Get the conveyor path that start at this tile.
-  let pathsToRender: JSX.Element[] = [];
+  const pathsToRender: JSX.Element[] = [];
 
   const path = useComponentValue(
     components.Path,
