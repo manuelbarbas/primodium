@@ -232,6 +232,7 @@ const ResourceTileLayer = ({
     setHoveredTiles(hoveredTilesToRender);
   }, [
     displayTileRange,
+    hoveredTile,
     selectedTile,
     selectedStartPathTile,
     selectedEndPathTile,
