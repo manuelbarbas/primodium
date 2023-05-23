@@ -5,11 +5,12 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 
 type GameState = {
   selectedTile: DisplayTile;
-  hoveredTile: DisplayTile | null;
+  hoveredTile: DisplayTile;
   pathTileSelection: { start: DisplayTile | null; end: DisplayTile | null };
   selectedBlock: EntityID | null;
   navigateToTile: boolean;
   showSelectedPathTiles: boolean;
+  transactionLoading: boolean;
 };
 
 type GameActions = {
@@ -21,7 +22,8 @@ type GameActions = {
   setNavigateToTile: (navigate: boolean) => void;
   toggleShowSelectedPathTiles: () => void;
   setSelectedBlock: (block: EntityID | null) => void;
-  setHoveredTile: (tile: DisplayTile | null) => void;
+  setHoveredTile: (tile: DisplayTile) => void;
+  setTransactionLoading: (loading: boolean) => void;
 };
 
 const defaults: GameState = {
@@ -31,6 +33,7 @@ const defaults: GameState = {
   selectedBlock: null,
   navigateToTile: false,
   showSelectedPathTiles: false,
+  transactionLoading: false,
 };
 
 export const useGameStore = create<GameState & GameActions>()((set) => ({
@@ -44,7 +47,9 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
   toggleShowSelectedPathTiles: () =>
     set((state) => ({ showSelectedPathTiles: !state.showSelectedPathTiles })),
   setSelectedBlock: (block: EntityID | null) => set({ selectedBlock: block }),
-  setHoveredTile: (tile: DisplayTile | null) => set({ hoveredTile: tile }),
+  setHoveredTile: (tile: DisplayTile) => set({ hoveredTile: tile }),
+  setTransactionLoading: (loading: boolean) =>
+    set({ transactionLoading: loading }),
 }));
 
 //store dev tools
