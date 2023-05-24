@@ -1,12 +1,13 @@
 import { useCallback, useEffect } from "react";
 import { useMud } from "../../context/MudContext";
-import { useSelectedTile } from "../../context/SelectedTileContext";
+// import { useSelectedTile } from "../../context/SelectedTileContext";
 import PathActionIconButton from "./building-icons/PathActionIconButton";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
 import { BlockType } from "../../util/constants";
 import { execute } from "../../network/actions";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+// import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 import BuildingContentBox from "./BuildingBox";
+import { useGameStore } from "../../store/GameStore";
 
 function ChooseTransportMenu({
   title,
@@ -18,14 +19,30 @@ function ChooseTransportMenu({
   const { systems, providers } = useMud();
 
   // Set start and end paths for conveyors
-  const {
+  // const {
+  //   // selectedTile,
+  //   selectedStartPathTile,
+  //   selectedEndPathTile,
+  //   setSelectedStartPathTile,
+  //   setSelectedEndPathTile,
+  //   // setShowSelectedPathTiles,
+  // } = useSelectedTile();
+
+  const [
+    setTransactionLoading,
     selectedTile,
-    selectedStartPathTile,
-    selectedEndPathTile,
-    setSelectedStartPathTile,
-    setSelectedEndPathTile,
+    selectedPathTiles,
     setShowSelectedPathTiles,
-  } = useSelectedTile();
+    setStartSelectedPathTile,
+    setEndSelectedPathTile,
+  ] = useGameStore((state) => [
+    state.setTransactionLoading,
+    state.selectedTile,
+    state.selectedPathTiles,
+    state.setShowSelectedPathTiles,
+    state.setStartSelectedPathTile,
+    state.setEndSelectedPathTile,
+  ]);
 
   useEffect(() => {
     // show selected path tiles on mount
@@ -38,30 +55,25 @@ function ChooseTransportMenu({
   }, []);
 
   const startPath = useCallback(() => {
-    setSelectedStartPathTile(selectedTile);
+    // setSelectedStartPathTile(selectedTile);
+    setStartSelectedPathTile(selectedTile);
   }, [selectedTile]);
 
   const endPath = useCallback(() => {
-    setSelectedEndPathTile(selectedTile);
+    // setSelectedEndPathTile(selectedTile);
+    setEndSelectedPathTile(selectedTile);
   }, [selectedTile]);
 
-  const { setTransactionLoading } = useTransactionLoading();
+  // const { setTransactionLoading } = useTransactionLoading();
 
   // Select tile to end path, executeTyped
   const createPath = useCallback(async () => {
-    if (selectedStartPathTile !== null && selectedEndPathTile !== null) {
+    if (selectedPathTiles.start !== null && selectedPathTiles.end !== null) {
       setTransactionLoading(true);
       await execute(
         systems["system.BuildPath"].executeTyped(
-          {
-            x: selectedStartPathTile.x,
-            y: selectedStartPathTile.y,
-          },
-          {
-            x: selectedEndPathTile.x,
-            y: selectedEndPathTile.y,
-          },
-
+          selectedPathTiles.start,
+          selectedPathTiles.end,
           {
             gasLimit: 500_000,
           }
@@ -70,27 +82,21 @@ function ChooseTransportMenu({
       );
       setTransactionLoading(false);
     }
-  }, [selectedStartPathTile, selectedEndPathTile]);
+  }, [selectedPathTiles]);
 
   // delete path
   const destroyPath = useCallback(async () => {
-    if (selectedStartPathTile !== null && selectedEndPathTile !== null) {
+    if (selectedPathTiles.start !== null && selectedPathTiles.end !== null) {
       setTransactionLoading(true);
       await execute(
-        systems["system.DestroyPath"].executeTyped(
-          {
-            x: selectedStartPathTile.x,
-            y: selectedStartPathTile.y,
-          },
-          {
-            gasLimit: 500_000,
-          }
-        ),
+        systems["system.DestroyPath"].executeTyped(selectedPathTiles.start, {
+          gasLimit: 500_000,
+        }),
         providers
       );
       setTransactionLoading(false);
     }
-  }, [selectedStartPathTile, selectedEndPathTile]);
+  }, [selectedPathTiles]);
 
   return (
     <BuildingContentBox>

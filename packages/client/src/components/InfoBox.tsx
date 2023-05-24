@@ -14,8 +14,9 @@ import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
 import { FaFlagCheckered } from "react-icons/fa";
 import Spinner from "./Spinner";
-import { useTransactionLoading } from "../context/TransactionLoadingContext";
+// import { useTransactionLoading } from "../context/TransactionLoadingContext";
 import NavigateMainBaseButton from "./action/NavigateMainBaseButton";
+import { useGameStore } from "../store/GameStore";
 
 function InfoBox() {
   const { address, isConnected } = useWagmiAccount();
@@ -42,7 +43,10 @@ function InfoBox() {
     }
   };
 
-  const { transactionLoading } = useTransactionLoading();
+  // const { transactionLoading } = useTransactionLoading();
+  const [transactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
+  ]);
 
   if (!isConnected) {
     return (

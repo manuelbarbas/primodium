@@ -4,10 +4,11 @@ import { useComponentValue } from "@latticexyz/react";
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 import { useSelectedTile } from "../../context/SelectedTileContext";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+// import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 import { execute } from "../../network/actions";
 import { BigNumber } from "ethers";
 import { BlockType } from "../../util/constants";
+import { useGameStore } from "../../store/GameStore";
 
 export default function NavigateMainBaseButton() {
   const { world, components, singletonIndex } = useMud();
@@ -37,8 +38,14 @@ export default function NavigateMainBaseButton() {
 
   // Otherwise build a main base
   const { systems, providers } = useMud();
-  const { selectedTile } = useSelectedTile();
-  const { setTransactionLoading } = useTransactionLoading();
+  // const { selectedTile } = useSelectedTile();
+  // const { setTransactionLoading } = useTransactionLoading();
+
+  const [selectedTile, setTransactionLoading] = useGameStore((state) => [
+    state.selectedTile,
+    state.setTransactionLoading,
+  ]);
+
   const buildMainBase = useCallback(async () => {
     setTransactionLoading(true);
     await execute(

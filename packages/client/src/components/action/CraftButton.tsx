@@ -2,11 +2,15 @@ import { useCallback } from "react";
 import { useMud } from "../../context/MudContext";
 import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+// import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+import { useGameStore } from "../../store/GameStore";
 
 export default function CraftButton({ x, y }: DisplayTile) {
   const { systems, providers } = useMud();
-  const { setTransactionLoading } = useTransactionLoading();
+  // const { setTransactionLoading } = useTransactionLoading();
+  const [setTransactionLoading] = useGameStore((state) => [
+    state.setTransactionLoading,
+  ]);
 
   const claimAction = useCallback(async () => {
     setTransactionLoading(true);

@@ -8,8 +8,8 @@ import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
 
-import { useTransactionLoading } from "../context/TransactionLoadingContext";
-import { useSelectedTile } from "../context/SelectedTileContext";
+// import { useTransactionLoading } from "../context/TransactionLoadingContext";
+// import { useSelectedTile } from "../context/SelectedTileContext";
 import { useMud } from "../context/MudContext";
 
 import { getTopLayerKey } from "../util/tile";
@@ -21,6 +21,7 @@ import CraftButton from "./action/CraftButton";
 import StaticResourceLabel from "./resource-box/StaticResourceLabel";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
+import { useGameStore } from "../store/GameStore";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -52,7 +53,9 @@ function TooltipBox() {
   );
 
   // Get information on the selected tile
-  const { selectedTile } = useSelectedTile();
+  // const { selectedTile } = useSelectedTile();
+  // const { selectedTile } = useGameStore();
+  const [selectedTile] = useGameStore((state) => [state.selectedTile]);
 
   const tilesAtPosition = useEntityQuery([
     Has(components.Tile),
@@ -144,7 +147,10 @@ function TooltipBox() {
   });
 
   // actions
-  const { transactionLoading } = useTransactionLoading();
+  // const { transactionLoading } = useTransactionLoading();
+  const [transactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
+  ]);
 
   if (!minimized) {
     return (

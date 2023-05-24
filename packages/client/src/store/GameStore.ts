@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 type GameState = {
   selectedTile: DisplayTile;
   hoveredTile: DisplayTile;
-  pathTileSelection: { start: DisplayTile | null; end: DisplayTile | null };
+  selectedPathTiles: { start: DisplayTile | null; end: DisplayTile | null };
   selectedBlock: EntityID | null;
   navigateToTile: boolean;
   showSelectedPathTiles: boolean;
@@ -20,16 +20,18 @@ type GameActions = {
     end: DisplayTile | null
   ) => void;
   setNavigateToTile: (navigate: boolean) => void;
-  toggleShowSelectedPathTiles: () => void;
+  setShowSelectedPathTiles: (show: boolean) => void;
   setSelectedBlock: (block: EntityID | null) => void;
   setHoveredTile: (tile: DisplayTile) => void;
   setTransactionLoading: (loading: boolean) => void;
+  setStartSelectedPathTile: (tile: DisplayTile) => void;
+  setEndSelectedPathTile: (tile: DisplayTile) => void;
 };
 
 const defaults: GameState = {
   selectedTile: { x: 0, y: 0 },
   hoveredTile: { x: 0, y: 0 },
-  pathTileSelection: { start: null, end: null },
+  selectedPathTiles: { start: null, end: null },
   selectedBlock: null,
   navigateToTile: false,
   showSelectedPathTiles: false,
@@ -42,14 +44,22 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
   setConveyerTileSelection: (
     start: DisplayTile | null,
     end: DisplayTile | null
-  ) => set({ pathTileSelection: { start, end } }),
+  ) => set({ selectedPathTiles: { start, end } }),
   setNavigateToTile: (navigate: boolean) => set({ navigateToTile: navigate }),
-  toggleShowSelectedPathTiles: () =>
-    set((state) => ({ showSelectedPathTiles: !state.showSelectedPathTiles })),
+  setShowSelectedPathTiles: (show: boolean) =>
+    set({ showSelectedPathTiles: show }),
   setSelectedBlock: (block: EntityID | null) => set({ selectedBlock: block }),
   setHoveredTile: (tile: DisplayTile) => set({ hoveredTile: tile }),
   setTransactionLoading: (loading: boolean) =>
     set({ transactionLoading: loading }),
+  setStartSelectedPathTile: (tile: DisplayTile) =>
+    set((state) => ({
+      selectedPathTiles: { ...state.selectedPathTiles, start: tile },
+    })),
+  setEndSelectedPathTile: (tile: DisplayTile) =>
+    set((state) => ({
+      selectedPathTiles: { ...state.selectedPathTiles, end: tile },
+    })),
 }));
 
 //store dev tools

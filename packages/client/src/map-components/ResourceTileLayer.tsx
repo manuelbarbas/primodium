@@ -7,12 +7,12 @@ import { LeafletMouseEvent } from "leaflet";
 
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
-import { useSelectedTile } from "../context/SelectedTileContext";
+// import { useSelectedTile } from "../context/SelectedTileContext";
 import SelectedPath from "./SelectedPath";
 import { DisplayKeyPair, DisplayTile } from "../util/constants";
 import { useGameStore } from "../store/GameStore";
 import { BigNumber } from "ethers";
-import { useTransactionLoading } from "../context/TransactionLoadingContext";
+// import { useTransactionLoading } from "../context/TransactionLoadingContext";
 import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
 import { EntityID } from "@latticexyz/recs";
@@ -23,17 +23,17 @@ const ResourceTileLayer = ({
   getTileKey: (coord: Coord) => DisplayKeyPair;
 }) => {
   const map = useMap();
-  const {
-    // selectedTile,
-    // setSelectedTile,
-    selectedStartPathTile,
-    selectedEndPathTile,
-    showSelectedPathTiles,
-    navigateToTile,
-    setNavigateToTile,
-  } = useSelectedTile();
+  // const {
+  //   // selectedTile,
+  //   // setSelectedTile,
+  //   selectedStartPathTile,
+  //   selectedEndPathTile,
+  //   // showSelectedPathTiles,
+  //   // navigateToTile,
+  //   // setNavigateToTile,
+  // } = useSelectedTile();
 
-  const { setTransactionLoading } = useTransactionLoading();
+  // const { setTransactionLoading } = useTransactionLoading();
   const { systems, providers } = useMud();
 
   const [
@@ -43,6 +43,11 @@ const ResourceTileLayer = ({
     setSelectedTile,
     selectedBlock,
     setSelectedBlock,
+    navigateToTile,
+    setNavigateToTile,
+    showSelectedPathTiles,
+    pathTileSelection,
+    setTransactionLoading,
   ] = useGameStore((state) => [
     state.hoveredTile,
     state.setHoveredTile,
@@ -50,6 +55,11 @@ const ResourceTileLayer = ({
     state.setSelectedTile,
     state.selectedBlock,
     state.setSelectedBlock,
+    state.navigateToTile,
+    state.setNavigateToTile,
+    state.showSelectedPathTiles,
+    state.selectedPathTiles,
+    state.setTransactionLoading,
   ]);
 
   const [displayTileRange, setDisplayTileRange] = useState({
@@ -183,45 +193,48 @@ const ResourceTileLayer = ({
       />
     );
 
-    selectedPathTilesToRender.push(
-      <SelectedTile
-        key={JSON.stringify({
-          x: selectedStartPathTile.x,
-          y: selectedStartPathTile.y,
-          render: "selectedStartPathTile",
-        })}
-        x={selectedStartPathTile.x}
-        y={selectedStartPathTile.y}
-        color="red"
-        pane="markerPane"
-      />
-    );
+    if (pathTileSelection.start)
+      selectedPathTilesToRender.push(
+        <SelectedTile
+          key={JSON.stringify({
+            x: pathTileSelection.start.x,
+            y: pathTileSelection.start.y,
+            render: "selectedStartPathTile",
+          })}
+          x={pathTileSelection.start.x}
+          y={pathTileSelection.start.y}
+          color="red"
+          pane="markerPane"
+        />
+      );
 
-    selectedPathTilesToRender.push(
-      <SelectedTile
-        key={JSON.stringify({
-          x: selectedEndPathTile.x,
-          y: selectedEndPathTile.y,
-          render: "selectedEndPathTile",
-        })}
-        x={selectedEndPathTile.x}
-        y={selectedEndPathTile.y}
-        color="green"
-        pane="markerPane"
-      />
-    );
+    if (pathTileSelection.end)
+      selectedPathTilesToRender.push(
+        <SelectedTile
+          key={JSON.stringify({
+            x: pathTileSelection.end.x,
+            y: pathTileSelection.end.y,
+            render: "selectedEndPathTile",
+          })}
+          x={pathTileSelection.end.x}
+          y={pathTileSelection.end.y}
+          color="green"
+          pane="markerPane"
+        />
+      );
 
-    selectedPathTilesToRender.push(
-      <SelectedPath
-        key="selectedPath"
-        startCoord={selectedStartPathTile}
-        endCoord={selectedEndPathTile}
-      />
-    );
+    if (pathTileSelection.start && pathTileSelection.end)
+      selectedPathTilesToRender.push(
+        <SelectedPath
+          key="selectedPath"
+          startCoord={pathTileSelection.start}
+          endCoord={pathTileSelection.end}
+        />
+      );
 
     setSelectedTiles(selectedTilesToRender);
     setSelectedPathTiles(selectedPathTilesToRender);
-  }, [selectedTile, selectedStartPathTile, selectedEndPathTile]);
+  }, [selectedTile, pathTileSelection]);
 
   //Render hover tiles
   useEffect(() => {

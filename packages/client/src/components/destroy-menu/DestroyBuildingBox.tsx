@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 
-import { useSelectedTile } from "../../context/SelectedTileContext";
+// import { useSelectedTile } from "../../context/SelectedTileContext";
 import { useMud } from "../../context/MudContext";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+// import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+import { useGameStore } from "../../store/GameStore";
 
 import { execute } from "../../network/actions";
 import { DisplayTile } from "../../util/constants";
@@ -11,8 +12,12 @@ import DestroyTileButton from "./DestroyTileButton";
 
 function DestroyBuildingBox() {
   const { systems, providers } = useMud();
-  const { selectedTile } = useSelectedTile();
-  const { setTransactionLoading } = useTransactionLoading();
+  // const { selectedTile } = useSelectedTile();
+  // const { setTransactionLoading } = useTransactionLoading();
+  const [selectedTile, setTransactionLoading] = useGameStore((state) => [
+    state.selectedTile,
+    state.setTransactionLoading,
+  ]);
 
   const destroyTile = useCallback(async ({ x, y }: DisplayTile) => {
     setTransactionLoading(true);
