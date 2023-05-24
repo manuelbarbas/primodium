@@ -69,6 +69,11 @@ function TooltipBox() {
     tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
   );
 
+  const tileHealth = useComponentValue(
+    components.Health,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+  );
+
   const terrainTile = getTopLayerKeyHelper({
     x: selectedTile.x,
     y: selectedTile.y,
@@ -187,6 +192,12 @@ function TooltipBox() {
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div className="flex-col">
+                <div className="inline-block font-bold mb-1">Health:</div>
+                <div className="mx-2 inline-block">
+                  <div>{tileHealth?.value}</div>
                 </div>
               </div>
               {tileOwner && (
