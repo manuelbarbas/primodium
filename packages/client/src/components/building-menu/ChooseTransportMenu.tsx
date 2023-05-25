@@ -35,6 +35,8 @@ function ChooseTransportMenu({
     setShowSelectedPathTiles,
     setStartSelectedPathTile,
     setEndSelectedPathTile,
+    selectedBlock,
+    setSelectedBlock,
   ] = useGameStore((state) => [
     state.setTransactionLoading,
     state.selectedTile,
@@ -42,6 +44,8 @@ function ChooseTransportMenu({
     state.setShowSelectedPathTiles,
     state.setStartSelectedPathTile,
     state.setEndSelectedPathTile,
+    state.selectedBlock,
+    state.setSelectedBlock,
   ]);
 
   useEffect(() => {
@@ -52,6 +56,7 @@ function ChooseTransportMenu({
   const closeMenuHelper = useCallback(() => {
     setMenuOpenIndex(-1);
     setShowSelectedPathTiles(false);
+    setSelectedBlock(null);
   }, []);
 
   const startPath = useCallback(() => {
@@ -98,31 +103,56 @@ function ChooseTransportMenu({
     }
   }, [selectedPathTiles]);
 
+  const clearPath = useCallback(() => {
+    setStartSelectedPathTile(null);
+    setEndSelectedPathTile(null);
+  }, [setStartSelectedPathTile, setEndSelectedPathTile]);
+
   return (
     <BuildingContentBox>
       <p className="text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
-        <PathActionIconButton
-          backgroundColor="#dd9871"
-          text="Start"
-          action={startPath}
-        />
-        <PathActionIconButton
-          backgroundColor="#77c899"
-          text="End"
-          action={endPath}
-        />
-        <PathActionIconButton
-          backgroundColor="#479dd6"
-          text="Create"
-          action={createPath}
-        />
-        <PathActionIconButton
-          backgroundColor="#ad6b85"
-          text="Clear"
-          action={destroyPath}
-        />
-        <BuildingIconButton label="Node" blockType={BlockType.Node} />
+        {(selectedBlock === BlockType.Conveyor ||
+          (selectedPathTiles.start !== null &&
+            selectedPathTiles.end !== null)) && (
+          <>
+            {/* <PathActionIconButton
+              backgroundColor="#dd9871"
+              text="Start"
+              action={startPath}
+            />
+            <PathActionIconButton
+              backgroundColor="#77c899"
+              text="End"
+              action={endPath}
+            /> */}
+            <PathActionIconButton
+              backgroundColor="#479dd6"
+              text="Create"
+              action={createPath}
+            />
+            <PathActionIconButton
+              backgroundColor="#dd9871"
+              text="Clear"
+              action={clearPath}
+            />
+          </>
+        )}
+        {selectedBlock !== BlockType.Conveyor &&
+          selectedPathTiles.start === null && (
+            <>
+              <BuildingIconButton label="Node" blockType={BlockType.Node} />
+              <BuildingIconButton
+                label="Conveyor"
+                blockType={BlockType.Conveyor}
+              />
+              <PathActionIconButton
+                backgroundColor="#ad6b85"
+                text="Destroy"
+                action={destroyPath}
+              />
+            </>
+          )}
       </div>
       <button
         onClick={closeMenuHelper}

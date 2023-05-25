@@ -9,13 +9,14 @@ import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
 // import { useSelectedTile } from "../context/SelectedTileContext";
 import SelectedPath from "./SelectedPath";
-import { DisplayKeyPair, DisplayTile } from "../util/constants";
+import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
 import { useGameStore } from "../store/GameStore";
 import { BigNumber } from "ethers";
 // import { useTransactionLoading } from "../context/TransactionLoadingContext";
 import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
 import { EntityID } from "@latticexyz/recs";
+import HoverTile from "./HoverTile";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -47,6 +48,8 @@ const ResourceTileLayer = ({
     setNavigateToTile,
     showSelectedPathTiles,
     pathTileSelection,
+    setStartSelectedPathTile,
+    setEndSelectedPathTile,
     setTransactionLoading,
   ] = useGameStore((state) => [
     state.hoveredTile,
@@ -59,6 +62,8 @@ const ResourceTileLayer = ({
     state.setNavigateToTile,
     state.showSelectedPathTiles,
     state.selectedPathTiles,
+    state.setStartSelectedPathTile,
+    state.setEndSelectedPathTile,
     state.setTransactionLoading,
   ]);
 
@@ -103,6 +108,19 @@ const ResourceTileLayer = ({
         y: Math.floor(event.latlng.lat),
       };
 
+      if (selectedBlock === BlockType.Conveyor) {
+        if (pathTileSelection.start === null) {
+          setStartSelectedPathTile(mousePos);
+        }
+
+        if (pathTileSelection.end !== null) {
+          setEndSelectedPathTile(mousePos);
+          setSelectedBlock(null);
+        }
+
+        return;
+      }
+
       //update selected tile position
       setSelectedTile(mousePos);
 
@@ -113,17 +131,29 @@ const ResourceTileLayer = ({
         setSelectedBlock(null);
       }
     },
-    [map, selectedBlock]
+    [map, selectedBlock, pathTileSelection]
   );
 
   const hoverEvent = useCallback(
     (event: LeafletMouseEvent) => {
-      setHoveredTile({
+      const mousePos = {
         x: Math.floor(event.latlng.lng),
         y: Math.floor(event.latlng.lat),
-      });
+      };
+
+      setHoveredTile(mousePos);
+
+      if (selectedBlock === null) return;
+
+      if (selectedBlock === BlockType.Conveyor) {
+        if (pathTileSelection.start !== null && selectedBlock !== null) {
+          setEndSelectedPathTile(mousePos);
+        }
+
+        return;
+      }
     },
-    [map]
+    [map, selectedBlock, pathTileSelection]
   );
 
   useMapEvent("click", clickEvent);
@@ -203,7 +233,7 @@ const ResourceTileLayer = ({
           })}
           x={pathTileSelection.start.x}
           y={pathTileSelection.start.y}
-          color="red"
+          color="green"
           pane="markerPane"
         />
       );
@@ -218,7 +248,7 @@ const ResourceTileLayer = ({
           })}
           x={pathTileSelection.end.x}
           y={pathTileSelection.end.y}
-          color="green"
+          color="red"
           pane="markerPane"
         />
       );
@@ -242,7 +272,7 @@ const ResourceTileLayer = ({
     const hoveredTilesToRender: JSX.Element[] = [];
 
     hoveredTilesToRender.push(
-      <SelectedTile
+      <HoverTile
         key={JSON.stringify({
           x: hoveredTile.x,
           y: hoveredTile.y,
@@ -250,7 +280,7 @@ const ResourceTileLayer = ({
         })}
         x={hoveredTile.x}
         y={hoveredTile.y}
-        color="pink"
+        selectedBlock={selectedBlock}
       />
     );
 

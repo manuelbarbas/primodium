@@ -24,8 +24,8 @@ type GameActions = {
   setSelectedBlock: (block: EntityID | null) => void;
   setHoveredTile: (tile: DisplayTile) => void;
   setTransactionLoading: (loading: boolean) => void;
-  setStartSelectedPathTile: (tile: DisplayTile) => void;
-  setEndSelectedPathTile: (tile: DisplayTile) => void;
+  setStartSelectedPathTile: (tile: DisplayTile | null) => void;
+  setEndSelectedPathTile: (tile: DisplayTile | null) => void;
 };
 
 const defaults: GameState = {
@@ -52,11 +52,11 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
   setHoveredTile: (tile: DisplayTile) => set({ hoveredTile: tile }),
   setTransactionLoading: (loading: boolean) =>
     set({ transactionLoading: loading }),
-  setStartSelectedPathTile: (tile: DisplayTile) =>
+  setStartSelectedPathTile: (tile: DisplayTile | null) =>
     set((state) => ({
       selectedPathTiles: { ...state.selectedPathTiles, start: tile },
     })),
-  setEndSelectedPathTile: (tile: DisplayTile) =>
+  setEndSelectedPathTile: (tile: DisplayTile | null) =>
     set((state) => ({
       selectedPathTiles: { ...state.selectedPathTiles, end: tile },
     })),

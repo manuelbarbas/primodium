@@ -23,9 +23,16 @@ function BuildingIconButton({
   blockType: EntityID;
 }) {
   const { components, world, singletonIndex } = useMud();
-  const [setSelectedBlock, selectedBlock] = useGameStore((state) => [
+  const [
+    setSelectedBlock,
+    selectedBlock,
+    setStartSelectedPathTile,
+    setEndSelectedPathTile,
+  ] = useGameStore((state) => [
     state.setSelectedBlock,
     state.selectedBlock,
+    state.setStartSelectedPathTile,
+    state.setEndSelectedPathTile,
   ]);
 
   const { address } = useAccount();
@@ -73,7 +80,13 @@ function BuildingIconButton({
     <button
       className="w-16 h-16 text-sm group"
       onClick={
-        buildingLocked ? cannotBuildTile : () => setSelectedBlock(blockType)
+        buildingLocked
+          ? cannotBuildTile
+          : () => {
+              setSelectedBlock(blockType);
+              setStartSelectedPathTile(null);
+              setEndSelectedPathTile(null);
+            }
       }
     >
       <div
