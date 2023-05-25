@@ -17,6 +17,7 @@ import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
 import { EntityID } from "@latticexyz/recs";
 import HoverTile from "./HoverTile";
+import { SingletonID } from "@latticexyz/network";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -47,7 +48,7 @@ const ResourceTileLayer = ({
     navigateToTile,
     setNavigateToTile,
     showSelectedPathTiles,
-    pathTileSelection,
+    selectedPathTiles,
     setStartSelectedPathTile,
     setEndSelectedPathTile,
     setTransactionLoading,
@@ -99,6 +100,22 @@ const ResourceTileLayer = ({
     setTransactionLoading(false);
   };
 
+  const createPath = useCallback(
+    async (start: DisplayTile, end: DisplayTile) => {
+      if (selectedPathTiles.start !== null && selectedPathTiles.end !== null) {
+        setTransactionLoading(true);
+        await execute(
+          systems["system.BuildPath"].executeTyped(start, end, {
+            gasLimit: 500_000,
+          }),
+          providers
+        );
+        setTransactionLoading(false);
+      }
+    },
+    [selectedPathTiles]
+  );
+
   // Select tile
   // Touch event listener on the map itself instead of each tile due to touch offset issues for zoom.
   const clickEvent = useCallback(
@@ -109,29 +126,38 @@ const ResourceTileLayer = ({
       };
 
       if (selectedBlock === BlockType.Conveyor) {
-        if (pathTileSelection.start === null) {
+        if (selectedPathTiles.start === null) {
           setStartSelectedPathTile(mousePos);
+          return;
         }
 
-        if (pathTileSelection.end !== null) {
+        if (selectedPathTiles.end !== null) {
+          //clear selected block since path is now building. Also insure the end path is where the player clicked.
           setEndSelectedPathTile(mousePos);
           setSelectedBlock(null);
+
+          createPath(selectedPathTiles.start, selectedPathTiles.end);
+
+          //clear path tiles
+          setStartSelectedPathTile(null);
+          setEndSelectedPathTile(null);
+
+          return;
         }
-
-        return;
       }
-
-      //update selected tile position
-      setSelectedTile(mousePos);
 
       //build tile if block selected from menu
       if (selectedBlock !== null) {
         console.log("Building block: " + selectedBlock);
         buildTile(mousePos, selectedBlock);
         setSelectedBlock(null);
+        return;
       }
+
+      //update selected tile position
+      setSelectedTile(mousePos);
     },
-    [map, selectedBlock, pathTileSelection]
+    [map, selectedBlock, selectedPathTiles]
   );
 
   const hoverEvent = useCallback(
@@ -146,14 +172,14 @@ const ResourceTileLayer = ({
       if (selectedBlock === null) return;
 
       if (selectedBlock === BlockType.Conveyor) {
-        if (pathTileSelection.start !== null && selectedBlock !== null) {
+        if (selectedPathTiles.start !== null && selectedBlock !== null) {
           setEndSelectedPathTile(mousePos);
         }
 
         return;
       }
     },
-    [map, selectedBlock, pathTileSelection]
+    [map, selectedBlock, selectedPathTiles]
   );
 
   useMapEvent("click", clickEvent);
@@ -170,7 +196,7 @@ const ResourceTileLayer = ({
   // Displaying tiles
   const [tiles, setTiles] = useState<JSX.Element[]>([]);
   const [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
-  const [selectedPathTiles, setSelectedPathTiles] = useState<JSX.Element[]>([]);
+  const [selectedPathTile, setSelectedPathTiles] = useState<JSX.Element[]>([]);
   const [hoveredTiles, setHoveredTiles] = useState<JSX.Element[]>([]);
 
   // Render tiles
@@ -223,48 +249,48 @@ const ResourceTileLayer = ({
       />
     );
 
-    if (pathTileSelection.start)
+    if (selectedPathTiles.start)
       selectedPathTilesToRender.push(
         <SelectedTile
           key={JSON.stringify({
-            x: pathTileSelection.start.x,
-            y: pathTileSelection.start.y,
+            x: selectedPathTiles.start.x,
+            y: selectedPathTiles.start.y,
             render: "selectedStartPathTile",
           })}
-          x={pathTileSelection.start.x}
-          y={pathTileSelection.start.y}
+          x={selectedPathTiles.start.x}
+          y={selectedPathTiles.start.y}
           color="green"
           pane="markerPane"
         />
       );
 
-    if (pathTileSelection.end)
+    if (selectedPathTiles.end)
       selectedPathTilesToRender.push(
         <SelectedTile
           key={JSON.stringify({
-            x: pathTileSelection.end.x,
-            y: pathTileSelection.end.y,
+            x: selectedPathTiles.end.x,
+            y: selectedPathTiles.end.y,
             render: "selectedEndPathTile",
           })}
-          x={pathTileSelection.end.x}
-          y={pathTileSelection.end.y}
+          x={selectedPathTiles.end.x}
+          y={selectedPathTiles.end.y}
           color="red"
           pane="markerPane"
         />
       );
 
-    if (pathTileSelection.start && pathTileSelection.end)
+    if (selectedPathTiles.start && selectedPathTiles.end)
       selectedPathTilesToRender.push(
         <SelectedPath
           key="selectedPath"
-          startCoord={pathTileSelection.start}
-          endCoord={pathTileSelection.end}
+          startCoord={selectedPathTiles.start}
+          endCoord={selectedPathTiles.end}
         />
       );
 
     setSelectedTiles(selectedTilesToRender);
     setSelectedPathTiles(selectedPathTilesToRender);
-  }, [selectedTile, pathTileSelection]);
+  }, [selectedTile, selectedPathTiles]);
 
   //Render hover tiles
   useEffect(() => {
@@ -285,7 +311,7 @@ const ResourceTileLayer = ({
     );
 
     setHoveredTiles(hoveredTilesToRender);
-  }, [hoveredTile]);
+  }, [hoveredTile, selectedBlock]);
 
   return (
     <>
@@ -293,7 +319,7 @@ const ResourceTileLayer = ({
         checked={showSelectedPathTiles}
         name="Selected Path"
       >
-        <LayerGroup>{selectedPathTiles}</LayerGroup>
+        <LayerGroup>{selectedPathTile}</LayerGroup>
       </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Selected Tile">
         <LayerGroup>{selectedTiles}</LayerGroup>
