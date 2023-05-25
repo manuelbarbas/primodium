@@ -1,8 +1,11 @@
 import { EntityID } from "@latticexyz/recs";
 import React from "react";
 
-import { Rectangle } from "react-leaflet";
-import { BlockType } from "../util/constants";
+import { ImageOverlay, Rectangle } from "react-leaflet";
+import { BackgroundImage, BlockType } from "../util/constants";
+import { useGameStore } from "../store/GameStore";
+import ResourceTile from "./ResourceTile";
+import { SingletonID } from "@latticexyz/network";
 
 function HoverTile({
   x,
@@ -15,25 +18,36 @@ function HoverTile({
   selectedBlock: EntityID | null;
   pane?: string;
 }) {
-  let color;
-  switch (selectedBlock) {
-    case BlockType.Conveyor:
-      color = "";
-    default:
-      color = "pink";
-  }
+  const [selectedPathTile] = useGameStore((state) => [state.selectedPathTiles]);
+
   return (
-    <Rectangle
-      bounds={[
-        [y, x],
-        [y + 1, x + 1],
-      ]}
-      pathOptions={{
-        weight: 4,
-        color,
-      }}
-      pane={pane || "tooltipPane"}
-    />
+    <>
+      {selectedBlock !== BlockType.Conveyor && selectedBlock !== null && (
+        <ImageOverlay
+          className="pixel-images border-dashed border-4 border-pink-500"
+          bounds={[
+            [y, x],
+            [y + 1, x + 1],
+          ]}
+          url={BackgroundImage.get(selectedBlock)!}
+          pane={pane || "tooltipPane"}
+          zIndex={50}
+        />
+      )}
+      {selectedBlock === BlockType.Conveyor && (
+        <Rectangle
+          bounds={[
+            [y, x],
+            [y + 1, x + 1],
+          ]}
+          pathOptions={{
+            weight: 4,
+            color: selectedPathTile.start === null ? "green" : "red",
+          }}
+          pane={pane || "tooltipPane"}
+        />
+      )}
+    </>
   );
 }
 
