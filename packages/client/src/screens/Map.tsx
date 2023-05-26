@@ -57,10 +57,13 @@ export default function Map() {
     const plotX = displayIndexToTileIndex(columnIndex);
     const plotY = displayIndexToTileIndex(rowIndex) * -1;
 
-    const tilesAtPosition = useEntityQuery([
-      Has(components.Tile),
-      HasValue(components.Position, { x: plotX, y: plotY }),
-    ]);
+    const tilesAtPosition = useEntityQuery(
+      [
+        Has(components.Tile),
+        HasValue(components.Position, { x: plotX, y: plotY }),
+      ],
+      { updateOnValueChange: true }
+    );
 
     const tile = useComponentValue(
       components.Tile,

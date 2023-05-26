@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
+import { useGameStore } from "../../store/GameStore";
 
 function ChooseWeaponryMenu({
   title,
@@ -10,7 +11,10 @@ function ChooseWeaponryMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const [setSelectedBlock] = useGameStore((state) => [state.setSelectedBlock]);
+
   const closeMenuHelper = useCallback(() => {
+    setSelectedBlock(null);
     setMenuOpenIndex(-1);
   }, []);
 

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { useMemo, memo } from "react";
 
 import { Has, HasValue, EntityID, getComponentValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
@@ -24,10 +24,10 @@ function ResourceTile({
   const { world, components, singletonIndex } = useMud();
 
   // Get tile information
-  const tilesAtPosition = useEntityQuery([
-    Has(components.Tile),
-    HasValue(components.Position, { x: x, y: y }),
-  ]);
+  const tilesAtPosition = useEntityQuery(
+    [Has(components.Tile), HasValue(components.Position, { x: x, y: y })],
+    { updateOnValueChange: true }
+  );
 
   const tile = useComponentValue(
     components.Tile,
@@ -38,9 +38,6 @@ function ResourceTile({
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
     buildingKey = tile.value as unknown as EntityID;
   }
-
-  // Get the conveyor path that start at this tile.
-  let pathsToRender: JSX.Element[] = [];
 
   const path = useComponentValue(
     components.Path,
@@ -55,40 +52,50 @@ function ResourceTile({
       : singletonIndex
   );
 
-  if (path && endPathTile) {
-    // Path that starts at the current selected tile
-    pathsToRender.push(
-      <Path key="curTile" startCoord={{ x, y }} endCoord={endPathTile} />
-    );
-  }
-
   // Get all conveyor paths that end at this tile.
-  const endingConveyorPaths = useEntityQuery([
-    Has(components.Path),
-    HasValue(components.Path, {
-      value:
-        tilesAtPosition.length > 0
-          ? (world.entities[tilesAtPosition[0]] as unknown as number)
-          : 0,
-    }),
-  ]);
+  const endingConveyorPaths = useEntityQuery(
+    [
+      Has(components.Path),
+      HasValue(components.Path, {
+        value:
+          tilesAtPosition.length > 0
+            ? (world.entities[tilesAtPosition[0]] as unknown as number)
+            : 0,
+      }),
+    ],
+    { updateOnValueChange: true }
+  );
 
-  endingConveyorPaths.map((item) => {
-    // Paths that ends at the current tile
-    const currentStartTile = getComponentValue(components.Position, item);
-    if (currentStartTile) {
-      pathsToRender.push(
-        <Path
-          key={JSON.stringify({
-            start: currentStartTile,
-            end: { x, y },
-          })}
-          startCoord={currentStartTile}
-          endCoord={{ x, y }}
-        ></Path>
+  // Get the conveyor path that start at this tile.
+  const pathsToRender: JSX.Element[] = useMemo(() => {
+    const curPathsToRender: JSX.Element[] = [];
+
+    if (path && endPathTile) {
+      // Path that starts at the current selected tile
+      curPathsToRender.push(
+        <Path key="curTile" startCoord={{ x, y }} endCoord={endPathTile} />
       );
     }
-  });
+
+    endingConveyorPaths.map((item) => {
+      // Paths that ends at the current tile
+      const currentStartTile = getComponentValue(components.Position, item);
+      if (currentStartTile) {
+        curPathsToRender.push(
+          <Path
+            key={JSON.stringify({
+              start: currentStartTile,
+              end: { x, y },
+            })}
+            startCoord={currentStartTile}
+            endCoord={{ x, y }}
+          ></Path>
+        );
+      }
+    });
+
+    return curPathsToRender;
+  }, [endPathTile, endingConveyorPaths, path, x, y]);
 
   //!!Used for setting an image background!!
   const terrainBackground = BackgroundImage.get(terrain as EntityID);

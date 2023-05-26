@@ -12,7 +12,7 @@ export default function SelectedPath({
     <MovingCirclePolyline
       key={`ssp: ${JSON.stringify(startCoord)}`}
       pathOptions={{
-        color: "yellow",
+        color: "magenta",
         dashArray: "10 30",
         weight: 5,
       }}
@@ -21,7 +21,7 @@ export default function SelectedPath({
         [endCoord.y + 0.5, startCoord.x + 0.5],
         [endCoord.y + 0.5, endCoord.x + 0.5],
       ]}
-      circleColor="yellow"
+      circleColor="magenta"
       pane="popupPane"
     />
   );

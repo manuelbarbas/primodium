@@ -41,8 +41,8 @@ const MovingCirclePolyline: React.FC<MovingCirclePolylineProps> = ({
   const getPolylineLength = useCallback((): number => {
     let totalLength = 0;
     for (let i = 0; i < positions.length - 1; i++) {
-      let from = new LatLng(positions[i][0], positions[i][1]);
-      let to = new LatLng(positions[i + 1][0], positions[i + 1][1]);
+      const from = new LatLng(positions[i][0], positions[i][1]);
+      const to = new LatLng(positions[i + 1][0], positions[i + 1][1]);
       totalLength += from.distanceTo(to);
     }
     return totalLength;

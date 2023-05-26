@@ -10,8 +10,9 @@ import AttackBox from "./attack-menu/AttackBox";
 import MarketModal from "./market-menu/MarketModal";
 import BuildingPage from "./building-menu/BuildingPage";
 import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
-import { useSelectedTile } from "../context/SelectedTileContext";
+// import { useSelectedTile } from "../context/SelectedTileContext";
 import ResearchModal from "./research-menu/ResearchModal";
+import { useGameStore } from "../store/GameStore";
 
 function SideBarIcon({
   icon,
@@ -28,9 +29,15 @@ function SideBarIcon({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
   children?: ReactNode;
 }) {
-  const { setShowSelectedPathTiles } = useSelectedTile();
+  const [setShowSelectedPathTiles, setSelectedBlock] = useGameStore((state) => [
+    state.setShowSelectedPathTiles,
+    state.setSelectedBlock,
+  ]);
 
   const setMenuOpenIndexHelper = useCallback(() => {
+    // clear selected block on menu index change
+    setSelectedBlock(null);
+
     if (menuIndex !== menuOpenIndex) {
       setMenuOpenIndex(menuIndex);
     } else {

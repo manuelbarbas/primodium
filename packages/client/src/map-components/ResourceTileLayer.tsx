@@ -7,9 +7,14 @@ import { LeafletMouseEvent } from "leaflet";
 
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
-import { useSelectedTile } from "../context/SelectedTileContext";
 import SelectedPath from "./SelectedPath";
-import { DisplayKeyPair } from "../util/constants";
+import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
+import { useGameStore } from "../store/GameStore";
+import { BigNumber } from "ethers";
+import { execute } from "../network/actions";
+import { useMud } from "../context/MudContext";
+import { EntityID } from "@latticexyz/recs";
+import HoverTile from "./HoverTile";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -17,15 +22,38 @@ const ResourceTileLayer = ({
   getTileKey: (coord: Coord) => DisplayKeyPair;
 }) => {
   const map = useMap();
-  const {
+
+  const { systems, providers } = useMud();
+
+  const [
+    hoveredTile,
+    setHoveredTile,
     selectedTile,
     setSelectedTile,
-    selectedStartPathTile,
-    selectedEndPathTile,
-    showSelectedPathTiles,
+    selectedBlock,
+    setSelectedBlock,
     navigateToTile,
     setNavigateToTile,
-  } = useSelectedTile();
+    showSelectedPathTiles,
+    selectedPathTiles,
+    setStartSelectedPathTile,
+    setEndSelectedPathTile,
+    setTransactionLoading,
+  ] = useGameStore((state) => [
+    state.hoveredTile,
+    state.setHoveredTile,
+    state.selectedTile,
+    state.setSelectedTile,
+    state.selectedBlock,
+    state.setSelectedBlock,
+    state.navigateToTile,
+    state.setNavigateToTile,
+    state.showSelectedPathTiles,
+    state.selectedPathTiles,
+    state.setStartSelectedPathTile,
+    state.setEndSelectedPathTile,
+    state.setTransactionLoading,
+  ]);
 
   const [displayTileRange, setDisplayTileRange] = useState({
     x1: 0,
@@ -48,18 +76,128 @@ const ResourceTileLayer = ({
   useEffect(setNewBounds, [map]);
   useMapEvent("moveend", setNewBounds);
 
+  const buildTile = async (pos: DisplayTile, blockType: EntityID) => {
+    setTransactionLoading(true);
+    await execute(
+      systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
+        gasLimit: 1_800_000,
+      }),
+      providers
+    );
+    setTransactionLoading(false);
+  };
+
+  const createPath = useCallback(
+    async (start: DisplayTile, end: DisplayTile) => {
+      if (selectedPathTiles.start !== null && selectedPathTiles.end !== null) {
+        setTransactionLoading(true);
+        await execute(
+          systems["system.BuildPath"].executeTyped(start, end, {
+            gasLimit: 500_000,
+          }),
+          providers
+        );
+        setTransactionLoading(false);
+      }
+    },
+    [selectedPathTiles]
+  );
+
+  const destroyTile = async (pos: DisplayTile) => {
+    setTransactionLoading(true);
+    await execute(
+      systems["system.Destroy"].executeTyped(pos, {
+        gasLimit: 1_000_000,
+      }),
+      providers
+    );
+    setTransactionLoading(false);
+  };
+
+  const destroyPath = async (pos: DisplayTile) => {
+    setTransactionLoading(true);
+    await execute(
+      systems["system.DestroyPath"].executeTyped(pos, {
+        gasLimit: 500_000,
+      }),
+      providers
+    );
+    setTransactionLoading(false);
+  };
+
   // Select tile
   // Touch event listener on the map itself instead of each tile due to touch offset issues for zoom.
   const clickEvent = useCallback(
     (event: LeafletMouseEvent) => {
-      setSelectedTile({
+      const mousePos = {
         x: Math.floor(event.latlng.lng),
         y: Math.floor(event.latlng.lat),
-      });
+      };
+
+      switch (selectedBlock) {
+        case null:
+          setSelectedTile(mousePos);
+          return;
+        case BlockType.Conveyor:
+          if (selectedPathTiles.start === null) {
+            setStartSelectedPathTile(mousePos);
+            return;
+          }
+
+          if (selectedPathTiles.end !== null) {
+            //clear selected block since path is now building. Also insure the end path is where the player clicked.
+            setEndSelectedPathTile(mousePos);
+            setSelectedBlock(null);
+
+            createPath(selectedPathTiles.start, selectedPathTiles.end);
+
+            //clear path tiles
+            setStartSelectedPathTile(null);
+            setEndSelectedPathTile(null);
+          }
+          return;
+        case BlockType.DemolishBuilding:
+          setSelectedBlock(null);
+          destroyTile(mousePos);
+          return;
+        case BlockType.DemolishPath:
+          setSelectedBlock(null);
+          destroyPath(mousePos);
+          return;
+        default:
+          console.log("Building block: " + selectedBlock);
+          buildTile(mousePos, selectedBlock);
+          setSelectedBlock(null);
+          return;
+      }
     },
-    [map]
+    [map, selectedBlock, selectedPathTiles]
   );
+
+  const hoverEvent = useCallback(
+    (event: LeafletMouseEvent) => {
+      const mousePos = {
+        x: Math.floor(event.latlng.lng),
+        y: Math.floor(event.latlng.lat),
+      };
+
+      setHoveredTile(mousePos);
+
+      if (selectedBlock === null) return;
+
+      if (selectedBlock === BlockType.Conveyor) {
+        if (selectedPathTiles.start !== null && selectedBlock !== null) {
+          setEndSelectedPathTile(mousePos);
+        }
+
+        return;
+      }
+    },
+    [map, selectedBlock, selectedPathTiles]
+  );
+
   useMapEvent("click", clickEvent);
+  useMapEvent("mousemove", hoverEvent);
 
   // Navigating to selected tile when navigateToTile is set to true
   useEffect(() => {
@@ -72,14 +210,14 @@ const ResourceTileLayer = ({
   // Displaying tiles
   const [tiles, setTiles] = useState<JSX.Element[]>([]);
   const [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
-  const [selectedPathTiles, setSelectedPathTiles] = useState<JSX.Element[]>([]);
+  const [selectedPathTile, setSelectedPathTiles] = useState<JSX.Element[]>([]);
+  const [hoveredTiles, setHoveredTiles] = useState<JSX.Element[]>([]);
 
+  // Render tiles
   useEffect(() => {
     if (!map) return;
 
-    let tilesToRender: JSX.Element[] = [];
-    let selectedTilesToRender: JSX.Element[] = [];
-    let selectedPathTilesToRender: JSX.Element[] = [];
+    const tilesToRender: JSX.Element[] = [];
 
     // Render tiles and paths that start and end at displayed tiles
     for (let i = displayTileRange.x1; i < displayTileRange.x2; i += 1) {
@@ -101,6 +239,16 @@ const ResourceTileLayer = ({
       }
     }
 
+    setTiles(tilesToRender);
+  }, [displayTileRange]);
+
+  //Render select tiles
+  useEffect(() => {
+    if (!map) return;
+
+    const selectedTilesToRender: JSX.Element[] = [];
+    const selectedPathTilesToRender: JSX.Element[] = [];
+
     // Render selected tiles
     selectedTilesToRender.push(
       <SelectedTile
@@ -115,51 +263,69 @@ const ResourceTileLayer = ({
       />
     );
 
-    selectedPathTilesToRender.push(
-      <SelectedTile
-        key={JSON.stringify({
-          x: selectedStartPathTile.x,
-          y: selectedStartPathTile.y,
-          render: "selectedStartPathTile",
-        })}
-        x={selectedStartPathTile.x}
-        y={selectedStartPathTile.y}
-        color="red"
-        pane="markerPane"
-      />
-    );
+    if (selectedPathTiles.start)
+      selectedPathTilesToRender.push(
+        <SelectedTile
+          key={JSON.stringify({
+            x: selectedPathTiles.start.x,
+            y: selectedPathTiles.start.y,
+            render: "selectedStartPathTile",
+          })}
+          x={selectedPathTiles.start.x}
+          y={selectedPathTiles.start.y}
+          color="magenta"
+          pane="markerPane"
+        />
+      );
 
-    selectedPathTilesToRender.push(
-      <SelectedTile
-        key={JSON.stringify({
-          x: selectedEndPathTile.x,
-          y: selectedEndPathTile.y,
-          render: "selectedEndPathTile",
-        })}
-        x={selectedEndPathTile.x}
-        y={selectedEndPathTile.y}
-        color="green"
-        pane="markerPane"
-      />
-    );
+    if (selectedPathTiles.end)
+      selectedPathTilesToRender.push(
+        <SelectedTile
+          key={JSON.stringify({
+            x: selectedPathTiles.end.x,
+            y: selectedPathTiles.end.y,
+            render: "selectedEndPathTile",
+          })}
+          x={selectedPathTiles.end.x}
+          y={selectedPathTiles.end.y}
+          color="magenta"
+          pane="markerPane"
+        />
+      );
 
-    selectedPathTilesToRender.push(
-      <SelectedPath
-        key="selectedPath"
-        startCoord={selectedStartPathTile}
-        endCoord={selectedEndPathTile}
-      />
-    );
+    if (selectedPathTiles.start && selectedPathTiles.end)
+      selectedPathTilesToRender.push(
+        <SelectedPath
+          key="selectedPath"
+          startCoord={selectedPathTiles.start}
+          endCoord={selectedPathTiles.end}
+        />
+      );
 
-    setTiles(tilesToRender);
     setSelectedTiles(selectedTilesToRender);
     setSelectedPathTiles(selectedPathTilesToRender);
-  }, [
-    displayTileRange,
-    selectedTile,
-    selectedStartPathTile,
-    selectedEndPathTile,
-  ]);
+  }, [selectedTile, selectedPathTiles]);
+
+  //Render hover tiles
+  useEffect(() => {
+    if (!map) return;
+    const hoveredTilesToRender: JSX.Element[] = [];
+
+    hoveredTilesToRender.push(
+      <HoverTile
+        key={JSON.stringify({
+          x: hoveredTile.x,
+          y: hoveredTile.y,
+          render: "hoveredTile",
+        })}
+        x={hoveredTile.x}
+        y={hoveredTile.y}
+        selectedBlock={selectedBlock}
+      />
+    );
+
+    setHoveredTiles(hoveredTilesToRender);
+  }, [hoveredTile, selectedBlock]);
 
   return (
     <>
@@ -167,10 +333,16 @@ const ResourceTileLayer = ({
         checked={showSelectedPathTiles}
         name="Selected Path"
       >
-        <LayerGroup>{selectedPathTiles}</LayerGroup>
+        <LayerGroup>{selectedPathTile}</LayerGroup>
       </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Selected Tile">
         <LayerGroup>{selectedTiles}</LayerGroup>
+      </LayersControl.Overlay>
+      <LayersControl.Overlay
+        checked={selectedBlock !== null}
+        name="Hovered Tile"
+      >
+        <LayerGroup>{hoveredTiles}</LayerGroup>
       </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Resources">
         <LayerGroup>{tiles}</LayerGroup>
