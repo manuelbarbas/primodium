@@ -8,8 +8,6 @@ import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
 
-// import { useTransactionLoading } from "../context/TransactionLoadingContext";
-// import { useSelectedTile } from "../context/SelectedTileContext";
 import { useMud } from "../context/MudContext";
 
 import { getTopLayerKey } from "../util/tile";
@@ -53,8 +51,6 @@ function TooltipBox() {
   );
 
   // Get information on the selected tile
-  // const { selectedTile } = useSelectedTile();
-  // const { selectedTile } = useGameStore();
   const [selectedTile] = useGameStore((state) => [state.selectedTile]);
 
   const tilesAtPosition = useEntityQuery(
@@ -150,7 +146,6 @@ function TooltipBox() {
   });
 
   // actions
-  // const { transactionLoading } = useTransactionLoading();
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);

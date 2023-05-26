@@ -6,7 +6,6 @@ import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
 
 import { useMud } from "../../context/MudContext";
-// import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 import { useAccount } from "../../hooks/useAccount";
 
 import StarterPackButton from "../StarterPackButton";
@@ -35,7 +34,6 @@ function ResourceBox() {
       : singletonIndex
   );
 
-  // const { transactionLoading } = useTransactionLoading();
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);

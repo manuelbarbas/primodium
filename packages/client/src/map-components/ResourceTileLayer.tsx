@@ -23,7 +23,6 @@ const ResourceTileLayer = ({
 }) => {
   const map = useMap();
 
-  // const { setTransactionLoading } = useTransactionLoading();
   const { systems, providers } = useMud();
 
   const [

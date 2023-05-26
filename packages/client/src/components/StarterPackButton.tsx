@@ -1,12 +1,10 @@
 import { useCallback } from "react";
 import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
-// import { useTransactionLoading } from "../context/TransactionLoadingContext";
 import { useGameStore } from "../store/GameStore";
 
 export default function StarterPackButton() {
   const { systems, providers } = useMud();
-  // const { setTransactionLoading } = useTransactionLoading();
   const [setTransactionLoading] = useGameStore((state) => [
     state.setTransactionLoading,
   ]);
