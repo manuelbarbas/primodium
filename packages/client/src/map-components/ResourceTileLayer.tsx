@@ -181,6 +181,9 @@ const ResourceTileLayer = ({
         y: Math.floor(event.latlng.lat),
       };
 
+      // if hover tile is the same as the current hovered tile, don't update
+      if (mousePos.x === hoveredTile.x && mousePos.y === hoveredTile.y) return;
+
       setHoveredTile(mousePos);
 
       if (selectedBlock === null) return;
@@ -193,7 +196,7 @@ const ResourceTileLayer = ({
         return;
       }
     },
-    [map, selectedBlock, selectedPathTiles]
+    [map, selectedBlock, selectedPathTiles, hoveredTile]
   );
 
   useMapEvent("click", clickEvent);
