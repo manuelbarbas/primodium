@@ -56,22 +56,6 @@ function BuildingIconButton({
     );
   }, [isResearched, researchRequirement]);
 
-  // Place action
-  // const buildTile = useCallback(async () => {
-  //   setTransactionLoading(true);
-  //   await execute(
-  //     systems["system.Build"].executeTyped(
-  //       BigNumber.from(blockType),
-  //       selectedTile,
-  //       {
-  //         gasLimit: 1_800_000,
-  //       }
-  //     ),
-  //     providers
-  //   );
-  //   setTransactionLoading(false);
-  // }, [selectedTile]);
-
   const cannotBuildTile = useCallback(() => {}, []);
 
   const recipe = BuildingReceipe.get(blockType);
@@ -83,7 +67,10 @@ function BuildingIconButton({
         buildingLocked
           ? cannotBuildTile
           : () => {
-              setSelectedBlock(blockType);
+              //set selected block, if clicked again deselect
+              selectedBlock === blockType
+                ? setSelectedBlock(null)
+                : setSelectedBlock(blockType);
               setStartSelectedPathTile(null);
               setEndSelectedPathTile(null);
             }

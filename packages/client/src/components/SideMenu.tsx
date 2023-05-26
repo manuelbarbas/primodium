@@ -29,11 +29,15 @@ function SideBarIcon({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
   children?: ReactNode;
 }) {
-  const [setShowSelectedPathTiles] = useGameStore((state) => [
+  const [setShowSelectedPathTiles, setSelectedBlock] = useGameStore((state) => [
     state.setShowSelectedPathTiles,
+    state.setSelectedBlock,
   ]);
 
   const setMenuOpenIndexHelper = useCallback(() => {
+    // clear selected block on menu index change
+    setSelectedBlock(null);
+
     if (menuIndex !== menuOpenIndex) {
       setMenuOpenIndex(menuIndex);
     } else {
