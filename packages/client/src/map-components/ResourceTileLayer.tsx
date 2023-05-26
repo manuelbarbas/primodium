@@ -181,12 +181,12 @@ const ResourceTileLayer = ({
         y: Math.floor(event.latlng.lat),
       };
 
+      if (selectedBlock === null) return;
+
       // if hover tile is the same as the current hovered tile, don't update
       if (mousePos.x === hoveredTile.x && mousePos.y === hoveredTile.y) return;
 
       setHoveredTile(mousePos);
-
-      if (selectedBlock === null) return;
 
       if (selectedBlock === BlockType.Conveyor) {
         if (selectedPathTiles.start !== null && selectedBlock !== null) {
