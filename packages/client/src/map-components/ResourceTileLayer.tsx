@@ -275,7 +275,7 @@ const ResourceTileLayer = ({
           })}
           x={selectedPathTiles.start.x}
           y={selectedPathTiles.start.y}
-          color="green"
+          color="magenta"
           pane="markerPane"
         />
       );
@@ -290,7 +290,7 @@ const ResourceTileLayer = ({
           })}
           x={selectedPathTiles.end.x}
           y={selectedPathTiles.end.y}
-          color="red"
+          color="magenta"
           pane="markerPane"
         />
       );
