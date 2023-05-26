@@ -1,55 +1,55 @@
-import { useCallback } from "react";
+// import { useCallback } from "react";
 
 // import { useSelectedTile } from "../../context/SelectedTileContext";
-import { useMud } from "../../context/MudContext";
+// import { useMud } from "../../context/MudContext";
 // import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 import { useGameStore } from "../../store/GameStore";
 
-import { execute } from "../../network/actions";
-import { DisplayTile } from "../../util/constants";
+// import { execute } from "../../network/actions";
+import { BlockType } from "../../util/constants";
 
 function DestroyBuildingBox() {
-  const { systems, providers } = useMud();
+  // const { systems, providers } = useMud();
   // const { selectedTile } = useSelectedTile();
   // const { setTransactionLoading } = useTransactionLoading();
-  const [selectedTile, setTransactionLoading] = useGameStore((state) => [
-    state.selectedTile,
-    state.setTransactionLoading,
-  ]);
+  const [setSelectedBlock] = useGameStore((state) => [state.setSelectedBlock]);
 
-  const destroyTile = useCallback(async ({ x, y }: DisplayTile) => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Destroy"].executeTyped(
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 1_000_000,
-        }
-      ),
-      providers
-    );
-    setTransactionLoading(false);
-  }, []);
+  // const destroyTile = useCallback(async ({ x, y }: DisplayTile) => {
+  //   setTransactionLoading(true);
+  //   await execute(
+  //     systems["system.Destroy"].executeTyped(
+  //       {
+  //         x: x,
+  //         y: y,
+  //       },
+  //       {
+  //         gasLimit: 1_000_000,
+  //       }
+  //     ),
+  //     providers
+  //   );
+  //   setTransactionLoading(false);
+  // }, []);
 
   // delete path
-  const destroyPath = useCallback(async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.DestroyPath"].executeTyped(selectedTile, {
-        gasLimit: 500_000,
-      }),
-      providers
-    );
-    setTransactionLoading(false);
-  }, [selectedTile]);
+  // const destroyPath = useCallback(async () => {
+  //   setTransactionLoading(true);
+  //   await execute(
+  //     systems["system.DestroyPath"].executeTyped(selectedTile, {
+  //       gasLimit: 500_000,
+  //     }),
+  //     providers
+  //   );
+  //   setTransactionLoading(false);
+  // }, [selectedTile]);
 
-  // Helpers
-  const destroyTileHelper = useCallback(() => {
-    destroyTile(selectedTile);
-  }, [selectedTile]);
+  const destroyPath = () => {
+    setSelectedBlock(BlockType.DemolishPath);
+  };
+
+  const destroyTile = () => {
+    setSelectedBlock(BlockType.DemolishBuilding);
+  };
 
   return (
     <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
@@ -68,7 +68,7 @@ function DestroyBuildingBox() {
           </button>
           <button
             className="h-10 w-36 bg-red-600 hover:bg-red-700 font-bold rounded text-sm"
-            onClick={destroyTileHelper}
+            onClick={destroyTile}
           >
             <p className="inline-block ml-1">Demolish</p>
           </button>

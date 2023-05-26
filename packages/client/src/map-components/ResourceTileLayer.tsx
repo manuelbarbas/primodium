@@ -7,17 +7,14 @@ import { LeafletMouseEvent } from "leaflet";
 
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
-// import { useSelectedTile } from "../context/SelectedTileContext";
 import SelectedPath from "./SelectedPath";
 import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
 import { useGameStore } from "../store/GameStore";
 import { BigNumber } from "ethers";
-// import { useTransactionLoading } from "../context/TransactionLoadingContext";
 import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
 import { EntityID } from "@latticexyz/recs";
 import HoverTile from "./HoverTile";
-import { SingletonID } from "@latticexyz/network";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -25,15 +22,6 @@ const ResourceTileLayer = ({
   getTileKey: (coord: Coord) => DisplayKeyPair;
 }) => {
   const map = useMap();
-  // const {
-  //   // selectedTile,
-  //   // setSelectedTile,
-  //   selectedStartPathTile,
-  //   selectedEndPathTile,
-  //   // showSelectedPathTiles,
-  //   // navigateToTile,
-  //   // setNavigateToTile,
-  // } = useSelectedTile();
 
   // const { setTransactionLoading } = useTransactionLoading();
   const { systems, providers } = useMud();
@@ -116,6 +104,28 @@ const ResourceTileLayer = ({
     [selectedPathTiles]
   );
 
+  const destroyTile = async (pos: DisplayTile) => {
+    setTransactionLoading(true);
+    await execute(
+      systems["system.Destroy"].executeTyped(pos, {
+        gasLimit: 1_000_000,
+      }),
+      providers
+    );
+    setTransactionLoading(false);
+  };
+
+  const destroyPath = async (pos: DisplayTile) => {
+    setTransactionLoading(true);
+    await execute(
+      systems["system.DestroyPath"].executeTyped(pos, {
+        gasLimit: 500_000,
+      }),
+      providers
+    );
+    setTransactionLoading(false);
+  };
+
   // Select tile
   // Touch event listener on the map itself instead of each tile due to touch offset issues for zoom.
   const clickEvent = useCallback(
@@ -125,37 +135,43 @@ const ResourceTileLayer = ({
         y: Math.floor(event.latlng.lat),
       };
 
-      if (selectedBlock === BlockType.Conveyor) {
-        if (selectedPathTiles.start === null) {
-          setStartSelectedPathTile(mousePos);
+      switch (selectedBlock) {
+        case null:
+          setSelectedTile(mousePos);
           return;
-        }
+        case BlockType.Conveyor:
+          if (selectedPathTiles.start === null) {
+            setStartSelectedPathTile(mousePos);
+            return;
+          }
 
-        if (selectedPathTiles.end !== null) {
-          //clear selected block since path is now building. Also insure the end path is where the player clicked.
-          setEndSelectedPathTile(mousePos);
+          if (selectedPathTiles.end !== null) {
+            //clear selected block since path is now building. Also insure the end path is where the player clicked.
+            setEndSelectedPathTile(mousePos);
+            setSelectedBlock(null);
+
+            createPath(selectedPathTiles.start, selectedPathTiles.end);
+
+            //clear path tiles
+            setStartSelectedPathTile(null);
+            setEndSelectedPathTile(null);
+
+            return;
+          }
+        case BlockType.DemolishBuilding:
           setSelectedBlock(null);
-
-          createPath(selectedPathTiles.start, selectedPathTiles.end);
-
-          //clear path tiles
-          setStartSelectedPathTile(null);
-          setEndSelectedPathTile(null);
-
+          destroyTile(mousePos);
           return;
-        }
+        case BlockType.DemolishPath:
+          setSelectedBlock(null);
+          destroyPath(mousePos);
+          return;
+        default:
+          console.log("Building block: " + selectedBlock);
+          buildTile(mousePos, selectedBlock);
+          setSelectedBlock(null);
+          return;
       }
-
-      //build tile if block selected from menu
-      if (selectedBlock !== null) {
-        console.log("Building block: " + selectedBlock);
-        buildTile(mousePos, selectedBlock);
-        setSelectedBlock(null);
-        return;
-      }
-
-      //update selected tile position
-      setSelectedTile(mousePos);
     },
     [map, selectedBlock, selectedPathTiles]
   );

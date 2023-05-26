@@ -62,6 +62,10 @@ export const BlockType = {
   BulletFactory: keccak256("block.BulletFactory") as EntityID,
   Silo: keccak256("block.Silo") as EntityID,
 
+  // Dummy blocks for Demolish
+  DemolishBuilding: keccak256("demolish.Building") as EntityID,
+  DemolishPath: keccak256("demolish.Path") as EntityID,
+
   // Buildings
   BasicMiner: keccak256("block.BasicMiner") as EntityID,
   Node: keccak256("block.Node") as EntityID,
