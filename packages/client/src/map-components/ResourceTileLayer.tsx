@@ -155,9 +155,8 @@ const ResourceTileLayer = ({
             //clear path tiles
             setStartSelectedPathTile(null);
             setEndSelectedPathTile(null);
-
-            return;
           }
+          return;
         case BlockType.DemolishBuilding:
           setSelectedBlock(null);
           destroyTile(mousePos);

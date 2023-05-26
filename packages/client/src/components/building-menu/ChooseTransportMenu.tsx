@@ -58,7 +58,7 @@ function ChooseTransportMenu({
           {selectedPathTiles.start !== null &&
             selectedBlock == BlockType.Conveyor && (
               <p>
-                <i>End</i> a path by clicking on a Node to receive resources.
+                <i>End</i> a path by clicking on a Node to receive resources
                 from.
               </p>
             )}

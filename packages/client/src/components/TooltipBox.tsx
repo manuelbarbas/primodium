@@ -57,10 +57,13 @@ function TooltipBox() {
   // const { selectedTile } = useGameStore();
   const [selectedTile] = useGameStore((state) => [state.selectedTile]);
 
-  const tilesAtPosition = useEntityQuery([
-    Has(components.Tile),
-    HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
-  ]);
+  const tilesAtPosition = useEntityQuery(
+    [
+      Has(components.Tile),
+      HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
+    ],
+    { updateOnValueChange: true }
+  );
 
   const tile = useComponentValue(
     components.Tile,

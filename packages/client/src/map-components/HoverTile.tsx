@@ -46,7 +46,7 @@ function HoverTile({
           ]}
           pathOptions={{
             weight: 4,
-            color: "magenta",
+            color: "red",
           }}
           pane={pane || "tooltipPane"}
         />
