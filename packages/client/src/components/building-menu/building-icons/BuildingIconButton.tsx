@@ -1,21 +1,18 @@
 import { useCallback, useMemo } from "react";
-import { BigNumber } from "ethers";
 import { EntityID } from "@latticexyz/recs";
 
 import { useMud } from "../../../context/MudContext";
-import { useSelectedTile } from "../../../context/SelectedTileContext";
 import {
   BackgroundImage,
   BuildingResearchRequirements,
   BuildingResearchRequirementsDefaultUnlocked,
   ResourceImage,
 } from "../../../util/constants";
-import { execute } from "../../../network/actions";
 import { BuildingReceipe } from "../../../util/resource";
-import { useTransactionLoading } from "../../../context/TransactionLoadingContext";
 import { useComponentValue } from "@latticexyz/react";
 import { hashFromAddress } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
+import { useGameStore } from "../../../store/GameStore";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -25,9 +22,18 @@ function BuildingIconButton({
   label: string;
   blockType: EntityID;
 }) {
-  const { components, systems, world, providers, singletonIndex } = useMud();
-  const { selectedTile } = useSelectedTile();
-  const { setTransactionLoading } = useTransactionLoading();
+  const { components, world, singletonIndex } = useMud();
+  const [
+    setSelectedBlock,
+    selectedBlock,
+    setStartSelectedPathTile,
+    setEndSelectedPathTile,
+  ] = useGameStore((state) => [
+    state.setSelectedBlock,
+    state.selectedBlock,
+    state.setStartSelectedPathTile,
+    state.setEndSelectedPathTile,
+  ]);
 
   const { address } = useAccount();
 
@@ -50,22 +56,6 @@ function BuildingIconButton({
     );
   }, [isResearched, researchRequirement]);
 
-  // Place action
-  const buildTile = useCallback(async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Build"].executeTyped(
-        BigNumber.from(blockType),
-        selectedTile,
-        {
-          gasLimit: 1_800_000,
-        }
-      ),
-      providers
-    );
-    setTransactionLoading(false);
-  }, [selectedTile]);
-
   const cannotBuildTile = useCallback(() => {}, []);
 
   const recipe = BuildingReceipe.get(blockType);
@@ -73,7 +63,18 @@ function BuildingIconButton({
   return (
     <button
       className="w-16 h-16 text-sm group"
-      onClick={buildingLocked ? cannotBuildTile : buildTile}
+      onClick={
+        buildingLocked
+          ? cannotBuildTile
+          : () => {
+              //set selected block, if clicked again deselect
+              selectedBlock === blockType
+                ? setSelectedBlock(null)
+                : setSelectedBlock(blockType);
+              setStartSelectedPathTile(null);
+              setEndSelectedPathTile(null);
+            }
+      }
     >
       <div
         className={`building-tooltip group-hover:scale-100 ${
@@ -103,8 +104,10 @@ function BuildingIconButton({
       <div className="relative">
         <img
           src={BackgroundImage.get(blockType)}
-          className="w-16 h-16 pixel-images hover:brightness-75"
-        ></img>
+          className={`"w-16 h-16 pixel-images hover:brightness-75 ${
+            selectedBlock === blockType ? "border-4 border-yellow-300" : ""
+          }`}
+        />
         {buildingLocked && (
           <div
             style={{ backgroundColor: "rgba(240, 103, 100, 0.5)" }}

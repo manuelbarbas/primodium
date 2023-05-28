@@ -2,8 +2,8 @@ import { useCallback, useMemo } from "react";
 import { useMud } from "../../context/MudContext";
 import { BlockType, DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 import { EntityID } from "@latticexyz/recs";
+import { useGameStore } from "../../store/GameStore";
 
 export default function ClaimButton({
   coords: { x, y },
@@ -13,7 +13,9 @@ export default function ClaimButton({
   builtTile: EntityID;
 }) {
   const { systems, providers } = useMud();
-  const { setTransactionLoading } = useTransactionLoading();
+  const [setTransactionLoading] = useGameStore((state) => [
+    state.setTransactionLoading,
+  ]);
 
   const claimAction = useCallback(async () => {
     setTransactionLoading(true);

@@ -1,76 +1,43 @@
-import { useCallback } from "react";
-import { useState } from "react";
+import { useGameStore } from "../../store/GameStore";
 
-import { DisplayTile } from "../../util/constants";
-
-import DestroyTileButton from "./DestroyTileButton";
-
-import { useSelectedTile } from "../../context/SelectedTileContext";
-import { useMud } from "../../context/MudContext";
-
-import { FaWindowClose } from "react-icons/fa";
-import { execute } from "../../network/actions";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+import { BlockType } from "../../util/constants";
 
 function DestroyBuildingBox() {
-  const { systems, providers } = useMud();
-  const { selectedTile } = useSelectedTile();
-  const { setTransactionLoading } = useTransactionLoading();
+  const [setSelectedBlock] = useGameStore((state) => [state.setSelectedBlock]);
 
-  const destroyTile = useCallback(async ({ x, y }: DisplayTile) => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Destroy"].executeTyped(
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 1_000_000,
-        }
-      ),
-      providers
-    );
-    setTransactionLoading(false);
-  }, []);
-
-  // Helpers
-  const destroyTileHelper = useCallback(() => {
-    destroyTile(selectedTile);
-  }, [selectedTile]);
-
-  const [minimized, setMinimize] = useState(false);
-
-  const minimizeBox = () => {
-    if (minimized) {
-      setMinimize(false);
-    } else {
-      setMinimize(true);
-    }
+  const destroyPath = () => {
+    setSelectedBlock(BlockType.DemolishPath);
   };
-  if (!minimized) {
-    return (
-      <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
-        <div className="mt-4 mx-5 flex flex-col h-72">
-          <button onClick={minimizeBox} className="fixed top-4 right-5">
-            <LinkIcon icon={<FaWindowClose size="24" />} />
+
+  const destroyTile = () => {
+    setSelectedBlock(BlockType.DemolishBuilding);
+  };
+
+  return (
+    <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
+      <div className="mt-4 mx-5 flex flex-col h-72">
+        <p className="text-lg font-bold mb-3">Demolish</p>
+        <p>
+          Select your building/path on the map and click <i>Demolish</i> to
+          remove it.
+        </p>
+        <div className="absolute bottom-4 right-4 space-x-2">
+          <button
+            className="h-10 w-36 bg-orange-600 hover:bg-orange-700 font-bold rounded text-sm"
+            onClick={destroyPath}
+          >
+            <p className="inline-block ml-1">Demolish Path</p>
           </button>
-          <p className="text-lg font-bold mb-3">Demolish</p>
-          <p>
-            Select your building on the map and click <i>Demolish</i> to remove
-            it.
-          </p>
-          <DestroyTileButton action={destroyTileHelper} />
+          <button
+            className="h-10 w-36 bg-red-600 hover:bg-red-700 font-bold rounded text-sm"
+            onClick={destroyTile}
+          >
+            <p className="inline-block ml-1">Demolish</p>
+          </button>
         </div>
       </div>
-    );
-  } else {
-    return <div></div>;
-  }
+    </div>
+  );
 }
-
-const LinkIcon = ({ icon }: { icon: any }) => (
-  <div className="link-icon inline-block align-middle">{icon}</div>
-);
 
 export default DestroyBuildingBox;

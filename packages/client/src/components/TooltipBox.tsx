@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, memo } from "react";
 
 import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
@@ -8,8 +8,6 @@ import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
 
-import { useTransactionLoading } from "../context/TransactionLoadingContext";
-import { useSelectedTile } from "../context/SelectedTileContext";
 import { useMud } from "../context/MudContext";
 
 import { getTopLayerKey } from "../util/tile";
@@ -21,6 +19,7 @@ import CraftButton from "./action/CraftButton";
 import StaticResourceLabel from "./resource-box/StaticResourceLabel";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
+import { useGameStore } from "../store/GameStore";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -52,12 +51,15 @@ function TooltipBox() {
   );
 
   // Get information on the selected tile
-  const { selectedTile } = useSelectedTile();
+  const [selectedTile] = useGameStore((state) => [state.selectedTile]);
 
-  const tilesAtPosition = useEntityQuery([
-    Has(components.Tile),
-    HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
-  ]);
+  const tilesAtPosition = useEntityQuery(
+    [
+      Has(components.Tile),
+      HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
+    ],
+    { updateOnValueChange: true }
+  );
 
   const tile = useComponentValue(
     components.Tile,
@@ -105,15 +107,15 @@ function TooltipBox() {
   // display actions
   const [minimized, setMinimize] = useState(false);
 
-  const minimizeBox = () => {
+  const minimizeBox = useCallback(() => {
     if (minimized) {
       setMinimize(false);
     } else {
       setMinimize(true);
     }
-  };
+  }, [minimized]);
 
-  const CraftRecipeDisplay = () => {
+  const CraftRecipeDisplay = memo(() => {
     if (builtTile && isClaimableFactory(builtTile)) {
       const craftRecipe = CraftRecipe.get(builtTile);
       if (craftRecipe) {
@@ -146,10 +148,12 @@ function TooltipBox() {
     } else {
       return <></>;
     }
-  };
+  });
 
   // actions
-  const { transactionLoading } = useTransactionLoading();
+  const [transactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
+  ]);
 
   if (!minimized) {
     return (
@@ -222,6 +226,7 @@ function TooltipBox() {
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
                         <ClaimButton
+                          key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
                         />
@@ -229,10 +234,15 @@ function TooltipBox() {
                     {isClaimableFactory(builtTile) && (
                       <>
                         <ClaimButton
+                          key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
                         />
-                        <CraftButton x={selectedTile.x} y={selectedTile.y} />
+                        <CraftButton
+                          key={JSON.stringify(selectedTile)}
+                          x={selectedTile.x}
+                          y={selectedTile.y}
+                        />
                       </>
                     )}
                     <AllResourceLabels entityIndex={tilesAtPosition[0]} />

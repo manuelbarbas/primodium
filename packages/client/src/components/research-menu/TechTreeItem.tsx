@@ -10,7 +10,8 @@ import { BuildingResearchRequirementsDefaultUnlocked } from "../../util/constant
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
 import { hashFromAddress } from "../../util/encode";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
+
+import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
 
 function TechTreeItem({
@@ -57,7 +58,10 @@ function TechTreeItem({
     return isDefaultUnlocked || isResearched?.value;
   }, [isDefaultUnlocked, isResearched]);
 
-  const { transactionLoading, setTransactionLoading } = useTransactionLoading();
+  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
+    state.setTransactionLoading,
+  ]);
 
   const research = useCallback(async () => {
     setTransactionLoading(true);
