@@ -22,7 +22,11 @@ function ChooseMainBaseMenu({
     <BuildingContentBox>
       <p className="text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
-        <BuildingIconButton label="Main base" blockType={BlockType.MainBase} />
+        <BuildingIconButton
+          id="mainbase"
+          label="Main base"
+          blockType={BlockType.MainBase}
+        />
       </div>
       <button
         onClick={closeMenuHelper}

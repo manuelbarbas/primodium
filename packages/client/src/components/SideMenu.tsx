@@ -14,6 +14,7 @@ import ResearchModal from "./research-menu/ResearchModal";
 import { useGameStore } from "../store/GameStore";
 
 function SideBarIcon({
+  id,
   icon,
   text,
   menuIndex,
@@ -21,6 +22,7 @@ function SideBarIcon({
   setMenuOpenIndex,
   children,
 }: {
+  id?: string;
   icon: any;
   text: string;
   menuIndex: number;
@@ -47,7 +49,7 @@ function SideBarIcon({
   }, [menuIndex, menuOpenIndex]);
 
   return (
-    <>
+    <div id={id}>
       <button className="sidebar-icon group" onClick={setMenuOpenIndexHelper}>
         {icon}
         {menuIndex !== menuOpenIndex && (
@@ -58,7 +60,7 @@ function SideBarIcon({
         )}
       </button>
       {menuIndex === menuOpenIndex && children}
-    </>
+    </div>
   );
 }
 
@@ -70,6 +72,7 @@ function SideMenu() {
   return (
     <div className="z-[1000] viewport-container fixed bottom-4 left-4 selection:font-mono text-white">
       <SideBarIcon
+        id="build"
         icon={<IoHammerSharp size="24" />}
         text={"Build"}
         menuIndex={0}
@@ -79,6 +82,7 @@ function SideMenu() {
         <BuildingPage />
       </SideBarIcon>
       <SideBarIcon
+        id="research"
         icon={<IoFlaskSharp size="24" />}
         text="Research"
         menuIndex={1}
@@ -88,6 +92,7 @@ function SideMenu() {
         <ResearchModal setMenuOpenIndex={setMenuOpenIndex} />
       </SideBarIcon>
       <SideBarIcon
+        id="trade"
         icon={<TbScale size="24" />}
         text="Trade"
         menuIndex={2}
@@ -97,6 +102,7 @@ function SideMenu() {
         <MarketModal setMenuOpenIndex={setMenuOpenIndex} />
       </SideBarIcon>
       <SideBarIcon
+        id="attack"
         icon={<TbSword size="24" />}
         text="Attack"
         menuIndex={3}
@@ -106,6 +112,7 @@ function SideMenu() {
         <AttackBox />
       </SideBarIcon>
       <SideBarIcon
+        id="demolish"
         icon={<TbBulldozer size="24" />}
         text="Demolish"
         menuIndex={4}

@@ -26,6 +26,7 @@ type GameActions = {
   setTransactionLoading: (loading: boolean) => void;
   setStartSelectedPathTile: (tile: DisplayTile | null) => void;
   setEndSelectedPathTile: (tile: DisplayTile | null) => void;
+  setGameStateToDefault: () => void;
 };
 
 const defaults: GameState = {
@@ -60,6 +61,7 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
     set((state) => ({
       selectedPathTiles: { ...state.selectedPathTiles, end: tile },
     })),
+  setGameStateToDefault: () => set({ ...defaults }),
 }));
 
 //store dev tools

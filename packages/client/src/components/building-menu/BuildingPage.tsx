@@ -75,6 +75,7 @@ function BuildingPage() {
         <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
           {!mainBaseCoord && (
             <BuildingMenuButton
+              id={"base"}
               icon={"/img/icons/mainbaseicon.png"}
               label={"Base"}
               menuIndex={0}
