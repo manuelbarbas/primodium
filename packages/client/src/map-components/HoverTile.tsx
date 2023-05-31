@@ -16,7 +16,10 @@ function HoverTile({
   selectedBlock: EntityID | null;
   pane?: string;
 }) {
-  const [selectedPathTile] = useGameStore((state) => [state.selectedPathTiles]);
+  const [selectedPathTile, selectedAttackTile] = useGameStore((state) => [
+    state.selectedPathTiles,
+    state.selectedAttackTiles,
+  ]);
   let tile = null;
 
   switch (selectedBlock) {
@@ -62,6 +65,21 @@ function HoverTile({
           pathOptions={{
             weight: 4,
             color: "orange",
+          }}
+          pane={pane || "tooltipPane"}
+        />
+      );
+      break;
+    case BlockType.SelectAttack:
+      tile = (
+        <Rectangle
+          bounds={[
+            [y, x],
+            [y + 1, x + 1],
+          ]}
+          pathOptions={{
+            weight: 4,
+            color: selectedAttackTile.start === null ? "cyan" : "cyan",
           }}
           pane={pane || "tooltipPane"}
         />

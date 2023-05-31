@@ -6,12 +6,13 @@ import { TbBulldozer } from "react-icons/tb";
 import { TbSword } from "react-icons/tb";
 import { TbScale } from "react-icons/tb";
 
-import AttackBox from "./attack-menu/AttackBox";
+// import AttackBox from "./attack-menu/AttackBox";
 import MarketModal from "./market-menu/MarketModal";
 import BuildingPage from "./building-menu/BuildingPage";
 import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
 import ResearchModal from "./research-menu/ResearchModal";
 import { useGameStore } from "../store/GameStore";
+import AttackPage from "./attack-menu/AttackBox";
 
 function SideBarIcon({
   icon,
@@ -103,7 +104,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <AttackBox />
+        <AttackPage />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbBulldozer size="24" />}

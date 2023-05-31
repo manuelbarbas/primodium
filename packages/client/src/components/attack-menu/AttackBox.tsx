@@ -1,14 +1,90 @@
-import AttackPage from "./AttackPage";
+import { useCallback, useEffect } from "react";
+import { useGameStore } from "../../store/GameStore";
+import AttackActivated from "./AttackActivated";
+import ChooseMunitions from "./ChooseMunitions";
+import BuildingContentBox from "../building-menu/BuildingBox";
+import { BlockType } from "../../util/constants";
 
-function AttackBox() {
+function AttackPage() {
+  // TODO: pass in previous switch state function and close menu!!!1
+  const [
+    selectedAttackTiles,
+    setShowSelectedAttackTiles,
+    setStartSelectedAttackTile,
+    setEndSelectedAttackTile,
+    selectedBlock,
+    setSelectedBlock,
+  ] = useGameStore((state) => [
+    state.selectedAttackTiles,
+    state.setShowSelectedAttackTiles,
+    state.setStartSelectedAttackTile,
+    state.setEndSelectedAttackTile,
+    state.selectedBlock,
+    state.setSelectedBlock,
+  ]);
+
+  useEffect(() => {
+    // show selected path tiles on mount
+    setShowSelectedAttackTiles(true);
+    setSelectedBlock(BlockType.SelectAttack);
+  }, []);
+
+  const clearPath = useCallback(() => {
+    setStartSelectedAttackTile(null);
+    setEndSelectedAttackTile(null);
+  }, [setStartSelectedAttackTile, setEndSelectedAttackTile]);
+
   return (
-    <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
-      <div className="mt-4 mx-5 flex flex-col h-72">
-        <p className="text-lg font-bold mb-3">Attack Enemies</p>
-        <AttackPage />
+    <BuildingContentBox>
+      <p className="text-lg font-bold mb-3">Attack Enemy Buildings</p>
+      <div className="mr-4">
+        {selectedAttackTiles.start === null && (
+          <p>
+            <i>Start</i> by selecting your building to attack from (red enemy
+            buildings).
+          </p>
+        )}
+        {/* player placed start and conveyer selection is still active */}
+        {selectedAttackTiles.start !== null &&
+          selectedAttackTiles.end === null && (
+            <>
+              <p>
+                <i>End</i> by selecting a building to attack (red your
+                buildings).
+              </p>
+            </>
+          )}
+        {selectedAttackTiles.end !== null && (
+          <>
+            <p>
+              <i>End</i> by selecting a building to attack (red your buildings).
+            </p>
+            <ChooseMunitions />
+          </>
+        )}
       </div>
-    </div>
+
+      <div className="absolute bottom-4 right-4 space-x-2">
+        <button
+          onClick={clearPath}
+          className="text-center h-10 w-36 bg-red-600 hover:bg-red-700 font-bold rounded text-sm"
+        >
+          <p className="inline-block">Clear</p>
+        </button>
+      </div>
+    </BuildingContentBox>
   );
+
+  // return (
+  //   <div>
+  //     {/* 1. If the user doesn't have a launcher tile selected, display the following: */}
+  //     {/* <div>Select a launcher to open the attack menu.</div> */}
+  //     {/* 2. Show the following screen if the user has the launcher tile selected: */}
+  //     <AttackActivated />
+  //     {/* 3. The following shows up after users click "next" in the AttackActivated screen */}
+  //     <ChooseMunitions />
+  //   </div>
+  // );
 }
 
-export default AttackBox;
+export default AttackPage;

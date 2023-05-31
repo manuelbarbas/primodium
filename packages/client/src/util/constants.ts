@@ -66,6 +66,10 @@ export const BlockType = {
   DemolishBuilding: keccak256("demolish.Building") as EntityID,
   DemolishPath: keccak256("demolish.Path") as EntityID,
 
+  // Dummy block for selecting tiles
+  SelectPath: keccak256("select.path") as EntityID,
+  SelectAttack: keccak256("select.attack") as EntityID,
+
   // Buildings
   BasicMiner: keccak256("block.BasicMiner") as EntityID,
   Node: keccak256("block.Node") as EntityID,

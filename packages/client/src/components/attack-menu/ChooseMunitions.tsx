@@ -1,45 +1,36 @@
 import { useCallback } from "react";
 import { useMud } from "../../context/MudContext";
-import { useTransactionLoading } from "../../context/TransactionLoadingContext";
 import { execute } from "../../network/actions";
 
 import MunitionsButton from "./MunitionsButton";
-import { useSelectedTile } from "../../context/SelectedTileContext";
+import { useGameStore } from "../../store/GameStore";
 
 function ChooseMunitions() {
   // executeTyped(Coord memory coord, Coord memory targetCoord, uint256 weaponKey)
 
-  const {
-    selectedStartPathTile,
-    selectedEndPathTile,
-    setSelectedStartPathTile,
-    setSelectedEndPathTile,
-  } = useSelectedTile();
-
   const { systems, providers } = useMud();
-  const { setTransactionLoading } = useTransactionLoading();
+  const [selectedPathTiles, setTransactionLoading] = useGameStore((state) => [
+    state.selectedPathTiles,
+    state.setTransactionLoading,
+  ]);
 
   const attackAction = useCallback(async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Attack"].executeTyped(
-        {
-          x: selectedStartPathTile.x,
-          y: selectedStartPathTile.y,
-        },
-        {
-          x: selectedEndPathTile.x,
-          y: selectedEndPathTile.y,
-        },
-        0,
-        {
-          gasLimit: 30_000_000,
-        }
-      ),
-      providers
-    );
-    setTransactionLoading(false);
-  }, []);
+    if (selectedPathTiles.start !== null && selectedPathTiles.end !== null) {
+      setTransactionLoading(true);
+      await execute(
+        systems["system.Attack"].executeTyped(
+          selectedPathTiles.start,
+          selectedPathTiles.end,
+          0,
+          {
+            gasLimit: 30_000_000,
+          }
+        ),
+        providers
+      );
+      setTransactionLoading(false);
+    }
+  }, [selectedPathTiles]);
 
   return (
     <div className="pr-4">

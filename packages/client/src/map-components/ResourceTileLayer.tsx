@@ -1,20 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
-
-import { Coord } from "@latticexyz/utils";
-
 import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
+
+import { EntityID } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
+import { BigNumber } from "ethers";
+
+import { useMud } from "../context/MudContext";
+import { useGameStore } from "../store/GameStore";
+import { execute } from "../network/actions";
+import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
 
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
 import SelectedPath from "./SelectedPath";
-import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
-import { useGameStore } from "../store/GameStore";
-import { BigNumber } from "ethers";
-import { execute } from "../network/actions";
-import { useMud } from "../context/MudContext";
-import { EntityID } from "@latticexyz/recs";
 import HoverTile from "./HoverTile";
+import ArrowedPolyline from "./ArrowedPolyline";
+import SelectedAttack from "./SelectedAttack";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -36,8 +38,12 @@ const ResourceTileLayer = ({
     setNavigateToTile,
     showSelectedPathTiles,
     selectedPathTiles,
+    showSelectedAttackTiles,
+    selectedAttackTiles,
     setStartSelectedPathTile,
     setEndSelectedPathTile,
+    setStartSelectedAttackTile,
+    setEndSelectedAttackTile,
     setTransactionLoading,
   ] = useGameStore((state) => [
     state.hoveredTile,
@@ -50,8 +56,12 @@ const ResourceTileLayer = ({
     state.setNavigateToTile,
     state.showSelectedPathTiles,
     state.selectedPathTiles,
+    state.showSelectedAttackTiles,
+    state.selectedAttackTiles,
     state.setStartSelectedPathTile,
     state.setEndSelectedPathTile,
+    state.setStartSelectedAttackTile,
+    state.setEndSelectedAttackTile,
     state.setTransactionLoading,
   ]);
 
@@ -164,6 +174,22 @@ const ResourceTileLayer = ({
           setSelectedBlock(null);
           destroyPath(mousePos);
           return;
+        case BlockType.SelectAttack:
+          if (selectedAttackTiles.start === null) {
+            setSelectedTile(mousePos);
+            setStartSelectedAttackTile(mousePos);
+            return;
+          }
+          if (selectedAttackTiles.end === null) {
+            setEndSelectedAttackTile(mousePos);
+            // setSelectedBlock(null);
+
+            // attack
+
+            // setStartSelectedAttackTile(null);
+            // setEndSelectedAttackTile(null);
+          }
+          return;
         default:
           console.log("Building block: " + selectedBlock);
           buildTile(mousePos, selectedBlock);
@@ -171,7 +197,7 @@ const ResourceTileLayer = ({
           return;
       }
     },
-    [map, selectedBlock, selectedPathTiles]
+    [map, selectedBlock, selectedPathTiles, selectedAttackTiles]
   );
 
   const hoverEvent = useCallback(
@@ -188,15 +214,22 @@ const ResourceTileLayer = ({
 
       setHoveredTile(mousePos);
 
-      if (selectedBlock === BlockType.Conveyor) {
-        if (selectedPathTiles.start !== null && selectedBlock !== null) {
-          setEndSelectedPathTile(mousePos);
-        }
+      // Selected path is set on hover, but selected attack path is set on click so users can select weapon.
+      if (
+        selectedPathTiles.start !== null &&
+        selectedBlock === BlockType.Conveyor
+      ) {
+        setEndSelectedPathTile(mousePos);
+      }
 
-        return;
+      if (
+        selectedAttackTiles.start !== null &&
+        selectedBlock === BlockType.SelectAttack
+      ) {
+        setEndSelectedAttackTile(mousePos);
       }
     },
-    [map, selectedBlock, selectedPathTiles, hoveredTile]
+    [map, selectedBlock, selectedPathTiles, selectedAttackTiles, hoveredTile]
   );
 
   useMapEvent("click", clickEvent);
@@ -214,6 +247,9 @@ const ResourceTileLayer = ({
   const [tiles, setTiles] = useState<JSX.Element[]>([]);
   const [selectedTiles, setSelectedTiles] = useState<JSX.Element[]>([]);
   const [selectedPathTile, setSelectedPathTiles] = useState<JSX.Element[]>([]);
+  const [selectedAttackTile, setSelectedAttackTiles] = useState<JSX.Element[]>(
+    []
+  );
   const [hoveredTiles, setHoveredTiles] = useState<JSX.Element[]>([]);
 
   // Render tiles
@@ -251,6 +287,7 @@ const ResourceTileLayer = ({
 
     const selectedTilesToRender: JSX.Element[] = [];
     const selectedPathTilesToRender: JSX.Element[] = [];
+    const selectedAttackTilesToRender: JSX.Element[] = [];
 
     // Render selected tiles
     selectedTilesToRender.push(
@@ -265,6 +302,8 @@ const ResourceTileLayer = ({
         color="yellow"
       />
     );
+
+    // Path tiles
 
     if (selectedPathTiles.start)
       selectedPathTilesToRender.push(
@@ -305,9 +344,39 @@ const ResourceTileLayer = ({
         />
       );
 
+    // Attack tiles
+
+    if (selectedAttackTiles.start && selectedAttackTiles.end)
+      selectedAttackTilesToRender.push(
+        <SelectedAttack
+          key="selectedAttackPath"
+          startCoord={selectedAttackTiles.start}
+          endCoord={selectedAttackTiles.end}
+        />
+      );
+
     setSelectedTiles(selectedTilesToRender);
     setSelectedPathTiles(selectedPathTilesToRender);
-  }, [selectedTile, selectedPathTiles]);
+    setSelectedAttackTiles(selectedAttackTilesToRender);
+  }, [selectedTile, selectedPathTiles, selectedAttackTiles]);
+
+  // Reset selected states if change visibility
+  useEffect(() => {
+    if (!showSelectedPathTiles) {
+      setStartSelectedPathTile(null);
+      setEndSelectedPathTile(null);
+      setSelectedBlock(null);
+    }
+  }, [showSelectedPathTiles]);
+
+  useEffect(() => {
+    console.log("change show selction!!");
+    if (!showSelectedAttackTiles) {
+      setStartSelectedAttackTile(null);
+      setEndSelectedAttackTile(null);
+      setSelectedBlock(null);
+    }
+  }, [showSelectedAttackTiles]);
 
   //Render hover tiles
   useEffect(() => {
@@ -337,6 +406,12 @@ const ResourceTileLayer = ({
         name="Selected Path"
       >
         <LayerGroup>{selectedPathTile}</LayerGroup>
+      </LayersControl.Overlay>
+      <LayersControl.Overlay
+        checked={showSelectedAttackTiles}
+        name="Selected Attack Tiles"
+      >
+        <LayerGroup>{selectedAttackTile}</LayerGroup>
       </LayersControl.Overlay>
       <LayersControl.Overlay checked={true} name="Selected Tile">
         <LayerGroup>{selectedTiles}</LayerGroup>
