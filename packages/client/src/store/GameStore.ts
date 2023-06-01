@@ -9,6 +9,7 @@ type GameState = {
   selectedPathTiles: { start: DisplayTile | null; end: DisplayTile | null };
   selectedAttackTiles: { start: DisplayTile | null; end: DisplayTile | null };
   selectedBlock: EntityID | null;
+  lockedAttackTarget: boolean;
   navigateToTile: boolean;
   showSelectedPathTiles: boolean;
   showSelectedAttackTiles: boolean;
@@ -26,6 +27,7 @@ type GameActions = {
   setShowSelectedAttackTiles: (show: boolean) => void;
   setSelectedBlock: (block: EntityID | null) => void;
   setHoveredTile: (tile: DisplayTile) => void;
+  setLockedAttackTarget: (locked: boolean) => void;
   setTransactionLoading: (loading: boolean) => void;
   setStartSelectedPathTile: (tile: DisplayTile | null) => void;
   setEndSelectedPathTile: (tile: DisplayTile | null) => void;
@@ -39,6 +41,7 @@ const defaults: GameState = {
   selectedPathTiles: { start: null, end: null },
   selectedAttackTiles: { start: null, end: null },
   selectedBlock: null,
+  lockedAttackTarget: false,
   navigateToTile: false,
   showSelectedPathTiles: false,
   showSelectedAttackTiles: false,
@@ -59,6 +62,8 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
     set({ showSelectedPathTiles: show }),
   setSelectedBlock: (block: EntityID | null) => set({ selectedBlock: block }),
   setHoveredTile: (tile: DisplayTile) => set({ hoveredTile: tile }),
+  setLockedAttackTarget: (locked: boolean) =>
+    set({ lockedAttackTarget: locked }),
   setTransactionLoading: (loading: boolean) =>
     set({ transactionLoading: loading }),
   setStartSelectedPathTile: (tile: DisplayTile | null) =>

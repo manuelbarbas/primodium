@@ -1,25 +1,22 @@
 import { useCallback, useEffect } from "react";
 import { useGameStore } from "../../store/GameStore";
-import AttackActivated from "./AttackActivated";
 import ChooseMunitions from "./ChooseMunitions";
 import BuildingContentBox from "../building-menu/BuildingBox";
 import { BlockType } from "../../util/constants";
 
-function AttackPage() {
+function AttackBox() {
   // TODO: pass in previous switch state function and close menu!!!1
   const [
     selectedAttackTiles,
     setShowSelectedAttackTiles,
     setStartSelectedAttackTile,
     setEndSelectedAttackTile,
-    selectedBlock,
     setSelectedBlock,
   ] = useGameStore((state) => [
     state.selectedAttackTiles,
     state.setShowSelectedAttackTiles,
     state.setStartSelectedAttackTile,
     state.setEndSelectedAttackTile,
-    state.selectedBlock,
     state.setSelectedBlock,
   ]);
 
@@ -40,8 +37,7 @@ function AttackPage() {
       <div className="mr-4">
         {selectedAttackTiles.start === null && (
           <p>
-            <i>Start</i> by selecting your building to attack from (red enemy
-            buildings).
+            <i>Start</i> by selecting a missile silo.
           </p>
         )}
         {/* player placed start and conveyer selection is still active */}
@@ -49,8 +45,7 @@ function AttackPage() {
           selectedAttackTiles.end === null && (
             <>
               <p>
-                <i>End</i> by selecting a building to attack (red your
-                buildings).
+                <i>End</i> by selecting a building to attack.
               </p>
             </>
           )}
@@ -87,4 +82,4 @@ function AttackPage() {
   // );
 }
 
-export default AttackPage;
+export default AttackBox;

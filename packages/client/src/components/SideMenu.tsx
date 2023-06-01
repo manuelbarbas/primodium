@@ -12,7 +12,7 @@ import BuildingPage from "./building-menu/BuildingPage";
 import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
 import ResearchModal from "./research-menu/ResearchModal";
 import { useGameStore } from "../store/GameStore";
-import AttackPage from "./attack-menu/AttackBox";
+import AttackBox from "./attack-menu/AttackBox";
 
 function SideBarIcon({
   icon,
@@ -29,9 +29,18 @@ function SideBarIcon({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
   children?: ReactNode;
 }) {
-  const [setShowSelectedPathTiles, setSelectedBlock] = useGameStore((state) => [
-    state.setShowSelectedPathTiles,
+  const [
+    setSelectedBlock,
+    setStartSelectedPathTile,
+    setEndSelectedPathTile,
+    setStartSelectedAttackTile,
+    setEndSelectedAttackTile,
+  ] = useGameStore((state) => [
     state.setSelectedBlock,
+    state.setStartSelectedPathTile,
+    state.setEndSelectedPathTile,
+    state.setStartSelectedAttackTile,
+    state.setEndSelectedAttackTile,
   ]);
 
   const setMenuOpenIndexHelper = useCallback(() => {
@@ -41,10 +50,14 @@ function SideBarIcon({
     if (menuIndex !== menuOpenIndex) {
       setMenuOpenIndex(menuIndex);
     } else {
-      // hide selected path upon menu close on default
       setMenuOpenIndex(-1);
-      setShowSelectedPathTiles(false);
     }
+
+    // upon changing menu index or hide menu, hide and reset selected path tiles and selected attack tiles
+    setStartSelectedPathTile(null);
+    setEndSelectedPathTile(null);
+    setStartSelectedAttackTile(null);
+    setEndSelectedAttackTile(null);
   }, [menuIndex, menuOpenIndex]);
 
   return (
@@ -104,7 +117,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <AttackPage />
+        <AttackBox />
       </SideBarIcon>
       <SideBarIcon
         icon={<TbBulldozer size="24" />}

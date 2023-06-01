@@ -15,7 +15,6 @@ import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
 import SelectedPath from "./SelectedPath";
 import HoverTile from "./HoverTile";
-import ArrowedPolyline from "./ArrowedPolyline";
 import SelectedAttack from "./SelectedAttack";
 
 const ResourceTileLayer = ({
@@ -45,6 +44,8 @@ const ResourceTileLayer = ({
     setStartSelectedAttackTile,
     setEndSelectedAttackTile,
     setTransactionLoading,
+    lockedAttackTarget,
+    setLockedAttackTarget,
   ] = useGameStore((state) => [
     state.hoveredTile,
     state.setHoveredTile,
@@ -63,6 +64,8 @@ const ResourceTileLayer = ({
     state.setStartSelectedAttackTile,
     state.setEndSelectedAttackTile,
     state.setTransactionLoading,
+    state.lockedAttackTarget,
+    state.setLockedAttackTarget,
   ]);
 
   const [displayTileRange, setDisplayTileRange] = useState({
@@ -178,20 +181,13 @@ const ResourceTileLayer = ({
           if (selectedAttackTiles.start === null) {
             setSelectedTile(mousePos);
             setStartSelectedAttackTile(mousePos);
-            return;
-          }
-          if (selectedAttackTiles.end === null) {
+            setLockedAttackTarget(false);
+          } else if (!lockedAttackTarget) {
             setEndSelectedAttackTile(mousePos);
-            // setSelectedBlock(null);
-
-            // attack
-
-            // setStartSelectedAttackTile(null);
-            // setEndSelectedAttackTile(null);
+            setLockedAttackTarget(true);
           }
           return;
         default:
-          console.log("Building block: " + selectedBlock);
           buildTile(mousePos, selectedBlock);
           setSelectedBlock(null);
           return;
@@ -212,24 +208,34 @@ const ResourceTileLayer = ({
       // if hover tile is the same as the current hovered tile, don't update
       if (mousePos.x === hoveredTile.x && mousePos.y === hoveredTile.y) return;
 
-      setHoveredTile(mousePos);
-
       // Selected path is set on hover, but selected attack path is set on click so users can select weapon.
       if (
         selectedPathTiles.start !== null &&
         selectedBlock === BlockType.Conveyor
       ) {
         setEndSelectedPathTile(mousePos);
-      }
-
-      if (
+        setHoveredTile(mousePos);
+      } else if (
         selectedAttackTiles.start !== null &&
         selectedBlock === BlockType.SelectAttack
       ) {
-        setEndSelectedAttackTile(mousePos);
+        if (!lockedAttackTarget) {
+          // don't set hovered tile if attack target is locked
+          setEndSelectedAttackTile(mousePos);
+          setHoveredTile(mousePos);
+        }
+      } else {
+        setHoveredTile(mousePos);
       }
     },
-    [map, selectedBlock, selectedPathTiles, selectedAttackTiles, hoveredTile]
+    [
+      map,
+      selectedBlock,
+      selectedPathTiles,
+      selectedAttackTiles,
+      hoveredTile,
+      lockedAttackTarget,
+    ]
   );
 
   useMapEvent("click", clickEvent);
@@ -359,24 +365,6 @@ const ResourceTileLayer = ({
     setSelectedPathTiles(selectedPathTilesToRender);
     setSelectedAttackTiles(selectedAttackTilesToRender);
   }, [selectedTile, selectedPathTiles, selectedAttackTiles]);
-
-  // Reset selected states if change visibility
-  useEffect(() => {
-    if (!showSelectedPathTiles) {
-      setStartSelectedPathTile(null);
-      setEndSelectedPathTile(null);
-      setSelectedBlock(null);
-    }
-  }, [showSelectedPathTiles]);
-
-  useEffect(() => {
-    console.log("change show selction!!");
-    if (!showSelectedAttackTiles) {
-      setStartSelectedAttackTile(null);
-      setEndSelectedAttackTile(null);
-      setSelectedBlock(null);
-    }
-  }, [showSelectedAttackTiles]);
 
   //Render hover tiles
   useEffect(() => {
