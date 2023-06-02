@@ -75,7 +75,7 @@ function BuildingPage() {
         <div className="grid grid-cols-4 h-48 gap-y-1 overflow-y-scroll scrollbar">
           {!mainBaseCoord && (
             <BuildingMenuButton
-              id={"base"}
+              id="base"
               icon={"/img/icons/mainbaseicon.png"}
               label={"Base"}
               menuIndex={0}
@@ -84,6 +84,7 @@ function BuildingPage() {
             ></BuildingMenuButton>
           )}
           <BuildingMenuButton
+            id="miners"
             icon={"/img/icons/minersicon.png"}
             label={"Miners"}
             menuIndex={1}
@@ -91,6 +92,7 @@ function BuildingPage() {
             setMenuOpenIndex={setMenuOpenIndex}
           ></BuildingMenuButton>
           <BuildingMenuButton
+            id="transport"
             icon={"/img/icons/transporticon.png"}
             label={"Transport"}
             menuIndex={2}
@@ -98,6 +100,7 @@ function BuildingPage() {
             setMenuOpenIndex={setMenuOpenIndex}
           ></BuildingMenuButton>
           <BuildingMenuButton
+            id="factories"
             icon={"/img/icons/factoriesicon.png"}
             label={"Factories"}
             menuIndex={3}
@@ -105,6 +108,7 @@ function BuildingPage() {
             setMenuOpenIndex={setMenuOpenIndex}
           ></BuildingMenuButton>
           <BuildingMenuButton
+            id="weaponry"
             icon={"/img/icons/weaponryicon.png"}
             label={"Weaponry"}
             menuIndex={4}
@@ -113,6 +117,7 @@ function BuildingPage() {
           ></BuildingMenuButton>
           {import.meta.env.VITE_DEV === "true" ? (
             <BuildingMenuButton
+              id="debug"
               icon={"/img/icons/debugicon.png"}
               label={"Debug"}
               menuIndex={5}
@@ -122,6 +127,7 @@ function BuildingPage() {
           ) : (
             <div className="pointer-events-none">
               <BuildingMenuButton
+                id="blank"
                 icon={"/img/icons/blankicon.png"}
                 label={"\u00A0"} // for vertical spacing
                 menuIndex={6}

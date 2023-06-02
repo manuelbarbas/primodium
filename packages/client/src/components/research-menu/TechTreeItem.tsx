@@ -93,6 +93,7 @@ function TechTreeItem({
         </button>
       ) : (
         <button
+          id={`${name}-research`}
           className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-teal-600 hover:bg-teal-700  py-2 rounded shadow"
           onClick={research}
         >

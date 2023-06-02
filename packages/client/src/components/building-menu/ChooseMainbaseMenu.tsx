@@ -29,6 +29,7 @@ function ChooseMainBaseMenu({
         />
       </div>
       <button
+        id="mainbase-other-buildings"
         onClick={closeMenuHelper}
         className="absolute bottom-4 text-center right-4 h-10 w-36 bg-teal-600 hover:bg-teal-700 font-bold rounded text-sm"
       >
