@@ -1,11 +1,17 @@
 import { FaArrowDown } from "react-icons/fa";
+import { SimpleCardinal } from "../../util/types";
 
 const Arrow = ({
   direction,
+  bounce = false,
+  className = "",
 }: {
-  direction: "up" | "down" | "left" | "right";
+  direction: SimpleCardinal;
+  bounce?: boolean;
+  className?: string;
 }) => {
   let rotation;
+
   switch (direction) {
     case "up":
       rotation = "rotate-180";
@@ -22,8 +28,12 @@ const Arrow = ({
   }
 
   return (
-    <div className={`${rotation}`}>
-      <div className="animate-bounce text-yellow-300 text-4xl">
+    <div className={`${rotation} ${className} pointer-events-none`}>
+      <div
+        className={`text-yellow-300 shadow-2xl text-4xl ${
+          bounce ? "animate-bounce" : ""
+        }`}
+      >
         <FaArrowDown />
       </div>
     </div>

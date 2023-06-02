@@ -6754,6 +6754,11 @@ wait-on@^6.0.1:
     minimist "^1.2.5"
     rxjs "^7.5.4"
 
+walktour@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/walktour/-/walktour-5.2.0.tgz#0051ced019ec2aa7328f4523ef86470dee89d1a0"
+  integrity sha512-2Xm8J+a0TQmQYGFQ/QFRC+tPTy+iOz5OGofVlBi8Zqu1NgNF9bUTXLpbhGWweo+CpU8H/6i9iBhsEyRwHcHQFA==
+
 wcwidth@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/wcwidth/-/wcwidth-1.0.1.tgz#f0b0dcf915bc5ff1528afadb2c0e17b532da2fe8"
