@@ -12,12 +12,14 @@ function AttackBox() {
     setStartSelectedAttackTile,
     setEndSelectedAttackTile,
     setSelectedBlock,
+    lockedAttackTarget,
   ] = useGameStore((state) => [
     state.selectedAttackTiles,
     state.setShowSelectedAttackTiles,
     state.setStartSelectedAttackTile,
     state.setEndSelectedAttackTile,
     state.setSelectedBlock,
+    state.lockedAttackTarget,
   ]);
 
   useEffect(() => {
@@ -37,36 +39,32 @@ function AttackBox() {
       <div className="mr-4">
         {selectedAttackTiles.start === null && (
           <p>
-            <i>Start</i> by selecting a missile silo.
+            Click on a <b>missile silo</b>.
           </p>
         )}
-        {/* player placed start and conveyer selection is still active */}
-        {selectedAttackTiles.start !== null &&
-          selectedAttackTiles.end === null && (
-            <>
-              <p>
-                <i>End</i> by selecting a building to attack.
-              </p>
-            </>
-          )}
-        {selectedAttackTiles.end !== null && (
+        {selectedAttackTiles.start !== null && !lockedAttackTarget && (
           <>
-            <p>
-              <i>End</i> by selecting a building to attack (red your buildings).
-            </p>
+            <p>Click on a building to lock an attack target.</p>
+          </>
+        )}
+        {selectedAttackTiles.end !== null && lockedAttackTarget && (
+          <>
+            <p>Select a munition to attack.</p>
             <ChooseMunitions />
           </>
         )}
       </div>
 
-      <div className="absolute bottom-4 right-4 space-x-2">
-        <button
-          onClick={clearPath}
-          className="text-center h-10 w-36 bg-red-600 hover:bg-red-700 font-bold rounded text-sm"
-        >
-          <p className="inline-block">Clear</p>
-        </button>
-      </div>
+      {selectedAttackTiles.start !== null && (
+        <div className="absolute bottom-4 right-4 space-x-2">
+          <button
+            onClick={clearPath}
+            className="text-center h-10 w-36 bg-red-600 hover:bg-red-700 font-bold rounded text-sm"
+          >
+            <p className="inline-block">Clear</p>
+          </button>
+        </div>
+      )}
     </BuildingContentBox>
   );
 
