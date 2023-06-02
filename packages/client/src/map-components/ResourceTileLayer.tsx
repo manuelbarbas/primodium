@@ -237,6 +237,7 @@ const ResourceTileLayer = ({
             y={j}
             terrain={tileKey.terrain}
             resource={tileKey.resource}
+            pane="tilePane"
           />
         );
       }
@@ -263,6 +264,7 @@ const ResourceTileLayer = ({
         x={selectedTile.x}
         y={selectedTile.y}
         color="yellow"
+        pane="overlayPane"
       />
     );
 
@@ -277,7 +279,7 @@ const ResourceTileLayer = ({
           x={selectedPathTiles.start.x}
           y={selectedPathTiles.start.y}
           color="magenta"
-          pane="markerPane"
+          pane="overlayPane"
         />
       );
 
@@ -292,7 +294,7 @@ const ResourceTileLayer = ({
           x={selectedPathTiles.end.x}
           y={selectedPathTiles.end.y}
           color="magenta"
-          pane="markerPane"
+          pane="overlayPane"
         />
       );
 
@@ -324,6 +326,7 @@ const ResourceTileLayer = ({
         x={hoveredTile.x}
         y={hoveredTile.y}
         selectedBlock={selectedBlock}
+        pane="overlayPane"
       />
     );
 

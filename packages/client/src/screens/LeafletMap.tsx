@@ -10,6 +10,8 @@ import L from "leaflet";
 import { getTopLayerKeyPair } from "../util/tile";
 
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
+import { Tour } from "../components/tour/Tour";
+import TourHintLayer from "../map-components/TourHintLayer";
 
 export default function LeafletMap() {
   const [initialized, setInitialized] = useState(false);
@@ -56,8 +58,10 @@ export default function LeafletMap() {
       crs={L.CRS.Simple}
       className="map-container"
     >
+      <Tour />
       <LayersControl position="bottomright">
         <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
+        <TourHintLayer />
       </LayersControl>
     </MapContainer>
   );
