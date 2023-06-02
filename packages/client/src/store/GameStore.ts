@@ -11,6 +11,7 @@ type GameState = {
   navigateToTile: boolean;
   showSelectedPathTiles: boolean;
   transactionLoading: boolean;
+  showUI: boolean;
 };
 
 type GameActions = {
@@ -27,6 +28,7 @@ type GameActions = {
   setStartSelectedPathTile: (tile: DisplayTile | null) => void;
   setEndSelectedPathTile: (tile: DisplayTile | null) => void;
   setGameStateToDefault: () => void;
+  setShowUI: (show: boolean) => void;
 };
 
 const defaults: GameState = {
@@ -37,6 +39,7 @@ const defaults: GameState = {
   navigateToTile: false,
   showSelectedPathTiles: false,
   transactionLoading: false,
+  showUI: true,
 };
 
 export const useGameStore = create<GameState & GameActions>()((set) => ({
@@ -62,6 +65,7 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
       selectedPathTiles: { ...state.selectedPathTiles, end: tile },
     })),
   setGameStateToDefault: () => set({ ...defaults }),
+  setShowUI: (show: boolean) => set({ showUI: show }),
 }));
 
 //store dev tools
