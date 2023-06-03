@@ -4,14 +4,14 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 
 // Production Buildings
 import { SiloID } from "../prototypes/Tiles.sol";
-import { BulletFactoryID, MissileLaunchComplexID } from "../prototypes/Tiles.sol";
+import { BulletFactoryID, ProjectileLauncherID, MissileLaunchComplexID } from "../prototypes/Tiles.sol";
 
 import { BulletCraftedItemID } from "../prototypes/Keys.sol";
 import { KineticMissileCraftedItemID, PenetratingMissileCraftedItemID, ThermobaricMissileCraftedItemID } from "../prototypes/Keys.sol";
 
 library LibAttack {
   function isValidWeaponStorage(uint256 tileId) internal pure returns (bool) {
-    return tileId == SiloID || tileId == MissileLaunchComplexID;
+    return tileId == SiloID || tileId == ProjectileLauncherID || tileId == MissileLaunchComplexID;
   }
 
   function isValidWeapon(uint256 keyId) internal pure returns (bool) {
@@ -36,15 +36,13 @@ library LibAttack {
     }
   }
 
-  function getAttackRadius(uint256 keyId) internal pure returns (int32) {
-    if (keyId == BulletCraftedItemID) {
-      return 5;
-    } else if (keyId == KineticMissileCraftedItemID) {
+  function getAttackRadius(uint256 tileId) internal pure returns (int32) {
+    if (tileId == SiloID) {
       return 10;
-    } else if (keyId == PenetratingMissileCraftedItemID) {
-      return 15;
-    } else if (keyId == ThermobaricMissileCraftedItemID) {
-      return 20;
+    } else if (tileId == ProjectileLauncherID) {
+      return 30;
+    } else if (tileId == MissileLaunchComplexID) {
+      return 60;
     } else {
       return 0;
     }

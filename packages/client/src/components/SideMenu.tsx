@@ -35,12 +35,14 @@ function SideBarIcon({
     setEndSelectedPathTile,
     setStartSelectedAttackTile,
     setEndSelectedAttackTile,
+    setLockedAttackTarget,
   ] = useGameStore((state) => [
     state.setSelectedBlock,
     state.setStartSelectedPathTile,
     state.setEndSelectedPathTile,
     state.setStartSelectedAttackTile,
     state.setEndSelectedAttackTile,
+    state.setLockedAttackTarget,
   ]);
 
   const setMenuOpenIndexHelper = useCallback(() => {
@@ -58,6 +60,7 @@ function SideBarIcon({
     setEndSelectedPathTile(null);
     setStartSelectedAttackTile(null);
     setEndSelectedAttackTile(null);
+    setLockedAttackTarget(false);
   }, [menuIndex, menuOpenIndex]);
 
   return (

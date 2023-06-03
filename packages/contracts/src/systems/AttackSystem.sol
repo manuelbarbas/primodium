@@ -24,8 +24,17 @@ uint256 constant ID = uint256(keccak256("system.Attack"));
 contract AttackSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
+  function abs(int32 x) private pure returns (int32) {
+    return x >= 0 ? x : -x;
+  }
+
   // new function that takes in coord and attacks the entity at that coord
-  function attack(uint256 attackEntity, Coord memory targetCoord, uint256 weaponKey) public returns (uint8) {
+  function attack(
+    uint256 attackEntity,
+    Coord memory coord,
+    Coord memory targetCoord,
+    uint256 weaponKey
+  ) public returns (uint8) {
     ClaimComponents memory c = ClaimComponents(
       PositionComponent(getAddressById(components, PositionComponentID)),
       TileComponent(getAddressById(components, TileComponentID)),
@@ -55,6 +64,13 @@ contract AttackSystem is System {
       return 0;
     }
 
+    // check that attackEntity is wtihin range of targetEntity by fetching getAttackRadius
+    // compare coord and targetCoord
+    int32 attackRadius = LibAttack.getAttackRadius(c.tileComponent.getValue(attackEntity));
+    if (abs(coord.x - targetCoord.x) > attackRadius || abs(coord.y - targetCoord.y) > attackRadius) {
+      return 0;
+    }
+
     // decrease by HP
     if (c.healthComponent.has(targetEntities[0])) {
       uint256 curHealth = c.healthComponent.getValue(targetEntities[0]);
@@ -67,6 +83,15 @@ contract AttackSystem is System {
         targetEntities[0],
         LibHealth.getBuildingMaxHealth(targetTileEntity) - LibAttack.getAttackDamage(weaponKey)
       );
+    }
+
+    // If health is 0, then demolish the target entity
+    if (c.healthComponent.getValue(targetEntities[0]) == 0) {
+      c.positionComponent.remove(targetEntities[0]);
+      c.tileComponent.remove(targetEntities[0]);
+      c.ownedByComponent.remove(targetEntities[0]);
+      c.lastClaimedAtComponent.remove(targetEntities[0]);
+      c.healthComponent.remove(targetEntities[0]);
     }
 
     return 1;
@@ -98,7 +123,7 @@ contract AttackSystem is System {
     // Check that the weaponKey is valid
     require(LibAttack.isValidWeapon(weaponKey), "[AttackSystem] Invalid weapon key");
 
-    return abi.encode(attack(entities[0], targetCoord, weaponKey));
+    return abi.encode(attack(entities[0], coord, targetCoord, weaponKey));
   }
 
   // select start coord, targetCoord, and weaponKey

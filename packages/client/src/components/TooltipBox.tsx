@@ -226,7 +226,6 @@ function TooltipBox() {
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
                         <ClaimButton
-                          key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
                         />
@@ -234,15 +233,10 @@ function TooltipBox() {
                     {isClaimableFactory(builtTile) && (
                       <>
                         <ClaimButton
-                          key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
                         />
-                        <CraftButton
-                          key={JSON.stringify(selectedTile)}
-                          x={selectedTile.x}
-                          y={selectedTile.y}
-                        />
+                        <CraftButton x={selectedTile.x} y={selectedTile.y} />
                       </>
                     )}
                     <AllResourceLabels entityIndex={tilesAtPosition[0]} />
