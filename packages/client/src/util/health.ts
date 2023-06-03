@@ -1,8 +1,11 @@
-// TODO: return actual maximum health once have buildings
-export function getBuildingMaxHealth(tileId: number) {
-  if (tileId > 0) {
-    return 100;
+import { EntityID } from "@latticexyz/recs";
+
+export const DEFAULT_MAX_HEALTH = 100;
+
+export function getBuildingMaxHealth(tileId: EntityID) {
+  if (tileId) {
+    return DEFAULT_MAX_HEALTH;
   } else {
-    return 100;
+    return DEFAULT_MAX_HEALTH;
   }
 }

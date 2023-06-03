@@ -6,20 +6,20 @@ import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
-import { SingletonID } from "@latticexyz/network";
 
 import { useMud } from "../context/MudContext";
 
-import { getTopLayerKey } from "../util/tile";
+import { getTopLayerKeyPair } from "../util/tile";
 import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
 import { BlockIdToKey, BackgroundImage } from "../util/constants";
 
+import { useGameStore } from "../store/GameStore";
+import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
 import CraftButton from "./action/CraftButton";
 import StaticResourceLabel from "./resource-box/StaticResourceLabel";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
-import { useGameStore } from "../store/GameStore";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -38,13 +38,13 @@ function TooltipBox() {
   const getTopLayerKeyHelper = useCallback(
     (coord: Coord) => {
       if (!initialized || perlinRef.current === null) {
-        return SingletonID;
+        return { terrain: null, resource: null };
       }
       if (perlinRef.current !== null) {
         const perlin = perlinRef.current;
-        return getTopLayerKey(coord, perlin);
+        return getTopLayerKeyPair(coord, perlin);
       } else {
-        return SingletonID;
+        return { terrain: null, resource: null };
       }
     },
     [initialized]
@@ -80,9 +80,6 @@ function TooltipBox() {
     x: selectedTile.x,
     y: selectedTile.y,
   });
-
-  //change this to BackgroundImage.get (and import it from utils) if you want this to be an image
-  const tileColor = BackgroundImage.get(terrainTile);
 
   let builtTile: EntityID | undefined;
   let tileOwner: number | undefined;
@@ -171,37 +168,65 @@ function TooltipBox() {
           <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
             <div className="flex flex-col">
               <div className="flex align-center mb-4">
-                <div
-                  className="inline-block w-16 h-16 flex-shrink-0"
-                  style={{
-                    backgroundImage: `url(${tileColor!})`,
-                    backgroundSize: "cover",
-                    imageRendering: "pixelated",
-                  }}
-                ></div>
+                {builtTile ? (
+                  <div
+                    className="inline-block w-16 h-16 flex-shrink-0"
+                    style={{
+                      backgroundImage: `url(${BackgroundImage.get(
+                        builtTile
+                      )!})`,
+                      backgroundSize: "cover",
+                      imageRendering: "pixelated",
+                    }}
+                  ></div>
+                ) : (
+                  <div
+                    className="inline-block w-16 h-16 flex-shrink-0"
+                    style={{
+                      backgroundImage: `url(${BackgroundImage.get(
+                        terrainTile.resource
+                          ? terrainTile.resource
+                          : terrainTile.terrain!
+                      )!})`,
+                      backgroundSize: "cover",
+                      imageRendering: "pixelated",
+                    }}
+                  ></div>
+                )}
                 <div className="ml-4 flex flex-col my-auto">
                   <div className="mb-1">
                     <div>
                       <div>
                         {builtTile ? (
-                          <div>
-                            {BlockIdToKey[builtTile]
-                              .replace(/([A-Z]+)/g, " $1")
-                              .replace(/([A-Z][a-z])/g, " $1")}
-                          </div>
+                          <>
+                            <b>
+                              {BlockIdToKey[builtTile]
+                                .replace(/([A-Z]+)/g, " $1")
+                                .replace(/([A-Z][a-z])/g, " $1")}
+                            </b>
+                            <br />
+                            {terrainTile.resource && (
+                              <>
+                                <img
+                                  className="inline-block mr-2"
+                                  src={BackgroundImage.get(
+                                    terrainTile.resource
+                                  )}
+                                />
+                                {BlockIdToKey[terrainTile.resource]}
+                              </>
+                            )}
+                          </>
                         ) : (
-                          <div>No tile built</div>
+                          <b>
+                            {terrainTile.resource
+                              ? BlockIdToKey[terrainTile.resource]
+                              : BlockIdToKey[terrainTile.terrain!]}
+                          </b>
                         )}
-                        on <b>{BlockIdToKey[terrainTile]}</b>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="flex-col">
-                <div className="inline-block font-bold mb-1">Health:</div>
-                <div className="mx-2 inline-block">
-                  <div>{tileHealth?.value}</div>
                 </div>
               </div>
               {tileOwner && (
@@ -209,6 +234,23 @@ function TooltipBox() {
                   <div className="inline-block font-bold mb-1">Owner:</div>
                   <div className="mx-2 inline-block">
                     <div>{tileOwner.toString().slice(0, 8) + "..."}</div>
+                  </div>
+                </div>
+              )}
+              {builtTile && (
+                <div className="flex-col">
+                  <div className="inline-block font-bold mb-1">Health:</div>
+                  <div className="mx-2 inline-block">
+                    {tileHealth ? (
+                      <div>
+                        {tileHealth?.value}/{getBuildingMaxHealth(builtTile)}
+                      </div>
+                    ) : (
+                      <div>
+                        {getBuildingMaxHealth(builtTile)}/
+                        {getBuildingMaxHealth(builtTile)}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
