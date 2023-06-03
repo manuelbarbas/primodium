@@ -184,6 +184,7 @@ const ResourceTileLayer = ({
             setLockedAttackTarget(false);
           } else if (!lockedAttackTarget) {
             setEndSelectedAttackTile(mousePos);
+            setSelectedTile(mousePos);
             setLockedAttackTarget(true);
           }
           return;
