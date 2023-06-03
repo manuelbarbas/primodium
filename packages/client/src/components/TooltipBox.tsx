@@ -20,6 +20,7 @@ import CraftButton from "./action/CraftButton";
 import StaticResourceLabel from "./resource-box/StaticResourceLabel";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
+import { BigNumber } from "ethers";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -243,7 +244,8 @@ function TooltipBox() {
                   <div className="mx-2 inline-block">
                     {tileHealth ? (
                       <div>
-                        {tileHealth?.value}/{getBuildingMaxHealth(builtTile)}
+                        {BigNumber.from(tileHealth?.value).toString()}/
+                        {getBuildingMaxHealth(builtTile)}
                       </div>
                     ) : (
                       <div>

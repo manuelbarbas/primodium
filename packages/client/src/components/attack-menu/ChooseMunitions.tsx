@@ -75,6 +75,13 @@ function ChooseMunitions() {
         entityIndex={tilesAtPosition[0]}
         attackAction={attackAction}
       />
+      {import.meta.env.VITE_DEV === "true" && (
+        <MunitionsButton
+          resourceId={BlockType.BulletCrafted}
+          entityIndex={tilesAtPosition[0]}
+          attackAction={attackAction}
+        />
+      )}
     </div>
   );
 }
