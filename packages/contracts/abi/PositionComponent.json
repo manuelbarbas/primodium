@@ -1190,7 +1190,7 @@
     "id": 21573,
     "exportedSymbols": {
       "BareComponent": [
-        40759
+        40905
       ],
       "Component": [
         262
@@ -1205,22 +1205,22 @@
         21559
       ],
       "IEntityIndexer": [
-        41176
+        41322
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        40798
+        40944
       ],
       "MapSet": [
-        40991
+        41137
       ],
       "PositionComponent": [
         21572
       ],
       "Set": [
-        41157
+        41303
       ]
     },
     "nodeType": "SourceUnit",
@@ -1509,8 +1509,8 @@
         ],
         "canonicalName": "PositionComponent",
         "contractDependencies": [
-          40991,
-          41157
+          41137,
+          41303
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -1518,26 +1518,26 @@
           21572,
           1771,
           262,
-          40759,
-          43545,
-          41195,
+          40905,
+          43691,
+          41341,
           2359,
-          43101,
-          43601,
-          42977,
-          42844,
-          43590,
+          43247,
+          43747,
+          43123,
+          42990,
+          43736,
           2402,
-          43111
+          43257
         ],
         "name": "PositionComponent",
         "nameLocation": "186:17:91",
         "scope": 21573,
         "usedErrors": [
-          40559,
-          43470,
-          43598,
-          43600
+          40705,
+          43616,
+          43744,
+          43746
         ]
       }
     ],

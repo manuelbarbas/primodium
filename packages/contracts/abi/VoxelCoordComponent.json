@@ -1222,25 +1222,25 @@
     "id": 2169,
     "exportedSymbols": {
       "BareComponent": [
-        40759
+        40905
       ],
       "Component": [
         262
       ],
       "IEntityIndexer": [
-        41176
+        41322
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        40798
+        40944
       ],
       "MapSet": [
-        40991
+        41137
       ],
       "Set": [
-        41157
+        41303
       ],
       "VoxelCoord": [
         2013
@@ -1639,7 +1639,7 @@
                       "referencedDeclaration": 2036,
                       "src": "402:6:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr",
+                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr",
                         "typeString": "enum LibTypes.SchemaValue[] memory"
                       }
                     },
@@ -1679,7 +1679,7 @@
                         "nodeType": "NewExpression",
                         "src": "411:26:30",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr_$",
+                          "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr_$",
                           "typeString": "function (uint256) pure returns (enum LibTypes.SchemaValue[] memory)"
                         },
                         "typeName": {
@@ -1694,13 +1694,13 @@
                                 "424:11:30"
                               ],
                               "nodeType": "IdentifierPath",
-                              "referencedDeclaration": 40797,
+                              "referencedDeclaration": 40943,
                               "src": "415:20:30"
                             },
-                            "referencedDeclaration": 40797,
+                            "referencedDeclaration": 40943,
                             "src": "415:20:30",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                              "typeIdentifier": "t_enum$_SchemaValue_$40943",
                               "typeString": "enum LibTypes.SchemaValue"
                             }
                           },
@@ -1708,7 +1708,7 @@
                           "nodeType": "ArrayTypeName",
                           "src": "415:22:30",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_storage_ptr",
+                            "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_storage_ptr",
                             "typeString": "enum LibTypes.SchemaValue[]"
                           }
                         }
@@ -1725,13 +1725,13 @@
                       "src": "411:29:30",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr",
+                        "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr",
                         "typeString": "enum LibTypes.SchemaValue[] memory"
                       }
                     },
                     "src": "402:38:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr",
+                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr",
                       "typeString": "enum LibTypes.SchemaValue[] memory"
                     }
                   },
@@ -1831,7 +1831,7 @@
                         "referencedDeclaration": 2036,
                         "src": "466:6:30",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr",
                           "typeString": "enum LibTypes.SchemaValue[] memory"
                         }
                       },
@@ -1859,7 +1859,7 @@
                       "nodeType": "IndexAccess",
                       "src": "466:9:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                        "typeIdentifier": "t_enum$_SchemaValue_$40943",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -1872,10 +1872,10 @@
                           "name": "LibTypes",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 40798,
+                          "referencedDeclaration": 40944,
                           "src": "478:8:30",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$40798_$",
+                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$40944_$",
                             "typeString": "type(library LibTypes)"
                           }
                         },
@@ -1887,10 +1887,10 @@
                         "memberLocation": "487:11:30",
                         "memberName": "SchemaValue",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 40797,
+                        "referencedDeclaration": 40943,
                         "src": "478:20:30",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$40797_$",
+                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$40943_$",
                           "typeString": "type(enum LibTypes.SchemaValue)"
                         }
                       },
@@ -1902,16 +1902,16 @@
                       "memberLocation": "499:5:30",
                       "memberName": "INT32",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 40766,
+                      "referencedDeclaration": 40912,
                       "src": "478:26:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                        "typeIdentifier": "t_enum$_SchemaValue_$40943",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
                     "src": "466:38:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                      "typeIdentifier": "t_enum$_SchemaValue_$40943",
                       "typeString": "enum LibTypes.SchemaValue"
                     }
                   },
@@ -2011,7 +2011,7 @@
                         "referencedDeclaration": 2036,
                         "src": "530:6:30",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr",
                           "typeString": "enum LibTypes.SchemaValue[] memory"
                         }
                       },
@@ -2039,7 +2039,7 @@
                       "nodeType": "IndexAccess",
                       "src": "530:9:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                        "typeIdentifier": "t_enum$_SchemaValue_$40943",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -2052,10 +2052,10 @@
                           "name": "LibTypes",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 40798,
+                          "referencedDeclaration": 40944,
                           "src": "542:8:30",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$40798_$",
+                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$40944_$",
                             "typeString": "type(library LibTypes)"
                           }
                         },
@@ -2067,10 +2067,10 @@
                         "memberLocation": "551:11:30",
                         "memberName": "SchemaValue",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 40797,
+                        "referencedDeclaration": 40943,
                         "src": "542:20:30",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$40797_$",
+                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$40943_$",
                           "typeString": "type(enum LibTypes.SchemaValue)"
                         }
                       },
@@ -2082,16 +2082,16 @@
                       "memberLocation": "563:5:30",
                       "memberName": "INT32",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 40766,
+                      "referencedDeclaration": 40912,
                       "src": "542:26:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                        "typeIdentifier": "t_enum$_SchemaValue_$40943",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
                     "src": "530:38:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                      "typeIdentifier": "t_enum$_SchemaValue_$40943",
                       "typeString": "enum LibTypes.SchemaValue"
                     }
                   },
@@ -2191,7 +2191,7 @@
                         "referencedDeclaration": 2036,
                         "src": "594:6:30",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr",
                           "typeString": "enum LibTypes.SchemaValue[] memory"
                         }
                       },
@@ -2219,7 +2219,7 @@
                       "nodeType": "IndexAccess",
                       "src": "594:9:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                        "typeIdentifier": "t_enum$_SchemaValue_$40943",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -2232,10 +2232,10 @@
                           "name": "LibTypes",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 40798,
+                          "referencedDeclaration": 40944,
                           "src": "606:8:30",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$40798_$",
+                            "typeIdentifier": "t_type$_t_contract$_LibTypes_$40944_$",
                             "typeString": "type(library LibTypes)"
                           }
                         },
@@ -2247,10 +2247,10 @@
                         "memberLocation": "615:11:30",
                         "memberName": "SchemaValue",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 40797,
+                        "referencedDeclaration": 40943,
                         "src": "606:20:30",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$40797_$",
+                          "typeIdentifier": "t_type$_t_enum$_SchemaValue_$40943_$",
                           "typeString": "type(enum LibTypes.SchemaValue)"
                         }
                       },
@@ -2262,16 +2262,16 @@
                       "memberLocation": "627:5:30",
                       "memberName": "INT32",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 40766,
+                      "referencedDeclaration": 40912,
                       "src": "606:26:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                        "typeIdentifier": "t_enum$_SchemaValue_$40943",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
                     "src": "594:38:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                      "typeIdentifier": "t_enum$_SchemaValue_$40943",
                       "typeString": "enum LibTypes.SchemaValue"
                     }
                   },
@@ -2282,7 +2282,7 @@
               ]
             },
             "baseFunctions": [
-              42793
+              42939
             ],
             "functionSelector": "6b122fe0",
             "implemented": true,
@@ -2354,7 +2354,7 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_memory_ptr",
                     "typeString": "enum LibTypes.SchemaValue[]"
                   },
                   "typeName": {
@@ -2369,13 +2369,13 @@
                           "339:11:30"
                         ],
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 40797,
+                        "referencedDeclaration": 40943,
                         "src": "330:20:30"
                       },
-                      "referencedDeclaration": 40797,
+                      "referencedDeclaration": 40943,
                       "src": "330:20:30",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_enum$_SchemaValue_$40797",
+                        "typeIdentifier": "t_enum$_SchemaValue_$40943",
                         "typeString": "enum LibTypes.SchemaValue"
                       }
                     },
@@ -2383,7 +2383,7 @@
                     "nodeType": "ArrayTypeName",
                     "src": "330:22:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40797_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_enum$_SchemaValue_$40943_$dyn_storage_ptr",
                       "typeString": "enum LibTypes.SchemaValue[]"
                     }
                   },
@@ -2504,9 +2504,9 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
                         2115,
-                        40634
+                        40780
                       ],
-                      "referencedDeclaration": 40634,
+                      "referencedDeclaration": 40780,
                       "src": "718:3:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_bytes_memory_ptr_$returns$__$",
@@ -2752,7 +2752,7 @@
                           "name": "getRawValue",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 40679,
+                          "referencedDeclaration": 40825,
                           "src": "886:11:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_bytes_memory_ptr_$",
@@ -3328,34 +3328,34 @@
         ],
         "canonicalName": "VoxelCoordComponent",
         "contractDependencies": [
-          40991,
-          41157
+          41137,
+          41303
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
           2168,
           262,
-          40759,
-          43545,
-          41195,
+          40905,
+          43691,
+          41341,
           2359,
-          43101,
-          43601,
-          42977,
-          42844,
-          43590,
+          43247,
+          43747,
+          43123,
+          42990,
+          43736,
           2402,
-          43111
+          43257
         ],
         "name": "VoxelCoordComponent",
         "nameLocation": "154:19:30",
         "scope": 2169,
         "usedErrors": [
-          40559,
-          43470,
-          43598,
-          43600
+          40705,
+          43616,
+          43744,
+          43746
         ]
       }
     ],

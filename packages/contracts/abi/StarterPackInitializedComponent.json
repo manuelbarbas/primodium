@@ -1108,7 +1108,7 @@
     "id": 21621,
     "exportedSymbols": {
       "BareComponent": [
-        40759
+        40905
       ],
       "BoolComponent": [
         1627
@@ -1120,19 +1120,19 @@
         21607
       ],
       "IEntityIndexer": [
-        41176
+        41322
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        40798
+        40944
       ],
       "MapSet": [
-        40991
+        41137
       ],
       "Set": [
-        41157
+        41303
       ],
       "StarterPackInitializedComponent": [
         21620
@@ -1424,8 +1424,8 @@
         ],
         "canonicalName": "StarterPackInitializedComponent",
         "contractDependencies": [
-          40991,
-          41157
+          41137,
+          41303
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -1433,26 +1433,26 @@
           21620,
           1627,
           262,
-          40759,
-          43545,
-          41195,
+          40905,
+          43691,
+          41341,
           2359,
-          43101,
-          43601,
-          42977,
-          42844,
-          43590,
+          43247,
+          43747,
+          43123,
+          42990,
+          43736,
           2402,
-          43111
+          43257
         ],
         "name": "StarterPackInitializedComponent",
         "nameLocation": "199:31:93",
         "scope": 21621,
         "usedErrors": [
-          40559,
-          43470,
-          43598,
-          43600
+          40705,
+          43616,
+          43744,
+          43746
         ]
       }
     ],

@@ -36,7 +36,7 @@ export type CoordStructOutput = [number, number] & { x: number; y: number };
 
 export interface AttackSystemInterface extends utils.Interface {
   functions: {
-    "attack(uint256,(int32,int32),uint256)": FunctionFragment;
+    "attack(uint256,(int32,int32),(int32,int32),uint256)": FunctionFragment;
     "execute(bytes)": FunctionFragment;
     "executeTyped((int32,int32),(int32,int32),uint256)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -56,6 +56,7 @@ export interface AttackSystemInterface extends utils.Interface {
     functionFragment: "attack",
     values: [
       PromiseOrValue<BigNumberish>,
+      CoordStruct,
       CoordStruct,
       PromiseOrValue<BigNumberish>
     ]
@@ -134,6 +135,7 @@ export interface AttackSystem extends BaseContract {
   functions: {
     attack(
       attackEntity: PromiseOrValue<BigNumberish>,
+      coord: CoordStruct,
       targetCoord: CoordStruct,
       weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -161,6 +163,7 @@ export interface AttackSystem extends BaseContract {
 
   attack(
     attackEntity: PromiseOrValue<BigNumberish>,
+    coord: CoordStruct,
     targetCoord: CoordStruct,
     weaponKey: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -188,6 +191,7 @@ export interface AttackSystem extends BaseContract {
   callStatic: {
     attack(
       attackEntity: PromiseOrValue<BigNumberish>,
+      coord: CoordStruct,
       targetCoord: CoordStruct,
       weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -227,6 +231,7 @@ export interface AttackSystem extends BaseContract {
   estimateGas: {
     attack(
       attackEntity: PromiseOrValue<BigNumberish>,
+      coord: CoordStruct,
       targetCoord: CoordStruct,
       weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -255,6 +260,7 @@ export interface AttackSystem extends BaseContract {
   populateTransaction: {
     attack(
       attackEntity: PromiseOrValue<BigNumberish>,
+      coord: CoordStruct,
       targetCoord: CoordStruct,
       weaponKey: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
