@@ -180,7 +180,16 @@ contract AttackSystemTest is MudTest {
     assertEq(
       healthComponent.getValue(bobMainBaseID),
       LibHealth.getBuildingMaxHealth(MainBaseID) - LibAttack.getAttackDamage(BulletCraftedItemID),
-      "bob's mainbase should have 1 attack health left"
+      "bob's mainbase should have decreased by one attack damage"
+    );
+
+    attackSystem.executeTyped(mainBaseCoord, Coord({ x: 1, y: 1 }), BulletCraftedItemID);
+    assertEq(
+      healthComponent.getValue(bobMainBaseID),
+      LibHealth.getBuildingMaxHealth(MainBaseID) -
+        LibAttack.getAttackDamage(BulletCraftedItemID) -
+        LibAttack.getAttackDamage(BulletCraftedItemID),
+      "bob's mainbase should have decreased by two attack damage"
     );
 
     vm.stopPrank();
