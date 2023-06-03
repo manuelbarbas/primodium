@@ -117,27 +117,27 @@ function TooltipBox() {
       const craftRecipe = CraftRecipe.get(builtTile);
       if (craftRecipe) {
         return (
-          <>
-            <div className="flex-row mb-1 flex">
-              <div className="">Crafts</div>
-              <StaticResourceLabel
-                name={BlockIdToKey[craftRecipe[0].id]}
-                resourceId={craftRecipe[0].id}
-                count={1}
-              ></StaticResourceLabel>
-              <div className="">from</div>
-              {craftRecipe[0].resources.map((item) => {
-                return (
+          <p>
+            {craftRecipe[0].resources.map((item) => {
+              return (
+                <>
                   <StaticResourceLabel
                     key={BlockIdToKey[item.id]}
                     name={BlockIdToKey[item.id]}
                     resourceId={item.id}
                     count={item.amount}
                   ></StaticResourceLabel>
-                );
-              })}
-            </div>
-          </>
+                  &nbsp;
+                </>
+              );
+            })}
+            &rarr;&nbsp;
+            <StaticResourceLabel
+              name={BlockIdToKey[craftRecipe[0].id]}
+              resourceId={craftRecipe[0].id}
+              count={1}
+            ></StaticResourceLabel>
+          </p>
         );
       } else {
         return <></>;

@@ -4,7 +4,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 
 library LibHealth {
   function getBuildingMaxHealth(uint256 tileId) internal pure returns (uint256) {
-    return 100;
+    return 1000;
   }
 
   function checkAlive(Uint256Component component, uint256 entity) internal view returns (bool) {

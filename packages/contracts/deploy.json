@@ -27,7 +27,15 @@
     },
     {
       "name": "AttackSystem",
-      "writeAccess": ["HealthComponent", "ItemComponent"]
+      "writeAccess": [
+        "HealthComponent",
+        "ItemComponent",
+        "PositionComponent",
+        "TileComponent",
+        "OwnedByComponent",
+        "LastBuiltAtComponent",
+        "LastClaimedAtComponent"
+      ]
     },
     {
       "name": "IncrementSystem",

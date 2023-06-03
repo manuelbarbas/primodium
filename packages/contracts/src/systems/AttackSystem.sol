@@ -11,6 +11,7 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
@@ -41,6 +42,10 @@ contract AttackSystem is System {
       OwnedByComponent(getAddressById(components, OwnedByComponentID)),
       LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
       HealthComponent(getAddressById(components, HealthComponentID))
+    );
+
+    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
+      getAddressById(components, LastBuiltAtComponentID)
     );
 
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
@@ -86,12 +91,13 @@ contract AttackSystem is System {
     }
 
     // If health is 0, then demolish the target entity
-    if (c.healthComponent.getValue(targetEntities[0]) == 0) {
+    if (c.healthComponent.getValue(targetEntities[0]) <= 0) {
       c.positionComponent.remove(targetEntities[0]);
       c.tileComponent.remove(targetEntities[0]);
       c.ownedByComponent.remove(targetEntities[0]);
       c.lastClaimedAtComponent.remove(targetEntities[0]);
       c.healthComponent.remove(targetEntities[0]);
+      lastBuiltAtComponent.remove(targetEntities[0]);
     }
 
     return 1;

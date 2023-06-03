@@ -1118,7 +1118,7 @@
     "id": 21381,
     "exportedSymbols": {
       "BareComponent": [
-        40905
+        40926
       ],
       "Component": [
         262
@@ -1130,19 +1130,19 @@
         21367
       ],
       "IEntityIndexer": [
-        41322
+        41343
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        40944
+        40965
       ],
       "MapSet": [
-        41137
+        41158
       ],
       "Set": [
-        41303
+        41324
       ],
       "Uint256ArrayComponent": [
         1885
@@ -1434,8 +1434,8 @@
         ],
         "canonicalName": "GameConfigComponent",
         "contractDependencies": [
-          41137,
-          41303
+          41158,
+          41324
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -1443,26 +1443,26 @@
           21380,
           1885,
           262,
-          40905,
-          43691,
-          41341,
+          40926,
+          43712,
+          41362,
           2359,
-          43247,
-          43747,
-          43123,
-          42990,
-          43736,
+          43268,
+          43768,
+          43144,
+          43011,
+          43757,
           2402,
-          43257
+          43278
         ],
         "name": "GameConfigComponent",
         "nameLocation": "195:19:83",
         "scope": 21381,
         "usedErrors": [
-          40705,
-          43616,
-          43744,
-          43746
+          40726,
+          43637,
+          43765,
+          43767
         ]
       }
     ],

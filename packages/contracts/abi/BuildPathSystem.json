@@ -711,10 +711,10 @@
   },
   "ast": {
     "absolutePath": "src/systems/BuildPathSystem.sol",
-    "id": 29396,
+    "id": 29417,
     "exportedSymbols": {
       "BuildPathSystem": [
-        29395
+        29416
       ],
       "ConveyorID": [
         28360
@@ -723,7 +723,7 @@
         1635
       ],
       "ID": [
-        29137
+        29158
       ],
       "IWorld": [
         1247
@@ -769,7 +769,7 @@
     "src": "32:3651:111",
     "nodes": [
       {
-        "id": 29106,
+        "id": 29127,
         "nodeType": "PragmaDirective",
         "src": "32:24:111",
         "nodes": [],
@@ -781,19 +781,19 @@
         ]
       },
       {
-        "id": 29109,
+        "id": 29130,
         "nodeType": "ImportDirective",
         "src": "57:51:111",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/solecs/src/System.sol",
         "file": "solecs/System.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
+        "scope": 29417,
         "sourceUnit": 323,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29107,
+              "id": 29128,
               "name": "System",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -805,7 +805,7 @@
           },
           {
             "foreign": {
-              "id": 29108,
+              "id": 29129,
               "name": "IWorld",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -819,19 +819,19 @@
         "unitAlias": ""
       },
       {
-        "id": 29112,
+        "id": 29133,
         "nodeType": "ImportDirective",
         "src": "109:67:111",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/solecs/src/utils.sol",
         "file": "solecs/utils.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
+        "scope": 29417,
         "sourceUnit": 1515,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29110,
+              "id": 29131,
               "name": "getAddressById",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -843,7 +843,7 @@
           },
           {
             "foreign": {
-              "id": 29111,
+              "id": 29132,
               "name": "addressToEntity",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -857,19 +857,19 @@
         "unitAlias": ""
       },
       {
-        "id": 29115,
+        "id": 29136,
         "nodeType": "ImportDirective",
         "src": "177:96:111",
         "nodes": [],
         "absolutePath": "src/components/PositionComponent.sol",
         "file": "components/PositionComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
+        "scope": 29417,
         "sourceUnit": 21573,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29113,
+              "id": 29134,
               "name": "PositionComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -881,7 +881,7 @@
           },
           {
             "foreign": {
-              "id": 29114,
+              "id": 29135,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -896,19 +896,19 @@
         "unitAlias": ""
       },
       {
-        "id": 29118,
+        "id": 29139,
         "nodeType": "ImportDirective",
         "src": "274:84:111",
         "nodes": [],
         "absolutePath": "src/components/TileComponent.sol",
         "file": "components/TileComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
+        "scope": 29417,
         "sourceUnit": 21645,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29116,
+              "id": 29137,
               "name": "TileComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -920,7 +920,7 @@
           },
           {
             "foreign": {
-              "id": 29117,
+              "id": 29138,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -935,19 +935,19 @@
         "unitAlias": ""
       },
       {
-        "id": 29121,
+        "id": 29142,
         "nodeType": "ImportDirective",
         "src": "359:84:111",
         "nodes": [],
         "absolutePath": "src/components/PathComponent.sol",
         "file": "components/PathComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
+        "scope": 29417,
         "sourceUnit": 21549,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29119,
+              "id": 29140,
               "name": "PathComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -959,7 +959,7 @@
           },
           {
             "foreign": {
-              "id": 29120,
+              "id": 29141,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -974,19 +974,19 @@
         "unitAlias": ""
       },
       {
-        "id": 29124,
+        "id": 29145,
         "nodeType": "ImportDirective",
         "src": "444:93:111",
         "nodes": [],
         "absolutePath": "src/components/OwnedByComponent.sol",
         "file": "components/OwnedByComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
+        "scope": 29417,
         "sourceUnit": 21525,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29122,
+              "id": 29143,
               "name": "OwnedByComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -998,7 +998,7 @@
           },
           {
             "foreign": {
-              "id": 29123,
+              "id": 29144,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1013,19 +1013,19 @@
         "unitAlias": ""
       },
       {
-        "id": 29127,
+        "id": 29148,
         "nodeType": "ImportDirective",
         "src": "538:61:111",
         "nodes": [],
         "absolutePath": "src/prototypes/Tiles.sol",
         "file": "../prototypes/Tiles.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
+        "scope": 29417,
         "sourceUnit": 28553,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29125,
+              "id": 29146,
               "name": "ConveyorID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1037,7 +1037,7 @@
           },
           {
             "foreign": {
-              "id": 29126,
+              "id": 29147,
               "name": "NodeID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1051,19 +1051,19 @@
         "unitAlias": ""
       },
       {
-        "id": 29129,
+        "id": 29150,
         "nodeType": "ImportDirective",
         "src": "601:37:111",
         "nodes": [],
         "absolutePath": "src/types.sol",
         "file": "../types.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 29396,
-        "sourceUnit": 40635,
+        "scope": 29417,
+        "sourceUnit": 40656,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 29128,
+              "id": 29149,
               "name": "Coord",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1077,7 +1077,7 @@
         "unitAlias": ""
       },
       {
-        "id": 29137,
+        "id": 29158,
         "nodeType": "VariableDeclaration",
         "src": "640:60:111",
         "nodes": [],
@@ -1085,7 +1085,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "657:2:111",
-        "scope": 29396,
+        "scope": 29417,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1093,7 +1093,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 29130,
+          "id": 29151,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "640:7:111",
@@ -1108,7 +1108,7 @@
               "arguments": [
                 {
                   "hexValue": "73797374656d2e4275696c6450617468",
-                  "id": 29134,
+                  "id": 29155,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1130,7 +1130,7 @@
                     "typeString": "literal_string \"system.BuildPath\""
                   }
                 ],
-                "id": 29133,
+                "id": 29154,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1141,7 +1141,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 29135,
+              "id": 29156,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1165,7 +1165,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 29132,
+            "id": 29153,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1177,14 +1177,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 29131,
+              "id": 29152,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "662:7:111",
               "typeDescriptions": {}
             }
           },
-          "id": 29136,
+          "id": 29157,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1203,17 +1203,17 @@
         "visibility": "internal"
       },
       {
-        "id": 29395,
+        "id": 29416,
         "nodeType": "ContractDefinition",
         "src": "703:2979:111",
         "nodes": [
           {
-            "id": 29152,
+            "id": 29173,
             "nodeType": "FunctionDefinition",
             "src": "742:78:111",
             "nodes": [],
             "body": {
-              "id": 29151,
+              "id": 29172,
               "nodeType": "Block",
               "src": "818:2:111",
               "nodes": [],
@@ -1225,11 +1225,11 @@
               {
                 "arguments": [
                   {
-                    "id": 29147,
+                    "id": 29168,
                     "name": "_world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 29142,
+                    "referencedDeclaration": 29163,
                     "src": "797:6:111",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_IWorld_$1247",
@@ -1237,11 +1237,11 @@
                     }
                   },
                   {
-                    "id": 29148,
+                    "id": 29169,
                     "name": "_components",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 29144,
+                    "referencedDeclaration": 29165,
                     "src": "805:11:111",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1249,10 +1249,10 @@
                     }
                   }
                 ],
-                "id": 29149,
+                "id": 29170,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 29146,
+                  "id": 29167,
                   "name": "System",
                   "nameLocations": [
                     "790:6:111"
@@ -1268,17 +1268,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 29145,
+              "id": 29166,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 29142,
+                  "id": 29163,
                   "mutability": "mutable",
                   "name": "_world",
                   "nameLocation": "761:6:111",
                   "nodeType": "VariableDeclaration",
-                  "scope": 29152,
+                  "scope": 29173,
                   "src": "754:13:111",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1287,10 +1287,10 @@
                     "typeString": "contract IWorld"
                   },
                   "typeName": {
-                    "id": 29141,
+                    "id": 29162,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 29140,
+                      "id": 29161,
                       "name": "IWorld",
                       "nameLocations": [
                         "754:6:111"
@@ -1310,12 +1310,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 29144,
+                  "id": 29165,
                   "mutability": "mutable",
                   "name": "_components",
                   "nameLocation": "777:11:111",
                   "nodeType": "VariableDeclaration",
-                  "scope": 29152,
+                  "scope": 29173,
                   "src": "769:19:111",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1324,7 +1324,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 29143,
+                    "id": 29164,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "769:7:111",
@@ -1340,41 +1340,41 @@
               "src": "753:36:111"
             },
             "returnParameters": {
-              "id": 29150,
+              "id": 29171,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "818:0:111"
             },
-            "scope": 29395,
+            "scope": 29416,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 29374,
+            "id": 29395,
             "nodeType": "FunctionDefinition",
             "src": "824:2693:111",
             "nodes": [],
             "body": {
-              "id": 29373,
+              "id": 29394,
               "nodeType": "Block",
               "src": "890:2627:111",
               "nodes": [],
               "statements": [
                 {
                   "assignments": [
-                    29161,
-                    29164
+                    29182,
+                    29185
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29161,
+                      "id": 29182,
                       "mutability": "mutable",
                       "name": "coordStart",
                       "nameLocation": "910:10:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "897:23:111",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -1383,10 +1383,10 @@
                         "typeString": "struct Coord"
                       },
                       "typeName": {
-                        "id": 29160,
+                        "id": 29181,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 29159,
+                          "id": 29180,
                           "name": "Coord",
                           "nameLocations": [
                             "897:5:111"
@@ -1406,12 +1406,12 @@
                     },
                     {
                       "constant": false,
-                      "id": 29164,
+                      "id": 29185,
                       "mutability": "mutable",
                       "name": "coordEnd",
                       "nameLocation": "935:8:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "922:21:111",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -1420,10 +1420,10 @@
                         "typeString": "struct Coord"
                       },
                       "typeName": {
-                        "id": 29163,
+                        "id": 29184,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 29162,
+                          "id": 29183,
                           "name": "Coord",
                           "nameLocations": [
                             "922:5:111"
@@ -1442,15 +1442,15 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29172,
+                  "id": 29193,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 29167,
+                        "id": 29188,
                         "name": "args",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29154,
+                        "referencedDeclaration": 29175,
                         "src": "958:4:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
@@ -1460,7 +1460,7 @@
                       {
                         "components": [
                           {
-                            "id": 29168,
+                            "id": 29189,
                             "name": "Coord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1472,7 +1472,7 @@
                             }
                           },
                           {
-                            "id": 29169,
+                            "id": 29190,
                             "name": "Coord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1484,7 +1484,7 @@
                             }
                           }
                         ],
-                        "id": 29170,
+                        "id": 29191,
                         "isConstant": false,
                         "isInlineArray": false,
                         "isLValue": false,
@@ -1510,7 +1510,7 @@
                         }
                       ],
                       "expression": {
-                        "id": 29165,
+                        "id": 29186,
                         "name": "abi",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -1521,7 +1521,7 @@
                           "typeString": "abi"
                         }
                       },
-                      "id": 29166,
+                      "id": 29187,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1535,7 +1535,7 @@
                         "typeString": "function () pure"
                       }
                     },
-                    "id": 29171,
+                    "id": 29192,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1556,17 +1556,17 @@
                 },
                 {
                   "assignments": [
-                    29175
+                    29196
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29175,
+                      "id": 29196,
                       "mutability": "mutable",
                       "name": "positionComponent",
                       "nameLocation": "1003:17:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "985:35:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -1575,10 +1575,10 @@
                         "typeString": "contract PositionComponent"
                       },
                       "typeName": {
-                        "id": 29174,
+                        "id": 29195,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 29173,
+                          "id": 29194,
                           "name": "PositionComponent",
                           "nameLocations": [
                             "985:17:111"
@@ -1597,13 +1597,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29182,
+                  "id": 29203,
                   "initialValue": {
                     "arguments": [
                       {
                         "arguments": [
                           {
-                            "id": 29178,
+                            "id": 29199,
                             "name": "components",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1615,7 +1615,7 @@
                             }
                           },
                           {
-                            "id": 29179,
+                            "id": 29200,
                             "name": "PositionComponentID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1638,7 +1638,7 @@
                               "typeString": "uint256"
                             }
                           ],
-                          "id": 29177,
+                          "id": 29198,
                           "name": "getAddressById",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -1649,7 +1649,7 @@
                             "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                           }
                         },
-                        "id": 29180,
+                        "id": 29201,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1673,7 +1673,7 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 29176,
+                      "id": 29197,
                       "name": "PositionComponent",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -1684,7 +1684,7 @@
                         "typeString": "type(contract PositionComponent)"
                       }
                     },
-                    "id": 29181,
+                    "id": 29202,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1705,17 +1705,17 @@
                 },
                 {
                   "assignments": [
-                    29185
+                    29206
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29185,
+                      "id": 29206,
                       "mutability": "mutable",
                       "name": "tileComponent",
                       "nameLocation": "1109:13:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "1095:27:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -1724,10 +1724,10 @@
                         "typeString": "contract TileComponent"
                       },
                       "typeName": {
-                        "id": 29184,
+                        "id": 29205,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 29183,
+                          "id": 29204,
                           "name": "TileComponent",
                           "nameLocations": [
                             "1095:13:111"
@@ -1746,13 +1746,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29192,
+                  "id": 29213,
                   "initialValue": {
                     "arguments": [
                       {
                         "arguments": [
                           {
-                            "id": 29188,
+                            "id": 29209,
                             "name": "components",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1764,7 +1764,7 @@
                             }
                           },
                           {
-                            "id": 29189,
+                            "id": 29210,
                             "name": "TileComponentID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1787,7 +1787,7 @@
                               "typeString": "uint256"
                             }
                           ],
-                          "id": 29187,
+                          "id": 29208,
                           "name": "getAddressById",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -1798,7 +1798,7 @@
                             "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                           }
                         },
-                        "id": 29190,
+                        "id": 29211,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1822,7 +1822,7 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 29186,
+                      "id": 29207,
                       "name": "TileComponent",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -1833,7 +1833,7 @@
                         "typeString": "type(contract TileComponent)"
                       }
                     },
-                    "id": 29191,
+                    "id": 29212,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1854,17 +1854,17 @@
                 },
                 {
                   "assignments": [
-                    29195
+                    29216
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29195,
+                      "id": 29216,
                       "mutability": "mutable",
                       "name": "pathComponent",
                       "nameLocation": "1203:13:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "1189:27:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -1873,10 +1873,10 @@
                         "typeString": "contract PathComponent"
                       },
                       "typeName": {
-                        "id": 29194,
+                        "id": 29215,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 29193,
+                          "id": 29214,
                           "name": "PathComponent",
                           "nameLocations": [
                             "1189:13:111"
@@ -1895,13 +1895,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29202,
+                  "id": 29223,
                   "initialValue": {
                     "arguments": [
                       {
                         "arguments": [
                           {
-                            "id": 29198,
+                            "id": 29219,
                             "name": "components",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1913,7 +1913,7 @@
                             }
                           },
                           {
-                            "id": 29199,
+                            "id": 29220,
                             "name": "PathComponentID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -1936,7 +1936,7 @@
                               "typeString": "uint256"
                             }
                           ],
-                          "id": 29197,
+                          "id": 29218,
                           "name": "getAddressById",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -1947,7 +1947,7 @@
                             "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                           }
                         },
-                        "id": 29200,
+                        "id": 29221,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1971,7 +1971,7 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 29196,
+                      "id": 29217,
                       "name": "PathComponent",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -1982,7 +1982,7 @@
                         "typeString": "type(contract PathComponent)"
                       }
                     },
-                    "id": 29201,
+                    "id": 29222,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2003,17 +2003,17 @@
                 },
                 {
                   "assignments": [
-                    29205
+                    29226
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29205,
+                      "id": 29226,
                       "mutability": "mutable",
                       "name": "ownedByComponent",
                       "nameLocation": "1300:16:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "1283:33:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -2022,10 +2022,10 @@
                         "typeString": "contract OwnedByComponent"
                       },
                       "typeName": {
-                        "id": 29204,
+                        "id": 29225,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 29203,
+                          "id": 29224,
                           "name": "OwnedByComponent",
                           "nameLocations": [
                             "1283:16:111"
@@ -2044,13 +2044,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29212,
+                  "id": 29233,
                   "initialValue": {
                     "arguments": [
                       {
                         "arguments": [
                           {
-                            "id": 29208,
+                            "id": 29229,
                             "name": "components",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -2062,7 +2062,7 @@
                             }
                           },
                           {
-                            "id": 29209,
+                            "id": 29230,
                             "name": "OwnedByComponentID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -2085,7 +2085,7 @@
                               "typeString": "uint256"
                             }
                           ],
-                          "id": 29207,
+                          "id": 29228,
                           "name": "getAddressById",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -2096,7 +2096,7 @@
                             "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                           }
                         },
-                        "id": 29210,
+                        "id": 29231,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2120,7 +2120,7 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 29206,
+                      "id": 29227,
                       "name": "OwnedByComponent",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -2131,7 +2131,7 @@
                         "typeString": "type(contract OwnedByComponent)"
                       }
                     },
-                    "id": 29211,
+                    "id": 29232,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2154,7 +2154,7 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 29226,
+                        "id": 29247,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2170,7 +2170,7 @@
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
                               },
-                              "id": 29224,
+                              "id": 29245,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -2180,25 +2180,25 @@
                                   "typeIdentifier": "t_int32",
                                   "typeString": "int32"
                                 },
-                                "id": 29218,
+                                "id": 29239,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "expression": {
-                                    "id": 29214,
+                                    "id": 29235,
                                     "name": "coordStart",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 29161,
+                                    "referencedDeclaration": 29182,
                                     "src": "1407:10:111",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
                                       "typeString": "struct Coord memory"
                                     }
                                   },
-                                  "id": 29215,
+                                  "id": 29236,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
@@ -2217,18 +2217,18 @@
                                 "operator": "==",
                                 "rightExpression": {
                                   "expression": {
-                                    "id": 29216,
+                                    "id": 29237,
                                     "name": "coordEnd",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 29164,
+                                    "referencedDeclaration": 29185,
                                     "src": "1423:8:111",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
                                       "typeString": "struct Coord memory"
                                     }
                                   },
-                                  "id": 29217,
+                                  "id": 29238,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
@@ -2256,25 +2256,25 @@
                                   "typeIdentifier": "t_int32",
                                   "typeString": "int32"
                                 },
-                                "id": 29223,
+                                "id": 29244,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "leftExpression": {
                                   "expression": {
-                                    "id": 29219,
+                                    "id": 29240,
                                     "name": "coordStart",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 29161,
+                                    "referencedDeclaration": 29182,
                                     "src": "1437:10:111",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
                                       "typeString": "struct Coord memory"
                                     }
                                   },
-                                  "id": 29220,
+                                  "id": 29241,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
@@ -2293,18 +2293,18 @@
                                 "operator": "==",
                                 "rightExpression": {
                                   "expression": {
-                                    "id": 29221,
+                                    "id": 29242,
                                     "name": "coordEnd",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 29164,
+                                    "referencedDeclaration": 29185,
                                     "src": "1453:8:111",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
                                       "typeString": "struct Coord memory"
                                     }
                                   },
-                                  "id": 29222,
+                                  "id": 29243,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
@@ -2332,7 +2332,7 @@
                               }
                             }
                           ],
-                          "id": 29225,
+                          "id": 29246,
                           "isConstant": false,
                           "isInlineArray": false,
                           "isLValue": false,
@@ -2352,7 +2352,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f7420737461727420616e6420656e642070617468206174207468652073616d6520636f6f7264696e617465",
-                        "id": 29227,
+                        "id": 29248,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2378,7 +2378,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot start and end path at the same coordinate\""
                         }
                       ],
-                      "id": 29213,
+                      "id": 29234,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -2392,7 +2392,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29228,
+                    "id": 29249,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2408,23 +2408,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29229,
+                  "id": 29250,
                   "nodeType": "ExpressionStatement",
                   "src": "1390:156:111"
                 },
                 {
                   "assignments": [
-                    29234
+                    29255
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29234,
+                      "id": 29255,
                       "mutability": "mutable",
                       "name": "entitiesAtStartCoord",
                       "nameLocation": "1616:20:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "1599:37:111",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -2434,7 +2434,7 @@
                       },
                       "typeName": {
                         "baseType": {
-                          "id": 29232,
+                          "id": 29253,
                           "name": "uint256",
                           "nodeType": "ElementaryTypeName",
                           "src": "1599:7:111",
@@ -2443,7 +2443,7 @@
                             "typeString": "uint256"
                           }
                         },
-                        "id": 29233,
+                        "id": 29254,
                         "nodeType": "ArrayTypeName",
                         "src": "1599:9:111",
                         "typeDescriptions": {
@@ -2454,15 +2454,15 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29239,
+                  "id": 29260,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 29237,
+                        "id": 29258,
                         "name": "coordStart",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29161,
+                        "referencedDeclaration": 29182,
                         "src": "1678:10:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
@@ -2478,18 +2478,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 29235,
+                        "id": 29256,
                         "name": "positionComponent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29175,
+                        "referencedDeclaration": 29196,
                         "src": "1639:17:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_PositionComponent_$21572",
                           "typeString": "contract PositionComponent"
                         }
                       },
-                      "id": 29236,
+                      "id": 29257,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2504,7 +2504,7 @@
                         "typeString": "function (struct Coord memory) view external returns (uint256[] memory)"
                       }
                     },
-                    "id": 29238,
+                    "id": 29259,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2531,25 +2531,25 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 29244,
+                        "id": 29265,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "expression": {
-                            "id": 29241,
+                            "id": 29262,
                             "name": "entitiesAtStartCoord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29234,
+                            "referencedDeclaration": 29255,
                             "src": "1703:20:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                               "typeString": "uint256[] memory"
                             }
                           },
-                          "id": 29242,
+                          "id": 29263,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2567,7 +2567,7 @@
                         "operator": "==",
                         "rightExpression": {
                           "hexValue": "31",
-                          "id": 29243,
+                          "id": 29264,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -2589,7 +2589,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f74207374617274207061746820617420616e20656d70747920636f6f7264696e617465",
-                        "id": 29245,
+                        "id": 29266,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2615,7 +2615,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot start path at an empty coordinate\""
                         }
                       ],
-                      "id": 29240,
+                      "id": 29261,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -2629,7 +2629,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29246,
+                    "id": 29267,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2645,23 +2645,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29247,
+                  "id": 29268,
                   "nodeType": "ExpressionStatement",
                   "src": "1695:103:111"
                 },
                 {
                   "assignments": [
-                    29252
+                    29273
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29252,
+                      "id": 29273,
                       "mutability": "mutable",
                       "name": "entitiesAtEndCoord",
                       "nameLocation": "1821:18:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "1804:35:111",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -2671,7 +2671,7 @@
                       },
                       "typeName": {
                         "baseType": {
-                          "id": 29250,
+                          "id": 29271,
                           "name": "uint256",
                           "nodeType": "ElementaryTypeName",
                           "src": "1804:7:111",
@@ -2680,7 +2680,7 @@
                             "typeString": "uint256"
                           }
                         },
-                        "id": 29251,
+                        "id": 29272,
                         "nodeType": "ArrayTypeName",
                         "src": "1804:9:111",
                         "typeDescriptions": {
@@ -2691,15 +2691,15 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29257,
+                  "id": 29278,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 29255,
+                        "id": 29276,
                         "name": "coordEnd",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29164,
+                        "referencedDeclaration": 29185,
                         "src": "1881:8:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
@@ -2715,18 +2715,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 29253,
+                        "id": 29274,
                         "name": "positionComponent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29175,
+                        "referencedDeclaration": 29196,
                         "src": "1842:17:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_PositionComponent_$21572",
                           "typeString": "contract PositionComponent"
                         }
                       },
-                      "id": 29254,
+                      "id": 29275,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2741,7 +2741,7 @@
                         "typeString": "function (struct Coord memory) view external returns (uint256[] memory)"
                       }
                     },
-                    "id": 29256,
+                    "id": 29277,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2768,25 +2768,25 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 29262,
+                        "id": 29283,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "expression": {
-                            "id": 29259,
+                            "id": 29280,
                             "name": "entitiesAtEndCoord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29252,
+                            "referencedDeclaration": 29273,
                             "src": "1904:18:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                               "typeString": "uint256[] memory"
                             }
                           },
-                          "id": 29260,
+                          "id": 29281,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2804,7 +2804,7 @@
                         "operator": "==",
                         "rightExpression": {
                           "hexValue": "31",
-                          "id": 29261,
+                          "id": 29282,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -2826,7 +2826,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f7420656e64207061746820617420616e20656d70747920636f6f7264696e617465",
-                        "id": 29263,
+                        "id": 29284,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2852,7 +2852,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot end path at an empty coordinate\""
                         }
                       ],
-                      "id": 29258,
+                      "id": 29279,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -2866,7 +2866,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29264,
+                    "id": 29285,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2882,23 +2882,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29265,
+                  "id": 29286,
                   "nodeType": "ExpressionStatement",
                   "src": "1896:99:111"
                 },
                 {
                   "assignments": [
-                    29267
+                    29288
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29267,
+                      "id": 29288,
                       "mutability": "mutable",
                       "name": "tileEntityAtStartCoord",
                       "nameLocation": "2068:22:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "2060:30:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -2907,7 +2907,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 29266,
+                        "id": 29287,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "2060:7:111",
@@ -2919,26 +2919,26 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29274,
+                  "id": 29295,
                   "initialValue": {
                     "arguments": [
                       {
                         "baseExpression": {
-                          "id": 29270,
+                          "id": 29291,
                           "name": "entitiesAtStartCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29234,
+                          "referencedDeclaration": 29255,
                           "src": "2116:20:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                             "typeString": "uint256[] memory"
                           }
                         },
-                        "id": 29272,
+                        "id": 29293,
                         "indexExpression": {
                           "hexValue": "30",
-                          "id": 29271,
+                          "id": 29292,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -2972,18 +2972,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 29268,
+                        "id": 29289,
                         "name": "tileComponent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29185,
+                        "referencedDeclaration": 29206,
                         "src": "2093:13:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_TileComponent_$21644",
                           "typeString": "contract TileComponent"
                         }
                       },
-                      "id": 29269,
+                      "id": 29290,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2998,7 +2998,7 @@
                         "typeString": "function (uint256) view external returns (uint256)"
                       }
                     },
-                    "id": 29273,
+                    "id": 29294,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3025,7 +3025,7 @@
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
                         },
-                        "id": 29282,
+                        "id": 29303,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3035,17 +3035,17 @@
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           },
-                          "id": 29278,
+                          "id": 29299,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
-                            "id": 29276,
+                            "id": 29297,
                             "name": "tileEntityAtStartCoord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29267,
+                            "referencedDeclaration": 29288,
                             "src": "2161:22:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -3055,7 +3055,7 @@
                           "nodeType": "BinaryOperation",
                           "operator": "==",
                           "rightExpression": {
-                            "id": 29277,
+                            "id": 29298,
                             "name": "ConveyorID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3079,17 +3079,17 @@
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           },
-                          "id": 29281,
+                          "id": 29302,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
-                            "id": 29279,
+                            "id": 29300,
                             "name": "tileEntityAtStartCoord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29267,
+                            "referencedDeclaration": 29288,
                             "src": "2201:22:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -3099,7 +3099,7 @@
                           "nodeType": "BinaryOperation",
                           "operator": "==",
                           "rightExpression": {
-                            "id": 29280,
+                            "id": 29301,
                             "name": "NodeID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3124,7 +3124,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f7420737461727420706174682061742061206e6f6e2d737570706f727465642074696c652028436f6e7665796f722c204e6f646529",
-                        "id": 29283,
+                        "id": 29304,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3150,7 +3150,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot start path at a non-supported tile (Conveyor, Node)\""
                         }
                       ],
-                      "id": 29275,
+                      "id": 29296,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -3164,7 +3164,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29284,
+                    "id": 29305,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3180,23 +3180,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29285,
+                  "id": 29306,
                   "nodeType": "ExpressionStatement",
                   "src": "2146:179:111"
                 },
                 {
                   "assignments": [
-                    29287
+                    29308
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29287,
+                      "id": 29308,
                       "mutability": "mutable",
                       "name": "tileEntityAtEndCoord",
                       "nameLocation": "2339:20:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "2331:28:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -3205,7 +3205,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 29286,
+                        "id": 29307,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "2331:7:111",
@@ -3217,26 +3217,26 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29294,
+                  "id": 29315,
                   "initialValue": {
                     "arguments": [
                       {
                         "baseExpression": {
-                          "id": 29290,
+                          "id": 29311,
                           "name": "entitiesAtEndCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29252,
+                          "referencedDeclaration": 29273,
                           "src": "2385:18:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                             "typeString": "uint256[] memory"
                           }
                         },
-                        "id": 29292,
+                        "id": 29313,
                         "indexExpression": {
                           "hexValue": "30",
-                          "id": 29291,
+                          "id": 29312,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3270,18 +3270,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 29288,
+                        "id": 29309,
                         "name": "tileComponent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29185,
+                        "referencedDeclaration": 29206,
                         "src": "2362:13:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_TileComponent_$21644",
                           "typeString": "contract TileComponent"
                         }
                       },
-                      "id": 29289,
+                      "id": 29310,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3296,7 +3296,7 @@
                         "typeString": "function (uint256) view external returns (uint256)"
                       }
                     },
-                    "id": 29293,
+                    "id": 29314,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3323,7 +3323,7 @@
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
                         },
-                        "id": 29302,
+                        "id": 29323,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3333,17 +3333,17 @@
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           },
-                          "id": 29298,
+                          "id": 29319,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
-                            "id": 29296,
+                            "id": 29317,
                             "name": "tileEntityAtEndCoord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29287,
+                            "referencedDeclaration": 29308,
                             "src": "2428:20:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -3353,7 +3353,7 @@
                           "nodeType": "BinaryOperation",
                           "operator": "==",
                           "rightExpression": {
-                            "id": 29297,
+                            "id": 29318,
                             "name": "ConveyorID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3377,17 +3377,17 @@
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           },
-                          "id": 29301,
+                          "id": 29322,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
-                            "id": 29299,
+                            "id": 29320,
                             "name": "tileEntityAtEndCoord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29287,
+                            "referencedDeclaration": 29308,
                             "src": "2466:20:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -3397,7 +3397,7 @@
                           "nodeType": "BinaryOperation",
                           "operator": "==",
                           "rightExpression": {
-                            "id": 29300,
+                            "id": 29321,
                             "name": "NodeID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3422,7 +3422,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f7420656e6420706174682061742061206e6f6e2d737570706f727465642074696c652028436f6e7665796f722c204e6f646529",
-                        "id": 29303,
+                        "id": 29324,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3448,7 +3448,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot end path at a non-supported tile (Conveyor, Node)\""
                         }
                       ],
-                      "id": 29295,
+                      "id": 29316,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -3462,7 +3462,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29304,
+                    "id": 29325,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3478,23 +3478,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29305,
+                  "id": 29326,
                   "nodeType": "ExpressionStatement",
                   "src": "2413:173:111"
                 },
                 {
                   "assignments": [
-                    29307
+                    29328
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29307,
+                      "id": 29328,
                       "mutability": "mutable",
                       "name": "ownedEntityAtStartCoord",
                       "nameLocation": "2668:23:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "2660:31:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -3503,7 +3503,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 29306,
+                        "id": 29327,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "2660:7:111",
@@ -3515,26 +3515,26 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29314,
+                  "id": 29335,
                   "initialValue": {
                     "arguments": [
                       {
                         "baseExpression": {
-                          "id": 29310,
+                          "id": 29331,
                           "name": "entitiesAtStartCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29234,
+                          "referencedDeclaration": 29255,
                           "src": "2720:20:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                             "typeString": "uint256[] memory"
                           }
                         },
-                        "id": 29312,
+                        "id": 29333,
                         "indexExpression": {
                           "hexValue": "30",
-                          "id": 29311,
+                          "id": 29332,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3568,18 +3568,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 29308,
+                        "id": 29329,
                         "name": "ownedByComponent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29205,
+                        "referencedDeclaration": 29226,
                         "src": "2694:16:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_OwnedByComponent_$21524",
                           "typeString": "contract OwnedByComponent"
                         }
                       },
-                      "id": 29309,
+                      "id": 29330,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3594,7 +3594,7 @@
                         "typeString": "function (uint256) view external returns (uint256)"
                       }
                     },
-                    "id": 29313,
+                    "id": 29334,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3621,17 +3621,17 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 29321,
+                        "id": 29342,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
-                          "id": 29316,
+                          "id": 29337,
                           "name": "ownedEntityAtStartCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29307,
+                          "referencedDeclaration": 29328,
                           "src": "2765:23:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -3644,7 +3644,7 @@
                           "arguments": [
                             {
                               "expression": {
-                                "id": 29318,
+                                "id": 29339,
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
@@ -3655,7 +3655,7 @@
                                   "typeString": "msg"
                                 }
                               },
-                              "id": 29319,
+                              "id": 29340,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -3677,7 +3677,7 @@
                                 "typeString": "address"
                               }
                             ],
-                            "id": 29317,
+                            "id": 29338,
                             "name": "addressToEntity",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3688,7 +3688,7 @@
                               "typeString": "function (address) pure returns (uint256)"
                             }
                           },
-                          "id": 29320,
+                          "id": 29341,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -3712,7 +3712,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f74207374617274207061746820617420612074696c6520796f7520646f206e6f74206f776e",
-                        "id": 29322,
+                        "id": 29343,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3738,7 +3738,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot start path at a tile you do not own\""
                         }
                       ],
-                      "id": 29315,
+                      "id": 29336,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -3752,7 +3752,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29323,
+                    "id": 29344,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3768,23 +3768,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29324,
+                  "id": 29345,
                   "nodeType": "ExpressionStatement",
                   "src": "2750:145:111"
                 },
                 {
                   "assignments": [
-                    29326
+                    29347
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 29326,
+                      "id": 29347,
                       "mutability": "mutable",
                       "name": "ownedEntityAtEndCoord",
                       "nameLocation": "2909:21:111",
                       "nodeType": "VariableDeclaration",
-                      "scope": 29373,
+                      "scope": 29394,
                       "src": "2901:29:111",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -3793,7 +3793,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 29325,
+                        "id": 29346,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "2901:7:111",
@@ -3805,26 +3805,26 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 29333,
+                  "id": 29354,
                   "initialValue": {
                     "arguments": [
                       {
                         "baseExpression": {
-                          "id": 29329,
+                          "id": 29350,
                           "name": "entitiesAtEndCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29252,
+                          "referencedDeclaration": 29273,
                           "src": "2959:18:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                             "typeString": "uint256[] memory"
                           }
                         },
-                        "id": 29331,
+                        "id": 29352,
                         "indexExpression": {
                           "hexValue": "30",
-                          "id": 29330,
+                          "id": 29351,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3858,18 +3858,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 29327,
+                        "id": 29348,
                         "name": "ownedByComponent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29205,
+                        "referencedDeclaration": 29226,
                         "src": "2933:16:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_OwnedByComponent_$21524",
                           "typeString": "contract OwnedByComponent"
                         }
                       },
-                      "id": 29328,
+                      "id": 29349,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3884,7 +3884,7 @@
                         "typeString": "function (uint256) view external returns (uint256)"
                       }
                     },
-                    "id": 29332,
+                    "id": 29353,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3911,17 +3911,17 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 29340,
+                        "id": 29361,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
-                          "id": 29335,
+                          "id": 29356,
                           "name": "ownedEntityAtEndCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29326,
+                          "referencedDeclaration": 29347,
                           "src": "3002:21:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -3934,7 +3934,7 @@
                           "arguments": [
                             {
                               "expression": {
-                                "id": 29337,
+                                "id": 29358,
                                 "name": "msg",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
@@ -3945,7 +3945,7 @@
                                   "typeString": "msg"
                                 }
                               },
-                              "id": 29338,
+                              "id": 29359,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -3967,7 +3967,7 @@
                                 "typeString": "address"
                               }
                             ],
-                            "id": 29336,
+                            "id": 29357,
                             "name": "addressToEntity",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3978,7 +3978,7 @@
                               "typeString": "function (address) pure returns (uint256)"
                             }
                           },
-                          "id": 29339,
+                          "id": 29360,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -4002,7 +4002,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f7420656e64207061746820617420612074696c6520796f7520646f206e6f74206f776e",
-                        "id": 29341,
+                        "id": 29362,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -4028,7 +4028,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot end path at a tile you do not own\""
                         }
                       ],
-                      "id": 29334,
+                      "id": 29355,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -4042,7 +4042,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29342,
+                    "id": 29363,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4058,7 +4058,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29343,
+                  "id": 29364,
                   "nodeType": "ExpressionStatement",
                   "src": "2987:141:111"
                 },
@@ -4066,7 +4066,7 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 29351,
+                        "id": 29372,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -4079,21 +4079,21 @@
                           "arguments": [
                             {
                               "baseExpression": {
-                                "id": 29347,
+                                "id": 29368,
                                 "name": "entitiesAtStartCoord",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 29234,
+                                "referencedDeclaration": 29255,
                                 "src": "3268:20:111",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                                   "typeString": "uint256[] memory"
                                 }
                               },
-                              "id": 29349,
+                              "id": 29370,
                               "indexExpression": {
                                 "hexValue": "30",
-                                "id": 29348,
+                                "id": 29369,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
@@ -4127,18 +4127,18 @@
                               }
                             ],
                             "expression": {
-                              "id": 29345,
+                              "id": 29366,
                               "name": "pathComponent",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 29195,
+                              "referencedDeclaration": 29216,
                               "src": "3250:13:111",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_contract$_PathComponent_$21548",
                                 "typeString": "contract PathComponent"
                               }
                             },
-                            "id": 29346,
+                            "id": 29367,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -4153,7 +4153,7 @@
                               "typeString": "function (uint256) view external returns (bool)"
                             }
                           },
-                          "id": 29350,
+                          "id": 29371,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -4176,7 +4176,7 @@
                       },
                       {
                         "hexValue": "5b4275696c645061746853797374656d5d2043616e6e6f74207374617274206d6f7265207468616e206f6e6520706174682066726f6d207468652073616d652074696c65",
-                        "id": 29352,
+                        "id": 29373,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -4202,7 +4202,7 @@
                           "typeString": "literal_string \"[BuildPathSystem] Cannot start more than one path from the same tile\""
                         }
                       ],
-                      "id": 29344,
+                      "id": 29365,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -4216,7 +4216,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 29353,
+                    "id": 29374,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4232,7 +4232,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29354,
+                  "id": 29375,
                   "nodeType": "ExpressionStatement",
                   "src": "3234:142:111"
                 },
@@ -4241,21 +4241,21 @@
                     "arguments": [
                       {
                         "baseExpression": {
-                          "id": 29358,
+                          "id": 29379,
                           "name": "entitiesAtStartCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29234,
+                          "referencedDeclaration": 29255,
                           "src": "3416:20:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                             "typeString": "uint256[] memory"
                           }
                         },
-                        "id": 29360,
+                        "id": 29381,
                         "indexExpression": {
                           "hexValue": "30",
-                          "id": 29359,
+                          "id": 29380,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -4282,21 +4282,21 @@
                       },
                       {
                         "baseExpression": {
-                          "id": 29361,
+                          "id": 29382,
                           "name": "entitiesAtEndCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29252,
+                          "referencedDeclaration": 29273,
                           "src": "3441:18:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                             "typeString": "uint256[] memory"
                           }
                         },
-                        "id": 29363,
+                        "id": 29384,
                         "indexExpression": {
                           "hexValue": "30",
-                          "id": 29362,
+                          "id": 29383,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -4334,18 +4334,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 29355,
+                        "id": 29376,
                         "name": "pathComponent",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 29195,
+                        "referencedDeclaration": 29216,
                         "src": "3398:13:111",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_PathComponent_$21548",
                           "typeString": "contract PathComponent"
                         }
                       },
-                      "id": 29357,
+                      "id": 29378,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -4360,7 +4360,7 @@
                         "typeString": "function (uint256,uint256) external"
                       }
                     },
-                    "id": 29364,
+                    "id": 29385,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4376,7 +4376,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 29365,
+                  "id": 29386,
                   "nodeType": "ExpressionStatement",
                   "src": "3398:65:111"
                 },
@@ -4385,21 +4385,21 @@
                     "arguments": [
                       {
                         "baseExpression": {
-                          "id": 29368,
+                          "id": 29389,
                           "name": "entitiesAtStartCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 29234,
+                          "referencedDeclaration": 29255,
                           "src": "3488:20:111",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
                             "typeString": "uint256[] memory"
                           }
                         },
-                        "id": 29370,
+                        "id": 29391,
                         "indexExpression": {
                           "hexValue": "30",
-                          "id": 29369,
+                          "id": 29390,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -4433,7 +4433,7 @@
                         }
                       ],
                       "expression": {
-                        "id": 29366,
+                        "id": 29387,
                         "name": "abi",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -4444,7 +4444,7 @@
                           "typeString": "abi"
                         }
                       },
-                      "id": 29367,
+                      "id": 29388,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -4458,7 +4458,7 @@
                         "typeString": "function () pure returns (bytes memory)"
                       }
                     },
-                    "id": 29371,
+                    "id": 29392,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4474,15 +4474,15 @@
                       "typeString": "bytes memory"
                     }
                   },
-                  "functionReturnParameters": 29158,
-                  "id": 29372,
+                  "functionReturnParameters": 29179,
+                  "id": 29393,
                   "nodeType": "Return",
                   "src": "3470:42:111"
                 }
               ]
             },
             "baseFunctions": [
-              41354
+              41375
             ],
             "functionSelector": "09c5eabe",
             "implemented": true,
@@ -4491,17 +4491,17 @@
             "name": "execute",
             "nameLocation": "833:7:111",
             "parameters": {
-              "id": 29155,
+              "id": 29176,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 29154,
+                  "id": 29175,
                   "mutability": "mutable",
                   "name": "args",
                   "nameLocation": "854:4:111",
                   "nodeType": "VariableDeclaration",
-                  "scope": 29374,
+                  "scope": 29395,
                   "src": "841:17:111",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -4510,7 +4510,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 29153,
+                    "id": 29174,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "841:5:111",
@@ -4525,17 +4525,17 @@
               "src": "840:19:111"
             },
             "returnParameters": {
-              "id": 29158,
+              "id": 29179,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 29157,
+                  "id": 29178,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 29374,
+                  "scope": 29395,
                   "src": "876:12:111",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -4544,7 +4544,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 29156,
+                    "id": 29177,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "876:5:111",
@@ -4558,18 +4558,18 @@
               ],
               "src": "875:14:111"
             },
-            "scope": 29395,
+            "scope": 29416,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 29394,
+            "id": 29415,
             "nodeType": "FunctionDefinition",
             "src": "3521:159:111",
             "nodes": [],
             "body": {
-              "id": 29393,
+              "id": 29414,
               "nodeType": "Block",
               "src": "3621:59:111",
               "nodes": [],
@@ -4580,11 +4580,11 @@
                       {
                         "arguments": [
                           {
-                            "id": 29388,
+                            "id": 29409,
                             "name": "coordStart",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29377,
+                            "referencedDeclaration": 29398,
                             "src": "3653:10:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
@@ -4592,11 +4592,11 @@
                             }
                           },
                           {
-                            "id": 29389,
+                            "id": 29410,
                             "name": "coordEnd",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 29380,
+                            "referencedDeclaration": 29401,
                             "src": "3665:8:111",
                             "typeDescriptions": {
                               "typeIdentifier": "t_struct$_Coord_$1635_memory_ptr",
@@ -4616,7 +4616,7 @@
                             }
                           ],
                           "expression": {
-                            "id": 29386,
+                            "id": 29407,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -4627,7 +4627,7 @@
                               "typeString": "abi"
                             }
                           },
-                          "id": 29387,
+                          "id": 29408,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -4641,7 +4641,7 @@
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 29390,
+                        "id": 29411,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -4665,18 +4665,18 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 29385,
+                      "id": 29406,
                       "name": "execute",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 29374,
+                      "referencedDeclaration": 29395,
                       "src": "3634:7:111",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_bytes_memory_ptr_$returns$_t_bytes_memory_ptr_$",
                         "typeString": "function (bytes memory) returns (bytes memory)"
                       }
                     },
-                    "id": 29391,
+                    "id": 29412,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -4692,8 +4692,8 @@
                       "typeString": "bytes memory"
                     }
                   },
-                  "functionReturnParameters": 29384,
-                  "id": 29392,
+                  "functionReturnParameters": 29405,
+                  "id": 29413,
                   "nodeType": "Return",
                   "src": "3627:48:111"
                 }
@@ -4706,17 +4706,17 @@
             "name": "executeTyped",
             "nameLocation": "3530:12:111",
             "parameters": {
-              "id": 29381,
+              "id": 29402,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 29377,
+                  "id": 29398,
                   "mutability": "mutable",
                   "name": "coordStart",
                   "nameLocation": "3556:10:111",
                   "nodeType": "VariableDeclaration",
-                  "scope": 29394,
+                  "scope": 29415,
                   "src": "3543:23:111",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -4725,10 +4725,10 @@
                     "typeString": "struct Coord"
                   },
                   "typeName": {
-                    "id": 29376,
+                    "id": 29397,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 29375,
+                      "id": 29396,
                       "name": "Coord",
                       "nameLocations": [
                         "3543:5:111"
@@ -4748,12 +4748,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 29380,
+                  "id": 29401,
                   "mutability": "mutable",
                   "name": "coordEnd",
                   "nameLocation": "3581:8:111",
                   "nodeType": "VariableDeclaration",
-                  "scope": 29394,
+                  "scope": 29415,
                   "src": "3568:21:111",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -4762,10 +4762,10 @@
                     "typeString": "struct Coord"
                   },
                   "typeName": {
-                    "id": 29379,
+                    "id": 29400,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 29378,
+                      "id": 29399,
                       "name": "Coord",
                       "nameLocations": [
                         "3568:5:111"
@@ -4787,17 +4787,17 @@
               "src": "3542:48:111"
             },
             "returnParameters": {
-              "id": 29384,
+              "id": 29405,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 29383,
+                  "id": 29404,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 29394,
+                  "scope": 29415,
                   "src": "3607:12:111",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -4806,7 +4806,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 29382,
+                    "id": 29403,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "3607:5:111",
@@ -4820,7 +4820,7 @@
               ],
               "src": "3606:14:111"
             },
-            "scope": 29395,
+            "scope": 29416,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -4830,7 +4830,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 29138,
+              "id": 29159,
               "name": "System",
               "nameLocations": [
                 "731:6:111"
@@ -4839,7 +4839,7 @@
               "referencedDeclaration": 322,
               "src": "731:6:111"
             },
-            "id": 29139,
+            "id": 29160,
             "nodeType": "InheritanceSpecifier",
             "src": "731:6:111"
           }
@@ -4849,23 +4849,23 @@
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          29395,
+          29416,
           322,
-          41341,
+          41362,
           2359,
-          43247,
-          43747,
-          43123,
-          41355,
+          43268,
+          43768,
+          43144,
+          41376,
           2402,
-          43257
+          43278
         ],
         "name": "BuildPathSystem",
         "nameLocation": "712:15:111",
-        "scope": 29396,
+        "scope": 29417,
         "usedErrors": [
-          43744,
-          43746
+          43765,
+          43767
         ]
       }
     ],

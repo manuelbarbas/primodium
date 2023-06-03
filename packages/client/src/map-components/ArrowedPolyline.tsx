@@ -10,7 +10,7 @@ type ArrowedPolylineProps = Omit<PolylineProps, "positions"> & {
 
 const ArrowedPolyline: React.FC<ArrowedPolylineProps> = ({
   positions,
-  arrowsPerSegment = 4,
+  arrowsPerSegment = 3,
   pathOptions,
 }) => {
   const context = useLeafletContext();

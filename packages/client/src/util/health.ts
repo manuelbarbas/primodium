@@ -1,6 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 
-export const DEFAULT_MAX_HEALTH = 100;
+export const DEFAULT_MAX_HEALTH = 1000;
 
 export function getBuildingMaxHealth(tileId: EntityID) {
   if (tileId) {

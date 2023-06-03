@@ -12,9 +12,9 @@ export default function StaticResourceLabel({
 }) {
   const resourceIcon = ResourceImage.get(resourceId);
   return (
-    <div className="flex">
-      <p className="ml-2 mr-2">{count}</p>
-      <img className="w-4 h-4 my-auto mr-2" src={resourceIcon}></img>
-    </div>
+    <>
+      <img className="inline-block mr-1" src={resourceIcon}></img>
+      {count}
+    </>
   );
 }
