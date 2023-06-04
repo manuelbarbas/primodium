@@ -1123,22 +1123,22 @@
   },
   "ast": {
     "absolutePath": "src/components/PathComponent.sol",
-    "id": 21657,
+    "id": 21573,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "ID": [
-        21643
+        21559
       ],
       "IUint256Component": [
-        1218
+        1134
       ],
       "LibTypes": [
-        42620
+        40675
       ],
       "PathComponent": [
-        21656
+        21572
       ],
       "Uint256Component": [
         1105
@@ -1148,7 +1148,7 @@
     "src": "32:321:91",
     "nodes": [
       {
-        "id": 21634,
+        "id": 21550,
         "nodeType": "PragmaDirective",
         "src": "32:24:91",
         "nodes": [],
@@ -1160,20 +1160,20 @@
         ]
       },
       {
-        "id": 21635,
+        "id": 21551,
         "nodeType": "ImportDirective",
         "src": "57:55:91",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21657,
-        "sourceUnit": 1973,
+        "scope": 21573,
+        "sourceUnit": 1889,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21643,
+        "id": 21559,
         "nodeType": "VariableDeclaration",
         "src": "114:58:91",
         "nodes": [],
@@ -1181,7 +1181,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:91",
-        "scope": 21657,
+        "scope": 21573,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1189,7 +1189,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21636,
+          "id": 21552,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:91",
@@ -1204,7 +1204,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e50617468",
-                  "id": 21640,
+                  "id": 21556,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1226,7 +1226,7 @@
                     "typeString": "literal_string \"component.Path\""
                   }
                 ],
-                "id": 21639,
+                "id": 21555,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1237,7 +1237,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21641,
+              "id": 21557,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1261,7 +1261,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21638,
+            "id": 21554,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1273,14 +1273,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21637,
+              "id": 21553,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:91",
               "typeDescriptions": {}
             }
           },
-          "id": 21642,
+          "id": 21558,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1299,17 +1299,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21656,
+        "id": 21572,
         "nodeType": "ContractDefinition",
         "src": "175:106:91",
         "nodes": [
           {
-            "id": 21655,
+            "id": 21571,
             "nodeType": "FunctionDefinition",
             "src": "222:57:91",
             "nodes": [],
             "body": {
-              "id": 21654,
+              "id": 21570,
               "nodeType": "Block",
               "src": "277:2:91",
               "nodes": [],
@@ -1321,11 +1321,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21650,
+                    "id": 21566,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21647,
+                    "referencedDeclaration": 21563,
                     "src": "266:5:91",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1333,11 +1333,11 @@
                     }
                   },
                   {
-                    "id": 21651,
+                    "id": 21567,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21643,
+                    "referencedDeclaration": 21559,
                     "src": "273:2:91",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1345,10 +1345,10 @@
                     }
                   }
                 ],
-                "id": 21652,
+                "id": 21568,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21649,
+                  "id": 21565,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "249:16:91"
@@ -1364,17 +1364,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21648,
+              "id": 21564,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21647,
+                  "id": 21563,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "242:5:91",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21655,
+                  "scope": 21571,
                   "src": "234:13:91",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1383,7 +1383,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21646,
+                    "id": 21562,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "234:7:91",
@@ -1399,12 +1399,12 @@
               "src": "233:15:91"
             },
             "returnParameters": {
-              "id": 21653,
+              "id": 21569,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "277:0:91"
             },
-            "scope": 21656,
+            "scope": 21572,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1414,7 +1414,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21644,
+              "id": 21560,
               "name": "Uint256Component",
               "nameLocations": [
                 "201:16:91"
@@ -1423,43 +1423,43 @@
               "referencedDeclaration": 1105,
               "src": "201:16:91"
             },
-            "id": 21645,
+            "id": 21561,
             "nodeType": "InheritanceSpecifier",
             "src": "201:16:91"
           }
         ],
         "canonicalName": "PathComponent",
         "contractDependencies": [
-          42813,
-          42979
+          40868,
+          41034
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21656,
+          21572,
           1105,
-          1218,
+          1134,
           262,
-          42581,
-          45304,
-          43017,
-          2443,
-          44860,
-          45339,
-          44736,
-          1175,
-          44599,
-          2486,
-          44870
+          40636,
+          43422,
+          41072,
+          2359,
+          42978,
+          43478,
+          42854,
+          42721,
+          43467,
+          2402,
+          42988
         ],
         "name": "PathComponent",
         "nameLocation": "184:13:91",
-        "scope": 21657,
+        "scope": 21573,
         "usedErrors": [
-          42381,
-          45229,
-          45336,
-          45338
+          40436,
+          43347,
+          43475,
+          43477
         ]
       }
     ],

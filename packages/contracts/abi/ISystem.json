@@ -250,20 +250,20 @@
   },
   "ast": {
     "absolutePath": "/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol",
-    "id": 19593,
+    "id": 19509,
     "exportedSymbols": {
       "IERC173": [
-        2486
+        2402
       ],
       "ISystem": [
-        19592
+        19508
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:336:66",
     "nodes": [
       {
-        "id": 19580,
+        "id": 19496,
         "nodeType": "PragmaDirective",
         "src": "32:24:66",
         "nodes": [],
@@ -275,23 +275,23 @@
         ]
       },
       {
-        "id": 19582,
+        "id": 19498,
         "nodeType": "ImportDirective",
         "src": "58:40:66",
         "nodes": [],
         "absolutePath": "/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol",
         "file": "./IERC173.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 19593,
-        "sourceUnit": 19519,
+        "scope": 19509,
+        "sourceUnit": 19435,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 19581,
+              "id": 19497,
               "name": "IERC173",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 2486,
+              "referencedDeclaration": 2402,
               "src": "67:7:66",
               "typeDescriptions": {}
             },
@@ -301,12 +301,12 @@
         "unitAlias": ""
       },
       {
-        "id": 19592,
+        "id": 19508,
         "nodeType": "ContractDefinition",
         "src": "264:103:66",
         "nodes": [
           {
-            "id": 19591,
+            "id": 19507,
             "nodeType": "FunctionDefinition",
             "src": "297:68:66",
             "nodes": [],
@@ -317,17 +317,17 @@
             "name": "execute",
             "nameLocation": "306:7:66",
             "parameters": {
-              "id": 19587,
+              "id": 19503,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19586,
+                  "id": 19502,
                   "mutability": "mutable",
                   "name": "args",
                   "nameLocation": "327:4:66",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19591,
+                  "scope": 19507,
                   "src": "314:17:66",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -336,7 +336,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 19585,
+                    "id": 19501,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "314:5:66",
@@ -351,17 +351,17 @@
               "src": "313:19:66"
             },
             "returnParameters": {
-              "id": 19590,
+              "id": 19506,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19589,
+                  "id": 19505,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19591,
+                  "scope": 19507,
                   "src": "351:12:66",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -370,7 +370,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 19588,
+                    "id": 19504,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "351:5:66",
@@ -384,7 +384,7 @@
               ],
               "src": "350:14:66"
             },
-            "scope": 19592,
+            "scope": 19508,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
@@ -394,16 +394,16 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 19583,
+              "id": 19499,
               "name": "IERC173",
               "nameLocations": [
                 "285:7:66"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 2486,
+              "referencedDeclaration": 2402,
               "src": "285:7:66"
             },
-            "id": 19584,
+            "id": 19500,
             "nodeType": "InheritanceSpecifier",
             "src": "285:7:66"
           }
@@ -413,13 +413,13 @@
         "contractKind": "interface",
         "fullyImplemented": false,
         "linearizedBaseContracts": [
-          19592,
-          2486,
-          44870
+          19508,
+          2402,
+          42988
         ],
         "name": "ISystem",
         "nameLocation": "274:7:66",
-        "scope": 19593,
+        "scope": 19509,
         "usedErrors": []
       }
     ],

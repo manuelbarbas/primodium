@@ -1123,22 +1123,22 @@
   },
   "ast": {
     "absolutePath": "src/components/HealthComponent.sol",
-    "id": 21489,
+    "id": 21405,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "HealthComponent": [
-        21488
+        21404
       ],
       "ID": [
-        21475
+        21391
       ],
       "IUint256Component": [
-        1218
+        1134
       ],
       "LibTypes": [
-        42620
+        40675
       ],
       "Uint256Component": [
         1105
@@ -1148,7 +1148,7 @@
     "src": "32:315:84",
     "nodes": [
       {
-        "id": 21466,
+        "id": 21382,
         "nodeType": "PragmaDirective",
         "src": "32:24:84",
         "nodes": [],
@@ -1160,20 +1160,20 @@
         ]
       },
       {
-        "id": 21467,
+        "id": 21383,
         "nodeType": "ImportDirective",
         "src": "57:55:84",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
         "file": "std-contracts/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21489,
-        "sourceUnit": 1973,
+        "scope": 21405,
+        "sourceUnit": 1889,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21475,
+        "id": 21391,
         "nodeType": "VariableDeclaration",
         "src": "114:60:84",
         "nodes": [],
@@ -1181,7 +1181,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "131:2:84",
-        "scope": 21489,
+        "scope": 21405,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1189,7 +1189,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21468,
+          "id": 21384,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "114:7:84",
@@ -1204,7 +1204,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e4865616c7468",
-                  "id": 21472,
+                  "id": 21388,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1226,7 +1226,7 @@
                     "typeString": "literal_string \"component.Health\""
                   }
                 ],
-                "id": 21471,
+                "id": 21387,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1237,7 +1237,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21473,
+              "id": 21389,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1261,7 +1261,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21470,
+            "id": 21386,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1273,14 +1273,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21469,
+              "id": 21385,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "136:7:84",
               "typeDescriptions": {}
             }
           },
-          "id": 21474,
+          "id": 21390,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1299,17 +1299,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21488,
+        "id": 21404,
         "nodeType": "ContractDefinition",
         "src": "238:108:84",
         "nodes": [
           {
-            "id": 21487,
+            "id": 21403,
             "nodeType": "FunctionDefinition",
             "src": "287:57:84",
             "nodes": [],
             "body": {
-              "id": 21486,
+              "id": 21402,
               "nodeType": "Block",
               "src": "342:2:84",
               "nodes": [],
@@ -1321,11 +1321,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21482,
+                    "id": 21398,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21479,
+                    "referencedDeclaration": 21395,
                     "src": "331:5:84",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1333,11 +1333,11 @@
                     }
                   },
                   {
-                    "id": 21483,
+                    "id": 21399,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21475,
+                    "referencedDeclaration": 21391,
                     "src": "338:2:84",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1345,10 +1345,10 @@
                     }
                   }
                 ],
-                "id": 21484,
+                "id": 21400,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21481,
+                  "id": 21397,
                   "name": "Uint256Component",
                   "nameLocations": [
                     "314:16:84"
@@ -1364,17 +1364,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21480,
+              "id": 21396,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21479,
+                  "id": 21395,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "307:5:84",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21487,
+                  "scope": 21403,
                   "src": "299:13:84",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1383,7 +1383,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21478,
+                    "id": 21394,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "299:7:84",
@@ -1399,12 +1399,12 @@
               "src": "298:15:84"
             },
             "returnParameters": {
-              "id": 21485,
+              "id": 21401,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "342:0:84"
             },
-            "scope": 21488,
+            "scope": 21404,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1414,7 +1414,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21476,
+              "id": 21392,
               "name": "Uint256Component",
               "nameLocations": [
                 "266:16:84"
@@ -1423,43 +1423,43 @@
               "referencedDeclaration": 1105,
               "src": "266:16:84"
             },
-            "id": 21477,
+            "id": 21393,
             "nodeType": "InheritanceSpecifier",
             "src": "266:16:84"
           }
         ],
         "canonicalName": "HealthComponent",
         "contractDependencies": [
-          42813,
-          42979
+          40868,
+          41034
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21488,
+          21404,
           1105,
-          1218,
+          1134,
           262,
-          42581,
-          45304,
-          43017,
-          2443,
-          44860,
-          45339,
-          44736,
-          1175,
-          44599,
-          2486,
-          44870
+          40636,
+          43422,
+          41072,
+          2359,
+          42978,
+          43478,
+          42854,
+          42721,
+          43467,
+          2402,
+          42988
         ],
         "name": "HealthComponent",
         "nameLocation": "247:15:84",
-        "scope": 21489,
+        "scope": 21405,
         "usedErrors": [
-          42381,
-          45229,
-          45336,
-          45338
+          40436,
+          43347,
+          43475,
+          43477
         ]
       }
     ],

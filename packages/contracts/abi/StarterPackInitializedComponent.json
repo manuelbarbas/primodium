@@ -1105,44 +1105,44 @@
   },
   "ast": {
     "absolutePath": "src/components/StarterPackInitializedComponent.sol",
-    "id": 21729,
+    "id": 21645,
     "exportedSymbols": {
       "BareComponent": [
-        42581
+        40636
       ],
       "BoolComponent": [
-        1711
+        1627
       ],
       "Component": [
         262
       ],
       "ID": [
-        21715
+        21631
       ],
       "IEntityIndexer": [
-        42998
+        41053
       ],
       "IWorld": [
-        1331
+        1247
       ],
       "LibTypes": [
-        42620
+        40675
       ],
       "MapSet": [
-        42813
+        40868
       ],
       "Set": [
-        42979
+        41034
       ],
       "StarterPackInitializedComponent": [
-        21728
+        21644
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:277:94",
     "nodes": [
       {
-        "id": 21706,
+        "id": 21622,
         "nodeType": "PragmaDirective",
         "src": "32:24:94",
         "nodes": [],
@@ -1154,20 +1154,20 @@
         ]
       },
       {
-        "id": 21707,
+        "id": 21623,
         "nodeType": "ImportDirective",
         "src": "57:52:94",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/BoolComponent.sol",
         "file": "std-contracts/components/BoolComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 21729,
-        "sourceUnit": 1712,
+        "scope": 21645,
+        "sourceUnit": 1628,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 21715,
+        "id": 21631,
         "nodeType": "VariableDeclaration",
         "src": "111:76:94",
         "nodes": [],
@@ -1175,7 +1175,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "128:2:94",
-        "scope": 21729,
+        "scope": 21645,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1183,7 +1183,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 21708,
+          "id": 21624,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "111:7:94",
@@ -1198,7 +1198,7 @@
               "arguments": [
                 {
                   "hexValue": "636f6d706f6e656e742e537461727465725061636b496e697469616c697a6564",
-                  "id": 21712,
+                  "id": 21628,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1220,7 +1220,7 @@
                     "typeString": "literal_string \"component.StarterPackInitialized\""
                   }
                 ],
-                "id": 21711,
+                "id": 21627,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1231,7 +1231,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 21713,
+              "id": 21629,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1255,7 +1255,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 21710,
+            "id": 21626,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1267,14 +1267,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 21709,
+              "id": 21625,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "133:7:94",
               "typeDescriptions": {}
             }
           },
-          "id": 21714,
+          "id": 21630,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1293,17 +1293,17 @@
         "visibility": "internal"
       },
       {
-        "id": 21728,
+        "id": 21644,
         "nodeType": "ContractDefinition",
         "src": "190:118:94",
         "nodes": [
           {
-            "id": 21727,
+            "id": 21643,
             "nodeType": "FunctionDefinition",
             "src": "252:54:94",
             "nodes": [],
             "body": {
-              "id": 21726,
+              "id": 21642,
               "nodeType": "Block",
               "src": "304:2:94",
               "nodes": [],
@@ -1315,11 +1315,11 @@
               {
                 "arguments": [
                   {
-                    "id": 21722,
+                    "id": 21638,
                     "name": "world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21719,
+                    "referencedDeclaration": 21635,
                     "src": "293:5:94",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1327,11 +1327,11 @@
                     }
                   },
                   {
-                    "id": 21723,
+                    "id": 21639,
                     "name": "ID",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 21715,
+                    "referencedDeclaration": 21631,
                     "src": "300:2:94",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -1339,16 +1339,16 @@
                     }
                   }
                 ],
-                "id": 21724,
+                "id": 21640,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 21721,
+                  "id": 21637,
                   "name": "BoolComponent",
                   "nameLocations": [
                     "279:13:94"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1711,
+                  "referencedDeclaration": 1627,
                   "src": "279:13:94"
                 },
                 "nodeType": "ModifierInvocation",
@@ -1358,17 +1358,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 21720,
+              "id": 21636,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 21719,
+                  "id": 21635,
                   "mutability": "mutable",
                   "name": "world",
                   "nameLocation": "272:5:94",
                   "nodeType": "VariableDeclaration",
-                  "scope": 21727,
+                  "scope": 21643,
                   "src": "264:13:94",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1377,7 +1377,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 21718,
+                    "id": 21634,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "264:7:94",
@@ -1393,12 +1393,12 @@
               "src": "263:15:94"
             },
             "returnParameters": {
-              "id": 21725,
+              "id": 21641,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "304:0:94"
             },
-            "scope": 21728,
+            "scope": 21644,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -1408,51 +1408,51 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 21716,
+              "id": 21632,
               "name": "BoolComponent",
               "nameLocations": [
                 "234:13:94"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1711,
+              "referencedDeclaration": 1627,
               "src": "234:13:94"
             },
-            "id": 21717,
+            "id": 21633,
             "nodeType": "InheritanceSpecifier",
             "src": "234:13:94"
           }
         ],
         "canonicalName": "StarterPackInitializedComponent",
         "contractDependencies": [
-          42813,
-          42979
+          40868,
+          41034
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          21728,
-          1711,
+          21644,
+          1627,
           262,
-          42581,
-          45304,
-          43017,
-          2443,
-          44860,
-          45339,
-          44736,
-          1175,
-          44599,
-          2486,
-          44870
+          40636,
+          43422,
+          41072,
+          2359,
+          42978,
+          43478,
+          42854,
+          42721,
+          43467,
+          2402,
+          42988
         ],
         "name": "StarterPackInitializedComponent",
         "nameLocation": "199:31:94",
-        "scope": 21729,
+        "scope": 21645,
         "usedErrors": [
-          42381,
-          45229,
-          45336,
-          45338
+          40436,
+          43347,
+          43475,
+          43477
         ]
       }
     ],
