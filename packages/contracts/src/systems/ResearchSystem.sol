@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
@@ -24,6 +24,9 @@ contract ResearchSystem is System {
 
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
+    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
+      getAddressById(components, LastResearchedAtComponentID)
+    );
 
     // Research FastMiner with 100 IronResource and 100 CopperResource
     if (LibEncode.hashEqual(researchItem, FastMinerResearchID)) {
@@ -37,7 +40,7 @@ contract ResearchSystem is System {
         FastMinerResearchID,
         addressToEntity(msg.sender)
       );
-      (world, msg.sender, FastMinerResearchID);
+      LibResearch.setLastResearched(lastResearchedAtComponent, FastMinerResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research Copper with 200 IronResource
@@ -50,6 +53,7 @@ contract ResearchSystem is System {
         CopperResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, CopperResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research PlatingFactory with 200 IronResource and 200 CopperResource
@@ -64,6 +68,7 @@ contract ResearchSystem is System {
         PlatingFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, PlatingFactoryResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
@@ -76,6 +81,7 @@ contract ResearchSystem is System {
         LithiumResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, LithiumResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research BasicBatteryFactory with 50 IronPlateCrafted and 100 LithiumResource
@@ -87,6 +93,11 @@ contract ResearchSystem is System {
         50,
         LithiumResourceItemID,
         100,
+        BasicBatteryFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
         BasicBatteryFactoryResearchID,
         addressToEntity(msg.sender)
       );
@@ -104,6 +115,11 @@ contract ResearchSystem is System {
         KineticMissileFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        KineticMissileFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
     // Research Titanium with 50 BasicPowerSourceCrafted
@@ -116,6 +132,7 @@ contract ResearchSystem is System {
         TitaniumResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, TitaniumResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research ProjectileLauncher with 50 BasicPowerSourceCrafted and 500 TitaniumResource
@@ -127,6 +144,11 @@ contract ResearchSystem is System {
         50,
         TitaniumResourceItemID,
         500,
+        ProjectileLauncherResearchID,
+        addressToEntity(msg.sender)
+      );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
         ProjectileLauncherResearchID,
         addressToEntity(msg.sender)
       );
@@ -146,6 +168,7 @@ contract ResearchSystem is System {
         HardenedDrillResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, HardenedDrillResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research Osmium with 300 TitaniumResource
@@ -158,6 +181,7 @@ contract ResearchSystem is System {
         OsmiumResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, OsmiumResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research DenseMetalRefinery with 100 OsmiumResource, 300 TitaniumResource, and 100 BasicPowerSourceCrafted
@@ -171,6 +195,11 @@ contract ResearchSystem is System {
         300,
         BasicPowerSourceCraftedItemID,
         100,
+        DenseMetalRefineryResearchID,
+        addressToEntity(msg.sender)
+      );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
         DenseMetalRefineryResearchID,
         addressToEntity(msg.sender)
       );
@@ -190,6 +219,11 @@ contract ResearchSystem is System {
         AdvancedBatteryFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        AdvancedBatteryFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
     // Research Tungsten with 100 RefinedOsmiumCrafted 200 TitaniumResource
@@ -204,6 +238,7 @@ contract ResearchSystem is System {
         TungstenResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, TungstenResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research HighTempFoundry with 200 TungstenResource, 100 OsmiumResource, 50 AdvancedPowerSourceCrafted
@@ -220,6 +255,7 @@ contract ResearchSystem is System {
         HighTempFoundryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, HighTempFoundryResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research Iridium with 100 TungstenRodCrafted 100 OsmiumResource
@@ -234,6 +270,7 @@ contract ResearchSystem is System {
         IridiumResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, IridiumResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research PrecisionMachineryFactory with 200 IridiumResource and 100 TungstenRodsCrafted
@@ -245,6 +282,11 @@ contract ResearchSystem is System {
         200,
         TungstenRodsCraftedItemID,
         100,
+        PrecisionMachineryFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
         PrecisionMachineryFactoryResearchID,
         addressToEntity(msg.sender)
       );
@@ -262,6 +304,11 @@ contract ResearchSystem is System {
         IridiumDrillbitFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        IridiumDrillbitFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
     // Research PrecisionPneumaticDrill with 200 TungstenRodsCrafted and 50 IridiumDrillbitCrafted
@@ -273,6 +320,11 @@ contract ResearchSystem is System {
         200,
         IridiumDrillbitCraftedItemID,
         50,
+        PrecisionPneumaticDrillResearchID,
+        addressToEntity(msg.sender)
+      );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
         PrecisionPneumaticDrillResearchID,
         addressToEntity(msg.sender)
       );
@@ -290,6 +342,11 @@ contract ResearchSystem is System {
         PenetratorFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        PenetratorFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
     // Research PenetratingMissileFactory with 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
@@ -301,6 +358,11 @@ contract ResearchSystem is System {
         100,
         AdvancedPowerSourceCraftedItemID,
         50,
+        PenetratingMissileFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
         PenetratingMissileFactoryResearchID,
         addressToEntity(msg.sender)
       );
@@ -318,6 +380,11 @@ contract ResearchSystem is System {
         MissileLaunchComplexResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        MissileLaunchComplexResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
     // Research HighEnergyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
@@ -332,6 +399,11 @@ contract ResearchSystem is System {
         HighEnergyLaserFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        HighEnergyLaserFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
     // Research ThermobaricWarheadFactory with 200 IridiumCrystalCrafted
@@ -341,6 +413,11 @@ contract ResearchSystem is System {
         researchComponent,
         IridiumCrystalCraftedItemID,
         200,
+        ThermobaricWarheadFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
         ThermobaricWarheadFactoryResearchID,
         addressToEntity(msg.sender)
       );
@@ -358,6 +435,11 @@ contract ResearchSystem is System {
         ThermobaricMissileFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        ThermobaricMissileFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
     // Research Kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
@@ -372,6 +454,7 @@ contract ResearchSystem is System {
         KimberliteResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(lastResearchedAtComponent, KimberliteResearchID, addressToEntity(msg.sender));
       return abi.encode(true);
     }
     // Research KimberliteCatalystFactory with 300 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
@@ -386,9 +469,14 @@ contract ResearchSystem is System {
         KimberliteCatalystFactoryResearchID,
         addressToEntity(msg.sender)
       );
+      LibResearch.setLastResearched(
+        lastResearchedAtComponent,
+        KimberliteCatalystFactoryResearchID,
+        addressToEntity(msg.sender)
+      );
       return abi.encode(true);
     }
-    // no research item found
+    // no research objective found
     else {
       revert("[ResearchSystem] Not a valid research objective ID");
     }
