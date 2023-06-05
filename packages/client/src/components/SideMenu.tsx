@@ -1,4 +1,4 @@
-import { useState, useCallback, ReactNode } from "react";
+import { useState, useCallback, ReactNode, useEffect } from "react";
 
 import { IoHammerSharp } from "react-icons/io5";
 import { IoFlaskSharp } from "react-icons/io5";
@@ -12,6 +12,7 @@ import BuildingPage from "./building-menu/BuildingPage";
 import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
 import ResearchModal from "./research-menu/ResearchModal";
 import { useGameStore } from "../store/GameStore";
+import { useTourStore } from "../store/TourStore";
 
 function SideBarIcon({
   id,
@@ -68,6 +69,12 @@ function SideMenu() {
   // Only show one element at a time
   // -1 means menu not selected at all.
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
+  const [checkpoint] = useTourStore((state) => [state.checkpoint]);
+
+  //TODO: temp fix for tour. Menu will reset on checkpoint change.
+  useEffect(() => {
+    setMenuOpenIndex(-1);
+  }, [checkpoint]);
 
   return (
     <div className="z-[1000] viewport-container fixed bottom-4 left-4 selection:font-mono text-white">
