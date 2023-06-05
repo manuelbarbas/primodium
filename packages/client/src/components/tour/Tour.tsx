@@ -6,6 +6,7 @@ import NarrationBox from "./NarrationBox";
 import { _TourHintLayer } from "../../map-components/TourHintLayer";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
+import { validMapClick } from "../../util/map";
 
 export const Tour = () => {
   const map = useMap();
@@ -13,7 +14,6 @@ export const Tour = () => {
     currentStep,
     setCurrentStep,
     setCompletedTutorial,
-    completedTutorial,
     checkpoint,
     setCheckpoint,
     spawn,
@@ -21,19 +21,15 @@ export const Tour = () => {
     state.currentStep,
     state.setCurrentStep,
     state.setCompletedTutorial,
-    state.completedTutorial,
     state.checkpoint,
     state.setCheckpoint,
     state.spawn,
   ]);
 
-  const [setGameStateToDefault, setSelectedTile, setShowUI] = useGameStore(
-    (state) => [
-      state.setGameStateToDefault,
-      state.setSelectedTile,
-      state.setShowUI,
-    ]
-  );
+  const [setGameStateToDefault, setShowUI] = useGameStore((state) => [
+    state.setGameStateToDefault,
+    state.setShowUI,
+  ]);
 
   useEffect(() => {
     //set the current step to saved checkpoint + 1
@@ -50,13 +46,11 @@ export const Tour = () => {
     if (!spawn) return;
 
     //we want to default to the spawn tile when tour is in progress
-    setSelectedTile(spawn);
     map.setView([spawn.y, spawn.x]);
   }, []);
 
   //hide ui if step specifies
   useEffect(() => {
-    console.log(currentStep);
     if (!currentStep) {
       setShowUI(false);
       return;
@@ -65,10 +59,8 @@ export const Tour = () => {
     setShowUI(!currentStep.hideUI);
   }, [currentStep]);
 
-  if (completedTutorial) return null;
-
   return (
-    <div className=" pointer-events-none">
+    <div>
       <div className="absolute top-0 left-0 z-[1001] ml-4">
         <NarrationBox />
       </div>
@@ -85,6 +77,8 @@ export const Tour = () => {
         }
         disableCloseOnClick
         maskRadius={10}
+        disableClose
+        debug
         disableNext
         disablePrev
         movingTarget
@@ -99,6 +93,11 @@ export const Tour = () => {
           _TourHintLayer.clearLayers();
 
           tourLogic.next();
+        }}
+        validateNextOnTargetClick={async () => {
+          const selectedTile = useGameStore.getState().selectedTile;
+
+          return validMapClick(selectedTile);
         }}
         customCloseFunc={(tourLogic) => {
           setCheckpoint(null);

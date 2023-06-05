@@ -35,13 +35,10 @@ const MapBuildingHints = ({
     <>
       {tiles.map((tile) => {
         return (
-          <div className="-translate-y-full -translate-x-full">
-            <MapArrow
-              x={tile.x}
-              y={tile.y}
-              highlight
-              key={`map-building-hint, origin: ${tile.x}-${tile.y} resource: ${blockType}`}
-            />
+          <div
+            key={`map-building-hint, origin: ${tile.x}-${tile.y} resource: ${blockType}`}
+          >
+            <MapArrow x={tile.x} y={tile.y} highlight />
           </div>
         );
       })}

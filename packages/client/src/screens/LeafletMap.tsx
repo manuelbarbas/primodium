@@ -12,10 +12,13 @@ import { getTopLayerKeyPair } from "../util/tile";
 import ResourceTileLayer from "../map-components/ResourceTileLayer";
 import { Tour } from "../components/tour/Tour";
 import TourHintLayer from "../map-components/TourHintLayer";
+import { useTourStore } from "../store/TourStore";
 
 export default function LeafletMap() {
   const [initialized, setInitialized] = useState(false);
-
+  const [completedTutorial] = useTourStore((state) => [
+    state.completedTutorial,
+  ]);
   const perlinRef = useRef(null as null | Perlin);
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export default function LeafletMap() {
       crs={L.CRS.Simple}
       className="map-container"
     >
-      <Tour />
+      {!completedTutorial && <Tour />}
       <LayersControl position="bottomright">
         <ResourceTileLayer getTileKey={getTopLayerKeyPairHelper} />
         <TourHintLayer />

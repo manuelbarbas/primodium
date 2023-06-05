@@ -2,7 +2,10 @@ import { useEffect, useRef } from "react";
 import { useTourStore } from "../../store/TourStore";
 
 const NarrationBox = () => {
-  const [currentStep] = useTourStore((state) => [state.currentStep]);
+  const [currentStep, setCompletedTutorial] = useTourStore((state) => [
+    state.currentStep,
+    state.setCompletedTutorial,
+  ]);
   const narration = useRef<JSX.Element | undefined>(undefined);
 
   useEffect(() => {
@@ -28,6 +31,15 @@ const NarrationBox = () => {
       <div className="text-sm">
         {currentStep?.narration ?? narration.current}
       </div>
+      <br />
+      <button
+        className="underline text-right"
+        onClick={() => {
+          setCompletedTutorial(true);
+        }}
+      >
+        Skip Tutorial
+      </button>
     </div>
   );
 };

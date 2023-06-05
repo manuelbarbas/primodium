@@ -24,7 +24,10 @@ const defaults: TourState = {
   checkpoint: null,
   currentStep: null,
   prevCheckpoint: null,
-  spawn: null,
+  spawn: {
+    x: Math.floor(Math.random() * 2000),
+    y: Math.floor(Math.random() * 2000),
+  },
 };
 
 export const useTourStore = create<TourState & TourActions>()(

@@ -159,6 +159,6 @@ export function getBuildingsOfTypeInRange(
       }
     }
   }
-  console.log(tiles);
+
   return tiles;
 }

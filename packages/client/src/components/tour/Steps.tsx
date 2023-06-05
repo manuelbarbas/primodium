@@ -3,7 +3,6 @@ import { CardinalOrientation, Step, WalktourLogic } from "walktour";
 import { SimpleCardinal, TourStep } from "../../util/types";
 import { BlockType } from "../../util/constants";
 import { useTourStore } from "../../store/TourStore";
-import { useGameStore } from "../../store/GameStore";
 import { _TourHintLayer } from "../../map-components/TourHintLayer";
 import Arrow from "./Arrow";
 import MapArrow from "./MapArrow";
@@ -66,6 +65,7 @@ const buildRoute = (_route: {
       name: `routing to ${selector}`,
       selector: ".leaflet-container",
       narration: narration[index],
+      hideUI: true,
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
 
@@ -77,9 +77,6 @@ const buildRoute = (_route: {
             blockType={selector as EntityID}
           />
         );
-      },
-      validate: async () => {
-        return true;
       },
       orientation,
     });
@@ -103,7 +100,6 @@ const buildStep = (step: {
 }): TourStep => {
   const defaults = {
     checkpoint: false,
-    validate: async () => true,
     onNext: () => {},
     revertOnValidationFail: false,
     narration: undefined,
@@ -125,7 +121,7 @@ const buildStep = (step: {
     hideUI,
   } = { ...defaults, ...step };
 
-  return {
+  let _step: TourStep = {
     description: `${checkpoint ? "Checkpoint" : "Step"}: ${name}`,
     selector: selector,
     disableMask: disableMask,
@@ -152,49 +148,24 @@ const buildStep = (step: {
       return customTooltipRenderer(tour);
     },
     nextOnTargetClick: true,
-    validateNextOnTargetClick: async () => {
-      if (!(await validate())) {
-        //TODO: HANDLE VALIDATION ERROR
-
-        //TODO: HANDLE REVERT ON VALIDATION FAIL
-
-        // const setCheckpoint = useTourStore.getState().setCheckpoint;
-        // const prevCheckpoint = useTourStore.getState().prevCheckpoint;
-
-        // //rollback checkpoint
-        // setCheckpoint(prevCheckpoint);
-        return false;
-      }
-
-      return true;
-    },
     orientationPreferences: orientation,
   };
+
+  if (validate) {
+    _step.validateNextOnTargetClick = async () => {
+      return await validate();
+    };
+  }
+
+  return _step;
 };
 
-export const steps: Step[] = [
+export const steps: TourStep[] = [
   // CHECKPOINT 0: START
   buildStep({
     name: "start",
     selector: ".screen-container",
     checkpoint: true,
-    onNext: () => {
-      const setSpawn = useTourStore.getState().setSpawn;
-      const setSelectedTile = useGameStore.getState().setSelectedTile;
-      const setNavigateToTile = useGameStore.getState().setNavigateToTile;
-      const spawn = {
-        x: Math.floor(Math.random() * 1000),
-        y: Math.floor(Math.random() * 1000),
-      };
-
-      setSpawn(spawn);
-      setSelectedTile(spawn);
-      setNavigateToTile(true);
-    },
-    validate: async () => {
-      const spawn = useTourStore.getState().spawn;
-      return spawn !== null;
-    },
     customTooltipRenderer: (tour) => {
       return (
         <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">
@@ -252,20 +223,7 @@ export const steps: Step[] = [
     ),
     customTooltipRenderer: () => {
       const spawn = useTourStore.getState().spawn;
-      // const setShowUI = useGameStore.getState().setShowUI;
-
-      // setShowUI(false);
-
-      //we set spawn in previous step
-      return <MapArrow x={spawn!.x} y={spawn!.y} />;
-    },
-    onNext: () => {
-      const setShowUI = useGameStore.getState().setShowUI;
-      setShowUI(true);
-    },
-    validate: async () => {
-      // TODO: validate if main base is placed down
-      return true;
+      return <MapArrow x={spawn!.x} y={spawn!.y} highlight />;
     },
   }),
   // ROUTE TO RESOURCE BOX
@@ -291,10 +249,6 @@ export const steps: Step[] = [
     checkpoint: true,
     customTooltipRenderer: () => {
       return <Arrow direction="right" bounce />;
-    },
-    validate: async () => {
-      // TODO: validate if user has claimed starter pack
-      return true;
     },
     orientation: [CardinalOrientation.CENTER, CardinalOrientation.WEST],
   }),
@@ -416,11 +370,6 @@ export const steps: Step[] = [
     name: "place down conveyor",
     selector: ".leaflet-container",
     hideUI: true,
-    validate: async () => {
-      // TODO: Validate path placement
-
-      return true;
-    },
     narration: (
       <p>
         First, let's place the start of the conveyor on the miner node.
@@ -449,11 +398,6 @@ export const steps: Step[] = [
     selector: ".leaflet-container",
     checkpoint: true,
     hideUI: true,
-    validate: async () => {
-      // TODO: Validate path placement
-
-      return true;
-    },
     narration: (
       <p>
         Now, place the end of the conveyor on the base node.
@@ -501,7 +445,7 @@ export const steps: Step[] = [
       return <Arrow direction="right" bounce />;
     },
     validate: async () => {
-      //TODO: Validate user got enough iron for research
+      //TODO: Check if user has enough iron without using hooks
       return true;
     },
     orientation: [CardinalOrientation.WEST],
@@ -532,10 +476,6 @@ export const steps: Step[] = [
         mine copper!
       </p>
     ),
-    validate: async () => {
-      //TODO: Validate research
-      return true;
-    },
     orientation: [CardinalOrientation.WEST],
   }),
   // END
