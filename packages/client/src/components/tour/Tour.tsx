@@ -1,15 +1,21 @@
 import { Walktour } from "walktour";
 import { useTourStore } from "../../store/TourStore";
-import { steps } from "./Steps";
+import buildTourSteps from "./Steps";
 import { useGameStore } from "../../store/GameStore";
 import NarrationBox from "./NarrationBox";
 import { _TourHintLayer } from "../../map-components/TourHintLayer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
 import { validMapClick } from "../../util/map";
+import { useMud } from "../../context/MudContext";
+import { TourStep } from "../../util/types";
+import { useAccount } from "../../hooks/useAccount";
 
 export const Tour = () => {
   const map = useMap();
+  const mudCtx = useMud();
+  // const account = useAccount();
+  const [steps, setSteps] = useState<TourStep[]>([]);
   const [
     currentStep,
     setCurrentStep,
@@ -31,7 +37,14 @@ export const Tour = () => {
     state.setShowUI,
   ]);
 
+  //instatiate steps with injected mud context
   useEffect(() => {
+    setSteps(buildTourSteps(mudCtx));
+  }, []);
+
+  useEffect(() => {
+    if (!steps) return;
+
     //set the current step to saved checkpoint + 1
     setCurrentStep(
       checkpoint
@@ -47,7 +60,7 @@ export const Tour = () => {
 
     //we want to default to the spawn tile when tour is in progress
     map.setView([spawn.y, spawn.x]);
-  }, []);
+  }, [steps]);
 
   //hide ui if step specifies
   useEffect(() => {
