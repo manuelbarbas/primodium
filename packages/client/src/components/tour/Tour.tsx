@@ -14,8 +14,6 @@ import { useAccount } from "../../hooks/useAccount";
 export const Tour = () => {
   const map = useMap();
   const mudCtx = useMud();
-  const { address } = useAccount();
-
   // const account = useAccount();
   const [steps, setSteps] = useState<TourStep[]>([]);
   const [
@@ -39,13 +37,11 @@ export const Tour = () => {
     state.setShowUI,
   ]);
 
-  //instatiate steps with injected mud context
+  //instatiate steps with injected mud context, set current step to checkpoint + 1, set map view to random spawn
   useEffect(() => {
-    setSteps(buildTourSteps(mudCtx, address));
-  }, []);
-
-  useEffect(() => {
-    if (!steps) return;
+    const { address } = useAccount();
+    const steps = buildTourSteps(mudCtx, address);
+    setSteps(steps);
 
     //set the current step to saved checkpoint + 1
     setCurrentStep(
@@ -62,7 +58,7 @@ export const Tour = () => {
 
     //we want to default to the spawn tile when tour is in progress
     map.setView([spawn.y, spawn.x]);
-  }, [steps]);
+  }, []);
 
   //hide ui if step specifies
   useEffect(() => {
@@ -73,6 +69,9 @@ export const Tour = () => {
 
     setShowUI(!currentStep.hideUI);
   }, [currentStep]);
+
+  //steps needs to be defined for initialStepIndex to work
+  if (!steps.length) return null;
 
   return (
     <div>
@@ -93,7 +92,6 @@ export const Tour = () => {
         disableCloseOnClick
         maskRadius={10}
         disableClose
-        debug
         disableNext
         disablePrev
         movingTarget
