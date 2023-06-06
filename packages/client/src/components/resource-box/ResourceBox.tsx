@@ -14,7 +14,7 @@ import AllResourceLabels from "./AllResourceLabels";
 // import { useGameStore } from "../../store/GameStore";
 
 function ResourceBox() {
-  const [minimized, setMinimize] = useState(true);
+  const [minimized, setMinimize] = useState(false);
   const minimizeBox = () => {
     if (minimized) {
       setMinimize(false);
