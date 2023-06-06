@@ -37,9 +37,10 @@ export const Tour = () => {
     state.setShowUI,
   ]);
 
+  const { address } = useAccount();
+
   //instatiate steps with injected mud context, set current step to checkpoint + 1, set map view to random spawn
   useEffect(() => {
-    const { address } = useAccount();
     const steps = buildTourSteps(mudCtx, address);
     setSteps(steps);
 
