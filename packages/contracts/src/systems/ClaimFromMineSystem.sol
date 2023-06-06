@@ -9,6 +9,8 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
+import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -50,6 +52,13 @@ contract ClaimFromMineSystem is System {
       HealthComponent(getAddressById(components, HealthComponentID))
     );
 
+    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
+      getAddressById(components, LastBuiltAtComponentID)
+    );
+    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
+      getAddressById(components, LastResearchedAtComponentID)
+    );
+
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
     uint256 ownerKey = addressToEntity(msg.sender);
 
@@ -82,6 +91,8 @@ contract ClaimFromMineSystem is System {
 
         uint256 incBy = LibMine.mine(
           c.lastClaimedAtComponent,
+          lastBuiltAtComponent,
+          lastResearchedAtComponent,
           ResearchComponent(getAddressById(components, ResearchComponentID)),
           c.tileComponent.getValue(entitiesAtPosition[0]),
           resourceKey,

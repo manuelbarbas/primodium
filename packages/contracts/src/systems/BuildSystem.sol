@@ -7,7 +7,6 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -29,6 +28,7 @@ import { Coord } from "../types.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
+import { LibDebug } from "../libraries/LibDebug.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -43,9 +43,6 @@ contract BuildSystem is System {
 
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
-    );
-    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
-      getAddressById(components, LastClaimedAtComponentID)
     );
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
@@ -65,7 +62,9 @@ contract BuildSystem is System {
       blockType == SiloID
     ) {
       // debug buildings, do nothing
-      revert("[BuildSystem] Debug buildings are not allowed to be built");
+      if (!LibDebug.isDebug()) {
+        revert("[BuildSystem] Debug buildings are not allowed to be built");
+      }
     } else if (blockType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getAddressById(components, MainBaseInitializedComponentID)
@@ -452,7 +451,6 @@ contract BuildSystem is System {
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
     lastBuiltAtComponent.set(blockEntity, block.number);
-    lastClaimedAtComponent.set(blockEntity, block.number);
 
     return abi.encode(blockEntity);
   }
