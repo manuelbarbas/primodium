@@ -72,7 +72,7 @@ export default function LeafletMap() {
 
   return (
     <MapContainer
-      center={[0, 0]}
+      center={mainBaseCoord ? [mainBaseCoord.y, mainBaseCoord.x] : [0, 0]}
       minZoom={5}
       maxZoom={8}
       zoom={6}
