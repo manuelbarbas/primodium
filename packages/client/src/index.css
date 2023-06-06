@@ -66,6 +66,11 @@
   .map-container {
     background-color: rgb(100 116 139);
   }
+
+  /* remove outline on waltour tooltip containers */
+  #walktour-tooltip-container[tabindex] {
+    @apply focus:outline-none;
+  }
 }
 
 /* remove leaflet layer selection control */
