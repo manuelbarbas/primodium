@@ -233,11 +233,28 @@ export default function buildTourSteps(
         return <MapArrow x={spawn!.x} y={spawn!.y} highlight />;
       },
     }),
-    // ROUTE TO RESOURCE BOX
-    ...buildRoute({
-      route: ["#minimize-resource-box"],
-      arrowDirection: "up",
-      narration: [
+    // // ROUTE TO RESOURCE BOX
+    // ...buildRoute({
+    //   route: ["#minimize-resource-box"],
+    //   arrowDirection: "up",
+    //   narration: [
+    //     <p>
+    //       Looks like you are getting the hang of it. I’ve given you <b>200</b>{" "}
+    //       iron to get you started.
+    //       <br />
+    //       <br />
+    //       To see it, open the Inventory tab. This is where all of your resources
+    //       will be stored.
+    //     </p>,
+    //   ],
+    //   orientation: [CardinalOrientation.SOUTH],
+    // }),
+    // CHECKPOINT 2: CLAIMED STARTER PACK
+    buildStep({
+      name: "claim starter pack",
+      selector: "#starter-pack-button",
+      checkpoint: true,
+      narration: (
         <p>
           Looks like you are getting the hang of it. I’ve given you <b>200</b>{" "}
           iron to get you started.
@@ -245,15 +262,8 @@ export default function buildTourSteps(
           <br />
           To see it, open the Inventory tab. This is where all of your resources
           will be stored.
-        </p>,
-      ],
-      orientation: [CardinalOrientation.SOUTH],
-    }),
-    // CHECKPOINT 2: CLAIMED STARTER PACK
-    buildStep({
-      name: "claim starter pack",
-      selector: "#starter-pack-button",
-      checkpoint: true,
+        </p>
+      ),
       customTooltipRenderer: () => {
         return <Arrow direction="right" bounce />;
       },
@@ -440,6 +450,9 @@ export default function buildTourSteps(
           <br />
           To do this, first select your base on the map, then open the{" "}
           <b>storage menu</b> from the tooltip in the bottom right.
+          <br />
+          <br />
+          Let's get <b>200</b> iron. We will need this for the next step.
         </p>,
       ],
       arrowDirection: "down",
