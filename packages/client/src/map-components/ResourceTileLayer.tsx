@@ -67,10 +67,10 @@ const ResourceTileLayer = ({
   const setNewBounds = useCallback(() => {
     const bounds = map.getBounds();
     const newDisplayTileRange = {
-      x1: Math.floor(bounds.getWest()) - 5,
-      x2: Math.ceil(bounds.getEast()) + 5,
-      y1: Math.floor(bounds.getSouth()) - 5,
-      y2: Math.ceil(bounds.getNorth()) + 5,
+      x1: Math.floor(bounds.getWest()),
+      x2: Math.ceil(bounds.getEast()),
+      y1: Math.floor(bounds.getSouth()),
+      y2: Math.ceil(bounds.getNorth()),
     };
     setDisplayTileRange(newDisplayTileRange);
   }, [map]);
