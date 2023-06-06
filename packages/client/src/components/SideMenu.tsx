@@ -1,18 +1,15 @@
 import { useState, useCallback, ReactNode, useEffect } from "react";
 
-import { IoHammerSharp } from "react-icons/io5";
-import { IoFlaskSharp } from "react-icons/io5";
-import { TbBulldozer } from "react-icons/tb";
-import { TbSword } from "react-icons/tb";
-import { TbScale } from "react-icons/tb";
+import { IoHammerSharp, IoFlaskSharp } from "react-icons/io5";
+import { TbBulldozer, TbSword, TbScale } from "react-icons/tb";
 
-// import AttackBox from "./attack-menu/AttackBox";
 import MarketModal from "./market-menu/MarketModal";
 import BuildingPage from "./building-menu/BuildingPage";
 import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
 import ResearchModal from "./research-menu/ResearchModal";
-import { useGameStore } from "../store/GameStore";
 import AttackBox from "./attack-menu/AttackBox";
+
+import { useGameStore } from "../store/GameStore";
 import { useTourStore } from "../store/TourStore";
 
 function SideBarIcon({
