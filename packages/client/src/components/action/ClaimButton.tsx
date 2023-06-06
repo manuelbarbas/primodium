@@ -6,9 +6,11 @@ import { EntityID } from "@latticexyz/recs";
 import { useGameStore } from "../../store/GameStore";
 
 export default function ClaimButton({
+  id,
   coords: { x, y },
   builtTile,
 }: {
+  id: string;
   coords: DisplayTile;
   builtTile: EntityID;
 }) {
@@ -56,6 +58,7 @@ export default function ClaimButton({
 
   return (
     <button
+      id={id}
       className="inset-x-4 absolute bottom-4 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
       onClick={claimAction}
     >

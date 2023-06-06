@@ -23,6 +23,14 @@ library LibResearch {
   }
 
   // ###########################################################################
+  // Write last researched time into LastResearchedComponent
+
+  function setLastResearched(Uint256Component component, uint256 researchKey, uint256 entity) internal {
+    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(entity));
+    component.set(hashedResearchKey, block.number);
+  }
+
+  // ###########################################################################
   // Research
 
   function researchWithOneItem(

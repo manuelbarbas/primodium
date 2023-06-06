@@ -6,12 +6,24 @@ import { entityToAddress } from "solecs/utils.sol";
 
 import { MainBaseID, MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionMachineryFactoryID, ConveyorID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
 
+import { LibDebug } from "./LibDebug.sol";
 import { LibEncode } from "./LibEncode.sol";
 
 library LibMine {
+  function isDefaultUnlockedResource(uint256 resourceKey) internal pure returns (bool) {
+    if (LibDebug.isDebug()) {
+      // copper is unlocked for mud test
+      return resourceKey == IronID || resourceKey == CopperID;
+    } else {
+      return resourceKey == IronID;
+    }
+  }
+
   // allow mine resource if unlocked.
   function mine(
     Uint256Component lastClaimedAtComponent,
+    Uint256Component lastBuiltAtComponent,
+    Uint256Component lastResearchedAtComponent,
     BoolComponent researchComponent,
     uint256 minerType,
     uint256 resourceKey,
@@ -35,21 +47,30 @@ library LibMine {
       MINE_COUNT_MAX = 3000;
     }
 
-    uint256 startClaimTime = lastClaimedAtComponent.getValue(minerEntity);
-    uint256 endClaimTime = block.number;
     uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(ownerKey));
 
-    if (resourceKey == IronID) {
-      // iron is default unlocked
-    }
-    // copper is unlocked for mud test
-    else if (resourceKey == CopperID) {}
-    // all other resources, including copper in production, require research
-    else {
+    if (!isDefaultUnlockedResource(resourceKey)) {
       if (!researchComponent.has(hashedResearchKey)) {
         return 0;
       }
     }
+
+    // Logic for setting startClaimTime:
+    // If last claimed time doesn't exist, check if default unlocked resource.
+    // - If not a default unlocked resource, use the last researched time for the unlocked resource as startClaimTime.
+    // - If a default unlocked resource, use the last built at time as startClaimTime.
+    // If last claimed time exists, use as startClaimTime.
+    uint256 startClaimTime;
+    if (!lastClaimedAtComponent.has(minerEntity)) {
+      if (!isDefaultUnlockedResource(resourceKey)) {
+        startClaimTime = lastResearchedAtComponent.getValue(hashedResearchKey);
+      } else {
+        startClaimTime = lastBuiltAtComponent.getValue(minerEntity);
+      }
+    } else {
+      startClaimTime = lastClaimedAtComponent.getValue(minerEntity);
+    }
+    uint256 endClaimTime = block.number;
 
     lastClaimedAtComponent.set(minerEntity, endClaimTime);
 

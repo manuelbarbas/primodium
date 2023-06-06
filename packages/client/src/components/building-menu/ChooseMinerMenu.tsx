@@ -23,6 +23,7 @@ function ChooseMinerMenu({
       <p className="text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
         <BuildingIconButton
+          id="basic-miner"
           label="Basic miner"
           blockType={BlockType.BasicMiner}
         />
