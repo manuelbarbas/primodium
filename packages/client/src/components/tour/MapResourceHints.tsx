@@ -31,7 +31,7 @@ const MapResourceHints = ({
 
   if (perlinRef.current !== null && tiles.length === 0) {
     const perlin = perlinRef.current;
-    tiles = getTilesOfTypeInRange(origin, blockType, range, perlin);
+    tiles = getTilesOfTypeInRange(origin, blockType, range, 2, perlin);
   } else {
     return <></>;
   }

@@ -118,12 +118,18 @@ export function getTilesOfTypeInRange(
   origin: Coord,
   type: EntityID,
   range: number,
+  excludeRange: number,
   perlin: Perlin
 ): Coord[] {
   const tiles: Coord[] = [];
 
   for (let x = -range; x <= range; x++) {
     for (let y = -range; y <= range; y++) {
+      // If the current tile is within the exclude range, skip it
+      if (Math.abs(x) <= excludeRange && Math.abs(y) <= excludeRange) {
+        continue;
+      }
+
       const currentCoord = { x: origin.x + x, y: origin.y + y };
       const keyPair = getTopLayerKeyPair(currentCoord, perlin);
       if (keyPair.resource === type || keyPair.terrain === type) {
