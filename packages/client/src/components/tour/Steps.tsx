@@ -534,9 +534,9 @@ export default function buildTourSteps(
               It's time to expand your empire. Use your newfound knowledge to
               gather more advanced resources, research new factories and attack
               others.
+              {/* <br />
               <br />
-              <br />
-              <b>You can always retry this tutorial in the upper left.</b>
+              <b>You can always retry this tutorial in the upper left.</b> */}
             </div>
             <br />
             <button
