@@ -66,6 +66,10 @@ export const BlockType = {
   DemolishBuilding: keccak256("demolish.Building") as EntityID,
   DemolishPath: keccak256("demolish.Path") as EntityID,
 
+  // Dummy block for selecting tiles
+  SelectPath: keccak256("select.path") as EntityID,
+  SelectAttack: keccak256("select.attack") as EntityID,
+
   // Buildings
   BasicMiner: keccak256("block.BasicMiner") as EntityID,
   Node: keccak256("block.Node") as EntityID,
@@ -138,6 +142,7 @@ export const BlockType = {
   BulletFactoryResearch: keccak256(
     "research.BulletFactoryResearch"
   ) as EntityID,
+  SiloResearch: keccak256("research.SiloResearch") as EntityID,
 
   // Research components
   MainBaseResearch: keccak256("research.MainBase") as EntityID,
@@ -269,9 +274,8 @@ export const BlockColors = new Map<EntityID, string>([
   [BlockType.MainBase, "#8676c0"],
   [BlockType.Conveyor, "#ffcd00"],
 
-  // Factories
+  // Debug factories
   [BlockType.BulletFactory, "#824947"],
-
   [BlockType.Silo, "#bebebe"],
 ]);
 
@@ -456,6 +460,9 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.PenetratingMissileCrafted, "/img/crafted/penetratingmissile.png"],
   [BlockType.ThermobaricWarheadCrafted, "/img/crafted/thermobaricwarhead.png"],
   [BlockType.ThermobaricMissileCrafted, "/img/crafted/thermobaricmissile.png"],
+
+  // debug
+  [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
 ]);
 
 export type DisplayTile = {
@@ -476,6 +483,7 @@ export const BuildingResearchRequirements = new Map<EntityID, EntityID[]>([
 
   [BlockType.Miner, [BlockType.BasicMinerResearch]],
   [BlockType.BulletFactory, [BlockType.BulletFactoryResearch]],
+  [BlockType.Silo, [BlockType.SiloResearch]],
 
   [BlockType.PlatingFactory, [BlockType.PlatingFactoryResearch]],
   [BlockType.BasicBatteryFactory, [BlockType.BasicBatteryFactoryResearch]],
@@ -529,8 +537,11 @@ export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
   BlockType.Iron,
   BlockType.BasicMinerResearch,
   BlockType.NodeResearch,
+
+  // debug
   BlockType.ConveyorResearch,
   BlockType.BulletFactoryResearch,
+  BlockType.SiloResearch,
 ]);
 
 export const TutorialStepToNarrationStep: {

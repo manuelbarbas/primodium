@@ -5,7 +5,7 @@ import { NetworkComponents } from "@latticexyz/std-client";
 import { IComputedValue } from "mobx";
 import { WebSocketProvider } from "@ethersproject/providers";
 
-import { SystemTypes } from "contracts/types/SystemTypes";
+import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import {
   defineComponents,
   defineOffChainComponents,

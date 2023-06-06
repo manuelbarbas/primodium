@@ -8,8 +8,8 @@ import { createFaucetService } from "@latticexyz/network";
 import { SingletonID } from "@latticexyz/network";
 import { utils } from "ethers";
 
-import { SystemTypes } from "contracts/types/SystemTypes";
-import { SystemAbis } from "contracts/types/SystemAbis.mjs";
+import { SystemTypes } from "../../../contracts/types/SystemTypes";
+import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { defineComponents, defineOffChainComponents } from "./components";
 import { faucetUrl } from "./config";
 

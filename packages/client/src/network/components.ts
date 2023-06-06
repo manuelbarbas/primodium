@@ -42,6 +42,11 @@ export function defineComponents(world: World) {
         contractId: "component.LastClaimedAt",
       },
     }),
+    Health: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.Health",
+      },
+    }),
     Item: defineNumberComponent(world, {
       metadata: {
         contractId: "component.Item",
