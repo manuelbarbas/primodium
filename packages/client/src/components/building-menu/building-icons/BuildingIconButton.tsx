@@ -16,9 +16,11 @@ import { useGameStore } from "../../../store/GameStore";
 
 // Builds a specific blockType
 function BuildingIconButton({
+  id,
   label,
   blockType,
 }: {
+  id?: string;
   label: string;
   blockType: EntityID;
 }) {
@@ -62,6 +64,7 @@ function BuildingIconButton({
 
   return (
     <button
+      id={id}
       className="w-16 h-16 text-sm group"
       onClick={
         buildingLocked

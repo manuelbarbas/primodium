@@ -15,6 +15,7 @@ import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
 import { EntityID } from "@latticexyz/recs";
 import HoverTile from "./HoverTile";
+import { validMapClick } from "../util/map";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -134,17 +135,22 @@ const ResourceTileLayer = ({
         y: Math.floor(event.latlng.lat),
       };
 
+      //do not process click if it is not a valid map click
+      if (!validMapClick(mousePos)) return;
+
       switch (selectedBlock) {
         case null:
           setSelectedTile(mousePos);
           return;
         case BlockType.Conveyor:
           if (selectedPathTiles.start === null) {
+            setSelectedTile(mousePos);
             setStartSelectedPathTile(mousePos);
             return;
           }
 
           if (selectedPathTiles.end !== null) {
+            setSelectedTile(mousePos);
             //clear selected block since path is now building. Also insure the end path is where the player clicked.
             setEndSelectedPathTile(mousePos);
             setSelectedBlock(null);
@@ -157,17 +163,19 @@ const ResourceTileLayer = ({
           }
           return;
         case BlockType.DemolishBuilding:
+          setSelectedTile(mousePos);
           setSelectedBlock(null);
           destroyTile(mousePos);
           return;
         case BlockType.DemolishPath:
+          setSelectedTile(mousePos);
           setSelectedBlock(null);
           destroyPath(mousePos);
           return;
         default:
-          console.log("Building block: " + selectedBlock);
-          buildTile(mousePos, selectedBlock);
+          setSelectedTile(mousePos);
           setSelectedBlock(null);
+          buildTile(mousePos, selectedBlock);
           return;
       }
     },
@@ -237,6 +245,7 @@ const ResourceTileLayer = ({
             y={j}
             terrain={tileKey.terrain}
             resource={tileKey.resource}
+            pane="tilePane"
           />
         );
       }
@@ -263,6 +272,7 @@ const ResourceTileLayer = ({
         x={selectedTile.x}
         y={selectedTile.y}
         color="yellow"
+        pane="overlayPane"
       />
     );
 
@@ -277,7 +287,7 @@ const ResourceTileLayer = ({
           x={selectedPathTiles.start.x}
           y={selectedPathTiles.start.y}
           color="magenta"
-          pane="markerPane"
+          pane="overlayPane"
         />
       );
 
@@ -292,7 +302,7 @@ const ResourceTileLayer = ({
           x={selectedPathTiles.end.x}
           y={selectedPathTiles.end.y}
           color="magenta"
-          pane="markerPane"
+          pane="overlayPane"
         />
       );
 
@@ -324,6 +334,7 @@ const ResourceTileLayer = ({
         x={hoveredTile.x}
         y={hoveredTile.y}
         selectedBlock={selectedBlock}
+        pane="overlayPane"
       />
     );
 

@@ -532,3 +532,13 @@ export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
   BlockType.ConveyorResearch,
   BlockType.BulletFactoryResearch,
 ]);
+
+export const TutorialStepToNarrationStep: {
+  [key: number]: number | undefined;
+} = {
+  0: undefined,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 3,
+};

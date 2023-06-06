@@ -1,6 +1,7 @@
 import { useCallback, ReactNode } from "react";
 
 function BuildingMenuButton({
+  id,
   icon,
   label,
   menuIndex,
@@ -8,6 +9,7 @@ function BuildingMenuButton({
   setMenuOpenIndex,
   children,
 }: {
+  id?: string;
   icon: any;
   label: string;
   menuIndex: number;
@@ -26,6 +28,7 @@ function BuildingMenuButton({
   return (
     <>
       <button
+        id={id}
         className="w-16 h-18 flex flex-col items-center justify-center text-xs hover:brightness-75"
         onClick={setMenuOpenIndexHelper}
       >

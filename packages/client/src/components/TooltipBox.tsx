@@ -100,7 +100,7 @@ function TooltipBox() {
   // );
 
   // display actions
-  const [minimized, setMinimize] = useState(false);
+  const [minimized, setMinimize] = useState(true);
 
   const minimizeBox = useCallback(() => {
     if (minimized) {
@@ -155,6 +155,7 @@ function TooltipBox() {
       <div className="z-[1000] viewport-container fixed bottom-4 right-4 h-96 w-80  flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col overflow-y-scroll scrollbar h-64">
           <button
+            id="minimize-button-tooltip-box"
             onClick={minimizeBox}
             className="viewport-container fixed right-9"
           >
@@ -215,6 +216,7 @@ function TooltipBox() {
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
                         <ClaimButton
+                          id="claim-button"
                           key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
@@ -223,6 +225,7 @@ function TooltipBox() {
                     {isClaimableFactory(builtTile) && (
                       <>
                         <ClaimButton
+                          id="claim-button-factory"
                           key={JSON.stringify(selectedTile)}
                           builtTile={builtTile}
                           coords={selectedTile}
@@ -248,6 +251,7 @@ function TooltipBox() {
       <div className="z-[1000] viewport-container fixed bottom-4 right-4 h-14 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col">
           <button
+            id="minimize-button-tooltip-box"
             onClick={minimizeBox}
             className="viewport-container fixed right-9"
           >

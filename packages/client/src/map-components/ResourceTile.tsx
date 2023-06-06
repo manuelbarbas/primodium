@@ -15,11 +15,13 @@ function ResourceTile({
   y,
   terrain,
   resource,
+  pane = "tilePane",
 }: {
   x: number;
   y: number;
   terrain: EntityID;
   resource: EntityID | null;
+  pane: string;
 }) {
   const { world, components, singletonIndex } = useMud();
 
@@ -113,6 +115,7 @@ function ResourceTile({
           ]}
           url={BackgroundImage.get(buildingKey)!}
           zIndex={11}
+          pane={pane}
         />
       )}
       {resource && !buildingKey && (
@@ -124,6 +127,7 @@ function ResourceTile({
           ]}
           url={resourceBackground!}
           zIndex={11}
+          pane={pane}
         />
       )}
       {!buildingKey && (
@@ -135,6 +139,7 @@ function ResourceTile({
           ]}
           url={terrainBackground!}
           zIndex={10}
+          pane={pane}
         />
       )}
       {pathsToRender}
