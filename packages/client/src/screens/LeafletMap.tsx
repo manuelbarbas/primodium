@@ -29,8 +29,7 @@ export default function LeafletMap() {
   ]);
   const perlinRef = useRef(null as null | Perlin);
 
-  // if provide an entityId, use as owner
-  // else try to use wallet, otherwise use default index
+  // resourceKey of the entity
   const resourceKey = address
     ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
     : singletonIndex;
