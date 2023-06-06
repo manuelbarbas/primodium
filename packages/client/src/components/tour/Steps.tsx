@@ -7,8 +7,9 @@ import Arrow from "./Arrow";
 import MapArrow from "./MapArrow";
 import MapResourceHints from "./MapResourceHints";
 import MapBuildingHints from "./MapBuildingHints";
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 import type { useMud } from "../../context/MudContext";
+import { hashFromAddress } from "../../util/encode";
 
 const isQueryString = (selector: string) => {
   try {
@@ -160,8 +161,11 @@ const buildStep = (step: {
   return _step;
 };
 
-export default function buildTourSteps(ctx: ReturnType<typeof useMud>) {
-  const { components } = ctx;
+export default function buildTourSteps(
+  ctx: ReturnType<typeof useMud>,
+  address: string
+) {
+  const { components, world } = ctx;
 
   return [
     // CHECKPOINT 0: START
@@ -450,9 +454,29 @@ export default function buildTourSteps(ctx: ReturnType<typeof useMud>) {
         return <Arrow direction="right" bounce />;
       },
       validate: async () => {
-        //TODO: Check if user has enough iron without using hooks
-        console.log(components);
-        return true;
+        // Check if user has enough iron without using hooks
+
+        const addressIronEntityIndex = world.entityToIndex.get(
+          hashFromAddress(
+            BlockType.Iron,
+            address.toString().toLowerCase()
+          ) as EntityID
+        );
+
+        if (!addressIronEntityIndex) {
+          return false;
+        }
+
+        const addressIronValue = getComponentValue(
+          components.Item,
+          addressIronEntityIndex
+        );
+
+        if (addressIronValue && addressIronValue.value >= 200) {
+          return true;
+        } else {
+          return false;
+        }
       },
       orientation: [CardinalOrientation.WEST],
     }),

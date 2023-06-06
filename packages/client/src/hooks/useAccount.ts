@@ -5,9 +5,11 @@ export function useAccount() {
   const { address } = useWagmiAccount();
   const { defaultWalletAddress } = useMud();
 
-  if (!defaultWalletAddress) {
+  if (defaultWalletAddress) {
+    return { address: defaultWalletAddress };
+  } else if (address) {
     return { address };
   } else {
-    return { address: defaultWalletAddress };
+    throw new Error("No account found");
   }
 }

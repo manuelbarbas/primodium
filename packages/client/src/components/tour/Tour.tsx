@@ -14,6 +14,8 @@ import { useAccount } from "../../hooks/useAccount";
 export const Tour = () => {
   const map = useMap();
   const mudCtx = useMud();
+  const { address } = useAccount();
+
   // const account = useAccount();
   const [steps, setSteps] = useState<TourStep[]>([]);
   const [
@@ -39,7 +41,7 @@ export const Tour = () => {
 
   //instatiate steps with injected mud context
   useEffect(() => {
-    setSteps(buildTourSteps(mudCtx));
+    setSteps(buildTourSteps(mudCtx, address));
   }, []);
 
   useEffect(() => {
