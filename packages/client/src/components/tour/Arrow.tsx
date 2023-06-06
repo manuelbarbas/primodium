@@ -1,5 +1,6 @@
 import { FaArrowDown } from "react-icons/fa";
 import { SimpleCardinal } from "../../util/types";
+import { useGameStore } from "../../store/GameStore";
 
 const Arrow = ({
   direction,
@@ -10,6 +11,10 @@ const Arrow = ({
   bounce?: boolean;
   className?: string;
 }) => {
+  const [transactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
+  ]);
+
   let rotation;
 
   switch (direction) {
@@ -27,17 +32,22 @@ const Arrow = ({
       break;
   }
 
-  return (
-    <div className={`${rotation} ${className} pointer-events-none`}>
-      <div
-        className={`text-yellow-300 shadow-2xl text-4xl ${
-          bounce ? "animate-bounce" : ""
-        }`}
-      >
-        <FaArrowDown />
+  // don't return tooltip if transaction is loading, because nothing to click on
+  if (transactionLoading) {
+    return <></>;
+  } else {
+    return (
+      <div className={`${rotation} ${className} pointer-events-none`}>
+        <div
+          className={`text-yellow-300 shadow-2xl text-4xl ${
+            bounce ? "animate-bounce" : ""
+          }`}
+        >
+          <FaArrowDown />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default Arrow;
