@@ -470,6 +470,8 @@ export const BuildingReceipe = new Map<EntityID, ResourceCostData[]>([
 // researching an item requires resources
 // refer to research.ts for the actual research tree
 
+// Building can claim, store, but not craft
+// with the exception of MainBase, which claims directly to wallet instead of its own storage
 export function isClaimable(tileId: EntityID) {
   return (
     tileId == BlockType.MainBase ||
@@ -480,6 +482,7 @@ export function isClaimable(tileId: EntityID) {
   );
 }
 
+// Building can claim, store, and craft
 export function isClaimableFactory(tileId: EntityID) {
   return (
     tileId == BlockType.PlatingFactory ||

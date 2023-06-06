@@ -3,10 +3,16 @@ import { useMud } from "../../context/MudContext";
 import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
+import Spinner from "../Spinner";
 
-export default function CraftButton({ x, y }: DisplayTile) {
+export default function CraftButton({
+  coords: { x, y },
+}: {
+  coords: DisplayTile;
+}) {
   const { systems, providers } = useMud();
-  const [setTransactionLoading] = useGameStore((state) => [
+  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
     state.setTransactionLoading,
   ]);
 
@@ -22,12 +28,20 @@ export default function CraftButton({ x, y }: DisplayTile) {
     setTransactionLoading(false);
   }, []);
 
-  return (
-    <button
-      className="inset-x-4 absolute bottom-16 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
-      onClick={claimAction}
-    >
-      Craft from Storage
-    </button>
-  );
+  if (transactionLoading) {
+    return (
+      <button className="inset-x-4 absolute bottom-16 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold">
+        <Spinner />
+      </button>
+    );
+  } else {
+    return (
+      <button
+        className="inset-x-4 absolute bottom-16 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
+        onClick={claimAction}
+      >
+        Craft from Storage
+      </button>
+    );
+  }
 }

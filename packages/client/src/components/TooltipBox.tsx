@@ -262,8 +262,7 @@ function TooltipBox() {
               </div>
               <div className="flex-row mt-2 mb-2">
                 {/* TODO: show owned resource for every resource possible */}
-                {builtTile && transactionLoading && <Spinner />}
-                {builtTile && !transactionLoading && (
+                {builtTile && (
                   <>
                     {isClaimableFactory(builtTile) && (
                       <div className="font-bold mb-1">Storage:</div>
@@ -283,10 +282,14 @@ function TooltipBox() {
                           builtTile={builtTile}
                           coords={selectedTile}
                         />
-                        <CraftButton x={selectedTile.x} y={selectedTile.y} />
+                        <CraftButton coords={selectedTile} />
                       </>
                     )}
-                    <AllResourceLabels entityIndex={tilesAtPosition[0]} />
+                    {transactionLoading ? (
+                      <Spinner />
+                    ) : (
+                      <AllResourceLabels entityIndex={tilesAtPosition[0]} />
+                    )}
                   </>
                 )}
               </div>

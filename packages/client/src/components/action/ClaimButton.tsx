@@ -1,9 +1,11 @@
 import { useCallback, useMemo } from "react";
+import { EntityID } from "@latticexyz/recs";
+
 import { useMud } from "../../context/MudContext";
 import { BlockType, DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
-import { EntityID } from "@latticexyz/recs";
 import { useGameStore } from "../../store/GameStore";
+import Spinner from "../Spinner";
 
 export default function ClaimButton({
   id,
@@ -15,7 +17,8 @@ export default function ClaimButton({
   builtTile: EntityID;
 }) {
   const { systems, providers } = useMud();
-  const [setTransactionLoading] = useGameStore((state) => [
+  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
     state.setTransactionLoading,
   ]);
 
@@ -56,13 +59,24 @@ export default function ClaimButton({
     }
   }, [builtTile]);
 
-  return (
-    <button
-      id={id}
-      className="inset-x-4 absolute bottom-4 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
-      onClick={claimAction}
-    >
-      {claimText}
-    </button>
-  );
+  if (transactionLoading) {
+    return (
+      <button
+        id={id}
+        className="inset-x-4 absolute bottom-4 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
+      >
+        <Spinner />
+      </button>
+    );
+  } else {
+    return (
+      <button
+        id={id}
+        className="inset-x-4 absolute bottom-4 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
+        onClick={claimAction}
+      >
+        {claimText}
+      </button>
+    );
+  }
 }
