@@ -30,7 +30,7 @@ For production deployment, Primodium is currently live on the 0xPARC/Lattice tes
 npx mud deploy --chainSpec chainSpecSkyStrife.json --deployerPrivateKey <testnet key>
 ```
 
-The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet.primodium.com/?worldAddress=<world address>` with the rpc settings to the 0xPARC/Lattice testnet.
+The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world address>` with the rpc settings to the 0xPARC/Lattice testnet.
 
 # Claiming/Crafting Design
 
