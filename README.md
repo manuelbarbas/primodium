@@ -83,3 +83,7 @@ The keys of the following component is a hash of the uint256 representation of a
   MainBaseInitializedComponent
   StarterPackInitializedComponent
 ```
+
+# Item listing
+
+All the items in the game is listed at https://tiles.primodium.com/.
