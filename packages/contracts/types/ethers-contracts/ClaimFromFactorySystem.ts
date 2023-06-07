@@ -37,9 +37,9 @@ export type CoordStructOutput = [number, number] & { x: number; y: number };
 export interface ClaimFromFactorySystemInterface extends utils.Interface {
   functions: {
     "claimAdjacentBuildings((int32,int32),uint256,uint256)": FunctionFragment;
-    "claimAdjacentConveyorTiles((int32,int32),uint256,uint256)": FunctionFragment;
+    "claimAdjacentNodeTiles((int32,int32),uint256,uint256)": FunctionFragment;
     "claimBuilding((int32,int32),uint256,uint256)": FunctionFragment;
-    "claimConveyorTile((int32,int32),uint256,uint256)": FunctionFragment;
+    "claimNodeTile((int32,int32),uint256,uint256)": FunctionFragment;
     "execute(bytes)": FunctionFragment;
     "executeTyped((int32,int32))": FunctionFragment;
     "owner()": FunctionFragment;
@@ -49,9 +49,9 @@ export interface ClaimFromFactorySystemInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "claimAdjacentBuildings"
-      | "claimAdjacentConveyorTiles"
+      | "claimAdjacentNodeTiles"
       | "claimBuilding"
-      | "claimConveyorTile"
+      | "claimNodeTile"
       | "execute"
       | "executeTyped"
       | "owner"
@@ -67,7 +67,7 @@ export interface ClaimFromFactorySystemInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "claimAdjacentConveyorTiles",
+    functionFragment: "claimAdjacentNodeTiles",
     values: [
       CoordStruct,
       PromiseOrValue<BigNumberish>,
@@ -83,7 +83,7 @@ export interface ClaimFromFactorySystemInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "claimConveyorTile",
+    functionFragment: "claimNodeTile",
     values: [
       CoordStruct,
       PromiseOrValue<BigNumberish>,
@@ -109,7 +109,7 @@ export interface ClaimFromFactorySystemInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "claimAdjacentConveyorTiles",
+    functionFragment: "claimAdjacentNodeTiles",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -117,7 +117,7 @@ export interface ClaimFromFactorySystemInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "claimConveyorTile",
+    functionFragment: "claimNodeTile",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
@@ -184,7 +184,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    claimAdjacentConveyorTiles(
+    claimAdjacentNodeTiles(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,
@@ -198,7 +198,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    claimConveyorTile(
+    claimNodeTile(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,
@@ -230,7 +230,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  claimAdjacentConveyorTiles(
+  claimAdjacentNodeTiles(
     coord: CoordStruct,
     originEntity: PromiseOrValue<BigNumberish>,
     destination: PromiseOrValue<BigNumberish>,
@@ -244,7 +244,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  claimConveyorTile(
+  claimNodeTile(
     coord: CoordStruct,
     originEntity: PromiseOrValue<BigNumberish>,
     destination: PromiseOrValue<BigNumberish>,
@@ -276,7 +276,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    claimAdjacentConveyorTiles(
+    claimAdjacentNodeTiles(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,
@@ -290,7 +290,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    claimConveyorTile(
+    claimNodeTile(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,
@@ -334,7 +334,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    claimAdjacentConveyorTiles(
+    claimAdjacentNodeTiles(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,
@@ -348,7 +348,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    claimConveyorTile(
+    claimNodeTile(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,
@@ -381,7 +381,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    claimAdjacentConveyorTiles(
+    claimAdjacentNodeTiles(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,
@@ -395,7 +395,7 @@ export interface ClaimFromFactorySystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    claimConveyorTile(
+    claimNodeTile(
       coord: CoordStruct,
       originEntity: PromiseOrValue<BigNumberish>,
       destination: PromiseOrValue<BigNumberish>,

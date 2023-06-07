@@ -6,7 +6,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ConveyorID, NodeID } from "../prototypes/Tiles.sol";
+import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
@@ -36,12 +36,12 @@ contract BuildPathSystem is System {
     // Check that the coordinates are both conveyor tiles
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
     require(
-      tileEntityAtStartCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
+      tileEntityAtStartCoord == DebugNodeID || tileEntityAtStartCoord == NodeID,
       "[BuildPathSystem] Cannot start path at a non-supported tile (Conveyor, Node)"
     );
     uint256 tileEntityAtEndCoord = tileComponent.getValue(entitiesAtEndCoord[0]);
     require(
-      tileEntityAtEndCoord == ConveyorID || tileEntityAtEndCoord == NodeID,
+      tileEntityAtEndCoord == DebugNodeID || tileEntityAtEndCoord == NodeID,
       "[BuildPathSystem] Cannot end path at a non-supported tile (Conveyor, Node)"
     );
 

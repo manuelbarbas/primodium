@@ -19,7 +19,7 @@ type GameState = {
 
 type GameActions = {
   setSelectedTile: (tile: DisplayTile) => void;
-  setConveyerTileSelection: (
+  setConveyorTileSelection: (
     start: DisplayTile | null,
     end: DisplayTile | null
   ) => void;
@@ -55,7 +55,7 @@ const defaults: GameState = {
 export const useGameStore = create<GameState & GameActions>()((set) => ({
   ...defaults,
   setSelectedTile: (tile: DisplayTile) => set({ selectedTile: tile }),
-  setConveyerTileSelection: (
+  setConveyorTileSelection: (
     start: DisplayTile | null,
     end: DisplayTile | null
   ) => set({ selectedPathTiles: { start, end } }),

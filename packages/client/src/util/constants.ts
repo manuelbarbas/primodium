@@ -56,11 +56,14 @@ export const BlockType = {
 
   // Debug buildings
   MainBase: keccak256("block.MainBase") as EntityID,
-  Conveyor: keccak256("block.Conveyor") as EntityID,
+  DebugNode: keccak256("block.DebugNode") as EntityID,
   Miner: keccak256("block.Miner") as EntityID,
   LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
   BulletFactory: keccak256("block.BulletFactory") as EntityID,
   Silo: keccak256("block.Silo") as EntityID,
+
+  // Dummy block for Conveyor between tiles
+  Conveyor: keccak256("block.Conveyor") as EntityID,
 
   // Dummy blocks for Demolish
   DemolishBuilding: keccak256("demolish.Building") as EntityID,
@@ -272,6 +275,7 @@ export const BlockColors = new Map<EntityID, string>([
 
   // Resource
   [BlockType.MainBase, "#8676c0"],
+  [BlockType.DebugNode, "#ffcd00"],
   [BlockType.Conveyor, "#ffcd00"],
 
   // Debug factories
@@ -307,9 +311,12 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Miner, "/img/building/minerdrill.gif"],
   [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
   [BlockType.MainBase, "/img/building/mainbase.gif"],
-  [BlockType.Conveyor, "/img/building/conveyor.gif"],
+  [BlockType.DebugNode, "/img/building/node.gif"],
   [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
   [BlockType.Silo, "/img/building/silo.png"],
+
+  // dummy buildings
+  [BlockType.Conveyor, "/img/building/conveyor.gif"],
 
   //actual buildings
   [BlockType.BasicMiner, "/img/building/minerdrill.gif"],
@@ -482,6 +489,7 @@ export const BuildingResearchRequirements = new Map<EntityID, EntityID[]>([
   [BlockType.Conveyor, [BlockType.ConveyorResearch]],
 
   [BlockType.Miner, [BlockType.BasicMinerResearch]],
+  [BlockType.DebugNode, [BlockType.NodeResearch]],
   [BlockType.BulletFactory, [BlockType.BulletFactoryResearch]],
   [BlockType.Silo, [BlockType.SiloResearch]],
 

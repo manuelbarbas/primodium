@@ -6,7 +6,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ConveyorID, NodeID } from "../prototypes/Tiles.sol";
+import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
@@ -29,7 +29,7 @@ contract DestroyPathSystem is System {
     // Check that the coordinates is a conveyor tile
     uint256 tileEntityAtStartCoord = tileComponent.getValue(entitiesAtStartCoord[0]);
     require(
-      tileEntityAtStartCoord == ConveyorID || tileEntityAtStartCoord == NodeID,
+      tileEntityAtStartCoord == DebugNodeID || tileEntityAtStartCoord == NodeID,
       "[DestroyPathSystem] Cannot destroy path at a non-supported tile (Conveyor, Node)"
     );
 

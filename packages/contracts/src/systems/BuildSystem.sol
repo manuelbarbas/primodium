@@ -11,7 +11,7 @@ import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/L
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 // debug buildings
-import { MainBaseID, ConveyorID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
@@ -52,10 +52,10 @@ contract BuildSystem is System {
     require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
 
     // Check if the player has enough resources to build
-    // debug buildings are free:  ConveyorID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (
-      blockType == ConveyorID ||
+      blockType == DebugNodeID ||
       blockType == MinerID ||
       blockType == LithiumMinerID ||
       blockType == BulletFactoryID ||
