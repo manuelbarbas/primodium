@@ -17,8 +17,8 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 
-// import { MainBaseID, ConveyorID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, ConveyorID, MinerID, BulletFactoryID, SiloID } from "../../prototypes/Tiles.sol";
+// import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID, BulletFactoryID, SiloID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { IronResourceItemID, CopperResourceItemID, BulletCraftedItemID } from "../../prototypes/Keys.sol";
@@ -78,8 +78,8 @@ contract AttackSystemTest is MudTest {
     );
 
     // Copper to BulletFactory
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -9, y: -4 }));
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -6, y: -4 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -6, y: -4 }));
     buildPathSystem.executeTyped(Coord({ x: -9, y: -4 }), Coord({ x: -6, y: -4 }));
 
     // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
@@ -110,8 +110,8 @@ contract AttackSystemTest is MudTest {
 
     // Iron to BulletFactory
     buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: 1 }));
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: -3 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -5, y: 1 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -5, y: -3 }));
     buildPathSystem.executeTyped(Coord({ x: -5, y: 1 }), Coord({ x: -5, y: -3 }));
 
     vm.roll(20);
@@ -124,8 +124,8 @@ contract AttackSystemTest is MudTest {
     assertEq(itemComponent.getValue(hashedBulletFactoryKeyBullet), 100);
 
     // BulletFactory to MainBase
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -4, y: -4 }));
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -1, y: 0 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -4, y: -4 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -1, y: 0 }));
     buildPathSystem.executeTyped(Coord({ x: -4, y: -4 }), Coord({ x: -1, y: 0 }));
 
     vm.roll(30);

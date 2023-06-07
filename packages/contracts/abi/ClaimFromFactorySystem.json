@@ -1103,249 +1103,87 @@
     "absolutePath": "src/systems/ClaimFromFactorySystem.sol",
     "id": 31705,
     "exportedSymbols": {
-      "AdvancedBatteryFactoryID": [
-        28589
-      ],
-      "AdvancedPowerSourceCraftedItemID": [
-        28072
-      ],
-      "BasicBatteryFactoryID": [
-        28549
-      ],
-      "BasicMinerID": [
-        28525
-      ],
-      "BasicPowerSourceCraftedItemID": [
-        28048
-      ],
-      "BolutiteResourceItemID": [
-        28005
-      ],
-      "BulletCraftedItemID": [
-        28152
-      ],
-      "BulletFactoryID": [
-        28509
-      ],
-      "ClaimComponents": [
-        27989
-      ],
-      "ClaimFromFactorySystem": [
-        31704
-      ],
-      "ConveyorID": [
-        28485
-      ],
-      "Coord": [
-        1635
-      ],
-      "CopperResourceItemID": [
-        28008
-      ],
-      "DenseMetalRefineryID": [
-        28581
-      ],
-      "HardenedDrillID": [
-        28573
-      ],
-      "HealthComponent": [
-        21404
-      ],
-      "HealthComponentID": [
-        21391
-      ],
-      "HighEnergyLaserFactoryID": [
-        28653
-      ],
-      "HighTempFoundryID": [
-        28597
-      ],
-      "ID": [
-        30731
-      ],
-      "IWorld": [
-        1247
-      ],
-      "IridiumCrystalCraftedItemID": [
-        28104
-      ],
-      "IridiumDrillbitCraftedItemID": [
-        28112
-      ],
-      "IridiumDrillbitFactoryID": [
-        28613
-      ],
-      "IridiumResourceItemID": [
-        28011
-      ],
-      "IronPlateCraftedItemID": [
-        28040
-      ],
-      "IronResourceItemID": [
-        28014
-      ],
-      "ItemComponent": [
-        21428
-      ],
-      "ItemComponentID": [
-        21415
-      ],
-      "KimberliteCatalystFactoryID": [
-        28677
-      ],
-      "KimberliteCrystalCatalystCraftedItemID": [
-        28144
-      ],
-      "KimberliteResourceItemID": [
-        28017
-      ],
-      "KineticMissileCraftedItemID": [
-        28056
-      ],
-      "KineticMissileFactoryID": [
-        28557
-      ],
-      "LaserPowerSourceCraftedItemID": [
-        28120
-      ],
-      "LastClaimedAtComponent": [
-        21476
-      ],
-      "LastClaimedAtComponentID": [
-        21463
-      ],
-      "LibClaim": [
-        22351
-      ],
-      "LibCraft": [
-        22574
-      ],
-      "LibHealth": [
-        22733
-      ],
-      "LibMath": [
-        23193
-      ],
-      "LibMine": [
-        23435
-      ],
-      "LibTerrain": [
-        24443
-      ],
-      "LithiumMinerID": [
-        28501
-      ],
-      "LithiumResourceItemID": [
-        28020
-      ],
-      "MainBaseID": [
-        28477
-      ],
-      "MinerID": [
-        28493
-      ],
-      "MissileLaunchComplexID": [
-        28645
-      ],
-      "NodeID": [
-        28533
-      ],
-      "OsmiumResourceItemID": [
-        28023
-      ],
-      "OwnedByComponent": [
-        21548
-      ],
-      "OwnedByComponentID": [
-        21535
-      ],
-      "PathComponent": [
-        21572
-      ],
-      "PathComponentID": [
-        21559
-      ],
-      "PenetratingMissileCraftedItemID": [
-        28088
-      ],
-      "PenetratingMissileFactoryID": [
-        28637
-      ],
-      "PenetratingWarheadCraftedItemID": [
-        28080
-      ],
-      "PenetratorFactoryID": [
-        28629
-      ],
-      "PlatingFactoryID": [
-        28541
-      ],
-      "PositionComponent": [
-        21596
-      ],
-      "PositionComponentID": [
-        21583
-      ],
-      "PrecisionMachineryFactoryID": [
-        28605
-      ],
-      "PrecisionPneumaticDrillID": [
-        28621
-      ],
-      "ProjectileLauncherID": [
-        28565
-      ],
-      "RefinedOsmiumCraftedItemID": [
-        28064
-      ],
-      "ResearchComponent": [
-        21620
-      ],
-      "ResearchComponentID": [
-        21607
-      ],
-      "SiloID": [
-        28517
-      ],
-      "System": [
-        322
-      ],
-      "ThermobaricMissileCraftedItemID": [
-        28136
-      ],
-      "ThermobaricMissileFactoryID": [
-        28669
-      ],
-      "ThermobaricWarheadCraftedItemID": [
-        28128
-      ],
-      "ThermobaricWarheadFactoryID": [
-        28661
-      ],
-      "TileComponent": [
-        21668
-      ],
-      "TileComponentID": [
-        21655
-      ],
-      "TitaniumResourceItemID": [
-        28026
-      ],
-      "TungstenResourceItemID": [
-        28029
-      ],
-      "TungstenRodsCraftedItemID": [
-        28096
-      ],
-      "UraniniteResourceItemID": [
-        28032
-      ],
-      "addressToEntity": [
-        1291
-      ],
-      "getAddressById": [
-        1327
-      ]
+      "AdvancedBatteryFactoryID": [28589],
+      "AdvancedPowerSourceCraftedItemID": [28072],
+      "BasicBatteryFactoryID": [28549],
+      "BasicMinerID": [28525],
+      "BasicPowerSourceCraftedItemID": [28048],
+      "BolutiteResourceItemID": [28005],
+      "BulletCraftedItemID": [28152],
+      "BulletFactoryID": [28509],
+      "ClaimComponents": [27989],
+      "ClaimFromFactorySystem": [31704],
+      "DebugNodeID": [28485],
+      "Coord": [1635],
+      "CopperResourceItemID": [28008],
+      "DenseMetalRefineryID": [28581],
+      "HardenedDrillID": [28573],
+      "HealthComponent": [21404],
+      "HealthComponentID": [21391],
+      "HighEnergyLaserFactoryID": [28653],
+      "HighTempFoundryID": [28597],
+      "ID": [30731],
+      "IWorld": [1247],
+      "IridiumCrystalCraftedItemID": [28104],
+      "IridiumDrillbitCraftedItemID": [28112],
+      "IridiumDrillbitFactoryID": [28613],
+      "IridiumResourceItemID": [28011],
+      "IronPlateCraftedItemID": [28040],
+      "IronResourceItemID": [28014],
+      "ItemComponent": [21428],
+      "ItemComponentID": [21415],
+      "KimberliteCatalystFactoryID": [28677],
+      "KimberliteCrystalCatalystCraftedItemID": [28144],
+      "KimberliteResourceItemID": [28017],
+      "KineticMissileCraftedItemID": [28056],
+      "KineticMissileFactoryID": [28557],
+      "LaserPowerSourceCraftedItemID": [28120],
+      "LastClaimedAtComponent": [21476],
+      "LastClaimedAtComponentID": [21463],
+      "LibClaim": [22351],
+      "LibCraft": [22574],
+      "LibHealth": [22733],
+      "LibMath": [23193],
+      "LibMine": [23435],
+      "LibTerrain": [24443],
+      "LithiumMinerID": [28501],
+      "LithiumResourceItemID": [28020],
+      "MainBaseID": [28477],
+      "MinerID": [28493],
+      "MissileLaunchComplexID": [28645],
+      "NodeID": [28533],
+      "OsmiumResourceItemID": [28023],
+      "OwnedByComponent": [21548],
+      "OwnedByComponentID": [21535],
+      "PathComponent": [21572],
+      "PathComponentID": [21559],
+      "PenetratingMissileCraftedItemID": [28088],
+      "PenetratingMissileFactoryID": [28637],
+      "PenetratingWarheadCraftedItemID": [28080],
+      "PenetratorFactoryID": [28629],
+      "PlatingFactoryID": [28541],
+      "PositionComponent": [21596],
+      "PositionComponentID": [21583],
+      "PrecisionMachineryFactoryID": [28605],
+      "PrecisionPneumaticDrillID": [28621],
+      "ProjectileLauncherID": [28565],
+      "RefinedOsmiumCraftedItemID": [28064],
+      "ResearchComponent": [21620],
+      "ResearchComponentID": [21607],
+      "SiloID": [28517],
+      "System": [322],
+      "ThermobaricMissileCraftedItemID": [28136],
+      "ThermobaricMissileFactoryID": [28669],
+      "ThermobaricWarheadCraftedItemID": [28128],
+      "ThermobaricWarheadFactoryID": [28661],
+      "TileComponent": [21668],
+      "TileComponentID": [21655],
+      "TitaniumResourceItemID": [28026],
+      "TungstenResourceItemID": [28029],
+      "TungstenRodsCraftedItemID": [28096],
+      "UraniniteResourceItemID": [28032],
+      "addressToEntity": [1291],
+      "getAddressById": [1327]
     },
     "nodeType": "SourceUnit",
     "src": "32:16059:115",
@@ -1355,12 +1193,7 @@
         "nodeType": "PragmaDirective",
         "src": "32:24:115",
         "nodes": [],
-        "literals": [
-          "solidity",
-          ">=",
-          "0.8",
-          ".0"
-        ]
+        "literals": ["solidity", ">=", "0.8", ".0"]
       },
       {
         "id": 30626,
@@ -1802,7 +1635,7 @@
           {
             "foreign": {
               "id": 30657,
-              "name": "ConveyorID",
+              "name": "DebugNodeID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
               "referencedDeclaration": 28485,
@@ -2790,9 +2623,7 @@
                 "modifierName": {
                   "id": 30740,
                   "name": "System",
-                  "nameLocations": [
-                    "2932:6:115"
-                  ],
+                  "nameLocations": ["2932:6:115"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 322,
                   "src": "2932:6:115"
@@ -2828,9 +2659,7 @@
                     "pathNode": {
                       "id": 30734,
                       "name": "IWorld",
-                      "nameLocations": [
-                        "2896:6:115"
-                      ],
+                      "nameLocations": ["2896:6:115"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1247,
                       "src": "2896:6:115"
@@ -2898,9 +2727,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    30758
-                  ],
+                  "assignments": [30758],
                   "declarations": [
                     {
                       "constant": false,
@@ -2923,9 +2750,7 @@
                         "pathNode": {
                           "id": 30756,
                           "name": "ClaimComponents",
-                          "nameLocations": [
-                            "3065:15:115"
-                          ],
+                          "nameLocations": ["3065:15:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 27989,
                           "src": "3065:15:115"
@@ -3508,9 +3333,7 @@
                   "src": "3065:414:115"
                 },
                 {
-                  "assignments": [
-                    30794
-                  ],
+                  "assignments": [30794],
                   "declarations": [
                     {
                       "constant": false,
@@ -3533,9 +3356,7 @@
                         "pathNode": {
                           "id": 30792,
                           "name": "ItemComponent",
-                          "nameLocations": [
-                            "3486:13:115"
-                          ],
+                          "nameLocations": ["3486:13:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21428,
                           "src": "3486:13:115"
@@ -3657,9 +3478,7 @@
                   "src": "3486:88:115"
                 },
                 {
-                  "assignments": [
-                    30806
-                  ],
+                  "assignments": [30806],
                   "declarations": [
                     {
                       "constant": false,
@@ -3784,9 +3603,7 @@
                   "src": "3581:85:115"
                 },
                 {
-                  "assignments": [
-                    30814
-                  ],
+                  "assignments": [30814],
                   "declarations": [
                     {
                       "constant": false,
@@ -4114,10 +3931,7 @@
                             "id": 30824,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "3808:7:115",
                             "typeDescriptions": {
@@ -4235,9 +4049,7 @@
                         }
                       },
                       {
-                        "assignments": [
-                          30845
-                        ],
+                        "assignments": [30845],
                         "declarations": [
                           {
                             "constant": false,
@@ -9362,9 +9174,7 @@
                     "pathNode": {
                       "id": 30747,
                       "name": "Coord",
-                      "nameLocations": [
-                        "2989:5:115"
-                      ],
+                      "nameLocations": ["2989:5:115"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "2989:5:115"
@@ -10310,9 +10120,7 @@
                     "pathNode": {
                       "id": 31219,
                       "name": "Coord",
-                      "nameLocations": [
-                        "11024:5:115"
-                      ],
+                      "nameLocations": ["11024:5:115"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "11024:5:115"
@@ -10406,9 +10214,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    31293
-                  ],
+                  "assignments": [31293],
                   "declarations": [
                     {
                       "constant": false,
@@ -10431,9 +10237,7 @@
                         "pathNode": {
                           "id": 31291,
                           "name": "PositionComponent",
-                          "nameLocations": [
-                            "11577:17:115"
-                          ],
+                          "nameLocations": ["11577:17:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21596,
                           "src": "11577:17:115"
@@ -10555,9 +10359,7 @@
                   "src": "11577:104:115"
                 },
                 {
-                  "assignments": [
-                    31303
-                  ],
+                  "assignments": [31303],
                   "declarations": [
                     {
                       "constant": false,
@@ -10580,9 +10382,7 @@
                         "pathNode": {
                           "id": 31301,
                           "name": "TileComponent",
-                          "nameLocations": [
-                            "11687:13:115"
-                          ],
+                          "nameLocations": ["11687:13:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21668,
                           "src": "11687:13:115"
@@ -10704,9 +10504,7 @@
                   "src": "11687:88:115"
                 },
                 {
-                  "assignments": [
-                    31313
-                  ],
+                  "assignments": [31313],
                   "declarations": [
                     {
                       "constant": false,
@@ -10729,9 +10527,7 @@
                         "pathNode": {
                           "id": 31311,
                           "name": "PathComponent",
-                          "nameLocations": [
-                            "11781:13:115"
-                          ],
+                          "nameLocations": ["11781:13:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21572,
                           "src": "11781:13:115"
@@ -10853,9 +10649,7 @@
                   "src": "11781:88:115"
                 },
                 {
-                  "assignments": [
-                    31323
-                  ],
+                  "assignments": [31323],
                   "declarations": [
                     {
                       "constant": false,
@@ -10878,9 +10672,7 @@
                         "pathNode": {
                           "id": 31321,
                           "name": "HealthComponent",
-                          "nameLocations": [
-                            "11875:15:115"
-                          ],
+                          "nameLocations": ["11875:15:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21404,
                           "src": "11875:15:115"
@@ -11002,9 +10794,7 @@
                   "src": "11875:96:115"
                 },
                 {
-                  "assignments": [
-                    31335
-                  ],
+                  "assignments": [31335],
                   "declarations": [
                     {
                       "constant": false,
@@ -11306,7 +11096,7 @@
                             "operator": "==",
                             "rightExpression": {
                               "id": 31351,
-                              "name": "ConveyorID",
+                              "name": "DebugNodeID",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 28485,
@@ -11626,10 +11416,7 @@
                             "id": 31364,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "12362:7:115",
                             "typeDescriptions": {
@@ -11744,9 +11531,7 @@
                         "src": "12462:56:115"
                       },
                       {
-                        "assignments": [
-                          31385
-                        ],
+                        "assignments": [31385],
                         "declarations": [
                           {
                             "constant": false,
@@ -12114,9 +11899,7 @@
                         },
                         "id": 31416,
                         "initializationExpression": {
-                          "assignments": [
-                            31394
-                          ],
+                          "assignments": [31394],
                           "declarations": [
                             {
                               "constant": false,
@@ -12237,9 +12020,7 @@
                     "pathNode": {
                       "id": 31282,
                       "name": "Coord",
-                      "nameLocations": [
-                        "11501:5:115"
-                      ],
+                      "nameLocations": ["11501:5:115"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "11501:5:115"
@@ -13185,9 +12966,7 @@
                     "pathNode": {
                       "id": 31421,
                       "name": "Coord",
-                      "nameLocations": [
-                        "13224:5:115"
-                      ],
+                      "nameLocations": ["13224:5:115"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "13224:5:115"
@@ -13281,9 +13060,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    31492
-                  ],
+                  "assignments": [31492],
                   "declarations": [
                     {
                       "constant": false,
@@ -13306,9 +13083,7 @@
                         "pathNode": {
                           "id": 31490,
                           "name": "ClaimComponents",
-                          "nameLocations": [
-                            "13709:15:115"
-                          ],
+                          "nameLocations": ["13709:15:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 27989,
                           "src": "13709:15:115"
@@ -13891,9 +13666,7 @@
                   "src": "13709:414:115"
                 },
                 {
-                  "assignments": [
-                    31528
-                  ],
+                  "assignments": [31528],
                   "declarations": [
                     {
                       "constant": false,
@@ -13916,9 +13689,7 @@
                         "pathNode": {
                           "id": 31526,
                           "name": "Coord",
-                          "nameLocations": [
-                            "14130:5:115"
-                          ],
+                          "nameLocations": ["14130:5:115"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 1635,
                           "src": "14130:5:115"
@@ -14034,9 +13805,7 @@
                   "src": "14130:46:115"
                 },
                 {
-                  "assignments": [
-                    31540
-                  ],
+                  "assignments": [31540],
                   "declarations": [
                     {
                       "constant": false,
@@ -14255,10 +14024,7 @@
                       "id": 31547,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "14300:7:115",
                       "typeDescriptions": {
@@ -14287,9 +14053,7 @@
                   "src": "14300:136:115"
                 },
                 {
-                  "assignments": [
-                    31556
-                  ],
+                  "assignments": [31556],
                   "declarations": [
                     {
                       "constant": false,
@@ -14561,10 +14325,7 @@
                       "id": 31565,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "14594:7:115",
                       "typeDescriptions": {
@@ -14752,10 +14513,7 @@
                       "id": 31575,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "14800:7:115",
                       "typeDescriptions": {
@@ -14784,9 +14542,7 @@
                   "src": "14800:172:115"
                 },
                 {
-                  "assignments": [
-                    31588
-                  ],
+                  "assignments": [31588],
                   "declarations": [
                     {
                       "constant": false,
@@ -15459,10 +15215,7 @@
                                 "id": 31673,
                                 "name": "revert",
                                 "nodeType": "Identifier",
-                                "overloadedDeclarations": [
-                                  -19,
-                                  -19
-                                ],
+                                "overloadedDeclarations": [-19, -19],
                                 "referencedDeclaration": -19,
                                 "src": "15812:6:115",
                                 "typeDescriptions": {
@@ -15501,9 +15254,7 @@
                         "src": "15663:135:115",
                         "statements": [
                           {
-                            "assignments": [
-                              31659
-                            ],
+                            "assignments": [31659],
                             "declarations": [
                               {
                                 "constant": false,
@@ -15705,9 +15456,7 @@
                       "src": "15440:135:115",
                       "statements": [
                         {
-                          "assignments": [
-                            31634
-                          ],
+                          "assignments": [31634],
                           "declarations": [
                             {
                               "constant": false,
@@ -16154,9 +15903,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              41412
-            ],
+            "baseFunctions": [41412],
             "functionSelector": "09c5eabe",
             "implemented": true,
             "kind": "function",
@@ -16387,9 +16134,7 @@
                     "pathNode": {
                       "id": 31688,
                       "name": "Coord",
-                      "nameLocations": [
-                        "15946:5:115"
-                      ],
+                      "nameLocations": ["15946:5:115"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "15946:5:115"
@@ -16452,9 +16197,7 @@
             "baseName": {
               "id": 30732,
               "name": "System",
-              "nameLocations": [
-                "2873:6:115"
-              ],
+              "nameLocations": ["2873:6:115"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 322,
               "src": "2873:6:115"
@@ -16468,25 +16211,11 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          31704,
-          322,
-          41399,
-          2359,
-          43305,
-          43805,
-          43181,
-          41413,
-          2402,
-          43315
-        ],
+        "linearizedBaseContracts": [31704, 322, 41399, 2359, 43305, 43805, 43181, 41413, 2402, 43315],
         "name": "ClaimFromFactorySystem",
         "nameLocation": "2847:22:115",
         "scope": 31705,
-        "usedErrors": [
-          43802,
-          43804
-        ]
+        "usedErrors": [43802, 43804]
       }
     ],
     "license": "MIT"

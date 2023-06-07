@@ -56,7 +56,7 @@ export const BlockType = {
 
   // Debug buildings
   MainBase: keccak256("block.MainBase") as EntityID,
-  Conveyor: keccak256("block.Conveyor") as EntityID,
+  Conveyor: keccak256("block.DebugNode") as EntityID,
   Miner: keccak256("block.Miner") as EntityID,
   LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
   BulletFactory: keccak256("block.BulletFactory") as EntityID,

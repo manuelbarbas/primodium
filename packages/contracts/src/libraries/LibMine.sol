@@ -4,7 +4,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 
-import { MainBaseID, MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionMachineryFactoryID, ConveyorID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
+import { MainBaseID, MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionMachineryFactoryID, DebugNodeID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
 
 import { LibDebug } from "./LibDebug.sol";
 import { LibEncode } from "./LibEncode.sol";

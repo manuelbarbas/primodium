@@ -1111,171 +1111,61 @@
     "absolutePath": "src/systems/ClaimFromMineSystem.sol",
     "id": 32527,
     "exportedSymbols": {
-      "BasicMinerID": [
-        28525
-      ],
-      "BolutiteID": [
-        28469
-      ],
-      "ClaimComponents": [
-        27989
-      ],
-      "ClaimFromMineSystem": [
-        32526
-      ],
-      "ConveyorID": [
-        28485
-      ],
-      "Coord": [
-        1635
-      ],
-      "CopperID": [
-        28413
-      ],
-      "HardenedDrillID": [
-        28573
-      ],
-      "HealthComponent": [
-        21404
-      ],
-      "HealthComponentID": [
-        21391
-      ],
-      "ID": [
-        31791
-      ],
-      "IWorld": [
-        1247
-      ],
-      "IridiumID": [
-        28429
-      ],
-      "IronID": [
-        28405
-      ],
-      "ItemComponent": [
-        21428
-      ],
-      "ItemComponentID": [
-        21415
-      ],
-      "KimberliteID": [
-        28453
-      ],
-      "LastBuiltAtComponent": [
-        21452
-      ],
-      "LastBuiltAtComponentID": [
-        21439
-      ],
-      "LastClaimedAtComponent": [
-        21476
-      ],
-      "LastClaimedAtComponentID": [
-        21463
-      ],
-      "LastResearchedAtComponent": [
-        21500
-      ],
-      "LastResearchedAtComponentID": [
-        21487
-      ],
-      "LibClaim": [
-        22351
-      ],
-      "LibCraft": [
-        22574
-      ],
-      "LibEncode": [
-        22690
-      ],
-      "LibHealth": [
-        22733
-      ],
-      "LibMath": [
-        23193
-      ],
-      "LibMine": [
-        23435
-      ],
-      "LibTerrain": [
-        24443
-      ],
-      "LithiumID": [
-        28397
-      ],
-      "LithiumMinerID": [
-        28501
-      ],
-      "MainBaseID": [
-        28477
-      ],
-      "MinerID": [
-        28493
-      ],
-      "NodeID": [
-        28533
-      ],
-      "OsmiumID": [
-        28437
-      ],
-      "OwnedByComponent": [
-        21548
-      ],
-      "OwnedByComponentID": [
-        21535
-      ],
-      "PathComponent": [
-        21572
-      ],
-      "PathComponentID": [
-        21559
-      ],
-      "PositionComponent": [
-        21596
-      ],
-      "PositionComponentID": [
-        21583
-      ],
-      "PrecisionMachineryFactoryID": [
-        28605
-      ],
-      "ResearchComponent": [
-        21620
-      ],
-      "ResearchComponentID": [
-        21607
-      ],
-      "SiloID": [
-        28517
-      ],
-      "System": [
-        322
-      ],
-      "TileComponent": [
-        21668
-      ],
-      "TileComponentID": [
-        21655
-      ],
-      "TitaniumID": [
-        28421
-      ],
-      "TungstenID": [
-        28445
-      ],
-      "UraniniteID": [
-        28461
-      ],
-      "addressToEntity": [
-        1291
-      ],
-      "entityToAddress": [
-        1274
-      ],
-      "getAddressById": [
-        1327
-      ]
+      "BasicMinerID": [28525],
+      "BolutiteID": [28469],
+      "ClaimComponents": [27989],
+      "ClaimFromMineSystem": [32526],
+      "DebugNodeID": [28485],
+      "Coord": [1635],
+      "CopperID": [28413],
+      "HardenedDrillID": [28573],
+      "HealthComponent": [21404],
+      "HealthComponentID": [21391],
+      "ID": [31791],
+      "IWorld": [1247],
+      "IridiumID": [28429],
+      "IronID": [28405],
+      "ItemComponent": [21428],
+      "ItemComponentID": [21415],
+      "KimberliteID": [28453],
+      "LastBuiltAtComponent": [21452],
+      "LastBuiltAtComponentID": [21439],
+      "LastClaimedAtComponent": [21476],
+      "LastClaimedAtComponentID": [21463],
+      "LastResearchedAtComponent": [21500],
+      "LastResearchedAtComponentID": [21487],
+      "LibClaim": [22351],
+      "LibCraft": [22574],
+      "LibEncode": [22690],
+      "LibHealth": [22733],
+      "LibMath": [23193],
+      "LibMine": [23435],
+      "LibTerrain": [24443],
+      "LithiumID": [28397],
+      "LithiumMinerID": [28501],
+      "MainBaseID": [28477],
+      "MinerID": [28493],
+      "NodeID": [28533],
+      "OsmiumID": [28437],
+      "OwnedByComponent": [21548],
+      "OwnedByComponentID": [21535],
+      "PathComponent": [21572],
+      "PathComponentID": [21559],
+      "PositionComponent": [21596],
+      "PositionComponentID": [21583],
+      "PrecisionMachineryFactoryID": [28605],
+      "ResearchComponent": [21620],
+      "ResearchComponentID": [21607],
+      "SiloID": [28517],
+      "System": [322],
+      "TileComponent": [21668],
+      "TileComponentID": [21655],
+      "TitaniumID": [28421],
+      "TungstenID": [28445],
+      "UraniniteID": [28461],
+      "addressToEntity": [1291],
+      "entityToAddress": [1274],
+      "getAddressById": [1327]
     },
     "nodeType": "SourceUnit",
     "src": "32:10245:116",
@@ -1285,12 +1175,7 @@
         "nodeType": "PragmaDirective",
         "src": "32:24:116",
         "nodes": [],
-        "literals": [
-          "solidity",
-          ">=",
-          "0.8",
-          ".0"
-        ]
+        "literals": ["solidity", ">=", "0.8", ".0"]
       },
       {
         "id": 31709,
@@ -1822,7 +1707,7 @@
           {
             "foreign": {
               "id": 31747,
-              "name": "ConveyorID",
+              "name": "DebugNodeID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
               "referencedDeclaration": 28485,
@@ -2452,9 +2337,7 @@
                 "modifierName": {
                   "id": 31800,
                   "name": "System",
-                  "nameLocations": [
-                    "2255:6:116"
-                  ],
+                  "nameLocations": ["2255:6:116"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 322,
                   "src": "2255:6:116"
@@ -2490,9 +2373,7 @@
                     "pathNode": {
                       "id": 31794,
                       "name": "IWorld",
-                      "nameLocations": [
-                        "2219:6:116"
-                      ],
+                      "nameLocations": ["2219:6:116"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1247,
                       "src": "2219:6:116"
@@ -2560,9 +2441,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    31818
-                  ],
+                  "assignments": [31818],
                   "declarations": [
                     {
                       "constant": false,
@@ -2585,9 +2464,7 @@
                         "pathNode": {
                           "id": 31816,
                           "name": "ClaimComponents",
-                          "nameLocations": [
-                            "2388:15:116"
-                          ],
+                          "nameLocations": ["2388:15:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 27989,
                           "src": "2388:15:116"
@@ -3170,9 +3047,7 @@
                   "src": "2388:414:116"
                 },
                 {
-                  "assignments": [
-                    31854
-                  ],
+                  "assignments": [31854],
                   "declarations": [
                     {
                       "constant": false,
@@ -3195,9 +3070,7 @@
                         "pathNode": {
                           "id": 31852,
                           "name": "LastBuiltAtComponent",
-                          "nameLocations": [
-                            "2809:20:116"
-                          ],
+                          "nameLocations": ["2809:20:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21452,
                           "src": "2809:20:116"
@@ -3319,9 +3192,7 @@
                   "src": "2809:128:116"
                 },
                 {
-                  "assignments": [
-                    31864
-                  ],
+                  "assignments": [31864],
                   "declarations": [
                     {
                       "constant": false,
@@ -3344,9 +3215,7 @@
                         "pathNode": {
                           "id": 31862,
                           "name": "LastResearchedAtComponent",
-                          "nameLocations": [
-                            "2943:25:116"
-                          ],
+                          "nameLocations": ["2943:25:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21500,
                           "src": "2943:25:116"
@@ -3468,9 +3337,7 @@
                   "src": "2943:148:116"
                 },
                 {
-                  "assignments": [
-                    31876
-                  ],
+                  "assignments": [31876],
                   "declarations": [
                     {
                       "constant": false,
@@ -3595,9 +3462,7 @@
                   "src": "3098:85:116"
                 },
                 {
-                  "assignments": [
-                    31884
-                  ],
+                  "assignments": [31884],
                   "declarations": [
                     {
                       "constant": false,
@@ -3925,10 +3790,7 @@
                             "id": 31894,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "3325:7:116",
                             "typeDescriptions": {
@@ -4046,9 +3908,7 @@
                         }
                       },
                       {
-                        "assignments": [
-                          31915
-                        ],
+                        "assignments": [31915],
                         "declarations": [
                           {
                             "constant": false,
@@ -5034,9 +4894,7 @@
                           "src": "4356:777:116",
                           "statements": [
                             {
-                              "assignments": [
-                                31980
-                              ],
+                              "assignments": [31980],
                               "declarations": [
                                 {
                                   "constant": false,
@@ -5136,9 +4994,7 @@
                               "src": "4457:54:116"
                             },
                             {
-                              "assignments": [
-                                31987
-                              ],
+                              "assignments": [31987],
                               "declarations": [
                                 {
                                   "constant": false,
@@ -5941,9 +5797,7 @@
                     "pathNode": {
                       "id": 31807,
                       "name": "Coord",
-                      "nameLocations": [
-                        "2312:5:116"
-                      ],
+                      "nameLocations": ["2312:5:116"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "2312:5:116"
@@ -6889,9 +6743,7 @@
                     "pathNode": {
                       "id": 32041,
                       "name": "Coord",
-                      "nameLocations": [
-                        "5252:5:116"
-                      ],
+                      "nameLocations": ["5252:5:116"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "5252:5:116"
@@ -6985,9 +6837,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    32115
-                  ],
+                  "assignments": [32115],
                   "declarations": [
                     {
                       "constant": false,
@@ -7010,9 +6860,7 @@
                         "pathNode": {
                           "id": 32113,
                           "name": "PositionComponent",
-                          "nameLocations": [
-                            "5805:17:116"
-                          ],
+                          "nameLocations": ["5805:17:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21596,
                           "src": "5805:17:116"
@@ -7134,9 +6982,7 @@
                   "src": "5805:104:116"
                 },
                 {
-                  "assignments": [
-                    32125
-                  ],
+                  "assignments": [32125],
                   "declarations": [
                     {
                       "constant": false,
@@ -7159,9 +7005,7 @@
                         "pathNode": {
                           "id": 32123,
                           "name": "TileComponent",
-                          "nameLocations": [
-                            "5915:13:116"
-                          ],
+                          "nameLocations": ["5915:13:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21668,
                           "src": "5915:13:116"
@@ -7283,9 +7127,7 @@
                   "src": "5915:88:116"
                 },
                 {
-                  "assignments": [
-                    32135
-                  ],
+                  "assignments": [32135],
                   "declarations": [
                     {
                       "constant": false,
@@ -7308,9 +7150,7 @@
                         "pathNode": {
                           "id": 32133,
                           "name": "PathComponent",
-                          "nameLocations": [
-                            "6009:13:116"
-                          ],
+                          "nameLocations": ["6009:13:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21572,
                           "src": "6009:13:116"
@@ -7432,9 +7272,7 @@
                   "src": "6009:88:116"
                 },
                 {
-                  "assignments": [
-                    32145
-                  ],
+                  "assignments": [32145],
                   "declarations": [
                     {
                       "constant": false,
@@ -7457,9 +7295,7 @@
                         "pathNode": {
                           "id": 32143,
                           "name": "HealthComponent",
-                          "nameLocations": [
-                            "6103:15:116"
-                          ],
+                          "nameLocations": ["6103:15:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21404,
                           "src": "6103:15:116"
@@ -7581,9 +7417,7 @@
                   "src": "6103:96:116"
                 },
                 {
-                  "assignments": [
-                    32157
-                  ],
+                  "assignments": [32157],
                   "declarations": [
                     {
                       "constant": false,
@@ -7885,7 +7719,7 @@
                             "operator": "==",
                             "rightExpression": {
                               "id": 32173,
-                              "name": "ConveyorID",
+                              "name": "DebugNodeID",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 28485,
@@ -8205,10 +8039,7 @@
                             "id": 32186,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [
-                              -18,
-                              -18
-                            ],
+                            "overloadedDeclarations": [-18, -18],
                             "referencedDeclaration": -18,
                             "src": "6590:7:116",
                             "typeDescriptions": {
@@ -8323,9 +8154,7 @@
                         "src": "6690:56:116"
                       },
                       {
-                        "assignments": [
-                          32207
-                        ],
+                        "assignments": [32207],
                         "declarations": [
                           {
                             "constant": false,
@@ -8693,9 +8522,7 @@
                         },
                         "id": 32238,
                         "initializationExpression": {
-                          "assignments": [
-                            32216
-                          ],
+                          "assignments": [32216],
                           "declarations": [
                             {
                               "constant": false,
@@ -8816,9 +8643,7 @@
                     "pathNode": {
                       "id": 32104,
                       "name": "Coord",
-                      "nameLocations": [
-                        "5729:5:116"
-                      ],
+                      "nameLocations": ["5729:5:116"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "5729:5:116"
@@ -9764,9 +9589,7 @@
                     "pathNode": {
                       "id": 32243,
                       "name": "Coord",
-                      "nameLocations": [
-                        "7452:5:116"
-                      ],
+                      "nameLocations": ["7452:5:116"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "7452:5:116"
@@ -9860,9 +9683,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    32314
-                  ],
+                  "assignments": [32314],
                   "declarations": [
                     {
                       "constant": false,
@@ -9885,9 +9706,7 @@
                         "pathNode": {
                           "id": 32312,
                           "name": "ClaimComponents",
-                          "nameLocations": [
-                            "7937:15:116"
-                          ],
+                          "nameLocations": ["7937:15:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 27989,
                           "src": "7937:15:116"
@@ -10470,9 +10289,7 @@
                   "src": "7937:414:116"
                 },
                 {
-                  "assignments": [
-                    32350
-                  ],
+                  "assignments": [32350],
                   "declarations": [
                     {
                       "constant": false,
@@ -10495,9 +10312,7 @@
                         "pathNode": {
                           "id": 32348,
                           "name": "Coord",
-                          "nameLocations": [
-                            "8358:5:116"
-                          ],
+                          "nameLocations": ["8358:5:116"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 1635,
                           "src": "8358:5:116"
@@ -10613,9 +10428,7 @@
                   "src": "8358:46:116"
                 },
                 {
-                  "assignments": [
-                    32362
-                  ],
+                  "assignments": [32362],
                   "declarations": [
                     {
                       "constant": false,
@@ -10834,10 +10647,7 @@
                       "id": 32369,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "8528:7:116",
                       "typeDescriptions": {
@@ -10866,9 +10676,7 @@
                   "src": "8528:111:116"
                 },
                 {
-                  "assignments": [
-                    32378
-                  ],
+                  "assignments": [32378],
                   "declarations": [
                     {
                       "constant": false,
@@ -11140,10 +10948,7 @@
                       "id": 32387,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "8797:7:116",
                       "typeDescriptions": {
@@ -11331,10 +11136,7 @@
                       "id": 32397,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "8996:7:116",
                       "typeDescriptions": {
@@ -11363,9 +11165,7 @@
                   "src": "8996:165:116"
                 },
                 {
-                  "assignments": [
-                    32410
-                  ],
+                  "assignments": [32410],
                   "declarations": [
                     {
                       "constant": false,
@@ -12038,10 +11838,7 @@
                                 "id": 32495,
                                 "name": "revert",
                                 "nodeType": "Identifier",
-                                "overloadedDeclarations": [
-                                  -19,
-                                  -19
-                                ],
+                                "overloadedDeclarations": [-19, -19],
                                 "referencedDeclaration": -19,
                                 "src": "10001:6:116",
                                 "typeDescriptions": {
@@ -12080,9 +11877,7 @@
                         "src": "9852:135:116",
                         "statements": [
                           {
-                            "assignments": [
-                              32481
-                            ],
+                            "assignments": [32481],
                             "declarations": [
                               {
                                 "constant": false,
@@ -12284,9 +12079,7 @@
                       "src": "9629:135:116",
                       "statements": [
                         {
-                          "assignments": [
-                            32456
-                          ],
+                          "assignments": [32456],
                           "declarations": [
                             {
                               "constant": false,
@@ -12733,9 +12526,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              41412
-            ],
+            "baseFunctions": [41412],
             "functionSelector": "09c5eabe",
             "implemented": true,
             "kind": "function",
@@ -12966,9 +12757,7 @@
                     "pathNode": {
                       "id": 32510,
                       "name": "Coord",
-                      "nameLocations": [
-                        "10132:5:116"
-                      ],
+                      "nameLocations": ["10132:5:116"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "10132:5:116"
@@ -13031,9 +12820,7 @@
             "baseName": {
               "id": 31792,
               "name": "System",
-              "nameLocations": [
-                "2196:6:116"
-              ],
+              "nameLocations": ["2196:6:116"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 322,
               "src": "2196:6:116"
@@ -13047,25 +12834,11 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          32526,
-          322,
-          41399,
-          2359,
-          43305,
-          43805,
-          43181,
-          41413,
-          2402,
-          43315
-        ],
+        "linearizedBaseContracts": [32526, 322, 41399, 2359, 43305, 43805, 43181, 41413, 2402, 43315],
         "name": "ClaimFromMineSystem",
         "nameLocation": "2173:19:116",
         "scope": 32527,
-        "usedErrors": [
-          43802,
-          43804
-        ]
+        "usedErrors": [43802, 43804]
       }
     ],
     "license": "MIT"

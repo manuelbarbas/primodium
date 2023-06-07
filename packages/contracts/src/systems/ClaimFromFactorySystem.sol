@@ -16,7 +16,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 
 // Debug Buildings
-import { MainBaseID, ConveyorID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
 // Production Buildings
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
@@ -240,7 +240,7 @@ contract ClaimFromFactorySystem is System {
   }
 
   // pass in a coordinate of a conveyor block, which fetches all other
-  function claimConveyorTile(Coord memory coord, uint256 originEntity, uint256 destination) public {
+  function claimNodeTile(Coord memory coord, uint256 originEntity, uint256 destination) public {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
@@ -251,7 +251,7 @@ contract ClaimFromFactorySystem is System {
 
     if (
       entitiesAtPosition.length == 1 &&
-      (tileComponent.getValue(entitiesAtPosition[0]) == ConveyorID ||
+      (tileComponent.getValue(entitiesAtPosition[0]) == DebugNodeID ||
         tileComponent.getValue(entitiesAtPosition[0]) == NodeID)
     ) {
       // Check that health is not zero
@@ -266,17 +266,17 @@ contract ClaimFromFactorySystem is System {
       // claim each conveyor tile connected to the current tile. keys are the start position.
       for (uint i = 0; i < endAtPositionPaths.length; i++) {
         // Get the tile position
-        claimConveyorTile(positionComponent.getValue(endAtPositionPaths[i]), originEntity, destination);
+        claimNodeTile(positionComponent.getValue(endAtPositionPaths[i]), originEntity, destination);
       }
     }
   }
 
   // pass in a coordinate of a base or factory block, fetch all surrounding conveyor nodes.
-  function claimAdjacentConveyorTiles(Coord memory coord, uint256 originEntity, uint256 destination) public {
-    claimConveyorTile(Coord(coord.x - 1, coord.y), originEntity, destination);
-    claimConveyorTile(Coord(coord.x + 1, coord.y), originEntity, destination);
-    claimConveyorTile(Coord(coord.x, coord.y + 1), originEntity, destination);
-    claimConveyorTile(Coord(coord.x, coord.y - 1), originEntity, destination);
+  function claimAdjacentNodeTiles(Coord memory coord, uint256 originEntity, uint256 destination) public {
+    claimNodeTile(Coord(coord.x - 1, coord.y), originEntity, destination);
+    claimNodeTile(Coord(coord.x + 1, coord.y), originEntity, destination);
+    claimNodeTile(Coord(coord.x, coord.y + 1), originEntity, destination);
+    claimNodeTile(Coord(coord.x, coord.y - 1), originEntity, destination);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -316,15 +316,15 @@ contract ClaimFromFactorySystem is System {
 
     // Check main base, if so destination is the wallet
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
-      claimAdjacentConveyorTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
+      claimAdjacentNodeTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
     }
     // store items in the Silo for emitting bullets
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == SiloID) {
       uint256 destination = entitiesAtPosition[0];
-      claimAdjacentConveyorTiles(coord, entitiesAtPosition[0], destination);
+      claimAdjacentNodeTiles(coord, entitiesAtPosition[0], destination);
     } else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
       uint256 destination = entitiesAtPosition[0];
-      claimAdjacentConveyorTiles(coord, entitiesAtPosition[0], destination);
+      claimAdjacentNodeTiles(coord, entitiesAtPosition[0], destination);
     } else {
       revert("[ClaimFromFactorySystem] Cannot store items in selected tile");
     }

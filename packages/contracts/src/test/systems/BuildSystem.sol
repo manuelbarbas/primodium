@@ -9,7 +9,7 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-import { MainBaseID, LithiumMinerID, ConveyorID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, LithiumMinerID, DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 
 contract BuildSystemTest is MudTest {
@@ -82,8 +82,8 @@ contract BuildSystemTest is MudTest {
     PathComponent pathComponent = PathComponent(component(PathComponentID));
 
     // Build two conveyor blocks
-    bytes memory startBlockEntity = buildSystem.executeTyped(ConveyorID, startCoord);
-    bytes memory endBlockEntity = buildSystem.executeTyped(ConveyorID, endCoord);
+    bytes memory startBlockEntity = buildSystem.executeTyped(DebugNodeID, startCoord);
+    bytes memory endBlockEntity = buildSystem.executeTyped(DebugNodeID, endCoord);
 
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));

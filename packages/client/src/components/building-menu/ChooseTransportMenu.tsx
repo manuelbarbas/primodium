@@ -54,7 +54,7 @@ function ChooseTransportMenu({
               <i>Start</i> a path by clicking on a Node to send resources.
             </p>
           )}
-          {/* player placed start and conveyer selection is still active */}
+          {/* player placed start and conveyor selection is still active */}
           {selectedPathTiles.start !== null &&
             selectedBlock == BlockType.Conveyor && (
               <p>

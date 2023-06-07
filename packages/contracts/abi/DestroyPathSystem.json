@@ -679,57 +679,23 @@
     "absolutePath": "src/systems/DestroyPathSystem.sol",
     "id": 33363,
     "exportedSymbols": {
-      "ConveyorID": [
-        28485
-      ],
-      "Coord": [
-        1635
-      ],
-      "DestroyPathSystem": [
-        33362
-      ],
-      "ID": [
-        33190
-      ],
-      "IWorld": [
-        1247
-      ],
-      "NodeID": [
-        28533
-      ],
-      "OwnedByComponent": [
-        21548
-      ],
-      "OwnedByComponentID": [
-        21535
-      ],
-      "PathComponent": [
-        21572
-      ],
-      "PathComponentID": [
-        21559
-      ],
-      "PositionComponent": [
-        21596
-      ],
-      "PositionComponentID": [
-        21583
-      ],
-      "System": [
-        322
-      ],
-      "TileComponent": [
-        21668
-      ],
-      "TileComponentID": [
-        21655
-      ],
-      "addressToEntity": [
-        1291
-      ],
-      "getAddressById": [
-        1327
-      ]
+      "DebugNodeID": [28485],
+      "Coord": [1635],
+      "DestroyPathSystem": [33362],
+      "ID": [33190],
+      "IWorld": [1247],
+      "NodeID": [28533],
+      "OwnedByComponent": [21548],
+      "OwnedByComponentID": [21535],
+      "PathComponent": [21572],
+      "PathComponentID": [21559],
+      "PositionComponent": [21596],
+      "PositionComponentID": [21583],
+      "System": [322],
+      "TileComponent": [21668],
+      "TileComponentID": [21655],
+      "addressToEntity": [1291],
+      "getAddressById": [1327]
     },
     "nodeType": "SourceUnit",
     "src": "32:2724:118",
@@ -739,12 +705,7 @@
         "nodeType": "PragmaDirective",
         "src": "32:24:118",
         "nodes": [],
-        "literals": [
-          "solidity",
-          ">=",
-          "0.8",
-          ".0"
-        ]
+        "literals": ["solidity", ">=", "0.8", ".0"]
       },
       {
         "id": 33162,
@@ -992,7 +953,7 @@
           {
             "foreign": {
               "id": 33178,
-              "name": "ConveyorID",
+              "name": "DebugNodeID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
               "referencedDeclaration": 28485,
@@ -1220,9 +1181,7 @@
                 "modifierName": {
                   "id": 33199,
                   "name": "System",
-                  "nameLocations": [
-                    "794:6:118"
-                  ],
+                  "nameLocations": ["794:6:118"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 322,
                   "src": "794:6:118"
@@ -1258,9 +1217,7 @@
                     "pathNode": {
                       "id": 33193,
                       "name": "IWorld",
-                      "nameLocations": [
-                        "758:6:118"
-                      ],
+                      "nameLocations": ["758:6:118"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1247,
                       "src": "758:6:118"
@@ -1328,9 +1285,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    33214
-                  ],
+                  "assignments": [33214],
                   "declarations": [
                     {
                       "constant": false,
@@ -1353,9 +1308,7 @@
                         "pathNode": {
                           "id": 33212,
                           "name": "Coord",
-                          "nameLocations": [
-                            "900:5:118"
-                          ],
+                          "nameLocations": ["900:5:118"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 1635,
                           "src": "900:5:118"
@@ -1471,9 +1424,7 @@
                   "src": "900:51:118"
                 },
                 {
-                  "assignments": [
-                    33224
-                  ],
+                  "assignments": [33224],
                   "declarations": [
                     {
                       "constant": false,
@@ -1496,9 +1447,7 @@
                         "pathNode": {
                           "id": 33222,
                           "name": "PositionComponent",
-                          "nameLocations": [
-                            "957:17:118"
-                          ],
+                          "nameLocations": ["957:17:118"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21596,
                           "src": "957:17:118"
@@ -1620,9 +1569,7 @@
                   "src": "957:104:118"
                 },
                 {
-                  "assignments": [
-                    33234
-                  ],
+                  "assignments": [33234],
                   "declarations": [
                     {
                       "constant": false,
@@ -1645,9 +1592,7 @@
                         "pathNode": {
                           "id": 33232,
                           "name": "TileComponent",
-                          "nameLocations": [
-                            "1067:13:118"
-                          ],
+                          "nameLocations": ["1067:13:118"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21668,
                           "src": "1067:13:118"
@@ -1769,9 +1714,7 @@
                   "src": "1067:88:118"
                 },
                 {
-                  "assignments": [
-                    33244
-                  ],
+                  "assignments": [33244],
                   "declarations": [
                     {
                       "constant": false,
@@ -1794,9 +1737,7 @@
                         "pathNode": {
                           "id": 33242,
                           "name": "PathComponent",
-                          "nameLocations": [
-                            "1161:13:118"
-                          ],
+                          "nameLocations": ["1161:13:118"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21572,
                           "src": "1161:13:118"
@@ -1918,9 +1859,7 @@
                   "src": "1161:88:118"
                 },
                 {
-                  "assignments": [
-                    33254
-                  ],
+                  "assignments": [33254],
                   "declarations": [
                     {
                       "constant": false,
@@ -1943,9 +1882,7 @@
                         "pathNode": {
                           "id": 33252,
                           "name": "OwnedByComponent",
-                          "nameLocations": [
-                            "1255:16:118"
-                          ],
+                          "nameLocations": ["1255:16:118"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21548,
                           "src": "1255:16:118"
@@ -2067,9 +2004,7 @@
                   "src": "1255:100:118"
                 },
                 {
-                  "assignments": [
-                    33266
-                  ],
+                  "assignments": [33266],
                   "declarations": [
                     {
                       "constant": false,
@@ -2272,10 +2207,7 @@
                       "id": 33272,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "1504:7:118",
                       "typeDescriptions": {
@@ -2304,9 +2236,7 @@
                   "src": "1504:109:118"
                 },
                 {
-                  "assignments": [
-                    33281
-                  ],
+                  "assignments": [33281],
                   "declarations": [
                     {
                       "constant": false,
@@ -2473,7 +2403,7 @@
                           "operator": "==",
                           "rightExpression": {
                             "id": 33291,
-                            "name": "ConveyorID",
+                            "name": "DebugNodeID",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 28485,
@@ -2570,10 +2500,7 @@
                       "id": 33289,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "1759:7:118",
                       "typeDescriptions": {
@@ -2602,9 +2529,7 @@
                   "src": "1759:183:118"
                 },
                 {
-                  "assignments": [
-                    33301
-                  ],
+                  "assignments": [33301],
                   "declarations": [
                     {
                       "constant": false,
@@ -2860,10 +2785,7 @@
                       "id": 33309,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "2106:7:118",
                       "typeDescriptions": {
@@ -3019,10 +2941,7 @@
                       "id": 33319,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "2363:7:118",
                       "typeDescriptions": {
@@ -3250,9 +3169,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              41412
-            ],
+            "baseFunctions": [41412],
             "functionSelector": "09c5eabe",
             "implemented": true,
             "kind": "function",
@@ -3483,9 +3400,7 @@
                     "pathNode": {
                       "id": 33346,
                       "name": "Coord",
-                      "nameLocations": [
-                        "2649:5:118"
-                      ],
+                      "nameLocations": ["2649:5:118"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "2649:5:118"
@@ -3548,9 +3463,7 @@
             "baseName": {
               "id": 33191,
               "name": "System",
-              "nameLocations": [
-                "735:6:118"
-              ],
+              "nameLocations": ["735:6:118"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 322,
               "src": "735:6:118"
@@ -3564,25 +3477,11 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          33362,
-          322,
-          41399,
-          2359,
-          43305,
-          43805,
-          43181,
-          41413,
-          2402,
-          43315
-        ],
+        "linearizedBaseContracts": [33362, 322, 41399, 2359, 43305, 43805, 43181, 41413, 2402, 43315],
         "name": "DestroyPathSystem",
         "nameLocation": "714:17:118",
         "scope": 33363,
-        "usedErrors": [
-          43802,
-          43804
-        ]
+        "usedErrors": [43802, 43804]
       }
     ],
     "license": "MIT"

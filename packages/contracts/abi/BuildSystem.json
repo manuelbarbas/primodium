@@ -777,315 +777,109 @@
     "absolutePath": "src/systems/BuildSystem.sol",
     "id": 30622,
     "exportedSymbols": {
-      "AdvancedBatteryFactoryID": [
-        28589
-      ],
-      "AdvancedBatteryFactoryResearchID": [
-        28235
-      ],
-      "AdvancedPowerSourceCraftedItemID": [
-        28072
-      ],
-      "BasicBatteryFactoryID": [
-        28549
-      ],
-      "BasicBatteryFactoryResearchID": [
-        28195
-      ],
-      "BasicMinerID": [
-        28525
-      ],
-      "BasicPowerSourceCraftedItemID": [
-        28048
-      ],
-      "BolutiteResourceItemID": [
-        28005
-      ],
-      "BuildSystem": [
-        30621
-      ],
-      "BulletCraftedItemID": [
-        28152
-      ],
-      "BulletFactoryID": [
-        28509
-      ],
-      "ConveyorID": [
-        28485
-      ],
-      "Coord": [
-        1635
-      ],
-      "CopperResearchID": [
-        28155
-      ],
-      "CopperResourceItemID": [
-        28008
-      ],
-      "DenseMetalRefineryID": [
-        28581
-      ],
-      "DenseMetalRefineryResearchID": [
-        28227
-      ],
-      "FastMinerResearchID": [
-        28331
-      ],
-      "HardenedDrillID": [
-        28573
-      ],
-      "HardenedDrillResearchID": [
-        28219
-      ],
-      "HighEnergyLaserFactoryID": [
-        28653
-      ],
-      "HighEnergyLaserFactoryResearchID": [
-        28299
-      ],
-      "HighTempFoundryID": [
-        28597
-      ],
-      "HighTempFoundryResearchID": [
-        28243
-      ],
-      "ID": [
-        29670
-      ],
-      "IWorld": [
-        1247
-      ],
-      "IridiumCrystalCraftedItemID": [
-        28104
-      ],
-      "IridiumDrillbitCraftedItemID": [
-        28112
-      ],
-      "IridiumDrillbitFactoryID": [
-        28613
-      ],
-      "IridiumDrillbitFactoryResearchID": [
-        28259
-      ],
-      "IridiumResearchID": [
-        28170
-      ],
-      "IridiumResourceItemID": [
-        28011
-      ],
-      "IronPlateCraftedItemID": [
-        28040
-      ],
-      "IronResourceItemID": [
-        28014
-      ],
-      "ItemComponent": [
-        21428
-      ],
-      "ItemComponentID": [
-        21415
-      ],
-      "KimberliteCatalystFactoryID": [
-        28677
-      ],
-      "KimberliteCatalystFactoryResearchID": [
-        28323
-      ],
-      "KimberliteCrystalCatalystCraftedItemID": [
-        28144
-      ],
-      "KimberliteResearchID": [
-        28173
-      ],
-      "KimberliteResourceItemID": [
-        28017
-      ],
-      "KineticMissileCraftedItemID": [
-        28056
-      ],
-      "KineticMissileFactoryID": [
-        28557
-      ],
-      "KineticMissileFactoryResearchID": [
-        28203
-      ],
-      "LaserPowerSourceCraftedItemID": [
-        28120
-      ],
-      "LastBuiltAtComponent": [
-        21452
-      ],
-      "LastBuiltAtComponentID": [
-        21439
-      ],
-      "LibBuild": [
-        22241
-      ],
-      "LibDebug": [
-        22585
-      ],
-      "LibEncode": [
-        22690
-      ],
-      "LibResearch": [
-        23984
-      ],
-      "LithiumMinerID": [
-        28501
-      ],
-      "LithiumResearchID": [
-        28158
-      ],
-      "LithiumResourceItemID": [
-        28020
-      ],
-      "MainBaseID": [
-        28477
-      ],
-      "MainBaseInitializedComponent": [
-        21524
-      ],
-      "MainBaseInitializedComponentID": [
-        21511
-      ],
-      "MinerID": [
-        28493
-      ],
-      "MissileLaunchComplexID": [
-        28645
-      ],
-      "MissileLaunchComplexResearchID": [
-        28291
-      ],
-      "NodeID": [
-        28533
-      ],
-      "OsmiumResearchID": [
-        28164
-      ],
-      "OsmiumResourceItemID": [
-        28023
-      ],
-      "OwnedByComponent": [
-        21548
-      ],
-      "OwnedByComponentID": [
-        21535
-      ],
-      "PenetratingMissileCraftedItemID": [
-        28088
-      ],
-      "PenetratingMissileFactoryID": [
-        28637
-      ],
-      "PenetratingMissileFactoryResearchID": [
-        28283
-      ],
-      "PenetratingWarheadCraftedItemID": [
-        28080
-      ],
-      "PenetratorFactoryID": [
-        28629
-      ],
-      "PenetratorFactoryResearchID": [
-        28275
-      ],
-      "PlatingFactoryID": [
-        28541
-      ],
-      "PlatingFactoryResearchID": [
-        28187
-      ],
-      "PositionComponent": [
-        21596
-      ],
-      "PositionComponentID": [
-        21583
-      ],
-      "PrecisionMachineryFactoryID": [
-        28605
-      ],
-      "PrecisionMachineryFactoryResearchID": [
-        28251
-      ],
-      "PrecisionPneumaticDrillID": [
-        28621
-      ],
-      "PrecisionPneumaticDrillResearchID": [
-        28267
-      ],
-      "ProjectileLauncherID": [
-        28565
-      ],
-      "ProjectileLauncherResearchID": [
-        28211
-      ],
-      "RefinedOsmiumCraftedItemID": [
-        28064
-      ],
-      "ResearchComponent": [
-        21620
-      ],
-      "ResearchComponentID": [
-        21607
-      ],
-      "SiloID": [
-        28517
-      ],
-      "System": [
-        322
-      ],
-      "ThermobaricMissileCraftedItemID": [
-        28136
-      ],
-      "ThermobaricMissileFactoryID": [
-        28669
-      ],
-      "ThermobaricMissileFactoryResearchID": [
-        28315
-      ],
-      "ThermobaricWarheadCraftedItemID": [
-        28128
-      ],
-      "ThermobaricWarheadFactoryID": [
-        28661
-      ],
-      "ThermobaricWarheadFactoryResearchID": [
-        28307
-      ],
-      "TileComponent": [
-        21668
-      ],
-      "TileComponentID": [
-        21655
-      ],
-      "TitaniumResearchID": [
-        28161
-      ],
-      "TitaniumResourceItemID": [
-        28026
-      ],
-      "TungstenResearchID": [
-        28167
-      ],
-      "TungstenResourceItemID": [
-        28029
-      ],
-      "TungstenRodsCraftedItemID": [
-        28096
-      ],
-      "UraniniteResourceItemID": [
-        28032
-      ],
-      "addressToEntity": [
-        1291
-      ],
-      "entityToAddress": [
-        1274
-      ],
-      "getAddressById": [
-        1327
-      ]
+      "AdvancedBatteryFactoryID": [28589],
+      "AdvancedBatteryFactoryResearchID": [28235],
+      "AdvancedPowerSourceCraftedItemID": [28072],
+      "BasicBatteryFactoryID": [28549],
+      "BasicBatteryFactoryResearchID": [28195],
+      "BasicMinerID": [28525],
+      "BasicPowerSourceCraftedItemID": [28048],
+      "BolutiteResourceItemID": [28005],
+      "BuildSystem": [30621],
+      "BulletCraftedItemID": [28152],
+      "BulletFactoryID": [28509],
+      "DebugNodeID": [28485],
+      "Coord": [1635],
+      "CopperResearchID": [28155],
+      "CopperResourceItemID": [28008],
+      "DenseMetalRefineryID": [28581],
+      "DenseMetalRefineryResearchID": [28227],
+      "FastMinerResearchID": [28331],
+      "HardenedDrillID": [28573],
+      "HardenedDrillResearchID": [28219],
+      "HighEnergyLaserFactoryID": [28653],
+      "HighEnergyLaserFactoryResearchID": [28299],
+      "HighTempFoundryID": [28597],
+      "HighTempFoundryResearchID": [28243],
+      "ID": [29670],
+      "IWorld": [1247],
+      "IridiumCrystalCraftedItemID": [28104],
+      "IridiumDrillbitCraftedItemID": [28112],
+      "IridiumDrillbitFactoryID": [28613],
+      "IridiumDrillbitFactoryResearchID": [28259],
+      "IridiumResearchID": [28170],
+      "IridiumResourceItemID": [28011],
+      "IronPlateCraftedItemID": [28040],
+      "IronResourceItemID": [28014],
+      "ItemComponent": [21428],
+      "ItemComponentID": [21415],
+      "KimberliteCatalystFactoryID": [28677],
+      "KimberliteCatalystFactoryResearchID": [28323],
+      "KimberliteCrystalCatalystCraftedItemID": [28144],
+      "KimberliteResearchID": [28173],
+      "KimberliteResourceItemID": [28017],
+      "KineticMissileCraftedItemID": [28056],
+      "KineticMissileFactoryID": [28557],
+      "KineticMissileFactoryResearchID": [28203],
+      "LaserPowerSourceCraftedItemID": [28120],
+      "LastBuiltAtComponent": [21452],
+      "LastBuiltAtComponentID": [21439],
+      "LibBuild": [22241],
+      "LibDebug": [22585],
+      "LibEncode": [22690],
+      "LibResearch": [23984],
+      "LithiumMinerID": [28501],
+      "LithiumResearchID": [28158],
+      "LithiumResourceItemID": [28020],
+      "MainBaseID": [28477],
+      "MainBaseInitializedComponent": [21524],
+      "MainBaseInitializedComponentID": [21511],
+      "MinerID": [28493],
+      "MissileLaunchComplexID": [28645],
+      "MissileLaunchComplexResearchID": [28291],
+      "NodeID": [28533],
+      "OsmiumResearchID": [28164],
+      "OsmiumResourceItemID": [28023],
+      "OwnedByComponent": [21548],
+      "OwnedByComponentID": [21535],
+      "PenetratingMissileCraftedItemID": [28088],
+      "PenetratingMissileFactoryID": [28637],
+      "PenetratingMissileFactoryResearchID": [28283],
+      "PenetratingWarheadCraftedItemID": [28080],
+      "PenetratorFactoryID": [28629],
+      "PenetratorFactoryResearchID": [28275],
+      "PlatingFactoryID": [28541],
+      "PlatingFactoryResearchID": [28187],
+      "PositionComponent": [21596],
+      "PositionComponentID": [21583],
+      "PrecisionMachineryFactoryID": [28605],
+      "PrecisionMachineryFactoryResearchID": [28251],
+      "PrecisionPneumaticDrillID": [28621],
+      "PrecisionPneumaticDrillResearchID": [28267],
+      "ProjectileLauncherID": [28565],
+      "ProjectileLauncherResearchID": [28211],
+      "RefinedOsmiumCraftedItemID": [28064],
+      "ResearchComponent": [21620],
+      "ResearchComponentID": [21607],
+      "SiloID": [28517],
+      "System": [322],
+      "ThermobaricMissileCraftedItemID": [28136],
+      "ThermobaricMissileFactoryID": [28669],
+      "ThermobaricMissileFactoryResearchID": [28315],
+      "ThermobaricWarheadCraftedItemID": [28128],
+      "ThermobaricWarheadFactoryID": [28661],
+      "ThermobaricWarheadFactoryResearchID": [28307],
+      "TileComponent": [21668],
+      "TileComponentID": [21655],
+      "TitaniumResearchID": [28161],
+      "TitaniumResourceItemID": [28026],
+      "TungstenResearchID": [28167],
+      "TungstenResourceItemID": [28029],
+      "TungstenRodsCraftedItemID": [28096],
+      "UraniniteResourceItemID": [28032],
+      "addressToEntity": [1291],
+      "entityToAddress": [1274],
+      "getAddressById": [1327]
     },
     "nodeType": "SourceUnit",
     "src": "32:18438:114",
@@ -1095,12 +889,7 @@
         "nodeType": "PragmaDirective",
         "src": "32:24:114",
         "nodes": [],
-        "literals": [
-          "solidity",
-          ">=",
-          "0.8",
-          ".0"
-        ]
+        "literals": ["solidity", ">=", "0.8", ".0"]
       },
       {
         "id": 29546,
@@ -1450,7 +1239,7 @@
           {
             "foreign": {
               "id": 29570,
-              "name": "ConveyorID",
+              "name": "DebugNodeID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
               "referencedDeclaration": 28485,
@@ -2751,9 +2540,7 @@
                 "modifierName": {
                   "id": 29679,
                   "name": "System",
-                  "nameLocations": [
-                    "3498:6:114"
-                  ],
+                  "nameLocations": ["3498:6:114"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 322,
                   "src": "3498:6:114"
@@ -2789,9 +2576,7 @@
                     "pathNode": {
                       "id": 29673,
                       "name": "IWorld",
-                      "nameLocations": [
-                        "3462:6:114"
-                      ],
+                      "nameLocations": ["3462:6:114"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1247,
                       "src": "3462:6:114"
@@ -2859,10 +2644,7 @@
               "nodes": [],
               "statements": [
                 {
-                  "assignments": [
-                    29693,
-                    29696
-                  ],
+                  "assignments": [29693, 29696],
                   "declarations": [
                     {
                       "constant": false,
@@ -2912,9 +2694,7 @@
                         "pathNode": {
                           "id": 29694,
                           "name": "Coord",
-                          "nameLocations": [
-                            "3624:5:114"
-                          ],
+                          "nameLocations": ["3624:5:114"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 1635,
                           "src": "3624:5:114"
@@ -3050,9 +2830,7 @@
                   "src": "3604:76:114"
                 },
                 {
-                  "assignments": [
-                    29708
-                  ],
+                  "assignments": [29708],
                   "declarations": [
                     {
                       "constant": false,
@@ -3075,9 +2853,7 @@
                         "pathNode": {
                           "id": 29706,
                           "name": "PositionComponent",
-                          "nameLocations": [
-                            "3686:17:114"
-                          ],
+                          "nameLocations": ["3686:17:114"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21596,
                           "src": "3686:17:114"
@@ -3199,9 +2975,7 @@
                   "src": "3686:104:114"
                 },
                 {
-                  "assignments": [
-                    29718
-                  ],
+                  "assignments": [29718],
                   "declarations": [
                     {
                       "constant": false,
@@ -3224,9 +2998,7 @@
                         "pathNode": {
                           "id": 29716,
                           "name": "TileComponent",
-                          "nameLocations": [
-                            "3796:13:114"
-                          ],
+                          "nameLocations": ["3796:13:114"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21668,
                           "src": "3796:13:114"
@@ -3348,9 +3120,7 @@
                   "src": "3796:88:114"
                 },
                 {
-                  "assignments": [
-                    29728
-                  ],
+                  "assignments": [29728],
                   "declarations": [
                     {
                       "constant": false,
@@ -3373,9 +3143,7 @@
                         "pathNode": {
                           "id": 29726,
                           "name": "OwnedByComponent",
-                          "nameLocations": [
-                            "3890:16:114"
-                          ],
+                          "nameLocations": ["3890:16:114"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21548,
                           "src": "3890:16:114"
@@ -3497,9 +3265,7 @@
                   "src": "3890:100:114"
                 },
                 {
-                  "assignments": [
-                    29738
-                  ],
+                  "assignments": [29738],
                   "declarations": [
                     {
                       "constant": false,
@@ -3522,9 +3288,7 @@
                         "pathNode": {
                           "id": 29736,
                           "name": "LastBuiltAtComponent",
-                          "nameLocations": [
-                            "3997:20:114"
-                          ],
+                          "nameLocations": ["3997:20:114"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21452,
                           "src": "3997:20:114"
@@ -3646,9 +3410,7 @@
                   "src": "3997:128:114"
                 },
                 {
-                  "assignments": [
-                    29748
-                  ],
+                  "assignments": [29748],
                   "declarations": [
                     {
                       "constant": false,
@@ -3671,9 +3433,7 @@
                         "pathNode": {
                           "id": 29746,
                           "name": "ResearchComponent",
-                          "nameLocations": [
-                            "4131:17:114"
-                          ],
+                          "nameLocations": ["4131:17:114"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21620,
                           "src": "4131:17:114"
@@ -3795,9 +3555,7 @@
                   "src": "4131:104:114"
                 },
                 {
-                  "assignments": [
-                    29758
-                  ],
+                  "assignments": [29758],
                   "declarations": [
                     {
                       "constant": false,
@@ -3820,9 +3578,7 @@
                         "pathNode": {
                           "id": 29756,
                           "name": "ItemComponent",
-                          "nameLocations": [
-                            "4241:13:114"
-                          ],
+                          "nameLocations": ["4241:13:114"],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 21428,
                           "src": "4241:13:114"
@@ -3944,9 +3700,7 @@
                   "src": "4241:88:114"
                 },
                 {
-                  "assignments": [
-                    29770
-                  ],
+                  "assignments": [29770],
                   "declarations": [
                     {
                       "constant": false,
@@ -4149,10 +3903,7 @@
                       "id": 29776,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "4469:7:114",
                       "typeDescriptions": {
@@ -4247,7 +3998,7 @@
                             "operator": "==",
                             "rightExpression": {
                               "id": 29785,
-                              "name": "ConveyorID",
+                              "name": "DebugNodeID",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 28485,
@@ -5401,10 +5152,7 @@
                                                                       "id": 30522,
                                                                       "name": "revert",
                                                                       "nodeType": "Identifier",
-                                                                      "overloadedDeclarations": [
-                                                                        -19,
-                                                                        -19
-                                                                      ],
+                                                                      "overloadedDeclarations": [-19, -19],
                                                                       "referencedDeclaration": -19,
                                                                       "src": "17705:6:114",
                                                                       "typeDescriptions": {
@@ -5645,10 +5393,7 @@
                                                                             "id": 30501,
                                                                             "name": "revert",
                                                                             "nodeType": "Identifier",
-                                                                            "overloadedDeclarations": [
-                                                                              -19,
-                                                                              -19
-                                                                            ],
+                                                                            "overloadedDeclarations": [-19, -19],
                                                                             "referencedDeclaration": -19,
                                                                             "src": "17400:6:114",
                                                                             "typeDescriptions": {
@@ -6103,10 +5848,7 @@
                                                                           "id": 30465,
                                                                           "name": "revert",
                                                                           "nodeType": "Identifier",
-                                                                          "overloadedDeclarations": [
-                                                                            -19,
-                                                                            -19
-                                                                          ],
+                                                                          "overloadedDeclarations": [-19, -19],
                                                                           "referencedDeclaration": -19,
                                                                           "src": "16704:6:114",
                                                                           "typeDescriptions": {
@@ -6597,10 +6339,7 @@
                                                                         "id": 30429,
                                                                         "name": "revert",
                                                                         "nodeType": "Identifier",
-                                                                        "overloadedDeclarations": [
-                                                                          -19,
-                                                                          -19
-                                                                        ],
+                                                                        "overloadedDeclarations": [-19, -19],
                                                                         "referencedDeclaration": -19,
                                                                         "src": "15983:6:114",
                                                                         "typeDescriptions": {
@@ -7091,10 +6830,7 @@
                                                                       "id": 30393,
                                                                       "name": "revert",
                                                                       "nodeType": "Identifier",
-                                                                      "overloadedDeclarations": [
-                                                                        -19,
-                                                                        -19
-                                                                      ],
+                                                                      "overloadedDeclarations": [-19, -19],
                                                                       "referencedDeclaration": -19,
                                                                       "src": "15262:6:114",
                                                                       "typeDescriptions": {
@@ -7585,10 +7321,7 @@
                                                                     "id": 30359,
                                                                     "name": "revert",
                                                                     "nodeType": "Identifier",
-                                                                    "overloadedDeclarations": [
-                                                                      -19,
-                                                                      -19
-                                                                    ],
+                                                                    "overloadedDeclarations": [-19, -19],
                                                                     "referencedDeclaration": -19,
                                                                     "src": "14613:6:114",
                                                                     "typeDescriptions": {
@@ -8043,10 +7776,7 @@
                                                                   "id": 30323,
                                                                   "name": "revert",
                                                                   "nodeType": "Identifier",
-                                                                  "overloadedDeclarations": [
-                                                                    -19,
-                                                                    -19
-                                                                  ],
+                                                                  "overloadedDeclarations": [-19, -19],
                                                                   "referencedDeclaration": -19,
                                                                   "src": "13949:6:114",
                                                                   "typeDescriptions": {
@@ -8537,10 +8267,7 @@
                                                                 "id": 30287,
                                                                 "name": "revert",
                                                                 "nodeType": "Identifier",
-                                                                "overloadedDeclarations": [
-                                                                  -19,
-                                                                  -19
-                                                                ],
+                                                                "overloadedDeclarations": [-19, -19],
                                                                 "referencedDeclaration": -19,
                                                                 "src": "13252:6:114",
                                                                 "typeDescriptions": {
@@ -9031,10 +8758,7 @@
                                                               "id": 30251,
                                                               "name": "revert",
                                                               "nodeType": "Identifier",
-                                                              "overloadedDeclarations": [
-                                                                -19,
-                                                                -19
-                                                              ],
+                                                              "overloadedDeclarations": [-19, -19],
                                                               "referencedDeclaration": -19,
                                                               "src": "12617:6:114",
                                                               "typeDescriptions": {
@@ -9525,10 +9249,7 @@
                                                             "id": 30217,
                                                             "name": "revert",
                                                             "nodeType": "Identifier",
-                                                            "overloadedDeclarations": [
-                                                              -19,
-                                                              -19
-                                                            ],
+                                                            "overloadedDeclarations": [-19, -19],
                                                             "referencedDeclaration": -19,
                                                             "src": "11971:6:114",
                                                             "typeDescriptions": {
@@ -9983,10 +9704,7 @@
                                                           "id": 30181,
                                                           "name": "revert",
                                                           "nodeType": "Identifier",
-                                                          "overloadedDeclarations": [
-                                                            -19,
-                                                            -19
-                                                          ],
+                                                          "overloadedDeclarations": [-19, -19],
                                                           "referencedDeclaration": -19,
                                                           "src": "11293:6:114",
                                                           "typeDescriptions": {
@@ -10477,10 +10195,7 @@
                                                         "id": 30145,
                                                         "name": "revert",
                                                         "nodeType": "Identifier",
-                                                        "overloadedDeclarations": [
-                                                          -19,
-                                                          -19
-                                                        ],
+                                                        "overloadedDeclarations": [-19, -19],
                                                         "referencedDeclaration": -19,
                                                         "src": "10591:6:114",
                                                         "typeDescriptions": {
@@ -10971,10 +10686,7 @@
                                                       "id": 30109,
                                                       "name": "revert",
                                                       "nodeType": "Identifier",
-                                                      "overloadedDeclarations": [
-                                                        -19,
-                                                        -19
-                                                      ],
+                                                      "overloadedDeclarations": [-19, -19],
                                                       "referencedDeclaration": -19,
                                                       "src": "9965:6:114",
                                                       "typeDescriptions": {
@@ -11465,10 +11177,7 @@
                                                     "id": 30071,
                                                     "name": "revert",
                                                     "nodeType": "Identifier",
-                                                    "overloadedDeclarations": [
-                                                      -19,
-                                                      -19
-                                                    ],
+                                                    "overloadedDeclarations": [-19, -19],
                                                     "referencedDeclaration": -19,
                                                     "src": "9240:6:114",
                                                     "typeDescriptions": {
@@ -11995,10 +11704,7 @@
                                                   "id": 30035,
                                                   "name": "revert",
                                                   "nodeType": "Identifier",
-                                                  "overloadedDeclarations": [
-                                                    -19,
-                                                    -19
-                                                  ],
+                                                  "overloadedDeclarations": [-19, -19],
                                                   "referencedDeclaration": -19,
                                                   "src": "8598:6:114",
                                                   "typeDescriptions": {
@@ -12489,10 +12195,7 @@
                                                 "id": 30001,
                                                 "name": "revert",
                                                 "nodeType": "Identifier",
-                                                "overloadedDeclarations": [
-                                                  -19,
-                                                  -19
-                                                ],
+                                                "overloadedDeclarations": [-19, -19],
                                                 "referencedDeclaration": -19,
                                                 "src": "8052:6:114",
                                                 "typeDescriptions": {
@@ -12947,10 +12650,7 @@
                                               "id": 29965,
                                               "name": "revert",
                                               "nodeType": "Identifier",
-                                              "overloadedDeclarations": [
-                                                -19,
-                                                -19
-                                              ],
+                                              "overloadedDeclarations": [-19, -19],
                                               "referencedDeclaration": -19,
                                               "src": "7442:6:114",
                                               "typeDescriptions": {
@@ -13441,10 +13141,7 @@
                                             "id": 29931,
                                             "name": "revert",
                                             "nodeType": "Identifier",
-                                            "overloadedDeclarations": [
-                                              -19,
-                                              -19
-                                            ],
+                                            "overloadedDeclarations": [-19, -19],
                                             "referencedDeclaration": -19,
                                             "src": "6815:6:114",
                                             "typeDescriptions": {
@@ -13899,10 +13596,7 @@
                                           "id": 29897,
                                           "name": "revert",
                                           "nodeType": "Identifier",
-                                          "overloadedDeclarations": [
-                                            -19,
-                                            -19
-                                          ],
+                                          "overloadedDeclarations": [-19, -19],
                                           "referencedDeclaration": -19,
                                           "src": "6271:6:114",
                                           "typeDescriptions": {
@@ -14525,9 +14219,7 @@
                       "src": "5208:437:114",
                       "statements": [
                         {
-                          "assignments": [
-                            29819
-                          ],
+                          "assignments": [29819],
                           "declarations": [
                             {
                               "constant": false,
@@ -14550,9 +14242,7 @@
                                 "pathNode": {
                                   "id": 29817,
                                   "name": "MainBaseInitializedComponent",
-                                  "nameLocations": [
-                                    "5216:28:114"
-                                  ],
+                                  "nameLocations": ["5216:28:114"],
                                   "nodeType": "IdentifierPath",
                                   "referencedDeclaration": 21524,
                                   "src": "5216:28:114"
@@ -14974,10 +14664,7 @@
                                     "id": 29834,
                                     "name": "revert",
                                     "nodeType": "Identifier",
-                                    "overloadedDeclarations": [
-                                      -19,
-                                      -19
-                                    ],
+                                    "overloadedDeclarations": [-19, -19],
                                     "referencedDeclaration": -19,
                                     "src": "5466:6:114",
                                     "typeDescriptions": {
@@ -15120,10 +14807,7 @@
                                   "id": 29807,
                                   "name": "revert",
                                   "nodeType": "Identifier",
-                                  "overloadedDeclarations": [
-                                    -19,
-                                    -19
-                                  ],
+                                  "overloadedDeclarations": [-19, -19],
                                   "referencedDeclaration": -19,
                                   "src": "5091:6:114",
                                   "typeDescriptions": {
@@ -15158,9 +14842,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    30550
-                  ],
+                  "assignments": [30550],
                   "declarations": [
                     {
                       "constant": false,
@@ -15242,9 +14924,7 @@
                   "src": "17821:50:114"
                 },
                 {
-                  "assignments": [
-                    30556
-                  ],
+                  "assignments": [30556],
                   "declarations": [
                     {
                       "constant": false,
@@ -15847,9 +15527,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              41412
-            ],
+            "baseFunctions": [41412],
             "functionSelector": "09c5eabe",
             "implemented": true,
             "kind": "function",
@@ -16123,9 +15801,7 @@
                     "pathNode": {
                       "id": 30604,
                       "name": "Coord",
-                      "nameLocations": [
-                        "18362:5:114"
-                      ],
+                      "nameLocations": ["18362:5:114"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 1635,
                       "src": "18362:5:114"
@@ -16188,9 +15864,7 @@
             "baseName": {
               "id": 29671,
               "name": "System",
-              "nameLocations": [
-                "3439:6:114"
-              ],
+              "nameLocations": ["3439:6:114"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 322,
               "src": "3439:6:114"
@@ -16204,25 +15878,11 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          30621,
-          322,
-          41399,
-          2359,
-          43305,
-          43805,
-          43181,
-          41413,
-          2402,
-          43315
-        ],
+        "linearizedBaseContracts": [30621, 322, 41399, 2359, 43305, 43805, 43181, 41413, 2402, 43315],
         "name": "BuildSystem",
         "nameLocation": "3424:11:114",
         "scope": 30622,
-        "usedErrors": [
-          43802,
-          43804
-        ]
+        "usedErrors": [43802, 43804]
       }
     ],
     "license": "MIT"
