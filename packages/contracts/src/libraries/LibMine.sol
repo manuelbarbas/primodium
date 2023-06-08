@@ -63,7 +63,18 @@ library LibMine {
     uint256 startClaimTime;
     if (!lastClaimedAtComponent.has(minerEntity)) {
       if (!isDefaultUnlockedResource(resourceKey)) {
-        startClaimTime = lastResearchedAtComponent.getValue(hashedResearchKey);
+        // check which one is later, last researched or last built
+        if (lastResearchedAtComponent.has(hashedResearchKey)) {
+          uint256 lastResearchedAt = lastResearchedAtComponent.getValue(hashedResearchKey);
+          uint256 lastBuiltAt = lastBuiltAtComponent.getValue(minerEntity);
+          if (lastResearchedAt > lastBuiltAt) {
+            startClaimTime = lastResearchedAt;
+          } else {
+            startClaimTime = lastBuiltAt;
+          }
+        } else {
+          startClaimTime = lastBuiltAtComponent.getValue(minerEntity);
+        }
       } else {
         startClaimTime = lastBuiltAtComponent.getValue(minerEntity);
       }
