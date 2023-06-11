@@ -11,7 +11,7 @@ import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/L
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 // debug buildings
-import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
@@ -59,6 +59,7 @@ contract BuildSystem is System {
       blockType == MinerID ||
       blockType == LithiumMinerID ||
       blockType == BulletFactoryID ||
+      blockType == DebugPlatingFactoryID ||
       blockType == SiloID
     ) {
       // debug buildings, do nothing
