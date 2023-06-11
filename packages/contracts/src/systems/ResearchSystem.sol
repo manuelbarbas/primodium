@@ -41,13 +41,13 @@ contract ResearchSystem is System {
         addressToEntity(msg.sender)
       );
     }
-    // Research Copper with 40 IronResource
+    // Research Copper with 30 IronResource
     else if (LibEncode.hashEqual(researchItem, CopperResearchID)) {
       LibResearch.researchWithOneItem(
         itemComponent,
         researchComponent,
         IronResourceItemID,
-        40,
+        30,
         CopperResearchID,
         addressToEntity(msg.sender)
       );

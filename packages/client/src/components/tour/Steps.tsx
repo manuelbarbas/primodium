@@ -452,7 +452,7 @@ export default function buildTourSteps(
           <b>storage menu</b> from the tooltip in the bottom right.
           <br />
           <br />
-          Let's get <b>40</b> iron. We will need this for the next step.
+          Let's get <b>30</b> iron. We will need this for the next step.
         </p>,
       ],
       arrowDirection: "down",
@@ -485,7 +485,7 @@ export default function buildTourSteps(
           addressIronEntityIndex
         );
 
-        if (addressIronValue && addressIronValue.value >= 40) {
+        if (addressIronValue && addressIronValue.value >= 30) {
           return true;
         } else {
           return false;
