@@ -485,7 +485,7 @@ export default function buildTourSteps(
           addressIronEntityIndex
         );
 
-        if (addressIronValue && addressIronValue.value >= 200) {
+        if (addressIronValue && addressIronValue.value >= 40) {
           return true;
         } else {
           return false;
