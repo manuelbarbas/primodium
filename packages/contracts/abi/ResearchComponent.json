@@ -1108,7 +1108,7 @@
     "id": 21621,
     "exportedSymbols": {
       "BareComponent": [
-        40963
+        42516
       ],
       "BoolComponent": [
         1627
@@ -1120,22 +1120,22 @@
         21607
       ],
       "IEntityIndexer": [
-        41380
+        42933
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        41002
+        42555
       ],
       "MapSet": [
-        41195
+        42748
       ],
       "ResearchComponent": [
         21620
       ],
       "Set": [
-        41361
+        42914
       ]
     },
     "nodeType": "SourceUnit",
@@ -1424,8 +1424,8 @@
         ],
         "canonicalName": "ResearchComponent",
         "contractDependencies": [
-          41195,
-          41361
+          42748,
+          42914
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -1433,26 +1433,26 @@
           21620,
           1627,
           262,
-          40963,
-          43749,
-          41399,
+          42516,
+          45302,
+          42952,
           2359,
-          43305,
-          43805,
-          43181,
-          43048,
-          43794,
+          44858,
+          45358,
+          44734,
+          44601,
+          45347,
           2402,
-          43315
+          44868
         ],
         "name": "ResearchComponent",
         "nameLocation": "185:17:93",
         "scope": 21621,
         "usedErrors": [
-          40763,
-          43674,
-          43802,
-          43804
+          42316,
+          45227,
+          45355,
+          45357
         ]
       }
     ],
