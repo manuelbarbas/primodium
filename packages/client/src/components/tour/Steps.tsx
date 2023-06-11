@@ -452,7 +452,7 @@ export default function buildTourSteps(
           <b>storage menu</b> from the tooltip in the bottom right.
           <br />
           <br />
-          Let's get <b>200</b> iron. We will need this for the next step.
+          Let's get <b>40</b> iron. We will need this for the next step.
         </p>,
       ],
       arrowDirection: "down",

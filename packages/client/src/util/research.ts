@@ -72,7 +72,7 @@ export const technologyTree = [
   //   },
   //   position: { x: 450, y: 275 },
   // },
-  // Research Copper with 200 IronResource
+  // Research Copper with 40 IronResource
   {
     id: "6",
     type: "techTree",
@@ -81,7 +81,7 @@ export const technologyTree = [
       id: BlockType.Copper,
       description:
         "A versatile and conductive metal. Researching allows you to mine copper ore and store copper.",
-      resources: [{ id: BlockType.Iron, amount: 200 }],
+      resources: [{ id: BlockType.Iron, amount: 40 }],
     },
     position: { x: 150, y: 500 },
   },
