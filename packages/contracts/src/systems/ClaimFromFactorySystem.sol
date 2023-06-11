@@ -16,7 +16,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 
 // Debug Buildings
-import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID } from "../prototypes/Tiles.sol";
 
 // Production Buildings
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
@@ -68,6 +68,7 @@ contract ClaimFromFactorySystem is System {
         return;
       }
 
+      // debug
       // Craft 1 Bullet with 1 IronResource and 1 CopperResource in BulletFactory
       if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
         LibMath.transferThreeItems(
@@ -79,6 +80,18 @@ contract ClaimFromFactorySystem is System {
           CopperResourceItemID
         );
       }
+      // Craft 1 IronPlate with 1 IronResource and 1 CopperResource in DebugPlatingFactory
+      else if (c.tileComponent.getValue(entitiesAtPosition[0]) == DebugPlatingFactoryID) {
+        LibMath.transferThreeItems(
+          itemComponent,
+          entitiesAtPosition[0],
+          destination,
+          IronPlateCraftedItemID,
+          IronResourceItemID,
+          CopperResourceItemID
+        );
+      }
+      // production
       // Craft 1 IronPlate with 10 IronResource in PlatingFactory
       else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PlatingFactoryID) {
         LibMath.transferTwoItems(
@@ -318,11 +331,8 @@ contract ClaimFromFactorySystem is System {
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
       claimAdjacentNodeTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
     }
-    // store items in the Silo for emitting bullets
-    else if (c.tileComponent.getValue(entitiesAtPosition[0]) == SiloID) {
-      uint256 destination = entitiesAtPosition[0];
-      claimAdjacentNodeTiles(coord, entitiesAtPosition[0], destination);
-    } else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
+    // store items in claimable factories or weapons store
+    else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentNodeTiles(coord, entitiesAtPosition[0], destination);
     } else {

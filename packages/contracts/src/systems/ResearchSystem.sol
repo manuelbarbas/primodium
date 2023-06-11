@@ -67,11 +67,13 @@ contract ResearchSystem is System {
     }
     // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
     else if (LibEncode.hashEqual(researchItem, LithiumResearchID)) {
-      LibResearch.researchWithOneItem(
+      LibResearch.researchWithTwoItems(
         itemComponent,
         researchComponent,
         IronPlateCraftedItemID,
         20,
+        CopperResourceItemID,
+        100,
         LithiumResearchID,
         addressToEntity(msg.sender)
       );

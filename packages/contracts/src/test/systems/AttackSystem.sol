@@ -82,7 +82,6 @@ contract AttackSystemTest is MudTest {
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -6, y: -4 }));
     buildPathSystem.executeTyped(Coord({ x: -9, y: -4 }), Coord({ x: -6, y: -4 }));
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
     // START CLAIMING
     vm.roll(0);
 

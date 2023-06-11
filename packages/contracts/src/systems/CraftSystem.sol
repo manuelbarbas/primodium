@@ -15,7 +15,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 
 // Debug Buildings
-import { BulletFactoryID } from "../prototypes/Tiles.sol";
+import { BulletFactoryID, DebugPlatingFactoryID } from "../prototypes/Tiles.sol";
 
 // Production Buildings
 import { PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
@@ -69,6 +69,7 @@ contract CraftSystem is System {
       "[CraftSystem] Cannot craft at a tile with zero health"
     );
 
+    // debug
     // Craft 1 Bullet with 1 IronResource and 1 CopperResource in BulletFactory
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == BulletFactoryID) {
       LibCraft.craftWithTwoItems(
@@ -81,6 +82,19 @@ contract CraftSystem is System {
         entitiesAtPosition[0]
       );
     }
+    // Craft 1 IronPlate with 1 IronResource and 1 CopperResource in DebugPlatingFactory
+    else if (c.tileComponent.getValue(entitiesAtPosition[0]) == DebugPlatingFactoryID) {
+      LibCraft.craftWithTwoItems(
+        itemComponent,
+        IronResourceItemID,
+        1,
+        CopperResourceItemID,
+        1,
+        IronPlateCraftedItemID,
+        entitiesAtPosition[0]
+      );
+    }
+    // production
     // Craft 1 IronPlate with 10 IronResource in PlatingFactory
     else if (c.tileComponent.getValue(entitiesAtPosition[0]) == PlatingFactoryID) {
       LibCraft.craftWithOneItem(itemComponent, IronResourceItemID, 10, IronPlateCraftedItemID, entitiesAtPosition[0]);
