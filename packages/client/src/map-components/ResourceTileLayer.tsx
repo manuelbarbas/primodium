@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 
-<<<<<<< HEAD
 import { BigNumber } from "ethers";
 import { randomBytes } from "ethers/lib/utils";
 import { EntityID, EntityIndex } from "@latticexyz/recs";
@@ -13,16 +12,6 @@ import { execute } from "../network/actions";
 import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
 import { useGameStore } from "../store/GameStore";
-=======
-import { EntityID } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { BigNumber } from "ethers";
-
-import { useMud } from "../context/MudContext";
-import { useGameStore } from "../store/GameStore";
-import { execute } from "../network/actions";
-import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
->>>>>>> 3a7f8191acd72b6ca845866774cdd8e12dcc4d2c
 
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";

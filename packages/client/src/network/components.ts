@@ -32,21 +32,27 @@ export function defineComponents(world: World) {
         contractId: "component.Path",
       },
     }),
-    OwnedBy: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.OwnedBy",
-      },
-    }),
-    LastBuiltAt: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.LastBuiltAt",
-      },
-    }),
-    LastClaimedAt: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.LastClaimedAt",
-      },
-    }),
+    OwnedBy: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.OwnedBy",
+        },
+      })
+    ),
+    LastBuiltAt: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.LastBuiltAt",
+        },
+      })
+    ),
+    LastClaimedAt: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.LastClaimedAt",
+        },
+      })
+    ),
     Health: defineNumberComponent(world, {
       metadata: {
         contractId: "component.Health",
