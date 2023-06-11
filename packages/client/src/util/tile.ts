@@ -1,6 +1,13 @@
 import { Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
 import { BlockType, DisplayKeyPair } from "./constants";
+import {
+  EntityID,
+  getComponentValue,
+  getEntitiesWithValue,
+} from "@latticexyz/recs";
+import { NetworkComponents } from "@latticexyz/std-client";
+import { defineComponents } from "../network/components";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -104,4 +111,60 @@ export function getTopLayerKeyPair(
   } else {
     return { terrain: terrainKey, resource: resourceKey };
   }
+}
+
+//gets all tiles of a certain type within a certain range with the origin being the center
+export function getTilesOfTypeInRange(
+  origin: Coord,
+  type: EntityID,
+  range: number,
+  excludeRange: number,
+  perlin: Perlin
+): Coord[] {
+  const tiles: Coord[] = [];
+
+  for (let x = -range; x <= range; x++) {
+    for (let y = -range; y <= range; y++) {
+      // If the current tile is within the exclude range, skip it
+      if (Math.abs(x) <= excludeRange && Math.abs(y) <= excludeRange) {
+        continue;
+      }
+
+      const currentCoord = { x: origin.x + x, y: origin.y + y };
+      const keyPair = getTopLayerKeyPair(currentCoord, perlin);
+      if (keyPair.resource === type || keyPair.terrain === type) {
+        tiles.push(currentCoord);
+      }
+    }
+  }
+
+  return tiles;
+}
+
+export function getBuildingsOfTypeInRange(
+  origin: Coord,
+  type: EntityID,
+  range: number,
+  component: NetworkComponents<ReturnType<typeof defineComponents>>
+) {
+  const tiles: Coord[] = [];
+
+  for (let x = -range; x <= range; x++) {
+    for (let y = -range; y <= range; y++) {
+      const currentCoord = { x: origin.x + x, y: origin.y + y };
+
+      //get entity at coord
+      const entities = getEntitiesWithValue(component.Position, currentCoord);
+      const comp = getComponentValue(
+        component.Tile,
+        entities.values().next().value
+      );
+
+      if (type === (comp?.value as unknown as EntityID)) {
+        tiles.push(currentCoord);
+      }
+    }
+  }
+
+  return tiles;
 }

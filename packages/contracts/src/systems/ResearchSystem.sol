@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
@@ -24,6 +24,9 @@ contract ResearchSystem is System {
 
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
+    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
+      getAddressById(components, LastResearchedAtComponentID)
+    );
 
     // Research FastMiner with 100 IronResource and 100 CopperResource
     if (LibEncode.hashEqual(researchItem, FastMinerResearchID)) {
@@ -37,8 +40,6 @@ contract ResearchSystem is System {
         FastMinerResearchID,
         addressToEntity(msg.sender)
       );
-      (world, msg.sender, FastMinerResearchID);
-      return abi.encode(true);
     }
     // Research Copper with 200 IronResource
     else if (LibEncode.hashEqual(researchItem, CopperResearchID)) {
@@ -50,7 +51,6 @@ contract ResearchSystem is System {
         CopperResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research PlatingFactory with 200 IronResource and 200 CopperResource
     else if (LibEncode.hashEqual(researchItem, PlatingFactoryResearchID)) {
@@ -64,19 +64,19 @@ contract ResearchSystem is System {
         PlatingFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
     else if (LibEncode.hashEqual(researchItem, LithiumResearchID)) {
-      LibResearch.researchWithOneItem(
+      LibResearch.researchWithTwoItems(
         itemComponent,
         researchComponent,
         IronPlateCraftedItemID,
         20,
+        CopperResourceItemID,
+        100,
         LithiumResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research BasicBatteryFactory with 50 IronPlateCrafted and 100 LithiumResource
     else if (LibEncode.hashEqual(researchItem, BasicBatteryFactoryResearchID)) {
@@ -90,7 +90,6 @@ contract ResearchSystem is System {
         BasicBatteryFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research KineticMissileFactory with 50 BasicPowerSourceCrafted and 100 IronResource
     else if (LibEncode.hashEqual(researchItem, KineticMissileFactoryResearchID)) {
@@ -104,7 +103,6 @@ contract ResearchSystem is System {
         KineticMissileFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research Titanium with 50 BasicPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, TitaniumResearchID)) {
@@ -116,7 +114,6 @@ contract ResearchSystem is System {
         TitaniumResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research ProjectileLauncher with 50 BasicPowerSourceCrafted and 500 TitaniumResource
     else if (LibEncode.hashEqual(researchItem, ProjectileLauncherResearchID)) {
@@ -130,7 +127,6 @@ contract ResearchSystem is System {
         ProjectileLauncherResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research HardenedDrill with 200 TitaniumResource, 500 IronPlateCrafted, and 50 BasicPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, HardenedDrillResearchID)) {
@@ -146,7 +142,6 @@ contract ResearchSystem is System {
         HardenedDrillResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research Osmium with 300 TitaniumResource
     else if (LibEncode.hashEqual(researchItem, OsmiumResearchID)) {
@@ -158,7 +153,6 @@ contract ResearchSystem is System {
         OsmiumResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research DenseMetalRefinery with 100 OsmiumResource, 300 TitaniumResource, and 100 BasicPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, DenseMetalRefineryResearchID)) {
@@ -174,7 +168,6 @@ contract ResearchSystem is System {
         DenseMetalRefineryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research AdvancedBatteryFactory with 200 OsmiumResource, 100 IronPlateCrafted, and 400 TitaniumResource
     else if (LibEncode.hashEqual(researchItem, AdvancedBatteryFactoryResearchID)) {
@@ -190,7 +183,6 @@ contract ResearchSystem is System {
         AdvancedBatteryFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research Tungsten with 100 RefinedOsmiumCrafted 200 TitaniumResource
     else if (LibEncode.hashEqual(researchItem, TungstenResearchID)) {
@@ -204,7 +196,6 @@ contract ResearchSystem is System {
         TungstenResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research HighTempFoundry with 200 TungstenResource, 100 OsmiumResource, 50 AdvancedPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, HighTempFoundryResearchID)) {
@@ -220,7 +211,6 @@ contract ResearchSystem is System {
         HighTempFoundryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research Iridium with 100 TungstenRodCrafted 100 OsmiumResource
     else if (LibEncode.hashEqual(researchItem, IridiumResearchID)) {
@@ -234,7 +224,6 @@ contract ResearchSystem is System {
         IridiumResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research PrecisionMachineryFactory with 200 IridiumResource and 100 TungstenRodsCrafted
     else if (LibEncode.hashEqual(researchItem, PrecisionMachineryFactoryResearchID)) {
@@ -248,7 +237,6 @@ contract ResearchSystem is System {
         PrecisionMachineryFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research IridiumDrillbitFactory with 100 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, IridiumDrillbitFactoryResearchID)) {
@@ -262,7 +250,6 @@ contract ResearchSystem is System {
         IridiumDrillbitFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research PrecisionPneumaticDrill with 200 TungstenRodsCrafted and 50 IridiumDrillbitCrafted
     else if (LibEncode.hashEqual(researchItem, PrecisionPneumaticDrillResearchID)) {
@@ -276,7 +263,6 @@ contract ResearchSystem is System {
         PrecisionPneumaticDrillResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research PenetratorFactory with 500 OsmiumResource and 50 AdvancedPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, PenetratorFactoryResearchID)) {
@@ -290,7 +276,6 @@ contract ResearchSystem is System {
         PenetratorFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research PenetratingMissileFactory with 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, PenetratingMissileFactoryResearchID)) {
@@ -304,7 +289,6 @@ contract ResearchSystem is System {
         PenetratingMissileFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research MissileLaunchComplex with 50 TungstenRodsCrafted and 100 AdvancedPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, MissileLaunchComplexResearchID)) {
@@ -318,7 +302,6 @@ contract ResearchSystem is System {
         MissileLaunchComplexResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research HighEnergyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, HighEnergyLaserFactoryResearchID)) {
@@ -332,7 +315,6 @@ contract ResearchSystem is System {
         HighEnergyLaserFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research ThermobaricWarheadFactory with 200 IridiumCrystalCrafted
     else if (LibEncode.hashEqual(researchItem, ThermobaricWarheadFactoryResearchID)) {
@@ -344,7 +326,6 @@ contract ResearchSystem is System {
         ThermobaricWarheadFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Resesarch ThermobaricMissileFactory with 200 IridiumCrystalCrafted and 100 TungstenRodsCrafted
     else if (LibEncode.hashEqual(researchItem, ThermobaricMissileFactoryResearchID)) {
@@ -358,7 +339,6 @@ contract ResearchSystem is System {
         ThermobaricMissileFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research Kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
     else if (LibEncode.hashEqual(researchItem, KimberliteResearchID)) {
@@ -372,7 +352,6 @@ contract ResearchSystem is System {
         KimberliteResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
     // Research KimberliteCatalystFactory with 300 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
     else if (LibEncode.hashEqual(researchItem, KimberliteCatalystFactoryResearchID)) {
@@ -386,12 +365,14 @@ contract ResearchSystem is System {
         KimberliteCatalystFactoryResearchID,
         addressToEntity(msg.sender)
       );
-      return abi.encode(true);
     }
-    // no research item found
+    // no research objective found
     else {
       revert("[ResearchSystem] Not a valid research objective ID");
     }
+
+    LibResearch.setLastResearched(lastResearchedAtComponent, researchItem, addressToEntity(msg.sender));
+    return abi.encode(true);
   }
 
   function executeTyped(uint256 researchItem) public returns (bytes memory) {

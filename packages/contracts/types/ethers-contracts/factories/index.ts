@@ -22,6 +22,7 @@ export { IncrementSystem__factory } from "./IncrementSystem__factory";
 export { ItemComponent__factory } from "./ItemComponent__factory";
 export { LastBuiltAtComponent__factory } from "./LastBuiltAtComponent__factory";
 export { LastClaimedAtComponent__factory } from "./LastClaimedAtComponent__factory";
+export { LastResearchedAtComponent__factory } from "./LastResearchedAtComponent__factory";
 export { LibQuery__factory } from "./LibQuery__factory";
 export { MainBaseInitializedComponent__factory } from "./MainBaseInitializedComponent__factory";
 export { OwnedByComponent__factory } from "./OwnedByComponent__factory";

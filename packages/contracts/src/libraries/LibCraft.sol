@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "forge-std/console.sol";
-
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { entityToAddress } from "solecs/utils.sol";
 import { LibMath } from "./LibMath.sol";

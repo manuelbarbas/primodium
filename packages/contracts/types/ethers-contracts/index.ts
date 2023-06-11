@@ -22,6 +22,7 @@ export type { IncrementSystem } from "./IncrementSystem";
 export type { ItemComponent } from "./ItemComponent";
 export type { LastBuiltAtComponent } from "./LastBuiltAtComponent";
 export type { LastClaimedAtComponent } from "./LastClaimedAtComponent";
+export type { LastResearchedAtComponent } from "./LastResearchedAtComponent";
 export type { LibQuery } from "./LibQuery";
 export type { MainBaseInitializedComponent } from "./MainBaseInitializedComponent";
 export type { OwnedByComponent } from "./OwnedByComponent";
@@ -61,6 +62,7 @@ export { IUint256Component__factory } from "./factories/IUint256Component__facto
 export { IWorld__factory } from "./factories/IWorld__factory";
 export { LastBuiltAtComponent__factory } from "./factories/LastBuiltAtComponent__factory";
 export { LastClaimedAtComponent__factory } from "./factories/LastClaimedAtComponent__factory";
+export { LastResearchedAtComponent__factory } from "./factories/LastResearchedAtComponent__factory";
 export { LibQuery__factory } from "./factories/LibQuery__factory";
 export { MainBaseInitializedComponent__factory } from "./factories/MainBaseInitializedComponent__factory";
 export { OwnedByComponent__factory } from "./factories/OwnedByComponent__factory";

@@ -470,17 +470,24 @@ export const BuildingReceipe = new Map<EntityID, ResourceCostData[]>([
 // researching an item requires resources
 // refer to research.ts for the actual research tree
 
+// Building can claim, store, but not craft
+// with the exception of MainBase, which claims directly to wallet instead of its own storage
 export function isClaimable(tileId: EntityID) {
-  return tileId == BlockType.MainBase;
+  return (
+    tileId == BlockType.MainBase ||
+    tileId == BlockType.ProjectileLauncher ||
+    tileId == BlockType.MissileLaunchComplex ||
+    // debug
+    tileId == BlockType.Silo
+  );
 }
 
+// Building can claim, store, and craft
 export function isClaimableFactory(tileId: EntityID) {
   return (
-    tileId == BlockType.BulletFactory ||
     tileId == BlockType.PlatingFactory ||
     tileId == BlockType.BasicBatteryFactory ||
     tileId == BlockType.KineticMissileFactory ||
-    tileId == BlockType.ProjectileLauncher ||
     tileId == BlockType.HardenedDrill ||
     tileId == BlockType.DenseMetalRefinery ||
     tileId == BlockType.AdvancedBatteryFactory ||
@@ -490,10 +497,11 @@ export function isClaimableFactory(tileId: EntityID) {
     tileId == BlockType.PrecisionPneumaticDrill ||
     tileId == BlockType.PenetratorFactory ||
     tileId == BlockType.PenetratingMissileFactory ||
-    tileId == BlockType.MissileLaunchComplex ||
     tileId == BlockType.HighEnergyLaserFactory ||
     tileId == BlockType.ThermobaricWarheadFactory ||
     tileId == BlockType.ThermobaricMissileFactory ||
-    tileId == BlockType.KimberliteCatalystFactory
+    tileId == BlockType.KimberliteCatalystFactory ||
+    // debug
+    tileId == BlockType.BulletFactory
   );
 }

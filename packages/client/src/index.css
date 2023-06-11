@@ -27,6 +27,11 @@
     height: 100vh;
   }
 
+  .screen-container {
+    width: 100vw;
+    height: 100vh;
+  }
+
   .viewport-container {
     margin-top: env(safe-area-inset-top);
     margin-right: env(safe-area-inset-right);
@@ -61,4 +66,14 @@
   .map-container {
     background-color: rgb(100 116 139);
   }
+
+  /* remove outline on waltour tooltip containers */
+  #walktour-tooltip-container[tabindex] {
+    @apply focus:outline-none;
+  }
+}
+
+/* remove leaflet layer selection control */
+.leaflet-bottom {
+  display: none;
 }

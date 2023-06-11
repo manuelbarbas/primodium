@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Rectangle } from "react-leaflet";
 
 function SelectedTile({
@@ -14,17 +13,20 @@ function SelectedTile({
   pane?: string;
 }) {
   return (
-    <Rectangle
-      bounds={[
-        [y, x],
-        [y + 1, x + 1],
-      ]}
-      pathOptions={{
-        weight: 4,
-        color: color,
-      }}
-      pane={pane || "tooltipPane"}
-    />
+    <div>
+      <Rectangle
+        className="select-tile"
+        bounds={[
+          [y, x],
+          [y + 1, x + 1],
+        ]}
+        pathOptions={{
+          weight: 4,
+          color: color,
+        }}
+        pane={pane || "tooltipPane"}
+      />
+    </div>
   );
 }
 

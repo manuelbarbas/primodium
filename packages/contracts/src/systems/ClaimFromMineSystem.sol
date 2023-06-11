@@ -9,6 +9,8 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
+import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -16,7 +18,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 
 // Debug Buildings
-import { MainBaseID, ConveyorID, MinerID, LithiumMinerID, SiloID } from "../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, SiloID } from "../prototypes/Tiles.sol";
 
 // Production Buildings
 import { BasicMinerID, PrecisionMachineryFactoryID, HardenedDrillID, NodeID } from "../prototypes/Tiles.sol";
@@ -48,6 +50,13 @@ contract ClaimFromMineSystem is System {
       OwnedByComponent(getAddressById(components, OwnedByComponentID)),
       LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
       HealthComponent(getAddressById(components, HealthComponentID))
+    );
+
+    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
+      getAddressById(components, LastBuiltAtComponentID)
+    );
+    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
+      getAddressById(components, LastResearchedAtComponentID)
     );
 
     uint256[] memory entitiesAtPosition = c.positionComponent.getEntitiesWithValue(coord);
@@ -82,6 +91,8 @@ contract ClaimFromMineSystem is System {
 
         uint256 incBy = LibMine.mine(
           c.lastClaimedAtComponent,
+          lastBuiltAtComponent,
+          lastResearchedAtComponent,
           ResearchComponent(getAddressById(components, ResearchComponentID)),
           c.tileComponent.getValue(entitiesAtPosition[0]),
           resourceKey,
@@ -109,7 +120,7 @@ contract ClaimFromMineSystem is System {
   }
 
   // pass in a coordinate of a conveyor block, which fetches all other
-  function claimConveyorTile(Coord memory coord, uint256 originEntity, uint256 destination) public {
+  function claimNodeTile(Coord memory coord, uint256 originEntity, uint256 destination) public {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
@@ -120,7 +131,7 @@ contract ClaimFromMineSystem is System {
 
     if (
       entitiesAtPosition.length == 1 &&
-      (tileComponent.getValue(entitiesAtPosition[0]) == ConveyorID ||
+      (tileComponent.getValue(entitiesAtPosition[0]) == DebugNodeID ||
         tileComponent.getValue(entitiesAtPosition[0]) == NodeID)
     ) {
       // Check that health is not zero
@@ -135,17 +146,17 @@ contract ClaimFromMineSystem is System {
       // claim each conveyor tile connected to the current tile. keys are the start position.
       for (uint i = 0; i < endAtPositionPaths.length; i++) {
         // Get the tile position
-        claimConveyorTile(positionComponent.getValue(endAtPositionPaths[i]), originEntity, destination);
+        claimNodeTile(positionComponent.getValue(endAtPositionPaths[i]), originEntity, destination);
       }
     }
   }
 
   // pass in a coordinate of a base or factory block, fetch all surrounding conveyor nodes.
-  function claimAdjacentConveyorTiles(Coord memory coord, uint256 originEntity, uint256 destination) public {
-    claimConveyorTile(Coord(coord.x - 1, coord.y), originEntity, destination);
-    claimConveyorTile(Coord(coord.x + 1, coord.y), originEntity, destination);
-    claimConveyorTile(Coord(coord.x, coord.y + 1), originEntity, destination);
-    claimConveyorTile(Coord(coord.x, coord.y - 1), originEntity, destination);
+  function claimAdjacentNodeTiles(Coord memory coord, uint256 originEntity, uint256 destination) public {
+    claimNodeTile(Coord(coord.x - 1, coord.y), originEntity, destination);
+    claimNodeTile(Coord(coord.x + 1, coord.y), originEntity, destination);
+    claimNodeTile(Coord(coord.x, coord.y + 1), originEntity, destination);
+    claimNodeTile(Coord(coord.x, coord.y - 1), originEntity, destination);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -182,15 +193,12 @@ contract ClaimFromMineSystem is System {
 
     // Check main base, if so destination is the wallet
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
-      claimAdjacentConveyorTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
+      claimAdjacentNodeTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
     }
-    // store items in the Silo for emitting bullets
-    else if (c.tileComponent.getValue(entitiesAtPosition[0]) == SiloID) {
+    // store items in claimable factories or weapons store
+    else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
       uint256 destination = entitiesAtPosition[0];
-      claimAdjacentConveyorTiles(coord, entitiesAtPosition[0], destination);
-    } else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
-      uint256 destination = entitiesAtPosition[0];
-      claimAdjacentConveyorTiles(coord, entitiesAtPosition[0], destination);
+      claimAdjacentNodeTiles(coord, entitiesAtPosition[0], destination);
     } else {
       revert("[ClaimFromMineSystem] Cannot store items in selected tile");
     }

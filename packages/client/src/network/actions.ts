@@ -20,10 +20,14 @@ export async function execute(
     const tx = await txPromise;
     await tx.wait();
   } catch (error: TransactionResponse | any) {
-    const reason = await getRevertReason(
-      error.transactionHash,
-      providers.get().json
-    );
-    alert(reason);
+    try {
+      const reason = await getRevertReason(
+        error.transactionHash,
+        providers.get().json
+      );
+      alert(reason);
+    } catch (error: any) {
+      alert(error);
+    }
   }
 }

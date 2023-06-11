@@ -13,8 +13,8 @@ import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
-// import { MainBaseID, ConveyorID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, ConveyorID, MinerID } from "../../prototypes/Tiles.sol";
+// import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
@@ -47,11 +47,10 @@ contract ClaimSystemTest is MudTest {
     Coord memory startPathCoord = Coord({ x: -5, y: 1 });
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    buildSystem.executeTyped(ConveyorID, endPathCoord);
-    buildSystem.executeTyped(ConveyorID, startPathCoord);
+    buildSystem.executeTyped(DebugNodeID, endPathCoord);
+    buildSystem.executeTyped(DebugNodeID, startPathCoord);
     buildPathSystem.executeTyped(startPathCoord, endPathCoord);
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
     // START CLAIMING
     vm.roll(0);
     buildSystem.executeTyped(MinerID, coord);
@@ -95,18 +94,18 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
-    buildSystem.executeTyped(ConveyorID, endPathCoord);
-    buildSystem.executeTyped(ConveyorID, startPathCoord);
+    buildSystem.executeTyped(DebugNodeID, endPathCoord);
+    buildSystem.executeTyped(DebugNodeID, startPathCoord);
     buildPathSystem.executeTyped(startPathCoord, endPathCoord);
 
-    buildSystem.executeTyped(ConveyorID, endPathCoord2);
-    buildSystem.executeTyped(ConveyorID, startPathCoord2);
+    buildSystem.executeTyped(DebugNodeID, endPathCoord2);
+    buildSystem.executeTyped(DebugNodeID, startPathCoord2);
     buildPathSystem.executeTyped(startPathCoord2, endPathCoord2);
 
     vm.roll(0);
     buildSystem.executeTyped(MinerID, coord);
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
+    //
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
@@ -138,11 +137,10 @@ contract ClaimSystemTest is MudTest {
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
     // Copper to main base
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -9, y: -4 }));
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -6, y: -4 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -6, y: -4 }));
     buildPathSystem.executeTyped(Coord({ x: -9, y: -4 }), Coord({ x: -6, y: -4 }));
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
     // START CLAIMING
     vm.roll(0);
 
@@ -150,8 +148,8 @@ contract ClaimSystemTest is MudTest {
 
     // Iron to main base
     buildSystem.executeTyped(MinerID, IronCoord);
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: 1 }));
-    buildSystem.executeTyped(ConveyorID, Coord({ x: -5, y: -3 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -5, y: 1 }));
+    buildSystem.executeTyped(DebugNodeID, Coord({ x: -5, y: -3 }));
     buildPathSystem.executeTyped(Coord({ x: -5, y: 1 }), Coord({ x: -5, y: -3 }));
 
     vm.roll(20);
@@ -182,7 +180,7 @@ contract ClaimSystemTest is MudTest {
 
     vm.roll(0);
     buildSystem.executeTyped(MinerID, IronCoord);
-    buildSystem.executeTyped(ConveyorID, nodeCoord);
+    buildSystem.executeTyped(DebugNodeID, nodeCoord);
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
     // claim from main base
@@ -217,10 +215,10 @@ contract ClaimSystemTest is MudTest {
 
     vm.roll(0);
     buildSystem.executeTyped(MinerID, IronCoord);
-    buildSystem.executeTyped(ConveyorID, node1Coord1);
-    buildSystem.executeTyped(ConveyorID, node1Coord2);
-    buildSystem.executeTyped(ConveyorID, node2Coord1);
-    buildSystem.executeTyped(ConveyorID, node2Coord2);
+    buildSystem.executeTyped(DebugNodeID, node1Coord1);
+    buildSystem.executeTyped(DebugNodeID, node1Coord2);
+    buildSystem.executeTyped(DebugNodeID, node2Coord1);
+    buildSystem.executeTyped(DebugNodeID, node2Coord2);
     buildPathSystem.executeTyped(node1Coord1, node1Coord2);
     buildPathSystem.executeTyped(node2Coord1, node2Coord2);
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);

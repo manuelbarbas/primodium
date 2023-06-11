@@ -54,7 +54,7 @@ function ChooseTransportMenu({
               <i>Start</i> a path by clicking on a Node to send resources.
             </p>
           )}
-          {/* player placed start and conveyer selection is still active */}
+          {/* player placed start and conveyor selection is still active */}
           {selectedPathTiles.start !== null &&
             selectedBlock == BlockType.Conveyor && (
               <p>
@@ -68,8 +68,13 @@ function ChooseTransportMenu({
       {selectedBlock !== BlockType.Conveyor &&
         selectedPathTiles.start === null && (
           <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
-            <BuildingIconButton label="Node" blockType={BlockType.Node} />
             <BuildingIconButton
+              id="node"
+              label="Node"
+              blockType={BlockType.Node}
+            />
+            <BuildingIconButton
+              id="conveyor"
               label="Conveyor"
               blockType={BlockType.Conveyor}
             />

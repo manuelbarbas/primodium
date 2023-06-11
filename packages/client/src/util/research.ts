@@ -12,18 +12,18 @@ export type TechnologyTreeNode = {
 };
 
 export const technologyTree = [
-  {
-    id: "1",
-    type: "techTree",
-    data: {
-      name: "Main Base",
-      id: BlockType.MainBaseResearch,
-      description:
-        "Unlocked by default. The heart of your operation, protect it at all costs.",
-      resources: [],
-    },
-    position: { x: 150, y: 50 },
-  },
+  // {
+  //   id: "1",
+  //   type: "techTree",
+  //   data: {
+  //     name: "Main Base",
+  //     id: BlockType.MainBaseResearch,
+  //     description:
+  //       "Unlocked by default. The heart of your operation, protect it at all costs.",
+  //     resources: [],
+  //   },
+  //   position: { x: 150, y: 50 },
+  // },
   {
     id: "2",
     type: "techTree",
@@ -37,41 +37,41 @@ export const technologyTree = [
     position: { x: 250, y: 275 },
   },
 
-  {
-    id: "3",
-    type: "techTree",
-    data: {
-      name: "Basic Miner",
-      id: BlockType.BasicMinerResearch,
-      description: "Unlocked by default. Mines ores slowly.",
-      resources: [],
-    },
-    position: { x: 50, y: 275 },
-  },
-  {
-    id: "4",
-    type: "techTree",
-    data: {
-      name: "Conveyor",
-      id: BlockType.ConveyorResearch,
-      description:
-        "Unlocked by default. Connects nodes together to move material.",
-      resources: [],
-    },
-    position: { x: -150, y: 275 },
-  },
-  {
-    id: "5",
-    type: "techTree",
-    data: {
-      name: "Node",
-      id: BlockType.NodeResearch,
-      description:
-        "Unlocked by default. Allows input/output of materials from miners and factories.",
-      resources: [],
-    },
-    position: { x: 450, y: 275 },
-  },
+  // {
+  //   id: "3",
+  //   type: "techTree",
+  //   data: {
+  //     name: "Basic Miner",
+  //     id: BlockType.BasicMinerResearch,
+  //     description: "Unlocked by default. Mines ores slowly.",
+  //     resources: [],
+  //   },
+  //   position: { x: 50, y: 275 },
+  // },
+  // {
+  //   id: "4",
+  //   type: "techTree",
+  //   data: {
+  //     name: "Conveyor",
+  //     id: BlockType.ConveyorResearch,
+  //     description:
+  //       "Unlocked by default. Connects nodes together to move material.",
+  //     resources: [],
+  //   },
+  //   position: { x: -150, y: 275 },
+  // },
+  // {
+  //   id: "5",
+  //   type: "techTree",
+  //   data: {
+  //     name: "Node",
+  //     id: BlockType.NodeResearch,
+  //     description:
+  //       "Unlocked by default. Allows input/output of materials from miners and factories.",
+  //     resources: [],
+  //   },
+  //   position: { x: 450, y: 275 },
+  // },
   // Research Copper with 200 IronResource
   {
     id: "6",

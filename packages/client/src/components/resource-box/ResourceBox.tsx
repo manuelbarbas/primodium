@@ -14,7 +14,7 @@ import Spinner from "../Spinner";
 import { useGameStore } from "../../store/GameStore";
 
 function ResourceBox() {
-  const [minimized, setMinimize] = useState(true);
+  const [minimized, setMinimize] = useState(false);
   const minimizeBox = () => {
     if (minimized) {
       setMinimize(false);
@@ -34,6 +34,7 @@ function ResourceBox() {
       : singletonIndex
   );
 
+  //TODO: TEMP DISABLED FOR TUTORIAL
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);
@@ -43,6 +44,7 @@ function ResourceBox() {
       <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
           <button
+            id="minimize-resource-box"
             onClick={minimizeBox}
             className="viewport-container fixed right-9"
           >
@@ -58,6 +60,7 @@ function ResourceBox() {
       <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
           <button
+            id="minimize-resource-box"
             onClick={minimizeBox}
             className="viewport-container fixed right-9"
           >
@@ -79,6 +82,7 @@ function ResourceBox() {
       <div className="z-[1000] viewport-container fixed top-4 right-4 h-14 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
           <button
+            id="minimize-resource-box"
             onClick={minimizeBox}
             className="viewport-container fixed right-9"
           >
