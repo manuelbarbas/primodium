@@ -4,7 +4,8 @@ import { useNotificationStore } from "../store/NotificationStore";
 import { useCallback, useEffect } from "react";
 
 function NotificationBox() {
-  const [message, showUI, setShowUI] = useNotificationStore((state) => [
+  const [title, message, showUI, setShowUI] = useNotificationStore((state) => [
+    state.title,
     state.message,
     state.showUI,
     state.setShowUI,
@@ -51,7 +52,7 @@ function NotificationBox() {
             <div className="flex flex-row">
               <LinkIcon icon={<AiFillWarning size="16" />} />
               <p className="ml-2 inline-block align-middle font-bold">
-                Warning
+                {title}
               </p>
             </div>
             <div className="mt-2 text-sm">{message}</div>

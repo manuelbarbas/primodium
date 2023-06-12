@@ -7,6 +7,7 @@ import { execute } from "../../network/actions";
 import { BigNumber } from "ethers";
 import { BlockType } from "../../util/constants";
 import { useGameStore } from "../../store/GameStore";
+import { useNotificationStore } from "../../store/NotificationStore";
 
 export default function NavigateMainBaseButton() {
   const { world, components, singletonIndex } = useMud();
@@ -46,6 +47,9 @@ export default function NavigateMainBaseButton() {
     state.setTransactionLoading,
     state.setNavigateToTile,
   ]);
+  const [setNotification] = useNotificationStore((state) => [
+    state.setNotification,
+  ]);
 
   const buildMainBase = useCallback(async () => {
     setTransactionLoading(true);
@@ -57,7 +61,8 @@ export default function NavigateMainBaseButton() {
           gasLimit: 1_500_000,
         }
       ),
-      providers
+      providers,
+      setNotification
     );
     setTransactionLoading(false);
   }, [selectedTile]);

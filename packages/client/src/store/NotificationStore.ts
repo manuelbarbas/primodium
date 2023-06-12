@@ -15,7 +15,7 @@ type NotificationActions = {
 const defaults: NotificationState = {
   title: "",
   message: "",
-  showUI: true,
+  showUI: false,
 };
 
 export const useNotificationStore = create<
