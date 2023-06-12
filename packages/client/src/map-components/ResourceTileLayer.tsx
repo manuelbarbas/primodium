@@ -172,7 +172,8 @@ const ResourceTileLayer = ({
         systems["system.BuildPath"].executeTyped(start, end, {
           gasLimit: 500_000,
         }),
-        providers
+        providers,
+        setNotification
       );
       setTransactionLoading(false);
     },
