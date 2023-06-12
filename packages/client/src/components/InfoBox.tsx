@@ -17,6 +17,8 @@ import Spinner from "./Spinner";
 import NavigateMainBaseButton from "./action/NavigateMainBaseButton";
 import { useGameStore } from "../store/GameStore";
 
+const params = new URLSearchParams(window.location.search);
+
 function InfoBox() {
   const { address, isConnected } = useWagmiAccount();
   const { connect } = useConnect({
@@ -52,8 +54,8 @@ function InfoBox() {
         <div className="mt-4 ml-5 flex flex-col">
           <div className="flex flex-row">
             <div className="flex items-center mb-2">
-              <p className="inline-block align-middle text-xl font-bold">
-                Primodium
+              <p className="inline-block align-middle text-lg font-bold">
+                Primodium {params.get("version") ? params.get("version") : ""}
               </p>
               <div>
                 <a
@@ -62,15 +64,15 @@ function InfoBox() {
                   className="text-sm inline-block hover:text-gray-300 ml-3"
                   rel="noreferrer"
                 >
-                  <LinkIcon icon={<FaDiscord size="16" />} />
+                  <LinkIcon icon={<FaDiscord size="14" />} />
                 </a>
                 <a
                   href="https://twitter.com/primodiumgame"
                   target="_blank"
-                  className="text-sm inline-block hover:text-gray-300 ml-3"
+                  className="text-sm inline-block hover:text-gray-300 ml-2"
                   rel="noreferrer"
                 >
-                  <LinkIcon icon={<FaTwitter size="16" />} />
+                  <LinkIcon icon={<FaTwitter size="14" />} />
                 </a>
               </div>
             </div>
@@ -117,7 +119,9 @@ function InfoBox() {
       return (
         <div className="z-[1000] viewport-container fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
-            <p className="text-xl mb-4 font-bold">Primodium</p>
+            <p className="text-lg mb-4 font-bold">
+              Primodium {params.get("version") ? params.get("version") : ""}
+            </p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaMinusSquare size="18" />} />
             </button>
@@ -135,7 +139,7 @@ function InfoBox() {
                 href="https://twitter.com/primodiumgame"
                 className="text-sm inline-block hover:text-gray-300"
               >
-                <LinkIcon icon={<ImTwitter size="16" />} />
+                <LinkIcon icon={<ImTwitter size="14" />} />
                 <p className="inline-block align-middle ml-2">Twitter</p>
               </a>
             </div>
@@ -144,7 +148,7 @@ function InfoBox() {
                 href="https://discord.com/invite/bn7eSSKFWV"
                 className="text-sm inline-block hover:text-gray-300"
               >
-                <LinkIcon icon={<FaDiscord size="16" />} />
+                <LinkIcon icon={<FaDiscord size="14" />} />
                 <p className="inline-block align-middle ml-2">Discord</p>
               </a>
             </div>
@@ -161,7 +165,9 @@ function InfoBox() {
       return (
         <div className="z-[1000] viewport-container fixed top-4 left-4 h-28 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
-            <p className="text-xl mb-4 font-bold">Primodium</p>
+            <p className="text-lg mb-4 font-bold">
+              Primodium {params.get("version") ? params.get("version") : ""}
+            </p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaPlusSquare size="18" />} />
             </button>
