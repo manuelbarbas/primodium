@@ -96,30 +96,30 @@ const ResourceTileLayer = ({
   const buildTile = async (pos: DisplayTile, blockType: EntityID) => {
     setTransactionLoading(true);
 
-    console.log("buildTile");
     const positionId = uuid();
     const tempEntityId = BigNumber.from(
       randomBytes(32)
     ) as unknown as EntityIndex;
+
     components.Position.addOverride(positionId, {
       entity: tempEntityId,
       value: pos,
     });
     components.Tile.addOverride(positionId, {
       entity: tempEntityId,
-      value: { value: BigNumber.from(blockType) as unknown as number },
+      value: { value: blockType as unknown as number },
     });
     components.OwnedBy.addOverride(positionId, {
       entity: tempEntityId,
-      value: { value: BigNumber.from(address) as unknown as number },
+      value: { value: address as unknown as number },
     });
     components.LastBuiltAt.addOverride(positionId, {
       entity: tempEntityId,
-      value: { value: 0 },
+      value: { value: providers.get().ws?.blockNumber || 0 },
     });
     components.LastClaimedAt.addOverride(positionId, {
       entity: tempEntityId,
-      value: { value: 0 },
+      value: { value: providers.get().ws?.blockNumber || 0 },
     });
 
     console.log(tempEntityId);
@@ -134,6 +134,9 @@ const ResourceTileLayer = ({
     } finally {
       components.Position.removeOverride(positionId);
       components.Tile.removeOverride(positionId);
+      components.OwnedBy.removeOverride(positionId);
+      components.LastBuiltAt.removeOverride(positionId);
+      components.LastClaimedAt.removeOverride(positionId);
     }
 
     setTransactionLoading(false);
