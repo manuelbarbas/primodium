@@ -13,9 +13,7 @@ import { FaDiscord, FaTwitter } from "react-icons/fa";
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
 import { FaFlagCheckered } from "react-icons/fa";
-import Spinner from "./Spinner";
 import NavigateMainBaseButton from "./action/NavigateMainBaseButton";
-import { useGameStore } from "../store/GameStore";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -43,10 +41,6 @@ function InfoBox() {
       setMinimize(true);
     }
   };
-
-  const [transactionLoading] = useGameStore((state) => [
-    state.transactionLoading,
-  ]);
 
   if (!isConnected) {
     return (
@@ -76,7 +70,6 @@ function InfoBox() {
                 </a>
               </div>
             </div>
-            <div className="ml-3">{transactionLoading && <Spinner />}</div>
           </div>
           <div className="flex"></div>
           <div className="flex items-center mb-2">
