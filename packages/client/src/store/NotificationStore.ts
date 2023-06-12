@@ -1,34 +1,33 @@
 import { create } from "zustand";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 
-type DisplayMessageState = {
+type NotificationState = {
   title: string;
   message: string;
   showUI: boolean;
 };
 
-type DisplayMessageActions = {
-  setTitle: (title: string) => void;
-  setMessage: (message: string) => void;
+type NotificationActions = {
+  setNotification: (title: string, message: string) => void;
   setShowUI: (show: boolean) => void;
 };
 
-const defaults: DisplayMessageState = {
+const defaults: NotificationState = {
   title: "",
   message: "",
   showUI: true,
 };
 
-export const useDisplayMessageStore = create<
-  DisplayMessageState & DisplayMessageActions
+export const useNotificationStore = create<
+  NotificationState & NotificationActions
 >()((set) => ({
   ...defaults,
-  setTitle: (title: string) => set({ title }),
-  setMessage: (message: string) => set({ message }),
+  setNotification: (title: string, message: string) =>
+    set({ title, message, showUI: true }),
   setShowUI: (show: boolean) => set({ showUI: show }),
 }));
 
 // store dev tools
 if (import.meta.env.VITE_DEV === "true") {
-  mountStoreDevtool("DisplayMessageStore", useDisplayMessageStore);
+  mountStoreDevtool("NotificationStore", useNotificationStore);
 }
