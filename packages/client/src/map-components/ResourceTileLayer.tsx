@@ -28,7 +28,7 @@ const ResourceTileLayer = ({
   const map = useMap();
 
   const { address } = useAccount();
-  const { components, systems, providers } = useMud();
+  const { components, systems, providers, world } = useMud();
 
   const [
     hoveredTile,
@@ -93,46 +93,66 @@ const ResourceTileLayer = ({
   useEffect(setNewBounds, [map]);
   useMapEvent("moveend", setNewBounds);
 
+  // Component overrides
   const addTileOverride = useCallback(
     (pos: DisplayTile, blockType: EntityID) => {
       const tempPositionId = uuid();
-      const tempEntityId = BigNumber.from(
+      const tempEntityIndex = BigNumber.from(
         randomBytes(32)
       ) as unknown as EntityIndex;
 
       components.Position.addOverride(tempPositionId, {
-        entity: tempEntityId,
+        entity: tempEntityIndex,
         value: pos,
       });
       components.Tile.addOverride(tempPositionId, {
-        entity: tempEntityId,
+        entity: tempEntityIndex,
         value: { value: blockType as unknown as number },
       });
       components.OwnedBy.addOverride(tempPositionId, {
-        entity: tempEntityId,
+        entity: tempEntityIndex,
         value: { value: address as unknown as number },
       });
       components.LastBuiltAt.addOverride(tempPositionId, {
-        entity: tempEntityId,
+        entity: tempEntityIndex,
         value: { value: providers.get().ws?.blockNumber || 0 },
       });
       components.LastClaimedAt.addOverride(tempPositionId, {
-        entity: tempEntityId,
+        entity: tempEntityIndex,
         value: { value: providers.get().ws?.blockNumber || 0 },
       });
 
-      return { tempPositionId, tempEntityId };
+      return { tempPositionId, tempEntityIndex };
     },
     [components]
   );
 
   const removeTileOverride = useCallback(
-    (positionId: string) => {
-      components.Position.removeOverride(positionId);
-      components.Tile.removeOverride(positionId);
-      components.OwnedBy.removeOverride(positionId);
-      components.LastBuiltAt.removeOverride(positionId);
-      components.LastClaimedAt.removeOverride(positionId);
+    (tempPositionId: string) => {
+      components.Position.removeOverride(tempPositionId);
+      components.Tile.removeOverride(tempPositionId);
+      components.OwnedBy.removeOverride(tempPositionId);
+      components.LastBuiltAt.removeOverride(tempPositionId);
+      components.LastClaimedAt.removeOverride(tempPositionId);
+    },
+    [components]
+  );
+
+  const addPathOverride = useCallback(
+    (startEntityIndex: EntityIndex, endEntityIndex: EntityIndex) => {
+      const tempPositionId = uuid();
+      components.Path.addOverride(tempPositionId, {
+        entity: startEntityIndex,
+        value: { value: world.entities[endEntityIndex] as unknown as number },
+      });
+      return tempPositionId;
+    },
+    [components, world]
+  );
+
+  const removePathOverride = useCallback(
+    (tempPositionId: string) => {
+      components.Path.removeOverride(tempPositionId);
     },
     [components]
   );
@@ -163,6 +183,19 @@ const ResourceTileLayer = ({
       }
       setTransactionLoading(true);
 
+      // override start and end tiles with temporary node tiles
+      const {
+        tempPositionId: tempStartId,
+        tempEntityIndex: tempStartEntityIndex,
+      } = addTileOverride(start, BlockType.Node);
+      const { tempPositionId: tempEndId, tempEntityIndex: tempEndEntityIndex } =
+        addTileOverride(end, BlockType.Node);
+
+      const tempPathPositionId = addPathOverride(
+        tempStartEntityIndex,
+        tempEndEntityIndex
+      );
+
       try {
         await execute(
           systems["system.BuildPath"].executeTyped(start, end, {
@@ -171,6 +204,9 @@ const ResourceTileLayer = ({
           providers
         );
       } finally {
+        removeTileOverride(tempStartId);
+        removeTileOverride(tempEndId);
+        removePathOverride(tempPathPositionId);
       }
       setTransactionLoading(false);
     },
