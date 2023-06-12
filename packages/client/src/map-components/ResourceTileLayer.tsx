@@ -93,54 +93,68 @@ const ResourceTileLayer = ({
   useEffect(setNewBounds, [map]);
   useMapEvent("moveend", setNewBounds);
 
-  const buildTile = async (pos: DisplayTile, blockType: EntityID) => {
-    setTransactionLoading(true);
+  const addTileOverride = useCallback(
+    (pos: DisplayTile, blockType: EntityID) => {
+      const tempPositionId = uuid();
+      const tempEntityId = BigNumber.from(
+        randomBytes(32)
+      ) as unknown as EntityIndex;
 
-    const positionId = uuid();
-    const tempEntityId = BigNumber.from(
-      randomBytes(32)
-    ) as unknown as EntityIndex;
+      components.Position.addOverride(tempPositionId, {
+        entity: tempEntityId,
+        value: pos,
+      });
+      components.Tile.addOverride(tempPositionId, {
+        entity: tempEntityId,
+        value: { value: blockType as unknown as number },
+      });
+      components.OwnedBy.addOverride(tempPositionId, {
+        entity: tempEntityId,
+        value: { value: address as unknown as number },
+      });
+      components.LastBuiltAt.addOverride(tempPositionId, {
+        entity: tempEntityId,
+        value: { value: providers.get().ws?.blockNumber || 0 },
+      });
+      components.LastClaimedAt.addOverride(tempPositionId, {
+        entity: tempEntityId,
+        value: { value: providers.get().ws?.blockNumber || 0 },
+      });
 
-    components.Position.addOverride(positionId, {
-      entity: tempEntityId,
-      value: pos,
-    });
-    components.Tile.addOverride(positionId, {
-      entity: tempEntityId,
-      value: { value: blockType as unknown as number },
-    });
-    components.OwnedBy.addOverride(positionId, {
-      entity: tempEntityId,
-      value: { value: address as unknown as number },
-    });
-    components.LastBuiltAt.addOverride(positionId, {
-      entity: tempEntityId,
-      value: { value: providers.get().ws?.blockNumber || 0 },
-    });
-    components.LastClaimedAt.addOverride(positionId, {
-      entity: tempEntityId,
-      value: { value: providers.get().ws?.blockNumber || 0 },
-    });
+      return { tempPositionId, tempEntityId };
+    },
+    [components]
+  );
 
-    console.log(tempEntityId);
-
-    try {
-      await execute(
-        systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
-          gasLimit: 1_800_000,
-        }),
-        providers
-      );
-    } finally {
+  const removeTileOverride = useCallback(
+    (positionId: string) => {
       components.Position.removeOverride(positionId);
       components.Tile.removeOverride(positionId);
       components.OwnedBy.removeOverride(positionId);
       components.LastBuiltAt.removeOverride(positionId);
       components.LastClaimedAt.removeOverride(positionId);
-    }
+    },
+    [components]
+  );
 
-    setTransactionLoading(false);
-  };
+  const buildTile = useCallback(
+    async (pos: DisplayTile, blockType: EntityID) => {
+      setTransactionLoading(true);
+      const { tempPositionId } = addTileOverride(pos, blockType);
+      try {
+        await execute(
+          systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
+            gasLimit: 1_800_000,
+          }),
+          providers
+        );
+      } finally {
+        removeTileOverride(tempPositionId);
+      }
+      setTransactionLoading(false);
+    },
+    [providers]
+  );
 
   const createPath = useCallback(
     async (start: DisplayTile, end: DisplayTile) => {
@@ -148,15 +162,19 @@ const ResourceTileLayer = ({
         return;
       }
       setTransactionLoading(true);
-      await execute(
-        systems["system.BuildPath"].executeTyped(start, end, {
-          gasLimit: 500_000,
-        }),
-        providers
-      );
+
+      try {
+        await execute(
+          systems["system.BuildPath"].executeTyped(start, end, {
+            gasLimit: 500_000,
+          }),
+          providers
+        );
+      } finally {
+      }
       setTransactionLoading(false);
     },
-    [selectedPathTiles]
+    [selectedPathTiles, providers]
   );
 
   const destroyTile = async (pos: DisplayTile) => {

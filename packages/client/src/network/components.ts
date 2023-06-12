@@ -27,11 +27,13 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    Path: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.Path",
-      },
-    }),
+    Path: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Path",
+        },
+      })
+    ),
     OwnedBy: overridableComponent(
       defineNumberComponent(world, {
         metadata: {
