@@ -13,6 +13,7 @@ import { hashFromAddress } from "../../util/encode";
 
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
+import { useNotificationStore } from "../../store/NotificationStore";
 
 function TechTreeItem({
   data,
@@ -62,6 +63,9 @@ function TechTreeItem({
     state.transactionLoading,
     state.setTransactionLoading,
   ]);
+  const [setNotification] = useNotificationStore((state) => [
+    state.setNotification,
+  ]);
 
   const research = useCallback(async () => {
     setTransactionLoading(true);
@@ -69,7 +73,8 @@ function TechTreeItem({
       systems["system.Research"].executeTyped(BigNumber.from(data.id), {
         gasLimit: 1_000_000,
       }),
-      providers
+      providers,
+      setNotification
     );
     setTransactionLoading(false);
   }, []);
