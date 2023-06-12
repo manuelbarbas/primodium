@@ -4,6 +4,7 @@ import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
+import { useNotificationStore } from "../../store/NotificationStore";
 
 export default function CraftButton({
   coords: { x, y },
@@ -15,6 +16,9 @@ export default function CraftButton({
     state.transactionLoading,
     state.setTransactionLoading,
   ]);
+  const [setNotification] = useNotificationStore((state) => [
+    state.setNotification,
+  ]);
 
   const claimAction = useCallback(async () => {
     setTransactionLoading(true);
@@ -23,7 +27,8 @@ export default function CraftButton({
         x: x,
         y: y,
       }),
-      providers
+      providers,
+      setNotification
     );
     setTransactionLoading(false);
   }, []);

@@ -19,6 +19,7 @@ import SelectedPath from "./SelectedPath";
 import HoverTile from "./HoverTile";
 import SelectedAttack from "./SelectedAttack";
 import { validMapClick } from "../util/map";
+import { useNotificationStore } from "../store/NotificationStore";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -70,6 +71,9 @@ const ResourceTileLayer = ({
     state.setTransactionLoading,
     state.lockedAttackTarget,
     state.setLockedAttackTarget,
+  ]);
+  const [setNotification] = useNotificationStore((state) => [
+    state.setNotification,
   ]);
 
   const [displayTileRange, setDisplayTileRange] = useState({
@@ -147,7 +151,8 @@ const ResourceTileLayer = ({
           systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
             gasLimit: 1_800_000,
           }),
-          providers
+          providers,
+          setNotification
         );
       } finally {
         removeTileOverride(tempPositionId);
@@ -167,7 +172,8 @@ const ResourceTileLayer = ({
         systems["system.BuildPath"].executeTyped(start, end, {
           gasLimit: 500_000,
         }),
-        providers
+        providers,
+        setNotification
       );
       setTransactionLoading(false);
     },
@@ -180,7 +186,8 @@ const ResourceTileLayer = ({
       systems["system.Destroy"].executeTyped(pos, {
         gasLimit: 1_000_000,
       }),
-      providers
+      providers,
+      setNotification
     );
     setTransactionLoading(false);
   };
@@ -191,7 +198,8 @@ const ResourceTileLayer = ({
       systems["system.DestroyPath"].executeTyped(pos, {
         gasLimit: 500_000,
       }),
-      providers
+      providers,
+      setNotification
     );
     setTransactionLoading(false);
   };

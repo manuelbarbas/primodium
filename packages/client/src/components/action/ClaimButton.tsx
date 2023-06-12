@@ -6,6 +6,7 @@ import { BlockType, DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
+import { useNotificationStore } from "../../store/NotificationStore";
 
 export default function ClaimButton({
   id,
@@ -21,6 +22,9 @@ export default function ClaimButton({
     state.transactionLoading,
     state.setTransactionLoading,
   ]);
+  const [setNotification] = useNotificationStore((state) => [
+    state.setNotification,
+  ]);
 
   const claimAction = useCallback(async () => {
     setTransactionLoading(true);
@@ -34,7 +38,8 @@ export default function ClaimButton({
           gasLimit: 30_000_000,
         }
       ),
-      providers
+      providers,
+      setNotification
     );
     await execute(
       systems["system.ClaimFromFactory"].executeTyped(
@@ -46,7 +51,8 @@ export default function ClaimButton({
           gasLimit: 30_000_000,
         }
       ),
-      providers
+      providers,
+      setNotification
     );
     setTransactionLoading(false);
   }, []);

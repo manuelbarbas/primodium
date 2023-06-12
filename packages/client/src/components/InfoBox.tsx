@@ -51,7 +51,7 @@ function InfoBox() {
       <div className="z-[1000] viewport-container fixed top-4 left-4 h-44 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col">
           <div className="flex flex-row">
-            <div className="flex items-center mb-2">
+            <div className="flex items-center mb-3">
               <p className="inline-block align-middle text-xl font-bold">
                 Primodium
               </p>

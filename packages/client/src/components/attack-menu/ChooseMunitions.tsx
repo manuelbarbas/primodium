@@ -8,6 +8,7 @@ import { useGameStore } from "../../store/GameStore";
 import { BlockType } from "../../util/constants";
 
 import MunitionsButton from "./MunitionsButton";
+import { useNotificationStore } from "../../store/NotificationStore";
 
 function ChooseMunitions() {
   // executeTyped(Coord memory coord, Coord memory targetCoord, uint256 weaponKey)
@@ -16,6 +17,9 @@ function ChooseMunitions() {
   const [selectedAttackTiles, setTransactionLoading] = useGameStore((state) => [
     state.selectedAttackTiles,
     state.setTransactionLoading,
+  ]);
+  const [setNotification] = useNotificationStore((state) => [
+    state.setNotification,
   ]);
 
   const attackAction = useCallback(
@@ -34,7 +38,8 @@ function ChooseMunitions() {
               gasLimit: 1_000_000,
             }
           ),
-          providers
+          providers,
+          setNotification
         );
         setTransactionLoading(false);
       }
