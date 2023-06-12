@@ -27,6 +27,11 @@
     height: 100vh;
   }
 
+  .phaser-container {
+    width: 100vw;
+    height: 100vh;
+  }
+
   .screen-container {
     width: 100vw;
     height: 100vh;

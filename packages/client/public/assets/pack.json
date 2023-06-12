@@ -1,0 +1,11 @@
+{
+    "MAIN": {
+      "files": [
+        {
+          "type": "image",
+          "key": "tilemap",
+          "url": "/assets/tilemap/tilemap.png"
+        }
+      ]
+    }
+  }
