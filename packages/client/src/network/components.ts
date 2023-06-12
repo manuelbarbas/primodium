@@ -1,4 +1,5 @@
 import { World } from "@latticexyz/recs";
+import { overridableComponent } from "@latticexyz/recs";
 import {
   defineBoolComponent,
   defineNumberComponent,
@@ -12,36 +13,48 @@ export function defineComponents(world: World) {
         contractId: "component.Counter",
       },
     }),
-    Position: defineCoordComponent(world, {
-      metadata: {
-        contractId: "component.Position",
-      },
-    }),
-    Tile: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.Tile",
-      },
-    }),
-    Path: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.Path",
-      },
-    }),
-    OwnedBy: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.OwnedBy",
-      },
-    }),
-    LastBuiltAt: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.LastBuiltAt",
-      },
-    }),
-    LastClaimedAt: defineNumberComponent(world, {
-      metadata: {
-        contractId: "component.LastClaimedAt",
-      },
-    }),
+    Position: overridableComponent(
+      defineCoordComponent(world, {
+        metadata: {
+          contractId: "component.Position",
+        },
+      })
+    ),
+    Tile: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Tile",
+        },
+      })
+    ),
+    Path: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Path",
+        },
+      })
+    ),
+    OwnedBy: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.OwnedBy",
+        },
+      })
+    ),
+    LastBuiltAt: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.LastBuiltAt",
+        },
+      })
+    ),
+    LastClaimedAt: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.LastClaimedAt",
+        },
+      })
+    ),
     Health: defineNumberComponent(world, {
       metadata: {
         contractId: "component.Health",
