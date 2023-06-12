@@ -80,7 +80,7 @@
     "owner()": "8da5cb5b",
     "transferOwnership(address)": "f2fde38b"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"args\",\"type\":\"bytes\"}],\"name\":\"execute\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"returns\":{\"_0\":\"conrtact owner\"}},\"transferOwnership(address)\":{\"params\":{\"account\":\"address of new owner\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"owner()\":{\"notice\":\"get the ERC173 contract owner\"},\"transferOwnership(address)\":{\"notice\":\"transfer contract ownership to new account\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol\":\"ISystem\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[\":@latticexyz/=../../node_modules/@latticexyz/\",\":@rari-capital/=../../node_modules/@rari-capital/\",\":@solidstate/=../../node_modules/@solidstate/\",\":abdk-libraries-solidity/=../../node_modules/abdk-libraries-solidity/\",\":components/=src/components/\",\":ds-test/=../../node_modules/ds-test/src/\",\":forge-std/=../../node_modules/forge-std/src/\",\":libraries/=src/libraries/\",\":memmove/=../../node_modules/memmove/src/\",\":noise/=../../node_modules/@latticexyz/noise/contracts/\",\":packages/=../../../mud/packages/\",\":solecs/=../../node_modules/@latticexyz/solecs/src/\",\":solmate/=../../node_modules/@rari-capital/solmate/src/\",\":std-contracts/=../../node_modules/@latticexyz/std-contracts/src/\",\":systems/=src/systems/\",\":templates/=../../../mud/templates/\"]},\"sources\":{\"../../node_modules/@solidstate/contracts/interfaces/IERC173.sol\":{\"keccak256\":\"0x9b18a5ad66323c65a81ecd62c3536db99115fe69a30b56a04409de941da7deb6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a93684363c5bfd4e31fa2cc2d3402e9451ba61c7dbb404e8e50658610fb2a555\",\"dweb:/ipfs/QmanFgF5v5GjBBrAEYCpaZyXRFRvzLGgB8SQcSEf9Dkj5Q\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173Internal.sol\":{\"keccak256\":\"0x9644c3e56c9ecd1763f8aaa437d5d573a7f64a8d93ad7bea1a9c44beb5911b89\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c32cfda38b44878ab196d32eeb72823a9f9904e8193286c787caccfb2e5bfa75\",\"dweb:/ipfs/QmfBNKWUSKaJtYL3JJ3YFioXCVFeeakqQ4cR5XzAxxZkCx\"]},\"/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol\":{\"keccak256\":\"0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e\",\"dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi\"]},\"/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol\":{\"keccak256\":\"0xbc1c0b0c72ab5e20ff7eae3cf53627aac367a2f9a65d2e87451a0313869d3bed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b2a7c4c30beb9b96c4e8112b9864f7bac5c761e61765e0dc359d926572feaa5a\",\"dweb:/ipfs/QmVNJbky7itfqBBdDCh8anSWMaHhXs2mKhzuW7hbCVWgj3\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"args\",\"type\":\"bytes\"}],\"name\":\"execute\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"returns\":{\"_0\":\"conrtact owner\"}},\"transferOwnership(address)\":{\"params\":{\"account\":\"address of new owner\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"owner()\":{\"notice\":\"get the ERC173 contract owner\"},\"transferOwnership(address)\":{\"notice\":\"transfer contract ownership to new account\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"../../node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol\":\"ISystem\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[\":@latticexyz/=../../node_modules/@latticexyz/\",\":@rari-capital/=../../node_modules/@rari-capital/\",\":@solidstate/=../../node_modules/@solidstate/\",\":abdk-libraries-solidity/=../../node_modules/abdk-libraries-solidity/\",\":components/=src/components/\",\":ds-test/=../../node_modules/ds-test/src/\",\":forge-std/=../../node_modules/forge-std/src/\",\":libraries/=src/libraries/\",\":memmove/=../../node_modules/memmove/src/\",\":noise/=../../node_modules/@latticexyz/noise/contracts/\",\":packages/=../../../mud/packages/\",\":solecs/=../../node_modules/@latticexyz/solecs/src/\",\":solmate/=../../node_modules/@rari-capital/solmate/src/\",\":std-contracts/=../../node_modules/@latticexyz/std-contracts/src/\",\":systems/=src/systems/\",\":templates/=../../../mud/templates/\"]},\"sources\":{\"../../node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol\":{\"keccak256\":\"0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e\",\"dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi\"]},\"../../node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol\":{\"keccak256\":\"0xbc1c0b0c72ab5e20ff7eae3cf53627aac367a2f9a65d2e87451a0313869d3bed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b2a7c4c30beb9b96c4e8112b9864f7bac5c761e61765e0dc359d926572feaa5a\",\"dweb:/ipfs/QmVNJbky7itfqBBdDCh8anSWMaHhXs2mKhzuW7hbCVWgj3\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173.sol\":{\"keccak256\":\"0x9b18a5ad66323c65a81ecd62c3536db99115fe69a30b56a04409de941da7deb6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a93684363c5bfd4e31fa2cc2d3402e9451ba61c7dbb404e8e50658610fb2a555\",\"dweb:/ipfs/QmanFgF5v5GjBBrAEYCpaZyXRFRvzLGgB8SQcSEf9Dkj5Q\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173Internal.sol\":{\"keccak256\":\"0x9644c3e56c9ecd1763f8aaa437d5d573a7f64a8d93ad7bea1a9c44beb5911b89\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c32cfda38b44878ab196d32eeb72823a9f9904e8193286c787caccfb2e5bfa75\",\"dweb:/ipfs/QmfBNKWUSKaJtYL3JJ3YFioXCVFeeakqQ4cR5XzAxxZkCx\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
       "version": "0.8.17+commit.8df45f5f"
@@ -208,11 +208,27 @@
         "bytecodeHash": "ipfs"
       },
       "compilationTarget": {
-        "/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol": "ISystem"
+        "../../node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol": "ISystem"
       },
       "libraries": {}
     },
     "sources": {
+      "../../node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol": {
+        "keccak256": "0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9",
+        "urls": [
+          "bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e",
+          "dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi"
+        ],
+        "license": "MIT"
+      },
+      "../../node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol": {
+        "keccak256": "0xbc1c0b0c72ab5e20ff7eae3cf53627aac367a2f9a65d2e87451a0313869d3bed",
+        "urls": [
+          "bzz-raw://b2a7c4c30beb9b96c4e8112b9864f7bac5c761e61765e0dc359d926572feaa5a",
+          "dweb:/ipfs/QmVNJbky7itfqBBdDCh8anSWMaHhXs2mKhzuW7hbCVWgj3"
+        ],
+        "license": "MIT"
+      },
       "../../node_modules/@solidstate/contracts/interfaces/IERC173.sol": {
         "keccak256": "0x9b18a5ad66323c65a81ecd62c3536db99115fe69a30b56a04409de941da7deb6",
         "urls": [
@@ -228,44 +244,28 @@
           "dweb:/ipfs/QmfBNKWUSKaJtYL3JJ3YFioXCVFeeakqQ4cR5XzAxxZkCx"
         ],
         "license": "MIT"
-      },
-      "/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol": {
-        "keccak256": "0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9",
-        "urls": [
-          "bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e",
-          "dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi"
-        ],
-        "license": "MIT"
-      },
-      "/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol": {
-        "keccak256": "0xbc1c0b0c72ab5e20ff7eae3cf53627aac367a2f9a65d2e87451a0313869d3bed",
-        "urls": [
-          "bzz-raw://b2a7c4c30beb9b96c4e8112b9864f7bac5c761e61765e0dc359d926572feaa5a",
-          "dweb:/ipfs/QmVNJbky7itfqBBdDCh8anSWMaHhXs2mKhzuW7hbCVWgj3"
-        ],
-        "license": "MIT"
       }
     },
     "version": 1
   },
   "ast": {
-    "absolutePath": "/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol",
-    "id": 19509,
+    "absolutePath": "../../node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol",
+    "id": 42967,
     "exportedSymbols": {
       "IERC173": [
         2402
       ],
       "ISystem": [
-        19508
+        42966
       ]
     },
     "nodeType": "SourceUnit",
-    "src": "32:336:66",
+    "src": "32:336:19",
     "nodes": [
       {
-        "id": 19496,
+        "id": 42954,
         "nodeType": "PragmaDirective",
-        "src": "32:24:66",
+        "src": "32:24:19",
         "nodes": [],
         "literals": [
           "solidity",
@@ -275,24 +275,24 @@
         ]
       },
       {
-        "id": 19498,
+        "id": 42956,
         "nodeType": "ImportDirective",
-        "src": "58:40:66",
+        "src": "58:40:19",
         "nodes": [],
-        "absolutePath": "/Users/emersonhsieh/primodium/primodium-mud/node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol",
+        "absolutePath": "../../node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol",
         "file": "./IERC173.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 19509,
-        "sourceUnit": 19435,
+        "scope": 42967,
+        "sourceUnit": 45331,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 19497,
+              "id": 42955,
               "name": "IERC173",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
               "referencedDeclaration": 2402,
-              "src": "67:7:66",
+              "src": "67:7:19",
               "typeDescriptions": {}
             },
             "nameLocation": "-1:-1:-1"
@@ -301,34 +301,34 @@
         "unitAlias": ""
       },
       {
-        "id": 19508,
+        "id": 42966,
         "nodeType": "ContractDefinition",
-        "src": "264:103:66",
+        "src": "264:103:19",
         "nodes": [
           {
-            "id": 19507,
+            "id": 42965,
             "nodeType": "FunctionDefinition",
-            "src": "297:68:66",
+            "src": "297:68:19",
             "nodes": [],
             "functionSelector": "09c5eabe",
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "execute",
-            "nameLocation": "306:7:66",
+            "nameLocation": "306:7:19",
             "parameters": {
-              "id": 19503,
+              "id": 42961,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19502,
+                  "id": 42960,
                   "mutability": "mutable",
                   "name": "args",
-                  "nameLocation": "327:4:66",
+                  "nameLocation": "327:4:19",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19507,
-                  "src": "314:17:66",
+                  "scope": 42965,
+                  "src": "314:17:19",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -336,10 +336,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 19501,
+                    "id": 42959,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "314:5:66",
+                    "src": "314:5:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -348,21 +348,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "313:19:66"
+              "src": "313:19:19"
             },
             "returnParameters": {
-              "id": 19506,
+              "id": 42964,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19505,
+                  "id": 42963,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19507,
-                  "src": "351:12:66",
+                  "scope": 42965,
+                  "src": "351:12:19",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -370,10 +370,10 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 19504,
+                    "id": 42962,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
-                    "src": "351:5:66",
+                    "src": "351:5:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes_storage_ptr",
                       "typeString": "bytes"
@@ -382,9 +382,9 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "350:14:66"
+              "src": "350:14:19"
             },
-            "scope": 19508,
+            "scope": 42966,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
@@ -394,18 +394,18 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 19499,
+              "id": 42957,
               "name": "IERC173",
               "nameLocations": [
-                "285:7:66"
+                "285:7:19"
               ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 2402,
-              "src": "285:7:66"
+              "src": "285:7:19"
             },
-            "id": 19500,
+            "id": 42958,
             "nodeType": "InheritanceSpecifier",
-            "src": "285:7:66"
+            "src": "285:7:19"
           }
         ],
         "canonicalName": "ISystem",
@@ -413,17 +413,17 @@
         "contractKind": "interface",
         "fullyImplemented": false,
         "linearizedBaseContracts": [
-          19508,
+          42966,
           2402,
           44868
         ],
         "name": "ISystem",
-        "nameLocation": "274:7:66",
-        "scope": 19509,
+        "nameLocation": "274:7:19",
+        "scope": 42967,
         "usedErrors": []
       }
     ],
     "license": "MIT"
   },
-  "id": 66
+  "id": 19
 }
