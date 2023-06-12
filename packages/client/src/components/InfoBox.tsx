@@ -17,8 +17,6 @@ import Spinner from "./Spinner";
 import NavigateMainBaseButton from "./action/NavigateMainBaseButton";
 import { useGameStore } from "../store/GameStore";
 
-const params = new URLSearchParams(window.location.search);
-
 function InfoBox() {
   const { address, isConnected } = useWagmiAccount();
   const { connect } = useConnect({
@@ -55,7 +53,7 @@ function InfoBox() {
           <div className="flex flex-row">
             <div className="flex items-center mb-3">
               <p className="inline-block align-middle text-xl font-bold">
-                Primodium {params.get("version") ? params.get("version") : ""}
+                Primodium
               </p>
               <div>
                 <a
@@ -119,9 +117,7 @@ function InfoBox() {
       return (
         <div className="z-[1000] viewport-container fixed top-4 left-4 h-52 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
-            <p className="text-xl mb-4 font-bold">
-              Primodium {params.get("version") ? params.get("version") : ""}
-            </p>
+            <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaMinusSquare size="18" />} />
             </button>
@@ -165,9 +161,7 @@ function InfoBox() {
       return (
         <div className="z-[1000] viewport-container fixed top-4 left-4 h-28 w-64 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
           <div className="mt-4 ml-5 flex flex-col">
-            <p className="text-xl mb-4 font-bold">
-              Primodium {params.get("version") ? params.get("version") : ""}
-            </p>
+            <p className="text-xl mb-4 font-bold">Primodium</p>
             <button onClick={minimizeBox} className="fixed top-4 right-5">
               <LinkIcon icon={<FaPlusSquare size="18" />} />
             </button>
