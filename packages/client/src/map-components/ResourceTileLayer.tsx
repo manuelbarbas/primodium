@@ -2,14 +2,16 @@ import React, { useState, useEffect, useCallback } from "react";
 import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 
-import { EntityID } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
+import { randomBytes } from "ethers/lib/utils";
+import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { Coord, uuid } from "@latticexyz/utils";
 
+import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
+import { execute } from "../network/actions";
+import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
 import { useGameStore } from "../store/GameStore";
-import { execute } from "../network/actions";
-import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
 
 import ResourceTile from "./ResourceTile";
 import SelectedTile from "./SelectedTile";
@@ -26,7 +28,8 @@ const ResourceTileLayer = ({
 }) => {
   const map = useMap();
 
-  const { systems, providers } = useMud();
+  const { address } = useAccount();
+  const { components, systems, providers } = useMud();
 
   const [
     hoveredTile,
@@ -94,33 +97,86 @@ const ResourceTileLayer = ({
   useEffect(setNewBounds, [map]);
   useMapEvent("moveend", setNewBounds);
 
-  const buildTile = async (pos: DisplayTile, blockType: EntityID) => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
-        gasLimit: 1_800_000,
-      }),
-      providers,
-      setNotification
-    );
-    setTransactionLoading(false);
-  };
+  // Component overrides
+  const addTileOverride = useCallback(
+    (pos: DisplayTile, blockType: EntityID) => {
+      const tempPositionId = uuid();
+      const tempEntityIndex = BigNumber.from(
+        randomBytes(32)
+      ) as unknown as EntityIndex;
 
-  const createPath = useCallback(
-    async (start: DisplayTile, end: DisplayTile) => {
-      if (selectedPathTiles.start !== null && selectedPathTiles.end !== null) {
-        setTransactionLoading(true);
+      components.Position.addOverride(tempPositionId, {
+        entity: tempEntityIndex,
+        value: pos,
+      });
+      components.Tile.addOverride(tempPositionId, {
+        entity: tempEntityIndex,
+        value: { value: blockType as unknown as number },
+      });
+      components.OwnedBy.addOverride(tempPositionId, {
+        entity: tempEntityIndex,
+        value: { value: address as unknown as number },
+      });
+      components.LastBuiltAt.addOverride(tempPositionId, {
+        entity: tempEntityIndex,
+        value: { value: providers.get().ws?.blockNumber || 0 },
+      });
+      components.LastClaimedAt.addOverride(tempPositionId, {
+        entity: tempEntityIndex,
+        value: { value: providers.get().ws?.blockNumber || 0 },
+      });
+
+      return { tempPositionId, tempEntityIndex };
+    },
+    [components]
+  );
+
+  const removeTileOverride = useCallback(
+    (tempPositionId: string) => {
+      components.Position.removeOverride(tempPositionId);
+      components.Tile.removeOverride(tempPositionId);
+      components.OwnedBy.removeOverride(tempPositionId);
+      components.LastBuiltAt.removeOverride(tempPositionId);
+      components.LastClaimedAt.removeOverride(tempPositionId);
+    },
+    [components]
+  );
+
+  const buildTile = useCallback(
+    async (pos: DisplayTile, blockType: EntityID) => {
+      setTransactionLoading(true);
+      const { tempPositionId } = addTileOverride(pos, blockType);
+      try {
         await execute(
-          systems["system.BuildPath"].executeTyped(start, end, {
-            gasLimit: 500_000,
+          systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
+            gasLimit: 1_800_000,
           }),
           providers,
           setNotification
         );
-        setTransactionLoading(false);
+      } finally {
+        removeTileOverride(tempPositionId);
       }
+      setTransactionLoading(false);
     },
-    [selectedPathTiles]
+    [providers]
+  );
+
+  const createPath = useCallback(
+    async (start: DisplayTile, end: DisplayTile) => {
+      if (selectedPathTiles.start === null || selectedPathTiles.end === null) {
+        return;
+      }
+      setTransactionLoading(true);
+      await execute(
+        systems["system.BuildPath"].executeTyped(start, end, {
+          gasLimit: 500_000,
+        }),
+        providers
+      );
+      setTransactionLoading(false);
+    },
+    [selectedPathTiles, providers]
   );
 
   const destroyTile = async (pos: DisplayTile) => {

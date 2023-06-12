@@ -141,9 +141,6 @@ function AttackBox() {
     }
   }, [lockedAttackTarget, selectedAttackTiles.end]);
 
-  console.log(selectedAttackTiles);
-  console.log(lockedAttackTarget);
-
   return (
     <BuildingContentBox>
       <p className="text-lg font-bold mb-3">Attack Enemy Buildings</p>
