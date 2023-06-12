@@ -103,16 +103,6 @@ function ResourceTile({
   const terrainBackground = BackgroundImage.get(terrain as EntityID);
   const resourceBackground = BackgroundImage.get(resource as EntityID);
 
-  console.log("here in the resource tile!");
-  console.log(x, y);
-  console.log(buildingKey);
-  if (buildingKey) {
-    console.log(x, y);
-
-    console.log("has buildingKey");
-    console.log(BackgroundImage.get(buildingKey));
-  }
-
   return (
     <>
       {/* !!setting an image background!! */}
