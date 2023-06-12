@@ -138,25 +138,6 @@ const ResourceTileLayer = ({
     [components]
   );
 
-  const addPathOverride = useCallback(
-    (startEntityIndex: EntityIndex, endEntityIndex: EntityIndex) => {
-      const tempPositionId = uuid();
-      components.Path.addOverride(tempPositionId, {
-        entity: startEntityIndex,
-        value: { value: world.entities[endEntityIndex] as unknown as number },
-      });
-      return tempPositionId;
-    },
-    [components, world]
-  );
-
-  const removePathOverride = useCallback(
-    (tempPositionId: string) => {
-      components.Path.removeOverride(tempPositionId);
-    },
-    [components]
-  );
-
   const buildTile = useCallback(
     async (pos: DisplayTile, blockType: EntityID) => {
       setTransactionLoading(true);
@@ -182,32 +163,12 @@ const ResourceTileLayer = ({
         return;
       }
       setTransactionLoading(true);
-
-      // override start and end tiles with temporary node tiles
-      const {
-        tempPositionId: tempStartId,
-        tempEntityIndex: tempStartEntityIndex,
-      } = addTileOverride(start, BlockType.Node);
-      const { tempPositionId: tempEndId, tempEntityIndex: tempEndEntityIndex } =
-        addTileOverride(end, BlockType.Node);
-
-      const tempPathPositionId = addPathOverride(
-        tempStartEntityIndex,
-        tempEndEntityIndex
+      await execute(
+        systems["system.BuildPath"].executeTyped(start, end, {
+          gasLimit: 500_000,
+        }),
+        providers
       );
-
-      try {
-        await execute(
-          systems["system.BuildPath"].executeTyped(start, end, {
-            gasLimit: 500_000,
-          }),
-          providers
-        );
-      } finally {
-        removeTileOverride(tempStartId);
-        removeTileOverride(tempEndId);
-        removePathOverride(tempPathPositionId);
-      }
       setTransactionLoading(false);
     },
     [selectedPathTiles, providers]
