@@ -2,6 +2,7 @@ import { memo, useEffect } from "react";
 import createGame from "../game/createGame";
 import { useMud } from "../context/MudContext";
 import { useGameStore } from "../store/GameStore";
+import GameUI from "../components/GameUi";
 
 export const Game = memo(() => {
   const { world } = useMud();
@@ -11,5 +12,10 @@ export const Game = memo(() => {
     createGame(world).then((game) => setGame(game));
   }, []);
 
-  return <div id="phaser-container"></div>;
+  return (
+    <>
+      <div id="phaser-container" />;
+      <GameUI />
+    </>
+  );
 });

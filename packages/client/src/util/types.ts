@@ -21,12 +21,25 @@ export enum Scenes {
 
 export type Game = Awaited<ReturnType<typeof createGame>>;
 
-export enum Terrain {
-  AIR,
-  ALLUVIUM,
-  BEDROCK,
-  BIOFILM,
-  REGOLITH,
-  SANDSTONE,
-  WATER,
+export enum TerrainTileset {
+  Air,
+  Alluvium,
+  Bedrock,
+  Biofilm,
+  Regolith,
+  Sandstone,
+  Water,
+}
+
+export enum ResourceTileset {
+  Bolutite,
+  Copper,
+  Iridium,
+  Iron,
+  Kimberlite,
+  Lithium,
+  Osmium,
+  Titanium,
+  Tungsten,
+  Uraninite,
 }

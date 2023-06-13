@@ -2,13 +2,13 @@ const config = {
   tilemap: {
     tileWidth: 16,
     tileHeight: 16,
-    gridSize: 100,
+    gridSize: 500,
     buffer: 1000,
   },
   assetKeys: {
     tilesets: {
       terrain: "terrain-tileset",
-      ore: "ore-tileset",
+      resource: "resource-tileset",
     },
   },
   network: {
@@ -16,8 +16,8 @@ const config = {
     retryCount: 2,
   },
   camera: {
-    minZoom: 0.5,
-    maxZoom: 10,
+    minZoom: 1,
+    maxZoom: 5,
     pinchSpeed: 1,
     scrollSpeed: 1,
   },

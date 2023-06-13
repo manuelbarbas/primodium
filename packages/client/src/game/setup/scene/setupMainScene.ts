@@ -1,17 +1,43 @@
 import {
   createCamera,
   getSceneLoadPromise,
-  tileCoordToPixelCoord,
 } from "@smallbraingames/small-phaser";
+import { createPerlin } from "@latticexyz/noise";
 
-import { GameConfig } from "../../../util/types";
+import { GameConfig, TerrainTileset } from "../../../util/types";
 import createGameTilemap from "../../helpers/createGameTilemap";
+import { getTopLayerKeyPair } from "../../../util/tile";
+import { EntityIdtoTilesetId } from "../../../util/constants";
 
 const setupMainScene = async (scene: Phaser.Scene, config: GameConfig) => {
   await getSceneLoadPromise(scene);
-  const { minZoom, maxZoom, pinchSpeed, scrollSpeed } = config.camera;
 
-  const tilemap = createGameTilemap(scene, config);
+  const {
+    camera: { minZoom, maxZoom, pinchSpeed, scrollSpeed },
+    assetKeys: {
+      tilesets: { resource: resourceKey, terrain: terrainKey },
+    },
+    tilemap: { gridSize, tileHeight, tileWidth },
+  } = config;
+
+  /* ----------------------------- Create Tilemaps ---------------------------- */
+  const terrainTilemap = createGameTilemap(
+    scene,
+    terrainKey,
+    tileWidth,
+    tileHeight,
+    gridSize
+  );
+
+  const resourceTilemap = createGameTilemap(
+    scene,
+    resourceKey,
+    tileWidth,
+    tileHeight,
+    gridSize
+  );
+
+  /* ------------------------------ Setup Camera ------------------------------ */
   const camera = createCamera(
     scene.cameras.main,
     minZoom,
@@ -20,14 +46,34 @@ const setupMainScene = async (scene: Phaser.Scene, config: GameConfig) => {
     scrollSpeed
   );
 
-  const { x, y } = tileCoordToPixelCoord({ x: 0, y: 0 }, 16, 16);
+  /* ---------------------- Render Resources and Terrain ---------------------- */
+  const perlin = await createPerlin();
 
-  camera.centerOn(x, y);
+  const halfGridSize = gridSize / 2;
+  for (let x = -halfGridSize; x < halfGridSize; x++) {
+    for (let y = -halfGridSize; y < halfGridSize; y++) {
+      const coord = { x, y };
+      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
+
+      //lookup and place terrain
+      const terrainId = EntityIdtoTilesetId[terrain];
+      terrainTilemap.putTileAt(terrainId ?? TerrainTileset.Alluvium, {
+        x,
+        y,
+      });
+
+      //lookup and place resource
+      if (!resource) continue;
+      const resourceId = EntityIdtoTilesetId[resource];
+      resourceTilemap.putTileAt(resourceId, { x, y });
+    }
+  }
 
   return {
     scene,
     config,
-    tilemap,
+    terrainTilemap,
+    resourceTilemap,
     camera,
   };
 };

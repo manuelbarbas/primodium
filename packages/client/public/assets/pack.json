@@ -8,8 +8,8 @@
         },
         {
           "type": "image",
-          "key": "ore-tileset",
-          "url": "/assets/tileset/ore.png"
+          "key": "resource-tileset",
+          "url": "/assets/tileset/resource.png"
         }
       ]
     }
