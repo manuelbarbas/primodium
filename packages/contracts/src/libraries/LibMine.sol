@@ -4,7 +4,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 
-import { MainBaseID, MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionMachineryFactoryID, DebugNodeID, SiloID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID, BulletFactoryID } from "../prototypes/Tiles.sol";
+import { MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionPneumaticDrillID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
 
 import { LibDebug } from "./LibDebug.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -42,7 +42,7 @@ library LibMine {
     } else if (minerType == HardenedDrillID) {
       MINE_COUNT_PER_BLOCK = 2;
       MINE_COUNT_MAX = 2000;
-    } else if (minerType == PrecisionMachineryFactoryID) {
+    } else if (minerType == PrecisionPneumaticDrillID) {
       MINE_COUNT_PER_BLOCK = 3;
       MINE_COUNT_MAX = 3000;
     }
@@ -63,7 +63,18 @@ library LibMine {
     uint256 startClaimTime;
     if (!lastClaimedAtComponent.has(minerEntity)) {
       if (!isDefaultUnlockedResource(resourceKey)) {
-        startClaimTime = lastResearchedAtComponent.getValue(hashedResearchKey);
+        // check which one is later, last researched or last built
+        if (lastResearchedAtComponent.has(hashedResearchKey)) {
+          uint256 lastResearchedAt = lastResearchedAtComponent.getValue(hashedResearchKey);
+          uint256 lastBuiltAt = lastBuiltAtComponent.getValue(minerEntity);
+          if (lastResearchedAt > lastBuiltAt) {
+            startClaimTime = lastResearchedAt;
+          } else {
+            startClaimTime = lastBuiltAt;
+          }
+        } else {
+          startClaimTime = lastBuiltAtComponent.getValue(minerEntity);
+        }
       } else {
         startClaimTime = lastBuiltAtComponent.getValue(minerEntity);
       }

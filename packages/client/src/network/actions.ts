@@ -14,7 +14,8 @@ export async function execute(
   providers: IComputedValue<{
     json: any;
     ws: WebSocketProvider | undefined;
-  }>
+  }>,
+  setNotification?: (title: string, message: string) => void
 ) {
   try {
     const tx = await txPromise;
@@ -25,9 +26,20 @@ export async function execute(
         error.transactionHash,
         providers.get().json
       );
-      alert(reason);
+      if (setNotification) {
+        setNotification("Warning", reason);
+      } else {
+        alert(reason);
+      }
     } catch (error: any) {
-      alert(error);
+      // This is most likely a gas error. i.e.:
+      //     TypeError: Cannot set properties of null (setting 'gasPrice')
+      // so we tell the user to try again
+      if (setNotification) {
+        setNotification("Try Again", `${error}`);
+      } else {
+        alert(error);
+      }
     }
   }
 }

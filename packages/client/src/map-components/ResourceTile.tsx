@@ -113,7 +113,7 @@ function ResourceTile({
             [y, x],
             [y + 1, x + 1],
           ]}
-          url={BackgroundImage.get(buildingKey)!}
+          url={BackgroundImage.get(buildingKey as EntityID)!}
           zIndex={11}
           pane={pane}
         />

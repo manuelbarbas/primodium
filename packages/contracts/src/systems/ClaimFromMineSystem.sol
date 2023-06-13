@@ -195,11 +195,8 @@ contract ClaimFromMineSystem is System {
     if (c.tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
       claimAdjacentNodeTiles(coord, entitiesAtPosition[0], addressToEntity(msg.sender));
     }
-    // store items in the Silo for emitting bullets
-    else if (c.tileComponent.getValue(entitiesAtPosition[0]) == SiloID) {
-      uint256 destination = entitiesAtPosition[0];
-      claimAdjacentNodeTiles(coord, entitiesAtPosition[0], destination);
-    } else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
+    // store items in claimable factories or weapons store
+    else if (LibClaim.isClaimableFactory(c.tileComponent.getValue(entitiesAtPosition[0]))) {
       uint256 destination = entitiesAtPosition[0];
       claimAdjacentNodeTiles(coord, entitiesAtPosition[0], destination);
     } else {

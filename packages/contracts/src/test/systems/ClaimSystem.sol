@@ -51,7 +51,6 @@ contract ClaimSystemTest is MudTest {
     buildSystem.executeTyped(DebugNodeID, startPathCoord);
     buildPathSystem.executeTyped(startPathCoord, endPathCoord);
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
     // START CLAIMING
     vm.roll(0);
     buildSystem.executeTyped(MinerID, coord);
@@ -106,7 +105,7 @@ contract ClaimSystemTest is MudTest {
     vm.roll(0);
     buildSystem.executeTyped(MinerID, coord);
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
+    //
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
@@ -142,7 +141,6 @@ contract ClaimSystemTest is MudTest {
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -6, y: -4 }));
     buildPathSystem.executeTyped(Coord({ x: -9, y: -4 }), Coord({ x: -6, y: -4 }));
 
-    // TEMP: MINE_COUNT_PER_BLOCK = 10 regardless of miner
     // START CLAIMING
     vm.roll(0);
 
