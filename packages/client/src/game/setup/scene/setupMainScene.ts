@@ -1,6 +1,7 @@
 import {
   createCamera,
   getSceneLoadPromise,
+  tileCoordToPixelCoord,
 } from "@smallbraingames/small-phaser";
 
 import { GameConfig } from "../../../util/types";
@@ -18,6 +19,10 @@ const setupMainScene = async (scene: Phaser.Scene, config: GameConfig) => {
     pinchSpeed,
     scrollSpeed
   );
+
+  const { x, y } = tileCoordToPixelCoord({ x: 0, y: 0 }, 16, 16);
+
+  camera.centerOn(x, y);
 
   return {
     scene,

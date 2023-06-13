@@ -16,7 +16,7 @@ const createGame = async (world: World) => {
     const MainScene = createPhaserScene({
       key: Scenes.MAIN,
       preload: (scene: Phaser.Scene) => {
-        scene.load.pack("src/assets/game/pack");
+        scene.load.pack("/assets/pack");
       },
     });
 
@@ -30,7 +30,7 @@ const createGame = async (world: World) => {
         mode: Phaser.Scale.NONE,
       },
       scene: [MainScene],
-      antialias: true,
+      pixelArt: true,
     };
 
     const phaserGame = await createPhaserGame(config);

@@ -6,26 +6,35 @@ import { GameConfig } from "../../util/types";
 const createGameTilemap = (scene: Phaser.Scene, config: GameConfig) => {
   const {
     tilemap: { tileWidth, tileHeight, gridSize },
-    assetKeys: { tileset: tilesetAssetKey },
+    assetKeys: {
+      tilesets: { terrain: terrainTilesetAssetKey, ore: oreTilesetAssetKey },
+    },
   } = config;
   const tilemap = createTilemap(scene, tileWidth, tileHeight, gridSize);
 
-  const tileset = tilemap.addTilesetImage(
-    tilesetAssetKey,
-    tilesetAssetKey,
+  const terrain = tilemap.addTilesetImage(
+    terrainTilesetAssetKey,
+    terrainTilesetAssetKey,
     tileWidth,
     tileHeight
   );
 
-  if (!tileset) {
+  const ore = tilemap.addTilesetImage(
+    oreTilesetAssetKey,
+    oreTilesetAssetKey,
+    tileWidth,
+    tileHeight
+  );
+
+  if (!terrain || !ore) {
     throw Error("Tileset is null");
   }
 
   const startX = -gridSize / 2;
   const startY = startX;
   const layer = tilemap.createBlankLayer(
-    tilesetAssetKey,
-    tileset,
+    "terrain-layer",
+    [ore, terrain],
     startX * tileWidth,
     startY * tileHeight,
     gridSize,

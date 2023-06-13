@@ -8,6 +8,7 @@ import Home from "./screens/Home";
 import Increment from "./screens/Increment";
 import Map from "./screens/Map";
 import LeafletMapDebug from "./screens/LeafletMapDebug";
+import { Game } from "./screens/Game";
 
 export default function AppLoadingState() {
   // setup loading component, after setting up the network layer and syncing the block state (per emojimon)
@@ -44,6 +45,7 @@ export default function AppLoadingState() {
           <Route path="/" element={<Home />} />
           <Route path="/increment" element={<Increment />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/game" element={<Game />} />
           <Route path="/leaflet" element={<LeafletMapDebug />} />
         </Routes>
       </BrowserRouter>

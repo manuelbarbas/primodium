@@ -1,5 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
+import { Terrain } from "./types";
 
 export const BlockKey = {
   //landscape blocks
@@ -552,12 +553,12 @@ export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
   BlockType.SiloResearch,
 ]);
 
-export const TutorialStepToNarrationStep: {
-  [key: number]: number | undefined;
-} = {
-  0: undefined,
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 3,
+export const BlockTypetoTerrainTileset = {
+  [BlockType.Air]: Terrain.AIR,
+  [BlockType.Iron]: Terrain.ALLUVIUM,
+  [BlockType.Biofilm]: Terrain.BIOFILM,
+  [BlockType.Sandstone]: Terrain.SANDSTONE,
+  [BlockType.Water]: Terrain.WATER,
+  [BlockType.Bedrock]: Terrain.BEDROCK,
+  [BlockType.Regolith]: Terrain.REGOLITH,
 };

@@ -1,12 +1,15 @@
 const config = {
   tilemap: {
-    tileWidth: 200,
-    tileHeight: 200,
-    gridSize: 1000,
-    buffer: 100,
+    tileWidth: 16,
+    tileHeight: 16,
+    gridSize: 100,
+    buffer: 1000,
   },
   assetKeys: {
-    tileset: "tilemap",
+    tilesets: {
+      terrain: "terrain-tileset",
+      ore: "ore-tileset",
+    },
   },
   network: {
     gasLimit: 500_000,
@@ -14,7 +17,7 @@ const config = {
   },
   camera: {
     minZoom: 0.5,
-    maxZoom: 2,
+    maxZoom: 10,
     pinchSpeed: 1,
     scrollSpeed: 1,
   },

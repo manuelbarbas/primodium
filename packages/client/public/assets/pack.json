@@ -3,8 +3,13 @@
       "files": [
         {
           "type": "image",
-          "key": "tilemap",
-          "url": "/assets/tilemap/tilemap.png"
+          "key": "terrain-tileset",
+          "url": "/assets/tileset/terrain.png"
+        },
+        {
+          "type": "image",
+          "key": "ore-tileset",
+          "url": "/assets/tileset/ore.png"
         }
       ]
     }
