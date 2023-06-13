@@ -2,7 +2,7 @@ import { memo, useEffect } from "react";
 import createGame from "../game/createGame";
 import { useMud } from "../context/MudContext";
 import { useGameStore } from "../store/GameStore";
-import GameUI from "../components/GameUi";
+import GameUI from "../components/GameUI";
 
 export const Game = memo(() => {
   const { world } = useMud();

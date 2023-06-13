@@ -5,7 +5,7 @@ import TooltipBox from "./TooltipBox";
 import NotificationBox from "./NotificationBox";
 import { useGameStore } from "../store/GameStore";
 
-function GameUI({ children }: { children?: React.ReactNode[] }) {
+function GameUI() {
   const [showUI] = useGameStore((state) => [state.showUI]);
   return (
     <div className="screen-container">
