@@ -1,7 +1,8 @@
 import { useMemo, memo } from "react";
 
 import { Has, HasValue, EntityID, getComponentValue } from "@latticexyz/recs";
-import { useComponentValue, useEntityQuery } from "@latticexyz/react";
+import { useEntityQuery } from "@latticexyz/react";
+import { useComponentValue } from "../hooks/useComponentValue";
 
 import { ImageOverlay } from "react-leaflet";
 

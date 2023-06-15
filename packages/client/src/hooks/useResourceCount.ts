@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useComponentValue } from "@latticexyz/react";
+import { useComponentValue } from "./useComponentValue";
 import { Component, EntityID, EntityIndex, Type } from "@latticexyz/recs";
 
 import { useAccount } from "../hooks/useAccount";
