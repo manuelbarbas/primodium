@@ -26,10 +26,7 @@ function DemolishBuildingBox() {
       <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">
           <p className="text-lg font-bold mb-3">Demolishing Path</p>
-          <p className="mb-3">
-            Select a node where your path starts to demolish the path.
-          </p>
-          <p>Refresh the map to update active paths.</p>
+          <p>Select a node where your path starts to demolish the path.</p>
           <div className="absolute bottom-4 right-4 space-x-2">
             <button
               className="h-10 w-36 bg-orange-700 hover:bg-orange-800 font-bold rounded text-sm"
