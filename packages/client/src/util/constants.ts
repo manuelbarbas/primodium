@@ -552,24 +552,3 @@ export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
   BlockType.BulletFactoryResearch,
   BlockType.SiloResearch,
 ]);
-
-export const Tileset = { ...TerrainTileset, ...ResourceTileset };
-
-export const EntityIdtoTilesetId = {
-  [BlockType.Air]: Tileset.Air,
-  [BlockType.Iron]: Tileset.Alluvium,
-  [BlockType.Biofilm]: Tileset.Biofilm,
-  [BlockType.Sandstone]: Tileset.Sandstone,
-  [BlockType.Water]: Tileset.Water,
-  [BlockType.Bedrock]: Tileset.Bedrock,
-  [BlockType.Regolith]: Tileset.Regolith,
-  [BlockType.Copper]: Tileset.Copper,
-  [BlockType.Lithium]: Tileset.Lithium,
-  [BlockType.Titanium]: Tileset.Titanium,
-  [BlockType.Osmium]: Tileset.Osmium,
-  [BlockType.Tungsten]: Tileset.Tungsten,
-  [BlockType.Iridium]: Tileset.Iridium,
-  [BlockType.Kimberlite]: Tileset.Kimberlite,
-  [BlockType.Uraninite]: Tileset.Uraninite,
-  [BlockType.Bolutite]: Tileset.Bolutite,
-};

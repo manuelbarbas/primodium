@@ -1,79 +1,52 @@
-import {
-  createCamera,
-  getSceneLoadPromise,
-} from "@smallbraingames/small-phaser";
-import { createPerlin } from "@latticexyz/noise";
-
-import { GameConfig, TerrainTileset } from "../../../util/types";
+import { getSceneLoadPromise } from "@smallbraingames/small-phaser";
+import { Coord, createCamera } from "@latticexyz/phaserx";
+import { GameConfig } from "../../../util/types";
 import createGameTilemap from "../../helpers/createGameTilemap";
-import { getTopLayerKeyPair } from "../../../util/tile";
-import { EntityIdtoTilesetId } from "../../../util/constants";
+import api from "../../../api";
+// import { getTopLayerKeyPair } from "../../../util/tile";
+// import { EntityIdtoTilesetId } from "../../../util/constants";
 
-const setupMainScene = async (scene: Phaser.Scene, config: GameConfig) => {
+const setupMainScene = async (
+  scene: Phaser.Scene,
+  spawnCoord: Coord,
+  config: GameConfig
+) => {
   await getSceneLoadPromise(scene);
 
   const {
     camera: { minZoom, maxZoom, pinchSpeed, scrollSpeed },
-    assetKeys: {
-      tilesets: { resource: resourceKey, terrain: terrainKey },
-    },
-    tilemap: { gridSize, tileHeight, tileWidth },
+    tilemap: { chunkSize, tileHeight, tileWidth },
   } = config;
 
-  /* ----------------------------- Create Tilemaps ---------------------------- */
-  const terrainTilemap = createGameTilemap(
-    scene,
-    terrainKey,
-    tileWidth,
-    tileHeight,
-    gridSize
-  );
-
-  const resourceTilemap = createGameTilemap(
-    scene,
-    resourceKey,
-    tileWidth,
-    tileHeight,
-    gridSize
-  );
-
   /* ------------------------------ Setup Camera ------------------------------ */
-  const camera = createCamera(
-    scene.cameras.main,
+  const camera = createCamera(scene.cameras.main, {
     minZoom,
     maxZoom,
     pinchSpeed,
-    scrollSpeed
+    wheelSpeed: scrollSpeed,
+  });
+
+  /* ----------------------------- Create Tilemaps ---------------------------- */
+  const tilemap = createGameTilemap(
+    scene,
+    camera,
+    tileWidth,
+    tileHeight,
+    chunkSize
   );
 
-  /* ---------------------- Render Resources and Terrain ---------------------- */
-  const perlin = await createPerlin();
+  const spawnPixelCoord = api.util.gameCoordToPixelCoord(spawnCoord);
 
-  const halfGridSize = gridSize / 2;
-  for (let x = -halfGridSize; x < halfGridSize; x++) {
-    for (let y = -halfGridSize; y < halfGridSize; y++) {
-      const coord = { x, y };
-      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
-
-      //lookup and place terrain
-      const terrainId = EntityIdtoTilesetId[terrain];
-      terrainTilemap.putTileAt(terrainId ?? TerrainTileset.Alluvium, {
-        x,
-        y,
-      });
-
-      //lookup and place resource
-      if (!resource) continue;
-      const resourceId = EntityIdtoTilesetId[resource];
-      resourceTilemap.putTileAt(resourceId, { x, y });
-    }
-  }
+  //set default camera position and zoom
+  camera.setZoom(minZoom);
+  camera.centerOn(spawnPixelCoord.x, spawnPixelCoord.y);
+  camera.phaserCamera.fadeIn(1000);
 
   return {
+    spawnCoord,
     scene,
     config,
-    terrainTilemap,
-    resourceTilemap,
+    tilemap,
     camera,
   };
 };

@@ -1,67 +1,81 @@
-import { Coord } from "@latticexyz/utils";
-import { createTilemap } from "@smallbraingames/small-phaser";
+import {
+  createAnimatedTilemap,
+  createChunks,
+  createCamera,
+} from "@latticexyz/phaserx";
+import { Tileset } from "../constants";
+import Phaser from "phaser";
 
 const createGameTilemap = (
   scene: Phaser.Scene,
-  tilesetKey: string,
+  camera: ReturnType<typeof createCamera>,
   tileWidth: number,
   tileHeight: number,
-  gridSize: number
+  chunkSize: number
 ) => {
-  const tilemap = createTilemap(scene, tileWidth, tileHeight, gridSize);
+  //create empty tilemap to create tilesets
+  const emptyMap = new Phaser.Tilemaps.Tilemap(
+    scene,
+    new Phaser.Tilemaps.MapData()
+  );
 
-  const tileset = tilemap.addTilesetImage(
-    tilesetKey,
-    tilesetKey,
+  const terrainTileset = emptyMap.addTilesetImage(
+    "terrain-tileset",
+    "terrain-tileset",
     tileWidth,
     tileHeight
   );
 
-  if (!tileset) {
+  const resourceTileset = emptyMap.addTilesetImage(
+    "resource-tileset",
+    "resource-tileset",
+    tileWidth,
+    tileHeight
+  );
+
+  if (!resourceTileset || !terrainTileset) {
     throw Error("Tileset is null");
   }
 
-  const startX = -gridSize / 2;
-  const startY = startX;
+  //set up chunk
+  const chunks = createChunks(camera.worldView$, chunkSize * tileWidth);
 
-  const layer = tilemap.createBlankLayer(
-    tilesetKey + "-layer",
-    tileset,
-    startX * tileWidth,
-    startY * tileHeight,
-    gridSize,
-    gridSize
-  );
-
-  if (!layer) {
-    throw Error("Layer is null");
-  }
-
-  const putTileAt = (tile: number, tileCoord: Coord) => {
-    layer.putTileAt(
-      tile,
-      tileCoord.x + gridSize / 2,
-      -tileCoord.y + gridSize / 2
-    );
-  };
-
-  const removeTileAt = (tileCoord: Coord) => {
-    layer.removeTileAt(tileCoord.x + gridSize / 2, -tileCoord.y + gridSize / 2);
-  };
-
-  const getTileAt = (tileCoord: Coord) => {
-    return layer.getTileAt(
-      tileCoord.x + gridSize / 2,
-      tileCoord.y + gridSize / 2
-    );
-  };
+  const tilemap = createAnimatedTilemap({
+    scene,
+    chunks,
+    tileWidth,
+    tileHeight,
+    backgroundTile: [
+      Tileset.Alluvium,
+      Tileset.Alluvium,
+      Tileset.Bedrock,
+      Tileset.Regolith,
+      Tileset.Regolith,
+      Tileset.Regolith,
+      Tileset.Regolith,
+      Tileset.Regolith,
+      Tileset.Regolith,
+      Tileset.Regolith,
+      Tileset.Regolith,
+      // Tileset.Air,
+    ],
+    tilesets: {
+      "resource-tileset": resourceTileset,
+      "terrain-tileset": terrainTileset,
+    },
+    layerConfig: {
+      layers: {
+        Terrain: { tilesets: ["terrain-tileset"] },
+        Resource: { tilesets: ["resource-tileset"] },
+      },
+      defaultLayer: "Terrain",
+    },
+    animationInterval: 200,
+  });
 
   return {
-    tilemap,
-    phaserLayer: layer,
-    putTileAt,
-    removeTileAt,
-    getTileAt,
+    map: tilemap,
+    chunks,
   };
 };
 

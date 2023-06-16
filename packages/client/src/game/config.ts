@@ -2,7 +2,8 @@ const config = {
   tilemap: {
     tileWidth: 16,
     tileHeight: 16,
-    gridSize: 500,
+    gridSize: 16,
+    chunkSize: 32,
     buffer: 1000,
   },
   assetKeys: {
@@ -11,13 +12,10 @@ const config = {
       resource: "resource-tileset",
     },
   },
-  network: {
-    gasLimit: 500_000,
-    retryCount: 2,
-  },
   camera: {
-    minZoom: 1,
+    minZoom: 2,
     maxZoom: 5,
+    zoomStep: 0.5,
     pinchSpeed: 1,
     scrollSpeed: 1,
   },
