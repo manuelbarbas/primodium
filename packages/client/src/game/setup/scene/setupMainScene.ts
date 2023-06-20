@@ -1,54 +1,35 @@
-import { getSceneLoadPromise } from "@smallbraingames/small-phaser";
-import { Coord, createCamera } from "@latticexyz/phaserx";
+import createScene from "../../helpers/createScene";
 import { GameConfig } from "../../../util/types";
-import createGameTilemap from "../../helpers/createGameTilemap";
-import api from "../../../api";
-// import { getTopLayerKeyPair } from "../../../util/tile";
-// import { EntityIdtoTilesetId } from "../../../util/constants";
+import { Scenes } from "../../constants";
+import type { createPhaserGame } from "@smallbraingames/small-phaser";
 
 const setupMainScene = async (
-  scene: Phaser.Scene,
-  spawnCoord: Coord,
+  phaserGame: Awaited<ReturnType<typeof createPhaserGame>>,
   config: GameConfig
 ) => {
-  await getSceneLoadPromise(scene);
-
   const {
     camera: { minZoom, maxZoom, pinchSpeed, scrollSpeed },
     tilemap: { chunkSize, tileHeight, tileWidth },
   } = config;
 
-  /* ------------------------------ Setup Camera ------------------------------ */
-  const camera = createCamera(scene.cameras.main, {
-    minZoom,
-    maxZoom,
-    pinchSpeed,
-    wheelSpeed: scrollSpeed,
+  const scene = await createScene(phaserGame, {
+    key: Scenes.Main,
+    assetPackUrl: "assets/pack",
+    camera: {
+      minZoom,
+      maxZoom,
+      pinchSpeed,
+      scrollSpeed,
+      defaultZoom: minZoom,
+    },
+    tilemap: {
+      chunkSize,
+      tileWidth,
+      tileHeight,
+    },
   });
 
-  /* ----------------------------- Create Tilemaps ---------------------------- */
-  const tilemap = createGameTilemap(
-    scene,
-    camera,
-    tileWidth,
-    tileHeight,
-    chunkSize
-  );
-
-  const spawnPixelCoord = api.util.gameCoordToPixelCoord(spawnCoord);
-
-  //set default camera position and zoom
-  camera.setZoom(minZoom);
-  camera.centerOn(spawnPixelCoord.x, spawnPixelCoord.y);
-  camera.phaserCamera.fadeIn(1000);
-
-  return {
-    spawnCoord,
-    scene,
-    config,
-    tilemap,
-    camera,
-  };
+  return scene;
 };
 
 export default setupMainScene;

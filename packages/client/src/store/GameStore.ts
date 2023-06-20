@@ -3,6 +3,9 @@ import { EntityID } from "@latticexyz/recs";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { DisplayTile } from "../util/constants";
 import { Game } from "../util/types";
+import { GameStatus } from "../game/constants";
+
+type UpdateFunction = <T>(ctx?: T) => void;
 
 type GameState = {
   selectedTile: DisplayTile;
@@ -17,6 +20,8 @@ type GameState = {
   transactionLoading: boolean;
   showUI: boolean;
   game: Game | null;
+  status: GameStatus | null;
+  updateFunctions: UpdateFunction[];
 };
 
 type GameActions = {
@@ -39,10 +44,14 @@ type GameActions = {
   setGameStateToDefault: () => void;
   setShowUI: (show: boolean) => void;
   setGame: (game: Game) => void;
+  setStatus: (initialized: GameStatus) => void;
+  addUpdateFunction: (updateFunction: UpdateFunction) => void;
+  removeUpdateFunction: (updateFunction: UpdateFunction) => void;
 };
 
 const defaults: GameState = {
   game: null,
+  status: null,
   selectedTile: { x: 0, y: 0 },
   hoveredTile: { x: 0, y: 0 },
   selectedPathTiles: { start: null, end: null },
@@ -54,6 +63,7 @@ const defaults: GameState = {
   showSelectedAttackTiles: false,
   transactionLoading: false,
   showUI: true,
+  updateFunctions: [],
 };
 
 export const useGameStore = create<GameState & GameActions>()((set) => ({
@@ -93,6 +103,17 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
   setGameStateToDefault: () => set({ ...defaults }),
   setShowUI: (show: boolean) => set({ showUI: show }),
   setGame: (game: Game) => set({ game: game }),
+  setStatus: (status: GameStatus) => set({ status }),
+  addUpdateFunction: (updateFunction: UpdateFunction) =>
+    set((state) => ({
+      updateFunctions: [...state.updateFunctions, updateFunction],
+    })),
+  removeUpdateFunction: (updateFunction: UpdateFunction) =>
+    set((state) => ({
+      updateFunctions: state.updateFunctions.filter(
+        (fn) => fn !== updateFunction
+      ),
+    })),
 }));
 
 // store dev tools

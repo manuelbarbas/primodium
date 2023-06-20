@@ -14,6 +14,15 @@ export enum Assets {
   ResourceTileset = "ResourceTileset",
 }
 
+export enum GameStatus {
+  Loading,
+  Ready,
+  Error,
+}
+
+export enum TileAnimationKey {}
+export const TileAnimations: { [key in TileAnimationKey]: number[] } = {};
+
 export enum Maps {
   Main = "Main",
 }
@@ -39,6 +48,41 @@ export enum ResourceTileset {
   Titanium,
   Tungsten,
   Uraninite,
+}
+
+export enum KeyindActions {
+  Up,
+  Down,
+  Left,
+  Right,
+  Center,
+  Base,
+  Hotbar1,
+  Hotbar2,
+  Hotbar3,
+  Hotbar4,
+  Hotbar5,
+  Hotbar6,
+  Hotbar7,
+  Hotbar8,
+  Hotbar9,
+  Hotbar0,
+  Marker1,
+  Marker2,
+  Marker3,
+  Marker4,
+  ZoomIn,
+  ZoomOut,
+  RightClick,
+  LeftClick,
+  BuildMenu,
+  AttackMenu,
+  InventoryMenu,
+  Mute,
+  MainMenu,
+  Debug,
+  DeleteBuilding,
+  DeletePath,
 }
 
 export const Tileset = { ...TerrainTileset, ...ResourceTileset };

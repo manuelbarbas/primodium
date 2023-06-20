@@ -5,12 +5,13 @@ import {
 import { Coord } from "@latticexyz/utils";
 import config from "../game/config";
 
-import { useGameStore } from "../store/GameStore";
-import { useConfigStore } from "../store/ConfigStore";
-
+/**
+ * Converts a pixel coordinate to a game coordinate.
+ * @param {Coord} coord The pixel coordinate to convert.
+ * @returns {Coord} The game coordinate.
+ */
 export const pixelCoordToGameCoord = (coord: Coord) => {
-  const { tileWidth, tileHeight } =
-    useGameStore.getState().game?.mainScene.config.tilemap!;
+  const { tileWidth, tileHeight } = config.tilemap;
 
   return pixelCoordToTileCoord(
     { x: coord.x, y: -coord.y },
@@ -19,6 +20,11 @@ export const pixelCoordToGameCoord = (coord: Coord) => {
   );
 };
 
+/**
+ * Converts a game coordinate to a pixel coordinate.
+ * @param {Coord} coord The game coordinate to convert.
+ * @returns {Coord} The pixel coordinate.
+ */
 export const gameCoordToPixelCoord = (coord: Coord) => {
   const { tileWidth, tileHeight } = config.tilemap;
 
@@ -27,12 +33,22 @@ export const gameCoordToPixelCoord = (coord: Coord) => {
   return { x: pixelCoord.x, y: -pixelCoord.y };
 };
 
+/**
+ * Converts a game coordinate to a tile coordinate.
+ * @param {Coord} coord The game coordinate to convert.
+ * @returns {Coord} The tile coordinate.
+ */
 export const gameCoordToTileCoord = (coord: Coord) => {
   return { x: coord.x, y: -coord.y };
 };
 
+/**
+ * Converts a game coordinate to a chunk coordinate.
+ * @param {Coord} coord The game coordinate to convert.
+ * @returns {Coord} The chunk coordinate.
+ */
 export const gameCoordtoChunkCoord = (coord: Coord) => {
-  const { chunkSize } = useConfigStore.getState().tilemap;
+  const { chunkSize } = config.tilemap;
 
   return {
     x: Math.floor(coord.x / chunkSize),
@@ -40,12 +56,16 @@ export const gameCoordtoChunkCoord = (coord: Coord) => {
   };
 };
 
-//returns game coord of center of chunk
+/**
+ * Converts a chunk coordinate to a game coordinate.
+ * @param {Coord} coord The chunk coordinate to convert.
+ * @returns {Coord} The game coordinate.
+ */
 export const chunkCoordtoGameCoord = (coord: Coord) => {
-  const { chunkSize } = useConfigStore.getState().tilemap;
+  const { chunkSize } = config.tilemap;
 
   return {
-    x: (coord.x + 0.5) * chunkSize - 8,
-    y: (coord.y + 0.5) * chunkSize - 8,
+    x: coord.x * chunkSize,
+    y: coord.y * chunkSize,
   };
 };

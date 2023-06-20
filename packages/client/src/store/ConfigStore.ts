@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import Phaser from "phaser";
 
 type ConfigState = {
   fps: Phaser.Types.Core.FPSConfig;
@@ -63,7 +64,7 @@ const defaults: ConfigState = {
     maxZoom: 8,
     zoomStep: 1,
     pinchSpeed: 1,
-    scrollSpeed: 1,
+    scrollSpeed: 0.5,
   },
   keybinds: {
     centerCamera: new Set([

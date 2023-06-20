@@ -17,7 +17,7 @@ const config = {
     maxZoom: 5,
     zoomStep: 0.5,
     pinchSpeed: 1,
-    scrollSpeed: 1,
+    scrollSpeed: 0.5,
   },
 };
 

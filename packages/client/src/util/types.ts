@@ -16,3 +16,11 @@ export interface TourStep extends Step {
 export type GameConfig = typeof config;
 
 export type Game = Awaited<ReturnType<typeof createGame>>;
+
+export interface GameObject {
+  id: string;
+  data: typeof Phaser.GameObjects.GameObject;
+  onAdd: (scene: Phaser.Scene) => void;
+  onUpdate: (time: number, delta: number) => void;
+  dispose: () => void;
+}

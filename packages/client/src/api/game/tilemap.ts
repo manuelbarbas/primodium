@@ -3,13 +3,23 @@ import { getTopLayerKeyPair } from "../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
 import { useGameStore } from "../../store/GameStore";
-import { EntityIdtoTilesetId, Tileset } from "../../game/constants";
+import { EntityIdtoTilesetId, Scenes, Tileset } from "../../game/constants";
 
-const perlin = await createPerlin();
+const perlin = await createPerlin().then((perlin) => {
+  return perlin;
+});
 const chunkCache = new CoordMap<boolean>();
 
-export const renderChunk = (coord: Coord) => {
-  const { tilemap } = useGameStore.getState().game?.mainScene!;
+/**
+ * Renders a chunk of the tilemap at the specified coordinate.
+ * @param {Coord} coord The coordinate of the chunk to render.
+ * @param {Scenes} [targetScene=Scenes.Main] The scene to render the chunk in.
+ */
+export const renderChunk = (
+  coord: Coord,
+  targetScene: Scenes = Scenes.Main
+) => {
+  const { tilemap } = useGameStore.getState().game?.scenes[targetScene]!;
   const { chunkSize } = config.tilemap;
 
   //don't render if already rendered
@@ -24,7 +34,6 @@ export const renderChunk = (coord: Coord) => {
       const coord = { x, y: -y };
 
       const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
-      // const { terrain, resource } = { terrain: 1, resource: 1 };
 
       try {
         //lookup and place terrain
