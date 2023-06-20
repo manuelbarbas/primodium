@@ -11,16 +11,20 @@ import { useMud } from "../context/MudContext";
 
 import { getTopLayerKeyPair } from "../util/tile";
 import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
-import { BlockIdToKey, BackgroundImage } from "../util/constants";
+import {
+  BlockIdToKey,
+  BackgroundImage,
+  ResourceImage,
+} from "../util/constants";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
 import CraftButton from "./action/CraftButton";
-import StaticResourceLabel from "./resource-box/StaticResourceLabel";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
 import { BigNumber } from "ethers";
+import ResourceIconTooltip from "./shared/ResourceIconTooltip";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -122,22 +126,26 @@ function TooltipBox() {
             {craftRecipe[0].resources.map((item) => {
               return (
                 <>
-                  <StaticResourceLabel
+                  <ResourceIconTooltip
                     key={BlockIdToKey[item.id]}
+                    image={ResourceImage.get(item.id)!}
                     name={BlockIdToKey[item.id]}
                     resourceId={item.id}
-                    count={item.amount}
-                  ></StaticResourceLabel>
+                    amount={item.amount}
+                    inline
+                  ></ResourceIconTooltip>
                   &nbsp;
                 </>
               );
             })}
             &rarr;&nbsp;
-            <StaticResourceLabel
+            <ResourceIconTooltip
               name={BlockIdToKey[craftRecipe[0].id]}
+              image={ResourceImage.get(craftRecipe[0].id)!}
               resourceId={craftRecipe[0].id}
-              count={1}
-            ></StaticResourceLabel>
+              amount={1}
+              inline
+            ></ResourceIconTooltip>
           </p>
         );
       } else {

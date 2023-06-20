@@ -101,7 +101,7 @@ function TechTreeItem({
               image={resourceImage}
               resourceId={resource.id}
               name={resourceName}
-              amount={resource.amount.toString()}
+              amount={resource.amount}
             />
           );
         })}

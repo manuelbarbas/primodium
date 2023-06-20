@@ -3,11 +3,13 @@ export default function ResourceIconTooltip({
   resourceId,
   name,
   amount,
+  inline,
 }: {
   image: string;
   resourceId: string;
   name: string;
-  amount: string;
+  amount: number;
+  inline?: boolean;
 }) {
   function formatString(str: string) {
     // remove ending "Crafted" or "Resource"
@@ -19,6 +21,20 @@ export default function ResourceIconTooltip({
     // change CamelCase to "Camel Case"
     str = str.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
     return str;
+  }
+
+  if (inline) {
+    return (
+      <div className="group inline-block">
+        <div className="resource-tooltip group-hover:scale-100">
+          {formatString(name)}
+        </div>
+        <div>
+          <img className="inline-block mr-1" src={image}></img>
+          {amount}
+        </div>
+      </div>
+    );
   }
 
   return (
