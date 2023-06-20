@@ -10,6 +10,12 @@
           "type": "image",
           "key": "resource-tileset",
           "url": "/assets/tileset/resource.png"
+        },
+        {
+          "type": "atlas",
+          "key": "sprite-atlas",
+          "textureURL": "/assets/sprites/atlas.png",
+          "atlasURL": "/assets/sprites/atlas.json"
         }
       ]
     }
