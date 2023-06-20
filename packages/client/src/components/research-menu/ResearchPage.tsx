@@ -1,6 +1,11 @@
 import TechTreeItem from "./TechTreeItem";
 import { technologyTree } from "../../util/research";
-import { ResearchImage, ResourceImage } from "../../util/constants";
+import {
+  BlockIdToKey,
+  ResearchImage,
+  ResourceImage,
+} from "../../util/constants";
+import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 
 function ResearchPage() {
   return (
@@ -9,15 +14,16 @@ function ResearchPage() {
         {technologyTree.map((item) => {
           const resourceIcon = ResearchImage.get(item.data.id);
           const ResourceCostDisplay = item.data.resources.map((resource) => {
-            const resourceImage = ResourceImage.get(resource.id);
+            const resourceImage = ResourceImage.get(resource.id)!;
+            const resourceName = BlockIdToKey[resource.id];
             return (
-              <div className="mr-2" key={resource.id}>
-                <img
-                  src={resourceImage}
-                  className="w-4 h-4 inline-block mr-1 pixel-images"
-                />
-                {resource.amount}
-              </div>
+              <ResourceIconTooltip
+                key={resource.id}
+                image={resourceImage}
+                resourceId={resource.id}
+                name={resourceName}
+                amount={resource.amount.toString()}
+              />
             );
           });
           return (

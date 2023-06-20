@@ -51,11 +51,6 @@
     @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 mt-3 mr-3 mb-3 ml-10 min-w-max rounded shadow-xl text-gray-700 font-mono font-bold;
   }
 
-  .research-tooltip {
-    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute h-auto w-40 p-2 rounded shadow-xl;
-    top: 90%;
-    left: 0%;
-  }
   .pixel-images {
     image-rendering: pixelated;
   }
