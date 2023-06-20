@@ -38,7 +38,7 @@ function NotificationBox() {
   }, [showUI, setShowUI]);
 
   return (
-    <Transition in={showUI} timeout={duration} unmountOnExit>
+    <Transition in={showUI} timeout={duration}>
       {(state: TransitionStatus) => {
         if (state === "exited") {
           return null;
