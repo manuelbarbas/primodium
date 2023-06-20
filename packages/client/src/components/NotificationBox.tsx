@@ -1,9 +1,11 @@
+import { useCallback, useEffect, useState } from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { Transition, TransitionStatus } from "react-transition-group";
 import { useNotificationStore } from "../store/NotificationStore";
-import { useCallback, useEffect } from "react";
 
 function NotificationBox() {
+  const [isRendered, setIsRendered] = useState(false);
+
   const [title, message, showUI, setShowUI] = useNotificationStore((state) => [
     state.title,
     state.message,
@@ -31,14 +33,25 @@ function NotificationBox() {
   }, []);
 
   useEffect(() => {
+    setIsRendered(true);
     const timeoutId = showUI
       ? setTimeout(() => setShowUI(false), 3000)
       : undefined;
     return () => clearTimeout(timeoutId);
   }, [showUI]);
 
+  const onExited = useCallback(() => setIsRendered(false), []);
+
+  if (!isRendered) {
+    return <></>;
+  }
+
   return (
-    <Transition in={showUI} timeout={duration}>
+    <Transition
+      in={showUI}
+      timeout={duration}
+      onExited={onExited} // After exit, stop rendering-
+    >
       {(state: TransitionStatus) => (
         <div
           className="z-[1000] viewport-container fixed top-52 left-4 pb-4 pr-4 w-64 flex flex-col bg-gray-700 text-yellow-400 drop-shadow-xl font-mono rounded"
