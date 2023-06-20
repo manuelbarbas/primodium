@@ -46,7 +46,7 @@ function NotificationBox() {
 
         return (
           <div
-            className="z-[1000] viewport-container fixed top-52 left-4 pb-4 pr-4 w-64 flex flex-col bg-gray-700 text-yellow-400 drop-shadow-xl font-mono rounded"
+            className="z-[1001] viewport-container fixed top-52 left-4 pb-4 pr-4 w-64 flex flex-col bg-gray-700 text-yellow-400 drop-shadow-xl font-mono rounded"
             style={{
               ...defaultStyle,
               ...transitionStyles[state],
