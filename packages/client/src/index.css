@@ -51,6 +51,10 @@
     @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 mt-3 mr-3 mb-3 ml-10 min-w-max rounded shadow-xl text-gray-700 font-mono font-bold;
   }
 
+  .resource-tooltip {
+    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-2 mb-3 ml-3 min-w-max rounded shadow-xl text-gray-700 font-mono text-sm;
+  }
+
   .pixel-images {
     image-rendering: pixelated;
   }
