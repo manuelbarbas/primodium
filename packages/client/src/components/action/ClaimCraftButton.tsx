@@ -1,17 +1,16 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { EntityID } from "@latticexyz/recs";
 
 import { useMud } from "../../context/MudContext";
-import { BlockType, DisplayTile } from "../../util/constants";
+import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
 import { useNotificationStore } from "../../store/NotificationStore";
 
-export default function ClaimButton({
+export default function ClaimCraftButton({
   id,
   coords: { x, y },
-  builtTile,
 }: {
   id: string;
   coords: DisplayTile;
@@ -54,30 +53,22 @@ export default function ClaimButton({
       providers,
       setNotification
     );
+    await execute(
+      systems["system.Craft"].executeTyped({
+        x: x,
+        y: y,
+      }),
+      providers,
+      setNotification
+    );
     setTransactionLoading(false);
   }, []);
-
-  const claimText = useMemo(() => {
-    if (builtTile === BlockType.MainBase) {
-      return "Claim to Inventory";
-    } else {
-      return "Claim to Storage";
-    }
-  }, [builtTile]);
-
-  const colorCode = useMemo(() => {
-    if (builtTile === BlockType.MainBase) {
-      return "bg-blue-600 hover:bg-blue-700";
-    } else {
-      return "bg-yellow-800 hover:bg-yellow-900";
-    }
-  }, [builtTile]);
 
   if (transactionLoading) {
     return (
       <button
         id={id}
-        className={`inset-x-4 absolute bottom-4 h-10 ${colorCode} text-sm rounded font-bold`}
+        className="inset-x-4 absolute bottom-4 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
       >
         <Spinner />
       </button>
@@ -86,10 +77,10 @@ export default function ClaimButton({
     return (
       <button
         id={id}
-        className={`inset-x-4 absolute bottom-4 h-10 ${colorCode} text-sm rounded font-bold`}
+        className="inset-x-4 absolute bottom-4 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
         onClick={claimAction}
       >
-        {claimText}
+        Claim & Craft to Storage
       </button>
     );
   }
