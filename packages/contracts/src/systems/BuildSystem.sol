@@ -5,6 +5,7 @@ import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.s
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 
@@ -29,6 +30,7 @@ import { LibBuild } from "../libraries/LibBuild.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
+import { LibBuilding } from "../libraries/LibBuilding.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -40,6 +42,7 @@ contract BuildSystem is System {
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
 
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
@@ -50,6 +53,26 @@ contract BuildSystem is System {
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
+
+    
+    
+    if(LibBuilding.isBuilding(blockType))
+    {
+      uint256 buildingCount = 0;  
+      uint256 mainBuildingLevel = 0;
+      uint256[] memory ownedTiles = ownedByComponent.getEntitiesWithValue(addressToEntity(msg.sender));
+      for (uint256 i = 0; i < ownedTiles.length; i++) {
+         if(buildingComponent.has(ownedTiles[i]))
+          {
+            buildingCount++;
+            if(mainBuildingLevel <= 0 && LibBuilding.isMainBase(tileComponent.getValue(ownedTiles[i])))
+              mainBuildingLevel = buildingComponent.getValue(ownedTiles[i]);
+          }
+      }
+
+      require(buildingCount <= LibBuilding.getBuildCountLimit(mainBuildingLevel), "[BuildSystem] build limit reached. upgrade main building or destroy other buildings");
+    }
+
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -447,6 +470,10 @@ contract BuildSystem is System {
 
     // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
     uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
+    if(LibBuilding.isBuilding(blockType))
+    {
+      buildingComponent.set(blockEntity, 1);
+    }
 
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);

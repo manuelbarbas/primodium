@@ -29,6 +29,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
+import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
@@ -191,6 +192,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
+    authorizeWriter(components, BuildingComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DestroySystem");
@@ -203,6 +205,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, BuildingComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathSystem");

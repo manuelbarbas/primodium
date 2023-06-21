@@ -6,6 +6,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
@@ -26,7 +27,7 @@ contract DestroySystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
     );
@@ -64,7 +65,7 @@ contract DestroySystem is System {
     ownedByComponent.remove(entitiesAtPosition[0]);
     lastBuiltAtComponent.remove(entitiesAtPosition[0]);
     lastClaimedAtComponent.remove(entitiesAtPosition[0]);
-
+    buildingComponent.remove(entitiesAtPosition[0]);
     return abi.encode(entitiesAtPosition[0]);
   }
 
