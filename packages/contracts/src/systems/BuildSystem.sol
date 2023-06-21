@@ -6,6 +6,8 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 
@@ -31,6 +33,7 @@ import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
+import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -43,7 +46,8 @@ contract BuildSystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(getAddressById(components, RequiredResearchComponentID));
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID));
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
     );
@@ -54,6 +58,15 @@ contract BuildSystem is System {
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
 
+    if(requiredResearchComponent.has(blockType))
+    {
+      require(LibResearch.hasResearchedWithKey(researchComponent, 
+      requiredResearchComponent.getValue(blockType), 
+      addressToEntity(msg.sender)),"[BuildSystem] You have not researched the required Technology");
+    }
+
+    require(LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent,
+     blockType, addressToEntity(msg.sender)), "[BuildSystem] You do not have the required resources");
     
     
     if(LibBuilding.isBuilding(blockType))
