@@ -30,6 +30,7 @@
   #phaser-container {
     width: 100vw;
     height: 100vh;
+    cursor: pointer;
   }
 
   /* #phase-container > canvas {

@@ -6,7 +6,7 @@ import {
 import { Tileset } from "../constants";
 import Phaser from "phaser";
 
-const createGameTilemap = (
+export const createTilemap = (
   scene: Phaser.Scene,
   camera: ReturnType<typeof createCamera>,
   tileWidth: number,
@@ -93,9 +93,12 @@ const createGameTilemap = (
   });
 
   return {
+    chunkSize,
+    tileHeight,
+    tileWidth,
     map: tilemap,
     chunks,
   };
 };
 
-export default createGameTilemap;
+export default createTilemap;

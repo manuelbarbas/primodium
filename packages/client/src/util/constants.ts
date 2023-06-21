@@ -1,6 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
-import { ResourceTileset, TerrainTileset } from "./types";
 
 export const BlockKey = {
   //landscape blocks

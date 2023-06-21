@@ -1,9 +1,7 @@
 import { Coord } from "@latticexyz/utils";
-
 import { useGameStore } from "../../store/GameStore";
-import * as util from "../util";
+import * as util from "./util";
 import { useConfigStore } from "../../store/ConfigStore";
-import { Scenes } from "../../game/constants";
 
 /**
  * Pans the camera to the specified coordinate.
@@ -16,10 +14,10 @@ export const pan = (
   coord: Coord,
   duration: number = 1000,
   ease: string = "Power2",
-  targetScene: Scenes = Scenes.Main
+  targetScene: string = "Main"
 ) => {
-  const { scene, camera } = useGameStore.getState().game?.scenes[targetScene]!;
-
+  const { scene, camera } =
+    useGameStore.getState().game?.sceneManager.scenes[targetScene]!;
   const pixelCoord = util.gameCoordToPixelCoord(coord);
   const scroll = camera.phaserCamera.getScroll(pixelCoord.x, pixelCoord.y);
 
@@ -40,11 +38,9 @@ export const pan = (
  * @param {Coord} coord The coordinate to set the camera position to.
  * @param {Scenes} [targetScene=Scenes.Main] The scene to set the camera position in.
  */
-export const setPosition = (
-  coord: Coord,
-  targetScene: Scenes = Scenes.Main
-) => {
-  const { camera } = useGameStore.getState().game?.scenes[targetScene]!;
+export const setPosition = (coord: Coord, targetScene: string = "Main") => {
+  const { camera } =
+    useGameStore.getState().game?.sceneManager.scenes[targetScene]!;
 
   const pixelCoord = util.gameCoordToPixelCoord(coord);
   const scroll = camera.phaserCamera.getScroll(pixelCoord.x, pixelCoord.y);
@@ -57,8 +53,9 @@ export const setPosition = (
  * @param {Scenes} [targetScene=Scenes.Main] The scene to get the camera position from.
  * @returns {Coord} The current position of the camera.
  */
-export const getPosition = (targetScene: Scenes = Scenes.Main) => {
-  const { camera } = useGameStore.getState().game?.scenes[targetScene]!;
+export const getPosition = (targetScene: string = "Main") => {
+  const { camera } =
+    useGameStore.getState().game?.sceneManager.scenes[targetScene]!;
 
   const { centerX: x, centerY: y } = camera?.phaserCamera.worldView!;
 
@@ -70,8 +67,9 @@ export const getPosition = (targetScene: Scenes = Scenes.Main) => {
  * @param {number} zoom The zoom level to set.
  * @param {Scenes} [targetScene=Scenes.Main] The scene to set the camera zoom in.
  */
-export const setZoom = (zoom: number, targetScene: Scenes = Scenes.Main) => {
-  const { camera } = useGameStore.getState().game?.scenes[targetScene]!;
+export const setZoom = (zoom: number, targetScene: string = "Main") => {
+  const { camera } =
+    useGameStore.getState().game?.sceneManager.scenes[targetScene]!;
 
   camera?.setZoom(zoom);
 };
@@ -87,10 +85,11 @@ export const zoomTo = (
   zoom: number,
   duration: number = 500,
   ease: string = "Power2",
-  targetScene: Scenes = Scenes.Main
+  targetScene: string = "Main"
 ) => {
   const { minZoom, maxZoom } = useConfigStore.getState().camera;
-  const { camera } = useGameStore.getState().game?.scenes[targetScene]!;
+  const { camera } =
+    useGameStore.getState().game?.sceneManager.scenes[targetScene]!;
 
   //clamp zoom based on min and max zoom
   zoom = Math.max(zoom, minZoom);
@@ -104,8 +103,9 @@ export const zoomTo = (
  * Makes sure updates the world view of the camera are sent for observable listeners.
  * @param {Scenes} [targetScene=Scenes.Main] The scene to update the camera world view in.
  */
-export const updateWorldView = (targetScene: Scenes = Scenes.Main) => {
-  const { camera } = useGameStore.getState().game?.scenes[targetScene]!;
+export const updateWorldView = (targetScene: string = "Main") => {
+  const { camera } =
+    useGameStore.getState().game?.sceneManager.scenes[targetScene]!;
 
   requestAnimationFrame(() =>
     camera?.worldView$.next(camera.phaserCamera.worldView)

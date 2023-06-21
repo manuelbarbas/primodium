@@ -8,7 +8,7 @@ export const validMapClick = (pos: Coord) => {
   //get coords of hint markers
   _TourHintLayer.eachLayer((layer) => {
     if (layer instanceof L.Marker) {
-      let latLng = layer.getLatLng();
+      const latLng = layer.getLatLng();
       hintCoords.push({
         x: Math.floor(latLng.lng - 0.5),
         y: Math.floor(latLng.lat - 1),
