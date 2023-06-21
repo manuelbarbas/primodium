@@ -434,7 +434,7 @@ export const ResearchImage = new Map<EntityID, string>([
   ],
   [
     BlockType.KimberliteCatalystFactoryResearch,
-    "/img/building/kimberlitecatalyst.png",
+    "/img/building/kimberlitecatalyst.gif",
   ],
 ]);
 //images of resource items (think of them like minecraft entities)
