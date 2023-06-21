@@ -25,6 +25,7 @@ import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
 import { BigNumber } from "ethers";
 import ResourceIconTooltip from "./shared/ResourceIconTooltip";
+import ClaimCraftButton from "./action/ClaimCraftButton";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -164,7 +165,7 @@ function TooltipBox() {
   if (!minimized) {
     return (
       <div className="z-[1000] viewport-container fixed bottom-4 right-4 h-96 w-80  flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className="mt-4 ml-5 flex flex-col overflow-y-scroll scrollbar h-64">
+        <div className="mt-4 ml-5 flex flex-col overflow-y-scroll scrollbar h-[19rem]">
           <button
             id="minimize-button-tooltip-box"
             onClick={minimizeBox}
@@ -272,7 +273,8 @@ function TooltipBox() {
                 {/* TODO: show owned resource for every resource possible */}
                 {builtTile && (
                   <>
-                    {isClaimableFactory(builtTile) && (
+                    {(isClaimable(builtTile) ||
+                      isClaimableFactory(builtTile)) && (
                       <div className="font-bold mb-1">Storage:</div>
                     )}
                     {isClaimable(builtTile) &&
@@ -284,14 +286,11 @@ function TooltipBox() {
                         />
                       )}
                     {isClaimableFactory(builtTile) && (
-                      <>
-                        <ClaimButton
-                          id="claim-button-factory"
-                          builtTile={builtTile}
-                          coords={selectedTile}
-                        />
-                        <CraftButton coords={selectedTile} />
-                      </>
+                      <ClaimCraftButton
+                        id="claim-button-factory"
+                        builtTile={builtTile}
+                        coords={selectedTile}
+                      />
                     )}
                     {transactionLoading ? (
                       <Spinner />
