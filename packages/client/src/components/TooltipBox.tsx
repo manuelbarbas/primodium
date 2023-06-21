@@ -20,7 +20,6 @@ import {
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
-import CraftButton from "./action/CraftButton";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import Spinner from "./Spinner";
 import { BigNumber } from "ethers";
