@@ -56,21 +56,9 @@ contract BuildSystem is System {
 
     
     
-    if(LibBuilding.isBuilding(blockType))
+    if(LibBuilding.doesTileCountTowardsBuildingLimit(blockType))
     {
-      uint256 buildingCount = 0;  
-      uint256 mainBuildingLevel = 0;
-      uint256[] memory ownedTiles = ownedByComponent.getEntitiesWithValue(addressToEntity(msg.sender));
-      for (uint256 i = 0; i < ownedTiles.length; i++) {
-         if(buildingComponent.has(ownedTiles[i]))
-          {
-            buildingCount++;
-            if(mainBuildingLevel <= 0 && LibBuilding.isMainBase(tileComponent.getValue(ownedTiles[i])))
-              mainBuildingLevel = buildingComponent.getValue(ownedTiles[i]);
-          }
-      }
-
-      require(buildingCount <= LibBuilding.getBuildCountLimit(mainBuildingLevel), "[BuildSystem] build limit reached. upgrade main building or destroy other buildings");
+        require(LibBuilding.checkBuildCountLimit(buildingComponent, ownedByComponent, tileComponent, addressToEntity(msg.sender)), "[BuildSystem] build limit reached. upgrade main building or destroy other buildings");
     }
 
 
@@ -470,7 +458,7 @@ contract BuildSystem is System {
 
     // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
     uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
-    if(LibBuilding.isBuilding(blockType))
+    if(LibBuilding.doesTileCountTowardsBuildingLimit(blockType) || blockType == MainBaseID)
     {
       buildingComponent.set(blockEntity, 1);
     }
