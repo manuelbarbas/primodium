@@ -121,6 +121,10 @@ library LibDeploy {
       console.log("Deploying StarterPackInitializedComponent");
       comp = new StarterPackInitializedComponent(address(result.world));
       console.log(address(comp));
+
+      console.log("Deploying BuildingComponent");
+      comp = new BuildingComponent(address(result.world));
+      console.log(address(comp));
     } 
     
     // Deploy systems 

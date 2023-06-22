@@ -15,7 +15,8 @@
     "ResearchComponent",
 
     "MainBaseInitializedComponent",
-    "StarterPackInitializedComponent"
+    "StarterPackInitializedComponent",
+    "BuildingComponent"
   ],
   "systems": [
     {
@@ -53,7 +54,8 @@
 
         "ItemComponent",
 
-        "MainBaseInitializedComponent"
+        "MainBaseInitializedComponent",
+        "BuildingComponent"
       ]
     },
     {
@@ -67,7 +69,8 @@
         "HealthComponent",
         "PathComponent",
 
-        "MainBaseInitializedComponent"
+        "MainBaseInitializedComponent",
+        "BuildingComponent"
       ]
     },
     {
