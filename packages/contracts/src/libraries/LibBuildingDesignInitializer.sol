@@ -23,9 +23,9 @@ import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, Ir
 
 // Research
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
-library LibBuildingDesign {
+library LibBuildingDesignInitializer {
 
-    function setupBuildingDesign(IWorld world) public
+    function init(IWorld world) internal
     {
         IUint256Component components = world.components();
         ItemComponent itemComponent = ItemComponent(getAddressById(components,ItemComponentID));

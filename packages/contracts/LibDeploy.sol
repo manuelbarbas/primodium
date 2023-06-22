@@ -47,8 +47,6 @@ import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "systems/
 import { CraftSystem, ID as CraftSystemID } from "systems/CraftSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "systems/UpgradeSystem.sol";
 
-import { LibBuildingDesign} from "libraries/LibBuildingDesign.sol";
-
 
 struct DeployResult {
   IWorld world;
@@ -144,10 +142,7 @@ library LibDeploy {
       
     } 
 
-    IUint256Component components = result.world.components();
-
-    // Deploy building designs
-    LibBuildingDesign.setupBuildingDesigns(address(result.world));    
+    
     // Deploy systems 
     deploySystems(address(result.world), true);
 

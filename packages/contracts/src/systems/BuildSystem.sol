@@ -14,7 +14,7 @@ import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/L
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 // debug buildings
-import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { PlatingFactoryID,MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
@@ -46,13 +46,13 @@ contract BuildSystem is System {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID));
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent,
-     blockType, addressToEntity(player));
+     blockType, player);
   }
 
   function spendRequiredResources(uint256 blockType, address player) internal {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID));
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent,blockType,addressToEntity(player));
+    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent,blockType,player);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -73,8 +73,11 @@ contract BuildSystem is System {
     require(checkResearchRequirements(blockType, msg.sender),
       "[BuildSystem] You have not researched the required Technology");
 
+    
     //check required resources
     require(checkResourceRequirements(blockType, msg.sender), "[BuildSystem] You do not have the required resources");
+
+    
 
     //check if counts towards build limit and if so, check if limit is reached
     if(LibBuilding.isBuilding(blockType))
@@ -94,6 +97,7 @@ contract BuildSystem is System {
       require(buildingCount <= LibBuilding.getBuildCountLimit(mainBuildingLevel), "[BuildSystem] build limit reached. upgrade main building or destroy other buildings");
     }
 
+   
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -124,8 +128,7 @@ contract BuildSystem is System {
      
     //spend required resources
     spendRequiredResources(blockType, msg.sender);
-
-
+   
     // Randomly generate IDs instead of basing on coordinate
     uint256 newBlockEntity = world.getUniqueEntityId();
 
@@ -135,6 +138,11 @@ contract BuildSystem is System {
     {
       buildingComponent.set(blockEntity, 1);
     }
+
+     if(blockType == PlatingFactoryID)
+      revert("passed setting building level");
+
+
 
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);

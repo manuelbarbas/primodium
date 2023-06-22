@@ -19,6 +19,7 @@
     "RequiredResearchComponent",
     "RequiredResourcesComponent"
   ],
+  "initializers": ["LibBuildingDesignInitializer"],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -52,9 +53,8 @@
         "OwnedByComponent",
         "LastBuiltAtComponent",
         "LastClaimedAtComponent",
-
         "ItemComponent",
-
+        "BuildingComponent",
         "MainBaseInitializedComponent"
       ]
     },
