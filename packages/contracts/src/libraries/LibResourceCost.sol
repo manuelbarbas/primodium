@@ -13,6 +13,10 @@ library LibResourceCost {
    function hasRequiredResources(Uint256ArrayComponent requiredResourcesComponent,
    Uint256Component itemComponent,uint256 entity,uint256 playerEntity) internal view returns (bool) 
    {
+
+    if(!requiredResourcesComponent.has(entity))
+        return true;
+
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);    
         for (uint256 i = 0; i < requiredResources.length; i++) 
         {
@@ -29,6 +33,8 @@ library LibResourceCost {
    function spendRequiredResources(Uint256ArrayComponent requiredResourcesComponent,
    Uint256Component itemComponent,uint256 entity,uint256 playerEntity) internal 
    {
+        if(!requiredResourcesComponent.has(entity))
+            return;
         uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);    
         for (uint256 i = 0; i < requiredResources.length; i++) 
         {
