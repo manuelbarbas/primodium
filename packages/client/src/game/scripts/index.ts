@@ -2,7 +2,7 @@
 import engine from "../../engine";
 import gameConfig from "../config/gameConfig";
 import mainSceneConfig from "../config/mainSceneConfig";
-import { Scenes } from "../constants";
+import { Scenes, TileAnimationKeys } from "../constants";
 import createChunkManager from "./managers/chunkManager";
 
 const init = async () => {
@@ -18,6 +18,18 @@ const init = async () => {
     lineStyle: { width: lineWidth, color: 0xffff00 },
     fillStyle: { color: 0xffff00, alpha: 0.3 },
   });
+
+  scene.camera.phaserCamera.fadeIn(1000);
+
+  // scene.phaserScene.add
+  //   .sprite(8, 8, "sprite-atlas", "mainbase/mainbase-0")
+  //   .play("node")
+  //   .setDepth(100);
+  // try {
+  //   scene.tilemap.map.putAnimationAt({ x: 0, y: 0 }, TileAnimationKeys.Water);
+  // } catch (e) {
+  //   console.log(e);
+  // }
 
   // Calculate the equivalent screen coordinates
 

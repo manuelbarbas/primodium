@@ -2,6 +2,7 @@ import { Step } from "walktour";
 import type config from "../game/config/mainSceneConfig";
 import type createGame from "../engine/lib/createGame";
 import type createScene from "../engine/lib/createScene";
+import { Animation } from "@latticexyz/phaserx/dist/types";
 
 export type BlockTypeActionComponent = {
   action: () => void;
@@ -27,6 +28,11 @@ export interface GameObject {
   dispose: () => void;
 }
 
+export interface TileAnimation {
+  key: string;
+  frames: number[];
+}
+
 export interface SceneConfig {
   key: string;
   assetPackUrl: string;
@@ -37,6 +43,9 @@ export interface SceneConfig {
     scrollSpeed: number;
     defaultZoom: number;
   };
+  animations?: Animation<any>[];
+  tileAnimations?: TileAnimation[];
+  animationInterval: number;
   tilemap: {
     chunkSize: number;
     tileWidth: number;

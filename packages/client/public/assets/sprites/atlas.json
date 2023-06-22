@@ -4,13 +4,13 @@
 			"image": "atlas.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 378,
-				"h": 378
+				"w": 414,
+				"h": 414
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-0",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-1",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -52,7 +52,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-2",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -73,7 +73,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-3",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -94,7 +94,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-4",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -115,7 +115,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-5",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -136,7 +136,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-6",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -157,7 +157,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-7",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -178,7 +178,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-8",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -199,7 +199,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-9",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -220,7 +220,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-10",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -241,7 +241,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-11",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -262,7 +262,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-12",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -283,7 +283,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-13",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -304,7 +304,7 @@
 					}
 				},
 				{
-					"filename": "advancedbatteryfactory/advancedbatteryfactory-14",
+					"filename": "advancedbatteryfactory/advancedbatteryfactory-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -325,7 +325,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-0",
+					"filename": "basicbatteryfactory/basicbatteryfactory-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -346,7 +346,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-1",
+					"filename": "basicbatteryfactory/basicbatteryfactory-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -367,28 +367,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-17",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 1,
-						"y": 289,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-2",
+					"filename": "basicbatteryfactory/basicbatteryfactory-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -409,28 +388,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-16",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 1,
-						"y": 307,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-3",
+					"filename": "basicbatteryfactory/basicbatteryfactory-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -451,28 +409,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-15",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 1,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-4",
+					"filename": "basicbatteryfactory/basicbatteryfactory-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -493,7 +430,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-5",
+					"filename": "basicbatteryfactory/basicbatteryfactory-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -514,7 +451,49 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-6",
+					"filename": "basicbatteryfactory/basicbatteryfactory-6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 1,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "basicbatteryfactory/basicbatteryfactory-7.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 1,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "basicbatteryfactory/basicbatteryfactory-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -535,28 +514,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-7",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 19,
-						"y": 1,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-8",
+					"filename": "basicbatteryfactory/basicbatteryfactory-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -577,7 +535,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-9",
+					"filename": "basicbatteryfactory/basicbatteryfactory-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -598,7 +556,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-10",
+					"filename": "basicbatteryfactory/basicbatteryfactory-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -619,7 +577,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-11",
+					"filename": "basicbatteryfactory/basicbatteryfactory-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -640,7 +598,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-12",
+					"filename": "basicbatteryfactory/basicbatteryfactory-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -661,7 +619,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-13",
+					"filename": "basicbatteryfactory/basicbatteryfactory-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -682,7 +640,7 @@
 					}
 				},
 				{
-					"filename": "basicbatteryfactory/basicbatteryfactory-14",
+					"filename": "basicbatteryfactory/basicbatteryfactory-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -703,7 +661,7 @@
 					}
 				},
 				{
-					"filename": "bulletfactory/bulletfactory",
+					"filename": "basicbatteryfactory/basicbatteryfactory-16.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -724,7 +682,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-0",
+					"filename": "basicbatteryfactory/basicbatteryfactory-17.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -745,7 +703,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-1",
+					"filename": "bulletfactory/bulletfactory.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -766,7 +724,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-2",
+					"filename": "densemetalrefinery/densemetalrefinery-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -787,7 +745,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-3",
+					"filename": "densemetalrefinery/densemetalrefinery-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -808,7 +766,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-4",
+					"filename": "densemetalrefinery/densemetalrefinery-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -829,7 +787,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-5",
+					"filename": "densemetalrefinery/densemetalrefinery-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -850,7 +808,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-6",
+					"filename": "densemetalrefinery/densemetalrefinery-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -871,7 +829,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-7",
+					"filename": "densemetalrefinery/densemetalrefinery-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -892,7 +850,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-8",
+					"filename": "densemetalrefinery/densemetalrefinery-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -913,7 +871,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-9",
+					"filename": "densemetalrefinery/densemetalrefinery-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -934,7 +892,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-10",
+					"filename": "densemetalrefinery/densemetalrefinery-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -955,7 +913,49 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-11",
+					"filename": "densemetalrefinery/densemetalrefinery-9.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 1,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "densemetalrefinery/densemetalrefinery-10.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 1,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "densemetalrefinery/densemetalrefinery-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -976,7 +976,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-12",
+					"filename": "densemetalrefinery/densemetalrefinery-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -997,7 +997,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-13",
+					"filename": "densemetalrefinery/densemetalrefinery-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1018,7 +1018,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-14",
+					"filename": "densemetalrefinery/densemetalrefinery-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1039,7 +1039,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-15",
+					"filename": "densemetalrefinery/densemetalrefinery-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1060,7 +1060,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-16",
+					"filename": "densemetalrefinery/densemetalrefinery-16.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1081,7 +1081,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-17",
+					"filename": "densemetalrefinery/densemetalrefinery-17.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1102,7 +1102,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-18",
+					"filename": "densemetalrefinery/densemetalrefinery-18.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1123,7 +1123,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-19",
+					"filename": "densemetalrefinery/densemetalrefinery-19.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1144,7 +1144,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-20",
+					"filename": "densemetalrefinery/densemetalrefinery-20.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1165,7 +1165,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-21",
+					"filename": "densemetalrefinery/densemetalrefinery-21.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1186,7 +1186,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-22",
+					"filename": "densemetalrefinery/densemetalrefinery-22.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1207,7 +1207,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-23",
+					"filename": "densemetalrefinery/densemetalrefinery-23.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1228,7 +1228,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-24",
+					"filename": "densemetalrefinery/densemetalrefinery-24.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1249,7 +1249,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-25",
+					"filename": "densemetalrefinery/densemetalrefinery-25.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1270,7 +1270,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-26",
+					"filename": "densemetalrefinery/densemetalrefinery-26.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1291,7 +1291,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-27",
+					"filename": "densemetalrefinery/densemetalrefinery-27.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1312,7 +1312,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-28",
+					"filename": "densemetalrefinery/densemetalrefinery-28.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1333,7 +1333,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-29",
+					"filename": "densemetalrefinery/densemetalrefinery-29.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1354,7 +1354,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-30",
+					"filename": "densemetalrefinery/densemetalrefinery-30.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1375,7 +1375,49 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-31",
+					"filename": "densemetalrefinery/densemetalrefinery-31.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 19,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "densemetalrefinery/densemetalrefinery-32.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 19,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "densemetalrefinery/densemetalrefinery-33.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1396,7 +1438,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-32",
+					"filename": "densemetalrefinery/densemetalrefinery-34.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1417,7 +1459,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-33",
+					"filename": "densemetalrefinery/densemetalrefinery-35.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1438,7 +1480,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-34",
+					"filename": "densemetalrefinery/densemetalrefinery-36.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1459,7 +1501,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-35",
+					"filename": "densemetalrefinery/densemetalrefinery-37.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1480,7 +1522,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-36",
+					"filename": "densemetalrefinery/densemetalrefinery-38.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1501,7 +1543,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-37",
+					"filename": "densemetalrefinery/densemetalrefinery-39.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1522,7 +1564,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-38",
+					"filename": "hardeneddrill/hardeneddrill-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1543,7 +1585,7 @@
 					}
 				},
 				{
-					"filename": "densemetalrefinery/densemetalrefinery-39",
+					"filename": "hardeneddrill/hardeneddrill-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1564,7 +1606,7 @@
 					}
 				},
 				{
-					"filename": "hardeneddrill/hardeneddrill-0",
+					"filename": "hardeneddrill/hardeneddrill-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1585,7 +1627,7 @@
 					}
 				},
 				{
-					"filename": "hardeneddrill/hardeneddrill-1",
+					"filename": "hardeneddrill/hardeneddrill-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1606,7 +1648,7 @@
 					}
 				},
 				{
-					"filename": "hardeneddrill/hardeneddrill-2",
+					"filename": "hightempfoundry/hightempfoundry-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1627,7 +1669,7 @@
 					}
 				},
 				{
-					"filename": "hardeneddrill/hardeneddrill-3",
+					"filename": "hightempfoundry/hightempfoundry-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1648,7 +1690,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-0",
+					"filename": "hightempfoundry/hightempfoundry-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1669,7 +1711,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-1",
+					"filename": "hightempfoundry/hightempfoundry-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1690,7 +1732,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-2",
+					"filename": "hightempfoundry/hightempfoundry-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1711,7 +1753,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-3",
+					"filename": "hightempfoundry/hightempfoundry-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1732,7 +1774,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-4",
+					"filename": "hightempfoundry/hightempfoundry-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1753,7 +1795,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-5",
+					"filename": "hightempfoundry/hightempfoundry-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1774,7 +1816,49 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-6",
+					"filename": "hightempfoundry/hightempfoundry-8.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 19,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "hightempfoundry/hightempfoundry-9.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 19,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "hightempfoundry/hightempfoundry-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1795,7 +1879,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-7",
+					"filename": "hightempfoundry/hightempfoundry-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1816,7 +1900,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-8",
+					"filename": "hightempfoundry/hightempfoundry-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1837,7 +1921,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-9",
+					"filename": "hightempfoundry/hightempfoundry-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1858,7 +1942,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-10",
+					"filename": "hightempfoundry/hightempfoundry-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1879,7 +1963,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-11",
+					"filename": "hightempfoundry/hightempfoundry-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1900,7 +1984,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-12",
+					"filename": "hightempfoundry/hightempfoundry-16.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1921,7 +2005,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-13",
+					"filename": "hightempfoundry/hightempfoundry-17.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1942,7 +2026,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-14",
+					"filename": "hightempfoundry/hightempfoundry-18.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1963,7 +2047,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-15",
+					"filename": "hightempfoundry/hightempfoundry-19.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -1984,7 +2068,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-16",
+					"filename": "hightempfoundry/hightempfoundry-20.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2005,7 +2089,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-17",
+					"filename": "hightempfoundry/hightempfoundry-21.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2026,7 +2110,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-18",
+					"filename": "hightempfoundry/hightempfoundry-22.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2047,7 +2131,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-19",
+					"filename": "hightempfoundry/hightempfoundry-23.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2068,7 +2152,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-20",
+					"filename": "hightempfoundry/hightempfoundry-24.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2089,7 +2173,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-21",
+					"filename": "hightempfoundry/hightempfoundry-25.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2110,7 +2194,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-22",
+					"filename": "hightempfoundry/hightempfoundry-26.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2131,7 +2215,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-23",
+					"filename": "hightempfoundry/hightempfoundry-27.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2152,7 +2236,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-24",
+					"filename": "hightempfoundry/hightempfoundry-28.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2173,7 +2257,49 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-25",
+					"filename": "hightempfoundry/hightempfoundry-29.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 37,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "hightempfoundry/hightempfoundry-30.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 37,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "hightempfoundry/hightempfoundry-31.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2194,7 +2320,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-26",
+					"filename": "hightempfoundry/hightempfoundry-32.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2215,7 +2341,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-27",
+					"filename": "hightempfoundry/hightempfoundry-33.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2236,7 +2362,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-28",
+					"filename": "hightempfoundry/hightempfoundry-34.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2257,7 +2383,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-29",
+					"filename": "hightempfoundry/hightempfoundry-35.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2278,7 +2404,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-30",
+					"filename": "hightempfoundry/hightempfoundry-36.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2299,7 +2425,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-31",
+					"filename": "hightempfoundry/hightempfoundry-37.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2320,7 +2446,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-32",
+					"filename": "hightempfoundry/hightempfoundry-38.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2341,7 +2467,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-33",
+					"filename": "hightempfoundry/hightempfoundry-39.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2362,7 +2488,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-34",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2383,7 +2509,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-35",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2404,7 +2530,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-36",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2425,7 +2551,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-37",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2446,7 +2572,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-38",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2467,7 +2593,7 @@
 					}
 				},
 				{
-					"filename": "hightempfoundry/hightempfoundry-39",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2488,7 +2614,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-0",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2509,7 +2635,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-1",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2530,7 +2656,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-2",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2551,7 +2677,49 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-3",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-9.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 37,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-10.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 37,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2572,7 +2740,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-4",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2593,7 +2761,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-5",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2614,7 +2782,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-6",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2635,7 +2803,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-7",
+					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2656,7 +2824,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-8",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2677,7 +2845,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-9",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2698,7 +2866,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-10",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2719,7 +2887,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-11",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2740,7 +2908,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-12",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2761,7 +2929,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-13",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2782,7 +2950,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-14",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2803,7 +2971,7 @@
 					}
 				},
 				{
-					"filename": "iridiumdrillbitfactory/iridiumdrillbitfactory-15",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2824,7 +2992,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-0",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2845,7 +3013,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-1",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2866,7 +3034,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-2",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2887,7 +3055,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-3",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2908,7 +3076,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-4",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2929,7 +3097,49 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-5",
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-13.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 55,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-14.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 55,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "kimberlitecatalyst/kimberlitecatalyst-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2950,7 +3160,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-6",
+					"filename": "kineticmisslefactory/kineticmissilefactory.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2971,7 +3181,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-7",
+					"filename": "laserfactory/laserfactory-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -2992,7 +3202,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-8",
+					"filename": "laserfactory/laserfactory-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3013,7 +3223,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-9",
+					"filename": "laserfactory/laserfactory-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3034,7 +3244,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-10",
+					"filename": "laserfactory/laserfactory-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3055,7 +3265,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-11",
+					"filename": "laserfactory/laserfactory-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3076,7 +3286,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-12",
+					"filename": "laserfactory/laserfactory-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3097,7 +3307,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-13",
+					"filename": "laserfactory/laserfactory-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3118,7 +3328,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-14",
+					"filename": "laserfactory/laserfactory-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3139,7 +3349,7 @@
 					}
 				},
 				{
-					"filename": "kimberlitecatalyst/kimberlitecatalyst-15",
+					"filename": "laserfactory/laserfactory-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3160,7 +3370,7 @@
 					}
 				},
 				{
-					"filename": "kineticmisslefactory/kineticmissilefactory",
+					"filename": "laserfactory/laserfactory-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3181,7 +3391,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-0",
+					"filename": "laserfactory/laserfactory-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3202,7 +3412,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-1",
+					"filename": "laserfactory/laserfactory-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3223,7 +3433,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-2",
+					"filename": "laserfactory/laserfactory-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3244,7 +3454,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-3",
+					"filename": "laserfactory/laserfactory-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3265,7 +3475,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-4",
+					"filename": "mainbase/mainbase-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3286,7 +3496,49 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-5",
+					"filename": "mainbase/mainbase-1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 55,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-2.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 55,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3307,7 +3559,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-6",
+					"filename": "mainbase/mainbase-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3328,7 +3580,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-7",
+					"filename": "mainbase/mainbase-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3349,7 +3601,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-8",
+					"filename": "mainbase/mainbase-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3370,7 +3622,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-9",
+					"filename": "mainbase/mainbase-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3391,7 +3643,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-10",
+					"filename": "mainbase/mainbase-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3412,7 +3664,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-11",
+					"filename": "mainbase/mainbase-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3433,7 +3685,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-12",
+					"filename": "mainbase/mainbase-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3454,7 +3706,7 @@
 					}
 				},
 				{
-					"filename": "laserfactory/laserfactory-13",
+					"filename": "mainbase/mainbase-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3475,7 +3727,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-0",
+					"filename": "mainbase/mainbase-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3496,7 +3748,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-1",
+					"filename": "mainbase/mainbase-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3517,28 +3769,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-2",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 73,
-						"y": 253,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-3",
+					"filename": "mainbase/mainbase-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3559,28 +3790,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-4",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 73,
-						"y": 271,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-5",
+					"filename": "mainbase/mainbase-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3601,7 +3811,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-6",
+					"filename": "mainbase/mainbase-16.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3622,7 +3832,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-7",
+					"filename": "mainbase/mainbase-17.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3643,7 +3853,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-8",
+					"filename": "mainbase/mainbase-18.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3664,28 +3874,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-9",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 73,
-						"y": 343,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-10",
+					"filename": "mainbase/mainbase-19.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3706,7 +3895,49 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-11",
+					"filename": "mainbase/mainbase-20.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 73,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-21.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 73,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-22.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3727,28 +3958,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-12",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 91,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-13",
+					"filename": "mainbase/mainbase-23.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3769,28 +3979,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-14",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-15",
+					"filename": "mainbase/mainbase-24.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3811,28 +4000,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-16",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-17",
+					"filename": "mainbase/mainbase-25.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3853,28 +4021,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-18",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 145,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-19",
+					"filename": "mainbase/mainbase-26.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3895,7 +4042,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-20",
+					"filename": "mainbase/mainbase-27.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3916,7 +4063,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-21",
+					"filename": "mainbase/mainbase-28.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3937,7 +4084,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-22",
+					"filename": "mainbase/mainbase-29.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -3958,49 +4105,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-23",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 217,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-24",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 217,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-25",
+					"filename": "mainbase/mainbase-30.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4021,7 +4126,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-26",
+					"filename": "mainbase/mainbase-31.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4042,28 +4147,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-27",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 253,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-28",
+					"filename": "mainbase/mainbase-32.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4084,7 +4168,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-29",
+					"filename": "mainbase/mainbase-33.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4105,7 +4189,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-30",
+					"filename": "mainbase/mainbase-34.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4126,7 +4210,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-31",
+					"filename": "mainbase/mainbase-35.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4147,49 +4231,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-32",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 325,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-33",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 325,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-34",
+					"filename": "mainbase/mainbase-36.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4210,28 +4252,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-35",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 343,
-						"y": 73,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-36",
+					"filename": "mainbase/mainbase-37.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4252,7 +4273,49 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-37",
+					"filename": "mainbase/mainbase-38.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 73,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-39.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 73,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-40.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4273,7 +4336,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-38",
+					"filename": "mainbase/mainbase-41.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4294,49 +4357,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-39",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 91,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-40",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 91,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-41",
+					"filename": "mainbase/mainbase-42.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4357,7 +4378,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-42",
+					"filename": "mainbase/mainbase-43.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4378,7 +4399,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-43",
+					"filename": "mainbase/mainbase-44.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4399,7 +4420,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-44",
+					"filename": "mainbase/mainbase-45.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4420,7 +4441,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-45",
+					"filename": "mainbase/mainbase-46.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4441,7 +4462,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-46",
+					"filename": "mainbase/mainbase-47.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4462,7 +4483,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-47",
+					"filename": "mainbase/mainbase-48.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4483,7 +4504,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-48",
+					"filename": "mainbase/mainbase-49.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4504,7 +4525,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-49",
+					"filename": "mainbase/mainbase-50.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4525,7 +4546,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-50",
+					"filename": "mainbase/mainbase-51.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4546,7 +4567,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-51",
+					"filename": "mainbase/mainbase-52.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4567,7 +4588,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-52",
+					"filename": "mainbase/mainbase-53.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4588,7 +4609,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-53",
+					"filename": "mainbase/mainbase-54.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4609,7 +4630,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-54",
+					"filename": "mainbase/mainbase-55.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4630,7 +4651,49 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-55",
+					"filename": "mainbase/mainbase-56.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 91,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-57.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 91,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-58.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4651,7 +4714,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-56",
+					"filename": "mainbase/mainbase-59.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4672,7 +4735,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-57",
+					"filename": "mainbase/mainbase-60.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4693,7 +4756,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-58",
+					"filename": "mainbase/mainbase-61.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4714,7 +4777,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-59",
+					"filename": "mainbase/mainbase-62.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4735,7 +4798,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-60",
+					"filename": "mainbase/mainbase-63.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4756,7 +4819,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-61",
+					"filename": "mainbase/mainbase-64.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4777,49 +4840,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-62",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 217,
-						"y": 91,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-63",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 217,
-						"y": 91,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-64",
+					"filename": "mainbase/mainbase-65.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4840,49 +4861,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-65",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 235,
-						"y": 91,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-66",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 235,
-						"y": 91,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-67",
+					"filename": "mainbase/mainbase-66.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4903,49 +4882,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-68",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 253,
-						"y": 91,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-69",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 253,
-						"y": 91,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-70",
+					"filename": "mainbase/mainbase-67.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4966,7 +4903,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-71",
+					"filename": "mainbase/mainbase-68.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -4987,7 +4924,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-72",
+					"filename": "mainbase/mainbase-69.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5008,7 +4945,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-73",
+					"filename": "mainbase/mainbase-70.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5029,7 +4966,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-74",
+					"filename": "mainbase/mainbase-71.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5050,7 +4987,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-75",
+					"filename": "mainbase/mainbase-72.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5071,7 +5008,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-76",
+					"filename": "mainbase/mainbase-73.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5085,14 +5022,35 @@
 						"h": 16
 					},
 					"frame": {
-						"x": 361,
+						"x": 379,
 						"y": 91,
 						"w": 16,
 						"h": 16
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-77",
+					"filename": "mainbase/mainbase-74.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 91,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-75.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5113,7 +5071,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-78",
+					"filename": "mainbase/mainbase-76.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5134,7 +5092,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-79",
+					"filename": "mainbase/mainbase-77.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5155,7 +5113,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-80",
+					"filename": "mainbase/mainbase-78.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5176,7 +5134,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-81",
+					"filename": "mainbase/mainbase-79.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5197,7 +5155,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-82",
+					"filename": "mainbase/mainbase-80.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5218,7 +5176,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-83",
+					"filename": "mainbase/mainbase-81.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5239,7 +5197,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-84",
+					"filename": "mainbase/mainbase-82.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5260,28 +5218,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-85",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 235,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-86",
+					"filename": "mainbase/mainbase-83.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5302,7 +5239,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-87",
+					"filename": "mainbase/mainbase-84.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5323,7 +5260,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-88",
+					"filename": "mainbase/mainbase-85.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5344,7 +5281,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-89",
+					"filename": "mainbase/mainbase-86.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5365,70 +5302,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-90",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 307,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-91",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 307,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-92",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 307,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-93",
+					"filename": "mainbase/mainbase-87.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5449,154 +5323,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-94",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-95",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-96",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-97",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-98",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-99",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-100",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-101",
+					"filename": "mainbase/mainbase-88.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5617,28 +5344,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-102",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 109,
-						"y": 343,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-103",
+					"filename": "mainbase/mainbase-89.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5659,7 +5365,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-104",
+					"filename": "mainbase/mainbase-90.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5674,13 +5380,34 @@
 					},
 					"frame": {
 						"x": 109,
-						"y": 361,
+						"y": 379,
 						"w": 16,
 						"h": 16
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-105",
+					"filename": "mainbase/mainbase-91.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 109,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-92.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5701,28 +5428,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-106",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-107",
+					"filename": "mainbase/mainbase-93.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5743,28 +5449,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-108",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 145,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-109",
+					"filename": "mainbase/mainbase-94.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5785,28 +5470,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-110",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 163,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-111",
+					"filename": "mainbase/mainbase-95.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5827,7 +5491,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-112",
+					"filename": "mainbase/mainbase-96.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5848,7 +5512,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-113",
+					"filename": "mainbase/mainbase-97.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5869,28 +5533,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-114",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 217,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-115",
+					"filename": "mainbase/mainbase-98.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5911,28 +5554,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-116",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 235,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-117",
+					"filename": "mainbase/mainbase-99.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5953,28 +5575,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-118",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 253,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-119",
+					"filename": "mainbase/mainbase-100.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -5995,28 +5596,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-120",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 271,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-121",
+					"filename": "mainbase/mainbase-101.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6037,49 +5617,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-122",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 289,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-123",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 289,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-124",
+					"filename": "mainbase/mainbase-102.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6100,7 +5638,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-125",
+					"filename": "mainbase/mainbase-103.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6121,28 +5659,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-126",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 325,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-127",
+					"filename": "mainbase/mainbase-104.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6163,49 +5680,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-128",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 343,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-129",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 343,
-						"y": 109,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-130",
+					"filename": "mainbase/mainbase-105.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6226,7 +5701,49 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-131",
+					"filename": "mainbase/mainbase-106.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 109,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-107.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 109,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-108.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6247,70 +5764,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-132",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 127,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-133",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 127,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-134",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 127,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-135",
+					"filename": "mainbase/mainbase-109.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6331,70 +5785,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-136",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 145,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-137",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 145,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-138",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 145,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-139",
+					"filename": "mainbase/mainbase-110.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6415,49 +5806,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-140",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 163,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-141",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 163,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-142",
+					"filename": "mainbase/mainbase-111.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6478,49 +5827,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-143",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 181,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-144",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 181,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-145",
+					"filename": "mainbase/mainbase-112.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6541,28 +5848,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-146",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 199,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-147",
+					"filename": "mainbase/mainbase-113.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6583,49 +5869,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-148",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 217,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-149",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 217,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-150",
+					"filename": "mainbase/mainbase-114.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6646,49 +5890,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-151",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 235,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-152",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 235,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-153",
+					"filename": "mainbase/mainbase-115.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6709,7 +5911,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-154",
+					"filename": "mainbase/mainbase-116.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6730,7 +5932,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-155",
+					"filename": "mainbase/mainbase-117.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6751,28 +5953,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-156",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 289,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-157",
+					"filename": "mainbase/mainbase-118.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6793,7 +5974,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-158",
+					"filename": "mainbase/mainbase-119.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6814,28 +5995,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-159",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-160",
+					"filename": "mainbase/mainbase-120.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6856,28 +6016,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-161",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 127,
-						"y": 343,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-162",
+					"filename": "mainbase/mainbase-121.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6898,7 +6037,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-163",
+					"filename": "mainbase/mainbase-122.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6913,13 +6052,13 @@
 					},
 					"frame": {
 						"x": 127,
-						"y": 361,
+						"y": 379,
 						"w": 16,
 						"h": 16
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-164",
+					"filename": "mainbase/mainbase-123.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6934,13 +6073,13 @@
 					},
 					"frame": {
 						"x": 127,
-						"y": 361,
+						"y": 397,
 						"w": 16,
 						"h": 16
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-165",
+					"filename": "mainbase/mainbase-124.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6961,7 +6100,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-166",
+					"filename": "mainbase/mainbase-125.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -6982,28 +6121,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-167",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 163,
-						"y": 127,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "mainbase/mainbase-168",
+					"filename": "mainbase/mainbase-126.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7024,7 +6142,7 @@
 					}
 				},
 				{
-					"filename": "mainbase/mainbase-169",
+					"filename": "mainbase/mainbase-127.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7045,7 +6163,7 @@
 					}
 				},
 				{
-					"filename": "miner/miner",
+					"filename": "mainbase/mainbase-128.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7066,7 +6184,7 @@
 					}
 				},
 				{
-					"filename": "minerdrill/minerdrill-0",
+					"filename": "mainbase/mainbase-129.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7087,7 +6205,7 @@
 					}
 				},
 				{
-					"filename": "minerdrill/minerdrill-1",
+					"filename": "mainbase/mainbase-130.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7108,7 +6226,7 @@
 					}
 				},
 				{
-					"filename": "minerdrill/minerdrill-2",
+					"filename": "mainbase/mainbase-131.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7129,7 +6247,7 @@
 					}
 				},
 				{
-					"filename": "minerdrill/minerdrill-3",
+					"filename": "mainbase/mainbase-132.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7150,7 +6268,7 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-0",
+					"filename": "mainbase/mainbase-133.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7171,7 +6289,7 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-1",
+					"filename": "mainbase/mainbase-134.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7192,7 +6310,7 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-2",
+					"filename": "mainbase/mainbase-135.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7213,7 +6331,7 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-3",
+					"filename": "mainbase/mainbase-136.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7234,7 +6352,49 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-4",
+					"filename": "mainbase/mainbase-137.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 127,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-138.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 127,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-139.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7255,7 +6415,7 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-5",
+					"filename": "mainbase/mainbase-140.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7276,7 +6436,7 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-6",
+					"filename": "mainbase/mainbase-141.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7297,7 +6457,7 @@
 					}
 				},
 				{
-					"filename": "missilelaunchcomplex/missilelaunchcomplex-7",
+					"filename": "mainbase/mainbase-142.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7318,7 +6478,7 @@
 					}
 				},
 				{
-					"filename": "node/node-0",
+					"filename": "mainbase/mainbase-143.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7339,7 +6499,7 @@
 					}
 				},
 				{
-					"filename": "node/node-1",
+					"filename": "mainbase/mainbase-144.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7360,7 +6520,7 @@
 					}
 				},
 				{
-					"filename": "node/node-2",
+					"filename": "mainbase/mainbase-145.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7381,7 +6541,7 @@
 					}
 				},
 				{
-					"filename": "node/node-3",
+					"filename": "mainbase/mainbase-146.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7402,7 +6562,7 @@
 					}
 				},
 				{
-					"filename": "node/node-4",
+					"filename": "mainbase/mainbase-147.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7423,7 +6583,7 @@
 					}
 				},
 				{
-					"filename": "node/node-5",
+					"filename": "mainbase/mainbase-148.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7444,7 +6604,7 @@
 					}
 				},
 				{
-					"filename": "node/node-6",
+					"filename": "mainbase/mainbase-149.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7465,7 +6625,7 @@
 					}
 				},
 				{
-					"filename": "node/node-7",
+					"filename": "mainbase/mainbase-150.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7486,7 +6646,7 @@
 					}
 				},
 				{
-					"filename": "node/node-8",
+					"filename": "mainbase/mainbase-151.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7507,7 +6667,49 @@
 					}
 				},
 				{
-					"filename": "node/node-9",
+					"filename": "mainbase/mainbase-152.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 145,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-153.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 145,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-154.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7528,7 +6730,7 @@
 					}
 				},
 				{
-					"filename": "node/node-10",
+					"filename": "mainbase/mainbase-155.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7549,7 +6751,7 @@
 					}
 				},
 				{
-					"filename": "node/node-11",
+					"filename": "mainbase/mainbase-156.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7570,7 +6772,7 @@
 					}
 				},
 				{
-					"filename": "node/node-12",
+					"filename": "mainbase/mainbase-157.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7591,7 +6793,7 @@
 					}
 				},
 				{
-					"filename": "node/node-13",
+					"filename": "mainbase/mainbase-158.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7612,7 +6814,7 @@
 					}
 				},
 				{
-					"filename": "node/node-14",
+					"filename": "mainbase/mainbase-159.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7633,7 +6835,7 @@
 					}
 				},
 				{
-					"filename": "node/node-15",
+					"filename": "mainbase/mainbase-160.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7654,7 +6856,7 @@
 					}
 				},
 				{
-					"filename": "node/node-16",
+					"filename": "mainbase/mainbase-161.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7675,7 +6877,7 @@
 					}
 				},
 				{
-					"filename": "node/node-17",
+					"filename": "mainbase/mainbase-162.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7696,7 +6898,7 @@
 					}
 				},
 				{
-					"filename": "node/node-18",
+					"filename": "mainbase/mainbase-163.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7717,7 +6919,7 @@
 					}
 				},
 				{
-					"filename": "node/node-19",
+					"filename": "mainbase/mainbase-164.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7738,7 +6940,7 @@
 					}
 				},
 				{
-					"filename": "node/node-20",
+					"filename": "mainbase/mainbase-165.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7759,7 +6961,49 @@
 					}
 				},
 				{
-					"filename": "node/node-21",
+					"filename": "mainbase/mainbase-166.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 145,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-167.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 145,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "mainbase/mainbase-168.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7780,7 +7024,7 @@
 					}
 				},
 				{
-					"filename": "node/node-22",
+					"filename": "mainbase/mainbase-169.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7801,7 +7045,7 @@
 					}
 				},
 				{
-					"filename": "node/node-23",
+					"filename": "miner/miner.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7822,7 +7066,7 @@
 					}
 				},
 				{
-					"filename": "node/node-24",
+					"filename": "minerdrill/minerdrill-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7843,7 +7087,7 @@
 					}
 				},
 				{
-					"filename": "node/node-25",
+					"filename": "minerdrill/minerdrill-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7864,7 +7108,7 @@
 					}
 				},
 				{
-					"filename": "node/node-26",
+					"filename": "minerdrill/minerdrill-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7885,7 +7129,7 @@
 					}
 				},
 				{
-					"filename": "node/node-27",
+					"filename": "minerdrill/minerdrill-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7906,7 +7150,7 @@
 					}
 				},
 				{
-					"filename": "node/node-28",
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7927,7 +7171,7 @@
 					}
 				},
 				{
-					"filename": "node/node-29",
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7948,7 +7192,7 @@
 					}
 				},
 				{
-					"filename": "node/node-30",
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7969,7 +7213,7 @@
 					}
 				},
 				{
-					"filename": "node/node-31",
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -7990,7 +7234,7 @@
 					}
 				},
 				{
-					"filename": "node/node-32",
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8011,7 +7255,49 @@
 					}
 				},
 				{
-					"filename": "node/node-33",
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-5.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 163,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 163,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "missilelaunchcomplex/missilelaunchcomplex-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8032,7 +7318,7 @@
 					}
 				},
 				{
-					"filename": "node/node-34",
+					"filename": "node/node-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8053,7 +7339,7 @@
 					}
 				},
 				{
-					"filename": "node/node-35",
+					"filename": "node/node-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8074,7 +7360,7 @@
 					}
 				},
 				{
-					"filename": "node/node-36",
+					"filename": "node/node-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8095,7 +7381,7 @@
 					}
 				},
 				{
-					"filename": "node/node-37",
+					"filename": "node/node-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8116,7 +7402,7 @@
 					}
 				},
 				{
-					"filename": "node/node-38",
+					"filename": "node/node-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8137,7 +7423,7 @@
 					}
 				},
 				{
-					"filename": "node/node-39",
+					"filename": "node/node-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8158,7 +7444,7 @@
 					}
 				},
 				{
-					"filename": "node/node-40",
+					"filename": "node/node-6.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8179,7 +7465,7 @@
 					}
 				},
 				{
-					"filename": "node/node-41",
+					"filename": "node/node-7.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8200,7 +7486,7 @@
 					}
 				},
 				{
-					"filename": "node/node-42",
+					"filename": "node/node-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8221,7 +7507,7 @@
 					}
 				},
 				{
-					"filename": "node/node-43",
+					"filename": "node/node-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8242,7 +7528,49 @@
 					}
 				},
 				{
-					"filename": "node/node-44",
+					"filename": "node/node-10.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 163,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "node/node-11.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 163,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "node/node-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8263,7 +7591,7 @@
 					}
 				},
 				{
-					"filename": "node/node-45",
+					"filename": "node/node-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8284,7 +7612,7 @@
 					}
 				},
 				{
-					"filename": "node/node-46",
+					"filename": "node/node-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8305,7 +7633,7 @@
 					}
 				},
 				{
-					"filename": "node/node-47",
+					"filename": "node/node-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8326,7 +7654,7 @@
 					}
 				},
 				{
-					"filename": "node/node-48",
+					"filename": "node/node-16.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8347,7 +7675,7 @@
 					}
 				},
 				{
-					"filename": "node/node-49",
+					"filename": "node/node-17.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8368,7 +7696,7 @@
 					}
 				},
 				{
-					"filename": "penetratingmisslefactory/penetratingmissilefactory",
+					"filename": "node/node-18.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8389,7 +7717,7 @@
 					}
 				},
 				{
-					"filename": "penetratorfactory/penetratorfactory",
+					"filename": "node/node-19.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8410,7 +7738,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-0",
+					"filename": "node/node-20.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8431,28 +7759,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-10",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 181,
-						"y": 325,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "platingfactory/platingfactory-1",
+					"filename": "node/node-21.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8473,28 +7780,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-9",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 181,
-						"y": 343,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "platingfactory/platingfactory-2",
+					"filename": "node/node-22.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8515,7 +7801,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-8",
+					"filename": "node/node-23.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8530,13 +7816,34 @@
 					},
 					"frame": {
 						"x": 181,
-						"y": 361,
+						"y": 379,
 						"w": 16,
 						"h": 16
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-3",
+					"filename": "node/node-24.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 181,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "node/node-25.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8557,7 +7864,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-4",
+					"filename": "node/node-26.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8578,7 +7885,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-5",
+					"filename": "node/node-27.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8599,7 +7906,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-6",
+					"filename": "node/node-28.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8620,7 +7927,7 @@
 					}
 				},
 				{
-					"filename": "platingfactory/platingfactory-7",
+					"filename": "node/node-29.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8641,7 +7948,7 @@
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-0",
+					"filename": "node/node-30.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8662,7 +7969,7 @@
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-1",
+					"filename": "node/node-31.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8683,7 +7990,7 @@
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-2",
+					"filename": "node/node-32.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8704,7 +8011,7 @@
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-3",
+					"filename": "node/node-33.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8725,49 +8032,7 @@
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-4",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 343,
-						"y": 181,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-6",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 16,
-						"h": 16
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 16,
-						"h": 16
-					},
-					"frame": {
-						"x": 343,
-						"y": 181,
-						"w": 16,
-						"h": 16
-					}
-				},
-				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-5",
+					"filename": "node/node-34.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8788,7 +8053,7 @@
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-7",
+					"filename": "node/node-35.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8802,14 +8067,35 @@
 						"h": 16
 					},
 					"frame": {
-						"x": 361,
+						"x": 379,
 						"y": 181,
 						"w": 16,
 						"h": 16
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-8",
+					"filename": "node/node-36.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 181,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "node/node-37.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8830,7 +8116,7 @@
 					}
 				},
 				{
-					"filename": "precisionmachineryfactory/precisionmachineryfactory-9",
+					"filename": "node/node-38.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8851,7 +8137,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-0",
+					"filename": "node/node-39.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8872,7 +8158,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-1",
+					"filename": "node/node-40.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8893,7 +8179,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-2",
+					"filename": "node/node-41.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8914,7 +8200,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-3",
+					"filename": "node/node-42.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8935,7 +8221,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-4",
+					"filename": "node/node-43.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8956,7 +8242,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-5",
+					"filename": "node/node-44.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8977,7 +8263,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-6",
+					"filename": "node/node-45.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -8998,7 +8284,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-7",
+					"filename": "node/node-46.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9019,7 +8305,49 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-8",
+					"filename": "node/node-47.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 199,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "node/node-48.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 199,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "node/node-49.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9040,7 +8368,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-9",
+					"filename": "penetratingmisslefactory/penetratingmissilefactory.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9061,7 +8389,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-10",
+					"filename": "penetratorfactory/penetratorfactory.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9082,7 +8410,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-11",
+					"filename": "platingfactory/platingfactory-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9103,7 +8431,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-12",
+					"filename": "platingfactory/platingfactory-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9124,7 +8452,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-13",
+					"filename": "platingfactory/platingfactory-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9145,7 +8473,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-14",
+					"filename": "platingfactory/platingfactory-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9166,7 +8494,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-15",
+					"filename": "platingfactory/platingfactory-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9187,7 +8515,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-16",
+					"filename": "platingfactory/platingfactory-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9208,7 +8536,49 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-17",
+					"filename": "platingfactory/platingfactory-6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 199,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "platingfactory/platingfactory-7.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 199,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "platingfactory/platingfactory-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9229,7 +8599,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-18",
+					"filename": "platingfactory/platingfactory-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9250,7 +8620,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-19",
+					"filename": "platingfactory/platingfactory-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9271,7 +8641,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-20",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9292,7 +8662,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-21",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9313,7 +8683,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-22",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9334,7 +8704,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-23",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9355,7 +8725,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-24",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9376,7 +8746,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-25",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9397,7 +8767,49 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-26",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 217,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-7.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 217,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9418,7 +8830,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-27",
+					"filename": "precisionmachineryfactory/precisionmachineryfactory-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9439,7 +8851,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-28",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-0.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9460,7 +8872,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-29",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-1.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9481,7 +8893,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-30",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-2.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9502,7 +8914,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-31",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-3.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9523,7 +8935,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-32",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-4.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9544,7 +8956,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-33",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-5.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9565,7 +8977,49 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-34",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 217,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-7.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 217,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-8.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9586,7 +9040,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-35",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-9.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9607,7 +9061,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-36",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-10.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9628,7 +9082,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-37",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-11.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9649,7 +9103,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-38",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-12.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9670,7 +9124,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-39",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-13.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9691,7 +9145,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-40",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-14.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9712,7 +9166,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-41",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-15.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9733,7 +9187,49 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-42",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-16.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 235,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-17.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 235,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-18.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9754,7 +9250,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-43",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-19.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9775,7 +9271,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-44",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-20.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9796,7 +9292,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-45",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-21.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9817,7 +9313,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-46",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-22.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9838,7 +9334,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-47",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-23.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9859,7 +9355,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-48",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-24.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9880,7 +9376,49 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-49",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-25.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 235,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-26.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 235,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-27.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9901,7 +9439,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-50",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-28.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9922,7 +9460,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-51",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-29.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9943,7 +9481,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-52",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-30.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9964,7 +9502,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-53",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-31.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -9985,7 +9523,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-54",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-32.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10006,7 +9544,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-55",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-33.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10027,7 +9565,49 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-56",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-34.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 253,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-35.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 253,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-36.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10048,7 +9628,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-57",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-37.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10069,7 +9649,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-58",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-38.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10090,7 +9670,7 @@
 					}
 				},
 				{
-					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-59",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-39.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10111,7 +9691,7 @@
 					}
 				},
 				{
-					"filename": "projectilelauncher/projectilelauncher",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-40.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10132,7 +9712,7 @@
 					}
 				},
 				{
-					"filename": "silo/silo",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-41.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10153,7 +9733,49 @@
 					}
 				},
 				{
-					"filename": "thermobaricmissilefactory/thermobaricmissilefactory",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-42.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 253,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-43.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 253,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-44.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10174,7 +9796,7 @@
 					}
 				},
 				{
-					"filename": "thermobaricwaarheadfactory/thermobaricwarheadfactory",
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-45.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10190,6 +9812,384 @@
 					"frame": {
 						"x": 271,
 						"y": 289,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-46.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 271,
+						"y": 307,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-47.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 271,
+						"y": 325,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-48.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 271,
+						"y": 343,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-49.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 271,
+						"y": 361,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-50.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 271,
+						"y": 379,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-51.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 271,
+						"y": 397,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-52.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 289,
+						"y": 271,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-53.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 307,
+						"y": 271,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-54.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 325,
+						"y": 271,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-55.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 343,
+						"y": 271,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-56.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 361,
+						"y": 271,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-57.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 379,
+						"y": 271,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-58.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 397,
+						"y": 271,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "precisionpneumaticdrill/precisionpneumaticdrill-59.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 289,
+						"y": 289,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "projectilelauncher/projectilelauncher.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 289,
+						"y": 307,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "silo/silo.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 289,
+						"y": 325,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "thermobaricmissilefactory/thermobaricmissilefactory.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 289,
+						"y": 343,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "thermobaricwaarheadfactory/thermobaricwarheadfactory.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 289,
+						"y": 361,
 						"w": 16,
 						"h": 16
 					}
@@ -10200,6 +10200,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:ca60b8ddff06832b251f64a03fed2c30:2f7dda9487328e373a1fe73e0f6c1503:cbce6b53f0f49e0bf15173c25c41f876$"
+		"smartupdate": "$TexturePacker:SmartUpdate:f14c2cf4ee77336eb8747990d2b2d5c5:2f7dda9487328e373a1fe73e0f6c1503:cbce6b53f0f49e0bf15173c25c41f876$"
 	}
 }

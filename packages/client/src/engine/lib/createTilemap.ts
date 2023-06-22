@@ -5,13 +5,16 @@ import {
 } from "@latticexyz/phaserx";
 import { Tileset } from "../constants";
 import Phaser from "phaser";
+import { TileAnimation } from "../../util/types";
 
 export const createTilemap = (
   scene: Phaser.Scene,
   camera: ReturnType<typeof createCamera>,
   tileWidth: number,
   tileHeight: number,
-  chunkSize: number
+  chunkSize: number,
+  animations: TileAnimation[] = [],
+  animationInterval: number
 ) => {
   //create empty tilemap to create tilesets
   const emptyMap = new Phaser.Tilemaps.Tilemap(
@@ -89,8 +92,12 @@ export const createTilemap = (
       },
       defaultLayer: "Terrain",
     },
-    animationInterval: 200,
+    animationInterval,
   });
+
+  for (const anim of animations) {
+    tilemap.registerAnimation(anim.key, anim.frames);
+  }
 
   return {
     chunkSize,

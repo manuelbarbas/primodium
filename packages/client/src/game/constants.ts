@@ -10,8 +10,10 @@ export const RENDER_INTERVAL = 30;
 export const ANIMATION_INTERVAL = 200;
 
 export enum Assets {
-  TerrainTileset = "TerrainTileset",
-  ResourceTileset = "ResourceTileset",
+  Pack = "assets/pack",
+  SpriteAtlas = "sprite-atlas",
+  ResourceTileset = "resource-tileset",
+  TerrainTileset = "terrain-tileset",
 }
 
 export enum GameStatus {
@@ -20,14 +22,11 @@ export enum GameStatus {
   Error,
 }
 
-export enum TileAnimationKey {}
-export const TileAnimations: { [key in TileAnimationKey]: number[] } = {};
-
 export enum Maps {
   Main = "Main",
 }
 
-export enum TerrainTileset {
+export enum TerrainTilekeys {
   Air,
   Alluvium,
   Bedrock,
@@ -37,7 +36,7 @@ export enum TerrainTileset {
   Water,
 }
 
-export enum ResourceTileset {
+export enum ResourceTilekeys {
   Bolutite,
   Copper,
   Iridium,
@@ -48,6 +47,16 @@ export enum ResourceTileset {
   Titanium,
   Tungsten,
   Uraninite,
+}
+
+export const Tilekeys = { ...TerrainTilekeys, ...ResourceTilekeys };
+
+export enum TileAnimationKeys {
+  Water = "Water",
+}
+
+export enum AnimationKeys {
+  Mainbase = "Mainbase",
 }
 
 export enum KeyindActions {
@@ -85,23 +94,21 @@ export enum KeyindActions {
   DeletePath,
 }
 
-export const Tileset = { ...TerrainTileset, ...ResourceTileset };
-
 export const EntityIdtoTilesetId = {
-  [BlockType.Air]: Tileset.Air,
-  [BlockType.Iron]: Tileset.Iron,
-  [BlockType.Biofilm]: Tileset.Biofilm,
-  [BlockType.Sandstone]: Tileset.Sandstone,
-  [BlockType.Water]: Tileset.Water,
-  [BlockType.Bedrock]: Tileset.Bedrock,
-  [BlockType.Regolith]: Tileset.Regolith,
-  [BlockType.Copper]: Tileset.Copper,
-  [BlockType.Lithium]: Tileset.Lithium,
-  [BlockType.Titanium]: Tileset.Titanium,
-  [BlockType.Osmium]: Tileset.Osmium,
-  [BlockType.Tungsten]: Tileset.Tungsten,
-  [BlockType.Iridium]: Tileset.Iridium,
-  [BlockType.Kimberlite]: Tileset.Kimberlite,
-  [BlockType.Uraninite]: Tileset.Uraninite,
-  [BlockType.Bolutite]: Tileset.Bolutite,
+  [BlockType.Air]: Tilekeys.Air,
+  [BlockType.Iron]: Tilekeys.Iron,
+  [BlockType.Biofilm]: Tilekeys.Biofilm,
+  [BlockType.Sandstone]: Tilekeys.Sandstone,
+  [BlockType.Water]: Tilekeys.Water,
+  [BlockType.Bedrock]: Tilekeys.Bedrock,
+  [BlockType.Regolith]: Tilekeys.Regolith,
+  [BlockType.Copper]: Tilekeys.Copper,
+  [BlockType.Lithium]: Tilekeys.Lithium,
+  [BlockType.Titanium]: Tilekeys.Titanium,
+  [BlockType.Osmium]: Tilekeys.Osmium,
+  [BlockType.Tungsten]: Tilekeys.Tungsten,
+  [BlockType.Iridium]: Tilekeys.Iridium,
+  [BlockType.Kimberlite]: Tilekeys.Kimberlite,
+  [BlockType.Uraninite]: Tilekeys.Uraninite,
+  [BlockType.Bolutite]: Tilekeys.Bolutite,
 };

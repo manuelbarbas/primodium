@@ -3,13 +3,13 @@ import type { AnimatedTilemap } from "@latticexyz/phaserx";
 import { getTopLayerKeyPair } from "../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
-import { EntityIdtoTilesetId, Tileset } from "../../constants";
+import { EntityIdtoTilesetId, Tilekeys } from "../../constants";
 import { Scene } from "../../../util/types";
 
 const chunkCache = new CoordMap<boolean>();
-const perlin = await createPerlin();
+const perlin = createPerlin();
 
-const renderChunk = (
+const renderChunk = async (
   coord: Coord,
   map: AnimatedTilemap<number, string, string>,
   chunkSize: number
@@ -25,14 +25,20 @@ const renderChunk = (
     ) {
       const coord = { x, y: -y };
 
-      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
+      const { terrain, resource } = getTopLayerKeyPair(coord, await perlin);
 
       try {
         //lookup and place terrain
         const terrainId = EntityIdtoTilesetId[terrain];
 
+        if (terrainId === Tilekeys.Water) {
+          // map.putTileAt({ x, y }, Tilekeys.Water);
+          map.putAnimationAt({ x, y }, "Water", "Terrain");
+          continue;
+        }
+
         //lookup and place resource
-        map.putTileAt({ x, y }, terrainId ?? Tileset.Alluvium, "Terrain");
+        map.putTileAt({ x, y }, terrainId ?? Tilekeys.Alluvium, "Terrain");
       } catch (e) {
         // console.log(e);
       }

@@ -1,5 +1,7 @@
 import { SceneConfig } from "../../util/types";
 import { Scenes } from "../constants";
+import animationConfig from "./animationConfig";
+import tileAnimationConfig from "./tileAnimationConfig";
 
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
@@ -16,6 +18,9 @@ const mainSceneConfig: SceneConfig = {
     pinchSpeed: 1,
     scrollSpeed: 0.5,
   },
+  animations: animationConfig,
+  tileAnimations: tileAnimationConfig,
+  animationInterval: 100,
 };
 
 export default mainSceneConfig;

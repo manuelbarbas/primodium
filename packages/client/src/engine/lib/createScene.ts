@@ -8,12 +8,16 @@ import createUpdater from "./createUpdater";
 import createTilemap from "./createTilemap";
 import { useEngineStore } from "../store/EngineStore";
 import { SceneConfig } from "../../util/types";
+import { generateFrames } from "@latticexyz/phaserx";
 
 const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
   const { minZoom, maxZoom, pinchSpeed, scrollSpeed, defaultZoom } =
     config.camera;
   const { chunkSize, tileWidth, tileHeight } = config.tilemap;
   const phaserGame = useEngineStore.getState().game?.phaserGame;
+  const animations = config.animations;
+  const tileAnimations = config.tileAnimations;
+  const animationInterval = config.animationInterval;
 
   if (!phaserGame) throw new Error("Phaser game not initialized");
 
@@ -49,8 +53,21 @@ const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
     camera,
     tileWidth,
     tileHeight,
-    chunkSize
+    chunkSize,
+    tileAnimations,
+    animationInterval
   );
+
+  if (animations) {
+    for (const anim of animations) {
+      scene.anims.create({
+        key: anim.key,
+        frames: generateFrames(scene.anims, anim),
+        frameRate: anim.frameRate,
+        repeat: anim.repeat,
+      });
+    }
+  }
 
   const input = createInput(scene.input);
 
