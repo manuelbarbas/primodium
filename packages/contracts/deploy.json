@@ -13,9 +13,11 @@
 
     "ItemComponent",
     "ResearchComponent",
-
+    "BuildingComponent",
     "MainBaseInitializedComponent",
-    "StarterPackInitializedComponent"
+    "StarterPackInitializedComponent",
+    "RequiredResearchComponent",
+    "RequiredResourcesComponent"
   ],
   "systems": [
     {
@@ -116,6 +118,10 @@
 
         "ItemComponent"
       ]
+    },
+    {
+      "name": "UpgradeSystem",
+      "writeAccess": ["BuildingComponent", "ItemComponent"]	
     }
   ]
 }
