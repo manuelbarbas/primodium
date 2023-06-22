@@ -138,12 +138,7 @@ contract BuildSystem is System {
     {
       buildingComponent.set(blockEntity, 1);
     }
-
-     if(blockType == PlatingFactoryID)
-      revert("passed setting building level");
-
-
-
+    
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
