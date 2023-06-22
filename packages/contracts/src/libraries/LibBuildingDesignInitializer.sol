@@ -57,7 +57,7 @@ library LibBuildingDesignInitializer {
         requiredResearch.set(PlatingFactoryID, PlatingFactoryResearchID);
 
         //BasicBatteryFactoryID
-        itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, BasicBatteryFactoryID),20);
+        itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, BasicBatteryFactoryID),20);
         itemComponent.set(LibEncode.hashFromKey(CopperResourceItemID, BasicBatteryFactoryID),50);
         
         requiredResourceIDs = new uint256[](2);
@@ -142,17 +142,17 @@ library LibBuildingDesignInitializer {
         //HighTempFoundryID
         
         
-        itemComponent.set(LibEncode.hashFromKey(TungstenResourceItemID, AdvancedBatteryFactoryID),50);
-        itemComponent.set(LibEncode.hashFromKey(RefinedOsmiumCraftedItemID, AdvancedBatteryFactoryID),50);
-        itemComponent.set(LibEncode.hashFromKey(AdvancedPowerSourceCraftedItemID, AdvancedBatteryFactoryID),20);
+        itemComponent.set(LibEncode.hashFromKey(TungstenResourceItemID, HighTempFoundryID),50);
+        itemComponent.set(LibEncode.hashFromKey(RefinedOsmiumCraftedItemID, HighTempFoundryID),50);
+        itemComponent.set(LibEncode.hashFromKey(AdvancedPowerSourceCraftedItemID, HighTempFoundryID),20);
         
         requiredResourceIDs = new uint256[](3);
         requiredResourceIDs[0] = TungstenResourceItemID;
         requiredResourceIDs[1] = RefinedOsmiumCraftedItemID;
         requiredResourceIDs[2] = AdvancedPowerSourceCraftedItemID;
-        requiredResources.set(AdvancedBatteryFactoryID,requiredResourceIDs);
+        requiredResources.set(HighTempFoundryID,requiredResourceIDs);
         
-        requiredResearch.set(AdvancedBatteryFactoryID, HighTempFoundryResearchID);
+        requiredResearch.set(HighTempFoundryID, HighTempFoundryResearchID);
 
         //PrecisionMachineryFactoryID
         
@@ -162,7 +162,7 @@ library LibBuildingDesignInitializer {
         
         requiredResourceIDs = new uint256[](3);
         requiredResourceIDs[0] = IridiumResourceItemID;
-        requiredResourceIDs[1] = TungstenResourceItemID;
+        requiredResourceIDs[1] = TungstenRodsCraftedItemID;
         requiredResourceIDs[2] = AdvancedPowerSourceCraftedItemID;
         requiredResources.set(PrecisionMachineryFactoryID,requiredResourceIDs);
         
@@ -182,13 +182,14 @@ library LibBuildingDesignInitializer {
 
 
         //PrecisionPneumaticDrillID
+        // Build PrecisionPneumaticDrill with 100 TungstenResource 100 OsmiumResource and 5 LaserPowerSourceCrafted
         itemComponent.set(LibEncode.hashFromKey(TungstenResourceItemID, PrecisionPneumaticDrillID),100);
         itemComponent.set(LibEncode.hashFromKey(OsmiumResourceItemID, PrecisionPneumaticDrillID),100);
         itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, PrecisionPneumaticDrillID),5);
         
         requiredResourceIDs = new uint256[](3);
-        requiredResourceIDs[1] = OsmiumResourceItemID;
-        requiredResourceIDs[0] = TungstenRodsCraftedItemID;
+        requiredResourceIDs[1] = TungstenResourceItemID;
+        requiredResourceIDs[0] = OsmiumResourceItemID;
         requiredResourceIDs[2] = LaserPowerSourceCraftedItemID;
         requiredResources.set(PrecisionPneumaticDrillID,requiredResourceIDs);
 
@@ -246,16 +247,16 @@ library LibBuildingDesignInitializer {
 
         //ThermobaricWarheadFactory
         requiredResourceIDs = new uint256[](3);
-        itemComponent.set(LibEncode.hashFromKey(RefinedOsmiumCraftedItemID, HighEnergyLaserFactoryID),200);
-        itemComponent.set(LibEncode.hashFromKey(IridiumCrystalCraftedItemID, HighEnergyLaserFactoryID),100);
-        itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, HighEnergyLaserFactoryID),10);
+        itemComponent.set(LibEncode.hashFromKey(RefinedOsmiumCraftedItemID, ThermobaricWarheadFactoryID),200);
+        itemComponent.set(LibEncode.hashFromKey(IridiumCrystalCraftedItemID, ThermobaricWarheadFactoryID),100);
+        itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, ThermobaricWarheadFactoryID),10);
 
         requiredResourceIDs = new uint256[](3);
         requiredResourceIDs[1] = RefinedOsmiumCraftedItemID;
         requiredResourceIDs[0] = IridiumCrystalCraftedItemID;
         requiredResourceIDs[2] = LaserPowerSourceCraftedItemID;
-        requiredResources.set(HighEnergyLaserFactoryID,requiredResourceIDs);
-        requiredResearch.set(HighEnergyLaserFactoryID, ThermobaricWarheadFactoryResearchID);
+        requiredResources.set(ThermobaricWarheadFactoryID,requiredResourceIDs);
+        requiredResearch.set(ThermobaricWarheadFactoryID, ThermobaricWarheadFactoryResearchID);
         
         //ThermobaricMissileFactoryID
         requiredResourceIDs = new uint256[](3);
