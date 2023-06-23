@@ -6,9 +6,6 @@ import {split} from "solecs/utils.sol";
 
 
 library LibEncode {
-  function hashFromStringAddress(string memory str, address addr) internal pure returns (uint256) {
-    return uint256(keccak256(abi.encodePacked(str, addr)));
-  }
 
   function hashFromAddress(uint256 key, address addr) internal pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(key, addr)));
