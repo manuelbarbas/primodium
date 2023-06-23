@@ -75,22 +75,26 @@ export default function ClaimButton({
 
   if (transactionLoading) {
     return (
-      <button
-        id={id}
-        className={`inset-x-4 absolute bottom-4 h-10 ${colorCode} text-sm rounded font-bold`}
-      >
-        <Spinner />
-      </button>
+      <div className="absolute inset-x-4 bottom-4">
+        <button
+          id={id}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+        >
+          <Spinner />
+        </button>
+      </div>
     );
   } else {
     return (
-      <button
-        id={id}
-        className={`inset-x-4 absolute bottom-4 h-10 ${colorCode} text-sm rounded font-bold`}
-        onClick={claimAction}
-      >
-        {claimText}
-      </button>
+      <div className="absolute inset-x-4 bottom-4">
+        <button
+          id={id}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+          onClick={claimAction}
+        >
+          {claimText}
+        </button>
+      </div>
     );
   }
 }
