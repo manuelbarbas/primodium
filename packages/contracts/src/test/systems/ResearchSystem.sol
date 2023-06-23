@@ -4,7 +4,7 @@ import "forge-std/console.sol";
 
 import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
-import { entityToAddress, addressToEntity } from "solecs/utils.sol";
+import { addressToEntity } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";

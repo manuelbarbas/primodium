@@ -224,7 +224,6 @@ contract ClaimFactorySystemTest is MudTest {
     vm.roll(0);
 
     buildSystem.executeTyped(MinerID, Coord({ x: -5, y: 2 }));
-    // uint256 hashedBulletFactoryKey = LibEncode.hashKeyEntity(IronResourceItemID, entityToAddress(bulletFactoryID));
     assertTrue(!itemComponent.has(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactoryID)));
 
     vm.roll(10);
@@ -251,7 +250,7 @@ contract ClaimFactorySystemTest is MudTest {
     // transfer iron from mine to factory 2
     claimSystem.executeTyped(bulletFactory2Coord);
     claimFactorySystem.executeTyped(bulletFactory2Coord);
-    // uint256 hashedBulletFactory2Key = LibEncode.hashKeyEntity(IronResourceItemID, entityToAddress(bulletFactory2ID));
+
     assertTrue(itemComponent.has(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)));
     assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)), 100);
 

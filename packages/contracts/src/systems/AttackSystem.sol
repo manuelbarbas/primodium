@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { SiloID } from "../prototypes/Tiles.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
