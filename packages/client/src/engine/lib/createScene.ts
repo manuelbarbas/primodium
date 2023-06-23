@@ -16,7 +16,14 @@ import {
 
 const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
   const {
-    camera: { minZoom, maxZoom, pinchSpeed, scrollSpeed, defaultZoom },
+    camera: {
+      minZoom,
+      maxZoom,
+      pinchSpeed,
+      scrollSpeed,
+      defaultZoom,
+      dragSpeed,
+    },
     tilemap: { chunkSize, tileWidth, tileHeight },
     cullingChunkSize,
     animations,
@@ -50,6 +57,7 @@ const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
     minZoom,
     pinchSpeed,
     wheelSpeed: scrollSpeed,
+    dragSpeed,
   });
 
   const tilemap = createTilemap(

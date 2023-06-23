@@ -33,6 +33,10 @@
     cursor: pointer;
   }
 
+  #phaser-container > canvas {
+    touch-action: none;
+  }
+
   /* #phase-container > canvas {
     display: block;
     margin: 0;

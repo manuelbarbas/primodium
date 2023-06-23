@@ -42,6 +42,7 @@ export interface SceneConfig {
     pinchSpeed: number;
     scrollSpeed: number;
     defaultZoom: number;
+    dragSpeed: number;
   };
   animations?: Animation<any>[];
   tileAnimations?: TileAnimation[];

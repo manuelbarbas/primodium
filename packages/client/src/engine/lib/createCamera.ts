@@ -18,7 +18,7 @@ import {
 
 export function createCamera(
   phaserCamera: Phaser.Cameras.Scene2D.Camera,
-  options: CameraConfig
+  options: CameraConfig & { dragSpeed: number }
 ) {
   // Stop default gesture events to not collide with use-gesture
   // https://github.com/pmndrs/use-gesture/blob/404e2b2ac145a45aff179c1faf5097b97414731c/documentation/pages/docs/gestures.mdx#about-the-pinch-gesture
@@ -31,12 +31,14 @@ export function createCamera(
   const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom);
   const wheelStream$ = new Subject<GestureState<"onWheel">>();
   const pinchStream$ = new Subject<GestureState<"onPinch">>();
+  const dragStream$ = new Subject<GestureState<"onDrag">>();
 
   const gesture = new Gesture(
     phaserCamera.scene.game.canvas,
     {
       onPinch: (state) => pinchStream$.next(state),
       onWheel: (state) => wheelStream$.next(state),
+      onDrag: (state) => dragStream$.next(state),
     },
     {}
   );
@@ -95,6 +97,24 @@ export function createCamera(
       worldView$.next(phaserCamera.worldView);
     });
 
+  const dragSub = dragStream$
+    .pipe(
+      // filter((state) => !state.pinching),
+      sampleTime(10),
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      map((state) => state.delta.map((x) => x * options.dragSpeed)), // Compute wheel speed
+      map((movement) => movement.map((m: number) => m / phaserCamera.zoom)),
+      map((movement) => [
+        phaserCamera.scrollX - movement[0],
+        phaserCamera.scrollY - movement[1],
+      ])
+    )
+    .subscribe(([x, y]) => {
+      phaserCamera.setScroll(x, y);
+      worldView$.next(phaserCamera.worldView);
+    });
+
   function ignore(objectPool: ObjectPool, ignore: boolean) {
     objectPool.ignoreCamera(phaserCamera.id, ignore);
   }
@@ -126,6 +146,7 @@ export function createCamera(
     dispose: () => {
       pinchSub.unsubscribe();
       wheelSub.unsubscribe();
+      dragSub.unsubscribe();
       gesture.destroy();
       phaserCamera.scene.scale.removeListener("resize", onResize);
     },

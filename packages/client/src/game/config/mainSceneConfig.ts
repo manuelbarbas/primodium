@@ -17,6 +17,7 @@ const mainSceneConfig: SceneConfig = {
     defaultZoom: 2,
     pinchSpeed: 1,
     scrollSpeed: 0.5,
+    dragSpeed: 2,
   },
   animations: animationConfig,
   tileAnimations: tileAnimationConfig,
