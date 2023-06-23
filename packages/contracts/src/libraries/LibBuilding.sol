@@ -10,6 +10,7 @@ import { LibDebug } from "libraries/LibDebug.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { entityToAddress } from "solecs/utils.sol";
 
+
 library LibBuilding {
 
     function checkBuildCountLimit(Uint256Component buildingComponent, Uint256Component ownedByComponent,Uint256Component tileComponent, uint256 playerEntity) internal view returns (bool)
@@ -54,8 +55,8 @@ library LibBuilding {
     function getBuildCountLimit(uint256 mainBuildingLevel) internal pure returns (uint256)
     {
         if(LibDebug.isDebug())
-            return 15;
-        else if(mainBuildingLevel == 1)
+            return 100;
+        if(mainBuildingLevel == 1)
             return 5;
         else if(mainBuildingLevel == 2)
             return 10;
