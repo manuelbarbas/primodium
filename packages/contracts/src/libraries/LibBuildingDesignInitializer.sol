@@ -32,6 +32,28 @@ library LibBuildingDesignInitializer {
         RequiredResearchComponent requiredResearch = RequiredResearchComponent(getAddressById(components,RequiredResearchComponentID));
         RequiredResourcesComponent requiredResources =  RequiredResourcesComponent(getAddressById(components,RequiredResourcesComponentID));
 
+
+
+        //MainBaseID Level 2 Upgrade
+        itemComponent.set(LibEncode.hashFromTwoKeys(IronResourceItemID, MainBaseID,2),500);
+        itemComponent.set(LibEncode.hashFromTwoKeys(CopperResourceItemID, MainBaseID,2),500);
+        uint256[] memory requiredResourceIDs = new uint256[](2);
+        requiredResourceIDs[0] = IronResourceItemID;
+        requiredResourceIDs[1] = CopperResourceItemID;
+        requiredResources.set(LibEncode.hashFromKey(MainBaseID,2),requiredResourceIDs);
+
+
+        //MainBaseID Level 3 Upgrade
+        itemComponent.set(LibEncode.hashFromTwoKeys(IronPlateCraftedItemID, MainBaseID,3),500);
+        itemComponent.set(LibEncode.hashFromTwoKeys(BasicPowerSourceCraftedItemID, MainBaseID,3),100);
+        itemComponent.set(LibEncode.hashFromTwoKeys(CopperResourceItemID, MainBaseID,3),2000);
+        uint256[] memory requiredResourceIDs = new uint256[](3);
+        requiredResourceIDs[0] = IronPlateCraftedItemID;
+        requiredResourceIDs[1] = BasicPowerSourceCraftedItemID;
+        requiredResourceIDs[2] = CopperResourceItemID;
+        requiredResources.set(LibEncode.hashFromKey(MainBaseID,3),requiredResourceIDs);
+
+
         //BasicMinerId  
         itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, BasicMinerID),100);
         
