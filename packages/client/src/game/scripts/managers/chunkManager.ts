@@ -1,10 +1,11 @@
-import { RENDER_INTERVAL } from "../../constants";
+import { RENDER_INTERVAL, TileAnimationKeys } from "../../constants";
 import type { AnimatedTilemap } from "@latticexyz/phaserx";
 import { getTopLayerKeyPair } from "../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
 import { EntityIdtoTilesetId, Tilekeys } from "../../constants";
 import { Scene } from "../../../util/types";
+import { delay } from "rxjs/operators";
 
 const chunkCache = new CoordMap<boolean>();
 const perlin = createPerlin();
@@ -27,29 +28,19 @@ const renderChunk = async (
 
       const { terrain, resource } = getTopLayerKeyPair(coord, await perlin);
 
-      try {
-        //lookup and place terrain
-        const terrainId = EntityIdtoTilesetId[terrain];
+      //lookup and place terrain
+      const terrainId = EntityIdtoTilesetId[terrain];
 
-        if (terrainId === Tilekeys.Water) {
-          // map.putTileAt({ x, y }, Tilekeys.Water);
-          map.putAnimationAt({ x, y }, "Water", "Terrain");
-          continue;
-        }
-
-        //lookup and place resource
-        map.putTileAt({ x, y }, terrainId ?? Tilekeys.Alluvium, "Terrain");
-      } catch (e) {
-        // console.log(e);
+      if (terrainId === Tilekeys.Water) {
+        map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
+        continue;
       }
+      //lookup and place resource
+      map.putTileAt({ x, y }, terrainId ?? Tilekeys.Alluvium, "Terrain");
 
-      try {
-        if (!resource) continue;
-        const resourceId = EntityIdtoTilesetId[resource!];
-        map.putTileAt({ x, y }, resourceId, "Resource");
-      } catch (e) {
-        // console.log(e);
-      }
+      if (!resource) continue;
+      const resourceId = EntityIdtoTilesetId[resource!];
+      map.putTileAt({ x, y }, resourceId, "Resource");
     }
   }
 
@@ -59,8 +50,6 @@ const renderChunk = async (
 const createChunkManager = async (tilemap: Scene["tilemap"]) => {
   const { chunks, map, chunkSize } = tilemap;
   let chunkStream: ReturnType<typeof chunks.addedChunks$.subscribe>;
-
-  const renderQueue: Coord[] = [];
   let lazyChunkLoader: ReturnType<typeof setInterval>;
 
   const renderInitialChunks = () => {
@@ -70,21 +59,11 @@ const createChunkManager = async (tilemap: Scene["tilemap"]) => {
   };
 
   const startChunkRenderer = () => {
-    chunkStream = chunks.addedChunks$.subscribe((chunk) => {
-      renderQueue.push(chunk);
-    });
-
-    // distrube chunk rendering over time
-    lazyChunkLoader = setInterval(() => {
-      // get chunks to render. prioritize chunks that are closer to the player/just added
-      const chunk = renderQueue.pop();
-      if (!chunk) return;
-
-      //check if chunk is still visible
-      if (!chunks.visibleChunks.current.get(chunk)) return;
-
-      renderChunk(chunk, map, chunkSize);
-    }, RENDER_INTERVAL);
+    chunkStream = chunks.addedChunks$
+      .pipe(delay(RENDER_INTERVAL))
+      .subscribe((chunk) => {
+        renderChunk(chunk, map, chunkSize);
+      });
   };
 
   const dispose = () => {

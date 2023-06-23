@@ -17,6 +17,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   },
   autoFocus: true,
   autoCenter: Phaser.Scale.Center.CENTER_BOTH,
+  desynchronized: true,
+  preserveDrawingBuffer: true,
   pixelArt: true,
 };
 

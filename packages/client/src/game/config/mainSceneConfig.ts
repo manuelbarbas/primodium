@@ -21,6 +21,7 @@ const mainSceneConfig: SceneConfig = {
   animations: animationConfig,
   tileAnimations: tileAnimationConfig,
   animationInterval: 100,
+  cullingChunkSize: 32,
 };
 
 export default mainSceneConfig;

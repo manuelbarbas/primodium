@@ -46,6 +46,7 @@ export interface SceneConfig {
   animations?: Animation<any>[];
   tileAnimations?: TileAnimation[];
   animationInterval: number;
+  cullingChunkSize: number;
   tilemap: {
     chunkSize: number;
     tileWidth: number;

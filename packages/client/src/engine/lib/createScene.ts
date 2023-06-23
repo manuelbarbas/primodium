@@ -1,23 +1,29 @@
-import {
-  createCamera,
-  createPhaserScene,
-  getSceneLoadPromise,
-  createInput,
-} from "@smallbraingames/small-phaser";
+import createInput from "./createInput";
+import getSceneLoadPromise from "./getSceneLoadPromise";
+import createPhaserScene from "./createPhaserScene";
+import { createCamera } from "./createCamera";
 import createUpdater from "./createUpdater";
 import createTilemap from "./createTilemap";
 import { useEngineStore } from "../store/EngineStore";
 import { SceneConfig } from "../../util/types";
-import { generateFrames } from "@latticexyz/phaserx";
+import {
+  generateFrames,
+  createCulling,
+  // createDebugger,
+  createObjectPool,
+  createChunks,
+} from "@latticexyz/phaserx";
 
 const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
-  const { minZoom, maxZoom, pinchSpeed, scrollSpeed, defaultZoom } =
-    config.camera;
-  const { chunkSize, tileWidth, tileHeight } = config.tilemap;
-  const phaserGame = useEngineStore.getState().game?.phaserGame;
-  const animations = config.animations;
-  const tileAnimations = config.tileAnimations;
-  const animationInterval = config.animationInterval;
+  const {
+    camera: { minZoom, maxZoom, pinchSpeed, scrollSpeed, defaultZoom },
+    tilemap: { chunkSize, tileWidth, tileHeight },
+    cullingChunkSize,
+    animations,
+    tileAnimations,
+    animationInterval,
+    phaserGame,
+  } = { ...config, ...useEngineStore.getState().game! };
 
   if (!phaserGame) throw new Error("Phaser game not initialized");
 
@@ -35,17 +41,16 @@ const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
 
   const scene = new phaserScene();
 
-  phaserGame.game.scene.add(config.key, scene, autoStart);
+  phaserGame.scene.add(config.key, scene, autoStart);
 
   await getSceneLoadPromise(scene);
 
-  const camera = createCamera(
-    scene.cameras.main,
-    minZoom,
+  const camera = createCamera(scene.cameras.main, {
     maxZoom,
+    minZoom,
     pinchSpeed,
-    scrollSpeed
-  );
+    wheelSpeed: scrollSpeed,
+  });
 
   const tilemap = createTilemap(
     scene,
@@ -58,6 +63,7 @@ const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
     animationInterval
   );
 
+  //create sprite animations
   if (animations) {
     for (const anim of animations) {
       scene.anims.create({
@@ -69,6 +75,26 @@ const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
     }
   }
 
+  // Setup object pool
+  const objectPool = createObjectPool(scene);
+
+  // Setup chunks for viewport culling
+  const cullingChunks = createChunks(
+    camera.worldView$,
+    cullingChunkSize * tileWidth
+  );
+
+  // const debug = createDebugger(
+  //   camera,
+  //   cullingChunks,
+  //   scene,
+  //   objectPool,
+  //   tilemap.map
+  // );
+
+  // Setup viewport culling
+  const culling = createCulling(objectPool, camera, cullingChunks);
+
   const input = createInput(scene.input);
 
   camera.centerOn(0, 0);
@@ -79,6 +105,8 @@ const createScene = async (config: SceneConfig, autoStart: boolean = true) => {
     tilemap,
     scriptManager: updater,
     camera,
+    culling,
+    objectPool,
     config,
     input,
   };

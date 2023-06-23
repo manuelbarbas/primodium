@@ -2,7 +2,9 @@
 import engine from "../../engine";
 import gameConfig from "../config/gameConfig";
 import mainSceneConfig from "../config/mainSceneConfig";
-import { Scenes, TileAnimationKeys } from "../constants";
+import { Scenes } from "../constants";
+import { PulsingColoredTile } from "../objects/ PulsingColoredTile";
+import { TestSprite } from "../objects/TestSprite";
 import createChunkManager from "./managers/chunkManager";
 
 const init = async () => {
@@ -21,19 +23,53 @@ const init = async () => {
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  // scene.phaserScene.add
-  //   .sprite(8, 8, "sprite-atlas", "mainbase/mainbase-0")
-  //   .play("node")
-  //   .setDepth(100);
-  // try {
-  //   scene.tilemap.map.putAnimationAt({ x: 0, y: 0 }, TileAnimationKeys.Water);
-  // } catch (e) {
-  //   console.log(e);
-  // }
+  const obj = new TestSprite(
+    scene.phaserScene,
+    32,
+    32,
+    "sprite-atlas",
+    "mainbase/mainbase-0.png"
+  ).play("mainbase");
+
+  // scene.objectPool.groups.Rectangle.add(
+  //   true
+  // );
+
+  scene.objectPool.groups.Sprite.add(obj, true);
+
+  const graphics = scene.phaserScene.add.graphics().setDepth(100);
+
+  function drawManhattanLine(
+    startX: number,
+    startY: number,
+    endX: number,
+    endY: number
+  ) {
+    graphics.clear();
+    // Set the line style
+    graphics.lineStyle(1, 0xffffff, 0.5);
+
+    // Calculate the midpoints
+    const midX = (startX + endX) / 2;
+    const midY = (startY + endY) / 2;
+
+    // Move to the starting point
+    graphics.moveTo(startX, startY);
+
+    // Draw the line segments, including midpoints
+    graphics.lineTo(midX, startY);
+    graphics.lineTo(midX, midY);
+    graphics.lineTo(endX, midY);
+    graphics.lineTo(endX, endY);
+
+    // Render the line
+    graphics.stroke();
+  }
+  // .sprite(8, 8, "sprite-atlas", "mainbase/mainbase-0.png")
 
   // Calculate the equivalent screen coordinates
 
-  scene.scriptManager.add((time, delta) => {
+  scene.scriptManager.add(async (time, delta) => {
     const { worldX, worldY } = scene.phaserScene.input.activePointer;
 
     hoverTile
@@ -44,6 +80,13 @@ const init = async () => {
       .setDepth(100)
       .setX(Math.floor(worldX / 16) * 16)
       .setY(Math.floor(worldY / 16) * 16);
+
+    drawManhattanLine(
+      8,
+      8,
+      Math.floor(worldX / 16) * 16 + 8,
+      Math.floor(worldY / 16) * 16 + 8
+    );
   });
 };
 

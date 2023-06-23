@@ -1,10 +1,14 @@
 import { memo, useEffect, useState } from "react";
 import primodium from "../game";
 import GameUI from "../components/GameUI";
+import { useMud } from "../context/MudContext";
 
 export const Game = memo(() => {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState(false);
+  const { world, components, systems } = useMud();
+
+  console.log(components, systems, world);
 
   useEffect(() => {
     (async () => {

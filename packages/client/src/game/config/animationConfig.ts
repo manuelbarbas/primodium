@@ -4,7 +4,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "mainbase",
     assetKey: "sprite-atlas",
-    frameRate: 4,
+    frameRate: 30,
     startFrame: 0,
     endFrame: 169,
     repeat: -1,

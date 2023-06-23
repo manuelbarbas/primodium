@@ -1,10 +1,6 @@
-import {
-  createAnimatedTilemap,
-  createChunks,
-  createCamera,
-} from "@latticexyz/phaserx";
+import { createAnimatedTilemap, createChunks } from "@latticexyz/phaserx";
+import type { createCamera } from "@latticexyz/phaserx";
 import { Tileset } from "../constants";
-import Phaser from "phaser";
 import { TileAnimation } from "../../util/types";
 
 export const createTilemap = (
@@ -87,14 +83,19 @@ export const createTilemap = (
     },
     layerConfig: {
       layers: {
-        Terrain: { tilesets: ["terrain-tileset"] },
-        Resource: { tilesets: ["resource-tileset"] },
+        Terrain: {
+          tilesets: ["terrain-tileset", "terrain-tileset"],
+        },
+        Resource: {
+          tilesets: ["resource-tileset", "resource-tileset"],
+        },
       },
       defaultLayer: "Terrain",
     },
     animationInterval,
   });
 
+  //register tilemap animations
   for (const anim of animations) {
     tilemap.registerAnimation(anim.key, anim.frames);
   }
