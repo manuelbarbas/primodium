@@ -65,3 +65,6 @@ uint256 constant KimberliteCatalystFactoryResearchID = uint256(keccak256("resear
 
 // Debug Research IDs
 uint256 constant FastMinerResearchID = uint256(keccak256("research.FastMiner"));
+
+// Building key
+string constant BuildingKey = "building";

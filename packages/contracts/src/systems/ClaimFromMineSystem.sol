@@ -103,7 +103,7 @@ contract ClaimFromMineSystem is System {
 
         LibMath.incrementBy(
           ItemComponent(getAddressById(components, ItemComponentID)),
-          LibEncode.hashFromAddress(resourceKey, entityToAddress(destination)),
+          LibEncode.hashKeyEntity(resourceKey, destination),
           incBy
         );
         return;

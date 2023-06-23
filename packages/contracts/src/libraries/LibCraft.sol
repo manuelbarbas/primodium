@@ -17,8 +17,8 @@ library LibCraft {
     uint256 craftedKey,
     uint256 entity
   ) internal {
-    uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
-    uint256 hashedCraftedKey = LibEncode.hashFromAddress(craftedKey, entityToAddress(entity));
+    uint256 hashedItem1Key = LibEncode.hashKeyEntity(item1Key, entity);
+    uint256 hashedCraftedKey = LibEncode.hashKeyEntity(craftedKey, entity);
 
     uint256 curItem1 = LibMath.getSafeUint256Value(itemComponent, hashedItem1Key);
     uint256 curCrafted = LibMath.getSafeUint256Value(itemComponent, hashedCraftedKey);
@@ -39,21 +39,21 @@ library LibCraft {
     uint256 craftedKey,
     uint256 entity
   ) internal {
-    // uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
-    // uint256 hashedItem2Key = LibEncode.hashFromAddress(item2Key, entityToAddress(entity));
-    // uint256 hashedCraftedKey = LibEncode.hashFromAddress(craftedKey, entityToAddress(entity));
+    // uint256 hashedItem1Key = LibEncode.hashKeyEntity(item1Key, entityToAddress(entity));
+    // uint256 hashedItem2Key = LibEncode.hashKeyEntity(item2Key, entityToAddress(entity));
+    // uint256 hashedCraftedKey = LibEncode.hashKeyEntity(craftedKey, entityToAddress(entity));
 
     uint256 curItem1 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item1Key, entity)
     );
     uint256 curItem2 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item2Key, entity)
     );
     uint256 curCrafted = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(craftedKey, entityToAddress(entity))
+      LibEncode.hashKeyEntity(craftedKey, entity)
     );
 
     uint256 maxCraftedFromItem1 = curItem1 / item1Required;
@@ -64,13 +64,13 @@ library LibCraft {
     // uint256 consumeItem2By = maxCrafted * item2Required;
 
     itemComponent.set(
-      LibEncode.hashFromAddress(item1Key, entityToAddress(entity)),
+      LibEncode.hashKeyEntity(item1Key, entity),
       curItem1 - maxCrafted * item1Required
     );
     itemComponent.set(
-      LibEncode.hashFromAddress(item2Key, entityToAddress(entity)),
+      LibEncode.hashKeyEntity(item2Key, entity),
       curItem2 - maxCrafted * item2Required
     );
-    itemComponent.set(LibEncode.hashFromAddress(craftedKey, entityToAddress(entity)), curCrafted + maxCrafted);
+    itemComponent.set(LibEncode.hashKeyEntity(craftedKey, entity), curCrafted + maxCrafted);
   }
 }

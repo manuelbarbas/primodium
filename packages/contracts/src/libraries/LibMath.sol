@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 import { Uint32Component } from "std-contracts/components/Uint32Component.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { entityToAddress } from "solecs/utils.sol";
 import { LibEncode } from "./LibEncode.sol";
 
 library LibMath {
@@ -32,17 +31,17 @@ library LibMath {
   ) internal {
     uint256 curOrigin1 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(originEntity))
+      LibEncode.hashKeyEntity(item1Key, originEntity)
     );
 
     uint256 curDestination1 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(destinationEntity))
+      LibEncode.hashKeyEntity(item1Key, destinationEntity)
     );
 
-    component.set(LibEncode.hashFromAddress(item1Key, entityToAddress(originEntity)), 0);
+    component.set(LibEncode.hashKeyEntity(item1Key, originEntity), 0);
     component.set(
-      LibEncode.hashFromAddress(item1Key, entityToAddress(destinationEntity)),
+      LibEncode.hashKeyEntity(item1Key, destinationEntity),
       curDestination1 + curOrigin1
     );
   }
@@ -56,30 +55,30 @@ library LibMath {
   ) internal {
     uint256 curOrigin1 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(originEntity))
+      LibEncode.hashKeyEntity(item1Key, originEntity)
     );
     uint256 curOrigin2 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(originEntity))
+      LibEncode.hashKeyEntity(item2Key, originEntity)
     );
 
     uint256 curDestination1 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(destinationEntity))
+      LibEncode.hashKeyEntity(item1Key, destinationEntity)
     );
     uint256 curDestination2 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(destinationEntity))
+      LibEncode.hashKeyEntity(item2Key, destinationEntity)
     );
 
-    component.set(LibEncode.hashFromAddress(item1Key, entityToAddress(originEntity)), 0);
-    component.set(LibEncode.hashFromAddress(item2Key, entityToAddress(originEntity)), 0);
+    component.set(LibEncode.hashKeyEntity(item1Key, originEntity), 0);
+    component.set(LibEncode.hashKeyEntity(item2Key, originEntity), 0);
     component.set(
-      LibEncode.hashFromAddress(item1Key, entityToAddress(destinationEntity)),
+      LibEncode.hashKeyEntity(item1Key, destinationEntity),
       curDestination1 + curOrigin1
     );
     component.set(
-      LibEncode.hashFromAddress(item2Key, entityToAddress(destinationEntity)),
+      LibEncode.hashKeyEntity(item2Key, destinationEntity),
       curDestination2 + curOrigin2
     );
   }
@@ -94,43 +93,43 @@ library LibMath {
   ) internal {
     uint256 curOrigin1 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(originEntity))
+      LibEncode.hashKeyEntity(item1Key, originEntity)
     );
     uint256 curOrigin2 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(originEntity))
+      LibEncode.hashKeyEntity(item2Key, originEntity)
     );
     uint256 curOrigin3 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item3Key, entityToAddress(originEntity))
+      LibEncode.hashKeyEntity(item3Key, originEntity)
     );
 
     uint256 curDestination1 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(destinationEntity))
+      LibEncode.hashKeyEntity(item1Key, destinationEntity)
     );
     uint256 curDestination2 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(destinationEntity))
+      LibEncode.hashKeyEntity(item2Key, destinationEntity)
     );
     uint256 curDestination3 = getSafeUint256Value(
       component,
-      LibEncode.hashFromAddress(item3Key, entityToAddress(destinationEntity))
+      LibEncode.hashKeyEntity(item3Key, destinationEntity)
     );
 
-    component.set(LibEncode.hashFromAddress(item1Key, entityToAddress(originEntity)), 0);
-    component.set(LibEncode.hashFromAddress(item2Key, entityToAddress(originEntity)), 0);
-    component.set(LibEncode.hashFromAddress(item3Key, entityToAddress(originEntity)), 0);
+    component.set(LibEncode.hashKeyEntity(item1Key, originEntity), 0);
+    component.set(LibEncode.hashKeyEntity(item2Key, originEntity), 0);
+    component.set(LibEncode.hashKeyEntity(item3Key, originEntity), 0);
     component.set(
-      LibEncode.hashFromAddress(item1Key, entityToAddress(destinationEntity)),
+      LibEncode.hashKeyEntity(item1Key, destinationEntity),
       curDestination1 + curOrigin1
     );
     component.set(
-      LibEncode.hashFromAddress(item2Key, entityToAddress(destinationEntity)),
+      LibEncode.hashKeyEntity(item2Key, destinationEntity),
       curDestination2 + curOrigin2
     );
     component.set(
-      LibEncode.hashFromAddress(item3Key, entityToAddress(destinationEntity)),
+      LibEncode.hashKeyEntity(item3Key, destinationEntity),
       curDestination3 + curOrigin3
     );
   }

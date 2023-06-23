@@ -57,7 +57,7 @@ contract AttackSystem is System {
     require(curOwnedEntity != addressToEntity(msg.sender), "[AttackSystem] Cannot attack your own entity");
 
     // check that attackEntity has enough bullets
-    uint hashedAttackEntity = LibEncode.hashFromAddress(weaponKey, entityToAddress(attackEntity));
+    uint hashedAttackEntity = LibEncode.hashKeyEntity(weaponKey, attackEntity);
     if (itemComponent.has(hashedAttackEntity)) {
       uint256 curBullets = itemComponent.getValue(hashedAttackEntity);
       if (curBullets > 0) {

@@ -12,16 +12,16 @@ library LibBuild {
     uint256 item1Required,
     uint256 entity
   ) internal {
-    // uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
+    // uint256 hashedItem1Key = LibEncode.hashKeyEntity(item1Key, entityToAddress(entity));
     uint256 curItem1 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item1Key, entity)
     );
 
     if (curItem1 < item1Required) {
       revert("[BuildSystem] Not enough resources");
     } else {
-      itemComponent.set(LibEncode.hashFromAddress(item1Key, entityToAddress(entity)), curItem1 - item1Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item1Key, entity), curItem1 - item1Required);
     }
   }
 
@@ -33,23 +33,23 @@ library LibBuild {
     uint256 item2Required,
     uint256 entity
   ) internal {
-    // uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
-    // uint256 hashedItem2Key = LibEncode.hashFromAddress(item2Key, entityToAddress(entity));
+    // uint256 hashedItem1Key = LibEncode.hashKeyEntity(item1Key, entityToAddress(entity));
+    // uint256 hashedItem2Key = LibEncode.hashKeyEntity(item2Key, entityToAddress(entity));
 
     uint256 curItem1 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item1Key, entity)
     );
     uint256 curItem2 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item2Key, entity)
     );
 
     if (curItem1 < item1Required || curItem2 < item2Required) {
       revert("[BuildSystem] Not enough resources");
     } else {
-      itemComponent.set(LibEncode.hashFromAddress(item1Key, entityToAddress(entity)), curItem1 - item1Required);
-      itemComponent.set(LibEncode.hashFromAddress(item2Key, entityToAddress(entity)), curItem2 - item2Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item1Key, entity), curItem1 - item1Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item2Key, entity), curItem2 - item2Required);
     }
   }
 
@@ -63,29 +63,29 @@ library LibBuild {
     uint256 item3Required,
     uint256 entity
   ) internal {
-    // uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
-    // uint256 hashedItem2Key = LibEncode.hashFromAddress(item2Key, entityToAddress(entity));
-    // uint256 hashedItem3Key = LibEncode.hashFromAddress(item3Key, entityToAddress(entity));
+    // uint256 hashedItem1Key = LibEncode.hashKeyEntity(item1Key, entityToAddress(entity));
+    // uint256 hashedItem2Key = LibEncode.hashKeyEntity(item2Key, entityToAddress(entity));
+    // uint256 hashedItem3Key = LibEncode.hashKeyEntity(item3Key, entityToAddress(entity));
 
     uint256 curItem1 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item1Key, entity)
     );
     uint256 curItem2 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item2Key, entity)
     );
     uint256 curItem3 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item3Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item3Key, entity)
     );
 
     if (curItem1 < item1Required || curItem2 < item2Required || curItem3 < item3Required) {
       revert("[BuildSystem] Not enough resources");
     } else {
-      itemComponent.set(LibEncode.hashFromAddress(item1Key, entityToAddress(entity)), curItem1 - item1Required);
-      itemComponent.set(LibEncode.hashFromAddress(item2Key, entityToAddress(entity)), curItem2 - item2Required);
-      itemComponent.set(LibEncode.hashFromAddress(item3Key, entityToAddress(entity)), curItem3 - item3Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item1Key, entity), curItem1 - item1Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item2Key, entity), curItem2 - item2Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item3Key, entity), curItem3 - item3Required);
     }
   }
 
@@ -101,35 +101,35 @@ library LibBuild {
     uint256 item4Required,
     uint256 entity
   ) internal {
-    // uint256 hashedItem1Key = LibEncode.hashFromAddress(item1Key, entityToAddress(entity));
-    // uint256 hashedItem2Key = LibEncode.hashFromAddress(item2Key, entityToAddress(entity));
-    // uint256 hashedItem3Key = LibEncode.hashFromAddress(item3Key, entityToAddress(entity));
-    // uint256 hashedItem4Key = LibEncode.hashFromAddress(item4Key, entityToAddress(entity));
+    // uint256 hashedItem1Key = LibEncode.hashKeyEntity(item1Key, entityToAddress(entity));
+    // uint256 hashedItem2Key = LibEncode.hashKeyEntity(item2Key, entityToAddress(entity));
+    // uint256 hashedItem3Key = LibEncode.hashKeyEntity(item3Key, entityToAddress(entity));
+    // uint256 hashedItem4Key = LibEncode.hashKeyEntity(item4Key, entityToAddress(entity));
 
     uint256 curItem1 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item1Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item1Key, entity)
     );
     uint256 curItem2 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item2Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item2Key, entity)
     );
     uint256 curItem3 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item3Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item3Key, entity)
     );
     uint256 curItem4 = LibMath.getSafeUint256Value(
       itemComponent,
-      LibEncode.hashFromAddress(item4Key, entityToAddress(entity))
+      LibEncode.hashKeyEntity(item4Key, entity)
     );
 
     if (curItem1 < item1Required || curItem2 < item2Required || curItem3 < item3Required || curItem4 < item4Required) {
       revert("[BuildSystem] Not enough resources");
     } else {
-      itemComponent.set(LibEncode.hashFromAddress(item1Key, entityToAddress(entity)), curItem1 - item1Required);
-      itemComponent.set(LibEncode.hashFromAddress(item2Key, entityToAddress(entity)), curItem2 - item2Required);
-      itemComponent.set(LibEncode.hashFromAddress(item3Key, entityToAddress(entity)), curItem3 - item3Required);
-      itemComponent.set(LibEncode.hashFromAddress(item4Key, entityToAddress(entity)), curItem4 - item4Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item1Key, entity), curItem1 - item1Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item2Key, entity), curItem2 - item2Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item3Key, entity), curItem3 - item3Required);
+      itemComponent.set(LibEncode.hashKeyEntity(item4Key, entity), curItem4 - item4Required);
     }
   }
 }

@@ -7,8 +7,8 @@ import {split} from "solecs/utils.sol";
 
 library LibEncode {
 
-  function hashFromAddress(uint256 key, address addr) internal pure returns (uint256) {
-    return uint256(keccak256(abi.encodePacked(key, addr)));
+  function hashKeyEntity(uint256 key, uint256 entity) internal pure returns (uint256) {
+    return uint256(keccak256(abi.encodePacked(key, entity)));
   }
 
   function hashEqualToString(uint256 a, string memory b) internal pure returns (bool) {
