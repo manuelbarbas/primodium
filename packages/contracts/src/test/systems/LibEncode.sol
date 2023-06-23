@@ -6,6 +6,7 @@ import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
 
 import { addressToEntity, entityToAddress } from "solecs/utils.sol";
+import { Coord } from "std-contracts/components/CoordComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -19,6 +20,13 @@ contract LibEncodeTest is MudTest {
     vm.stopPrank();
   }
 
+  function testCoordEncoding() public {
+    uint256 coordEntity = LibEncode.encodeCoordEntity(Coord({x: 1, y: 2}), "test");
+    Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
+    assertEq(1, decoded.x);
+    assertEq(2, decoded.y);
+  }
+  
   // function testUint160Mask() public {
   //   uint256 rawAddr = 0xfcc5ba1a98fc477b8948a04d08c6f4a76181fe75021370ab5e6abd22b1792a2a;
   //   address addr = 0x08c6F4A76181fe75021370ab5e6abd22b1792a2a;
