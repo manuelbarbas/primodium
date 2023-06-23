@@ -66,22 +66,26 @@ export default function ClaimCraftButton({
 
   if (transactionLoading) {
     return (
-      <button
-        id={id}
-        className="inset-x-4 absolute bottom-4 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
-      >
-        <Spinner />
-      </button>
+      <div className="absolute inset-x-4 bottom-4">
+        <button
+          id={id}
+          className="h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold w-full"
+        >
+          <Spinner />
+        </button>
+      </div>
     );
   } else {
     return (
-      <button
-        id={id}
-        className="inset-x-4 absolute bottom-4 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
-        onClick={claimAction}
-      >
-        Claim & Craft to Storage
-      </button>
+      <div className="absolute inset-x-4 bottom-4">
+        <button
+          id={id}
+          className="h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold w-full"
+          onClick={claimAction}
+        >
+          Claim & Craft to Storage
+        </button>
+      </div>
     );
   }
 }
