@@ -21,7 +21,7 @@ contract LibEncodeTest is MudTest {
   }
 
   function testCoordEncoding() public {
-    uint256 coordEntity = LibEncode.encodeCoordEntity(Coord({x: 1, y: 2}), "test");
+    uint256 coordEntity = LibEncode.encodeCoordEntity(Coord({ x: 1, y: 2 }), "test");
     Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
     assertEq(1, decoded.x);
     assertEq(2, decoded.y);

@@ -64,18 +64,9 @@ contract AttackSystemTest is MudTest {
     // bytes memory bulletFactoryEntity = buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord);
     uint256 bulletFactoryID = abi.decode(buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord), (uint256));
 
-    uint256 hashedBulletFactoryKeyIron = LibEncode.hashKeyEntity(
-      IronResourceItemID,
-      bulletFactoryID
-    );
-    uint256 hashedBulletFactoryKeyCopper = LibEncode.hashKeyEntity(
-      CopperResourceItemID,
-      bulletFactoryID
-    );
-    uint256 hashedBulletFactoryKeyBullet = LibEncode.hashKeyEntity(
-      BulletCraftedItemID,
-      bulletFactoryID
-    );
+    uint256 hashedBulletFactoryKeyIron = LibEncode.hashKeyEntity(IronResourceItemID, bulletFactoryID);
+    uint256 hashedBulletFactoryKeyCopper = LibEncode.hashKeyEntity(CopperResourceItemID, bulletFactoryID);
+    uint256 hashedBulletFactoryKeyBullet = LibEncode.hashKeyEntity(BulletCraftedItemID, bulletFactoryID);
 
     // Copper to BulletFactory
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));

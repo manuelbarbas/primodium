@@ -143,18 +143,9 @@ contract ResearchSystemTest is MudTest {
     bytes memory platingFactoryEntity = buildSystem.executeTyped(DebugPlatingFactoryID, platingFactoryCoord);
     uint256 platingFactoryID = abi.decode(platingFactoryEntity, (uint256));
 
-    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashKeyEntity(
-      IronResourceItemID,
-      platingFactoryID
-    );
-    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashKeyEntity(
-      CopperResourceItemID,
-      platingFactoryID
-    );
-    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashKeyEntity(
-      IronPlateCraftedItemID,
-      platingFactoryID
-    );
+    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashKeyEntity(IronResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashKeyEntity(CopperResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashKeyEntity(IronPlateCraftedItemID, platingFactoryID);
 
     // Copper to DebugIronPlateFactory
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));
@@ -288,18 +279,9 @@ contract ResearchSystemTest is MudTest {
     bytes memory platingFactoryEntity = buildSystem.executeTyped(DebugPlatingFactoryID, platingFactoryCoord);
     uint256 platingFactoryID = abi.decode(platingFactoryEntity, (uint256));
 
-    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashKeyEntity(
-      IronResourceItemID,
-      platingFactoryID
-    );
-    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashKeyEntity(
-      CopperResourceItemID,
-      platingFactoryID
-    );
-    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashKeyEntity(
-      IronPlateCraftedItemID,
-      platingFactoryID
-    );
+    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashKeyEntity(IronResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashKeyEntity(CopperResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashKeyEntity(IronPlateCraftedItemID, platingFactoryID);
 
     // Copper to DebugIronPlateFactory
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));

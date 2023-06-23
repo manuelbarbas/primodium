@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {Coord} from "std-contracts/components/CoordComponent.sol";
-import {split} from "solecs/utils.sol";
-
+import { Coord } from "std-contracts/components/CoordComponent.sol";
+import { split } from "solecs/utils.sol";
 
 library LibEncode {
-
   function hashKeyEntity(uint256 key, uint256 entity) internal pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(key, entity)));
   }

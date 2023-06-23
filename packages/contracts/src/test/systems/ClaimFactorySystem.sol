@@ -110,18 +110,9 @@ contract ClaimFactorySystemTest is MudTest {
     bytes memory bulletFactoryEntity = buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord);
     uint256 bulletFactoryID = abi.decode(bulletFactoryEntity, (uint256));
 
-    uint256 hashedBulletFactoryKeyIron = LibEncode.hashKeyEntity(
-      IronResourceItemID,
-      bulletFactoryID
-    );
-    uint256 hashedBulletFactoryKeyCopper = LibEncode.hashKeyEntity(
-      CopperResourceItemID,
-      bulletFactoryID
-    );
-    uint256 hashedBulletFactoryKeyBullet = LibEncode.hashKeyEntity(
-      BulletCraftedItemID,
-      bulletFactoryID
-    );
+    uint256 hashedBulletFactoryKeyIron = LibEncode.hashKeyEntity(IronResourceItemID, bulletFactoryID);
+    uint256 hashedBulletFactoryKeyCopper = LibEncode.hashKeyEntity(CopperResourceItemID, bulletFactoryID);
+    uint256 hashedBulletFactoryKeyBullet = LibEncode.hashKeyEntity(BulletCraftedItemID, bulletFactoryID);
 
     // Copper to BulletFactory
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));
@@ -242,10 +233,7 @@ contract ClaimFactorySystemTest is MudTest {
     claimFactorySystem.executeTyped(bulletFactoryCoord);
     craftSystem.executeTyped(bulletFactoryCoord);
     assertTrue(itemComponent.has(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactoryID)));
-    assertEq(
-      itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactoryID)),
-      100
-    );
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactoryID)), 100);
 
     // new bullet factory to transfer resources to
     Coord memory bulletFactory2Coord = Coord({ x: 0, y: 10 });
@@ -265,10 +253,7 @@ contract ClaimFactorySystemTest is MudTest {
     claimFactorySystem.executeTyped(bulletFactory2Coord);
     // uint256 hashedBulletFactory2Key = LibEncode.hashKeyEntity(IronResourceItemID, entityToAddress(bulletFactory2ID));
     assertTrue(itemComponent.has(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)));
-    assertEq(
-      itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)),
-      100
-    );
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)), 100);
 
     vm.roll(20);
 
@@ -277,10 +262,7 @@ contract ClaimFactorySystemTest is MudTest {
     claimSystem.executeTyped(bulletFactory2Coord);
     claimFactorySystem.executeTyped(bulletFactory2Coord);
     assertTrue(itemComponent.has(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)));
-    assertEq(
-      itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)),
-      100
-    );
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, bulletFactory2ID)), 100);
 
     vm.stopPrank();
   }
