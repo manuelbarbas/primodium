@@ -1192,7 +1192,7 @@
     "id": 21525,
     "exportedSymbols": {
       "BareComponent": [
-        42078
+        42156
       ],
       "Component": [
         262
@@ -1207,22 +1207,22 @@
         21511
       ],
       "IEntityIndexer": [
-        42495
+        42573
       ],
       "IWorld": [
         1247
       ],
       "LibTypes": [
-        42117
+        42195
       ],
       "MainBaseInitializedComponent": [
         21524
       ],
       "MapSet": [
-        42310
+        42388
       ],
       "Set": [
-        42476
+        42554
       ]
     },
     "nodeType": "SourceUnit",
@@ -1511,8 +1511,8 @@
         ],
         "canonicalName": "MainBaseInitializedComponent",
         "contractDependencies": [
-          42310,
-          42476
+          42388,
+          42554
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -1520,26 +1520,26 @@
           21524,
           1771,
           262,
-          42078,
-          44864,
-          42514,
+          42156,
+          44942,
+          42592,
           2359,
-          44420,
-          44920,
-          44296,
-          44163,
-          44909,
+          44498,
+          44998,
+          44374,
+          44241,
+          44987,
           2402,
-          44430
+          44508
         ],
         "name": "MainBaseInitializedComponent",
         "nameLocation": "197:28:89",
         "scope": 21525,
         "usedErrors": [
-          41878,
-          44789,
-          44917,
-          44919
+          41956,
+          44867,
+          44995,
+          44997
         ]
       }
     ],

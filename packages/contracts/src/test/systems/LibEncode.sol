@@ -25,6 +25,12 @@ contract LibEncodeTest is MudTest {
     Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
     assertEq(1, decoded.x);
     assertEq(2, decoded.y);
+    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: -110, y: -19201929 }), "testtesttesttesttesttest")));
+    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 124123, y: 3325 }), "building")));
+    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: -12334, y: -1120 }), "sowm")));
+    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 222233332, y: 22324234 }), "taxcuts")));
+    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 2147483647, y: -2147483647 }), "smallbrain")));
+
   }
 
   function testFuzzCoordEncoding(int32 x, int32 y) public {
