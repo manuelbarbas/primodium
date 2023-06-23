@@ -29,7 +29,7 @@ const ResourceTileLayer = ({
   const map = useMap();
 
   const { address } = useAccount();
-  const { components, systems, providers } = useMud();
+  const { components, systems, providers, world } = useMud();
 
   const [
     hoveredTile,

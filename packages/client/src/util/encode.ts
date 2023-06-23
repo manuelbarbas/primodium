@@ -4,6 +4,8 @@ import { BigNumber } from "ethers";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
+import { Buffer } from "buffer";
+
 // Identical to encodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
 export function encodeCoordEntity(coord: Coord, key: string): string {
   function encodeCoordinate(value: number): Buffer {
@@ -11,7 +13,7 @@ export function encodeCoordEntity(coord: Coord, key: string): string {
     if (value >= 0) {
       bytes.writeInt32BE(value);
     } else {
-       // Use two's complement for negative values
+      // Use two's complement for negative values
       bytes.writeUInt32BE(value >>> 0);
     }
     return bytes;
@@ -21,12 +23,15 @@ export function encodeCoordEntity(coord: Coord, key: string): string {
   let keyBytes = Buffer.from(key);
   const desiredKeyLength = 24;
   if (keyBytes.length < desiredKeyLength) {
-    keyBytes = Buffer.concat([keyBytes, Buffer.alloc(desiredKeyLength - keyBytes.length)]);
+    keyBytes = Buffer.concat([
+      keyBytes,
+      Buffer.alloc(desiredKeyLength - keyBytes.length),
+    ]);
   } else if (keyBytes.length > desiredKeyLength) {
     keyBytes = keyBytes.slice(0, desiredKeyLength);
   }
   const concatenatedBytes = Buffer.concat([xBytes, yBytes, keyBytes]);
-  const encodedValue = `0x${concatenatedBytes.toString('hex')}`;
+  const encodedValue = `0x${concatenatedBytes.toString("hex")}`;
   return encodedValue;
 }
 
@@ -48,7 +53,7 @@ export function decodeCoordEntity(entity: EntityID): Coord {
     // If the most significant bit is set, the number is negative
     return value >= 0x80000000 ? value - 0x100000000 : value;
   }
-  const data = Buffer.from(entity.slice(2), 'hex');
+  const data = Buffer.from(padTo64Bytes(entity).slice(2), "hex");
   const sizes = [4, 4];
   const decoded = split(data, sizes);
   const x = getInt32FromBuffer(decoded[0]);
@@ -57,7 +62,10 @@ export function decodeCoordEntity(entity: EntityID): Coord {
 }
 
 // Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
-export function hashKeyEntity(key: EntityID, entity: EntityID | string): string {
+export function hashKeyEntity(
+  key: EntityID,
+  entity: EntityID | string
+): string {
   // Compute the Keccak-256 hash of the concatenated key and entity
   const hash: string = solidityKeccak256(
     ["uint256", "uint256"],
@@ -65,4 +73,14 @@ export function hashKeyEntity(key: EntityID, entity: EntityID | string): string 
   );
 
   return hash;
+}
+
+function padTo64Bytes(hex: string): string {
+  // Remove "0x" prefix if present
+  const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
+  // Pad the hex string with zeros to 64 characters (32 bytes)
+  const paddedHex = cleanHex.padStart(64, "0");
+  // Add "0x" prefix back
+  const result = "0x" + paddedHex;
+  return result;
 }
