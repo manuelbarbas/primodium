@@ -26,7 +26,15 @@ contract LibEncodeTest is MudTest {
     assertEq(1, decoded.x);
     assertEq(2, decoded.y);
   }
-  
+
+  function testFuzzCoordEncoding(int32 x, int32 y) public {
+    Coord memory coord = Coord(x, y);
+    uint256 coordEntity = LibEncode.encodeCoordEntity(coord, "building");
+    Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
+    assertEq(coord.x, decoded.x);
+    assertEq(coord.y, decoded.y);
+  }
+
   // function testUint160Mask() public {
   //   uint256 rawAddr = 0xfcc5ba1a98fc477b8948a04d08c6f4a76181fe75021370ab5e6abd22b1792a2a;
   //   address addr = 0x08c6F4A76181fe75021370ab5e6abd22b1792a2a;
