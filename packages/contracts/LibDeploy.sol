@@ -18,12 +18,12 @@ import { SystemStorage } from "solecs/SystemStorage.sol";
 // Components (requires 'components=...' remapping in project's remappings.txt)
 import { CounterComponent, ID as CounterComponentID } from "components/CounterComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID } from "components/GameConfigComponent.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
@@ -77,10 +77,6 @@ library LibDeploy {
       comp = new GameConfigComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying PositionComponent");
-      comp = new PositionComponent(address(result.world));
-      console.log(address(comp));
-
       console.log("Deploying TileComponent");
       comp = new TileComponent(address(result.world));
       console.log(address(comp));
@@ -99,6 +95,10 @@ library LibDeploy {
 
       console.log("Deploying LastClaimedAtComponent");
       comp = new LastClaimedAtComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying LastResearchedAtComponent");
+      comp = new LastResearchedAtComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying HealthComponent");
@@ -159,6 +159,7 @@ library LibDeploy {
     world.registerSystem(address(system), ResearchSystemID);
     authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, ResearchComponentID, address(system));
+    authorizeWriter(components, LastResearchedAtComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying StarterPackSystem");
@@ -173,6 +174,10 @@ library LibDeploy {
     world.registerSystem(address(system), AttackSystemID);
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
+    authorizeWriter(components, TileComponentID, address(system));
+    authorizeWriter(components, OwnedByComponentID, address(system));
+    authorizeWriter(components, LastBuiltAtComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying IncrementSystem");
@@ -184,7 +189,6 @@ library LibDeploy {
     console.log("Deploying BuildSystem");
     system = new BuildSystem(world, address(components));
     world.registerSystem(address(system), BuildSystemID);
-    authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
@@ -196,19 +200,18 @@ library LibDeploy {
     console.log("Deploying DestroySystem");
     system = new DestroySystem(world, address(components));
     world.registerSystem(address(system), DestroySystemID);
-    authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, MainBaseInitializedComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathSystem");
     system = new BuildPathSystem(world, address(components));
     world.registerSystem(address(system), BuildPathSystemID);
-    authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
@@ -217,7 +220,6 @@ library LibDeploy {
     console.log("Deploying DestroyPathSystem");
     system = new DestroyPathSystem(world, address(components));
     world.registerSystem(address(system), DestroyPathSystemID);
-    authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
@@ -226,7 +228,6 @@ library LibDeploy {
     console.log("Deploying ClaimFromMineSystem");
     system = new ClaimFromMineSystem(world, address(components));
     world.registerSystem(address(system), ClaimFromMineSystemID);
-    authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
@@ -238,7 +239,6 @@ library LibDeploy {
     console.log("Deploying ClaimFromFactorySystem");
     system = new ClaimFromFactorySystem(world, address(components));
     world.registerSystem(address(system), ClaimFromFactorySystemID);
-    authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
@@ -250,7 +250,6 @@ library LibDeploy {
     console.log("Deploying CraftSystem");
     system = new CraftSystem(world, address(components));
     world.registerSystem(address(system), CraftSystemID);
-    authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, TileComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
