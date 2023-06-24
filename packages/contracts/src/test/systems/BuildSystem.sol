@@ -10,6 +10,8 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
+import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
+
 import { MainBaseID, LithiumMinerID, DebugNodeID,MinerID,NodeID,DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
@@ -72,8 +74,8 @@ contract BuildSystemTest is MudTest {
   function testFailBuildMoreThenBuildLimit() public {
     vm.startPrank(alice);
 
-
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(1);
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
+    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent,1);
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) 
@@ -88,7 +90,8 @@ contract BuildSystemTest is MudTest {
   function testBuildUpToBuildLimit() public {
     vm.startPrank(alice);
 
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(1);
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
+    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent,1);
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) 
@@ -104,7 +107,8 @@ contract BuildSystemTest is MudTest {
   function testBuildUpToBuildLimitIgnoreMainBaseAndTransportNodes() public {
     vm.startPrank(alice);
 
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(1);
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
+    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent,1);
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
 
     Coord memory coord1 = Coord({ x: -1, y: -1 });  
