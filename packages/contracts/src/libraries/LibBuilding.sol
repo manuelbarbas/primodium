@@ -13,10 +13,10 @@ import { entityToAddress } from "solecs/utils.sol";
 
 library LibBuilding {
 
-    function checkBuildCountLimit(Uint256Component buildingComponent, Uint256Component ownedByComponent,Uint256Component tileComponent, uint256 playerEntity) internal view returns (bool)
+    function checkBuildCountLimit(Uint256Component buildingLimitComponent,Uint256Component buildingComponent, Uint256Component ownedByComponent,Uint256Component tileComponent, uint256 playerEntity) internal view returns (bool)
     {
         uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, ownedByComponent, tileComponent, playerEntity);
-        uint256 buildCountLimit = getBuildCountLimit(mainBuildingLevel);
+        uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent,mainBuildingLevel);
         uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingComponent, ownedByComponent,tileComponent, playerEntity);
         return buildingCount < buildCountLimit;
     }
@@ -52,17 +52,14 @@ library LibBuilding {
         return buildingCount;
     }
     
-    function getBuildCountLimit(uint256 mainBuildingLevel) internal pure returns (uint256)
+    function getBuildCountLimit(Uint256Component buildingLimitComponent,uint256 mainBuildingLevel) internal view returns (uint256)
     {
         if(LibDebug.isDebug())
             return 100;
-        if(mainBuildingLevel == 1)
-            return 5;
-        else if(mainBuildingLevel == 2)
-            return 10;
-        else if(mainBuildingLevel == 3)
-            return 15;
-        return 0;
+        else if(buildingLimitComponent.has(mainBuildingLevel))
+            return buildingLimitComponent.getValue(mainBuildingLevel);
+        else
+            revert("Invalid Main Building Level");
     }
 
     function isMainBase(uint256 tileId) internal pure returns (bool) {
