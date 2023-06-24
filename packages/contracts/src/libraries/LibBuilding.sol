@@ -14,11 +14,11 @@ import { entityToAddress } from "solecs/utils.sol";
 
 library LibBuilding {
 
-    function checkBuildCountLimit(Uint256Component buildingLimitComponent,Uint256Component buildingComponent, Uint256Component ownedByComponent,Uint256Component tileComponent, uint256 playerEntity) internal view returns (bool)
+    function checkBuildCountLimit(BoolComponent ignoreBuildLimitComponent,Uint256Component buildingLimitComponent,Uint256Component buildingComponent, Uint256Component ownedByComponent,Uint256Component tileComponent, uint256 playerEntity) internal view returns (bool)
     {
         uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, ownedByComponent, tileComponent, playerEntity);
         uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent,mainBuildingLevel);
-        uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingComponent, ownedByComponent,tileComponent, playerEntity);
+        uint256 buildingCount = getNumberOfBuildingsForPlayer(ignoreBuildLimitComponent,buildingComponent, ownedByComponent,tileComponent, playerEntity);
         return buildingCount < buildCountLimit;
     }
 
@@ -67,8 +67,8 @@ library LibBuilding {
         return tileId == MainBaseID;
     }
 
-  function doesTileCountTowardsBuildingLimit(BoolComponent ignoreBuildLimitComponent,uint256 tileId) internal pure returns (bool) {
-    return ignoreBuildLimitComponent.has(tileId);
+  function doesTileCountTowardsBuildingLimit(BoolComponent ignoreBuildLimitComponent,uint256 tileId) internal view returns (bool) {
+    return !ignoreBuildLimitComponent.has(tileId) || !ignoreBuildLimitComponent.getValue(tileId);
   }
 
   

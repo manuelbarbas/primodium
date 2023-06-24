@@ -68,7 +68,7 @@ contract BuildSystem is System {
       getAddressById(components, IgnoreBuildLimitComponentID)
     );
     return !LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent,blockType) || 
-    LibBuilding.checkBuildCountLimit(buildingLimitComponent,buildingComponent, ownedByComponent, tileComponent, addressToEntity(msg.sender));
+    LibBuilding.checkBuildCountLimit(ignoreBuildLimitComponent,buildingLimitComponent,buildingComponent, ownedByComponent, tileComponent, addressToEntity(msg.sender));
   
   }
 

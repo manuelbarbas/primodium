@@ -25,13 +25,13 @@ library LibBuildingLimitDesignInitializer {
 
         ignoreBuildLimitComponent.set(MainBaseID);
         ignoreBuildLimitComponent.set(NodeID);
-        
-        ignoreBuildLimitComponent.set(MinerID);
         ignoreBuildLimitComponent.set(DebugNodeID);
-        ignoreBuildLimitComponent.set(LithiumMinerID);
-        ignoreBuildLimitComponent.set(BulletFactoryID);
-        ignoreBuildLimitComponent.set(SiloID);
-        ignoreBuildLimitComponent.set(DebugPlatingFactoryID);
+
+        // ignoreBuildLimitComponent.set(MinerID); 
+        // ignoreBuildLimitComponent.set(LithiumMinerID);
+        // ignoreBuildLimitComponent.set(BulletFactoryID);
+        // ignoreBuildLimitComponent.set(SiloID);
+        // ignoreBuildLimitComponent.set(DebugPlatingFactoryID);
         
 
 

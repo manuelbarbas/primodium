@@ -18,7 +18,8 @@
     "BuildingComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
-    "BuildingLimitComponent"
+    "BuildingLimitComponent",
+    "IgnoreBuildLimitComponent"
   ],
   "initializers": ["LibBuildingDesignInitializer","LibBuildingLimitDesignInitializer", "LibBuildingUpgradeDesignInitializer"],
   "systems": [
