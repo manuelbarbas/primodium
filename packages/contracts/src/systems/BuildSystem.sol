@@ -8,7 +8,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-
+import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
@@ -55,6 +55,7 @@ contract BuildSystem is System {
     LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent,blockType,player);
   }
 
+
   function execute(bytes memory args) public returns (bytes memory) {
     (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
@@ -63,6 +64,9 @@ contract BuildSystem is System {
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
+    );
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
+      getAddressById(components, BuildingLimitComponentID)
     );
     
     // Check there isn't another tile there
@@ -78,15 +82,11 @@ contract BuildSystem is System {
     require(checkResourceRequirements(blockType, msg.sender), "[BuildSystem] You do not have the required resources");
 
     
-<<<<<<< HEAD
-    if(LibBuilding.doesTileCountTowardsBuildingLimit(blockType))
-=======
 
     //check if counts towards build limit and if so, check if limit is reached
-    if(LibBuilding.isBuilding(blockType))
->>>>>>> alireza/move-gamedesign-to-components
+    if(LibBuilding.doesTileCountTowardsBuildingLimit(blockType))
     {
-        require(LibBuilding.checkBuildCountLimit(buildingComponent, ownedByComponent, tileComponent, addressToEntity(msg.sender)), "[BuildSystem] build limit reached. upgrade main building or destroy other buildings");
+        require(LibBuilding.checkBuildCountLimit(buildingLimitComponent,buildingComponent, ownedByComponent, tileComponent, addressToEntity(msg.sender)), "[BuildSystem] build limit reached. upgrade main base or destroy buildings");
     }
 
    
