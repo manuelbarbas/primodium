@@ -13,14 +13,14 @@
 
     "ItemComponent",
     "ResearchComponent",
-    "BuildingComponent",
     "MainBaseInitializedComponent",
     "StarterPackInitializedComponent",
     "BuildingComponent",
     "RequiredResearchComponent",
-    "RequiredResourcesComponent"
+    "RequiredResourcesComponent",
+    "BuildingLimitComponent"
   ],
-  "initializers": ["LibBuildingDesignInitializer"],
+  "initializers": ["LibBuildingDesignInitializer","LibBuildingLimitDesignInitializer", "LibBuildingUpgradeDesignInitializer"],
   "systems": [
     {
       "name": "ResearchSystem",
