@@ -8,6 +8,7 @@ import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFa
 import { LibDebug } from "libraries/LibDebug.sol";
 
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 
 
@@ -35,7 +36,7 @@ library LibBuilding {
     }
 
 
-    function getNumberOfBuildingsForPlayer(Uint256Component buildingComponent,
+    function getNumberOfBuildingsForPlayer(BoolComponent ignoreBuildLimitComponent,Uint256Component buildingComponent,
      Uint256Component ownedByComponent,Uint256Component tileComponent, uint256 playerEntity) internal view returns (uint256)
     {
         uint256 buildingCount = 0;
@@ -44,7 +45,7 @@ library LibBuilding {
         {
             if(buildingComponent.has(ownedTiles[i]) && 
             tileComponent.has(ownedTiles[i]) && 
-            doesTileCountTowardsBuildingLimit(tileComponent.getValue(ownedTiles[i])))
+            doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent,tileComponent.getValue(ownedTiles[i])))
             {
                 buildingCount++;
             }
@@ -66,34 +67,8 @@ library LibBuilding {
         return tileId == MainBaseID;
     }
 
-  function doesTileCountTowardsBuildingLimit(uint256 tileId) internal pure returns (bool) {
-    return
-      // debug
-      tileId == SiloID ||
-      tileId == BulletFactoryID ||
-      tileId == DebugPlatingFactoryID ||
-      tileId == MinerID ||
-
-      // production
-      tileId == BasicMinerID ||
-      tileId == PlatingFactoryID ||
-      tileId == BasicBatteryFactoryID ||
-      tileId == KineticMissileFactoryID ||
-      tileId == ProjectileLauncherID ||
-      tileId == HardenedDrillID ||
-      tileId == DenseMetalRefineryID ||
-      tileId == AdvancedBatteryFactoryID ||
-      tileId == HighTempFoundryID ||
-      tileId == PrecisionMachineryFactoryID ||
-      tileId == IridiumDrillbitFactoryID ||
-      tileId == PrecisionPneumaticDrillID ||
-      tileId == PenetratorFactoryID ||
-      tileId == PenetratingMissileFactoryID ||
-      tileId == MissileLaunchComplexID ||
-      tileId == HighEnergyLaserFactoryID ||
-      tileId == ThermobaricWarheadFactoryID ||
-      tileId == ThermobaricMissileFactoryID ||
-      tileId == KimberliteCatalystFactoryID;
+  function doesTileCountTowardsBuildingLimit(BoolComponent ignoreBuildLimitComponent,uint256 tileId) internal pure returns (bool) {
+    return ignoreBuildLimitComponent.has(tileId);
   }
 
   

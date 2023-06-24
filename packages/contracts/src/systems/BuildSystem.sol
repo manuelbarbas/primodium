@@ -9,6 +9,7 @@ import { BuildingComponent, ID as BuildingComponentID } from "components/Buildin
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
@@ -55,6 +56,22 @@ contract BuildSystem is System {
     LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent,blockType,player);
   }
 
+  function checkBuildLimitCondition(uint256 blockType, address player) internal view returns (bool)
+  {
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
+      getAddressById(components, BuildingLimitComponentID)
+    );
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      getAddressById(components, IgnoreBuildLimitComponentID)
+    );
+    return !LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent,blockType) || 
+    LibBuilding.checkBuildCountLimit(buildingLimitComponent,buildingComponent, ownedByComponent, tileComponent, addressToEntity(msg.sender));
+  
+  }
+
 
   function execute(bytes memory args) public returns (bytes memory) {
     (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
@@ -65,9 +82,7 @@ contract BuildSystem is System {
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
     );
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
-      getAddressById(components, BuildingLimitComponentID)
-    );
+    
     
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
@@ -81,13 +96,12 @@ contract BuildSystem is System {
     //check required resources
     require(checkResourceRequirements(blockType, msg.sender), "[BuildSystem] You do not have the required resources");
 
+    //check if counts towards build limit and if so, check if limit is reached
+    require(checkBuildLimitCondition(blockType, msg.sender), "[BuildSystem] build limit reached. upgrade main base or destroy buildings");
     
 
-    //check if counts towards build limit and if so, check if limit is reached
-    if(LibBuilding.doesTileCountTowardsBuildingLimit(blockType))
-    {
-        require(LibBuilding.checkBuildCountLimit(buildingLimitComponent,buildingComponent, ownedByComponent, tileComponent, addressToEntity(msg.sender)), "[BuildSystem] build limit reached. upgrade main base or destroy buildings");
-    }
+    
+    
 
    
 
@@ -126,11 +140,7 @@ contract BuildSystem is System {
 
     // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
     uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
-    if(LibBuilding.doesTileCountTowardsBuildingLimit(blockType) || blockType == MainBaseID)
-    {
-      buildingComponent.set(blockEntity, 1);
-    }
-    
+    buildingComponent.set(blockEntity, 1);
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
