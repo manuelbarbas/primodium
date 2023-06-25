@@ -2,7 +2,6 @@
   "components": [
     "CounterComponent",
     "GameConfigComponent",
-    "PositionComponent",
     "TileComponent",
     "OwnedByComponent",
     "PathComponent",
@@ -31,7 +30,6 @@
       "writeAccess": [
         "HealthComponent",
         "ItemComponent",
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
@@ -45,7 +43,6 @@
     {
       "name": "BuildSystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
@@ -59,7 +56,6 @@
     {
       "name": "DestroySystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
@@ -72,16 +68,15 @@
     },
     {
       "name": "BuildPathSystem",
-      "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "DestroyPathSystem",
-      "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "ClaimFromMineSystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "PathComponent",
@@ -94,7 +89,6 @@
     {
       "name": "ClaimFromFactorySystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "PathComponent",
@@ -107,7 +101,6 @@
     {
       "name": "CraftSystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "PathComponent",

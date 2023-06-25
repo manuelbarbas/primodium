@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
@@ -12,6 +11,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 // debug buildings
 import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
@@ -19,7 +19,7 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
 // Items
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
+import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID, BuildingKey } from "../prototypes/Keys.sol";
 
 // Research
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
@@ -37,7 +37,6 @@ contract BuildSystem is System {
 
   function execute(bytes memory args) public returns (bytes memory) {
     (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
@@ -48,8 +47,8 @@ contract BuildSystem is System {
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
     // Check there isn't another tile there
-    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
+    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -442,18 +441,11 @@ contract BuildSystem is System {
       revert("[BuildSystem] Invalid block type");
     }
 
-    // Randomly generate IDs instead of basing on coordinate
-    uint256 newBlockEntity = world.getUniqueEntityId();
+    tileComponent.set(entity, blockType);
+    ownedByComponent.set(entity, addressToEntity(msg.sender));
+    lastBuiltAtComponent.set(entity, block.number);
 
-    // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
-    uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
-
-    positionComponent.set(blockEntity, coord);
-    tileComponent.set(blockEntity, blockType);
-    ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
-    lastBuiltAtComponent.set(blockEntity, block.number);
-
-    return abi.encode(blockEntity);
+    return abi.encode(entity);
   }
 
   function executeTyped(uint256 blockType, Coord memory coord) public returns (bytes memory) {

@@ -5,7 +5,7 @@ import { Component, EntityID, EntityIndex, Type } from "@latticexyz/recs";
 
 import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
-import { applyUint160Mask, hashFromAddress } from "../util/encode";
+import { hashKeyEntity } from "../util/encode";
 
 export default function useResourceCount(
   resourceComponent: Component<
@@ -23,13 +23,13 @@ export default function useResourceCount(
   // else try to use wallet, otherwise use default index
   const resourceKey: EntityIndex = useMemo(() => {
     if (entityIndex && world.entities.length > entityIndex) {
-      const encodedEntityId = hashFromAddress(
+      const encodedEntityId = hashKeyEntity(
         resourceId,
-        applyUint160Mask(world.entities[entityIndex])
+        world.entities[entityIndex]
       ) as EntityID;
       return world.entityToIndex.get(encodedEntityId)!;
     } else if (address) {
-      const encodedEntityId = hashFromAddress(resourceId, address) as EntityID;
+      const encodedEntityId = hashKeyEntity(resourceId, address) as EntityID;
       return world.entityToIndex.get(
         encodedEntityId.toString().toLowerCase() as EntityID
       )!;
