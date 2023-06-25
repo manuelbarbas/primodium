@@ -90,6 +90,9 @@ contract BuildSystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
+      getAddressById(components, BuildingLimitComponentID)
+    );
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
     );
@@ -112,19 +115,6 @@ contract BuildSystem is System {
       checkBuildLimitCondition(blockType, msg.sender),
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
     );
-
-    if (LibBuilding.doesTileCountTowardsBuildingLimit(blockType)) {
-      require(
-        LibBuilding.checkBuildCountLimit(
-          buildingLimitComponent,
-          buildingComponent,
-          ownedByComponent,
-          tileComponent,
-          addressToEntity(msg.sender)
-        ),
-        "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
-      );
-    }
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
