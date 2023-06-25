@@ -26,12 +26,14 @@ export default function StarterPackButton() {
   }, []);
 
   return (
-    <button
-      id="starter-pack-button"
-      onClick={claimStarterPack}
-      className="absolute inset-x-4 bottom-4 h-10 bg-green-600 hover:bg-green-700 text-sm rounded font-bold"
-    >
-      Claim 200 Iron
-    </button>
+    <div className="absolute inset-x-4 bottom-4 flex">
+      <button
+        id="starter-pack-button"
+        onClick={claimStarterPack}
+        className="h-10 bg-green-600 hover:bg-green-700 text-sm rounded font-bold w-full"
+      >
+        Claim 200 Iron
+      </button>
+    </div>
   );
 }

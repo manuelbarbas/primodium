@@ -35,18 +35,22 @@ export default function CraftButton({
 
   if (transactionLoading) {
     return (
-      <button className="inset-x-4 absolute bottom-16 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold">
-        <Spinner />
-      </button>
+      <div className="absolute inset-x-4 bottom-16">
+        <button className="h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold w-full">
+          <Spinner />
+        </button>
+      </div>
     );
   } else {
     return (
-      <button
-        className="inset-x-4 absolute bottom-16 h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold"
-        onClick={claimAction}
-      >
-        Craft from Storage
-      </button>
+      <div className="absolute inset-x-4 bottom-16">
+        <button
+          className="h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold w-full"
+          onClick={claimAction}
+        >
+          Craft from Storage
+        </button>
+      </div>
     );
   }
 }
