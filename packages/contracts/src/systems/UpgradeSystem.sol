@@ -21,14 +21,13 @@ import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibUpgrade } from "../libraries/LibUpgrade.sol";
 
-
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function execute(bytes memory args) public returns (bytes memory)  {
-    (Coord memory coord) = abi.decode(args, (Coord));
+  function execute(bytes memory args) public returns (bytes memory) {
+    Coord memory coord = abi.decode(args, (Coord));
     PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
@@ -37,20 +36,54 @@ contract UpgradeSystem is System {
 
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID));
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(getAddressById(components, RequiredResearchComponentID));
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(components, RequiredResourcesComponentID)
+    );
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
+      getAddressById(components, RequiredResearchComponentID)
+    );
 
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 1, "[UpgradeSystem] Cannot upgrade an empty coordinate");
-    require(buildingComponent.has(entitiesAtPosition[0]),"[UpgradeSystem] Cannot upgrade a non-building");
+    require(buildingComponent.has(entitiesAtPosition[0]), "[UpgradeSystem] Cannot upgrade a non-building");
     uint256 ownerKey = addressToEntity(msg.sender);
-    require(ownedByComponent.getValue(entitiesAtPosition[0]) == ownerKey,"[UpgradeSystem] Cannot upgrade a building that is not owned by you");
+    require(
+      ownedByComponent.getValue(entitiesAtPosition[0]) == ownerKey,
+      "[UpgradeSystem] Cannot upgrade a building that is not owned by you"
+    );
     uint256 blockType = tileComponent.getValue(entitiesAtPosition[0]);
-    require(LibUpgrade.checkUpgradeResearchRequirements(buildingComponent,requiredResearchComponent,researchComponent,blockType,entitiesAtPosition[0],msg.sender),"[UpgradeSystem] Cannot upgrade a building that does not meet research requirements");
-    require(LibUpgrade.checkUpgradeResourceRequirements(buildingComponent, requiredResourcesComponent, itemComponent, blockType, entitiesAtPosition[0], msg.sender),"[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements");
-    LibUpgrade.spendUpgradeResourceRequirements(buildingComponent,requiredResourcesComponent,itemComponent,blockType,entitiesAtPosition[0],msg.sender);
-    buildingComponent.set(entitiesAtPosition[0],buildingComponent.getValue(entitiesAtPosition[0]) + 1);
+    require(
+      LibUpgrade.checkUpgradeResearchRequirements(
+        buildingComponent,
+        requiredResearchComponent,
+        researchComponent,
+        blockType,
+        entitiesAtPosition[0],
+        msg.sender
+      ),
+      "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
+    );
+    require(
+      LibUpgrade.checkUpgradeResourceRequirements(
+        buildingComponent,
+        requiredResourcesComponent,
+        itemComponent,
+        blockType,
+        entitiesAtPosition[0],
+        msg.sender
+      ),
+      "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
+    );
+    LibUpgrade.spendUpgradeResourceRequirements(
+      buildingComponent,
+      requiredResourcesComponent,
+      itemComponent,
+      blockType,
+      entitiesAtPosition[0],
+      msg.sender
+    );
+    buildingComponent.set(entitiesAtPosition[0], buildingComponent.getValue(entitiesAtPosition[0]) + 1);
     return abi.encode(entitiesAtPosition[0]);
   }
 

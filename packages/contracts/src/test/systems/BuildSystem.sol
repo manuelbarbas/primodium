@@ -12,9 +12,10 @@ import { PositionComponent, ID as PositionComponentID } from "../../components/P
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 
-import { MainBaseID, LithiumMinerID, DebugNodeID,MinerID,NodeID,DebugNodeID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
+
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
 
@@ -75,13 +76,12 @@ contract BuildSystemTest is MudTest {
     vm.startPrank(alice);
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent,1);
+    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     int32 secondIncrement = 0;
-    for (uint256 i = 0; i < buildLimit + 1; i++) 
-    {
-      Coord memory coord1 = Coord({ x: secondIncrement, y: secondIncrement });  
-      buildSystem.executeTyped(MinerID, coord1);  
+    for (uint256 i = 0; i < buildLimit + 1; i++) {
+      Coord memory coord1 = Coord({ x: secondIncrement, y: secondIncrement });
+      buildSystem.executeTyped(MinerID, coord1);
       secondIncrement++;
     }
     vm.stopPrank();
@@ -91,43 +91,38 @@ contract BuildSystemTest is MudTest {
     vm.startPrank(alice);
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent,1);
+    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     int32 secondIncrement = 0;
-    for (uint256 i; i < buildLimit; i++) 
-    {
-      Coord memory coord1 = Coord({ x: secondIncrement, y: secondIncrement });  
-      buildSystem.executeTyped(MinerID, coord1);  
+    for (uint256 i; i < buildLimit; i++) {
+      Coord memory coord1 = Coord({ x: secondIncrement, y: secondIncrement });
+      buildSystem.executeTyped(MinerID, coord1);
       secondIncrement++;
     }
     vm.stopPrank();
   }
-
 
   function testBuildUpToBuildLimitIgnoreMainBaseAndTransportNodes() public {
     vm.startPrank(alice);
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent,1);
+    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });  
-    buildSystem.executeTyped(MainBaseID, coord1);  
+    Coord memory coord1 = Coord({ x: -1, y: -1 });
+    buildSystem.executeTyped(MainBaseID, coord1);
 
-    coord1 = Coord({ x: -1, y: -2 });  
-    buildSystem.executeTyped(DebugNodeID, coord1);  
+    coord1 = Coord({ x: -1, y: -2 });
+    buildSystem.executeTyped(DebugNodeID, coord1);
 
     int32 secondIncrement = 0;
-    for (uint256 i; i < buildLimit; i++) 
-    {
-      coord1 = Coord({ x: secondIncrement, y: secondIncrement });  
-      buildSystem.executeTyped(MinerID, coord1);  
+    for (uint256 i; i < buildLimit; i++) {
+      coord1 = Coord({ x: secondIncrement, y: secondIncrement });
+      buildSystem.executeTyped(MinerID, coord1);
       secondIncrement++;
     }
     vm.stopPrank();
   }
-
-
 
   function testBuildPath() public {
     vm.startPrank(alice);

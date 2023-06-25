@@ -14,7 +14,7 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
-import { MainBaseID, LithiumMinerID, DebugNodeID,MinerID,NodeID,DebugNodeID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibUpgrade } from "../../libraries/LibUpgrade.sol";
@@ -42,7 +42,6 @@ contract UpgradeSystemTest is MudTest {
   //   BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
   //   RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(component(RequiredResourcesComponentID));
   //   ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    
 
   //   bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
   //   uint256 blockEntityID = abi.decode(blockEntity, (uint256));
@@ -61,11 +60,10 @@ contract UpgradeSystemTest is MudTest {
   //   upgradeSystem.executeTyped(coord);
   //   assertTrue(buildingComponent.getValue(blockEntityID) == 2);
 
-
   //   vm.stopPrank();
   // }
 
-function testFailUpgradeResourceRequirementsNotMet() public {
+  function testFailUpgradeResourceRequirementsNotMet() public {
     vm.startPrank(alice);
 
     Coord memory coord = Coord({ x: 0, y: 0 });
@@ -73,7 +71,6 @@ function testFailUpgradeResourceRequirementsNotMet() public {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
     BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
-    
 
     bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
@@ -83,6 +80,4 @@ function testFailUpgradeResourceRequirementsNotMet() public {
     upgradeSystem.executeTyped(coord);
     vm.stopPrank();
   }
-
-
 }
