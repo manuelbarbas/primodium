@@ -20,7 +20,7 @@ import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, SiloID } from "../prototypes/Tiles.sol";
 
 // Production Buildings
-import { BasicMinerID, PrecisionMachineryFactoryID, HardenedDrillID, NodeID } from "../prototypes/Tiles.sol";
+import { BasicMinerID, PrecisionPneumaticDrillID, HardenedDrillID, NodeID } from "../prototypes/Tiles.sol";
 
 // resources
 import { BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TitaniumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
@@ -83,7 +83,7 @@ contract ClaimFromMineSystem is System {
         c.tileComponent.getValue(entity) == MinerID ||
         c.tileComponent.getValue(entity) == LithiumMinerID ||
         c.tileComponent.getValue(entity) == BasicMinerID ||
-        c.tileComponent.getValue(entity) == PrecisionMachineryFactoryID ||
+        c.tileComponent.getValue(entity) == PrecisionPneumaticDrillID ||
         c.tileComponent.getValue(entity) == HardenedDrillID
       ) {
         // fetch tile beneath miner, return 0 if resource is not unlocked via LibMine.mine
