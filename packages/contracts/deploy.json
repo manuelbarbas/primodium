@@ -19,10 +19,13 @@
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
-    "IgnoreBuildLimitComponent",
-    "DebugModeComponent"
+    "IgnoreBuildLimitComponent"
   ],
-  "initializers": ["LibBuildingDesignInitializer","LibBuildingLimitDesignInitializer", "LibBuildingUpgradeDesignInitializer"],
+  "initializers": [
+    "LibBuildingDesignInitializer",
+    "LibBuildingLimitDesignInitializer",
+    "LibBuildingUpgradeDesignInitializer"
+  ],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -127,41 +130,27 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingComponent", "ItemComponent"]	
+      "writeAccess": ["BuildingComponent", "ItemComponent"]
     },
     {
       "name": "DebugAquireResourcesSystem",
-      "writeAccess": [
-        "ItemComponent"
-      ]	
+      "writeAccess": ["ItemComponent"]
     },
     {
       "name": "DebugIgnoreBuildLimitForBuildingSystem",
-      "writeAccess": [
-        "IgnoreBuildLimitComponent"
-      ]	
+      "writeAccess": ["IgnoreBuildLimitComponent"]
     },
     {
       "name": "DebugRemoveBuildingRequirementsSystem",
-      "writeAccess": [
-        "RequiredResearchComponent",
-        "RequiredResourcesComponent"
-      ]	
+      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
     },
     {
       "name": "DebugRemoveUpgradeRequirementsSystem",
-      "writeAccess": [
-        "RequiredResearchComponent",
-        "RequiredResourcesComponent"
-      ]	
+      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
     },
     {
       "name": "DebugRemoveBuildLimitSystem",
-      "writeAccess": [
-        "IgnoreBuildLimitComponent"
-      ]	
+      "writeAccess": ["IgnoreBuildLimitComponent"]
     }
-    
-
   ]
 }
