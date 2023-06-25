@@ -28,7 +28,7 @@ export function encodeCoordEntity(coord: Coord, key: string): string {
       Buffer.alloc(desiredKeyLength - keyBytes.length),
     ]);
   } else if (keyBytes.length > desiredKeyLength) {
-    keyBytes = keyBytes.slice(0, desiredKeyLength);
+    keyBytes = keyBytes.subarray(0, desiredKeyLength);
   }
   const concatenatedBytes = Buffer.concat([xBytes, yBytes, keyBytes]);
   const encodedValue = `0x${concatenatedBytes.toString("hex")}`;
@@ -42,7 +42,7 @@ export function decodeCoordEntity(entity: EntityID): Coord {
     const result: Buffer[] = [];
     let offset = 0;
     for (const size of sizes) {
-      result.push(data.slice(offset, offset + size));
+      result.push(data.subarray(offset, offset + size));
       offset += size;
     }
     return result;
