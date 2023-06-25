@@ -6,7 +6,6 @@ import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "componen
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 
-
 uint256 constant ID = uint256(keccak256("system.DebugRemoveBuildLimit"));
 
 contract DebugRemoveBuildLimitSystem is System {
@@ -26,5 +25,4 @@ contract DebugRemoveBuildLimitSystem is System {
   function executeTyped() public returns (bytes memory) {
     return execute(abi.encode(0));
   }
-
 }

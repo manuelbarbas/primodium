@@ -6,7 +6,6 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 
-
 uint256 constant ID = uint256(keccak256("system.DebugRemoveUpgradeRequirements"));
 
 contract DebugRemoveUpgradeRequirementsSystem is System {
@@ -16,15 +15,16 @@ contract DebugRemoveUpgradeRequirementsSystem is System {
     if (!LibDebug.isDebug()) {
       revert("Not in debug mode");
     }
-    (uint256 buildingId) = abi.decode(args, (uint256));
-     for (uint256 i = 0; i < 100; i++) {
+    uint256 buildingId = abi.decode(args, (uint256));
+    for (uint256 i = 0; i < 100; i++) {
       removeRequiredResourcesAndTechnologyConditionsForUpgradingBuildingIdLevel(buildingId, i);
     }
-
   }
 
   function removeRequiredResourcesAndTechnologyConditionsForUpgradingBuildingIdLevel(
-    uint256 buildingId, uint256 level) public returns (bytes memory) {
+    uint256 buildingId,
+    uint256 level
+  ) public returns (bytes memory) {
     if (!LibDebug.isDebug()) {
       revert("Not in debug mode");
     }
@@ -37,11 +37,9 @@ contract DebugRemoveUpgradeRequirementsSystem is System {
     );
     requiredResearch.remove(LibEncode.hashFromKey(buildingId, level));
     requiredResources.remove(LibEncode.hashFromKey(buildingId, level));
-
   }
 
   function executeTyped(uint256 buildingId) public returns (bytes memory) {
     return execute(abi.encode(buildingId));
   }
-
 }

@@ -5,7 +5,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
-import {LibMath} from "../libraries/LibMath.sol";
+import { LibMath } from "../libraries/LibMath.sol";
 
 uint256 constant ID = uint256(keccak256("system.DebugAquireResources"));
 
@@ -20,13 +20,12 @@ contract DebugAquireResourcesSystem is System {
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     itemComponent.set(
       LibEncode.hashFromAddress(resourceId, msg.sender),
-      LibMath.getSafeUint256Value(itemComponent,LibEncode.hashFromAddress(resourceId, msg.sender)) + amount
+      LibMath.getSafeUint256Value(itemComponent, LibEncode.hashFromAddress(resourceId, msg.sender)) + amount
     );
-    return abi.encode(LibMath.getSafeUint256Value(itemComponent,LibEncode.hashFromAddress(resourceId, msg.sender)));
+    return abi.encode(LibMath.getSafeUint256Value(itemComponent, LibEncode.hashFromAddress(resourceId, msg.sender)));
   }
 
   function executeTyped(uint256 resourceId, uint256 amount) public returns (bytes memory) {
     return execute(abi.encode(resourceId, amount));
   }
-
 }
