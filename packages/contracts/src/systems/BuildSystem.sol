@@ -14,11 +14,9 @@ import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/L
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 // debug buildings
-import { PlatingFactoryID,MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
-
-
 
 import { Coord } from "../types.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
@@ -33,26 +31,34 @@ uint256 constant ID = uint256(keccak256("system.Build"));
 contract BuildSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
- 
-
   function checkResearchRequirements(uint256 blockType, address player) internal view returns (bool) {
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(getAddressById(components, RequiredResearchComponentID));
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
+      getAddressById(components, RequiredResearchComponentID)
+    );
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    return !requiredResearchComponent.has(blockType) || LibResearch.hasResearchedWithKey(researchComponent,
-      requiredResearchComponent.getValue(blockType),addressToEntity(player));
+    return
+      !requiredResearchComponent.has(blockType) ||
+      LibResearch.hasResearchedWithKey(
+        researchComponent,
+        requiredResearchComponent.getValue(blockType),
+        addressToEntity(player)
+      );
   }
 
   function checkResourceRequirements(uint256 blockType, address player) internal view returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID));
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(components, RequiredResourcesComponentID)
+    );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent,
-     blockType, player);
+    return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent, blockType, player);
   }
 
   function spendRequiredResources(uint256 blockType, address player) internal {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID));
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(components, RequiredResourcesComponentID)
+    );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent,blockType,player);
+    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent, blockType, player);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -64,40 +70,38 @@ contract BuildSystem is System {
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
     );
-    
+
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
 
     //check required research
-    require(checkResearchRequirements(blockType, msg.sender),
-      "[BuildSystem] You have not researched the required Technology");
+    require(
+      checkResearchRequirements(blockType, msg.sender),
+      "[BuildSystem] You have not researched the required Technology"
+    );
 
-    
     //check required resources
     require(checkResourceRequirements(blockType, msg.sender), "[BuildSystem] You do not have the required resources");
 
-    
-
     //check if counts towards build limit and if so, check if limit is reached
-    if(LibBuilding.isBuilding(blockType))
-    {
-      uint256 buildingCount = 0;  
+    if (LibBuilding.isBuilding(blockType)) {
+      uint256 buildingCount = 0;
       uint256 mainBuildingLevel = 0;
       uint256[] memory ownedTiles = ownedByComponent.getEntitiesWithValue(addressToEntity(msg.sender));
       for (uint256 i = 0; i < ownedTiles.length; i++) {
-         if(buildingComponent.has(ownedTiles[i]))
-          {
-            buildingCount++;
-            if(mainBuildingLevel <= 0 && LibBuilding.isMainBase(tileComponent.getValue(ownedTiles[i])))
-              mainBuildingLevel = buildingComponent.getValue(ownedTiles[i]);
-          }
+        if (buildingComponent.has(ownedTiles[i])) {
+          buildingCount++;
+          if (mainBuildingLevel <= 0 && LibBuilding.isMainBase(tileComponent.getValue(ownedTiles[i])))
+            mainBuildingLevel = buildingComponent.getValue(ownedTiles[i]);
+        }
       }
 
-      require(buildingCount <= LibBuilding.getBuildCountLimit(mainBuildingLevel), "[BuildSystem] build limit reached. upgrade main building or destroy other buildings");
+      require(
+        buildingCount <= LibBuilding.getBuildCountLimit(mainBuildingLevel),
+        "[BuildSystem] build limit reached. upgrade main building or destroy other buildings"
+      );
     }
-
-   
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -125,20 +129,19 @@ contract BuildSystem is System {
         mainBaseInitializedComponent.set(addressToEntity(msg.sender), coord);
       }
     }
-     
+
     //spend required resources
     spendRequiredResources(blockType, msg.sender);
-   
+
     // Randomly generate IDs instead of basing on coordinate
     uint256 newBlockEntity = world.getUniqueEntityId();
 
     // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
     uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
-    if(LibBuilding.isBuilding(blockType))
-    {
+    if (LibBuilding.isBuilding(blockType)) {
       buildingComponent.set(blockEntity, 1);
     }
-    
+
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
