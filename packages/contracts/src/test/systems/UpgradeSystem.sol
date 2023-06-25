@@ -15,7 +15,7 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
-import { MainBaseID, LithiumMinerID, DebugNodeID,MinerID,NodeID,DebugNodeID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibUpgrade } from "../../libraries/LibUpgrade.sol";
@@ -32,43 +32,45 @@ contract UpgradeSystemTest is MudTest {
     vm.stopPrank();
   }
 
-   function testUpgrade() public {
-     vm.startPrank(alice);
+  function testUpgrade() public {
+    vm.startPrank(alice);
 
-     Coord memory coord = Coord({ x: 0, y: 0 });
+    Coord memory coord = Coord({ x: 0, y: 0 });
 
-     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-     DebugAquireResourcesSystem debugAquireResourcesSystem = DebugAquireResourcesSystem(system(DebugAquireResourcesSystemID));
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    DebugAquireResourcesSystem debugAquireResourcesSystem = DebugAquireResourcesSystem(
+      system(DebugAquireResourcesSystemID)
+    );
 
-     BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
-     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(component(RequiredResourcesComponentID));
-     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    
+    BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      component(RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-     bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
-     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-     assertTrue(buildingComponent.has(blockEntityID));
-     assertTrue(buildingComponent.getValue(blockEntityID) == 1);
-    console.log("upgrading MainBase to level 2");    
-     uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashFromKey(MainBaseID,2));
-     for(uint256 i = 0; i < resourceRequirements.length; i++)
-     {
-      
-         uint256 resourceCost = LibMath.getSafeUint256Value(itemComponent,
-             LibEncode.hashFromTwoKeys(resourceRequirements[i], MainBaseID, 2));
-         console.log("MainBase level 2 requires resource: %s of amount %s", resourceRequirements[i],resourceCost);    
-         debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
-         console.log("%s of amount %s provided to player", resourceRequirements[i],resourceCost);    
-     }
-     upgradeSystem.executeTyped(coord);
-     assertTrue(buildingComponent.getValue(blockEntityID) == 2);
+    bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
+    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
+    assertTrue(buildingComponent.has(blockEntityID));
+    assertTrue(buildingComponent.getValue(blockEntityID) == 1);
+    console.log("upgrading MainBase to level 2");
+    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashFromKey(MainBaseID, 2));
+    for (uint256 i = 0; i < resourceRequirements.length; i++) {
+      uint256 resourceCost = LibMath.getSafeUint256Value(
+        itemComponent,
+        LibEncode.hashFromTwoKeys(resourceRequirements[i], MainBaseID, 2)
+      );
+      console.log("MainBase level 2 requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
+      debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
+      console.log("%s of amount %s provided to player", resourceRequirements[i], resourceCost);
+    }
+    upgradeSystem.executeTyped(coord);
+    assertTrue(buildingComponent.getValue(blockEntityID) == 2);
 
+    vm.stopPrank();
+  }
 
-     vm.stopPrank();
-   }
-
-function testFailUpgradeResourceRequirementsNotMet() public {
+  function testFailUpgradeResourceRequirementsNotMet() public {
     vm.startPrank(alice);
 
     Coord memory coord = Coord({ x: 0, y: 0 });
@@ -76,7 +78,6 @@ function testFailUpgradeResourceRequirementsNotMet() public {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
     BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
-    
 
     bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
@@ -86,6 +87,4 @@ function testFailUpgradeResourceRequirementsNotMet() public {
     upgradeSystem.executeTyped(coord);
     vm.stopPrank();
   }
-
-
 }
