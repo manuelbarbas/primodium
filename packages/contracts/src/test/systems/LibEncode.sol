@@ -25,12 +25,18 @@ contract LibEncodeTest is MudTest {
     Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
     assertEq(1, decoded.x);
     assertEq(2, decoded.y);
-    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: -110, y: -19201929 }), "testtesttesttesttesttest")));
-    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 124123, y: 3325 }), "building")));
-    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: -12334, y: -1120 }), "sowm")));
-    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 222233332, y: 22324234 }), "taxcuts")));
-    console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 2147483647, y: -2147483647 }), "smallbrain")));
 
+    // Check values used in client tests
+    bytes32 clientTestOne = bytes32(LibEncode.encodeCoordEntity(Coord({ x: -110, y: -19201929 }), "testtesttesttesttesttest"));
+    bytes32 clientTestTwo = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 124123, y: 3325 }), "building"));
+    bytes32 clientTestThree  = bytes32(LibEncode.encodeCoordEntity(Coord({ x: -12334, y: -1120 }), "sowm"));
+    bytes32 clientTestFour = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 222233332, y: 22324234 }), "taxcuts"));
+    bytes32 clientTestFive = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 2147483647, y: -2147483647 }), "smallbrain"));
+    assertEq(clientTestOne, 0xffffff92fedb0077746573747465737474657374746573747465737474657374);
+    assertEq(clientTestTwo, 0x0001e4db00000cfd6275696c64696e6700000000000000000000000000000000);
+    assertEq(clientTestThree, 0xffffcfd2fffffba0736f776d0000000000000000000000000000000000000000);
+    assertEq(clientTestFour, 0x0d3f02f40154a40a746178637574730000000000000000000000000000000000);
+    assertEq(clientTestFive, 0x7fffffff80000001736d616c6c627261696e0000000000000000000000000000);
   }
 
   function testFuzzCoordEncoding(int32 x, int32 y) public {
