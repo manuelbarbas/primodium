@@ -36,6 +36,11 @@ contract ResearchSystem is System {
     );
 
     require(
+      requiredResourcesComponent.has(researchItem),
+      "[ResearchSystem] can not research a technology that does not have resource requirements"
+    );
+
+    require(
       LibResearch.checkResearchRequirements(
         requiredResearchComponent,
         researchComponent,
@@ -54,7 +59,7 @@ contract ResearchSystem is System {
       ),
       "[ResearchSystem] Not enough resources to research"
     );
-
+    researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
     LibResearch.setLastResearched(lastResearchedAtComponent, researchItem, addressToEntity(msg.sender));
     return abi.encode(true);
   }
