@@ -79,7 +79,7 @@ contract BuildSystemTest is MudTest {
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashFromTwoKeys(resourceRequirements[i], BasicMinerID, 2)
+        LibEncode.hashFromKey(resourceRequirements[i], BasicMinerID)
       );
       console.log("BasicMiner requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
       debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
