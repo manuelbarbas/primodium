@@ -21,7 +21,6 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
-import { LibBuild } from "../libraries/LibBuild.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -40,10 +39,10 @@ contract BuildSystem is System {
     );
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
     return
-      !requiredResearchComponent.has(blockType) ||
-      LibResearch.hasResearchedWithKey(
+      LibResearch.checkResearchRequirements(
+        requiredResearchComponent,
         researchComponent,
-        requiredResearchComponent.getValue(blockType),
+        blockType,
         addressToEntity(msg.sender)
       );
   }
@@ -103,6 +102,7 @@ contract BuildSystem is System {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       getAddressById(components, IgnoreBuildLimitComponentID)
     );
+
     // Check there isn't another tile there
     uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
@@ -110,7 +110,7 @@ contract BuildSystem is System {
     //check required research
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
 
-    //check required resources
+    //check build limit
     require(
       LibBuilding.checkBuildLimitConditionForBuildingId(
         ignoreBuildLimitComponent,
@@ -121,10 +121,6 @@ contract BuildSystem is System {
       ),
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
     );
-
-    //require(checkResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
-
-    //check if counts towards build limit and if so, check if limit is reached
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -153,19 +149,24 @@ contract BuildSystem is System {
       }
     }
 
-    //spend required resources
-    //spendRequiredResources(blockType);
+    //check resource requirements and if ok spend required resources
     require(checkAndSpendResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
+
+    //set MainBase id for player address for easy lookup
     if (blockType == MainBaseID) {
       buildingComponent.set(addressToEntity(msg.sender), entity);
     }
+
+    // update building count if the built building counts towards the build limit
     if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {
       buildingLimitComponent.set(
         addressToEntity(msg.sender),
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) + 1
       );
     }
+    //set level of building to 1
     buildingComponent.set(entity, 1);
+
     tileComponent.set(entity, blockType);
     ownedByComponent.set(entity, addressToEntity(msg.sender));
     lastBuiltAtComponent.set(entity, block.number);
