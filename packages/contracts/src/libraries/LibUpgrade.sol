@@ -86,10 +86,7 @@ library LibUpgrade {
   ) internal view returns (bool) {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
     uint256 currentLevel = buildingComponent.getValue(buildingEntity);
-    require(
-      researchRequirmentComponent.has(LibEncode.hashFromKey(buildingId, currentLevel + 1)),
-      "[LibUpgrade] Research Requirements do not exist for this building level"
-    );
+    if (!researchRequirmentComponent.has(LibEncode.hashFromKey(buildingId, currentLevel + 1))) return true;
     uint256 researchRequirement = researchRequirmentComponent.getValue(
       LibEncode.hashFromKey(buildingId, currentLevel + 1)
     );
