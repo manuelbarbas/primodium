@@ -4,7 +4,7 @@ import "forge-std/console.sol";
 
 import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
-import { entityToAddress, addressToEntity } from "solecs/utils.sol";
+import { addressToEntity } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
@@ -66,11 +66,11 @@ contract ResearchSystemTest is MudTest {
     // ================================================================================================
     // Resource and crafted components
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
-    uint256 hashedAliceCopperKey = LibEncode.hashFromAddress(CopperID, alice);
+    uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
+    uint256 hashedAliceCopperKey = LibEncode.hashKeyEntity(CopperID, addressToEntity(alice));
 
     ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
-    uint256 hashedAliceFastMinerKey = LibEncode.hashFromAddress(FastMinerResearchID, alice);
+    uint256 hashedAliceFastMinerKey = LibEncode.hashKeyEntity(FastMinerResearchID, addressToEntity(alice));
 
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
@@ -143,18 +143,9 @@ contract ResearchSystemTest is MudTest {
     bytes memory platingFactoryEntity = buildSystem.executeTyped(DebugPlatingFactoryID, platingFactoryCoord);
     uint256 platingFactoryID = abi.decode(platingFactoryEntity, (uint256));
 
-    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashFromAddress(
-      IronResourceItemID,
-      entityToAddress(platingFactoryID)
-    );
-    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashFromAddress(
-      CopperResourceItemID,
-      entityToAddress(platingFactoryID)
-    );
-    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashFromAddress(
-      IronPlateCraftedItemID,
-      entityToAddress(platingFactoryID)
-    );
+    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashKeyEntity(IronResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashKeyEntity(CopperResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashKeyEntity(IronPlateCraftedItemID, platingFactoryID);
 
     // Copper to DebugIronPlateFactory
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));
@@ -227,9 +218,9 @@ contract ResearchSystemTest is MudTest {
     assertEq(itemComponent.getValue(hashedPlatingFactoryKeyCopper), 0);
     assertEq(itemComponent.getValue(hashedPlatingFactoryKeyIronPlate), 0);
 
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, alice)), 0);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(CopperResourceItemID, alice)), 100);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronPlateCraftedItemID, alice)), 300);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice))), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(CopperResourceItemID, addressToEntity(alice))), 100);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))), 300);
 
     // ================================================================================================
     // BEGIN UNIQUE SEGMENT FOR THIS TEST:
@@ -247,17 +238,17 @@ contract ResearchSystemTest is MudTest {
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
     researchSystem.executeTyped(LithiumResearchID);
-    assertTrue(researchComponent.has(LibEncode.hashFromAddress(LithiumResearchID, alice)));
-    assertTrue(researchComponent.getValue(LibEncode.hashFromAddress(LithiumResearchID, alice)));
+    assertTrue(researchComponent.has(LibEncode.hashKeyEntity(LithiumResearchID, addressToEntity(alice))));
+    assertTrue(researchComponent.getValue(LibEncode.hashKeyEntity(LithiumResearchID, addressToEntity(alice))));
 
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, alice)), 0);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(CopperResourceItemID, alice)), 0);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronPlateCraftedItemID, alice)), 280);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice))), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(CopperResourceItemID, addressToEntity(alice))), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))), 280);
 
     // mine lithium (expected 110 -> 120 => (120 - 110) * 10 = 100 lithium)
     vm.roll(120);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(LithiumResourceItemID, alice)), 100);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(LithiumResourceItemID, addressToEntity(alice))), 100);
 
     vm.stopPrank();
   }
@@ -288,18 +279,9 @@ contract ResearchSystemTest is MudTest {
     bytes memory platingFactoryEntity = buildSystem.executeTyped(DebugPlatingFactoryID, platingFactoryCoord);
     uint256 platingFactoryID = abi.decode(platingFactoryEntity, (uint256));
 
-    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashFromAddress(
-      IronResourceItemID,
-      entityToAddress(platingFactoryID)
-    );
-    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashFromAddress(
-      CopperResourceItemID,
-      entityToAddress(platingFactoryID)
-    );
-    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashFromAddress(
-      IronPlateCraftedItemID,
-      entityToAddress(platingFactoryID)
-    );
+    uint256 hashedPlatingFactoryKeyIron = LibEncode.hashKeyEntity(IronResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyCopper = LibEncode.hashKeyEntity(CopperResourceItemID, platingFactoryID);
+    uint256 hashedPlatingFactoryKeyIronPlate = LibEncode.hashKeyEntity(IronPlateCraftedItemID, platingFactoryID);
 
     // Copper to DebugIronPlateFactory
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));
@@ -372,9 +354,9 @@ contract ResearchSystemTest is MudTest {
     assertEq(itemComponent.getValue(hashedPlatingFactoryKeyCopper), 0);
     assertEq(itemComponent.getValue(hashedPlatingFactoryKeyIronPlate), 0);
 
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, alice)), 0);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(CopperResourceItemID, alice)), 100);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronPlateCraftedItemID, alice)), 300);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice))), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(CopperResourceItemID, addressToEntity(alice))), 100);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))), 300);
 
     // ================================================================================================
     // BEGIN UNIQUE SEGMENT FOR THIS TEST:
@@ -386,12 +368,12 @@ contract ResearchSystemTest is MudTest {
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
     researchSystem.executeTyped(LithiumResearchID);
-    assertTrue(researchComponent.has(LibEncode.hashFromAddress(LithiumResearchID, alice)));
-    assertTrue(researchComponent.getValue(LibEncode.hashFromAddress(LithiumResearchID, alice)));
+    assertTrue(researchComponent.has(LibEncode.hashKeyEntity(LithiumResearchID, addressToEntity(alice))));
+    assertTrue(researchComponent.getValue(LibEncode.hashKeyEntity(LithiumResearchID, addressToEntity(alice))));
 
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, alice)), 0);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(CopperResourceItemID, alice)), 0);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronPlateCraftedItemID, alice)), 280);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice))), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(CopperResourceItemID, addressToEntity(alice))), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))), 280);
 
     vm.roll(110);
     // build mine at the lithiumCoord and connect to the main base
@@ -402,7 +384,7 @@ contract ResearchSystemTest is MudTest {
     // mine lithium (expected 110 -> 120 => (120 - 110) * 10 = 100 lithium)
     vm.roll(120);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(LithiumResourceItemID, alice)), 100);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(LithiumResourceItemID, addressToEntity(alice))), 100);
 
     vm.stopPrank();
   }

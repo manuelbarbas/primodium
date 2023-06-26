@@ -10,7 +10,7 @@ import {
 } from "../../../util/constants";
 import { BuildingReceipe } from "../../../util/resource";
 import { useComponentValue } from "@latticexyz/react";
-import { hashFromAddress } from "../../../util/encode";
+import { hashKeyEntity } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
 import { useGameStore } from "../../../store/GameStore";
 
@@ -43,7 +43,7 @@ function BuildingIconButton({
   const researchRequirement = BuildingResearchRequirements.get(blockType)![0];
   const researchOwner = address
     ? world.entityToIndex.get(
-        hashFromAddress(
+        hashKeyEntity(
           researchRequirement,
           address.toString().toLowerCase()
         ) as EntityID

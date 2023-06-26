@@ -27,7 +27,6 @@ export { LibQuery__factory } from "./LibQuery__factory";
 export { MainBaseInitializedComponent__factory } from "./MainBaseInitializedComponent__factory";
 export { OwnedByComponent__factory } from "./OwnedByComponent__factory";
 export { PathComponent__factory } from "./PathComponent__factory";
-export { PositionComponent__factory } from "./PositionComponent__factory";
 export { RegisterSystem__factory } from "./RegisterSystem__factory";
 export { ResearchComponent__factory } from "./ResearchComponent__factory";
 export { ResearchSystem__factory } from "./ResearchSystem__factory";

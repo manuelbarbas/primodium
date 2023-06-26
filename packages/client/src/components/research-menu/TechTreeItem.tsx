@@ -13,7 +13,7 @@ import {
 } from "../../util/constants";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
-import { hashFromAddress } from "../../util/encode";
+import { hashKeyEntity } from "../../util/encode";
 
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
@@ -49,7 +49,7 @@ function TechTreeItem({
 
   const researchOwner = address
     ? world.entityToIndex.get(
-        hashFromAddress(data.id, address.toString().toLowerCase()) as EntityID
+        hashKeyEntity(data.id, address.toString().toLowerCase()) as EntityID
       )!
     : singletonIndex;
 
