@@ -21,7 +21,6 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
-import { LibBuild } from "../libraries/LibBuild.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
