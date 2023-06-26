@@ -7,6 +7,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
+import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
@@ -34,10 +35,15 @@ contract ResearchSystem is System {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
-
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
     require(
       requiredResourcesComponent.has(researchItem),
       "[ResearchSystem] can not research a technology that does not have resource requirements"
+    );
+
+    require(
+      LibBuilding.checkMainBaseLevelRequirement(buildingComponent, addressToEntity(msg.sender), researchItem),
+      "[ResearchSystem] MainBase level requirement not met"
     );
 
     require(
