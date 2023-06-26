@@ -2,7 +2,6 @@
   "components": [
     "CounterComponent",
     "GameConfigComponent",
-    "PositionComponent",
     "TileComponent",
     "OwnedByComponent",
     "PathComponent",
@@ -18,9 +17,14 @@
     "BuildingComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
-    "BuildingLimitComponent"
+    "BuildingLimitComponent",
+    "IgnoreBuildLimitComponent"
   ],
-  "initializers": ["LibBuildingDesignInitializer","LibBuildingLimitDesignInitializer", "LibBuildingUpgradeDesignInitializer"],
+  "initializers": [
+    "LibBuildingDesignInitializer",
+    "LibBuildingLimitDesignInitializer",
+    "LibBuildingUpgradeDesignInitializer"
+  ],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -35,7 +39,6 @@
       "writeAccess": [
         "HealthComponent",
         "ItemComponent",
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
@@ -49,7 +52,6 @@
     {
       "name": "BuildSystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
@@ -58,13 +60,13 @@
 
         "MainBaseInitializedComponent",
         "BuildingComponent",
-        "MainBaseInitializedComponent"
+        "MainBaseInitializedComponent",
+        "BuildingLimitComponent"
       ]
     },
     {
       "name": "DestroySystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "LastBuiltAtComponent",
@@ -73,21 +75,21 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingComponent"
+        "BuildingComponent",
+        "BuildingLimitComponent"
       ]
     },
     {
       "name": "BuildPathSystem",
-      "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "DestroyPathSystem",
-      "writeAccess": ["PositionComponent", "TileComponent", "OwnedByComponent", "PathComponent"]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "ClaimFromMineSystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "PathComponent",
@@ -100,7 +102,6 @@
     {
       "name": "ClaimFromFactorySystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "PathComponent",
@@ -113,7 +114,6 @@
     {
       "name": "CraftSystem",
       "writeAccess": [
-        "PositionComponent",
         "TileComponent",
         "OwnedByComponent",
         "PathComponent",
@@ -125,7 +125,7 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingComponent", "ItemComponent"]	
+      "writeAccess": ["BuildingComponent", "ItemComponent"]
     }
   ]
 }

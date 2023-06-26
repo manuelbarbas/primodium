@@ -2,13 +2,13 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
@@ -18,8 +18,11 @@ import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, Bul
 
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
+import { BuildingKey } from "../prototypes/Keys.sol";
+
 import { Coord } from "../types.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
+import { LibMath } from "../libraries/LibMath.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
@@ -31,7 +34,7 @@ uint256 constant ID = uint256(keccak256("system.Build"));
 contract BuildSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function checkResearchRequirements(uint256 blockType, address player) internal view returns (bool) {
+  function checkResearchRequirements(uint256 blockType) internal view returns (bool) {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
@@ -41,29 +44,28 @@ contract BuildSystem is System {
       LibResearch.hasResearchedWithKey(
         researchComponent,
         requiredResearchComponent.getValue(blockType),
-        addressToEntity(player)
+        addressToEntity(msg.sender)
       );
   }
 
-  function checkResourceRequirements(uint256 blockType, address player) internal view returns (bool) {
+  function checkResourceRequirements(uint256 blockType) internal view returns (bool) {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent, blockType, player);
+    return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent, blockType, msg.sender);
   }
 
-  function spendRequiredResources(uint256 blockType, address player) internal {
+  function spendRequiredResources(uint256 blockType) internal {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent, blockType, player);
+    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent, blockType, msg.sender);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
     (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
@@ -73,34 +75,31 @@ contract BuildSystem is System {
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
       getAddressById(components, BuildingLimitComponentID)
     );
-
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      getAddressById(components, IgnoreBuildLimitComponentID)
+    );
     // Check there isn't another tile there
-    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
+    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
     //check required research
-    require(
-      checkResearchRequirements(blockType, msg.sender),
-      "[BuildSystem] You have not researched the required Technology"
-    );
+    require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
 
     //check required resources
-    require(checkResourceRequirements(blockType, msg.sender), "[BuildSystem] You do not have the required resources");
+    require(checkResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
 
     //check if counts towards build limit and if so, check if limit is reached
 
-    if (LibBuilding.doesTileCountTowardsBuildingLimit(blockType)) {
-      require(
-        LibBuilding.checkBuildCountLimit(
-          buildingLimitComponent,
-          buildingComponent,
-          ownedByComponent,
-          tileComponent,
-          addressToEntity(msg.sender)
-        ),
-        "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
-      );
-    }
+    require(
+      LibBuilding.checkBuildLimitConditionForBuildingId(
+        ignoreBuildLimitComponent,
+        buildingLimitComponent,
+        buildingComponent,
+        addressToEntity(msg.sender),
+        blockType
+      ),
+      "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
+    );
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -130,24 +129,22 @@ contract BuildSystem is System {
     }
 
     //spend required resources
-    spendRequiredResources(blockType, msg.sender);
+    spendRequiredResources(blockType);
 
-    // Randomly generate IDs instead of basing on coordinate
-    uint256 newBlockEntity = world.getUniqueEntityId();
-
-    // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
-    uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
-
-    if (LibBuilding.doesTileCountTowardsBuildingLimit(blockType) || blockType == MainBaseID) {
-      buildingComponent.set(blockEntity, 1);
+    if (blockType == MainBaseID) {
+      buildingComponent.set(addressToEntity(msg.sender), entity);
     }
+    if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {
+      buildingLimitComponent.set(
+        addressToEntity(msg.sender),
+        LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) + 1
+      );
+    }
+    tileComponent.set(entity, blockType);
+    ownedByComponent.set(entity, addressToEntity(msg.sender));
+    lastBuiltAtComponent.set(entity, block.number);
 
-    positionComponent.set(blockEntity, coord);
-    tileComponent.set(blockEntity, blockType);
-    ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
-    lastBuiltAtComponent.set(blockEntity, block.number);
-
-    return abi.encode(blockEntity);
+    return abi.encode(entity);
   }
 
   function executeTyped(uint256 blockType, Coord memory coord) public returns (bytes memory) {

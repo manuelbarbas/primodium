@@ -58,7 +58,7 @@ contract ClaimSystemTest is MudTest {
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
-    uint256 hashedAliceKey = LibEncode.hashFromAddress(IronID, alice);
+    uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceKey));
     assertEq(itemComponent.getValue(hashedAliceKey), 100);
 
@@ -109,7 +109,7 @@ contract ClaimSystemTest is MudTest {
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
-    uint256 hashedAliceKey = LibEncode.hashFromAddress(IronID, alice);
+    uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceKey));
     assertEq(itemComponent.getValue(hashedAliceKey), 100);
 
@@ -155,8 +155,8 @@ contract ClaimSystemTest is MudTest {
     vm.roll(20);
 
     claimSystem.executeTyped(mainBaseCoord);
-    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
-    uint256 hashedAliceCopperKey = LibEncode.hashFromAddress(CopperID, alice);
+    uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
+    uint256 hashedAliceCopperKey = LibEncode.hashKeyEntity(CopperID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceCopperKey));
     assertEq(itemComponent.getValue(hashedAliceCopperKey), 200);
     assertEq(itemComponent.getValue(hashedAliceIronKey), 200);
@@ -187,7 +187,7 @@ contract ClaimSystemTest is MudTest {
     vm.roll(20);
     claimSystem.executeTyped(mainBaseCoord);
 
-    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
+    uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceIronKey));
     assertEq(itemComponent.getValue(hashedAliceIronKey), 200);
 
@@ -226,7 +226,7 @@ contract ClaimSystemTest is MudTest {
     // claim from main base
     vm.roll(20);
     claimSystem.executeTyped(mainBaseCoord);
-    uint256 hashedAliceIronKey = LibEncode.hashFromAddress(IronID, alice);
+    uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceIronKey));
     assertEq(itemComponent.getValue(hashedAliceIronKey), 200);
     vm.stopPrank();

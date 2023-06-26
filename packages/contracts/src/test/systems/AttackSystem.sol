@@ -64,18 +64,9 @@ contract AttackSystemTest is MudTest {
     // bytes memory bulletFactoryEntity = buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord);
     uint256 bulletFactoryID = abi.decode(buildSystem.executeTyped(BulletFactoryID, bulletFactoryCoord), (uint256));
 
-    uint256 hashedBulletFactoryKeyIron = LibEncode.hashFromAddress(
-      IronResourceItemID,
-      entityToAddress(bulletFactoryID)
-    );
-    uint256 hashedBulletFactoryKeyCopper = LibEncode.hashFromAddress(
-      CopperResourceItemID,
-      entityToAddress(bulletFactoryID)
-    );
-    uint256 hashedBulletFactoryKeyBullet = LibEncode.hashFromAddress(
-      BulletCraftedItemID,
-      entityToAddress(bulletFactoryID)
-    );
+    uint256 hashedBulletFactoryKeyIron = LibEncode.hashKeyEntity(IronResourceItemID, bulletFactoryID);
+    uint256 hashedBulletFactoryKeyCopper = LibEncode.hashKeyEntity(CopperResourceItemID, bulletFactoryID);
+    uint256 hashedBulletFactoryKeyBullet = LibEncode.hashKeyEntity(BulletCraftedItemID, bulletFactoryID);
 
     // Copper to BulletFactory
     buildSystem.executeTyped(DebugNodeID, Coord({ x: -9, y: -4 }));
@@ -151,9 +142,9 @@ contract AttackSystemTest is MudTest {
     assertEq(itemComponent.getValue(hashedBulletFactoryKeyCopper), 0);
     assertEq(itemComponent.getValue(hashedBulletFactoryKeyBullet), 0);
 
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, entityToAddress(siloID))), 0);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(CopperResourceItemID, entityToAddress(siloID))), 100);
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(BulletCraftedItemID, entityToAddress(siloID))), 300);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, siloID)), 0);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(CopperResourceItemID, siloID)), 100);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(BulletCraftedItemID, siloID)), 300);
 
     vm.stopPrank();
 

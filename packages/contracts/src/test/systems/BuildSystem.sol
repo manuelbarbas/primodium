@@ -7,14 +7,16 @@ import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
+
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
-import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 
 import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
+
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
+import { LibEncode } from "../../libraries/LibEncode.sol";
 
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -32,14 +34,13 @@ contract BuildSystemTest is MudTest {
     Coord memory coord = Coord({ x: 0, y: 0 });
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
 
     bytes memory blockEntity = buildSystem.executeTyped(LithiumMinerID, coord);
 
     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
 
-    Coord memory position = positionComponent.getValue(blockEntityID);
+    Coord memory position = LibEncode.decodeCoordEntity(blockEntityID);
     assertEq(position.x, coord.x);
     assertEq(position.y, coord.y);
 
@@ -133,7 +134,6 @@ contract BuildSystemTest is MudTest {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
 
-    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     PathComponent pathComponent = PathComponent(component(PathComponentID));
 
@@ -144,11 +144,11 @@ contract BuildSystemTest is MudTest {
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
 
-    Coord memory startPosition = positionComponent.getValue(startBlockEntityID);
+    Coord memory startPosition = LibEncode.decodeCoordEntity(startBlockEntityID);
     assertEq(startPosition.x, startCoord.x);
     assertEq(startPosition.y, startCoord.y);
 
-    Coord memory endPosition = positionComponent.getValue(endBlockEntityID);
+    Coord memory endPosition = LibEncode.decodeCoordEntity(endBlockEntityID);
     assertEq(endPosition.x, endCoord.x);
     assertEq(endPosition.y, endCoord.y);
 

@@ -2,19 +2,24 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
-
+import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
+import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
+import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
+import { LibBuilding } from "../libraries/LibBuilding.sol";
+import { LibMath } from "../libraries/LibMath.sol";
+
+import { LibEncode } from "../libraries/LibEncode.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -23,7 +28,6 @@ contract DestroySystem is System {
 
   function execute(bytes memory args) public returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
-    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
@@ -34,18 +38,22 @@ contract DestroySystem is System {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       getAddressById(components, LastClaimedAtComponentID)
     );
-
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      getAddressById(components, IgnoreBuildLimitComponentID)
+    );
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
+      getAddressById(components, BuildingLimitComponentID)
+    );
     // Check there isn't another tile there
-    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length < 2, "[DestroySystem] Cannot destroy multiple tiles at once");
-    require(entitiesAtPosition.length == 1, "[DestroySystem] Cannot destroy tile at an empty coordinate");
+    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    require(tileComponent.has(entity), "[DestroySystem] Cannot destroy tile at an empty coordinate");
 
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
-    if (pathComponent.has(entitiesAtPosition[0])) {
-      pathComponent.remove(entitiesAtPosition[0]);
+    if (pathComponent.has(entity)) {
+      pathComponent.remove(entity);
     }
 
-    uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(entitiesAtPosition[0]);
+    uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(entity);
     if (pathWithEndingTile.length > 0) {
       for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
         pathComponent.remove(pathWithEndingTile[i]);
@@ -53,20 +61,27 @@ contract DestroySystem is System {
     }
 
     // for main base tile, remove main base initialized.
-    if (tileComponent.getValue(entitiesAtPosition[0]) == MainBaseID) {
+    if (tileComponent.getValue(entity) == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getAddressById(components, MainBaseInitializedComponentID)
       );
       mainBaseInitializedComponent.remove(addressToEntity(msg.sender));
     }
 
-    positionComponent.remove(entitiesAtPosition[0]);
-    tileComponent.remove(entitiesAtPosition[0]);
-    ownedByComponent.remove(entitiesAtPosition[0]);
-    lastBuiltAtComponent.remove(entitiesAtPosition[0]);
-    lastClaimedAtComponent.remove(entitiesAtPosition[0]);
-    buildingComponent.remove(entitiesAtPosition[0]);
-    return abi.encode(entitiesAtPosition[0]);
+    if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, tileComponent.getValue(entity))) {
+      buildingLimitComponent.set(
+        addressToEntity(msg.sender),
+        LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) - 1
+      );
+    }
+
+    buildingComponent.remove(entity);
+    tileComponent.remove(entity);
+    ownedByComponent.remove(entity);
+    lastBuiltAtComponent.remove(entity);
+    lastClaimedAtComponent.remove(entity);
+
+    return abi.encode(entity);
   }
 
   function executeTyped(Coord memory coord) public returns (bytes memory) {

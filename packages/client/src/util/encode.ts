@@ -1,49 +1,86 @@
-import {
-  solidityKeccak256,
-  getAddress,
-  zeroPad,
-  hexlify,
-} from "ethers/lib/utils";
+import { solidityKeccak256 } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 
 import { EntityID } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 
-// Valid addresses need to be truncated to uint160 to be recognized as valid addresses
-// that could be hashed for component keys
-export function applyUint160Mask(key: EntityID): string {
-  // Create a mask to limit the value to 160 bits (equivalent to uint160)
-  const uint160Mask: BigNumber = BigNumber.from(
-    "0xffffffffffffffffffffffffffffffffffffffff"
-  );
+import { Buffer } from "buffer";
 
-  // Convert the key to a BigNumber
-  const entity: BigNumber = BigNumber.from(key.toString());
-
-  // Apply the mask using the bitwise AND operation
-  const uint160Value: BigNumber = entity.and(uint160Mask);
-
-  // Pad the BigNumber to 20 bytes (160 bits) to ensure a valid Ethereum address
-  const paddedAddressBytes = zeroPad(uint160Value.toHexString(), 20);
-
-  // Convert the padded bytes to a hexadecimal string
-  const paddedAddressHexString = hexlify(paddedAddressBytes);
-
-  // Convert the padded bytes to a valid Ethereum address
-  const validAddress = getAddress(paddedAddressHexString);
-
-  return validAddress;
+// Identical to encodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
+export function encodeCoordEntity(coord: Coord, key: string): string {
+  function encodeCoordinate(value: number): Buffer {
+    const bytes = Buffer.alloc(4);
+    if (value >= 0) {
+      bytes.writeInt32BE(value);
+    } else {
+      // Use two's complement for negative values
+      bytes.writeUInt32BE(value >>> 0);
+    }
+    return bytes;
+  }
+  const xBytes = encodeCoordinate(coord.x);
+  const yBytes = encodeCoordinate(coord.y);
+  let keyBytes = Buffer.from(key);
+  const desiredKeyLength = 24;
+  if (keyBytes.length < desiredKeyLength) {
+    keyBytes = Buffer.concat([
+      keyBytes,
+      Buffer.alloc(desiredKeyLength - keyBytes.length),
+    ]);
+  } else if (keyBytes.length > desiredKeyLength) {
+    keyBytes = keyBytes.subarray(0, desiredKeyLength);
+  }
+  const concatenatedBytes = Buffer.concat([xBytes, yBytes, keyBytes]);
+  const encodedValue = `0x${concatenatedBytes.toString("hex")}`;
+  return encodedValue;
 }
 
-// Identical to hashFromAddress in packages/contracts/src/libraries/LibHash.sol
-export function hashFromAddress(key: EntityID, addr: string): string {
-  // Normalize and validate the address
-  const normalizedAddr: string = getAddress(addr);
+// Identical to decodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
+export function decodeCoordEntity(entity: EntityID): Coord {
+  // Utility to plit buffer data into bytes sizes
+  function split(data: Buffer, sizes: number[]): Buffer[] {
+    const result: Buffer[] = [];
+    let offset = 0;
+    for (const size of sizes) {
+      result.push(data.subarray(offset, offset + size));
+      offset += size;
+    }
+    return result;
+  }
+  // Correctly convert negative signed integers
+  function getInt32FromBuffer(buffer: Buffer): number {
+    const value = buffer.readInt32BE();
+    // If the most significant bit is set, the number is negative
+    return value >= 0x80000000 ? value - 0x100000000 : value;
+  }
+  const data = Buffer.from(padTo64Bytes(entity).slice(2), "hex");
+  const sizes = [4, 4];
+  const decoded = split(data, sizes);
+  const x = getInt32FromBuffer(decoded[0]);
+  const y = getInt32FromBuffer(decoded[1]);
+  return { x, y };
+}
 
-  // Compute the Keccak-256 hash of the concatenated key and address
+// Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
+export function hashKeyEntity(
+  key: EntityID,
+  entity: EntityID | string
+): string {
+  // Compute the Keccak-256 hash of the concatenated key and entity
   const hash: string = solidityKeccak256(
-    ["uint256", "address"],
-    [BigNumber.from(key), normalizedAddr]
+    ["uint256", "uint256"],
+    [BigNumber.from(key), BigNumber.from(entity)]
   );
 
   return hash;
+}
+
+function padTo64Bytes(hex: string): string {
+  // Remove "0x" prefix if present
+  const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
+  // Pad the hex string with zeros to 64 characters (32 bytes)
+  const paddedHex = cleanHex.padStart(64, "0");
+  // Add "0x" prefix back
+  const result = "0x" + paddedHex;
+  return result;
 }
