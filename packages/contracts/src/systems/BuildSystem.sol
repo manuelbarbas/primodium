@@ -140,6 +140,7 @@ contract BuildSystem is System {
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) + 1
       );
     }
+    buildingComponent.set(entity, 1);
     tileComponent.set(entity, blockType);
     ownedByComponent.set(entity, addressToEntity(msg.sender));
     lastBuiltAtComponent.set(entity, block.number);
