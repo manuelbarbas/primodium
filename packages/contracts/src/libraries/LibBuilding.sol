@@ -6,79 +6,48 @@ import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID, MinerID } f
 import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
 import { LibDebug } from "libraries/LibDebug.sol";
+import { LibMath } from "libraries/LibMath.sol";
 
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 
 library LibBuilding {
-  function getBuildCountLimit(uint256 mainBuildingLevel) internal pure returns (uint256) {
-    if (LibDebug.isDebug()) return 100;
-    if (mainBuildingLevel == 1) return 5;
-    else if (mainBuildingLevel == 2) return 10;
-    else if (mainBuildingLevel == 3) return 15;
-    return 0;
-  }
-
-  function checkBuildCountLimit(
+  function checkBuildLimitConditionForBuildingId(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
     Uint256Component buildingComponent,
-    Uint256Component ownedByComponent,
-    Uint256Component tileComponent,
+    uint256 playerEntity,
+    uint256 buildingId
+  ) internal view returns (bool) {
+    return
+      !doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, buildingId) ||
+      checkBuildingCountNotExceedBuildLimit(buildingLimitComponent, buildingComponent, playerEntity);
+  }
+
+  function checkBuildingCountNotExceedBuildLimit(
+    Uint256Component buildingLimitComponent,
+    Uint256Component buildingComponent,
     uint256 playerEntity
   ) internal view returns (bool) {
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(
-      buildingComponent,
-      ownedByComponent,
-      tileComponent,
-      playerEntity
-    );
+    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
     uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent, mainBuildingLevel);
-    uint256 buildingCount = getNumberOfBuildingsForPlayer(
-      ignoreBuildLimitComponent,
-      buildingComponent,
-      ownedByComponent,
-      tileComponent,
-      playerEntity
-    );
+    uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingLimitComponent, playerEntity);
     return buildingCount < buildCountLimit;
   }
 
   function getMainBuildingLevelforPlayer(
     Uint256Component buildingComponent,
-    Uint256Component ownedByComponent,
-    Uint256Component tileComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
-    uint256[] memory ownedTiles = ownedByComponent.getEntitiesWithValue(playerEntity);
-    for (uint256 i = 0; i < ownedTiles.length; i++) {
-      if (tileComponent.has(ownedTiles[i]) && tileComponent.getValue(ownedTiles[i]) == MainBaseID) {
-        return buildingComponent.getValue(ownedTiles[i]);
-      }
-    }
-    return 0;
+    return buildingComponent.has(playerEntity) ? buildingComponent.getValue(playerEntity) : 0;
   }
 
   function getNumberOfBuildingsForPlayer(
-    BoolComponent ignoreBuildLimitComponent,
-    Uint256Component buildingComponent,
-    Uint256Component ownedByComponent,
-    Uint256Component tileComponent,
+    Uint256Component buildingLimitComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
-    uint256 buildingCount = 0;
-    uint256[] memory ownedTiles = ownedByComponent.getEntitiesWithValue(playerEntity);
-    for (uint256 i = 0; i < ownedTiles.length; i++) {
-      if (
-        buildingComponent.has(ownedTiles[i]) &&
-        tileComponent.has(ownedTiles[i]) &&
-        doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, tileComponent.getValue(ownedTiles[i]))
-      ) {
-        buildingCount++;
-      }
-    }
-    return buildingCount;
+    return LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity);
   }
 
   function getBuildCountLimit(

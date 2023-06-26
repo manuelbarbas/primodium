@@ -21,6 +21,7 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 
 import { Coord } from "../types.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
+import { LibMath } from "../libraries/LibMath.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
@@ -32,7 +33,7 @@ uint256 constant ID = uint256(keccak256("system.Build"));
 contract BuildSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function checkResearchRequirements(uint256 blockType, address player) internal view returns (bool) {
+  function checkResearchRequirements(uint256 blockType) internal view returns (bool) {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
@@ -42,46 +43,24 @@ contract BuildSystem is System {
       LibResearch.hasResearchedWithKey(
         researchComponent,
         requiredResearchComponent.getValue(blockType),
-        addressToEntity(player)
-      );
-  }
-
-  function checkResourceRequirements(uint256 blockType, address player) internal view returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent, blockType, player);
-  }
-
-  function spendRequiredResources(uint256 blockType, address player) internal {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent, blockType, player);
-  }
-
-  function checkBuildLimitCondition(uint256 blockType, address player) internal view returns (bool) {
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
-      getAddressById(components, BuildingLimitComponentID)
-    );
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
-      getAddressById(components, IgnoreBuildLimitComponentID)
-    );
-    return
-      !LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType) ||
-      LibBuilding.checkBuildCountLimit(
-        ignoreBuildLimitComponent,
-        buildingLimitComponent,
-        buildingComponent,
-        ownedByComponent,
-        tileComponent,
         addressToEntity(msg.sender)
       );
+  }
+
+  function checkResourceRequirements(uint256 blockType) internal view returns (bool) {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(components, RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+    return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent, blockType, msg.sender);
+  }
+
+  function spendRequiredResources(uint256 blockType) internal {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(components, RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent, blockType, msg.sender);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -90,29 +69,35 @@ contract BuildSystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
+      getAddressById(components, LastBuiltAtComponentID)
+    );
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
       getAddressById(components, BuildingLimitComponentID)
     );
-    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
-      getAddressById(components, LastBuiltAtComponentID)
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      getAddressById(components, IgnoreBuildLimitComponentID)
     );
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
 
     //check required research
-    require(
-      checkResearchRequirements(blockType, msg.sender),
-      "[BuildSystem] You have not researched the required Technology"
-    );
+    require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
 
     //check required resources
-    require(checkResourceRequirements(blockType, msg.sender), "[BuildSystem] You do not have the required resources");
+    require(checkResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
 
     //check if counts towards build limit and if so, check if limit is reached
 
     require(
-      checkBuildLimitCondition(blockType, msg.sender),
+      LibBuilding.checkBuildLimitConditionForBuildingId(
+        ignoreBuildLimitComponent,
+        buildingLimitComponent,
+        buildingComponent,
+        addressToEntity(msg.sender),
+        blockType
+      ),
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
     );
 
@@ -144,14 +129,23 @@ contract BuildSystem is System {
     }
 
     //spend required resources
-    spendRequiredResources(blockType, msg.sender);
+    spendRequiredResources(blockType);
 
     // Randomly generate IDs instead of basing on coordinate
     uint256 newBlockEntity = world.getUniqueEntityId();
 
     // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
     uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
-    buildingComponent.set(blockEntity, 1);
+
+    if (blockType == MainBaseID) {
+      buildingComponent.set(addressToEntity(msg.sender), blockEntity);
+    }
+    if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {
+      buildingLimitComponent.set(
+        addressToEntity(msg.sender),
+        LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) + 1
+      );
+    }
     positionComponent.set(blockEntity, coord);
     tileComponent.set(blockEntity, blockType);
     ownedByComponent.set(blockEntity, addressToEntity(msg.sender));

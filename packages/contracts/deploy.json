@@ -21,7 +21,11 @@
     "BuildingLimitComponent",
     "IgnoreBuildLimitComponent"
   ],
-  "initializers": ["LibBuildingDesignInitializer","LibBuildingLimitDesignInitializer", "LibBuildingUpgradeDesignInitializer"],
+  "initializers": [
+    "LibBuildingDesignInitializer",
+    "LibBuildingLimitDesignInitializer",
+    "LibBuildingUpgradeDesignInitializer"
+  ],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -59,7 +63,8 @@
 
         "MainBaseInitializedComponent",
         "BuildingComponent",
-        "MainBaseInitializedComponent"
+        "MainBaseInitializedComponent",
+        "BuildingLimitComponent"
       ]
     },
     {
@@ -74,7 +79,8 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingComponent"
+        "BuildingComponent",
+        "BuildingLimitComponent"
       ]
     },
     {
@@ -126,7 +132,7 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingComponent", "ItemComponent"]	
+      "writeAccess": ["BuildingComponent", "ItemComponent"]
     }
   ]
 }

@@ -7,7 +7,8 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
-
+import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
+import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
@@ -15,6 +16,8 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
+import { LibBuilding } from "../libraries/LibBuilding.sol";
+import { LibMath } from "../libraries/LibMath.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -34,7 +37,12 @@ contract DestroySystem is System {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       getAddressById(components, LastClaimedAtComponentID)
     );
-
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      getAddressById(components, IgnoreBuildLimitComponentID)
+    );
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
+      getAddressById(components, BuildingLimitComponentID)
+    );
     // Check there isn't another tile there
     uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
     require(entitiesAtPosition.length < 2, "[DestroySystem] Cannot destroy multiple tiles at once");
@@ -60,12 +68,25 @@ contract DestroySystem is System {
       mainBaseInitializedComponent.remove(addressToEntity(msg.sender));
     }
 
+    if (
+      LibBuilding.doesTileCountTowardsBuildingLimit(
+        ignoreBuildLimitComponent,
+        tileComponent.getValue(entitiesAtPosition[0])
+      )
+    ) {
+      buildingLimitComponent.set(
+        addressToEntity(msg.sender),
+        LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) - 1
+      );
+    }
+
     positionComponent.remove(entitiesAtPosition[0]);
     tileComponent.remove(entitiesAtPosition[0]);
     ownedByComponent.remove(entitiesAtPosition[0]);
     lastBuiltAtComponent.remove(entitiesAtPosition[0]);
     lastClaimedAtComponent.remove(entitiesAtPosition[0]);
     buildingComponent.remove(entitiesAtPosition[0]);
+
     return abi.encode(entitiesAtPosition[0]);
   }
 

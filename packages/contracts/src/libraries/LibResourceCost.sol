@@ -41,15 +41,13 @@ library LibResourceCost {
     if (!requiredResourcesComponent.has(entity)) return;
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.length; i++) {
+      uint256 playerResourceHash = LibEncode.hashFromAddress(requiredResources[i], playerAddress);
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
         LibEncode.hashFromKey(requiredResources[i], entity)
       );
-      uint256 curItem = LibMath.getSafeUint256Value(
-        itemComponent,
-        LibEncode.hashFromAddress(requiredResources[i], playerAddress)
-      );
-      itemComponent.set(LibEncode.hashFromAddress(requiredResources[i], playerAddress), curItem - resourceCost);
+      uint256 curItem = LibMath.getSafeUint256Value(itemComponent, playerResourceHash);
+      itemComponent.set(playerResourceHash, curItem - resourceCost);
     }
   }
 }
