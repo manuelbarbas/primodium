@@ -13,7 +13,7 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 
 import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-
+import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 // production buildings
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
@@ -36,257 +36,284 @@ library LibBuildingDesignInitializer {
 
     //BasicMinerId
     // Build BasicMiner with 100 IronResource
-    itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, BasicMinerID), 100);
-
-    uint256[] memory requiredResourceIDs = new uint256[](1);
-    requiredResourceIDs[0] = IronResourceItemID;
-    requiredResources.set(BasicMinerID, requiredResourceIDs);
+    LibResourceCost.set1RequiredResourceForEntity(
+      requiredResources,
+      itemComponent,
+      BasicMinerID,
+      IronResourceItemID,
+      100
+    );
 
     //Node
     // Build Node with 50 IronResource
-    itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, NodeID), 50);
-    requiredResourceIDs = new uint256[](1);
-    requiredResourceIDs[0] = IronResourceItemID;
-    requiredResources.set(NodeID, requiredResourceIDs);
+    LibResourceCost.set1RequiredResourceForEntity(requiredResources, itemComponent, NodeID, IronResourceItemID, 50);
 
     //PlatingFactoryID
     // Build PlatingFactory with 100 IronResource and 50 CopperResource
-    itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, PlatingFactoryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(CopperResourceItemID, PlatingFactoryID), 50);
-
-    requiredResourceIDs = new uint256[](2);
-    requiredResourceIDs[0] = IronResourceItemID;
-    requiredResourceIDs[1] = CopperResourceItemID;
-    requiredResources.set(PlatingFactoryID, requiredResourceIDs);
+    LibResourceCost.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      PlatingFactoryID,
+      IronResourceItemID,
+      100,
+      CopperResourceItemID,
+      50
+    );
 
     requiredResearch.set(PlatingFactoryID, PlatingFactoryResearchID);
 
     //BasicBatteryFactoryID
     // Build BasicBatteryFactory with 20 IronPlateCrafted and 50 CopperResource
-    itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, BasicBatteryFactoryID), 20);
-    itemComponent.set(LibEncode.hashFromKey(CopperResourceItemID, BasicBatteryFactoryID), 50);
-
-    requiredResourceIDs = new uint256[](2);
-    requiredResourceIDs[0] = IronResourceItemID;
-    requiredResourceIDs[1] = CopperResourceItemID;
-    requiredResources.set(BasicBatteryFactoryID, requiredResourceIDs);
+    LibResourceCost.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      BasicBatteryFactoryID,
+      IronPlateCraftedItemID,
+      20,
+      CopperResourceItemID,
+      50
+    );
 
     requiredResearch.set(BasicBatteryFactoryID, BasicBatteryFactoryResearchID);
 
     //KineticMissileFactoryID
     // Build KineticMissileFactory with 100 IronPlateCrafted 50 LithiumResource and 10 BasicPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, KineticMissileFactoryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(LithiumResourceItemID, KineticMissileFactoryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(BasicPowerSourceCraftedItemID, KineticMissileFactoryID), 10);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[0] = IronPlateCraftedItemID;
-    requiredResourceIDs[1] = LithiumResourceItemID;
-    requiredResourceIDs[2] = BasicPowerSourceCraftedItemID;
-    requiredResources.set(KineticMissileFactoryID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      KineticMissileFactoryID,
+      IronPlateCraftedItemID,
+      100,
+      LithiumResourceItemID,
+      50,
+      BasicPowerSourceCraftedItemID,
+      10
+    );
 
     requiredResearch.set(KineticMissileFactoryID, KineticMissileFactoryResearchID);
 
     //ProjectileLauncherID
     // Build ProjectileLauncher with 100 IronPlateCrafted and 100 TitaniumResource
-    itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, ProjectileLauncherID), 100);
-    itemComponent.set(LibEncode.hashFromKey(TitaniumResourceItemID, ProjectileLauncherID), 100);
-
-    requiredResourceIDs = new uint256[](2);
-    requiredResourceIDs[0] = IronPlateCraftedItemID;
-    requiredResourceIDs[1] = TitaniumResourceItemID;
-    requiredResources.set(ProjectileLauncherID, requiredResourceIDs);
+    LibResourceCost.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      ProjectileLauncherID,
+      IronPlateCraftedItemID,
+      100,
+      TitaniumResourceItemID,
+      100
+    );
 
     requiredResearch.set(ProjectileLauncherID, ProjectileLauncherResearchID);
 
     //HardenedDrillID
     // Build HardenedDrill with 100 TitaniumResource 10 IronPlateCrafted 5 BasicPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(TitaniumResourceItemID, HardenedDrillID), 100);
-    itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, HardenedDrillID), 10);
-    itemComponent.set(LibEncode.hashFromKey(BasicPowerSourceCraftedItemID, HardenedDrillID), 5);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[0] = TitaniumResourceItemID;
-    requiredResourceIDs[1] = IronPlateCraftedItemID;
-    requiredResourceIDs[2] = BasicPowerSourceCraftedItemID;
-    requiredResources.set(HardenedDrillID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      HardenedDrillID,
+      TitaniumResourceItemID,
+      100,
+      IronPlateCraftedItemID,
+      10,
+      BasicPowerSourceCraftedItemID,
+      5
+    );
 
     requiredResearch.set(HardenedDrillID, HardenedDrillResearchID);
 
     //DenseMetalRefineryID
     // Build DenseMetalRefinery with 50 OsmiumResource 100 TitaniumResource 30 IronPlateCrafted 10 BasicPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(OsmiumResourceItemID, DenseMetalRefineryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(TitaniumResourceItemID, DenseMetalRefineryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, DenseMetalRefineryID), 30);
-    itemComponent.set(LibEncode.hashFromKey(BasicPowerSourceCraftedItemID, DenseMetalRefineryID), 10);
-
-    requiredResourceIDs = new uint256[](4);
-    requiredResourceIDs[0] = OsmiumResourceItemID;
-    requiredResourceIDs[1] = TitaniumResourceItemID;
-    requiredResourceIDs[2] = IronPlateCraftedItemID;
-    requiredResourceIDs[3] = BasicPowerSourceCraftedItemID;
-    requiredResources.set(DenseMetalRefineryID, requiredResourceIDs);
+    LibResourceCost.set4RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      DenseMetalRefineryID,
+      OsmiumResourceItemID,
+      50,
+      TitaniumResourceItemID,
+      100,
+      IronPlateCraftedItemID,
+      30,
+      BasicPowerSourceCraftedItemID,
+      10
+    );
 
     requiredResearch.set(DenseMetalRefineryID, DenseMetalRefineryResearchID);
 
     //AdvancedBatteryFactoryID
     // Build AdvancedBatteryFactory with 150 OsmiumResource 50 TitaniumResource and 20 BasicPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(OsmiumResourceItemID, AdvancedBatteryFactoryID), 150);
-    itemComponent.set(LibEncode.hashFromKey(TitaniumResourceItemID, AdvancedBatteryFactoryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(BasicPowerSourceCraftedItemID, AdvancedBatteryFactoryID), 20);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[0] = OsmiumResourceItemID;
-    requiredResourceIDs[1] = TitaniumResourceItemID;
-    requiredResourceIDs[2] = BasicPowerSourceCraftedItemID;
-    requiredResources.set(AdvancedBatteryFactoryID, requiredResourceIDs);
-
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      AdvancedBatteryFactoryID,
+      OsmiumResourceItemID,
+      150,
+      TitaniumResourceItemID,
+      50,
+      BasicPowerSourceCraftedItemID,
+      20
+    );
     requiredResearch.set(AdvancedBatteryFactoryID, AdvancedBatteryFactoryResearchID);
 
     //HighTempFoundryID
     // Build HighTempFoundry with 50 TungstenResource 50 RefinedOsmium and 20 AdvancedPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(TungstenResourceItemID, HighTempFoundryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(RefinedOsmiumCraftedItemID, HighTempFoundryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(AdvancedPowerSourceCraftedItemID, HighTempFoundryID), 20);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[0] = TungstenResourceItemID;
-    requiredResourceIDs[1] = RefinedOsmiumCraftedItemID;
-    requiredResourceIDs[2] = AdvancedPowerSourceCraftedItemID;
-    requiredResources.set(HighTempFoundryID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      HighTempFoundryID,
+      TungstenResourceItemID,
+      50,
+      RefinedOsmiumCraftedItemID,
+      50,
+      AdvancedPowerSourceCraftedItemID,
+      20
+    );
 
     requiredResearch.set(HighTempFoundryID, HighTempFoundryResearchID);
 
     //PrecisionMachineryFactoryID
     // Build PrecisionMachineryFactory with 50 IridiumResource 50 TungstenRodsCrafted and 10 AdvancedPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(IridiumResourceItemID, PrecisionMachineryFactoryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(TungstenRodsCraftedItemID, PrecisionMachineryFactoryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(AdvancedPowerSourceCraftedItemID, PrecisionMachineryFactoryID), 10);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[0] = IridiumResourceItemID;
-    requiredResourceIDs[1] = TungstenRodsCraftedItemID;
-    requiredResourceIDs[2] = AdvancedPowerSourceCraftedItemID;
-    requiredResources.set(PrecisionMachineryFactoryID, requiredResourceIDs);
-
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      PrecisionMachineryFactoryID,
+      IridiumResourceItemID,
+      50,
+      TungstenRodsCraftedItemID,
+      50,
+      AdvancedPowerSourceCraftedItemID,
+      10
+    );
     requiredResearch.set(PrecisionMachineryFactoryID, PrecisionMachineryFactoryResearchID);
 
     //IridiumDrillbitFactoryID
     // Build IridiumDrillbitFactory with 50 TungstenRodsCrafted and 5 LaserPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(TungstenRodsCraftedItemID, IridiumDrillbitFactoryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, IridiumDrillbitFactoryID), 5);
-
-    requiredResourceIDs = new uint256[](2);
-    requiredResourceIDs[0] = TungstenRodsCraftedItemID;
-    requiredResourceIDs[1] = LaserPowerSourceCraftedItemID;
-    requiredResources.set(IridiumDrillbitFactoryID, requiredResourceIDs);
+    LibResourceCost.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      IridiumDrillbitFactoryID,
+      TungstenRodsCraftedItemID,
+      50,
+      LaserPowerSourceCraftedItemID,
+      5
+    );
 
     requiredResearch.set(IridiumDrillbitFactoryID, IridiumDrillbitFactoryResearchID);
 
     //PrecisionPneumaticDrillID
     // Build PrecisionPneumaticDrill with 100 TungstenResource 100 OsmiumResource and 5 LaserPowerSourceCrafted
-    itemComponent.set(LibEncode.hashFromKey(TungstenResourceItemID, PrecisionPneumaticDrillID), 100);
-    itemComponent.set(LibEncode.hashFromKey(OsmiumResourceItemID, PrecisionPneumaticDrillID), 100);
-    itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, PrecisionPneumaticDrillID), 5);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[1] = TungstenResourceItemID;
-    requiredResourceIDs[0] = OsmiumResourceItemID;
-    requiredResourceIDs[2] = LaserPowerSourceCraftedItemID;
-    requiredResources.set(PrecisionPneumaticDrillID, requiredResourceIDs);
-
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      PrecisionPneumaticDrillID,
+      TungstenResourceItemID,
+      100,
+      OsmiumResourceItemID,
+      100,
+      LaserPowerSourceCraftedItemID,
+      5
+    );
     requiredResearch.set(PrecisionPneumaticDrillID, PrecisionPneumaticDrillResearchID);
 
     //PenetratorFactoryID
     // Build PenetratorFactory with 200 OsmiumResource 50 IronPlateCrafted and 10 AdvancedPowerSourceCrafted
-    requiredResourceIDs = new uint256[](3);
-    itemComponent.set(LibEncode.hashFromKey(OsmiumResourceItemID, PenetratorFactoryID), 200);
-    itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, PenetratorFactoryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(AdvancedPowerSourceCraftedItemID, PenetratorFactoryID), 10);
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[1] = OsmiumResourceItemID;
-    requiredResourceIDs[0] = IronPlateCraftedItemID;
-    requiredResourceIDs[2] = AdvancedPowerSourceCraftedItemID;
-
-    requiredResources.set(PenetratorFactoryID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      PenetratorFactoryID,
+      OsmiumResourceItemID,
+      200,
+      IronPlateCraftedItemID,
+      50,
+      AdvancedPowerSourceCraftedItemID,
+      10
+    );
     requiredResearch.set(PenetratorFactoryID, PenetratorFactoryResearchID);
 
     //PenetratingMissileFactoryID
     // Build PenetratingMissileFactory with 300 OsmiumResource 100 TitaniumResource and 15 AdvancedPowerSourceCrafted
-    requiredResourceIDs = new uint256[](3);
-    itemComponent.set(LibEncode.hashFromKey(OsmiumResourceItemID, PenetratingMissileFactoryID), 300);
-    itemComponent.set(LibEncode.hashFromKey(TitaniumResourceItemID, PenetratingMissileFactoryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(AdvancedPowerSourceCraftedItemID, PenetratingMissileFactoryID), 10);
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[1] = OsmiumResourceItemID;
-    requiredResourceIDs[0] = TitaniumResourceItemID;
-    requiredResourceIDs[2] = AdvancedPowerSourceCraftedItemID;
-    requiredResources.set(PenetratingMissileFactoryID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      PenetratingMissileFactoryID,
+      OsmiumResourceItemID,
+      300,
+      TitaniumResourceItemID,
+      100,
+      AdvancedPowerSourceCraftedItemID,
+      15
+    );
     requiredResearch.set(PenetratingMissileFactoryID, PenetratingMissileFactoryResearchID);
 
     //MissileLaunchComplexID
     // Build MissileLaunchComplex with 100 TungstenRodsCrafted and 100 OsmiumResource
-    requiredResourceIDs = new uint256[](2);
-    itemComponent.set(LibEncode.hashFromKey(TungstenRodsCraftedItemID, MissileLaunchComplexID), 100);
-    itemComponent.set(LibEncode.hashFromKey(OsmiumResourceItemID, MissileLaunchComplexID), 100);
-
-    requiredResourceIDs = new uint256[](2);
-    requiredResourceIDs[1] = TungstenRodsCraftedItemID;
-    requiredResourceIDs[0] = OsmiumResourceItemID;
-    requiredResources.set(MissileLaunchComplexID, requiredResourceIDs);
+    LibResourceCost.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      MissileLaunchComplexID,
+      TungstenRodsCraftedItemID,
+      100,
+      OsmiumResourceItemID,
+      100
+    );
     requiredResearch.set(MissileLaunchComplexID, MissileLaunchComplexResearchID);
 
     //HighEnergyLaserFactoryID
     // Build HighEnergyLaserFactory with 50 IridiumCrystalCrafted 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
-    requiredResourceIDs = new uint256[](3);
-    itemComponent.set(LibEncode.hashFromKey(IridiumCrystalCraftedItemID, HighEnergyLaserFactoryID), 50);
-    itemComponent.set(LibEncode.hashFromKey(RefinedOsmiumCraftedItemID, HighEnergyLaserFactoryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(AdvancedPowerSourceCraftedItemID, HighEnergyLaserFactoryID), 50);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[1] = IridiumCrystalCraftedItemID;
-    requiredResourceIDs[0] = RefinedOsmiumCraftedItemID;
-    requiredResourceIDs[2] = AdvancedPowerSourceCraftedItemID;
-    requiredResources.set(HighEnergyLaserFactoryID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      HighEnergyLaserFactoryID,
+      IridiumCrystalCraftedItemID,
+      50,
+      RefinedOsmiumCraftedItemID,
+      100,
+      AdvancedPowerSourceCraftedItemID,
+      50
+    );
     requiredResearch.set(HighEnergyLaserFactoryID, HighEnergyLaserFactoryResearchID);
 
     //ThermobaricWarheadFactory
     // Build ThermobaricWarheadFactory with 200 RefinedOsmiumCrafted 100 IridiumCrystalCrafted and 10 LaserPowerSourceCrafted
-    requiredResourceIDs = new uint256[](3);
-    itemComponent.set(LibEncode.hashFromKey(RefinedOsmiumCraftedItemID, ThermobaricWarheadFactoryID), 200);
-    itemComponent.set(LibEncode.hashFromKey(IridiumCrystalCraftedItemID, ThermobaricWarheadFactoryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, ThermobaricWarheadFactoryID), 10);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[1] = RefinedOsmiumCraftedItemID;
-    requiredResourceIDs[0] = IridiumCrystalCraftedItemID;
-    requiredResourceIDs[2] = LaserPowerSourceCraftedItemID;
-    requiredResources.set(ThermobaricWarheadFactoryID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      ThermobaricWarheadFactoryID,
+      RefinedOsmiumCraftedItemID,
+      200,
+      IridiumCrystalCraftedItemID,
+      100,
+      LaserPowerSourceCraftedItemID,
+      10
+    );
     requiredResearch.set(ThermobaricWarheadFactoryID, ThermobaricWarheadFactoryResearchID);
 
     //ThermobaricMissileFactoryID
     // Build ThermobaricMissileFactory with 100 IridiumCrystalCrafted 100 TungstenRodsCrafted and 20 LaserPowerSourceCrafted
-    requiredResourceIDs = new uint256[](3);
-    itemComponent.set(LibEncode.hashFromKey(IridiumCrystalCraftedItemID, ThermobaricMissileFactoryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(TungstenRodsCraftedItemID, ThermobaricMissileFactoryID), 100);
-    itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, ThermobaricMissileFactoryID), 20);
-
-    requiredResourceIDs = new uint256[](3);
-    requiredResourceIDs[1] = IridiumCrystalCraftedItemID;
-    requiredResourceIDs[0] = TungstenRodsCraftedItemID;
-    requiredResourceIDs[2] = LaserPowerSourceCraftedItemID;
-    requiredResources.set(ThermobaricMissileFactoryID, requiredResourceIDs);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      ThermobaricMissileFactoryID,
+      IridiumCrystalCraftedItemID,
+      100,
+      TungstenRodsCraftedItemID,
+      100,
+      LaserPowerSourceCraftedItemID,
+      20
+    );
     requiredResearch.set(ThermobaricMissileFactoryID, ThermobaricMissileFactoryResearchID);
 
     //KimberliteCatalystFactoryID
     // Build KimberliteCatalystFactory with 200 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
-    requiredResourceIDs = new uint256[](3);
-    itemComponent.set(LibEncode.hashFromKey(IridiumCrystalCraftedItemID, KimberliteCatalystFactoryID), 200);
-    itemComponent.set(LibEncode.hashFromKey(LaserPowerSourceCraftedItemID, KimberliteCatalystFactoryID), 20);
-    requiredResourceIDs = new uint256[](2);
-    requiredResourceIDs[1] = IridiumCrystalCraftedItemID;
-    requiredResourceIDs[0] = LaserPowerSourceCraftedItemID;
-    requiredResources.set(KimberliteCatalystFactoryID, requiredResourceIDs);
+    LibResourceCost.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      KimberliteCatalystFactoryID,
+      IridiumCrystalCraftedItemID,
+      200,
+      LaserPowerSourceCraftedItemID,
+      20
+    );
     requiredResearch.set(KimberliteCatalystFactoryID, KimberliteCatalystFactoryResearchID);
   }
 }
