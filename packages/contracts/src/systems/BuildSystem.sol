@@ -62,6 +62,20 @@ contract BuildSystem is System {
       );
   }
 
+  function checkAndSpendResourceRequirements(uint256 blockType) internal returns (bool) {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(components, RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+    return
+      LibResourceCost.checkAndSpendRequiredResources(
+        requiredResourcesComponent,
+        itemComponent,
+        blockType,
+        addressToEntity(msg.sender)
+      );
+  }
+
   function spendRequiredResources(uint256 blockType) internal {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
@@ -97,10 +111,6 @@ contract BuildSystem is System {
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
 
     //check required resources
-    require(checkResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
-
-    //check if counts towards build limit and if so, check if limit is reached
-
     require(
       LibBuilding.checkBuildLimitConditionForBuildingId(
         ignoreBuildLimitComponent,
@@ -111,6 +121,10 @@ contract BuildSystem is System {
       ),
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
     );
+
+    //require(checkResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
+
+    //check if counts towards build limit and if so, check if limit is reached
 
     // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -140,8 +154,8 @@ contract BuildSystem is System {
     }
 
     //spend required resources
-    spendRequiredResources(blockType);
-
+    //spendRequiredResources(blockType);
+    checkAndSpendResourceRequirements(blockType);
     if (blockType == MainBaseID) {
       buildingComponent.set(addressToEntity(msg.sender), entity);
     }
