@@ -6,21 +6,24 @@ import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
+import { BigNumber } from "ethers";
 
 import { useMud } from "../context/MudContext";
 
 import { getTopLayerKeyPair } from "../util/tile";
 import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
-import { BlockIdToKey, BackgroundImage } from "../util/constants";
+import {
+  BlockIdToKey,
+  BackgroundImage,
+  ResourceImage,
+} from "../util/constants";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
-import CraftButton from "./action/CraftButton";
-import StaticResourceLabel from "./resource-box/StaticResourceLabel";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
-import Spinner from "./Spinner";
-import { BigNumber } from "ethers";
+import ResourceIconTooltip from "./shared/ResourceIconTooltip";
+import ClaimCraftButton from "./action/ClaimCraftButton";
 
 function TooltipBox() {
   const { components, singletonIndex } = useMud();
@@ -122,22 +125,26 @@ function TooltipBox() {
             {craftRecipe[0].resources.map((item) => {
               return (
                 <>
-                  <StaticResourceLabel
+                  <ResourceIconTooltip
                     key={BlockIdToKey[item.id]}
+                    image={ResourceImage.get(item.id)!}
                     name={BlockIdToKey[item.id]}
                     resourceId={item.id}
-                    count={item.amount}
-                  ></StaticResourceLabel>
+                    amount={item.amount}
+                    inline
+                  ></ResourceIconTooltip>
                   &nbsp;
                 </>
               );
             })}
             &rarr;&nbsp;
-            <StaticResourceLabel
+            <ResourceIconTooltip
               name={BlockIdToKey[craftRecipe[0].id]}
+              image={ResourceImage.get(craftRecipe[0].id)!}
               resourceId={craftRecipe[0].id}
-              count={1}
-            ></StaticResourceLabel>
+              amount={1}
+              inline
+            ></ResourceIconTooltip>
           </p>
         );
       } else {
@@ -156,7 +163,7 @@ function TooltipBox() {
   if (!minimized) {
     return (
       <div className="z-[1000] viewport-container fixed bottom-4 right-4 h-96 w-80  flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className="mt-4 ml-5 flex flex-col overflow-y-scroll scrollbar h-64">
+        <div className="mt-4 ml-5 flex flex-col overflow-y-scroll scrollbar h-[19rem]">
           <button
             id="minimize-button-tooltip-box"
             onClick={minimizeBox}
@@ -264,7 +271,8 @@ function TooltipBox() {
                 {/* TODO: show owned resource for every resource possible */}
                 {builtTile && (
                   <>
-                    {isClaimableFactory(builtTile) && (
+                    {(isClaimable(builtTile) ||
+                      isClaimableFactory(builtTile)) && (
                       <div className="font-bold mb-1">Storage:</div>
                     )}
                     {isClaimable(builtTile) &&
@@ -276,17 +284,14 @@ function TooltipBox() {
                         />
                       )}
                     {isClaimableFactory(builtTile) && (
-                      <>
-                        <ClaimButton
-                          id="claim-button-factory"
-                          builtTile={builtTile}
-                          coords={selectedTile}
-                        />
-                        <CraftButton coords={selectedTile} />
-                      </>
+                      <ClaimCraftButton
+                        id="claim-button-factory"
+                        builtTile={builtTile}
+                        coords={selectedTile}
+                      />
                     )}
                     {transactionLoading ? (
-                      <Spinner />
+                      <p>...</p>
                     ) : (
                       <AllResourceLabels entityIndex={tilesAtPosition[0]} />
                     )}

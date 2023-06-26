@@ -360,8 +360,8 @@ export const technologyTree = [
       description:
         "Builds penetrating missiles with penetrating warheads and kinetic missiles.",
       resources: [
-        { id: BlockType.RefinedOsmiumCrafted, amount: 100 },
         { id: BlockType.AdvancedPowerSourceCrafted, amount: 50 },
+        { id: BlockType.RefinedOsmiumCrafted, amount: 100 },
       ],
     },
     position: { x: 250, y: 2750 },

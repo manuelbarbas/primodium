@@ -130,7 +130,7 @@ export default function AllResourceLabels({
         resourceId={BlockType.ThermobaricMissileCrafted}
       />
       <ResourceLabel
-        name={"Kimberlite Crystal Catalyst"}
+        name={"Kimberlite Catalyst"}
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
       />

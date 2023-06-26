@@ -1,7 +1,7 @@
+import { useCallback, useEffect } from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { Transition, TransitionStatus } from "react-transition-group";
 import { useNotificationStore } from "../store/NotificationStore";
-import { useCallback, useEffect } from "react";
 
 function NotificationBox() {
   const [title, message, showUI, setShowUI] = useNotificationStore((state) => [
@@ -14,7 +14,7 @@ function NotificationBox() {
   const duration = 300;
 
   const defaultStyle = {
-    transition: `${duration}ms ease-in-out`,
+    transition: `opacity ${duration}ms ease-in-out`,
     opacity: 0,
   };
 
@@ -28,37 +28,43 @@ function NotificationBox() {
 
   const hideNotificationBoxHelper = useCallback(() => {
     setShowUI(false);
-  }, []);
+  }, [setShowUI]);
 
   useEffect(() => {
     const timeoutId = showUI
       ? setTimeout(() => setShowUI(false), 3000)
       : undefined;
     return () => clearTimeout(timeoutId);
-  }, [showUI]);
+  }, [showUI, setShowUI]);
 
   return (
     <Transition in={showUI} timeout={duration}>
-      {(state: TransitionStatus) => (
-        <div
-          className="z-[1000] viewport-container fixed top-52 left-4 pb-4 pr-4 w-64 flex flex-col bg-gray-700 text-yellow-400 drop-shadow-xl font-mono rounded"
-          style={{
-            ...defaultStyle,
-            ...transitionStyles[state],
-          }}
-          onClick={hideNotificationBoxHelper}
-        >
-          <div className="mt-4 ml-5 flex flex-col">
-            <div className="flex flex-row">
-              <LinkIcon icon={<AiFillWarning size="16" />} />
-              <p className="ml-2 inline-block align-middle font-bold">
-                {title}
-              </p>
+      {(state: TransitionStatus) => {
+        if (state === "exited") {
+          return null;
+        }
+
+        return (
+          <div
+            className="z-[1001] viewport-container fixed top-52 left-4 pb-4 pr-4 w-64 flex flex-col bg-gray-700 text-yellow-400 drop-shadow-xl font-mono rounded"
+            style={{
+              ...defaultStyle,
+              ...transitionStyles[state],
+            }}
+            onClick={hideNotificationBoxHelper}
+          >
+            <div className="mt-4 ml-5 flex flex-col">
+              <div className="flex flex-row">
+                <LinkIcon icon={<AiFillWarning size="16" />} />
+                <p className="ml-2 inline-block align-middle font-bold">
+                  {title}
+                </p>
+              </div>
+              <div className="mt-2 text-sm">{message}</div>
             </div>
-            <div className="mt-2 text-sm">{message}</div>
           </div>
-        </div>
-      )}
+        );
+      }}
     </Transition>
   );
 }

@@ -65,24 +65,36 @@ export default function ClaimButton({
     }
   }, [builtTile]);
 
+  const colorCode = useMemo(() => {
+    if (builtTile === BlockType.MainBase) {
+      return "bg-blue-600 hover:bg-blue-700";
+    } else {
+      return "bg-yellow-800 hover:bg-yellow-900";
+    }
+  }, [builtTile]);
+
   if (transactionLoading) {
     return (
-      <button
-        id={id}
-        className="inset-x-4 absolute bottom-4 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
-      >
-        <Spinner />
-      </button>
+      <div className="absolute inset-x-4 bottom-4">
+        <button
+          id={id}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+        >
+          <Spinner />
+        </button>
+      </div>
     );
   } else {
     return (
-      <button
-        id={id}
-        className="inset-x-4 absolute bottom-4 h-10 bg-blue-600 hover:bg-blue-700 text-sm rounded font-bold"
-        onClick={claimAction}
-      >
-        {claimText}
-      </button>
+      <div className="absolute inset-x-4 bottom-4">
+        <button
+          id={id}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+          onClick={claimAction}
+        >
+          {claimText}
+        </button>
+      </div>
     );
   }
 }

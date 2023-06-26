@@ -5,7 +5,7 @@ import { TbBulldozer, TbSword, TbScale } from "react-icons/tb";
 
 import MarketModal from "./market-menu/MarketModal";
 import BuildingPage from "./building-menu/BuildingPage";
-import DestroyBuildingBox from "./destroy-menu/DestroyBuildingBox";
+import DemolishBuildingBox from "./demolish-menu/DemolishBuildingBox";
 import ResearchModal from "./research-menu/ResearchModal";
 import AttackBox from "./attack-menu/AttackBox";
 
@@ -140,7 +140,7 @@ function SideMenu() {
         menuOpenIndex={menuOpenIndex}
         setMenuOpenIndex={setMenuOpenIndex}
       >
-        <DestroyBuildingBox />
+        <DemolishBuildingBox />
       </SideBarIcon>
     </div>
   );

@@ -458,7 +458,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.LaserPowerSourceCrafted, "/img/crafted/laserbattery.png"],
   [
     BlockType.KimberliteCrystalCatalystCrafted,
-    "/img/crafted/kimberlitecrystal.png",
+    "/img/crafted/kimberlitecatalyst.png",
   ],
   [BlockType.RefinedOsmiumCrafted, "/img/crafted/refinedosmium.png"],
   [BlockType.TungstenRodsCrafted, "/img/crafted/tungstenrod.png"],
