@@ -3,7 +3,8 @@ pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
-import { entityToAddress } from "solecs/utils.sol";
+import { entityToAddress, addressToEntity } from "solecs/utils.sol";
+
 import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
 
@@ -14,7 +15,7 @@ library LibResourceCost {
     Uint256ArrayComponent requiredResourcesComponent,
     Uint256Component itemComponent,
     uint256 entity,
-    address playerAddress
+    uint256 playerEntity
   ) internal view returns (bool) {
     if (!requiredResourcesComponent.has(entity)) return true;
 
@@ -26,7 +27,7 @@ library LibResourceCost {
       );
       if (
         resourceCost >
-        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashFromAddress(requiredResources[i], playerAddress))
+        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], playerEntity))
       ) return false;
     }
     return true;
@@ -36,12 +37,12 @@ library LibResourceCost {
     Uint256ArrayComponent requiredResourcesComponent,
     Uint256Component itemComponent,
     uint256 entity,
-    address playerAddress
+    uint256 playerEntity
   ) internal {
     if (!requiredResourcesComponent.has(entity)) return;
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.length; i++) {
-      uint256 playerResourceHash = LibEncode.hashFromAddress(requiredResources[i], playerAddress);
+      uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources[i], playerEntity);
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
         LibEncode.hashFromKey(requiredResources[i], entity)

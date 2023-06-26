@@ -47,11 +47,13 @@ contract UpgradeSystemTest is MudTest {
       component(RequiredResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-
+    console.log("building MainBase");
     bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
+    console.log("MainBase built");
     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-    assertTrue(buildingComponent.has(blockEntityID));
-    assertTrue(buildingComponent.getValue(blockEntityID) == 1);
+    console.log("get built MainBase entity id ");
+    assertTrue(buildingComponent.has(blockEntityID), "MainBase entity id should have building component");
+    assertTrue(buildingComponent.getValue(blockEntityID) == 1, "MainBase entity id should be level 1");
     console.log("upgrading MainBase to level 2");
     uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashFromKey(MainBaseID, 2));
     for (uint256 i = 0; i < resourceRequirements.length; i++) {

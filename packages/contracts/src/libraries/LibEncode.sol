@@ -5,10 +5,6 @@ import { Coord } from "std-contracts/components/CoordComponent.sol";
 import { split } from "solecs/utils.sol";
 
 library LibEncode {
-  function hashFromAddress(uint256 key, address addr) internal pure returns (uint256) {
-    return uint256(keccak256(abi.encodePacked(key, addr)));
-  }
-
   function hashKeyEntity(uint256 key, uint256 entity) internal pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(key, entity)));
   }

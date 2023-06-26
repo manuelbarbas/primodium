@@ -61,7 +61,7 @@ contract UpgradeSystem is System {
         researchComponent,
         blockType,
         entity,
-        msg.sender
+        addressToEntity(msg.sender)
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
@@ -72,7 +72,7 @@ contract UpgradeSystem is System {
         itemComponent,
         blockType,
         entity,
-        msg.sender
+        addressToEntity(msg.sender)
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
@@ -82,7 +82,7 @@ contract UpgradeSystem is System {
       itemComponent,
       blockType,
       entity,
-      msg.sender
+      addressToEntity(msg.sender)
     );
     buildingComponent.set(entity, buildingComponent.getValue(entity) + 1);
     return abi.encode(entity);

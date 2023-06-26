@@ -53,7 +53,13 @@ contract BuildSystem is System {
       getAddressById(components, RequiredResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return LibResourceCost.hasRequiredResources(requiredResourcesComponent, itemComponent, blockType, msg.sender);
+    return
+      LibResourceCost.hasRequiredResources(
+        requiredResourcesComponent,
+        itemComponent,
+        blockType,
+        addressToEntity(msg.sender)
+      );
   }
 
   function spendRequiredResources(uint256 blockType) internal {
@@ -61,7 +67,12 @@ contract BuildSystem is System {
       getAddressById(components, RequiredResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(requiredResourcesComponent, itemComponent, blockType, msg.sender);
+    LibResourceCost.spendRequiredResources(
+      requiredResourcesComponent,
+      itemComponent,
+      blockType,
+      addressToEntity(msg.sender)
+    );
   }
 
   function execute(bytes memory args) public returns (bytes memory) {

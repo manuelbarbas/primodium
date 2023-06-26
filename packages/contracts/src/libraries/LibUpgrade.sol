@@ -22,7 +22,7 @@ library LibUpgrade {
     Uint256Component itemComponent,
     uint256 buildingId,
     uint256 buildingEntity,
-    address playerAddress
+    uint256 playerEntity
   ) internal view returns (bool) {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
     uint256 currentLevel = buildingComponent.getValue(buildingEntity);
@@ -40,7 +40,7 @@ library LibUpgrade {
       );
       if (
         resourceCost >
-        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashFromAddress(resourceRequirements[i], playerAddress))
+        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceRequirements[i], playerEntity))
       ) return false;
     }
     return true;
@@ -52,7 +52,7 @@ library LibUpgrade {
     Uint256Component itemComponent,
     uint256 buildingId,
     uint256 buildingEntity,
-    address playerAddress
+    uint256 playerEntity
   ) internal {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
     uint256 currentLevel = buildingComponent.getValue(buildingEntity);
@@ -70,9 +70,9 @@ library LibUpgrade {
       );
       uint256 curItem = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashFromAddress(resourceRequirements[i], playerAddress)
+        LibEncode.hashKeyEntity(resourceRequirements[i], playerEntity)
       );
-      itemComponent.set(LibEncode.hashFromAddress(resourceRequirements[i], playerAddress), curItem - resourceCost);
+      itemComponent.set(LibEncode.hashKeyEntity(resourceRequirements[i], playerEntity), curItem - resourceCost);
     }
   }
 
@@ -82,7 +82,7 @@ library LibUpgrade {
     BoolComponent researchComponent,
     uint256 buildingId,
     uint256 buildingEntity,
-    address playerAddress
+    uint256 playerEntity
   ) internal view returns (bool) {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
     uint256 currentLevel = buildingComponent.getValue(buildingEntity);
@@ -90,6 +90,6 @@ library LibUpgrade {
     uint256 researchRequirement = researchRequirmentComponent.getValue(
       LibEncode.hashFromKey(buildingId, currentLevel + 1)
     );
-    return LibResearch.hasResearchedWithKey(researchComponent, researchRequirement, addressToEntity(playerAddress));
+    return LibResearch.hasResearchedWithKey(researchComponent, researchRequirement, playerEntity);
   }
 }

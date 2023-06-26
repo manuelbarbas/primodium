@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
-import { getAddressById } from "solecs/utils.sol";
+import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -19,10 +19,14 @@ contract DebugAquireResourcesSystem is System {
     }
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     itemComponent.set(
-      LibEncode.hashFromAddress(resourceId, msg.sender),
-      LibMath.getSafeUint256Value(itemComponent, LibEncode.hashFromAddress(resourceId, msg.sender)) + amount
+      LibEncode.hashKeyEntity(resourceId, addressToEntity(msg.sender)),
+      LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceId, addressToEntity(msg.sender))) +
+        amount
     );
-    return abi.encode(LibMath.getSafeUint256Value(itemComponent, LibEncode.hashFromAddress(resourceId, msg.sender)));
+    return
+      abi.encode(
+        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceId, addressToEntity(msg.sender)))
+      );
   }
 
   function executeTyped(uint256 resourceId, uint256 amount) public returns (bytes memory) {
