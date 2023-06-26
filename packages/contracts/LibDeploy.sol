@@ -29,6 +29,9 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
+import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
@@ -42,6 +45,7 @@ import { DestroyPathSystem, ID as DestroyPathSystemID } from "systems/DestroyPat
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
 import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "systems/ClaimFromFactorySystem.sol";
 import { CraftSystem, ID as CraftSystemID } from "systems/CraftSystem.sol";
+import { UpgradeSystem, ID as UpgradeSystemID } from "systems/UpgradeSystem.sol";
 
 
 struct DeployResult {
@@ -120,7 +124,24 @@ library LibDeploy {
       console.log("Deploying StarterPackInitializedComponent");
       comp = new StarterPackInitializedComponent(address(result.world));
       console.log(address(comp));
+
+
+      console.log("Deploying BuildingComponent");
+      comp = new BuildingComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying RequiredResourcesComponent");
+      comp = new RequiredResourcesComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying RequiredResearchComponent");
+      comp = new RequiredResearchComponent(address(result.world));
+      console.log(address(comp));
+
+
+      
     } 
+
     
     // Deploy systems 
     deploySystems(address(result.world), true);
@@ -191,6 +212,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
+    authorizeWriter(components, BuildingComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DestroySystem");
@@ -203,6 +225,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, BuildingComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathSystem");
@@ -256,6 +279,13 @@ library LibDeploy {
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, ItemComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying UpgradeSystem");
+    system = new UpgradeSystem(world, address(components));
+    world.registerSystem(address(system), CraftSystemID);
+    authorizeWriter(components, BuildingComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
     console.log(address(system));
   }

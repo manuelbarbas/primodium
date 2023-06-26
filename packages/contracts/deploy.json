@@ -13,10 +13,13 @@
 
     "ItemComponent",
     "ResearchComponent",
-
+    "BuildingComponent",
     "MainBaseInitializedComponent",
-    "StarterPackInitializedComponent"
+    "StarterPackInitializedComponent",
+    "RequiredResearchComponent",
+    "RequiredResourcesComponent"
   ],
+  "initializers": ["LibBuildingDesignInitializer"],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -50,9 +53,8 @@
         "OwnedByComponent",
         "LastBuiltAtComponent",
         "LastClaimedAtComponent",
-
         "ItemComponent",
-
+        "BuildingComponent",
         "MainBaseInitializedComponent"
       ]
     },
@@ -116,6 +118,10 @@
 
         "ItemComponent"
       ]
+    },
+    {
+      "name": "UpgradeSystem",
+      "writeAccess": ["BuildingComponent", "ItemComponent"]	
     }
   ]
 }
