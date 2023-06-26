@@ -69,21 +69,25 @@ export default function NavigateMainBaseButton() {
 
   if (mainBaseCoord) {
     return (
-      <button
-        onClick={navigateMainBase}
-        className="absolute inset-x-4 bottom-4 h-10 bg-green-600 hover:bg-green-700 text-sm rounded font-bold"
-      >
-        Main Base ({mainBaseCoord.x},{mainBaseCoord.y})
-      </button>
+      <div className="absolute inset-x-4 bottom-4 flex">
+        <button
+          onClick={navigateMainBase}
+          className="h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold w-full"
+        >
+          Main Base ({mainBaseCoord.x},{mainBaseCoord.y})
+        </button>
+      </div>
     );
   } else {
     return (
-      <button
-        onClick={buildMainBase}
-        className="absolute inset-x-4 bottom-4 h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold"
-      >
-        Build a Main Base
-      </button>
+      <div className="absolute inset-x-4 bottom-4 flex">
+        <button
+          onClick={buildMainBase}
+          className="h-10 bg-orange-600 hover:bg-amber-700 text-sm rounded font-bold w-full"
+        >
+          Build a Main Base
+        </button>
+      </div>
     );
   }
 }

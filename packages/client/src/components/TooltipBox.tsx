@@ -6,6 +6,7 @@ import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
+import { BigNumber } from "ethers";
 
 import { useMud } from "../context/MudContext";
 
@@ -21,8 +22,6 @@ import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
-import Spinner from "./Spinner";
-import { BigNumber } from "ethers";
 import ResourceIconTooltip from "./shared/ResourceIconTooltip";
 import ClaimCraftButton from "./action/ClaimCraftButton";
 
@@ -292,7 +291,7 @@ function TooltipBox() {
                       />
                     )}
                     {transactionLoading ? (
-                      <Spinner />
+                      <p>...</p>
                     ) : (
                       <AllResourceLabels entityIndex={tilesAtPosition[0]} />
                     )}
