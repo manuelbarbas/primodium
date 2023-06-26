@@ -13,6 +13,7 @@ import { entityToAddress } from "solecs/utils.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResearch } from "libraries/LibResearch.sol";
+import { LibResourceCost } from "libraries/LibResourceCost.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 
 library LibUpgrade {
@@ -26,24 +27,30 @@ library LibUpgrade {
   ) internal view returns (bool) {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
     uint256 currentLevel = buildingComponent.getValue(buildingEntity);
-    require(
-      resourceRequirementsComponent.has(LibEncode.hashFromKey(buildingId, currentLevel + 1)),
-      "[LibUpgrade] Resource Requirements do not exist for this building level"
-    );
-    uint256[] memory resourceRequirements = resourceRequirementsComponent.getValue(
-      LibEncode.hashFromKey(buildingId, currentLevel + 1)
-    );
-    for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint256 resourceCost = LibMath.getSafeUint256Value(
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, currentLevel + 1);
+    return
+      LibResourceCost.hasRequiredResources(resourceRequirementsComponent, itemComponent, buildingIdLevel, playerEntity);
+  }
+
+  function checkAndSpendUpgradeResourceRequirements(
+    Uint256Component buildingComponent,
+    Uint256ArrayComponent resourceRequirementsComponent,
+    Uint256Component itemComponent,
+    uint256 buildingId,
+    uint256 buildingEntity,
+    uint256 playerEntity
+  ) internal returns (bool) {
+    require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
+    uint256 currentLevel = buildingComponent.getValue(buildingEntity);
+    require(currentLevel > 0, "[LibUpgrade] can not upgrade building that is level 0");
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, currentLevel + 1);
+    return
+      LibResourceCost.checkAndSpendRequiredResources(
+        resourceRequirementsComponent,
         itemComponent,
-        LibEncode.hashFromTwoKeys(resourceRequirements[i], buildingId, currentLevel + 1)
+        buildingIdLevel,
+        playerEntity
       );
-      if (
-        resourceCost >
-        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceRequirements[i], playerEntity))
-      ) return false;
-    }
-    return true;
   }
 
   function spendUpgradeResourceRequirements(
@@ -55,25 +62,8 @@ library LibUpgrade {
     uint256 playerEntity
   ) internal {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
-    uint256 currentLevel = buildingComponent.getValue(buildingEntity);
-    require(
-      resourceRequirementsComponent.has(LibEncode.hashFromKey(buildingId, currentLevel + 1)),
-      "[LibUpgrade] Resource Requirements do not exist for this building level"
-    );
-    uint256[] memory resourceRequirements = resourceRequirementsComponent.getValue(
-      LibEncode.hashFromKey(buildingId, currentLevel + 1)
-    );
-    for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint256 resourceCost = LibMath.getSafeUint256Value(
-        itemComponent,
-        LibEncode.hashFromTwoKeys(resourceRequirements[i], buildingId, currentLevel + 1)
-      );
-      uint256 curItem = LibMath.getSafeUint256Value(
-        itemComponent,
-        LibEncode.hashKeyEntity(resourceRequirements[i], playerEntity)
-      );
-      itemComponent.set(LibEncode.hashKeyEntity(resourceRequirements[i], playerEntity), curItem - resourceCost);
-    }
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingComponent.getValue(buildingEntity) + 1);
+    LibResourceCost.spendRequiredResources(resourceRequirementsComponent, itemComponent, buildingIdLevel, playerEntity);
   }
 
   function checkUpgradeResearchRequirements(

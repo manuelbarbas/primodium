@@ -59,7 +59,7 @@ contract UpgradeSystemTest is MudTest {
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashFromTwoKeys(resourceRequirements[i], MainBaseID, 2)
+        LibEncode.hashFromKey(resourceRequirements[i], LibEncode.hashFromKey(MainBaseID, 2))
       );
       console.log("MainBase level 2 requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
       debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);

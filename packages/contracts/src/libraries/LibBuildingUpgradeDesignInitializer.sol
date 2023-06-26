@@ -33,21 +33,23 @@ library LibBuildingUpgradeDesignInitializer {
     );
 
     //MainBaseID Level 2 Upgrade
-    itemComponent.set(LibEncode.hashFromTwoKeys(IronResourceItemID, MainBaseID, 2), 500);
-    itemComponent.set(LibEncode.hashFromTwoKeys(CopperResourceItemID, MainBaseID, 2), 500);
+    uint256 buildingIdLevel = LibEncode.hashFromKey(MainBaseID, 2);
+    itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, buildingIdLevel), 500);
+    itemComponent.set(LibEncode.hashFromKey(CopperResourceItemID, buildingIdLevel), 500);
     uint256[] memory requiredResourceIDs = new uint256[](2);
     requiredResourceIDs[0] = IronResourceItemID;
     requiredResourceIDs[1] = CopperResourceItemID;
-    requiredResources.set(LibEncode.hashFromKey(MainBaseID, 2), requiredResourceIDs);
+    requiredResources.set(buildingIdLevel, requiredResourceIDs);
 
     //MainBaseID Level 3 Upgrade
-    itemComponent.set(LibEncode.hashFromTwoKeys(IronPlateCraftedItemID, MainBaseID, 3), 500);
-    itemComponent.set(LibEncode.hashFromTwoKeys(BasicPowerSourceCraftedItemID, MainBaseID, 3), 100);
-    itemComponent.set(LibEncode.hashFromTwoKeys(CopperResourceItemID, MainBaseID, 3), 2000);
+    buildingIdLevel = LibEncode.hashFromKey(MainBaseID, 3);
+    itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, buildingIdLevel), 500);
+    itemComponent.set(LibEncode.hashFromKey(BasicPowerSourceCraftedItemID, buildingIdLevel), 100);
+    itemComponent.set(LibEncode.hashFromKey(CopperResourceItemID, buildingIdLevel), 2000);
     requiredResourceIDs = new uint256[](3);
     requiredResourceIDs[0] = IronPlateCraftedItemID;
     requiredResourceIDs[1] = BasicPowerSourceCraftedItemID;
     requiredResourceIDs[2] = CopperResourceItemID;
-    requiredResources.set(LibEncode.hashFromKey(MainBaseID, 3), requiredResourceIDs);
+    requiredResources.set(buildingIdLevel, requiredResourceIDs);
   }
 }

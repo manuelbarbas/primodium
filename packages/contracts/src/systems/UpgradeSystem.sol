@@ -66,7 +66,7 @@ contract UpgradeSystem is System {
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
     require(
-      LibUpgrade.checkUpgradeResourceRequirements(
+      LibUpgrade.checkAndSpendUpgradeResourceRequirements(
         buildingComponent,
         requiredResourcesComponent,
         itemComponent,
@@ -75,14 +75,6 @@ contract UpgradeSystem is System {
         addressToEntity(msg.sender)
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
-    );
-    LibUpgrade.spendUpgradeResourceRequirements(
-      buildingComponent,
-      requiredResourcesComponent,
-      itemComponent,
-      blockType,
-      entity,
-      addressToEntity(msg.sender)
     );
     buildingComponent.set(entity, buildingComponent.getValue(entity) + 1);
     return abi.encode(entity);

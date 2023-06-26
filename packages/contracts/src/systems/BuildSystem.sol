@@ -155,7 +155,7 @@ contract BuildSystem is System {
 
     //spend required resources
     //spendRequiredResources(blockType);
-    checkAndSpendResourceRequirements(blockType);
+    require(checkAndSpendResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
     if (blockType == MainBaseID) {
       buildingComponent.set(addressToEntity(msg.sender), entity);
     }
