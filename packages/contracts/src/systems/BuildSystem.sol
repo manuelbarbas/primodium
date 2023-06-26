@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
@@ -18,6 +17,8 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+
+import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
@@ -65,7 +66,6 @@ contract BuildSystem is System {
 
   function execute(bytes memory args) public returns (bytes memory) {
     (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
@@ -79,8 +79,8 @@ contract BuildSystem is System {
       getAddressById(components, IgnoreBuildLimitComponentID)
     );
     // Check there isn't another tile there
-    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
+    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
     //check required research
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
@@ -131,14 +131,8 @@ contract BuildSystem is System {
     //spend required resources
     spendRequiredResources(blockType);
 
-    // Randomly generate IDs instead of basing on coordinate
-    uint256 newBlockEntity = world.getUniqueEntityId();
-
-    // Standardize storing uint256 as uint160 because entity IDs are converted to addresses before hashing
-    uint256 blockEntity = addressToEntity(entityToAddress(newBlockEntity));
-
     if (blockType == MainBaseID) {
-      buildingComponent.set(addressToEntity(msg.sender), blockEntity);
+      buildingComponent.set(addressToEntity(msg.sender), entity);
     }
     if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {
       buildingLimitComponent.set(
@@ -146,12 +140,11 @@ contract BuildSystem is System {
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) + 1
       );
     }
-    positionComponent.set(blockEntity, coord);
-    tileComponent.set(blockEntity, blockType);
-    ownedByComponent.set(blockEntity, addressToEntity(msg.sender));
-    lastBuiltAtComponent.set(blockEntity, block.number);
+    tileComponent.set(entity, blockType);
+    ownedByComponent.set(entity, addressToEntity(msg.sender));
+    lastBuiltAtComponent.set(entity, block.number);
 
-    return abi.encode(blockEntity);
+    return abi.encode(entity);
   }
 
   function executeTyped(uint256 blockType, Coord memory coord) public returns (bytes memory) {

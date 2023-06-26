@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
-import { entityToAddress } from "solecs/utils.sol";
 
 import { MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionPneumaticDrillID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
 
@@ -47,7 +46,7 @@ library LibMine {
       MINE_COUNT_MAX = 3000;
     }
 
-    uint256 hashedResearchKey = LibEncode.hashFromAddress(researchKey, entityToAddress(ownerKey));
+    uint256 hashedResearchKey = LibEncode.hashKeyEntity(researchKey, ownerKey);
 
     if (!isDefaultUnlockedResource(resourceKey)) {
       if (!researchComponent.has(hashedResearchKey)) {

@@ -9,7 +9,6 @@ import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSyste
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
-import { PositionComponent, ID as PositionComponentID } from "../../components/PositionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";

@@ -27,7 +27,7 @@ contract StarterPackSystem is System {
       return abi.encode(false);
     } else {
       ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-      LibMath.incrementBy(itemComponent, LibEncode.hashFromAddress(IronResourceItemID, msg.sender), 200);
+      LibMath.incrementBy(itemComponent, LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(msg.sender)), 200);
       starterPackInitializedComponent.set(addressToEntity(msg.sender));
       return abi.encode(true);
     }

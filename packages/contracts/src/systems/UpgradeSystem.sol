@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
@@ -12,6 +11,8 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+
+import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
 import { LibBuild } from "../libraries/LibBuild.sol";
@@ -28,7 +29,6 @@ contract UpgradeSystem is System {
 
   function execute(bytes memory args) public returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
-    PositionComponent positionComponent = PositionComponent(getAddressById(components, PositionComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
@@ -44,22 +44,23 @@ contract UpgradeSystem is System {
     );
 
     // Check there isn't another tile there
-    uint256[] memory entitiesAtPosition = positionComponent.getEntitiesWithValue(coord);
-    require(entitiesAtPosition.length == 1, "[UpgradeSystem] Cannot upgrade an empty coordinate");
-    require(buildingComponent.has(entitiesAtPosition[0]), "[UpgradeSystem] Cannot upgrade a non-building");
+    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    require(tileComponent.has(entity), "[DestroySystem] Cannot destroy tile at an empty coordinate");
+
+    require(buildingComponent.has(entity), "[UpgradeSystem] Cannot upgrade a non-building");
     uint256 ownerKey = addressToEntity(msg.sender);
     require(
-      ownedByComponent.getValue(entitiesAtPosition[0]) == ownerKey,
+      ownedByComponent.getValue(entity) == ownerKey,
       "[UpgradeSystem] Cannot upgrade a building that is not owned by you"
     );
-    uint256 blockType = tileComponent.getValue(entitiesAtPosition[0]);
+    uint256 blockType = tileComponent.getValue(entity);
     require(
       LibUpgrade.checkUpgradeResearchRequirements(
         buildingComponent,
         requiredResearchComponent,
         researchComponent,
         blockType,
-        entitiesAtPosition[0],
+        entity,
         msg.sender
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
@@ -70,7 +71,7 @@ contract UpgradeSystem is System {
         requiredResourcesComponent,
         itemComponent,
         blockType,
-        entitiesAtPosition[0],
+        entity,
         msg.sender
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
@@ -80,11 +81,11 @@ contract UpgradeSystem is System {
       requiredResourcesComponent,
       itemComponent,
       blockType,
-      entitiesAtPosition[0],
+      entity,
       msg.sender
     );
-    buildingComponent.set(entitiesAtPosition[0], buildingComponent.getValue(entitiesAtPosition[0]) + 1);
-    return abi.encode(entitiesAtPosition[0]);
+    buildingComponent.set(entity, buildingComponent.getValue(entity) + 1);
+    return abi.encode(entity);
   }
 
   function executeTyped(Coord memory coord) public returns (bytes memory) {
