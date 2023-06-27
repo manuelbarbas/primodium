@@ -5,6 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { LastBuiltPathAtComponent, ID as LastBuiltPathAtComponentID } from "components/LastBuiltPathAtComponent.sol";
 import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
@@ -22,7 +23,9 @@ contract BuildPathSystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-
+    LastBuiltPathAtComponent lastBuiltPathAtComponent = LastBuiltPathAtComponent(
+      getAddressById(components, LastBuiltPathAtComponentID)
+    );
     require(
       !(coordStart.x == coordEnd.x && coordStart.y == coordEnd.y),
       "[BuildPathSystem] Cannot start and end path at the same coordinate"
