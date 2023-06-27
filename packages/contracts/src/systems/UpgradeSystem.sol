@@ -15,7 +15,6 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
-import { LibBuild } from "../libraries/LibBuild.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
