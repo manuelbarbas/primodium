@@ -10,15 +10,15 @@ import {
 } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
-  CameraConfig,
   Coord,
   GestureState,
   ObjectPool,
 } from "@latticexyz/phaserx/dist/types";
+import { CameraConfig } from "../../types";
 
 export function createCamera(
   phaserCamera: Phaser.Cameras.Scene2D.Camera,
-  options: CameraConfig & { dragSpeed: number }
+  options: CameraConfig
 ) {
   // Stop default gesture events to not collide with use-gesture
   // https://github.com/pmndrs/use-gesture/blob/404e2b2ac145a45aff179c1faf5097b97414731c/documentation/pages/docs/gestures.mdx#about-the-pinch-gesture
@@ -68,6 +68,7 @@ export function createCamera(
         // @ts-ignore
         const delta = state.offset[0] - zoom;
         const scaledDelta = delta * options.pinchSpeed;
+        // console.log(zoom, scaledDelta);
         return zoom + scaledDelta;
       }), // Compute pinch speed
       map((zoom) => Math.min(Math.max(zoom, options.minZoom), options.maxZoom)), // Limit zoom values
@@ -99,7 +100,7 @@ export function createCamera(
 
   const dragSub = dragStream$
     .pipe(
-      // filter((state) => !state.pinching),
+      filter((state) => !state.pinching || !state.wheeling),
       sampleTime(10),
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

@@ -2,7 +2,7 @@
  * Creates an updater that runs a list of functions on each update call. Functions can be added and removed from the list.
  * @returns {Object} An object with `add`, `remove`, and `update` methods.
  */
-const createUpdater = () => {
+export const createScriptManager = () => {
   let updateFunctions: ((time: number, delta: number) => void)[] = [];
 
   return {
@@ -19,5 +19,3 @@ const createUpdater = () => {
     },
   };
 };
-
-export default createUpdater;

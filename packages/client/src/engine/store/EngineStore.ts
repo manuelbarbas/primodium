@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { mountStoreDevtool } from "simple-zustand-devtools";
-import { Game } from "../../util/types";
+import { Game } from "../types";
 
 type EngineState = {
   game: Game | null;

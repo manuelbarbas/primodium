@@ -1,10 +1,11 @@
 // import DragPlugin from "phaser3-rex-plugins/plugins/drag-plugin";
-import api from "../api";
-import createSceneManager from "./createSceneManager";
+import { api } from "../../api";
+import { createSceneManager } from "./createSceneManager";
 import { deferred } from "@latticexyz/utils";
-import { resizePhaserGame } from "./resizePhaserGame";
+import { resizePhaserGame } from "../util/resizePhaserGame";
+import { GameConfig } from "../../types";
 
-const createGame = async (config: Phaser.Types.Core.GameConfig) => {
+export const createGame = async (config: GameConfig) => {
   try {
     //Initialize Phaser Game
     const phaserGame = new Phaser.Game(config);
@@ -33,5 +34,3 @@ const createGame = async (config: Phaser.Types.Core.GameConfig) => {
     throw e;
   }
 };
-
-export default createGame;

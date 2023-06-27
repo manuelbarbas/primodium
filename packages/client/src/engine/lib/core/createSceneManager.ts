@@ -1,7 +1,7 @@
-import { useEngineStore } from "../store/EngineStore";
-import createScene from "./createScene";
+import { useEngineStore } from "../../store/EngineStore";
+import { createScene } from "./createScene";
 
-const createSceneManager = () => {
+export const createSceneManager = () => {
   const scenes: Partial<
     Record<string, Awaited<ReturnType<typeof createScene>>>
   > = {};
@@ -22,7 +22,7 @@ const createSceneManager = () => {
     if (!phaserGame) throw new Error("Phaser game not initialized");
 
     delete scenes[key];
-    phaserGame.game.scene.remove(key);
+    phaserGame.scene.remove(key);
   };
 
   return {
@@ -31,5 +31,3 @@ const createSceneManager = () => {
     removeScene,
   };
 };
-
-export default createSceneManager;
