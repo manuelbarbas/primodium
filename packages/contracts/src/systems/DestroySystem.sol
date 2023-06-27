@@ -11,7 +11,9 @@ import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "componen
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
-
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
@@ -20,11 +22,30 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
 contract DestroySystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
+
+  function checkAndUpdatePlayerStorageAfterDestroy(uint256 buildingId, uint256 buildingLevel) internal {
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getAddressById(components, StorageCapacityResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+    LibStorage.checkAndUpdatePlayerStorageAfterDestroy(
+      storageCapacityComponent,
+      storageCapacityResourcesComponent,
+      itemComponent,
+      addressToEntity(msg.sender),
+      buildingId,
+      buildingLevel
+    );
+  }
 
   function execute(bytes memory args) public returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
@@ -74,6 +95,8 @@ contract DestroySystem is System {
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) - 1
       );
     }
+
+    checkAndUpdatePlayerStorageAfterDestroy(tileComponent.getValue(entity), buildingComponent.getValue(entity));
 
     buildingComponent.remove(entity);
     tileComponent.remove(entity);

@@ -11,6 +11,8 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 
 import { BuildingKey } from "../prototypes/Keys.sol";
 
@@ -20,11 +22,28 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibUpgrade } from "../libraries/LibUpgrade.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
+
+  function checkAndUpdatePlayerStorageAfterUpgrade(uint256 buildingId, uint256 newLevel) internal {
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getAddressById(components, StorageCapacityResourcesComponentID)
+    );
+    LibStorage.checkAndUpdatePlayerStorageAfterUpgrade(
+      storageCapacityComponent,
+      storageCapacityResourcesComponent,
+      addressToEntity(msg.sender),
+      buildingId,
+      newLevel
+    );
+  }
 
   function execute(bytes memory args) public returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
@@ -75,7 +94,11 @@ contract UpgradeSystem is System {
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
-    buildingComponent.set(entity, buildingComponent.getValue(entity) + 1);
+    uint256 newLevel = buildingComponent.getValue(entity) + 1;
+    buildingComponent.set(entity, newLevel);
+
+    checkAndUpdatePlayerStorageAfterUpgrade(blockType, newLevel);
+
     return abi.encode(entity);
   }
 
