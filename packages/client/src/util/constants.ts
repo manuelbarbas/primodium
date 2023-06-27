@@ -472,11 +472,6 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
 ]);
 
-export type DisplayTile = {
-  x: number;
-  y: number;
-};
-
 export type DisplayKeyPair = {
   terrain: EntityID;
   resource: EntityID | null;

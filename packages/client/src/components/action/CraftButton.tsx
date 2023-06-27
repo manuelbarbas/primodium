@@ -1,16 +1,14 @@
 import { useCallback } from "react";
+
+import { Coord } from "@latticexyz/utils";
+
 import { useMud } from "../../context/MudContext";
-import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
 import { useNotificationStore } from "../../store/NotificationStore";
 
-export default function CraftButton({
-  coords: { x, y },
-}: {
-  coords: DisplayTile;
-}) {
+export default function CraftButton({ coords: { x, y } }: { coords: Coord }) {
   const { systems, providers } = useMud();
   const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
     state.transactionLoading,
