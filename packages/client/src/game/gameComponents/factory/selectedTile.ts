@@ -11,8 +11,7 @@ export const createSelectedTile = (
     gameObject.lineStyle(1, 0xffff00);
     gameObject.strokeRect(0, 0, tileHeight, tileWidth);
     gameObject.fillRect(0, 0, tileWidth, tileHeight);
-    gameObject.setX(Math.floor(x / tileWidth) * tileWidth);
-    gameObject.setY(Math.floor(y / tileHeight) * tileHeight);
+    gameObject.setDepth(200);
   }
 
   // function animateBorder(
@@ -30,6 +29,9 @@ export const createSelectedTile = (
   return {
     id: "selectedTile",
     once: (gameObject) => {
+      gameObject.x = Math.floor(x / tileWidth) * tileWidth;
+      gameObject.y = Math.floor(y / tileHeight) * tileHeight;
+
       gameObject.clear();
       drawHoverTile(gameObject);
     },
