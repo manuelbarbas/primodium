@@ -3,7 +3,7 @@ import { defineComponentSystem } from "@latticexyz/recs";
 import { Network } from "../../../network/layer";
 import { Scene } from "../../../engine/types";
 
-export const createHoverTileSystem = (network: Network, scene: Scene) => {
+export const createHoverTileSystem = (network: Network, _scene: Scene) => {
   const { world, offChainComponents } = network;
 
   defineComponentSystem(

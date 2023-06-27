@@ -1,6 +1,5 @@
 import { defineComponentSystem, hasComponent } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { runInAction } from "mobx";
 
 import { Network } from "../../../network/layer";
 import { Scene } from "../../../engine/types";
