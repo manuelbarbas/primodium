@@ -4,8 +4,8 @@ import { getTopLayerKeyPair } from "../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
 import { EntityIdtoTilesetId, Tilekeys } from "../../constants";
-import { Scene } from "../../../util/types";
 import { delay } from "rxjs/operators";
+import { Scene } from "../../../engine/types";
 
 const chunkCache = new CoordMap<boolean>();
 const perlin = createPerlin();

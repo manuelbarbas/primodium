@@ -1,26 +1,25 @@
-import { memo, useEffect, useState } from "react";
-import primodium from "../game";
+import { useEffect, useState } from "react";
+import { primodium } from "../game";
 import GameUI from "../components/GameUI";
 import { useMud } from "../context/MudContext";
 
-export const Game = memo(() => {
+export const Game = () => {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState(false);
-  const { world, components, systems } = useMud();
-
-  console.log(components, systems, world);
+  const network = useMud();
 
   useEffect(() => {
     (async () => {
       try {
-        await primodium.init();
+        if (!network) return;
+        await primodium.init(network);
         setReady(true);
       } catch (e) {
         console.log(e);
         setError(true);
       }
     })();
-  }, []);
+  }, [network]);
 
   if (error) {
     return <div>Phaser Engine Game Error. Refer to console.</div>;
@@ -43,4 +42,4 @@ export const Game = memo(() => {
       </div>
     </div>
   );
-});
+};

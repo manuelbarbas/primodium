@@ -1,5 +1,4 @@
-// import type { Tilekeys } from "../../util/types";
-import { TileAnimation } from "../../util/types";
+import { TileAnimation } from "../../engine/types";
 import { Tilekeys, TileAnimationKeys } from "../constants";
 
 const generateTileFrames = (tile: number, length: number) => {
@@ -12,11 +11,9 @@ const generateTileFrames = (tile: number, length: number) => {
   return frames;
 };
 
-export const TileAnimationsConfig: TileAnimation[] = [
+export const tileAnimationConfig: TileAnimation[] = [
   {
     key: TileAnimationKeys.Water,
     frames: generateTileFrames(Tilekeys.Water, 49),
   },
 ];
-
-export default TileAnimationsConfig;

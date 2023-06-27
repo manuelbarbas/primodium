@@ -1,6 +1,6 @@
 import { Animation } from "@latticexyz/phaserx/dist/types";
 
-const animationConfig: Animation<any>[] = [
+export const animationConfig: Animation<any>[] = [
   {
     key: "mainbase",
     assetKey: "sprite-atlas",
@@ -24,7 +24,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "advancedbatteryfactory",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 14,
     repeat: -1,
@@ -34,7 +34,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "basicbatteryfactory",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 17,
     repeat: -1,
@@ -44,7 +44,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "densemetalrefinery",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 39,
     repeat: -1,
@@ -54,7 +54,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "hardeneddrill",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 3,
     repeat: -1,
@@ -64,7 +64,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "hightempfoundry",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 39,
     repeat: -1,
@@ -74,7 +74,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "iridiumdrillbitfactory",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 15,
     repeat: -1,
@@ -84,7 +84,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "kimberlitecatalyst",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 15,
     repeat: -1,
@@ -94,7 +94,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "laserfactory",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 13,
     repeat: -1,
@@ -104,7 +104,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "minerdrill",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 3,
     repeat: -1,
@@ -114,7 +114,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "missilelaunchcomplex",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 7,
     repeat: -1,
@@ -124,7 +124,7 @@ const animationConfig: Animation<any>[] = [
   {
     key: "platingfactory",
     assetKey: "sprite-atlas",
-    frameRate: 1,
+    frameRate: 4,
     startFrame: 0,
     endFrame: 10,
     repeat: -1,
@@ -152,5 +152,3 @@ const animationConfig: Animation<any>[] = [
     suffix: ".png",
   },
 ];
-
-export default animationConfig;
