@@ -1,3 +1,6 @@
+// MODIFIED FROM LATTICEXYZ/PHASERX
+// https://github.com/latticexyz/mud/blob/main/packages/phaserx/src/createInput.ts
+
 import {
   Observable,
   Subject,
@@ -13,8 +16,6 @@ import {
 } from "rxjs";
 import { observable, reaction, runInAction } from "mobx";
 
-// DIRECTLY COPIED FROM LATTICEXYZ/PHASERX
-// https://github.com/latticexyz/mud/blob/main/packages/phaserx/src/createInput.ts
 import Phaser from "phaser";
 import { filterNullish } from "@latticexyz/utils";
 
@@ -55,6 +56,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     map(() => {
       return { pointer: inputPlugin.manager?.activePointer };
     }),
+    filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 
@@ -67,6 +69,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
     })),
+    filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 
@@ -79,6 +82,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
     })),
+    filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 
@@ -95,6 +99,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     bufferCount(2, 1), // Store the last two timestamps
     filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 250), // Only care if button was pressed before and is not anymore and it happened within 500ms
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
+    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 
@@ -106,6 +111,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     filter(([prev, now]) => now - prev < 500), // Filter clicks with more than 500ms distance
     throttleTime(500), // A third click within 500ms is not counted as another double click
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
+    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 
@@ -113,6 +119,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const rightClick$ = merge(pointerdown$, pointerup$).pipe(
     filter(({ pointer }) => enabled.current && pointer.rightButtonDown()),
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
+    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 

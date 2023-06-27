@@ -1,7 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { GameObjectComponent } from "../../../engine/types";
 import {
-  AnimationKeys,
   Assets,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
@@ -25,7 +24,7 @@ export const createBuilding = (
       //set animation if it exists
       const anim = EntityIDtoAnimationKey[tile];
       if (anim) {
-        gameObject.play(EntityIDtoAnimationKey[tile] ?? AnimationKeys.Node);
+        gameObject.play(anim);
       }
     },
   };

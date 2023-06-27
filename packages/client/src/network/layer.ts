@@ -91,7 +91,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     offChainComponents,
     singletonIndex,
     providers: network.providers,
-  }
+  };
 
   startSync();
   syncPositionComponent(context);

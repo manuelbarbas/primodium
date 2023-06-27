@@ -91,5 +91,17 @@ export function defineOffChainComponents(world: World) {
       metadata: {},
       id: "DoubleCounter",
     }),
+    SelectedTile: defineCoordComponent(world, {
+      metadata: {},
+      id: "SelectedTile",
+    }),
+    HoverTile: defineCoordComponent(world, {
+      metadata: {},
+      id: "SelectedTile",
+    }),
+    SelectedBuilding: defineNumberComponent(world, {
+      metadata: {},
+      id: "SelectedBuilding",
+    }),
   };
 }
