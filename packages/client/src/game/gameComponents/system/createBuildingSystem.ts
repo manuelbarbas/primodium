@@ -40,7 +40,7 @@ export const createSpriteSystem = (network: Network, scene: Scene) => {
       const tilePosition = update.value[0];
 
       const tile = getComponentValue(components.Tile, entityIndex);
-      const tileEntityId = tile?.value! as unknown as EntityID;
+      const tileEntityId = tile?.value as unknown as EntityID;
 
       const pixelCoord = tileCoordToPixelCoord(
         tilePosition as Coord,

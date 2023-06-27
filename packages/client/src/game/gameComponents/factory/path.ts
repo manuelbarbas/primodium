@@ -19,9 +19,9 @@ export const createPath = (
   startY: number,
   endX: number,
   endY: number,
-  speed: number = 1,
-  circleCount: number = 1,
-  circleRadius: number = 2
+  speed = 1,
+  circleCount = 1,
+  circleRadius = 2
 ): GameObjectComponent<"Graphics"> => {
   const circles: Circle[] = [];
 
