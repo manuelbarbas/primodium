@@ -3160,7 +3160,7 @@
 					}
 				},
 				{
-					"filename": "kineticmisslefactory/kineticmissilefactory.png",
+					"filename": "kineticmissilefactory/kineticmissilefactory.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10174,7 +10174,7 @@
 					}
 				},
 				{
-					"filename": "thermobaricwaarheadfactory/thermobaricwarheadfactory.png",
+					"filename": "thermobaricwarheadfactory/thermobaricwarheadfactory.png",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -10200,6 +10200,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:f14c2cf4ee77336eb8747990d2b2d5c5:2f7dda9487328e373a1fe73e0f6c1503:cbce6b53f0f49e0bf15173c25c41f876$"
+		"smartupdate": "$TexturePacker:SmartUpdate:1967521951da8003afaef6f1cf6eb87a:2f7dda9487328e373a1fe73e0f6c1503:cbce6b53f0f49e0bf15173c25c41f876$"
 	}
 }
