@@ -122,7 +122,6 @@ contract BuildSystem is System {
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
     );
 
-    // Check if the player has enough resources to build
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (
