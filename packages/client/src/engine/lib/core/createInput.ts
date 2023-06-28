@@ -56,7 +56,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     map(() => {
       return { pointer: inputPlugin.manager?.activePointer };
     }),
-    filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
+    // filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 

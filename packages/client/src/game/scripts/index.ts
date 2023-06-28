@@ -1,8 +1,5 @@
 // PRIMODIUM ENTRY POINT
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { setComponent } from "@latticexyz/recs";
-import { SingletonID } from "@latticexyz/network";
-
 import { engine } from "../../engine";
 import { Network } from "../../network/layer";
 import gameConfig from "../config/gameConfig";
@@ -16,9 +13,14 @@ import { createChunkManager } from "./managers/chunkManager";
 import {
   setSelectedTileComponent,
   setHoverTileComponent,
+  getSelectedBuildingComponent,
+  removeSelectedBuildingComponent,
 } from "../api/components";
+import { BlockType } from "src/util/constants";
+import { buildBuilding, destroyBuilding, destroyPath } from "src/util/web3";
+import { EntityID } from "@latticexyz/recs";
 
-export const init = async (network: Network) => {
+export const init = async (address: string | undefined, network: Network) => {
   const game = await engine.createGame(gameConfig);
   const scene = await game.sceneManager.addScene(Scenes.Main, mainSceneConfig);
 
@@ -29,23 +31,48 @@ export const init = async (network: Network) => {
   scene.camera.phaserCamera.fadeIn(1000);
 
   scene.input.click$.subscribe((event) => {
-    const coord = pixelCoordToTileCoord(
+    const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
       scene.tilemap.tileWidth,
       scene.tilemap.tileHeight
     );
 
-    setSelectedTileComponent(coord, network);
+    setSelectedTileComponent({ x, y: -y }, network);
+
+    if (!address) return;
+
+    const selectedBuilding = getSelectedBuildingComponent(network);
+    //handle web3 mutations
+    switch (selectedBuilding) {
+      case undefined:
+        break;
+      case BlockType.DemolishBuilding:
+        removeSelectedBuildingComponent(network);
+        destroyBuilding({ x, y: -y }, network);
+        break;
+      case BlockType.DemolishPath:
+        removeSelectedBuildingComponent(network);
+        destroyPath({ x, y: -y }, network);
+      default:
+        removeSelectedBuildingComponent(network);
+        buildBuilding(
+          { x, y: -y },
+          selectedBuilding as EntityID,
+          address,
+          network
+        );
+        break;
+    }
   });
 
   scene.input.pointermove$.subscribe((event) => {
-    const coord = pixelCoordToTileCoord(
+    const { x, y } = pixelCoordToTileCoord(
       { x: event.pointer.worldX, y: event.pointer.worldY },
       scene.tilemap.tileWidth,
       scene.tilemap.tileHeight
     );
 
-    setHoverTileComponent(coord, network);
+    setHoverTileComponent({ x, y: -y }, network);
   });
 
   createSpriteSystem(network, scene);

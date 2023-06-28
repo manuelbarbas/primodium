@@ -35,5 +35,5 @@ export const useSelectedBuilding = (network: Network) => {
     {
       value: "",
     }
-  );
+  ).value;
 };

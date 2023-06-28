@@ -6,7 +6,7 @@ export const createSelectedTile = (
   tileHeight: number,
   tileWidth: number
 ): GameObjectComponent<"Graphics"> => {
-  function drawHoverTile(gameObject: Phaser.GameObjects.Graphics) {
+  function drawSelectedTile(gameObject: Phaser.GameObjects.Graphics) {
     gameObject.fillStyle(0xffff00, 0.3);
     gameObject.lineStyle(1, 0xffff00);
     gameObject.strokeRect(0, 0, tileHeight, tileWidth);
@@ -33,7 +33,7 @@ export const createSelectedTile = (
       gameObject.y = Math.floor(y / tileHeight) * tileHeight;
 
       gameObject.clear();
-      drawHoverTile(gameObject);
+      drawSelectedTile(gameObject);
     },
     // update: (gameObject, time, delta) => {
     //   gameObject.clear();

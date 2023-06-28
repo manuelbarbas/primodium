@@ -2,17 +2,19 @@ import { useEffect, useState } from "react";
 import { primodium } from "../game";
 import GameUI from "../components/GameUI";
 import { useMud } from "../context/MudContext";
+import { useAccount } from "src/hooks/useAccount";
 
 export const Game = () => {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState(false);
   const network = useMud();
+  const { address } = useAccount();
 
   useEffect(() => {
     (async () => {
       try {
         if (!network) return;
-        await primodium.init(network);
+        await primodium.init(address, network);
         setReady(true);
       } catch (e) {
         console.log(e);

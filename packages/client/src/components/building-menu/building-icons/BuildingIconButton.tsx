@@ -26,8 +26,7 @@ function BuildingIconButton({
 }) {
   const network = useMud();
   const { components, world, singletonIndex } = network;
-  const { value: selectedBuilding } =
-    primodium.hooks.useSelectedBuilding(network);
+  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
 
   const { address } = useAccount();
 
@@ -64,16 +63,13 @@ function BuildingIconButton({
           : () => {
               //set selected block, if clicked again deselect
               selectedBuilding === blockType
-                ? primodium.components.setSelectedBuildingComponent(
-                    "" as EntityID,
-                    network
-                  )
+                ? primodium.components.removeSelectedBuildingComponent(network)
                 : primodium.components.setSelectedBuildingComponent(
                     blockType,
                     network
                   );
-              // setStartSelectedPathTile(null);
-              // setEndSelectedPathTile(null);
+              //TODO setStartSelectedPathTile(null);
+              //TODO setEndSelectedPathTile(null);
             }
       }
     >
