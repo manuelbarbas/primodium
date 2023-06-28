@@ -47,7 +47,7 @@ const renderChunk = async (
   chunkCache.set(coord, true);
 };
 
-const createChunkManager = async (tilemap: Scene["tilemap"]) => {
+export const createChunkManager = async (tilemap: Scene["tilemap"]) => {
   const { chunks, map, chunkSize } = tilemap;
   let chunkStream: ReturnType<typeof chunks.addedChunks$.subscribe>;
   let lazyChunkLoader: ReturnType<typeof setInterval>;
@@ -73,5 +73,3 @@ const createChunkManager = async (tilemap: Scene["tilemap"]) => {
 
   return { renderInitialChunks, startChunkRenderer, dispose };
 };
-
-export default createChunkManager;

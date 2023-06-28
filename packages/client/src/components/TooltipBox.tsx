@@ -17,7 +17,7 @@ import {
   BackgroundImage,
   ResourceImage,
 } from "../util/constants";
-import { primodium } from "../game";
+import { primodium } from "@game/api";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";

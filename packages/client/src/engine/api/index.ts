@@ -61,4 +61,4 @@ export const api = {
 
 //expose api to window for debugging
 // @ts-ignore
-window.engine = api;
+if (import.meta.env.VITE_DEV === "true") window.engine = api;

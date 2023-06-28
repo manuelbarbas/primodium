@@ -4,6 +4,7 @@ import {
   defineBoolComponent,
   defineNumberComponent,
   defineCoordComponent,
+  defineStringComponent,
 } from "@latticexyz/std-client";
 
 export function defineComponents(world: World) {
@@ -97,9 +98,9 @@ export function defineOffChainComponents(world: World) {
     }),
     HoverTile: defineCoordComponent(world, {
       metadata: {},
-      id: "SelectedTile",
+      id: "HoverTile",
     }),
-    SelectedBuilding: defineNumberComponent(world, {
+    SelectedBuilding: defineStringComponent(world, {
       metadata: {},
       id: "SelectedBuilding",
     }),
