@@ -20,7 +20,9 @@
     "BuildingLimitComponent",
     "IgnoreBuildLimitComponent",
     "StorageCapacityComponent",
-    "StorageCapacityResourcesComponent"
+    "StorageCapacityResourcesComponent",
+    "MineComponent",
+    "UnclaimedResourceComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -100,8 +102,8 @@
         "PathComponent",
         "LastBuiltAtComponent",
         "LastClaimedAtComponent",
-
-        "ItemComponent"
+        "ItemComponent",
+        "UnclaimedResourceComponent"
       ]
     },
     {
