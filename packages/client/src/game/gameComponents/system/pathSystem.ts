@@ -51,6 +51,9 @@ export const createPathSystem = (network: Network, scene: Scene) => {
         world.entityToIndex.get(endEntityId)!
       ) as Coord;
 
+      //if endCoord or startCoord are not defined, don't draw path
+      if (!endCoord || !startCoord) return;
+
       const startPixelCoord = tileCoordToPixelCoord(
         startCoord,
         tileWidth,

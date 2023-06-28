@@ -72,20 +72,22 @@ export const createPath = (
       circle.y - gameObject.y,
       circleRadius
     );
+    gameObject.setZ(300);
   };
 
   return {
     id: "path",
-    //will be called on set component
-    now: () => {
-      const delay = 2000;
-      for (let i = 0; i < circleCount; i++) {
-        circles.push(createCircle(startX, startY, i * delay));
-      }
-    },
     //will be called on spawn
     once: (gameObject) => {
       gameObject.clear();
+
+      //initialize circles if it has not been populated yet
+      if (!circles.length) {
+        const delay = 2000;
+        for (let i = 0; i < circleCount; i++) {
+          circles.push(createCircle(startX, startY, i * delay));
+        }
+      }
 
       gameObject.x = startX;
       gameObject.y = startY;
