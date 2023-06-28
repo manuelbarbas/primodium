@@ -125,6 +125,17 @@ library LibStorage {
     return getEntityStorageCapacityForResource(storageComponent, LibEncode.hashFromKey(buildingId, level), resourceId);
   }
 
+  function getAvailableSpaceInStorageForResource(
+    Uint256Component storageComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId
+  ) internal view returns (uint256) {
+    return
+      getEntityStorageCapacityForResource(storageComponent, entity, resourceId) -
+      LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceId, entity));
+  }
+
   function getEntityStorageCapacityForResource(
     Uint256Component storageComponent,
     uint256 entity,
