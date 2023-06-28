@@ -23,7 +23,8 @@
   "initializers": [
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
-    "LibBuildingUpgradeDesignInitializer"
+    "LibBuildingUpgradeDesignInitializer",
+    "LibTechnologyDesignInitializer"
   ],
   "systems": [
     {
