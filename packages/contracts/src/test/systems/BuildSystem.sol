@@ -186,8 +186,8 @@ contract BuildSystemTest is MudTest {
     PathComponent pathComponent = PathComponent(component(PathComponentID));
 
     // Build two conveyor blocks
-    bytes memory startBlockEntity = buildSystem.executeTyped(DebugNodeID, startCoord);
-    bytes memory endBlockEntity = buildSystem.executeTyped(DebugNodeID, endCoord);
+    bytes memory startBlockEntity = buildSystem.executeTyped(MinerID, startCoord);
+    bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
 
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
