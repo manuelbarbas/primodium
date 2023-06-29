@@ -2,6 +2,7 @@ pragma solidity >=0.8.0;
 // Production Buildings
 import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID, MinerID } from "../prototypes/Tiles.sol";
 
+import "forge-std/console.sol";
 import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
 import { LibDebug } from "libraries/LibDebug.sol";
@@ -18,6 +19,7 @@ library LibPath {
     Uint256Component tileComponent,
     Uint256Component mineComponent,
     Uint256Component storageComponent,
+    Uint256Component buildingComponent,
     uint256 fromEntity,
     uint256 toEntity,
     uint256 playerEntity
@@ -30,6 +32,9 @@ library LibPath {
     if (!storageComponent.has(playerResourceStorageEntity)) {
       return false;
     }
-    return mineComponent.has(tileComponent.getValue(fromEntity));
+    return
+      mineComponent.has(
+        LibEncode.hashKeyEntity(tileComponent.getValue(fromEntity), buildingComponent.getValue(fromEntity))
+      );
   }
 }

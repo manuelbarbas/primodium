@@ -33,12 +33,11 @@ library LibMineDesignInitializer {
   function init(IWorld world) internal {
     IUint256Component components = world.components();
 
-    TileComponent tileComponent = TileComponent(getAddressById(components, ItemComponentID));
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
 
     //IronMineID
     tileComponent.set(IronMineID, IronResourceItemID);
-
     //IronMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashFromKey(IronMineID, 1);
     mineComponent.set(buildingIdLevel, 1);

@@ -47,17 +47,15 @@ contract DestroyPathSystem is System {
   function updateResourceProductionOnDestroyPathFromMine(
     MineComponent mineComponent,
     TileComponent tileComponent,
-    uint256 fromEntity,
-    uint256 toEntity
+    uint256 fromEntity
   ) internal {
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
     LibNewMine.updateResourceProductionOnDestroyPathFromMine(
       mineComponent,
       buildingComponent,
       tileComponent,
-      fromEntity,
-      toEntity,
-      addressToEntity(msg.sender)
+      addressToEntity(msg.sender),
+      fromEntity
     );
   }
 
@@ -81,13 +79,11 @@ contract DestroyPathSystem is System {
     // Check that a path doesn't already start there (each tile can only be the start of one path)
     require(ownedByComponent.has(startCoordEntity), "[DestroyPathSystem] Path does not exist at the selected tile");
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+
+    // update unclaimed resources
     updateUnclaimedForResource(mineComponent, addressToEntity(msg.sender), startCoordEntity);
-    updateResourceProductionOnDestroyPathFromMine(
-      mineComponent,
-      tileComponent,
-      startCoordEntity,
-      pathComponent.getValue(startCoordEntity)
-    );
+    //update resource production
+    updateResourceProductionOnDestroyPathFromMine(mineComponent, tileComponent, startCoordEntity);
     // remove key
     pathComponent.remove(startCoordEntity);
 

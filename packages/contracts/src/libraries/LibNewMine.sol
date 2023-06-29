@@ -55,7 +55,7 @@ library LibNewMine {
     uint256 resourceId
   ) internal {
     uint256 playerResourceProductionEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    uint256 playerResourceProduction = mineComponent.getValue(playerResourceProductionEntity);
+    uint256 playerResourceProduction = LibMath.getSafeUint256Value(mineComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;
@@ -86,8 +86,7 @@ library LibNewMine {
     Uint256Component buildingComponent,
     Uint256Component tileComponent,
     uint256 playerEntity,
-    uint256 fromEntity,
-    uint256 toEntity
+    uint256 fromEntity
   ) internal {
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
       tileComponent.getValue(fromEntity),
@@ -109,8 +108,7 @@ library LibNewMine {
     Uint256Component buildingComponent,
     Uint256Component tileComponent,
     uint256 playerEntity,
-    uint256 fromEntity,
-    uint256 toEntity
+    uint256 fromEntity
   ) internal {
     uint256 buildingId = tileComponent.getValue(fromEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(fromEntity));
@@ -125,16 +123,16 @@ library LibNewMine {
     Uint256Component buildingComponent,
     Uint256Component tileComponent,
     uint256 playerEntity,
-    uint256 fromEntity,
-    uint256 toEntity
+    uint256 fromEntity
   ) internal {
     uint256 buildingId = tileComponent.getValue(fromEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(fromEntity));
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromEntity));
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    require(mineComponent.has(buildingLevelEntity), "Mine level entity not found");
     mineComponent.set(
       playerResourceEntity, //player resource production entity
-      mineComponent.getValue(playerResourceEntity) + mineComponent.getValue(buildingLevelEntity) //current total resource production // resource production of mine
+      LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + mineComponent.getValue(buildingLevelEntity) //current total resource production // resource production of mine
     );
   }
 }

@@ -28,7 +28,8 @@
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibBuildingUpgradeDesignInitializer",
-    "LibStorageDesignInitializer"
+    "LibStorageDesignInitializer",
+    "LibMineDesignInitializer"
   ],
   "systems": [
     {
@@ -88,11 +89,25 @@
     },
     {
       "name": "BuildPathSystem",
-      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
+      "writeAccess": [
+        "TileComponent",
+        "OwnedByComponent",
+        "PathComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineComponent"
+      ]
     },
     {
       "name": "DestroyPathSystem",
-      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
+      "writeAccess": [
+        "TileComponent",
+        "OwnedByComponent",
+        "PathComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineComponent"
+      ]
     },
     {
       "name": "ClaimFromMineSystem",

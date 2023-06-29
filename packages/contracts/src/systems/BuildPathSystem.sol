@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -41,23 +42,6 @@ contract BuildPathSystem is System {
       ItemComponent(getAddressById(components, ItemComponentID)),
       playerEntity,
       LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startCoordEntity))
-    );
-  }
-
-  function updateResourceProductionOnBuildPathFromMine(
-    TileComponent tileComponent,
-    MineComponent mineComponent,
-    uint256 fromEntity,
-    uint256 toEntity
-  ) internal {
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    LibNewMine.updateResourceProductionOnBuildPathFromMine(
-      mineComponent,
-      buildingComponent,
-      tileComponent,
-      fromEntity,
-      toEntity,
-      addressToEntity(msg.sender)
     );
   }
 
@@ -111,11 +95,13 @@ contract BuildPathSystem is System {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
     );
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
     require(
       LibPath.checkCanBuildPath(
         tileComponent,
         mineComponent,
         storageCapacityComponent,
+        buildingComponent,
         startCoordEntity,
         endCoordEntity,
         addressToEntity(msg.sender)
@@ -125,8 +111,18 @@ contract BuildPathSystem is System {
 
     // Add key
     pathComponent.set(startCoordEntity, endCoordEntity);
+
+    //update unclaimed resources before updating resouce production
     updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), startCoordEntity);
-    updateResourceProductionOnBuildPathFromMine(tileComponent, mineComponent, startCoordEntity, endCoordEntity);
+    console.log("updated Unclaimed Resources");
+    //update resource production based on new path
+    LibNewMine.updateResourceProductionOnBuildPathFromMine(
+      mineComponent,
+      buildingComponent,
+      tileComponent,
+      addressToEntity(msg.sender),
+      startCoordEntity
+    );
 
     return abi.encode(startCoordEntity);
   }
