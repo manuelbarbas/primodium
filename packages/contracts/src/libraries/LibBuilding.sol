@@ -13,6 +13,7 @@ import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 import { Coord } from "../types.sol";
 import { LibTerrain } from "./LibTerrain.sol";
+import { LibEncode } from "./LibEncode.sol";
 
 library LibBuilding {
   function checkBuildLimitConditionForBuildingId(
@@ -40,10 +41,12 @@ library LibBuilding {
 
   function checkCanBuildOnTile(
     Uint256Component tileComponent,
-    uint256 tileId,
-    Coord memory coord
+    uint256 buildingId,
+    uint256 buildingEntity
   ) internal view returns (bool) {
-    return !tileComponent.has(tileId) || tileComponent.getValue(tileId) == LibTerrain.getTopLayerKey(coord);
+    return
+      !tileComponent.has(buildingId) ||
+      tileComponent.getValue(buildingId) == LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
   }
 
   function getMainBuildingLevelforPlayer(
