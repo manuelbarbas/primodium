@@ -10,21 +10,17 @@ function DemolishBuildingBox() {
   const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
 
   const destroyPath = useCallback(() => {
-    primodium.components.setSelectedBuildingComponent(
-      BlockType.DemolishPath,
-      network
-    );
+    primodium.components.selectedBuilding(network).set(BlockType.DemolishPath);
   }, []);
 
   const destroyTile = useCallback(() => {
-    primodium.components.setSelectedBuildingComponent(
-      BlockType.DemolishBuilding,
-      network
-    );
+    primodium.components
+      .selectedBuilding(network)
+      .set(BlockType.DemolishBuilding);
   }, []);
 
   const resetSetSelectedBlock = useCallback(() => {
-    primodium.components.removeSelectedBuildingComponent(network);
+    primodium.components.selectedBuilding(network).remove();
   }, []);
 
   if (selectedBuilding === BlockType.DemolishPath) {

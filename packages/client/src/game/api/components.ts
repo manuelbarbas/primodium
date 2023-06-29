@@ -8,61 +8,89 @@ import { Coord } from "@latticexyz/utils";
 import { SingletonID } from "@latticexyz/network";
 import { Network } from "../../network/layer";
 
-export const setSelectedTileComponent = (coord: Coord, network: Network) => {
+export const selectedTile = (network: Network) => {
   const { world, offChainComponents } = network;
   const singletonIndex = world.entityToIndex.get(SingletonID)!;
 
-  setComponent(offChainComponents.SelectedTile, singletonIndex, coord);
+  return {
+    set: (coord: Coord) => {
+      setComponent(offChainComponents.SelectedTile, singletonIndex, coord);
+    },
+    get: () => {
+      return getComponentValue(
+        offChainComponents.SelectedTile,
+        singletonIndex
+      ) as Coord;
+    },
+    remove: () => {
+      return removeComponent(offChainComponents.SelectedTile, singletonIndex);
+    },
+  };
 };
 
-export const getSelectedTileComponent = (network: Network) => {
+export const hoverTile = (network: Network) => {
   const { world, offChainComponents } = network;
   const singletonIndex = world.entityToIndex.get(SingletonID)!;
 
-  return getComponentValue(
-    offChainComponents.HoverTile,
-    singletonIndex
-  ) as Coord;
+  return {
+    set: (coord: Coord) => {
+      setComponent(offChainComponents.HoverTile, singletonIndex, coord);
+    },
+    get: () => {
+      return getComponentValue(offChainComponents.HoverTile, singletonIndex) as
+        | Coord
+        | undefined;
+    },
+    remove: () => {
+      return removeComponent(offChainComponents.HoverTile, singletonIndex);
+    },
+  };
 };
 
-export const removeSelectedTileComponent = (network: Network) => {
+export const selectedBuilding = (network: Network) => {
   const { world, offChainComponents } = network;
   const singletonIndex = world.entityToIndex.get(SingletonID)!;
 
-  return removeComponent(offChainComponents.SelectedTile, singletonIndex);
+  return {
+    set: (entityID: EntityID) => {
+      setComponent(offChainComponents.SelectedBuilding, singletonIndex, {
+        value: entityID,
+      });
+    },
+    get: () => {
+      return getComponentValue(
+        offChainComponents.SelectedBuilding,
+        singletonIndex
+      )?.value as EntityID | undefined;
+    },
+    remove: () => {
+      return removeComponent(
+        offChainComponents.SelectedBuilding,
+        singletonIndex
+      );
+    },
+  };
 };
 
-export const setHoverTileComponent = (coord: Coord, network: Network) => {
+export const startSelectedPath = (network: Network) => {
   const { world, offChainComponents } = network;
   const singletonIndex = world.entityToIndex.get(SingletonID)!;
 
-  setComponent(offChainComponents.HoverTile, singletonIndex, coord);
-};
-
-export const setSelectedBuildingComponent = (
-  building: EntityID,
-  network: Network
-) => {
-  const { world, offChainComponents } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID)!;
-
-  setComponent(offChainComponents.SelectedBuilding, singletonIndex, {
-    value: building,
-  });
-};
-
-export const getSelectedBuildingComponent = (network: Network) => {
-  const { world, offChainComponents } = network;
-  const singletonIndex = world.entityToIndex.get(SingletonID)!;
-
-  return getComponentValue(offChainComponents.SelectedBuilding, singletonIndex)
-    ?.value;
-};
-
-export const removeSelectedBuildingComponent = (network: Network) => {
-  const { world, offChainComponents } = network;
-  const singletonIndex = world.entityToIndex.get(SingletonID)!;
-
-  return removeComponent(offChainComponents.SelectedBuilding, singletonIndex);
+  return {
+    set: (coord: Coord) => {
+      setComponent(offChainComponents.StartSelectedPath, singletonIndex, coord);
+    },
+    get: () => {
+      return getComponentValue(
+        offChainComponents.StartSelectedPath,
+        singletonIndex
+      ) as Coord | undefined;
+    },
+    remove: () => {
+      return removeComponent(
+        offChainComponents.StartSelectedPath,
+        singletonIndex
+      );
+    },
+  };
 };

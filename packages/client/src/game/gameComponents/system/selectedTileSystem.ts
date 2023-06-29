@@ -4,7 +4,7 @@ import { Coord } from "@latticexyz/utils";
 import { Network } from "../../../network/layer";
 import { Scene } from "../../../engine/types";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { createSelectedTile } from "../factory/selectedTile";
+import { createSelectionTile } from "../factory/selectionTile";
 
 export const createSelectedTileSystem = (network: Network, scene: Scene) => {
   const { world, offChainComponents } = network;
@@ -46,7 +46,7 @@ export const createSelectedTileSystem = (network: Network, scene: Scene) => {
         "Graphics"
       );
 
-      const selectedTileComponent = createSelectedTile(
+      const selectedTileComponent = createSelectionTile(
         pixelTileCoord.x,
         -pixelTileCoord.y,
         tileWidth,

@@ -21,6 +21,7 @@ export const createPathSystem = (network: Network, scene: Scene) => {
     components.Path,
     (update) => {
       const entityIndex = update.entity;
+      const objIndex = entityIndex + "_path";
       // Avoid updating on optimistic overrides
       if (
         typeof entityIndex !== "number" ||
@@ -30,8 +31,8 @@ export const createPathSystem = (network: Network, scene: Scene) => {
       }
 
       if (!hasComponent(components.Path, entityIndex)) {
-        if (scene.objectPool.objects.has(entityIndex + "_path")) {
-          scene.objectPool.remove(entityIndex + "_path");
+        if (scene.objectPool.objects.has(objIndex)) {
+          scene.objectPool.remove(objIndex);
         }
         return;
       }
@@ -66,11 +67,8 @@ export const createPathSystem = (network: Network, scene: Scene) => {
         tileHeight
       );
 
-      if (!scene.objectPool.objects.has(entityIndex + "_path")) {
-        const embodiedPath = scene.objectPool.get(
-          entityIndex + "_path",
-          "Graphics"
-        );
+      if (!scene.objectPool.objects.has(objIndex)) {
+        const embodiedPath = scene.objectPool.get(objIndex, "Graphics");
 
         const pathComponent = createPath(
           startPixelCoord.x + tileWidth / 2,

@@ -104,5 +104,9 @@ export function defineOffChainComponents(world: World) {
       metadata: {},
       id: "SelectedBuilding",
     }),
+    StartSelectedPath: defineCoordComponent(world, {
+      metadata: {},
+      id: "StartSelectedPath",
+    }),
   };
 }

@@ -101,7 +101,7 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
   setTransactionLoading(false);
 };
 
-export const destroyBuilding = async (pos: Coord, network: Network) => {
+export const demolishBuilding = async (pos: Coord, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
@@ -117,7 +117,7 @@ export const destroyBuilding = async (pos: Coord, network: Network) => {
   setTransactionLoading(false);
 };
 
-export const destroyPath = async (pos: Coord, network: Network) => {
+export const demolishPath = async (pos: Coord, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;

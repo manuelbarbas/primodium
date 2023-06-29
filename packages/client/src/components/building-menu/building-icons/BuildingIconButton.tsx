@@ -63,13 +63,8 @@ function BuildingIconButton({
           : () => {
               //set selected block, if clicked again deselect
               selectedBuilding === blockType
-                ? primodium.components.removeSelectedBuildingComponent(network)
-                : primodium.components.setSelectedBuildingComponent(
-                    blockType,
-                    network
-                  );
-              //TODO setStartSelectedPathTile(null);
-              //TODO setEndSelectedPathTile(null);
+                ? primodium.components.selectedBuilding(network).remove()
+                : primodium.components.selectedBuilding(network).set(blockType);
             }
       }
     >
