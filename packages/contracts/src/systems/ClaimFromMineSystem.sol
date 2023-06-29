@@ -8,7 +8,6 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
@@ -18,15 +17,6 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
-
-// Debug Buildings
-import { MainBaseID, DebugNodeID, MinerID, LithiumMinerID, SiloID } from "../prototypes/Tiles.sol";
-
-// Production Buildings
-import { BasicMinerID, PrecisionPneumaticDrillID, HardenedDrillID, NodeID } from "../prototypes/Tiles.sol";
-
-// resources
-import { BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TitaniumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
 
 import { BuildingKey } from "../prototypes/Keys.sol";
 
