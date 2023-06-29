@@ -167,17 +167,25 @@ library LibStorage {
     uint256 resourceAmount,
     uint256 playerEntity
   ) internal returns (uint256) {
-    uint256 currentStorage = getEntityStorageCapacityForResource(storageComponent, playerEntity, resourceId);
-    uint256 currentStoredAmount = LibMath.getSafeUint256Value(
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    uint256 availableSpaceInPlayerStorage = getAvailableSpaceInStorageForResource(
+      storageComponent,
       itemComponent,
-      LibEncode.hashKeyEntity(resourceId, playerEntity)
+      playerEntity,
+      resourceId
     );
-    if (currentStoredAmount + resourceAmount > currentStorage) {
-      uint256 amountToStore = currentStorage - currentStoredAmount;
-      itemComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), currentStoredAmount + amountToStore);
-      return resourceAmount - amountToStore;
+    if (availableSpaceInPlayerStorage > resourceAmount) {
+      itemComponent.set(
+        playerResourceEntity,
+        LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + resourceAmount
+      );
+      return 0;
+    } else {
+      itemComponent.set(
+        playerResourceEntity,
+        LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
+      );
+      return resourceAmount - availableSpaceInPlayerStorage;
     }
-    itemComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), currentStoredAmount + resourceAmount);
-    return 0;
   }
 }

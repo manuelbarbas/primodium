@@ -147,7 +147,14 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingComponent", "ItemComponent", "StorageCapacityComponent"]
+      "writeAccess": [
+        "BuildingComponent",
+        "ItemComponent",
+        "StorageCapacityComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineComponent"
+      ]
     },
     {
       "name": "DebugAquireResourcesSystem",

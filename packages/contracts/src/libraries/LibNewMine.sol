@@ -11,6 +11,7 @@ import { LibEncode } from "./LibEncode.sol";
 import { LibStorage } from "./LibStorage.sol";
 import { LibMath } from "./LibMath.sol";
 import { LibTerrain } from "./LibTerrain.sol";
+import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 library LibNewMine {
   function claimResourcesFromMines(
@@ -18,13 +19,13 @@ library LibNewMine {
     Uint256Component lastClaimedAtComponent, //writes to
     Uint256Component unclaimedResourceComponent, //writes to
     Uint256Component mineComponent,
-    Uint256ArrayComponent storageCapacityResourcesComponent,
     Uint256Component storageCapacityComponent,
     uint256 playerEntity
   ) internal {
-    uint256[] memory storageResourceIds = storageCapacityResourcesComponent.getValue(playerEntity);
+    uint256[25] memory storageResourceIds = getAllResourceIds();
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
+      if (!mineComponent.has(playerResourceEntity)) continue;
       updateUnclaimedForResource(
         unclaimedResourceComponent,
         lastClaimedAtComponent,
@@ -34,15 +35,44 @@ library LibNewMine {
         playerEntity,
         storageResourceIds[i]
       );
-      if (unclaimedResourceComponent.getValue(playerEntity) > 0)
-        LibStorage.addResourceToStorage(
-          itemComponent,
-          storageCapacityComponent,
-          playerResourceEntity,
-          storageResourceIds[i],
-          unclaimedResourceComponent.getValue(playerEntity)
-        );
+      LibStorage.addResourceToStorage(
+        itemComponent,
+        storageCapacityComponent,
+        storageResourceIds[i],
+        unclaimedResourceComponent.getValue(playerEntity),
+        playerEntity
+      );
     }
+  }
+
+  function getAllResourceIds() internal pure returns (uint256[25] memory) {
+    return [
+      BolutiteResourceItemID,
+      CopperResourceItemID,
+      IridiumResourceItemID,
+      IronResourceItemID,
+      KimberliteResourceItemID,
+      LithiumResourceItemID,
+      OsmiumResourceItemID,
+      TitaniumResourceItemID,
+      TungstenResourceItemID,
+      UraniniteResourceItemID,
+      IronPlateCraftedItemID,
+      BasicPowerSourceCraftedItemID,
+      KineticMissileCraftedItemID,
+      RefinedOsmiumCraftedItemID,
+      AdvancedPowerSourceCraftedItemID,
+      PenetratingWarheadCraftedItemID,
+      PenetratingMissileCraftedItemID,
+      TungstenRodsCraftedItemID,
+      IridiumCrystalCraftedItemID,
+      IridiumDrillbitCraftedItemID,
+      LaserPowerSourceCraftedItemID,
+      ThermobaricWarheadCraftedItemID,
+      ThermobaricMissileCraftedItemID,
+      KimberliteCrystalCatalystCraftedItemID,
+      BulletCraftedItemID
+    ];
   }
 
   function updateUnclaimedForResource(
@@ -92,11 +122,14 @@ library LibNewMine {
       tileComponent.getValue(fromEntity),
       buildingComponent.getValue(fromEntity)
     );
+    uint256 buildingLevelEntityPreUpgrade = LibEncode.hashKeyEntity(
+      tileComponent.getValue(fromEntity),
+      buildingComponent.getValue(fromEntity) - 1
+    );
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromEntity));
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    uint256 resourceProductionIncreaseOfMine = mineComponent.getValue( // new building level entity
-      LibEncode.hashKeyEntity(tileComponent.getValue(fromEntity), buildingComponent.getValue(fromEntity) + 1) // new building level entity
-    ) - mineComponent.getValue(buildingLevelEntity);
+    uint256 resourceProductionIncreaseOfMine = mineComponent.getValue(buildingLevelEntity) -
+      mineComponent.getValue(buildingLevelEntityPreUpgrade);
     mineComponent.set(
       playerResourceEntity,
       mineComponent.getValue(playerResourceEntity) + resourceProductionIncreaseOfMine

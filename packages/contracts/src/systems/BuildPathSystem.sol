@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -114,7 +113,6 @@ contract BuildPathSystem is System {
 
     //update unclaimed resources before updating resouce production
     updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), startCoordEntity);
-    console.log("updated Unclaimed Resources");
     //update resource production based on new path
     LibNewMine.updateResourceProductionOnBuildPathFromMine(
       mineComponent,
@@ -123,7 +121,6 @@ contract BuildPathSystem is System {
       addressToEntity(msg.sender),
       startCoordEntity
     );
-
     return abi.encode(startCoordEntity);
   }
 
