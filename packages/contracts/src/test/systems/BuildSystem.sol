@@ -14,16 +14,19 @@ import { BuildingComponent, ID as BuildingComponentID } from "../../components/B
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
+import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 //debug buildings
 import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
 
 //main buildings
-import { BasicMinerID } from "../../prototypes/Tiles.sol";
+import { BasicMinerID, IronMineID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
+import { LibTerrain } from "../../libraries/LibTerrain.sol";
 
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -176,7 +179,8 @@ contract BuildSystemTest is MudTest {
   function testBuildPath() public {
     vm.startPrank(alice);
 
-    Coord memory startCoord = Coord({ x: 0, y: 0 });
+    Coord memory startCoord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(startCoord), IronID, "test should try to build IronMineID on IronID tile");
     Coord memory endCoord = Coord({ x: 0, y: 1 });
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
@@ -184,10 +188,19 @@ contract BuildSystemTest is MudTest {
 
     OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     PathComponent pathComponent = PathComponent(component(PathComponentID));
+    TileComponent tileComponent = TileComponent(component(TileComponentID));
 
+    assertTrue(tileComponent.has(IronMineID), "IronMineID building should have tile type");
+    assertEq(
+      tileComponent.getValue(IronMineID),
+      IronID,
+      "IronMineID should have IronID as requireed tile type to build on"
+    );
     // Build two conveyor blocks
-    bytes memory startBlockEntity = buildSystem.executeTyped(MinerID, startCoord);
     bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
+    console.log("built MainBaseID");
+    bytes memory startBlockEntity = buildSystem.executeTyped(IronMineID, startCoord);
+    console.log("built IronMineID");
 
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
@@ -208,7 +221,12 @@ contract BuildSystemTest is MudTest {
 
     // Build a path
     buildPathSystem.executeTyped(startCoord, endCoord);
-    assertEq(pathComponent.getValue(startBlockEntityID), endBlockEntityID);
+    console.log("built path");
+    assertEq(
+      pathComponent.getValue(startBlockEntityID),
+      endBlockEntityID,
+      "startBlockEntityID should have path to endBlockEntityID"
+    );
 
     vm.stopPrank();
   }
