@@ -6,11 +6,7 @@ import { BigNumber } from "ethers";
 import { useMud } from "../../context/MudContext";
 import { ResourceCostData } from "../../util/resource";
 
-import {
-  BlockIdToKey,
-  BuildingResearchRequirementsDefaultUnlocked,
-  ResourceImage,
-} from "../../util/constants";
+import { BlockIdToKey, ResourceImage } from "../../util/constants";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
 import { hashKeyEntity } from "../../util/encode";
@@ -19,6 +15,7 @@ import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
 import { useNotificationStore } from "../../store/NotificationStore";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
+import { ResearchDefaultUnlocked } from "../../util/research";
 
 function TechTreeItem({
   data,
@@ -53,9 +50,7 @@ function TechTreeItem({
       )!
     : singletonIndex;
 
-  const isDefaultUnlocked = BuildingResearchRequirementsDefaultUnlocked.has(
-    data.id
-  );
+  const isDefaultUnlocked = ResearchDefaultUnlocked.has(data.id);
   const isResearched = useComponentValue(components.Research, researchOwner);
 
   const isUnlocked = useMemo(() => {

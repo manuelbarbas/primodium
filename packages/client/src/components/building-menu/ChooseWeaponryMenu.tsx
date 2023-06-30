@@ -22,19 +22,20 @@ function ChooseWeaponryMenu({
     <BuildingContentBox>
       <p className="text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
-        <BuildingIconButton
+        {/* <BuildingIconButton
           label="Kinetic missile factory"
           blockType={BlockType.KineticMissileFactory}
         />
         <BuildingIconButton
           label="Projectile launcher"
           blockType={BlockType.ProjectileLauncher}
-        />
+        /> */}
+        {/* third resource not being read */}
         <BuildingIconButton
           label="Penetrator factory"
           blockType={BlockType.PenetratorFactory}
         />
-        <BuildingIconButton
+        {/* <BuildingIconButton
           label="Penetrating missile factory"
           blockType={BlockType.PenetratingMissileFactory}
         />
@@ -49,7 +50,7 @@ function ChooseWeaponryMenu({
         <BuildingIconButton
           label="Thermobaric missile factory"
           blockType={BlockType.ThermobaricMissileFactory}
-        />
+        /> */}
       </div>
       <button
         onClick={closeMenuHelper}

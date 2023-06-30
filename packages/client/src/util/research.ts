@@ -1,3 +1,4 @@
+import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "./constants";
 import { ResourceCostData } from "./resource";
 
@@ -11,7 +12,77 @@ export type TechnologyTreeNode = {
   };
 };
 
-export const technologyTree = [
+export const ResearchDefaultUnlocked = new Set<EntityID>([
+  BlockType.MainBaseResearch,
+  BlockType.Iron,
+  BlockType.BasicMinerResearch,
+  BlockType.NodeResearch,
+
+  // debug
+  BlockType.ConveyorResearch,
+  BlockType.BulletFactoryResearch,
+  BlockType.SiloResearch,
+]);
+
+export const BuildingResearchRequirements = new Map<EntityID, EntityID[]>([
+  [BlockType.MainBase, [BlockType.MainBaseResearch]],
+  [BlockType.BasicMiner, [BlockType.BasicMinerResearch]],
+  [BlockType.Node, [BlockType.NodeResearch]],
+  [BlockType.Conveyor, [BlockType.ConveyorResearch]],
+
+  [BlockType.Miner, [BlockType.BasicMinerResearch]],
+  [BlockType.DebugNode, [BlockType.NodeResearch]],
+  [BlockType.BulletFactory, [BlockType.BulletFactoryResearch]],
+  [BlockType.Silo, [BlockType.SiloResearch]],
+
+  [BlockType.PlatingFactory, [BlockType.PlatingFactoryResearch]],
+  [BlockType.BasicBatteryFactory, [BlockType.BasicBatteryFactoryResearch]],
+  [BlockType.KineticMissileFactory, [BlockType.KineticMissileFactoryResearch]],
+  [BlockType.ProjectileLauncher, [BlockType.ProjectileLauncherResearch]],
+  [BlockType.HardenedDrill, [BlockType.HardenedDrillResearch]],
+  [BlockType.DenseMetalRefinery, [BlockType.DenseMetalRefineryResearch]],
+  [
+    BlockType.AdvancedBatteryFactory,
+    [BlockType.AdvancedBatteryFactoryResearch],
+  ],
+  [BlockType.HighTempFoundry, [BlockType.HighTempFoundryResearch]],
+  [
+    BlockType.PrecisionMachineryFactory,
+    [BlockType.PrecisionMachineryFactoryResearch],
+  ],
+  [
+    BlockType.IridiumDrillbitFactory,
+    [BlockType.IridiumDrillbitFactoryResearch],
+  ],
+  [
+    BlockType.PrecisionPneumaticDrill,
+    [BlockType.PrecisionPneumaticDrillResearch],
+  ],
+  [BlockType.PenetratorFactory, [BlockType.PenetratorFactoryResearch]],
+  [
+    BlockType.PenetratingMissileFactory,
+    [BlockType.PenetratingMissileFactoryResearch],
+  ],
+  [BlockType.MissileLaunchComplex, [BlockType.MissileLaunchComplexResearch]],
+  [
+    BlockType.HighEnergyLaserFactory,
+    [BlockType.HighEnergyLaserFactoryResearch],
+  ],
+  [
+    BlockType.ThermobaricWarheadFactory,
+    [BlockType.ThermobaricWarheadFactoryResearch],
+  ],
+  [
+    BlockType.ThermobaricMissileFactory,
+    [BlockType.ThermobaricMissileFactoryResearch],
+  ],
+  [
+    BlockType.KimberliteCatalystFactory,
+    [BlockType.KimberliteCatalystFactoryResearch],
+  ],
+]);
+
+export const ResearchTechnologyTree = [
   // {
   //   id: "1",
   //   type: "techTree",
@@ -459,39 +530,4 @@ export const technologyTree = [
     },
     position: { x: 150, y: 4100 },
   },
-];
-
-export const technologyTreeEdges = [
-  { id: "e1-2", source: "1", target: "2" },
-  { id: "e1-3", source: "1", target: "3" },
-  { id: "e1-4", source: "1", target: "4" },
-  { id: "e1-5", source: "1", target: "5" },
-  { id: "e2-6", source: "2", target: "6" },
-  { id: "e3-6", source: "3", target: "6" },
-  { id: "e4-6", source: "4", target: "6" },
-  { id: "e5-6", source: "5", target: "6" },
-  { id: "e6-7", source: "6", target: "7" },
-  { id: "e7-8", source: "7", target: "8" },
-  { id: "e8-9", source: "8", target: "9" },
-  { id: "e9-10", source: "9", target: "10" },
-  { id: "e9-11", source: "9", target: "11" },
-  { id: "e10-12", source: "10", target: "12" },
-  { id: "e10-13", source: "10", target: "13" },
-  { id: "e13-14", source: "13", target: "14" },
-  { id: "e14-15", source: "14", target: "15" },
-  { id: "e15-16", source: "15", target: "16" },
-  { id: "e16-17", source: "16", target: "17" },
-  { id: "e16-18", source: "16", target: "18" },
-  { id: "e18-19", source: "18", target: "19" },
-  { id: "e19-20", source: "19", target: "20" },
-  { id: "e20-21", source: "20", target: "21" },
-  { id: "e20-22", source: "20", target: "22" },
-  { id: "e22-23", source: "22", target: "23" },
-  { id: "e17-24", source: "17", target: "24" },
-  { id: "e24-25", source: "24", target: "25" },
-  { id: "e25-26", source: "25", target: "26" },
-  { id: "e26-27", source: "26", target: "27" },
-  { id: "e27-28", source: "27", target: "28" },
-  { id: "e28-29", source: "28", target: "29" },
-  { id: "e29-30", source: "29", target: "30" },
 ];

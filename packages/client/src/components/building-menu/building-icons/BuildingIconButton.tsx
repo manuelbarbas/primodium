@@ -1,18 +1,18 @@
 import { useCallback, useMemo } from "react";
+
 import { EntityID } from "@latticexyz/recs";
+import { useComponentValue } from "@latticexyz/react";
 
 import { useMud } from "../../../context/MudContext";
-import {
-  BackgroundImage,
-  BuildingResearchRequirements,
-  BuildingResearchRequirementsDefaultUnlocked,
-  ResourceImage,
-} from "../../../util/constants";
-import { BuildingReceipe } from "../../../util/resource";
-import { useComponentValue } from "@latticexyz/react";
+import { BackgroundImage, ResourceImage } from "../../../util/constants";
+import { getBuildingRecipe } from "../../../util/resource";
 import { hashKeyEntity } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
 import { useGameStore } from "../../../store/GameStore";
+import {
+  BuildingResearchRequirements,
+  ResearchDefaultUnlocked,
+} from "../../../util/research";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -52,15 +52,12 @@ function BuildingIconButton({
   const isResearched = useComponentValue(components.Research, researchOwner);
 
   const buildingLocked = useMemo(() => {
-    return !(
-      isResearched ||
-      BuildingResearchRequirementsDefaultUnlocked.has(researchRequirement)
-    );
+    return !(isResearched || ResearchDefaultUnlocked.has(researchRequirement));
   }, [isResearched, researchRequirement]);
 
   const cannotBuildTile = useCallback(() => {}, []);
 
-  const recipe = BuildingReceipe.get(blockType);
+  const recipe = getBuildingRecipe(blockType, world, components);
 
   return (
     <button
@@ -87,7 +84,7 @@ function BuildingIconButton({
         {label}
         <div className="flex-col">
           {recipe ? (
-            recipe[0].resources.map((resource) => {
+            recipe.map((resource) => {
               const resourceImage = ResourceImage.get(resource.id);
               return (
                 <div className="mr-2 inline-block" key={resource.id}>
