@@ -12,8 +12,10 @@ import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "comp
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-
-import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
@@ -22,6 +24,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibPath } from "../libraries/LibPath.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
+import { LibFactory } from "../libraries/LibFactory.sol";
 uint256 constant ID = uint256(keccak256("system.BuildPath"));
 
 contract BuildPathSystem is System {
@@ -44,6 +47,102 @@ contract BuildPathSystem is System {
     );
   }
 
+  function handleBuildingPathFromMineToMainBase(uint256 mineEntity) internal {
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+
+    //update unclaimed resources before updating resouce production
+    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), mineEntity);
+    //update resource production based on new path
+    LibNewMine.updateResourceProductionOnBuildPathFromMine(
+      mineComponent,
+      buildingComponent,
+      tileComponent,
+      addressToEntity(msg.sender),
+      mineEntity
+    );
+  }
+
+  function handleBuildingPathFromMineToFactory(uint256 mineEntity, uint256 factoryEntity) internal {
+    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
+      getAddressById(components, FactoryIsFunctionalComponentID)
+    );
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(components, FactoryMineBuildingsComponentID)
+    );
+    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+
+    require(
+      factoryMineBuildingsComponent.has(
+        LibEncode.hashKeyEntity(tileComponent.getValue(factoryEntity), buildingComponent.getValue(factoryEntity))
+      ),
+      "[BuildPathSystem] Cannot build path a building which is not MainBase or a factory"
+    );
+    require(
+      LibFactory.checkOnBuildPathFromMineToFactory(
+        factoryIsFunctionalComponent,
+        factoryMineBuildingsComponent,
+        buildingComponent,
+        tileComponent,
+        pathComponent,
+        mineEntity,
+        factoryEntity
+      ),
+      "[BuildPathSystem] Cannot build path to a the target factory"
+    );
+    if (factoryIsFunctionalComponent.has(factoryEntity) && pathComponent.has(factoryEntity)) {
+      FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+        getAddressById(components, FactoryProductionComponentID)
+      );
+      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
+        factoryProductionComponent,
+        mineComponent,
+        tileComponent,
+        buildingComponent,
+        addressToEntity(msg.sender),
+        factoryEntity,
+        true
+      );
+    }
+  }
+
+  function handleBuildingPathFromFactoryToMainBase(uint256 factoryEntity, uint256 mainBaseEntity) internal {
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    require(
+      tileComponent.getValue(mainBaseEntity) == MainBaseID,
+      "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
+    );
+    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+      getAddressById(components, FactoryProductionComponentID)
+    );
+    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
+      getAddressById(components, FactoryIsFunctionalComponentID)
+    );
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+
+    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), factoryEntity);
+    LibFactory.updateResourceProductionOnBuildPathFromFactoryToMainBase(
+      factoryProductionComponent,
+      factoryIsFunctionalComponent,
+      mineComponent,
+      buildingComponent,
+      tileComponent,
+      addressToEntity(msg.sender),
+      factoryEntity
+    );
+  }
+
   function execute(bytes memory args) public returns (bytes memory) {
     (Coord memory coordStart, Coord memory coordEnd) = abi.decode(args, (Coord, Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
@@ -59,18 +158,6 @@ contract BuildPathSystem is System {
     require(tileComponent.has(startCoordEntity), "[BuildPathSystem] Cannot start path at an empty coordinate");
     uint256 endCoordEntity = LibEncode.encodeCoordEntity(coordEnd, BuildingKey);
     require(tileComponent.has(endCoordEntity), "[BuildPathSystem] Cannot end path at an empty coordinate");
-
-    // // Check that the coordinates are both conveyor tiles
-    // uint256 tileEntityAtStartCoord = tileComponent.getValue(startCoordEntity);
-    // require(
-    //   tileEntityAtStartCoord == DebugNodeID || tileEntityAtStartCoord == NodeID,
-    //   "[BuildPathSystem] Cannot start path at a non-supported tile (Conveyor, Node)"
-    // );
-    // uint256 tileEntityAtEndCoord = tileComponent.getValue(endCoordEntity);
-    // require(
-    //   tileEntityAtEndCoord == DebugNodeID || tileEntityAtEndCoord == NodeID,
-    //   "[BuildPathSystem] Cannot end path at a non-supported tile (Conveyor, Node)"
-    // );
 
     // Check that the coordinates are both owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(startCoordEntity);
@@ -89,38 +176,32 @@ contract BuildPathSystem is System {
       !pathComponent.has(startCoordEntity),
       "[BuildPathSystem] Cannot start more than one path from the same tile"
     );
-
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    require(
-      LibPath.checkCanBuildPath(
-        tileComponent,
-        mineComponent,
-        storageCapacityComponent,
-        buildingComponent,
-        startCoordEntity,
-        endCoordEntity,
-        addressToEntity(msg.sender)
-      ),
-      "[BuildPathSystem] Cannot build path"
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(components, FactoryMineBuildingsComponentID)
     );
+    uint256 startCoordBuildingId = tileComponent.getValue(startCoordEntity);
+    uint256 endCoordBuildingId = tileComponent.getValue(endCoordEntity);
+    uint256 startCoordBuildingLevelEntity = LibEncode.hashKeyEntity(
+      startCoordBuildingId,
+      buildingComponent.getValue(startCoordEntity)
+    );
+    if (mineComponent.has(startCoordBuildingLevelEntity)) {
+      if (endCoordBuildingId == MainBaseID) {
+        handleBuildingPathFromMineToMainBase(startCoordEntity);
+      } else {
+        handleBuildingPathFromMineToFactory(startCoordEntity, endCoordEntity);
+      }
+    } else if (factoryMineBuildingsComponent.has(startCoordBuildingLevelEntity)) {
+      handleBuildingPathFromFactoryToMainBase(startCoordEntity, endCoordEntity);
+    }
 
     // Add key
     pathComponent.set(startCoordEntity, endCoordEntity);
 
     //update unclaimed resources before updating resouce production
-    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), startCoordEntity);
-    //update resource production based on new path
-    LibNewMine.updateResourceProductionOnBuildPathFromMine(
-      mineComponent,
-      buildingComponent,
-      tileComponent,
-      addressToEntity(msg.sender),
-      startCoordEntity
-    );
+
     return abi.encode(startCoordEntity);
   }
 

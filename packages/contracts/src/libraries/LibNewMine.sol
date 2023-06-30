@@ -85,6 +85,9 @@ library LibNewMine {
     uint256 resourceId
   ) internal {
     uint256 playerResourceProductionEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    // if (LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity) == block.number) {
+    //   return;
+    // }
     uint256 playerResourceProduction = LibMath.getSafeUint256Value(mineComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
@@ -101,9 +104,11 @@ library LibNewMine {
       return;
     }
     uint256 unclaimedResource = LibMath.getSafeUint256Value(unclaimedResourceComponent, playerResourceProductionEntity);
-    unclaimedResource +=
-      playerResourceProduction *
-      (block.number - LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity));
+    for (uint256 i = 0; i < playerResourceProduction; i++) {
+      unclaimedResource += (block.number -
+        LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity));
+    }
+
     if (availableSpaceInStorage < unclaimedResource) {
       unclaimedResource = availableSpaceInStorage;
     }
@@ -111,6 +116,7 @@ library LibNewMine {
     unclaimedResourceComponent.set(playerEntity, unclaimedResource);
   }
 
+  //call after upgrade has been done and level has been increased
   function checkAndUpdateResourceProductionOnUpgradeMine(
     Uint256Component mineComponent, //writes to
     Uint256Component buildingComponent,

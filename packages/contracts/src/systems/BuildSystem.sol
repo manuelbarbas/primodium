@@ -12,13 +12,12 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 // debug buildings
 import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
-
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { BuildingKey } from "../prototypes/Keys.sol";
 
@@ -103,6 +102,21 @@ contract BuildSystem is System {
       addressToEntity(msg.sender),
       buildingId
     );
+  }
+
+  function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(components, FactoryMineBuildingsComponentID)
+    );
+    uint256 buildingId = tileComponent.getValue(factoryEntity);
+    uint256 buildingLevelEntity = LibEncode.hashFromKey(buildingId, 1);
+    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
+      return;
+    }
+    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
+      buildingLevelEntity
+    );
+    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -191,7 +205,7 @@ contract BuildSystem is System {
     lastBuiltAtComponent.set(entity, block.number);
 
     checkAndUpdatePlayerStorageAfterBuild(blockType);
-
+    setupFactoryComponents(tileComponent, entity);
     return abi.encode(entity);
   }
 

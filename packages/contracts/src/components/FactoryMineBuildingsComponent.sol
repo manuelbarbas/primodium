@@ -9,7 +9,7 @@ struct FactoryMineBuildingsData {
 uint256 constant ID = uint256(keccak256("component.FactoryMineBuildings"));
 
 contract FactoryMineBuildingsComponent is Component {
-  constructor(address world, uint256 id) Component(world, id) {}
+  constructor(address world) Component(world, ID) {}
 
   function getSchema() public pure override returns (string[] memory keys, LibTypes.SchemaValue[] memory values) {
     keys = new string[](2);
@@ -23,7 +23,7 @@ contract FactoryMineBuildingsComponent is Component {
   }
 
   function set(uint256 entity, FactoryMineBuildingsData calldata value) public virtual {
-    set(entity, abi.encode(value));
+    set(entity, abi.encode(value.MineBuildingIDs, value.MineBuildingCount));
   }
 
   function getValue(uint256 entity) public view virtual returns (FactoryMineBuildingsData memory) {

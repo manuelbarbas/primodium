@@ -17,10 +17,12 @@ import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequireme
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
+import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 import { MainBaseID, IronMineID, CopperMineID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, DebugNodeID, MinerID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, DebugNodeID, MinerID, PlatingFactoryID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
+import { IronPlateCraftedItemID } from "../../prototypes/Keys.sol";
 import { BuildingKey } from "../../prototypes/Keys.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -32,6 +34,74 @@ contract ClaimSystemTest is MudTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(deployer);
+    vm.stopPrank();
+  }
+
+  function testClaimOnFactory() public {
+    vm.startPrank(alice);
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
+    ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+
+    // TEMP: tile -5, 2 has iron according to current generation seed
+    Coord memory coord = Coord({ x: -5, y: 2 });
+    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+
+    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory platingFactoryCoord = Coord({ x: 1, y: 1 });
+
+    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+    console.log("built main base");
+    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
+      system(DebugRemoveBuildingRequirementsSystemID)
+    );
+
+    debugRemoveBuildingRequirementsSystem.executeTyped(PlatingFactoryID);
+    buildSystem.executeTyped(PlatingFactoryID, platingFactoryCoord);
+    // START CLAIMING
+    vm.roll(0);
+
+    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
+    buildSystem.executeTyped(IronMineID, coord);
+    console.log("built IronMineID");
+
+    buildPathSystem.executeTyped(coord, platingFactoryCoord);
+    console.log("built path from IronMine to PlatingFactory");
+
+    buildPathSystem.executeTyped(platingFactoryCoord, mainBaseCoord);
+    console.log("built path from PlatingFactory to MainBase");
+
+    vm.roll(10);
+
+    claimSystem.executeTyped(mainBaseCoord);
+    console.log("claimed from main base");
+    uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
+    uint256 hashedAliceIronPlateKey = LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice));
+    assertTrue(itemComponent.has(hashedAliceIronPlateKey), "Alice should have IronPlate");
+    assertTrue(
+      !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
+      "Alice should not have any Iron"
+    );
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 10, "Alice should have 10 IronPlates");
+
+    vm.roll(20);
+    claimSystem.executeTyped(mainBaseCoord);
+
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
+    assertTrue(
+      !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
+      "Alice should not have any Iron"
+    );
+    vm.roll(30);
+    claimSystem.executeTyped(mainBaseCoord);
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 30, "Alice should have 30 IronPlates");
+    assertTrue(
+      !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
+      "Alice should not have any Iron"
+    );
+
     vm.stopPrank();
   }
 
@@ -104,6 +174,7 @@ contract ClaimSystemTest is MudTest {
       system(DebugRemoveBuildingRequirementsSystemID)
     );
     debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
+    MineComponent mineComponent = MineComponent(component(MineComponentID));
     buildSystem.executeTyped(IronMineID, coord);
     console.log("built IronMineID");
     buildPathSystem.executeTyped(coord, mainBaseCoord);
@@ -114,16 +185,17 @@ contract ClaimSystemTest is MudTest {
     console.log("claimed from main base");
     uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceKey), "Alice should have iron");
-    assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 100 iron");
+    assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 10 iron");
+
     destroyPathSystem.executeTyped(coord);
 
     vm.roll(20);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 200 iron");
+    assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 10 iron");
     buildPathSystem.executeTyped(coord, mainBaseCoord);
     vm.roll(30);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(itemComponent.getValue(hashedAliceKey), 20, "Alice should have 300 iron");
+    assertEq(itemComponent.getValue(hashedAliceKey), 20, "Alice should have 20 iron");
 
     vm.stopPrank();
   }
@@ -223,13 +295,12 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(IronMineID, IronCoord);
     buildSystem.executeTyped(CopperMineID, CopperCoord);
-
+    vm.roll(0);
     // Iron to main base
     buildPathSystem.executeTyped(IronCoord, mainBaseCoord);
     // Copper to main base
     buildPathSystem.executeTyped(CopperCoord, mainBaseCoord);
     // START CLAIMING
-    vm.roll(0);
 
     vm.roll(20);
 

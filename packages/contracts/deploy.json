@@ -22,14 +22,18 @@
     "StorageCapacityComponent",
     "StorageCapacityResourcesComponent",
     "MineComponent",
-    "UnclaimedResourceComponent"
+    "UnclaimedResourceComponent",
+    "FactoryIsFunctionalComponent",
+    "FactoryMineBuildingsComponent",
+    "FactoryProductionComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibBuildingUpgradeDesignInitializer",
     "LibStorageDesignInitializer",
-    "LibMineDesignInitializer"
+    "LibMineDesignInitializer",
+    "LibFactoryDesignInitializer"
   ],
   "systems": [
     {
@@ -68,7 +72,8 @@
         "BuildingComponent",
         "MainBaseInitializedComponent",
         "BuildingLimitComponent",
-        "StorageCapacityComponent"
+        "StorageCapacityComponent",
+        "FactoryMineBuildingsComponent"
       ]
     },
     {
@@ -95,7 +100,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent"
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
+        "FactoryMineBuildingsComponent",
+        "FactoryProductionComponent"
       ]
     },
     {
@@ -106,7 +114,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent"
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
+        "FactoryMineBuildingsComponent",
+        "FactoryProductionComponent"
       ]
     },
     {
