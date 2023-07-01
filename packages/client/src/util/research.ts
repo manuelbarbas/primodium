@@ -1,6 +1,9 @@
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, World, getComponentValue } from "@latticexyz/recs";
+import { NetworkComponents } from "@latticexyz/std-client";
+
 import { BlockType } from "./constants";
 import { ResourceCostData } from "./resource";
+import { defineComponents } from "../network/components";
 
 // Research Technology Tree
 export type TechnologyTreeNode = {
@@ -24,63 +27,19 @@ export const ResearchDefaultUnlocked = new Set<EntityID>([
   BlockType.SiloResearch,
 ]);
 
-export const BuildingResearchRequirements = new Map<EntityID, EntityID[]>([
-  [BlockType.MainBase, [BlockType.MainBaseResearch]],
-  [BlockType.BasicMiner, [BlockType.BasicMinerResearch]],
-  [BlockType.Node, [BlockType.NodeResearch]],
-  [BlockType.Conveyor, [BlockType.ConveyorResearch]],
+export function getBuildingResearchRequirement(
+  buildingId: EntityID,
+  world: World,
+  components: NetworkComponents<ReturnType<typeof defineComponents>>
+): EntityID | null {
+  const requiredResearch = getComponentValue(
+    components.RequiredResearchComponent,
+    world.entityToIndex.get(buildingId)!
+  );
 
-  [BlockType.Miner, [BlockType.BasicMinerResearch]],
-  [BlockType.DebugNode, [BlockType.NodeResearch]],
-  [BlockType.BulletFactory, [BlockType.BulletFactoryResearch]],
-  [BlockType.Silo, [BlockType.SiloResearch]],
-
-  [BlockType.PlatingFactory, [BlockType.PlatingFactoryResearch]],
-  [BlockType.BasicBatteryFactory, [BlockType.BasicBatteryFactoryResearch]],
-  [BlockType.KineticMissileFactory, [BlockType.KineticMissileFactoryResearch]],
-  [BlockType.ProjectileLauncher, [BlockType.ProjectileLauncherResearch]],
-  [BlockType.HardenedDrill, [BlockType.HardenedDrillResearch]],
-  [BlockType.DenseMetalRefinery, [BlockType.DenseMetalRefineryResearch]],
-  [
-    BlockType.AdvancedBatteryFactory,
-    [BlockType.AdvancedBatteryFactoryResearch],
-  ],
-  [BlockType.HighTempFoundry, [BlockType.HighTempFoundryResearch]],
-  [
-    BlockType.PrecisionMachineryFactory,
-    [BlockType.PrecisionMachineryFactoryResearch],
-  ],
-  [
-    BlockType.IridiumDrillbitFactory,
-    [BlockType.IridiumDrillbitFactoryResearch],
-  ],
-  [
-    BlockType.PrecisionPneumaticDrill,
-    [BlockType.PrecisionPneumaticDrillResearch],
-  ],
-  [BlockType.PenetratorFactory, [BlockType.PenetratorFactoryResearch]],
-  [
-    BlockType.PenetratingMissileFactory,
-    [BlockType.PenetratingMissileFactoryResearch],
-  ],
-  [BlockType.MissileLaunchComplex, [BlockType.MissileLaunchComplexResearch]],
-  [
-    BlockType.HighEnergyLaserFactory,
-    [BlockType.HighEnergyLaserFactoryResearch],
-  ],
-  [
-    BlockType.ThermobaricWarheadFactory,
-    [BlockType.ThermobaricWarheadFactoryResearch],
-  ],
-  [
-    BlockType.ThermobaricMissileFactory,
-    [BlockType.ThermobaricMissileFactoryResearch],
-  ],
-  [
-    BlockType.KimberliteCatalystFactory,
-    [BlockType.KimberliteCatalystFactoryResearch],
-  ],
-]);
+  if (!requiredResearch) return null;
+  return requiredResearch.value as unknown as EntityID;
+}
 
 export const ResearchTechnologyTree = [
   // {

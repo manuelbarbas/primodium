@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-import { EntityID } from "@latticexyz/recs";
-import { useComponentValue } from "@latticexyz/react";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 
 import { useMud } from "../../../context/MudContext";
 import { BackgroundImage, ResourceImage } from "../../../util/constants";
@@ -9,10 +8,7 @@ import { getBuildingRecipe } from "../../../util/resource";
 import { hashKeyEntity } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
 import { useGameStore } from "../../../store/GameStore";
-import {
-  BuildingResearchRequirements,
-  ResearchDefaultUnlocked,
-} from "../../../util/research";
+import { getBuildingResearchRequirement } from "../../../util/research";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -40,20 +36,28 @@ function BuildingIconButton({
   const { address } = useAccount();
 
   // Check if building is unlocked per research or not
-  const researchRequirement = BuildingResearchRequirements.get(blockType)![0];
-  const researchOwner = address
-    ? world.entityToIndex.get(
-        hashKeyEntity(
-          researchRequirement,
-          address.toString().toLowerCase()
-        ) as EntityID
-      )!
-    : singletonIndex;
-  const isResearched = useComponentValue(components.Research, researchOwner);
-
   const buildingLocked = useMemo(() => {
-    return !(isResearched || ResearchDefaultUnlocked.has(researchRequirement));
-  }, [isResearched, researchRequirement]);
+    const researchRequirement = getBuildingResearchRequirement(
+      blockType,
+      world,
+      components
+    );
+
+    if (!researchRequirement) {
+      return false;
+    }
+    const researchOwner = address
+      ? world.entityToIndex.get(
+          hashKeyEntity(
+            researchRequirement,
+            address.toString().toLowerCase()
+          ) as EntityID
+        )!
+      : singletonIndex;
+    const isResearched = getComponentValue(components.Research, researchOwner);
+
+    return !(isResearched && isResearched.value);
+  }, []);
 
   const cannotBuildTile = useCallback(() => {}, []);
 

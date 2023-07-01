@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useComponentValue } from "@latticexyz/react";
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
 
 import { useMud } from "../../context/MudContext";
@@ -32,30 +31,16 @@ function TechTreeItem({
   const { components, world, singletonIndex, systems, providers } = useMud();
   const { address } = useAccount();
 
-  // const researchOwner = useMemo(() => {
-  //   if (address) {
-  //     const encodedEntityId = hashFromAddress(
-  //       data.id,
-  //       address.toString().toLowerCase()
-  //     ) as EntityID;
-  //     return world.entityToIndex.get(encodedEntityId)!;
-  //   } else {
-  //     return singletonIndex;
-  //   }
-  // }, [address, singletonIndex, world]);
-
-  const researchOwner = address
-    ? world.entityToIndex.get(
-        hashKeyEntity(data.id, address.toString().toLowerCase()) as EntityID
-      )!
-    : singletonIndex;
-
-  const isDefaultUnlocked = ResearchDefaultUnlocked.has(data.id);
-  const isResearched = useComponentValue(components.Research, researchOwner);
-
-  const isUnlocked = useMemo(() => {
-    return isDefaultUnlocked || isResearched?.value;
-  }, [isDefaultUnlocked, isResearched]);
+  const isLocked = useMemo(() => {
+    if (ResearchDefaultUnlocked.has(data.id)) return false;
+    const researchOwner = address
+      ? world.entityToIndex.get(
+          hashKeyEntity(data.id, address.toString().toLowerCase()) as EntityID
+        )!
+      : singletonIndex;
+    const isResearched = getComponentValue(components.Research, researchOwner);
+    return !(isResearched && isResearched.value);
+  }, []);
 
   const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
     state.transactionLoading,
@@ -102,7 +87,7 @@ function TechTreeItem({
         })}
       </div>
       <div className="mt-3 text-xs">{description}</div>
-      {isUnlocked ? (
+      {!isLocked ? (
         <button className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-gray-600 py-2 rounded shadow">
           Unlocked
         </button>
