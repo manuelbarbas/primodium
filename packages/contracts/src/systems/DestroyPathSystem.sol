@@ -12,8 +12,10 @@ import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "comp
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-
-import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
+import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
+import { DebugNodeID, NodeID, MainBaseID } from "../prototypes/Tiles.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
@@ -22,17 +24,13 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibPath } from "../libraries/LibPath.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-
+import { LibFactory } from "../libraries/LibFactory.sol";
 uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 
 contract DestroyPathSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function updateUnclaimedForResource(
-    MineComponent mineComponent,
-    uint256 playerEntity,
-    uint256 startCoordEntity
-  ) internal {
+  function updateUnclaimedForResource(MineComponent mineComponent, uint256 playerEntity, uint256 resourceId) internal {
     LibNewMine.updateUnclaimedForResource(
       UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
       LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
@@ -40,7 +38,7 @@ contract DestroyPathSystem is System {
       StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
       ItemComponent(getAddressById(components, ItemComponentID)),
       playerEntity,
-      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startCoordEntity))
+      resourceId
     );
   }
 
@@ -56,6 +54,106 @@ contract DestroyPathSystem is System {
       tileComponent,
       addressToEntity(msg.sender),
       fromEntity
+    );
+  }
+
+  function handleOnDestroyPathFromMineToMainBase(
+    MineComponent mineComponent,
+    TileComponent tileComponent,
+    uint256 mineEntity
+  ) internal {
+    // update unclaimed resources
+    updateUnclaimedForResource(
+      mineComponent,
+      addressToEntity(msg.sender),
+      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity))
+    );
+    //update resource production
+    updateResourceProductionOnDestroyPathFromMine(mineComponent, tileComponent, mineEntity);
+  }
+
+  function handleOnDestroyPathFromMineToFactory(
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    TileComponent tileComponent,
+    BuildingComponent buildingComponent,
+    MineComponent mineComponent,
+    uint256 mineEntity,
+    uint256 factoryEntity
+  ) internal {
+    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
+      getAddressById(components, FactoryIsFunctionalComponentID)
+    );
+    bool isFunctional = factoryIsFunctionalComponent.has(factoryEntity);
+    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+      getAddressById(components, FactoryProductionComponentID)
+    );
+    if (isFunctional) {
+      uint256 buildingIdLevel = LibEncode.hashKeyEntity(
+        tileComponent.getValue(factoryEntity),
+        buildingComponent.getValue(factoryEntity)
+      );
+      // update unclaimed resources
+      updateUnclaimedForResource(
+        mineComponent,
+        addressToEntity(msg.sender),
+        factoryProductionComponent.getValue(buildingIdLevel).ResourceID
+      );
+    }
+    //update resource production
+
+    LibFactory.onPathFromMineToFactoryDestroyed(
+      factoryIsFunctionalComponent,
+      factoryMineBuildingsComponent,
+      tileComponent,
+      mineEntity,
+      factoryEntity
+    );
+    if (isFunctional)
+      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
+        factoryProductionComponent,
+        mineComponent,
+        tileComponent,
+        buildingComponent,
+        addressToEntity(msg.sender),
+        factoryEntity,
+        false
+      );
+  }
+
+  function handleOnDestroyPathFromFactoryToMainBase(
+    MineComponent mineComponent,
+    BuildingComponent buildingComponent,
+    TileComponent tileComponent,
+    uint256 playerEntity,
+    uint256 factoryEntity
+  ) internal {
+    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
+      getAddressById(components, FactoryIsFunctionalComponentID)
+    );
+    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+      getAddressById(components, FactoryProductionComponentID)
+    );
+    bool isFunctional = factoryIsFunctionalComponent.has(factoryEntity);
+    if (isFunctional) {
+      uint256 buildingIdLevel = LibEncode.hashKeyEntity(
+        tileComponent.getValue(factoryEntity),
+        buildingComponent.getValue(factoryEntity)
+      );
+      // update unclaimed resources
+      updateUnclaimedForResource(
+        mineComponent,
+        addressToEntity(msg.sender),
+        factoryProductionComponent.getValue(buildingIdLevel).ResourceID
+      );
+    }
+    LibFactory.updateResourceProductionOnDestroyPathFromFactoryToMainBase(
+      factoryProductionComponent,
+      factoryIsFunctionalComponent,
+      mineComponent,
+      buildingComponent,
+      tileComponent,
+      playerEntity,
+      factoryEntity
     );
   }
 
@@ -80,11 +178,41 @@ contract DestroyPathSystem is System {
     require(ownedByComponent.has(startCoordEntity), "[DestroyPathSystem] Path does not exist at the selected tile");
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
 
-    // update unclaimed resources
-    updateUnclaimedForResource(mineComponent, addressToEntity(msg.sender), startCoordEntity);
-    //update resource production
-    updateResourceProductionOnDestroyPathFromMine(mineComponent, tileComponent, startCoordEntity);
     // remove key
+    uint256 endCoordEntity = pathComponent.getValue(startCoordEntity);
+    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    uint256 startCoordBuildingId = tileComponent.getValue(startCoordEntity);
+    uint256 endCoordBuildingId = tileComponent.getValue(endCoordEntity);
+    uint256 startCoordBuildingLevelEntity = LibEncode.hashKeyEntity(
+      startCoordBuildingId,
+      buildingComponent.getValue(startCoordEntity)
+    );
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(components, FactoryMineBuildingsComponentID)
+    );
+    if (mineComponent.has(startCoordBuildingLevelEntity)) {
+      if (endCoordBuildingId == MainBaseID) {
+        handleOnDestroyPathFromMineToMainBase(mineComponent, tileComponent, startCoordEntity);
+      } else {
+        handleOnDestroyPathFromMineToFactory(
+          factoryMineBuildingsComponent,
+          tileComponent,
+          buildingComponent,
+          mineComponent,
+          startCoordEntity,
+          endCoordEntity
+        );
+      }
+    } else if (factoryMineBuildingsComponent.has(startCoordBuildingLevelEntity)) {
+      handleOnDestroyPathFromFactoryToMainBase(
+        mineComponent,
+        buildingComponent,
+        tileComponent,
+        addressToEntity(msg.sender),
+        startCoordEntity
+      );
+    }
+
     pathComponent.remove(startCoordEntity);
 
     return abi.encode(startCoordEntity);
