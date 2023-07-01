@@ -223,13 +223,12 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(IronMineID, IronCoord);
     buildSystem.executeTyped(CopperMineID, CopperCoord);
-
+    vm.roll(0);
     // Iron to main base
     buildPathSystem.executeTyped(IronCoord, mainBaseCoord);
     // Copper to main base
     buildPathSystem.executeTyped(CopperCoord, mainBaseCoord);
     // START CLAIMING
-    vm.roll(0);
 
     vm.roll(20);
 
