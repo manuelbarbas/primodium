@@ -41,6 +41,9 @@ export function getBuildingResearchRequirement(
   return requiredResearch.value as unknown as EntityID;
 }
 
+// Research resource data should be read from getRecipe() in ../util/resource.ts
+// below kept for compatibility
+
 export const ResearchTechnologyTree = [
   // {
   //   id: "1",

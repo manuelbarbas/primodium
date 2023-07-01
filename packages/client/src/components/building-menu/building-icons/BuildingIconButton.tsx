@@ -4,7 +4,7 @@ import { EntityID, getComponentValue } from "@latticexyz/recs";
 
 import { useMud } from "../../../context/MudContext";
 import { BackgroundImage, ResourceImage } from "../../../util/constants";
-import { getBuildingRecipe } from "../../../util/resource";
+import { getRecipe } from "../../../util/resource";
 import { hashKeyEntity } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
 import { useGameStore } from "../../../store/GameStore";
@@ -61,7 +61,7 @@ function BuildingIconButton({
 
   const cannotBuildTile = useCallback(() => {}, []);
 
-  const recipe = getBuildingRecipe(blockType, world, components);
+  const recipe = getRecipe(blockType, world, components);
 
   return (
     <button
