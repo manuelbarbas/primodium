@@ -29,7 +29,8 @@
     "LibBuildingLimitDesignInitializer",
     "LibBuildingUpgradeDesignInitializer",
     "LibStorageDesignInitializer",
-    "LibMineDesignInitializer"
+    "LibMineDesignInitializer",
+    "LibTechnologyDesignInitializer"
   ],
   "systems": [
     {
