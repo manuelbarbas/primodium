@@ -2,6 +2,7 @@ import { Network } from "../../network/layer";
 import { init as _init } from "../scripts";
 import * as hooks from "./hooks";
 import * as components from "./components";
+import * as camera from "./camera";
 
 const init = async (address: string | undefined, network: Network) => {
   //expose api to window for debugging
@@ -11,7 +12,7 @@ const init = async (address: string | undefined, network: Network) => {
   await _init(address, network);
 };
 
-export const api = { init, hooks, components };
+export const api = { init, hooks, components, camera };
 
 //expose api to window for debugging
 // @ts-ignore

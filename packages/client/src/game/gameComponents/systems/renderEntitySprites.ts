@@ -7,20 +7,23 @@ import {
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 import { Coord } from "@latticexyz/utils";
-import { Network } from "../../../network/layer";
-import { Scene } from "../../../engine/types";
+
 import { createBuilding } from "../factory/building";
+import { Network } from "src/network/layer";
+import { Scene } from "src/engine/types";
 
-export const createSpriteSystem = (network: Network, scene: Scene) => {
+export const renderEntitySprites = (scene: Scene, network: Network) => {
   const { world, components } = network;
-
   const { tileHeight, tileWidth } = scene.tilemap;
+  const objIndexSuffix = "_entitySprite";
 
   defineComponentSystem(
     world,
     components.Position,
     (update) => {
       const entityIndex = update.entity;
+      const objIndex = entityIndex + objIndexSuffix;
+
       // Avoid updating on optimistic overrides
       if (
         typeof entityIndex !== "number" ||
@@ -31,8 +34,8 @@ export const createSpriteSystem = (network: Network, scene: Scene) => {
 
       //handle destroy
       if (!hasComponent(components.Position, entityIndex)) {
-        if (scene.objectPool.objects.has(entityIndex.toString())) {
-          scene.objectPool.remove(entityIndex);
+        if (scene.objectPool.objects.has(objIndex)) {
+          scene.objectPool.remove(objIndex);
         }
         return;
       }
@@ -48,17 +51,15 @@ export const createSpriteSystem = (network: Network, scene: Scene) => {
         tileHeight
       );
 
-      if (!scene.objectPool.objects.has(entityIndex.toString())) {
-        const buildingEmbodiedEntity = scene.objectPool.get(
-          entityIndex,
-          "Sprite"
-        );
+      if (!scene.objectPool.objects.has(objIndex)) {
+        const buildingEmbodiedEntity = scene.objectPool.get(objIndex, "Sprite");
 
-        const buildingComponent = createBuilding(
-          pixelCoord.x,
-          -pixelCoord.y,
-          tileEntityId
-        );
+        const buildingComponent = createBuilding({
+          id: objIndex,
+          x: pixelCoord.x,
+          y: -pixelCoord.y,
+          tile: tileEntityId,
+        });
 
         buildingEmbodiedEntity.setComponent(buildingComponent);
       }

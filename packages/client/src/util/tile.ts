@@ -8,6 +8,7 @@ import {
 } from "@latticexyz/recs";
 import { NetworkComponents } from "@latticexyz/std-client";
 import { defineComponents } from "../network/components";
+import { Network } from "src/network/layer";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -168,3 +169,15 @@ export function getBuildingsOfTypeInRange(
 
   return tiles;
 }
+
+export const getEntityAtCoord = (coord: Coord, network: Network) => {
+  const { components } = network;
+
+  const entities = getEntitiesWithValue(components.Position, coord);
+
+  if (!entities.size) return undefined;
+  const tileEntityID = entities.values().next().value;
+
+  return getComponentValue(components.Tile, tileEntityID)
+    ?.value as unknown as EntityID;
+};

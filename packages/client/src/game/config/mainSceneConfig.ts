@@ -16,11 +16,11 @@ const mainSceneConfig: SceneConfig = {
     dragSpeed: 1.5,
   },
   animations: animationConfig,
-  cullingChunkSize: 32,
+  cullingChunkSize: 64,
   tilemap: {
     tileWidth: 16,
     tileHeight: 16,
-    chunkSize: 32,
+    chunkSize: 64,
     tilesets: {
       [Tilesets.Terrain]: {
         key: Assets.TerrainTileset,

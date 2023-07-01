@@ -5,23 +5,23 @@ import {
   hasComponent,
 } from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-
 import { Coord } from "@latticexyz/utils";
-import { Network } from "../../../network/layer";
 
 import { createPath } from "../factory/path";
-import { Scene } from "../../../engine/types";
+import { Scene } from "src/engine/types";
+import { Network } from "src/network/layer";
 
-export const createPathSystem = (network: Network, scene: Scene) => {
+export const renderEntityPaths = (scene: Scene, network: Network) => {
   const { world, components } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
+  const objSuffix = "_path";
 
   defineComponentSystem(
     world,
     components.Path,
     (update) => {
       const entityIndex = update.entity;
-      const objIndex = entityIndex + "_path";
+      const objIndex = entityIndex + objSuffix;
       // Avoid updating on optimistic overrides
       if (
         typeof entityIndex !== "number" ||
@@ -70,14 +70,13 @@ export const createPathSystem = (network: Network, scene: Scene) => {
       if (!scene.objectPool.objects.has(objIndex)) {
         const embodiedPath = scene.objectPool.get(objIndex, "Graphics");
 
-        const pathComponent = createPath(
-          startPixelCoord.x + tileWidth / 2,
-          -startPixelCoord.y + tileHeight / 2,
-          endPixelCoord.x + tileWidth / 2,
-          -endPixelCoord.y + tileHeight / 2,
-          20,
-          1
-        );
+        const pathComponent = createPath({
+          id: objIndex,
+          startX: startPixelCoord.x + tileWidth / 2,
+          startY: -startPixelCoord.y + tileHeight / 2,
+          endX: endPixelCoord.x + tileWidth / 2,
+          endY: -endPixelCoord.y + tileHeight / 2,
+        });
 
         embodiedPath.setComponent(pathComponent);
       }

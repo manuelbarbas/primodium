@@ -1,12 +1,13 @@
 import { GameObjectComponent } from "../../../engine/types";
 
-export const createSelectionTile = (
-  x: number,
-  y: number,
-  tileHeight: number,
-  tileWidth: number,
-  color: number = 0xffff00
-): GameObjectComponent<"Graphics"> => {
+export const createSelectionTile = (options: {
+  x: number;
+  y: number;
+  tileHeight: number;
+  tileWidth: number;
+  color?: number;
+}): GameObjectComponent<"Graphics"> => {
+  const { x, y, tileHeight, tileWidth, color = 0xffff00 } = options;
   function drawSelectedTile(gameObject: Phaser.GameObjects.Graphics) {
     gameObject.fillStyle(color, 0.3);
     gameObject.lineStyle(1, color);

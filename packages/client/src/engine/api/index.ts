@@ -19,7 +19,7 @@ const initializeContext = (game: Game) => {
  * Returns the current game object.
  * @returns {Game} The current game object.
  */
-const getEngineStore = () => {
+const getGame = () => {
   return useEngineStore.getState().game;
 };
 
@@ -41,7 +41,7 @@ const createGame = async (config: Phaser.Types.Core.GameConfig) => {
 export const api = {
   initializeContext,
   createGame,
-  getEngineStore,
+  getGame,
   // createScene,
   /**
    * An object containing game-related functions.

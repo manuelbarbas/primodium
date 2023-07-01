@@ -1,10 +1,9 @@
-import { World } from "@latticexyz/recs";
+import { Type, World, defineComponent } from "@latticexyz/recs";
 import { overridableComponent } from "@latticexyz/recs";
 import {
   defineBoolComponent,
   defineNumberComponent,
   defineCoordComponent,
-  defineStringComponent,
 } from "@latticexyz/std-client";
 
 export function defineComponents(world: World) {
@@ -96,17 +95,33 @@ export function defineOffChainComponents(world: World) {
       metadata: {},
       id: "SelectedTile",
     }),
+    // Tile position mouse is hovering over
     HoverTile: defineCoordComponent(world, {
       metadata: {},
       id: "HoverTile",
     }),
-    SelectedBuilding: defineStringComponent(world, {
-      metadata: {},
-      id: "SelectedBuilding",
-    }),
+    // Building entity ID user selected from menu
+    SelectedBuilding: defineComponent(
+      world,
+      {
+        value: Type.Entity,
+      },
+      {
+        metadata: {},
+        id: "SelectedBuilding",
+      }
+    ),
     StartSelectedPath: defineCoordComponent(world, {
       metadata: {},
       id: "StartSelectedPath",
     }),
+    SelectedAttack: defineComponent(
+      world,
+      {
+        origin: Type.OptionalString,
+        target: Type.OptionalString,
+      },
+      { metadata: {}, id: "SelectedAttackComponent" }
+    ),
   };
 }

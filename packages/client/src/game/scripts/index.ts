@@ -6,10 +6,6 @@ import { Network } from "../../network/layer";
 import gameConfig from "../config/gameConfig";
 import mainSceneConfig from "../config/mainSceneConfig";
 import { Scenes } from "../constants";
-import { createSpriteSystem } from "../gameComponents/system/spriteSystem";
-import { createPathSystem } from "../gameComponents/system/pathSystem";
-import { createSelectedTileSystem } from "../gameComponents/system/selectedTileSystem";
-import { createHoverTileSystem } from "../gameComponents/system/hoverTileSystem";
 import { createChunkManager } from "./managers/chunkManager";
 import * as components from "../api/components";
 import { BlockType } from "src/util/constants";
@@ -19,7 +15,7 @@ import {
   demolishPath,
   buildPath,
 } from "src/util/web3";
-import { createSelectedBuildingSystem } from "../gameComponents/system/selectedBuildingSystem";
+import { runSystems } from "../gameComponents/systems";
 
 export const init = async (address: string | undefined, network: Network) => {
   const game = await engine.createGame(gameConfig);
@@ -38,46 +34,59 @@ export const init = async (address: string | undefined, network: Network) => {
       scene.tilemap.tileHeight
     );
 
-    const mouseCoord = { x, y: -y } as Coord;
+    const gameCoord = { x, y: -y } as Coord;
 
     if (!address) return;
 
     const selectedBuilding = components.selectedBuilding(network).get();
+    components.selectedTile(network).set(gameCoord);
+
     //handle web3 mutations
     switch (selectedBuilding) {
       case undefined:
         break;
       case BlockType.DemolishBuilding:
         components.selectedBuilding(network).remove();
-        demolishBuilding(mouseCoord, network);
+        demolishBuilding(gameCoord, network);
         return;
       case BlockType.DemolishPath:
         components.selectedBuilding(network).remove();
-        console.log(mouseCoord);
-        demolishPath(mouseCoord, network);
+        demolishPath(gameCoord, network);
       case BlockType.Conveyor:
         const startCoord = components.startSelectedPath(network).get();
 
         if (!startCoord) {
-          components.startSelectedPath(network).set(mouseCoord);
+          components.startSelectedPath(network).set(gameCoord);
           return;
         }
 
         components.selectedBuilding(network).remove();
-        buildPath(startCoord, mouseCoord, network);
+        buildPath(startCoord, gameCoord, network);
         return;
+      case BlockType.SelectAttack:
+        const selectedAttackTiles = components.selectedAttack(network).get();
+
+        if (!selectedAttackTiles.origin) {
+          components.selectedAttack(network).setOrigin(gameCoord);
+          return;
+        }
+
+        if (!selectedAttackTiles.target) {
+          components.selectedAttack(network).setTarget(gameCoord);
+          return;
+        }
+        //if both origin and target are set, don't do anything
+        break;
       default:
         components.selectedBuilding(network).remove();
         buildBuilding(
-          mouseCoord,
+          gameCoord,
           selectedBuilding as EntityID,
           address,
           network
         );
         return;
     }
-
-    components.selectedTile(network).set(mouseCoord);
   });
 
   scene.input.pointermove$.pipe().subscribe((event) => {
@@ -97,10 +106,5 @@ export const init = async (address: string | undefined, network: Network) => {
     components.hoverTile(network).set(mouseCoord);
   });
 
-  //init systems
-  createSpriteSystem(network, scene);
-  createPathSystem(network, scene);
-  createSelectedTileSystem(network, scene);
-  createHoverTileSystem(network, scene);
-  createSelectedBuildingSystem(network);
+  runSystems(scene, network);
 };

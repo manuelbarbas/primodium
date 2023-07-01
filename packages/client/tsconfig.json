@@ -19,6 +19,7 @@
     "baseUrl": ".",
     "paths": {
       "@game/api": ["src/game"],
+      "@engine/api" : ["src/engine"],
       "@game/constants": ["src/game/constants"],
     }
   },

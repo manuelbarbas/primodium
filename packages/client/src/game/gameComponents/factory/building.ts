@@ -7,13 +7,16 @@ import {
   SpriteKeys,
 } from "../../constants";
 
-export const createBuilding = (
-  x: number,
-  y: number,
-  tile: EntityID
-): GameObjectComponent<"Sprite"> => {
+export const createBuilding = (options: {
+  id?: string;
+  x: number;
+  y: number;
+  tile: EntityID;
+}): GameObjectComponent<"Sprite"> => {
+  const { id = "building", x, y, tile } = options;
+
   return {
-    id: "building",
+    id,
     once: (gameObject) => {
       gameObject.setPosition(x, y);
 

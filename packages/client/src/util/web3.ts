@@ -132,3 +132,24 @@ export const demolishPath = async (pos: Coord, network: Network) => {
   );
   setTransactionLoading(false);
 };
+
+export const attackBuilding = async (
+  origin: Coord,
+  target: Coord,
+  weaponKey: EntityID,
+  network: Network
+) => {
+  const { providers, systems } = network;
+  const setTransactionLoading = useGameStore.getState().setTransactionLoading;
+  const setNotification = useNotificationStore.getState().setNotification;
+
+  setTransactionLoading(true);
+  await execute(
+    systems["system.Attack"].executeTyped(origin, target, weaponKey, {
+      gasLimit: 1_000_000,
+    }),
+    providers,
+    setNotification
+  );
+  setTransactionLoading(false);
+};

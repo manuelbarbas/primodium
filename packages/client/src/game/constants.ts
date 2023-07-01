@@ -6,7 +6,7 @@ export enum Scenes {
 
 export const TILE_HEIGHT = 16;
 export const TILE_WIDTH = 16;
-export const RENDER_INTERVAL = 0;
+export const RENDER_INTERVAL = 100;
 export const ANIMATION_INTERVAL = 200;
 
 export enum Assets {
@@ -98,7 +98,7 @@ export enum SpriteKeys {
   HighTempFoundry = "hightempfoundry/hightempfoundry-0.png",
   IridiumDrillBitFactory = "iridiumdrillbitfactory/iridiumdrillbitfactory-0.png",
   KimberliteCatalyst = "kimberlitecatalyst/kimberlitecatalyst-0.png",
-  KineticMissileFactory = "kineticmissilefactory/kineticmissilefactory-0.png",
+  KineticMissileFactory = "kineticmissilefactory/kineticmissilefactory.png",
   LaserFactory = "laserfactory/laserfactory-0.png",
   MissileLaunchComplex = "missilelaunchcomplex/missilelaunchcomplex-0.png",
   PlatingFactory = "platingfactory/platingfactory-0.png",
@@ -185,7 +185,6 @@ export const EntityIDtoAnimationKey = {
   [BlockType.HighTempFoundry]: AnimationKeys.Hightempfoundry,
   [BlockType.IridiumDrillbitFactory]: AnimationKeys.IridiumDrillbitFactory,
   [BlockType.KimberliteCatalystFactory]: AnimationKeys.KimberliteCatalyst,
-  [BlockType.KineticMissileFactory]: AnimationKeys.MissileLaunchComplex,
   [BlockType.HighEnergyLaserFactory]: AnimationKeys.LaserFactory,
   [BlockType.MissileLaunchComplex]: AnimationKeys.MissileLaunchComplex,
   [BlockType.PlatingFactory]: AnimationKeys.PlatingFactory,

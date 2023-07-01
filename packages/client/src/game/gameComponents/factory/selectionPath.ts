@@ -102,6 +102,9 @@ export const createSelectionPath = (
     once: (gameObject) => {
       gameObject.clear();
 
+      gameObject.x = startX;
+      gameObject.y = startY;
+
       //initialize circles if it has not been populated yet
       if (!circles.length) {
         const delay = 2000;
@@ -109,9 +112,6 @@ export const createSelectionPath = (
           circles.push(createCircle(startX, startY, i * delay));
         }
       }
-
-      gameObject.x = startX;
-      gameObject.y = startY;
     },
     //will be called on game tick
     update: (gameObject, time, delta) => {

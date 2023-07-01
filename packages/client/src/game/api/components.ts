@@ -3,14 +3,15 @@ import {
   getComponentValue,
   removeComponent,
   setComponent,
+  updateComponent,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { SingletonID } from "@latticexyz/network";
 import { Network } from "../../network/layer";
+import { getEntityAtCoord } from "src/util/tile";
+import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
 
 export const selectedTile = (network: Network) => {
-  const { world, offChainComponents } = network;
-  const singletonIndex = world.entityToIndex.get(SingletonID)!;
+  const { singletonIndex, offChainComponents } = network;
 
   return {
     set: (coord: Coord) => {
@@ -20,7 +21,7 @@ export const selectedTile = (network: Network) => {
       return getComponentValue(
         offChainComponents.SelectedTile,
         singletonIndex
-      ) as Coord;
+      ) as Coord | undefined;
     },
     remove: () => {
       return removeComponent(offChainComponents.SelectedTile, singletonIndex);
@@ -29,8 +30,7 @@ export const selectedTile = (network: Network) => {
 };
 
 export const hoverTile = (network: Network) => {
-  const { world, offChainComponents } = network;
-  const singletonIndex = world.entityToIndex.get(SingletonID)!;
+  const { singletonIndex, offChainComponents } = network;
 
   return {
     set: (coord: Coord) => {
@@ -48,8 +48,7 @@ export const hoverTile = (network: Network) => {
 };
 
 export const selectedBuilding = (network: Network) => {
-  const { world, offChainComponents } = network;
-  const singletonIndex = world.entityToIndex.get(SingletonID)!;
+  const { offChainComponents, singletonIndex } = network;
 
   return {
     set: (entityID: EntityID) => {
@@ -73,8 +72,7 @@ export const selectedBuilding = (network: Network) => {
 };
 
 export const startSelectedPath = (network: Network) => {
-  const { world, offChainComponents } = network;
-  const singletonIndex = world.entityToIndex.get(SingletonID)!;
+  const { singletonIndex, offChainComponents } = network;
 
   return {
     set: (coord: Coord) => {
@@ -92,5 +90,97 @@ export const startSelectedPath = (network: Network) => {
         singletonIndex
       );
     },
+  };
+};
+
+export const selectedAttack = (network: Network) => {
+  const { offChainComponents, singletonIndex } = network;
+
+  const get = () => {
+    const value = getComponentValue(
+      offChainComponents.SelectedAttack,
+      singletonIndex
+    );
+
+    return {
+      origin: (JSON.parse(value?.origin ?? "null") ?? undefined) as
+        | Coord
+        | undefined,
+      target: (JSON.parse(value?.target ?? "null") ?? undefined) as
+        | Coord
+        | undefined,
+    };
+  };
+
+  const setOrigin = (coord: Coord) => {
+    const originEntityBuilding = getEntityAtCoord(coord, network);
+
+    //if origin entity is not a weapon storage or empty, reset selection
+    if (!originEntityBuilding || !isValidWeaponStorage(originEntityBuilding)) {
+      console.warn("Origin is not valid");
+      remove();
+      return;
+    }
+
+    updateComponent(offChainComponents.SelectedAttack, singletonIndex, {
+      origin: JSON.stringify(coord),
+    });
+  };
+
+  const setTarget = (coord: Coord) => {
+    const selectedAttackTiles = get();
+
+    if (!selectedAttackTiles.origin) {
+      console.log("origin is not set");
+      return;
+    }
+
+    const targetEntityBuilding = getEntityAtCoord(coord, network);
+
+    //check if target is valid
+    if (!targetEntityBuilding) {
+      console.warn("Target is not valid");
+      return;
+    }
+
+    const originEntityBuilding = getEntityAtCoord(
+      selectedAttackTiles.origin,
+      network
+    );
+
+    if (!originEntityBuilding) {
+      console.warn("Origin is not valid");
+      return;
+    }
+
+    //check if target is in attack radius
+    const attackRadius = getAttackRadius(originEntityBuilding);
+
+    // compare x and y values of start and end
+    const xDiff = Math.abs(selectedAttackTiles.origin.x - coord.x);
+    const yDiff = Math.abs(selectedAttackTiles.origin.y - coord.y);
+
+    if (xDiff > attackRadius || yDiff > attackRadius) {
+      console.warn("Target is not in attack radius");
+      return;
+    } else if (xDiff === 0 && yDiff === 0) {
+      console.warn("Target is the same as origin");
+      return;
+    }
+
+    updateComponent(offChainComponents.SelectedAttack, singletonIndex, {
+      target: JSON.stringify(coord),
+    });
+  };
+
+  const remove = () => {
+    return removeComponent(offChainComponents.SelectedAttack, singletonIndex);
+  };
+
+  return {
+    setOrigin,
+    setTarget,
+    get,
+    remove,
   };
 };
