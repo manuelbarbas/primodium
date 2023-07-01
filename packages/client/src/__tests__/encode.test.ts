@@ -6,7 +6,6 @@ import {
 } from "../util/encode";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { BlockType } from "../util/constants";
 
 // Outputs of LibEncode.sol's hashKeyEntity function
 // E.g. console.logBytes32(bytes32(LibEncode.hashKeyEntity(0, 0)));
@@ -72,16 +71,26 @@ test("hashKeyEntity matches LibEncode outputs", () => {
 });
 
 // Hashing edge cases discovered in #36
+// AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
+// PenetratorFactoryResearchID 76799586671436623659050302616748218087565722340238208070730782780668821241238
+// Hash: 0x70e1c65c98bf24a9e78613b2ce740034b97a8fd2d6d5bbc51d6a8179b561052a
+
+// TitaniumResourceItemID 29592648218955693310631313341848988444781730640864177349094518031889847668484
+// ProjectileLauncherResearchID 115710791415720365844662016873039814882667321015852259562238368675311117449333
+// Hash: 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249
+
 const hashKeyResourceEntityOutputs = [
   {
-    key: BlockType.AdvancedPowerSourceCrafted,
-    entity: BlockType.PenetratorFactoryResearch,
+    key: "11699589371590179690663298539456535383454944084246709593455824231284844824000",
+    entity:
+      "76799586671436623659050302616748218087565722340238208070730782780668821241238",
     output:
       "0x70e1c65c98bf24a9e78613b2ce740034b97a8fd2d6d5bbc51d6a8179b561052a",
   },
   {
-    key: BlockType.Titanium,
-    entity: BlockType.ProjectileLauncherResearch,
+    key: "29592648218955693310631313341848988444781730640864177349094518031889847668484",
+    entity:
+      "115710791415720365844662016873039814882667321015852259562238368675311117449333",
     output:
       "0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249",
   },
@@ -90,10 +99,7 @@ const hashKeyResourceEntityOutputs = [
 test("hashKeyEntity matches LibEncode outputs, additional tests", () => {
   for (const example of hashKeyResourceEntityOutputs) {
     expect(example.output).eq(
-      hashKeyEntity(
-        example.key.toString() as EntityID,
-        example.key.toString() as EntityID
-      )
+      hashKeyEntity(example.key as EntityID, example.key as EntityID)
     );
   }
 });
