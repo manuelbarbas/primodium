@@ -39,9 +39,10 @@ library LibNewMine {
         itemComponent,
         storageCapacityComponent,
         storageResourceIds[i],
-        unclaimedResourceComponent.getValue(playerEntity),
+        unclaimedResourceComponent.getValue(playerResourceEntity),
         playerEntity
       );
+      unclaimedResourceComponent.set(playerResourceEntity, 0);
     }
   }
 
@@ -103,17 +104,19 @@ library LibNewMine {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;
     }
-    uint256 unclaimedResource = LibMath.getSafeUint256Value(unclaimedResourceComponent, playerResourceProductionEntity);
-    for (uint256 i = 0; i < playerResourceProduction; i++) {
-      unclaimedResource += (block.number -
-        LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity));
-    }
+
+    uint256 unclaimedResource = LibMath.getSafeUint256Value(
+      unclaimedResourceComponent,
+      playerResourceProductionEntity
+    ) +
+      (playerResourceProduction *
+        (block.number - LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity)));
 
     if (availableSpaceInStorage < unclaimedResource) {
       unclaimedResource = availableSpaceInStorage;
     }
     lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
-    unclaimedResourceComponent.set(playerEntity, unclaimedResource);
+    unclaimedResourceComponent.set(playerResourceProductionEntity, unclaimedResource);
   }
 
   //call after upgrade has been done and level has been increased
