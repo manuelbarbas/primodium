@@ -9,6 +9,8 @@ import { addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { Coord } from "std-contracts/components/CoordComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
+import { AdvancedPowerSourceCraftedItemID, PenetratorFactoryResearchID, TitaniumResourceItemID, ProjectileLauncherResearchID } from "../../prototypes/Keys.sol";
+
 import { LibEncode } from "../../libraries/LibEncode.sol";
 
 contract LibEncodeTest is MudTest {
@@ -32,6 +34,26 @@ contract LibEncodeTest is MudTest {
     assertEq(clientTestThree, 0x6b17b8cb5e84a99ff8477b1ce6041bf12d9716e79d07056760acebbb8354fbd1);
     assertEq(clientTestFour, 0x0c5c051a91a8ab2d13ce6a81f1030321cbaa0af9e7d9b7f67acbfeb12def84d3);
     assertEq(clientTestFive, 0xf7eea64553e727e221059874c9505c46a9e9ec09f44b6527830b639b77cb4ddd);
+  }
+
+  function testHashKeyEntityItems() public {
+    // hashing edge cases discovered in #36
+
+    // AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
+    // PenetratorFactoryResearchID 76799586671436623659050302616748218087565722340238208070730782780668821241238
+    // Hash: 0x70e1c65c98bf24a9e78613b2ce740034b97a8fd2d6d5bbc51d6a8179b561052a
+
+    // TitaniumResourceItemID 29592648218955693310631313341848988444781730640864177349094518031889847668484
+    // ProjectileLauncherResearchID 115710791415720365844662016873039814882667321015852259562238368675311117449333
+    // Hash: 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249
+
+    bytes32 clientTestOne = bytes32(
+      LibEncode.hashKeyEntity(AdvancedPowerSourceCraftedItemID, PenetratorFactoryResearchID)
+    );
+    assertEq(clientTestOne, 0x70e1c65c98bf24a9e78613b2ce740034b97a8fd2d6d5bbc51d6a8179b561052a);
+
+    bytes32 clientTestTwo = bytes32(LibEncode.hashKeyEntity(TitaniumResourceItemID, ProjectileLauncherResearchID));
+    assertEq(clientTestTwo, 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249);
   }
 
   function testCoordEncoding() public {
