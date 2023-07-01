@@ -39,10 +39,9 @@ library LibNewMine {
         itemComponent,
         storageCapacityComponent,
         storageResourceIds[i],
-        unclaimedResourceComponent.getValue(playerResourceEntity),
+        unclaimedResourceComponent.getValue(playerEntity),
         playerEntity
       );
-      unclaimedResourceComponent.set(playerResourceEntity, 0);
     }
   }
 
@@ -101,18 +100,15 @@ library LibNewMine {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;
     }
-    uint256 unclaimedResource = LibMath.getSafeUint256Value(
-      unclaimedResourceComponent,
-      playerResourceProductionEntity
-    ) +
-      (playerResourceProduction *
-        (block.number - LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity)));
-
+    uint256 unclaimedResource = LibMath.getSafeUint256Value(unclaimedResourceComponent, playerResourceProductionEntity);
+    unclaimedResource +=
+      playerResourceProduction *
+      (block.number - LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity));
     if (availableSpaceInStorage < unclaimedResource) {
       unclaimedResource = availableSpaceInStorage;
     }
     lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
-    unclaimedResourceComponent.set(playerResourceProductionEntity, unclaimedResource);
+    unclaimedResourceComponent.set(playerEntity, unclaimedResource);
   }
 
   function checkAndUpdateResourceProductionOnUpgradeMine(
