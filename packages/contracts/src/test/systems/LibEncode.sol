@@ -37,7 +37,7 @@ contract LibEncodeTest is MudTest {
   }
 
   function testHashKeyEntityItems() public {
-    // hashing edge cases discovered in #36
+    // Hashing edge cases discovered in #36
 
     // AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
     // PenetratorFactoryResearchID 76799586671436623659050302616748218087565722340238208070730782780668821241238

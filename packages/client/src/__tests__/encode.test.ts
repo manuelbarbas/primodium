@@ -6,6 +6,7 @@ import {
 } from "../util/encode";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { BlockType } from "../util/constants";
 
 // Outputs of LibEncode.sol's hashKeyEntity function
 // E.g. console.logBytes32(bytes32(LibEncode.hashKeyEntity(0, 0)));
@@ -65,6 +66,33 @@ test("hashKeyEntity matches LibEncode outputs", () => {
       hashKeyEntity(
         getPaddedHex(example.key, 64) as EntityID,
         getPaddedHex(example.entity, 64) as EntityID
+      )
+    );
+  }
+});
+
+// Hashing edge cases discovered in #36
+const hashKeyResourceEntityOutputs = [
+  {
+    key: BlockType.AdvancedPowerSourceCrafted,
+    entity: BlockType.PenetratorFactoryResearch,
+    output:
+      "0x70e1c65c98bf24a9e78613b2ce740034b97a8fd2d6d5bbc51d6a8179b561052a",
+  },
+  {
+    key: BlockType.Titanium,
+    entity: BlockType.ProjectileLauncherResearch,
+    output:
+      "0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249",
+  },
+];
+
+test("hashKeyEntity matches LibEncode outputs, additional tests", () => {
+  for (const example of hashKeyResourceEntityOutputs) {
+    expect(example.output).eq(
+      hashKeyEntity(
+        example.key.toString() as EntityID,
+        example.key.toString() as EntityID
       )
     );
   }
@@ -144,9 +172,13 @@ const encodeCoordEntityOutputs = [
 test("encodeCoordEntity matches LibEncode outputs", () => {
   for (const example of encodeCoordEntityOutputs) {
     expect(example.output).eq(encodeCoordEntity(example.coord, example.key));
-    expect(example.output).not.eq(encodeCoordEntity({x: example.coord.x - 10, y: example.coord.y}, example.key));
+    expect(example.output).not.eq(
+      encodeCoordEntity(
+        { x: example.coord.x - 10, y: example.coord.y },
+        example.key
+      )
+    );
   }
-
 });
 
 test("decodeCoordEntity matches LibEncode outputs", () => {
