@@ -99,7 +99,7 @@ const hashKeyResourceEntityOutputs = [
 test("hashKeyEntity matches LibEncode outputs, additional tests", () => {
   for (const example of hashKeyResourceEntityOutputs) {
     expect(example.output).eq(
-      hashKeyEntity(example.key as EntityID, example.key as EntityID)
+      hashKeyEntity(example.key as EntityID, example.entity as EntityID)
     );
   }
 });

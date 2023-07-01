@@ -75,7 +75,7 @@ export function hashKeyEntity(
   return hash;
 }
 
-function padTo64Bytes(hex: string): string {
+export function padTo64Bytes(hex: string): string {
   // Remove "0x" prefix if present
   const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
   // Pad the hex string with zeros to 64 characters (32 bytes)
