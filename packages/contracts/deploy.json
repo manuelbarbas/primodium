@@ -33,7 +33,8 @@
     "LibBuildingUpgradeDesignInitializer",
     "LibStorageDesignInitializer",
     "LibMineDesignInitializer",
-    "LibFactoryDesignInitializer"
+    "LibFactoryDesignInitializer",
+    "LibTechnologyDesignInitializer"
   ],
   "systems": [
     {

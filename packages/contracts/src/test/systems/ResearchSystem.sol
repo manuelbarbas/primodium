@@ -75,8 +75,8 @@ contract ResearchSystemTest is MudTest {
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
     Coord memory CopperCoord = Coord({ x: -10, y: -4 });
-    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID);
-    assertEq(LibTerrain.getTopLayerKey(CopperCoord), CopperID);
+    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID, "there should be Iron on IronCoord");
+    assertEq(LibTerrain.getTopLayerKey(CopperCoord), CopperID, "there should be Copper on CopperCoord");
 
     Coord memory mainBaseCoord = Coord({ x: -5, y: -4 });
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
@@ -101,18 +101,26 @@ contract ResearchSystemTest is MudTest {
 
     claimSystem.executeTyped(mainBaseCoord);
 
-    assertTrue(itemComponent.has(hashedAliceCopperKey));
-    assertEq(itemComponent.getValue(hashedAliceCopperKey), 100);
-    assertEq(itemComponent.getValue(hashedAliceIronKey), 100);
+    assertTrue(itemComponent.has(hashedAliceCopperKey), "alice should have copper in inventory");
+    assertEq(itemComponent.getValue(hashedAliceCopperKey), 100, "alice should have 100 copper after claiming");
+    assertTrue(itemComponent.has(hashedAliceCopperKey), "alice should have iron in inventory");
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 100, "alice should have 100 iron after claiming");
 
     // ================================================================================================
     // alice researches fast miner
     researchSystem.executeTyped(FastMinerResearchID);
 
-    assertTrue(researchComponent.has(hashedAliceFastMinerKey));
-    assertTrue(researchComponent.getValue(hashedAliceFastMinerKey));
-    assertEq(itemComponent.getValue(hashedAliceIronKey), 0);
-    assertEq(itemComponent.getValue(hashedAliceCopperKey), 0);
+    assertTrue(researchComponent.has(hashedAliceFastMinerKey), "alice should have fast miner research");
+    assertTrue(
+      researchComponent.getValue(hashedAliceFastMinerKey),
+      "alice should have researched fast miner technology"
+    );
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 0, "alice should have 0 iron after researching fast miner");
+    assertEq(
+      itemComponent.getValue(hashedAliceCopperKey),
+      0,
+      "alice should have 0 copper after researching fast miner"
+    );
 
     vm.stopPrank();
   }
