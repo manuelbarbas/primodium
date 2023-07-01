@@ -16,7 +16,13 @@ import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesCompon
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
+import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
+
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
@@ -27,6 +33,7 @@ import { LibUpgrade } from "../libraries/LibUpgrade.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
+import { LibFactory } from "../libraries/LibFactory.sol";
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is System {
@@ -36,7 +43,7 @@ contract UpgradeSystem is System {
     MineComponent mineComponent,
     StorageCapacityComponent storageCapacityComponent,
     uint256 playerEntity,
-    uint256 startCoordEntity
+    uint256 resourceId
   ) internal {
     LibNewMine.updateUnclaimedForResource(
       UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
@@ -45,7 +52,7 @@ contract UpgradeSystem is System {
       storageCapacityComponent,
       ItemComponent(getAddressById(components, ItemComponentID)),
       playerEntity,
-      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startCoordEntity))
+      resourceId
     );
   }
 
@@ -64,6 +71,137 @@ contract UpgradeSystem is System {
       buildingId,
       newLevel
     );
+  }
+
+  function handleFactoryUpgrade(
+    MineComponent mineComponent,
+    TileComponent tileComponent,
+    BuildingComponent buildingComponent,
+    uint256 factoryEntity
+  ) internal {
+    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
+      getAddressById(components, FactoryIsFunctionalComponentID)
+    );
+    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+      getAddressById(components, FactoryProductionComponentID)
+    );
+    uint256 buildingLevelEntity = LibEncode.hashFromKey(
+      tileComponent.getValue(factoryEntity),
+      buildingComponent.getValue(factoryEntity)
+    );
+    if (factoryIsFunctionalComponent.has(factoryEntity)) {
+      updateUnclaimedForResource(
+        mineComponent,
+        StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
+        addressToEntity(msg.sender),
+        factoryProductionComponent.getValue(buildingLevelEntity).ResourceID
+      );
+    }
+    LibFactory.checkAndUpdateResourceProductionOnUpgradeFactory(
+      FactoryProductionComponent(getAddressById(components, FactoryProductionComponentID)),
+      factoryIsFunctionalComponent,
+      mineComponent,
+      tileComponent,
+      buildingComponent,
+      PathComponent(getAddressById(components, PathComponentID)),
+      addressToEntity(msg.sender),
+      factoryEntity
+    );
+  }
+
+  function handleMineUpgrade(
+    MineComponent mineComponent,
+    BuildingComponent buildingComponent,
+    TileComponent tileComponent,
+    uint256 mineEntity
+  ) internal {
+    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+    if (pathComponent.has(mineEntity)) {
+      if (tileComponent.getValue(pathComponent.getValue(mineEntity)) == MainBaseID) {
+        updateUnclaimedForResource(
+          mineComponent,
+          StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
+          addressToEntity(msg.sender),
+          LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity))
+        );
+        LibNewMine.checkAndUpdateResourceProductionOnUpgradeMine(
+          mineComponent,
+          buildingComponent,
+          tileComponent,
+          addressToEntity(msg.sender),
+          mineEntity
+        );
+      } else {
+        uint256 factoryEntity = pathComponent.getValue(mineEntity);
+        FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+          getAddressById(components, FactoryMineBuildingsComponentID)
+        );
+        FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
+          getAddressById(components, FactoryIsFunctionalComponentID)
+        );
+        FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+          getAddressById(components, FactoryProductionComponentID)
+        );
+        bool isFunctional = factoryIsFunctionalComponent.has(factoryEntity);
+        if (isFunctional) {
+          uint256 buildingLevelEntity = LibEncode.hashFromKey(
+            tileComponent.getValue(factoryEntity),
+            buildingComponent.getValue(factoryEntity)
+          );
+          updateUnclaimedForResource(
+            mineComponent,
+            StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
+            addressToEntity(msg.sender),
+            factoryProductionComponent.getValue(buildingLevelEntity).ResourceID
+          );
+        }
+        LibFactory.onMineConnectedToFactoryUpgrade(
+          factoryIsFunctionalComponent,
+          factoryMineBuildingsComponent,
+          pathComponent,
+          buildingComponent,
+          factoryEntity
+        );
+        if (!isFunctional && factoryIsFunctionalComponent.has(factoryEntity)) {
+          LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
+            factoryProductionComponent,
+            mineComponent,
+            tileComponent,
+            buildingComponent,
+            addressToEntity(msg.sender),
+            factoryEntity,
+            true
+          );
+        }
+      }
+    }
+  }
+
+  function handleUpgradeAndPostUpgradeCallbacks(
+    BuildingComponent buildingComponent,
+    TileComponent tileComponent,
+    uint256 entity,
+    uint256 buildingId
+  ) internal {
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), entity);
+
+    uint256 newLevel = buildingComponent.getValue(entity) + 1;
+    buildingComponent.set(entity, newLevel);
+
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(components, FactoryMineBuildingsComponentID)
+    );
+    uint256 buildingIdLevelEntity = LibEncode.hashFromKey(buildingId, newLevel);
+    if (mineComponent.has(buildingIdLevelEntity)) {
+      handleMineUpgrade(mineComponent, buildingComponent, tileComponent, entity);
+    } else if (factoryMineBuildingsComponent.has(buildingIdLevelEntity)) {
+      handleFactoryUpgrade(mineComponent, tileComponent, buildingComponent, entity);
+    }
+    checkAndUpdatePlayerStorageAfterUpgrade(storageCapacityComponent, buildingId, newLevel);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -115,24 +253,7 @@ contract UpgradeSystem is System {
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), entity);
-
-    uint256 newLevel = buildingComponent.getValue(entity) + 1;
-    buildingComponent.set(entity, newLevel);
-
-    checkAndUpdatePlayerStorageAfterUpgrade(storageCapacityComponent, blockType, newLevel);
-    LibNewMine.checkAndUpdateResourceProductionOnUpgradeMine(
-      mineComponent,
-      buildingComponent,
-      tileComponent,
-      addressToEntity(msg.sender),
-      entity
-    );
-
+    handleUpgradeAndPostUpgradeCallbacks(buildingComponent, tileComponent, entity, blockType);
     return abi.encode(entity);
   }
 
