@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
@@ -104,8 +103,6 @@ library LibFactory {
     factoryIsFunctionalComponent.set(factoryEntity);
   }
 
-  function onFactoryUpgraded() internal {}
-
   //checks all required conditions for a factory to be functional and updates factory is functional status
   function updateFactoryIsFunctional(
     BoolComponent factoryIsFunctionalComponent, //writes
@@ -199,6 +196,7 @@ library LibFactory {
         mineComponent.getValue(playerResourceEntity) + resourceProductionIncreaseOfFactory
       );
     } else {
+      factoryIsFunctionalComponent.remove(factoryEntity);
       mineComponent.set(
         playerResourceEntity,
         mineComponent.getValue(playerResourceEntity) - factoryProductionDataPreUpgrade.ResourceProductionRate
@@ -244,7 +242,6 @@ library LibFactory {
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(factoryEntity));
     FactoryProductionData memory factoryProductionData = factoryProductionComponent.getValue(buildingLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
-    console.log("updating production rate for factory");
     mineComponent.set(
       playerResourceEntity, //player resource production entity
       LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate //current total resource production // resource production of factory
