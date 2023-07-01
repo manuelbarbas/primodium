@@ -5,11 +5,17 @@ import { BuildSystem } from "./ethers-contracts/BuildSystem";
 import { ClaimFromFactorySystem } from "./ethers-contracts/ClaimFromFactorySystem";
 import { ClaimFromMineSystem } from "./ethers-contracts/ClaimFromMineSystem";
 import { CraftSystem } from "./ethers-contracts/CraftSystem";
+import { DebugAquireResourcesSystem } from "./ethers-contracts/DebugAquireResourcesSystem";
+import { DebugIgnoreBuildLimitForBuildingSystem } from "./ethers-contracts/DebugIgnoreBuildLimitForBuildingSystem";
+import { DebugRemoveBuildingRequirementsSystem } from "./ethers-contracts/DebugRemoveBuildingRequirementsSystem";
+import { DebugRemoveBuildLimitSystem } from "./ethers-contracts/DebugRemoveBuildLimitSystem";
+import { DebugRemoveUpgradeRequirementsSystem } from "./ethers-contracts/DebugRemoveUpgradeRequirementsSystem";
 import { DestroyPathSystem } from "./ethers-contracts/DestroyPathSystem";
 import { DestroySystem } from "./ethers-contracts/DestroySystem";
 import { IncrementSystem } from "./ethers-contracts/IncrementSystem";
 import { ResearchSystem } from "./ethers-contracts/ResearchSystem";
 import { StarterPackSystem } from "./ethers-contracts/StarterPackSystem";
+import { UpgradeSystem } from "./ethers-contracts/UpgradeSystem";
  
 export type SystemTypes = {
   "system.Attack": AttackSystem;
@@ -18,9 +24,15 @@ export type SystemTypes = {
   "system.ClaimFromFactory": ClaimFromFactorySystem;
   "system.ClaimFromMine": ClaimFromMineSystem;
   "system.Craft": CraftSystem;
+  "system.DebugAquireResources": DebugAquireResourcesSystem;
+  "system.DebugIgnoreBuildLimitForBuilding": DebugIgnoreBuildLimitForBuildingSystem;
+  "system.DebugRemoveBuildingRequirements": DebugRemoveBuildingRequirementsSystem;
+  "system.DebugRemoveBuildLimit": DebugRemoveBuildLimitSystem;
+  "system.DebugRemoveUpgradeRequirements": DebugRemoveUpgradeRequirementsSystem;
   "system.DestroyPath": DestroyPathSystem;
   "system.Destroy": DestroySystem;
   "system.Increment": IncrementSystem;
   "system.Research": ResearchSystem;
   "system.StarterPackSystem": StarterPackSystem;
+  "system.Upgrade": UpgradeSystem;
 };

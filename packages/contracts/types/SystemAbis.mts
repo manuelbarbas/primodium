@@ -5,11 +5,17 @@ import BuildSystem from "../abi/BuildSystem.json";
 import ClaimFromFactorySystem from "../abi/ClaimFromFactorySystem.json";
 import ClaimFromMineSystem from "../abi/ClaimFromMineSystem.json";
 import CraftSystem from "../abi/CraftSystem.json";
+import DebugAquireResourcesSystem from "../abi/DebugAquireResourcesSystem.json";
+import DebugIgnoreBuildLimitForBuildingSystem from "../abi/DebugIgnoreBuildLimitForBuildingSystem.json";
+import DebugRemoveBuildingRequirementsSystem from "../abi/DebugRemoveBuildingRequirementsSystem.json";
+import DebugRemoveBuildLimitSystem from "../abi/DebugRemoveBuildLimitSystem.json";
+import DebugRemoveUpgradeRequirementsSystem from "../abi/DebugRemoveUpgradeRequirementsSystem.json";
 import DestroyPathSystem from "../abi/DestroyPathSystem.json";
 import DestroySystem from "../abi/DestroySystem.json";
 import IncrementSystem from "../abi/IncrementSystem.json";
 import ResearchSystem from "../abi/ResearchSystem.json";
 import StarterPackSystem from "../abi/StarterPackSystem.json";
+import UpgradeSystem from "../abi/UpgradeSystem.json";
 
 export const SystemAbis = {
   "system.Attack": AttackSystem.abi,
@@ -18,9 +24,15 @@ export const SystemAbis = {
   "system.ClaimFromFactory": ClaimFromFactorySystem.abi,
   "system.ClaimFromMine": ClaimFromMineSystem.abi,
   "system.Craft": CraftSystem.abi,
+  "system.DebugAquireResources": DebugAquireResourcesSystem.abi,
+  "system.DebugIgnoreBuildLimitForBuilding": DebugIgnoreBuildLimitForBuildingSystem.abi,
+  "system.DebugRemoveBuildingRequirements": DebugRemoveBuildingRequirementsSystem.abi,
+  "system.DebugRemoveBuildLimit": DebugRemoveBuildLimitSystem.abi,
+  "system.DebugRemoveUpgradeRequirements": DebugRemoveUpgradeRequirementsSystem.abi,
   "system.DestroyPath": DestroyPathSystem.abi,
   "system.Destroy": DestroySystem.abi,
   "system.Increment": IncrementSystem.abi,
   "system.Research": ResearchSystem.abi,
   "system.StarterPackSystem": StarterPackSystem.abi,
+  "system.Upgrade": UpgradeSystem.abi,
 };
