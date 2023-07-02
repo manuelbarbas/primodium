@@ -20,16 +20,12 @@ import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 
 import { BuildingKey } from "../prototypes/Keys.sol";
 
-// crafted
-
 import { Coord } from "../types.sol";
 
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "../libraries/LibMath.sol";
-import { LibCraft } from "../libraries/LibCraft.sol";
 import { LibClaim } from "../libraries/LibClaim.sol";
-import { LibMine } from "../libraries/LibMine.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));

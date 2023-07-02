@@ -8,12 +8,10 @@ import { FactoryProductionComponent, ID as FactoryProductionComponentID, Factory
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
-import { LibDebug } from "./LibDebug.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibStorage } from "./LibStorage.sol";
 import { LibMath } from "./LibMath.sol";
 import { LibTerrain } from "./LibTerrain.sol";
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 library LibFactory {
   //checks all required conditions for a factory to be functional and updates factory is functional status

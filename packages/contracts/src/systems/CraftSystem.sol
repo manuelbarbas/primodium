@@ -34,7 +34,6 @@ import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibCraft } from "libraries/LibCraft.sol";
-import { LibMine } from "libraries/LibMine.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 
 uint256 constant ID = uint256(keccak256("system.Craft"));

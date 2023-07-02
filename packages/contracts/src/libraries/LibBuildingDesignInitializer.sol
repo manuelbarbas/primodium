@@ -13,7 +13,7 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 
 import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibResourceCost } from "../libraries/LibResourceCost.sol";
+import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 // production buildings
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
@@ -36,7 +36,7 @@ library LibBuildingDesignInitializer {
 
     //BasicMinerId
     // Build BasicMiner with 100 IronResource
-    LibResourceCost.set1RequiredResourceForEntity(
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
       BasicMinerID,
@@ -46,11 +46,17 @@ library LibBuildingDesignInitializer {
 
     //Node
     // Build Node with 50 IronResource
-    LibResourceCost.set1RequiredResourceForEntity(requiredResources, itemComponent, NodeID, IronResourceItemID, 50);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      requiredResources,
+      itemComponent,
+      NodeID,
+      IronResourceItemID,
+      50
+    );
 
     //PlatingFactoryID
     // Build PlatingFactory with 100 IronResource and 50 CopperResource
-    LibResourceCost.set2RequiredResourcesForEntity(
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       PlatingFactoryID,
@@ -64,7 +70,7 @@ library LibBuildingDesignInitializer {
 
     //BasicBatteryFactoryID
     // Build BasicBatteryFactory with 20 IronPlateCrafted and 50 CopperResource
-    LibResourceCost.set2RequiredResourcesForEntity(
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       BasicBatteryFactoryID,
@@ -78,7 +84,7 @@ library LibBuildingDesignInitializer {
 
     //KineticMissileFactoryID
     // Build KineticMissileFactory with 100 IronPlateCrafted 50 LithiumResource and 10 BasicPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       KineticMissileFactoryID,
@@ -94,7 +100,7 @@ library LibBuildingDesignInitializer {
 
     //ProjectileLauncherID
     // Build ProjectileLauncher with 100 IronPlateCrafted and 100 TitaniumResource
-    LibResourceCost.set2RequiredResourcesForEntity(
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       ProjectileLauncherID,
@@ -108,7 +114,7 @@ library LibBuildingDesignInitializer {
 
     //HardenedDrillID
     // Build HardenedDrill with 100 TitaniumResource 10 IronPlateCrafted 5 BasicPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       HardenedDrillID,
@@ -124,7 +130,7 @@ library LibBuildingDesignInitializer {
 
     //DenseMetalRefineryID
     // Build DenseMetalRefinery with 50 OsmiumResource 100 TitaniumResource 30 IronPlateCrafted 10 BasicPowerSourceCrafted
-    LibResourceCost.set4RequiredResourcesForEntity(
+    LibSetRequiredResources.set4RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       DenseMetalRefineryID,
@@ -142,7 +148,7 @@ library LibBuildingDesignInitializer {
 
     //AdvancedBatteryFactoryID
     // Build AdvancedBatteryFactory with 150 OsmiumResource 50 TitaniumResource and 20 BasicPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       AdvancedBatteryFactoryID,
@@ -157,7 +163,7 @@ library LibBuildingDesignInitializer {
 
     //HighTempFoundryID
     // Build HighTempFoundry with 50 TungstenResource 50 RefinedOsmium and 20 AdvancedPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       HighTempFoundryID,
@@ -173,7 +179,7 @@ library LibBuildingDesignInitializer {
 
     //PrecisionMachineryFactoryID
     // Build PrecisionMachineryFactory with 50 IridiumResource 50 TungstenRodsCrafted and 10 AdvancedPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       PrecisionMachineryFactoryID,
@@ -188,7 +194,7 @@ library LibBuildingDesignInitializer {
 
     //IridiumDrillbitFactoryID
     // Build IridiumDrillbitFactory with 50 TungstenRodsCrafted and 5 LaserPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       IridiumDrillbitFactoryID,
@@ -202,7 +208,7 @@ library LibBuildingDesignInitializer {
 
     //PrecisionPneumaticDrillID
     // Build PrecisionPneumaticDrill with 100 TungstenResource 100 OsmiumResource and 5 LaserPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       PrecisionPneumaticDrillID,
@@ -217,7 +223,7 @@ library LibBuildingDesignInitializer {
 
     //PenetratorFactoryID
     // Build PenetratorFactory with 200 OsmiumResource 50 IronPlateCrafted and 10 AdvancedPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       PenetratorFactoryID,
@@ -232,7 +238,7 @@ library LibBuildingDesignInitializer {
 
     //PenetratingMissileFactoryID
     // Build PenetratingMissileFactory with 300 OsmiumResource 100 TitaniumResource and 15 AdvancedPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       PenetratingMissileFactoryID,
@@ -247,7 +253,7 @@ library LibBuildingDesignInitializer {
 
     //MissileLaunchComplexID
     // Build MissileLaunchComplex with 100 TungstenRodsCrafted and 100 OsmiumResource
-    LibResourceCost.set2RequiredResourcesForEntity(
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       MissileLaunchComplexID,
@@ -260,7 +266,7 @@ library LibBuildingDesignInitializer {
 
     //HighEnergyLaserFactoryID
     // Build HighEnergyLaserFactory with 50 IridiumCrystalCrafted 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       HighEnergyLaserFactoryID,
@@ -275,7 +281,7 @@ library LibBuildingDesignInitializer {
 
     //ThermobaricWarheadFactory
     // Build ThermobaricWarheadFactory with 200 RefinedOsmiumCrafted 100 IridiumCrystalCrafted and 10 LaserPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       ThermobaricWarheadFactoryID,
@@ -290,7 +296,7 @@ library LibBuildingDesignInitializer {
 
     //ThermobaricMissileFactoryID
     // Build ThermobaricMissileFactory with 100 IridiumCrystalCrafted 100 TungstenRodsCrafted and 20 LaserPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       ThermobaricMissileFactoryID,
@@ -305,7 +311,7 @@ library LibBuildingDesignInitializer {
 
     //KimberliteCatalystFactoryID
     // Build KimberliteCatalystFactory with 200 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       KimberliteCatalystFactoryID,
