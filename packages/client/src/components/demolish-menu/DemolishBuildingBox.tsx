@@ -74,7 +74,7 @@ function DemolishBuildingBox() {
       <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">
           <p className="text-lg font-bold mb-3">Demolish</p>
-          <p>Demolish a tile or path below.</p>
+          <p>Select an option below.</p>
           <div className="absolute bottom-4 right-4 space-x-2">
             <button
               className="h-10 w-36 bg-orange-600 hover:bg-orange-700 font-bold rounded text-sm"

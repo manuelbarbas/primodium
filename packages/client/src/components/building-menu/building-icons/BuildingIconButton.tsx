@@ -11,7 +11,7 @@ import {
 } from "../../../util/constants";
 import { BuildingReceipe } from "../../../util/resource";
 import { useComponentValue } from "@latticexyz/react";
-import { hashKeyEntity } from "../../../util/encode";
+import { hashKeyEntityAndTrim } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
 
 // Builds a specific blockType
@@ -34,7 +34,7 @@ function BuildingIconButton({
   const researchRequirement = BuildingResearchRequirements.get(blockType)![0];
   const researchOwner = address
     ? world.entityToIndex.get(
-        hashKeyEntity(
+        hashKeyEntityAndTrim(
           researchRequirement,
           address.toString().toLowerCase()
         ) as EntityID

@@ -9,7 +9,7 @@ import MapResourceHints from "./MapResourceHints";
 import MapBuildingHints from "./MapBuildingHints";
 import { EntityID, getComponentValue } from "@latticexyz/recs";
 import type { useMud } from "../../context/MudContext";
-import { hashKeyEntity } from "../../util/encode";
+import { hashKeyEntityAndTrim } from "../../util/encode";
 import { primodium } from "@game/api";
 
 const isQueryString = (selector: string) => {
@@ -173,7 +173,6 @@ export default function buildTourSteps(
     buildStep({
       name: "start",
       selector: ".screen-container",
-      // hideUI: true,
       customTooltipRenderer: (tour) => {
         return (
           <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">
@@ -479,7 +478,7 @@ export default function buildTourSteps(
         // Check if user has enough iron without using hooks
 
         const addressIronEntityIndex = world.entityToIndex.get(
-          hashKeyEntity(
+          hashKeyEntityAndTrim(
             BlockType.Iron,
             address.toString().toLowerCase()
           ) as EntityID
