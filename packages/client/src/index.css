@@ -28,6 +28,7 @@
   }
 
   #phaser-container {
+    @apply fixed top-0 left-0;
     width: 100vw;
     height: 100vh;
     cursor: pointer;
@@ -35,6 +36,7 @@
 
   #phaser-container > canvas {
     touch-action: none;
+    @apply h-full w-full;
   }
 
   /* #phase-container > canvas {
