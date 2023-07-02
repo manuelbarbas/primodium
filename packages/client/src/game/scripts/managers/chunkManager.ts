@@ -4,7 +4,7 @@ import { getTopLayerKeyPair } from "../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
 import { EntityIdtoTilesetId, Tilekeys } from "../../constants";
-import { delay } from "rxjs/operators";
+import { interval } from "rxjs";
 import { Scene } from "../../../engine/types";
 
 const chunkCache = new CoordMap<boolean>();
@@ -58,12 +58,22 @@ export const createChunkManager = async (tilemap: Scene["tilemap"]) => {
     }
   };
 
+  const chunkQueue: Coord[] = [];
+  const interval$ = interval(RENDER_INTERVAL);
   const startChunkRenderer = () => {
-    chunkStream = chunks.addedChunks$
-      .pipe(delay(RENDER_INTERVAL))
-      .subscribe((chunk) => {
-        renderChunk(chunk, map, chunkSize);
-      });
+    chunkStream = chunks.addedChunks$.subscribe((chunk) => {
+      chunkQueue.push(chunk);
+    });
+
+    interval$.subscribe(() => {
+      if (chunkQueue.length === 0) return;
+
+      const chunk = chunkQueue.pop()!;
+
+      if (!chunks.visibleChunks.current.get(chunk)) return;
+
+      renderChunk(chunk, map, chunkSize);
+    });
   };
 
   const dispose = () => {

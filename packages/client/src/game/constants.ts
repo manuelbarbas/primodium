@@ -6,7 +6,7 @@ export enum Scenes {
 
 export const TILE_HEIGHT = 16;
 export const TILE_WIDTH = 16;
-export const RENDER_INTERVAL = 100;
+export const RENDER_INTERVAL = 35;
 export const ANIMATION_INTERVAL = 200;
 
 export enum Assets {
