@@ -3,13 +3,10 @@ pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { LibEncode } from "./LibEncode.sol";
 import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
-import { LibStorage } from "./LibStorage.sol";
-import { LibMath } from "./LibMath.sol";
-import { LibTerrain } from "./LibTerrain.sol";
+import { LibClaim } from "./LibClaim.sol";
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 library LibNewMine {
@@ -34,7 +31,7 @@ library LibNewMine {
         playerEntity,
         storageResourceIds[i]
       );
-      LibStorage.addResourceToStorage(
+      LibClaim.addResourceToStorage(
         itemComponent,
         storageCapacityComponent,
         storageResourceIds[i],

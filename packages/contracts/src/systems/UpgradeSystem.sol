@@ -26,7 +26,7 @@ import { MainBaseID } from "../prototypes/Tiles.sol";
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibUpgrade } from "../libraries/LibUpgrade.sol";
+import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
@@ -89,6 +89,21 @@ contract UpgradeSystem is System {
     }
   }
 
+  function checkFactoryConnectedMinesLevelCondition(
+    FactoryIsFunctionalComponent factoryIsFunctionalComponent,
+    BuildingComponent buildingComponent,
+    PathComponent pathComponent,
+    uint256 factoryEntity
+  ) internal view returns (bool) {
+    if (!factoryIsFunctionalComponent.has(factoryEntity)) return false;
+    uint256 factoryLevel = buildingComponent.getValue(factoryEntity);
+    uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(factoryEntity);
+    for (uint256 i = 0; i < connectedMineEntities.length; i++) {
+      if (buildingComponent.getValue(connectedMineEntities[i]) < factoryLevel) return false;
+    }
+    return true;
+  }
+
   //after factory level is increased
   function handleFactoryUpgrade(
     MineComponent mineComponent,
@@ -124,7 +139,7 @@ contract UpgradeSystem is System {
 
     //check to see if factory is still functional after upgrade
     if (
-      LibFactory.checkFactoryConnectedMinesLevelCondition(
+      checkFactoryConnectedMinesLevelCondition(
         factoryIsFunctionalComponent,
         buildingComponent,
         PathComponent(getAddressById(components, PathComponentID)),
@@ -264,6 +279,47 @@ contract UpgradeSystem is System {
     checkAndUpdatePlayerStorageAfterUpgrade(buildingId, newLevel);
   }
 
+  function checkAndSpendUpgradeResourceRequirements(
+    BuildingComponent buildingComponent,
+    RequiredResourcesComponent resourceRequirementsComponent,
+    ItemComponent itemComponent,
+    uint256 buildingId,
+    uint256 buildingEntity,
+    uint256 playerEntity
+  ) internal returns (bool) {
+    require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
+    uint256 currentLevel = buildingComponent.getValue(buildingEntity);
+    require(currentLevel > 0, "[LibUpgrade] can not upgrade building that is level 0");
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, currentLevel + 1);
+    return
+      LibResourceCost.checkAndSpendRequiredResources(
+        resourceRequirementsComponent,
+        itemComponent,
+        buildingIdLevel,
+        playerEntity
+      );
+  }
+
+  function checkUpgradeResearchRequirements(
+    BuildingComponent buildingComponent,
+    RequiredResearchComponent researchRequirmentComponent,
+    ResearchComponent researchComponent,
+    uint256 buildingId,
+    uint256 buildingEntity,
+    uint256 playerEntity
+  ) internal view returns (bool) {
+    require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingComponent.getValue(buildingEntity) + 1);
+    return
+      !researchRequirmentComponent.has(buildingIdLevel) ||
+      LibResearch.checkResearchRequirements(
+        researchRequirmentComponent,
+        researchComponent,
+        buildingIdLevel,
+        playerEntity
+      );
+  }
+
   function execute(bytes memory args) public returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
@@ -292,7 +348,7 @@ contract UpgradeSystem is System {
     );
     uint256 blockType = tileComponent.getValue(entity);
     require(
-      LibUpgrade.checkUpgradeResearchRequirements(
+      checkUpgradeResearchRequirements(
         buildingComponent,
         requiredResearchComponent,
         researchComponent,
@@ -303,7 +359,7 @@ contract UpgradeSystem is System {
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
     require(
-      LibUpgrade.checkAndSpendUpgradeResourceRequirements(
+      checkAndSpendUpgradeResourceRequirements(
         buildingComponent,
         requiredResourcesComponent,
         itemComponent,
