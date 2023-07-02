@@ -2,6 +2,7 @@ import {
   generateFrames,
   createCulling,
   createChunks,
+  // createDebugger,
 } from "@latticexyz/phaserx";
 import { ObjectPool } from "@latticexyz/phaserx/dist/types";
 
@@ -36,6 +37,7 @@ export const createScene = async (
       tilesets,
       tileAnimations,
       animationInterval,
+      backgroundTile,
     },
     cullingChunkSize,
     animations,
@@ -81,7 +83,8 @@ export const createScene = async (
     tilesets,
     layerConfig,
     tileAnimations,
-    animationInterval
+    animationInterval,
+    backgroundTile
   );
 
   //create sprite animations
