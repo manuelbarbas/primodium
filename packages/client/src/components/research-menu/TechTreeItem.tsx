@@ -8,7 +8,7 @@ import { ResourceCostData, getRecipe } from "../../util/resource";
 import { BlockIdToKey, ResourceImage } from "../../util/constants";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
-import { hashKeyEntity } from "../../util/encode";
+import { hashKeyEntityAndTrim } from "../../util/encode";
 
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
@@ -35,7 +35,10 @@ function TechTreeItem({
     if (ResearchDefaultUnlocked.has(data.id)) return false;
     const researchOwner = address
       ? world.entityToIndex.get(
-          hashKeyEntity(data.id, address.toString().toLowerCase()) as EntityID
+          hashKeyEntityAndTrim(
+            data.id,
+            address.toString().toLowerCase()
+          ) as EntityID
         )!
       : singletonIndex;
     const isResearched = getComponentValue(components.Research, researchOwner);

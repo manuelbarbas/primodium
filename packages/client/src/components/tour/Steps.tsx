@@ -9,7 +9,7 @@ import MapResourceHints from "./MapResourceHints";
 import MapBuildingHints from "./MapBuildingHints";
 import { EntityID, getComponentValue } from "@latticexyz/recs";
 import type { useMud } from "../../context/MudContext";
-import { hashKeyEntity } from "../../util/encode";
+import { hashKeyEntityAndTrim } from "../../util/encode";
 
 const isQueryString = (selector: string) => {
   try {
@@ -470,7 +470,7 @@ export default function buildTourSteps(
         // Check if user has enough iron without using hooks
 
         const addressIronEntityIndex = world.entityToIndex.get(
-          hashKeyEntity(
+          hashKeyEntityAndTrim(
             BlockType.Iron,
             address.toString().toLowerCase()
           ) as EntityID

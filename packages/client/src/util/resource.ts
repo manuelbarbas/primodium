@@ -2,8 +2,7 @@ import { EntityID, World, getComponentValue } from "@latticexyz/recs";
 import { BlockType } from "./constants";
 import { defineComponents } from "../network/components";
 import { NetworkComponents } from "@latticexyz/std-client";
-import { hashKeyEntity } from "./encode";
-import { BigNumber } from "ethers";
+import { hashKeyEntityAndTrim } from "./encode";
 
 export type ResourceCostData = {
   name: string;
@@ -217,9 +216,7 @@ export function getRecipe(
     const resourceCost = getComponentValue(
       components.Item,
       world.entityToIndex.get(
-        BigNumber.from(
-          hashKeyEntity(resourceId, entityId)
-        ).toHexString() as EntityID
+        hashKeyEntityAndTrim(resourceId, entityId) as EntityID
       )!
     );
 

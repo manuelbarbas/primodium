@@ -5,7 +5,7 @@ import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { useMud } from "../../../context/MudContext";
 import { BackgroundImage, ResourceImage } from "../../../util/constants";
 import { getRecipe } from "../../../util/resource";
-import { hashKeyEntity } from "../../../util/encode";
+import { hashKeyEntityAndTrim } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
 import { useGameStore } from "../../../store/GameStore";
 import { getBuildingResearchRequirement } from "../../../util/research";
@@ -48,7 +48,7 @@ function BuildingIconButton({
     }
     const researchOwner = address
       ? world.entityToIndex.get(
-          hashKeyEntity(
+          hashKeyEntityAndTrim(
             researchRequirement,
             address.toString().toLowerCase()
           ) as EntityID
