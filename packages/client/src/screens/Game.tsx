@@ -3,18 +3,44 @@ import { primodium } from "../game";
 import GameUI from "../components/GameUI";
 import { useMud } from "../context/MudContext";
 import { useAccount } from "src/hooks/useAccount";
+import { Tour } from "src/components/tour/Tour";
+import { useTourStore } from "src/store/TourStore";
+import { EntityID } from "@latticexyz/recs";
+import { useComponentValue } from "@latticexyz/react";
+
+const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState(false);
   const network = useMud();
+  const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
+  const [completedTutorial, checkpoint] = useTourStore((state) => [
+    state.completedTutorial,
+    state.checkpoint,
+  ]);
+
+  // resourceKey of the entity
+  const resourceKey = address
+    ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
+    : singletonIndex;
+
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useComponentValue(
+    components.MainBaseInitialized,
+    resourceKey
+  );
 
   useEffect(() => {
     (async () => {
       try {
         if (!network) return;
-        await primodium.init(address, network);
+        await primodium.init(
+          address,
+          network,
+          params.get("version") ? params.get("version")! : "🔥"
+        );
         setReady(true);
       } catch (e) {
         console.log(e);
@@ -23,9 +49,19 @@ export const Game = () => {
     })();
   }, [network]);
 
+  useEffect(() => {
+    if (ready && mainBaseCoord) {
+      primodium.camera.pan(mainBaseCoord);
+      primodium.components.selectedTile(network).set(mainBaseCoord);
+    }
+  }, [mainBaseCoord, ready]);
+
   if (error) {
     return <div>Phaser Engine Game Error. Refer to console.</div>;
   }
+
+  //check if player has mainbase and checkpoint is null
+  const playerInitialized = mainBaseCoord && checkpoint === null;
 
   return (
     <div>
@@ -37,10 +73,12 @@ export const Game = () => {
           </div>
         </div>
       )}
+
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div className={`${ready ? "opacity-100" : "opacity-0"}`}>
-        <div id="phaser-container" />
+        {!playerInitialized && !completedTutorial && <Tour />}
         <GameUI />
+        <div id="phaser-container" />
       </div>
     </div>
   );

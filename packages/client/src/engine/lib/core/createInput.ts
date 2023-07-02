@@ -20,10 +20,12 @@ import Phaser from "phaser";
 import { filterNullish } from "@latticexyz/utils";
 
 type Area = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  originX: number;
+  originY: number;
+  currX: number;
+  currY: number;
+  prevY: number;
+  prevX: number;
 };
 
 export type Key =
@@ -137,15 +139,24 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
             ? prev.leftButtonDown() && acc // If the previous event wasn't mouseup and if the drag already started...
               ? {
                   ...acc,
-                  width: curr.worldX - acc.x,
-                  height: curr.worldY - acc.y,
+                  currX: curr.x,
+                  currY: curr.y,
+                  prevX: prev.x,
+                  prevY: prev.y,
                 } // Update the width/height
-              : { x: curr.worldX, y: curr.worldY, width: 0, height: 0 } // Else start the drag
+              : {
+                  originX: curr.x,
+                  originY: curr.y,
+                  currX: curr.x,
+                  currY: curr.y,
+                  prevX: curr.x,
+                  prevY: curr.y,
+                } // Else start the drag
             : undefined,
         undefined
       ),
       filterNullish(),
-      filter((area) => Math.abs(area.width) > 10 && Math.abs(area.height) > 10) // Prevent clicking to be mistaken as a drag
+      filter((area) => Math.abs(area.currX) > 10 && Math.abs(area.currY) > 10) // Prevent clicking to be mistaken as a drag
     )
   ).pipe(
     filter(() => enabled.current),

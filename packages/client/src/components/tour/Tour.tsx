@@ -5,14 +5,13 @@ import { useGameStore } from "../../store/GameStore";
 import NarrationBox from "./NarrationBox";
 import { _TourHintLayer } from "../../map-components/TourHintLayer";
 import { useEffect, useState } from "react";
-import { useMap } from "react-leaflet";
+
 import { validMapClick } from "../../util/map";
 import { useMud } from "../../context/MudContext";
 import { TourStep } from "../../util/types";
 import { useAccount } from "../../hooks/useAccount";
 
 export const Tour = () => {
-  const map = useMap();
   const mudCtx = useMud();
   // const account = useAccount();
   const [steps, setSteps] = useState<TourStep[]>([]);
@@ -22,14 +21,12 @@ export const Tour = () => {
     setCompletedTutorial,
     checkpoint,
     setCheckpoint,
-    spawn,
   ] = useTourStore((state) => [
     state.currentStep,
     state.setCurrentStep,
     state.setCompletedTutorial,
     state.checkpoint,
     state.setCheckpoint,
-    state.spawn,
   ]);
 
   const [setGameStateToDefault, setShowUI] = useGameStore((state) => [
@@ -55,10 +52,10 @@ export const Tour = () => {
         : null
     );
 
-    if (!spawn) return;
-
-    //we want to default to the spawn tile when tour is in progress
-    map.setView([spawn.y, spawn.x]);
+    // if (checkpoint) {
+    //   primodium.camera.pan(spawn);
+    //   primodium.components.selectedTile(mudCtx).set(spawn);
+    // }
   }, []);
 
   //hide ui if step specifies
@@ -98,13 +95,13 @@ export const Tour = () => {
         movingTarget
         customPrevFunc={(tourLogic) => {
           //wipe map hints
-          _TourHintLayer.clearLayers();
+          // _TourHintLayer.clearLayers();
 
           tourLogic.prev();
         }}
         customNextFunc={(tourLogic) => {
           //wipe map hints
-          _TourHintLayer.clearLayers();
+          // _TourHintLayer.clearLayers();
 
           tourLogic.next();
         }}

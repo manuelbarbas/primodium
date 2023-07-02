@@ -123,5 +123,6 @@ export function defineOffChainComponents(world: World) {
       },
       { metadata: {}, id: "SelectedAttackComponent" }
     ),
+    Hint: defineBoolComponent(world, { metadata: {}, id: "HintkComponent" }),
   };
 }

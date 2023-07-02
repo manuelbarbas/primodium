@@ -12,8 +12,8 @@ const mainSceneConfig: SceneConfig = {
     maxZoom: 5,
     defaultZoom: 2,
     pinchSpeed: 0.2,
-    scrollSpeed: 0.5,
-    dragSpeed: 1.5,
+    scrollSpeed: 1,
+    dragSpeed: 3,
   },
   animations: animationConfig,
   cullingChunkSize: 64,
@@ -26,6 +26,7 @@ const mainSceneConfig: SceneConfig = {
         key: Assets.TerrainTileset,
         tileHeight: 16,
         tileWidth: 16,
+        extrusion: 1,
       },
       [Tilesets.Resource]: {
         key: Assets.ResourceTileset,

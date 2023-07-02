@@ -2,7 +2,7 @@ import { CardinalOrientation, Step, WalktourLogic } from "walktour";
 import { SimpleCardinal, TourStep } from "../../util/types";
 import { BlockType } from "../../util/constants";
 import { useTourStore } from "../../store/TourStore";
-import { _TourHintLayer } from "../../map-components/TourHintLayer";
+// import { _TourHintLayer } from "../../map-components/TourHintLayer";
 import Arrow from "./Arrow";
 import MapArrow from "./MapArrow";
 import MapResourceHints from "./MapResourceHints";
@@ -10,6 +10,7 @@ import MapBuildingHints from "./MapBuildingHints";
 import { EntityID, getComponentValue } from "@latticexyz/recs";
 import type { useMud } from "../../context/MudContext";
 import { hashKeyEntity } from "../../util/encode";
+import { primodium } from "@game/api";
 
 const isQueryString = (selector: string) => {
   try {
@@ -64,7 +65,7 @@ const buildRoute = (_route: {
 
     return buildStep({
       name: `routing to ${selector}`,
-      selector: ".leaflet-container",
+      selector: ".phaser-container",
       narration: narration[index],
       hideUI: true,
       customTooltipRenderer: () => {
@@ -134,7 +135,7 @@ const buildStep = (step: {
 
       //need this since we are overriding the next function
       if (checkpoint) setCheckpoint(tour.allSteps[tour.stepIndex]);
-      _TourHintLayer.clearLayers();
+      // _TourHintLayer.clearLayers();
 
       //call custom onNext function
       onNext();
@@ -172,7 +173,7 @@ export default function buildTourSteps(
     buildStep({
       name: "start",
       selector: ".screen-container",
-      checkpoint: true,
+      // hideUI: true,
       customTooltipRenderer: (tour) => {
         return (
           <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">
@@ -188,6 +189,12 @@ export default function buildTourSteps(
             </button>
           </div>
         );
+      },
+      onNext: () => {
+        const spawn = useTourStore.getState().spawn;
+
+        primodium.camera.pan(spawn!);
+        primodium.components.selectedTile(ctx).set(spawn!);
       },
     }),
     //ROUTE TO MAIN BASE BUILDING ICON
@@ -216,7 +223,8 @@ export default function buildTourSteps(
     // CHECKPOINT 1: PLACE DOWN MAIN BASE
     buildStep({
       name: "place down main base",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
+      disableMask: true,
       checkpoint: true,
       hideUI: true,
       narration: (
@@ -230,6 +238,7 @@ export default function buildTourSteps(
       ),
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
+
         return <MapArrow x={spawn!.x} y={spawn!.y} highlight />;
       },
     }),
@@ -285,7 +294,7 @@ export default function buildTourSteps(
     //CHECKPOINT 3: PLACED DOWN MINER
     buildStep({
       name: "place down miner",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       narration: (
@@ -322,7 +331,7 @@ export default function buildTourSteps(
     //CHECKPOINT 4: PLACE DOWN MINER NODE
     buildStep({
       name: "place down miner node",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       customTooltipRenderer: () => {
@@ -354,7 +363,7 @@ export default function buildTourSteps(
     //CHECKPOINT 5: PLACE DOWN BASE NODE
     buildStep({
       name: "place down base node",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       customTooltipRenderer: () => {
@@ -387,7 +396,7 @@ export default function buildTourSteps(
     //PLACE DOWN START NODE OF CONVEYOR
     buildStep({
       name: "place down conveyor",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       hideUI: true,
       narration: (
         <p>
@@ -414,7 +423,7 @@ export default function buildTourSteps(
     //CHECKPOINT 6: PLACE DOWN END NODE OF CONVEYOR
     buildStep({
       name: "place down conveyor",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       narration: (
@@ -524,7 +533,7 @@ export default function buildTourSteps(
     // END
     buildStep({
       name: "end screen",
-      selector: ".screen-container",
+      selector: "#phaser-container",
       customTooltipRenderer: (tour) => {
         return (
           <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">

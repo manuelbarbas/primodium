@@ -7,7 +7,7 @@ import {
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Network } from "../../network/layer";
-import { getEntityAtCoord } from "src/util/tile";
+import { getEntityTileAtCoord } from "src/util/tile";
 import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
 
 export const selectedTile = (network: Network) => {
@@ -113,7 +113,7 @@ export const selectedAttack = (network: Network) => {
   };
 
   const setOrigin = (coord: Coord) => {
-    const originEntityBuilding = getEntityAtCoord(coord, network);
+    const originEntityBuilding = getEntityTileAtCoord(coord, network);
 
     //if origin entity is not a weapon storage or empty, reset selection
     if (!originEntityBuilding || !isValidWeaponStorage(originEntityBuilding)) {
@@ -135,7 +135,7 @@ export const selectedAttack = (network: Network) => {
       return;
     }
 
-    const targetEntityBuilding = getEntityAtCoord(coord, network);
+    const targetEntityBuilding = getEntityTileAtCoord(coord, network);
 
     //check if target is valid
     if (!targetEntityBuilding) {
@@ -143,7 +143,7 @@ export const selectedAttack = (network: Network) => {
       return;
     }
 
-    const originEntityBuilding = getEntityAtCoord(
+    const originEntityBuilding = getEntityTileAtCoord(
       selectedAttackTiles.origin,
       network
     );

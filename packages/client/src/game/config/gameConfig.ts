@@ -1,21 +1,20 @@
+const RENDER_RESOLUTION = 1;
+
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: "phaser-container",
-  fps: {
-    target: 60,
-    min: 30,
-    limit: 60,
-  },
   backgroundColor: "64748b",
-  width: window.innerWidth * window.devicePixelRatio,
-  height: window.innerHeight * window.devicePixelRatio,
+  width: window.innerWidth * window.devicePixelRatio * RENDER_RESOLUTION,
+  height: window.innerHeight * window.devicePixelRatio * RENDER_RESOLUTION,
   scale: {
     mode: Phaser.Scale.NONE,
   },
   autoFocus: true,
-  autoCenter: Phaser.Scale.Center.CENTER_BOTH,
   desynchronized: true,
   preserveDrawingBuffer: true,
+  autoMobilePipeline: true,
+  autoRound: true,
+  transparent: true,
   pixelArt: true,
 };
 

@@ -170,7 +170,7 @@ export function getBuildingsOfTypeInRange(
   return tiles;
 }
 
-export const getEntityAtCoord = (coord: Coord, network: Network) => {
+export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
   const { components } = network;
 
   const entities = getEntitiesWithValue(components.Position, coord);
