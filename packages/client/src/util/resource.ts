@@ -1,8 +1,9 @@
 import { EntityID, World, getComponentValue } from "@latticexyz/recs";
-import { BlockType } from "./constants";
+import { BlockIdToKey, BlockType } from "./constants";
 import { defineComponents } from "../network/components";
 import { NetworkComponents } from "@latticexyz/std-client";
 import { hashKeyEntity } from "./encode";
+import { BigNumber } from "ethers";
 
 export type ResourceCostData = {
   name: string;
@@ -212,10 +213,16 @@ export function getRecipe(
 
   if (!requiredResources || requiredResources.value.length == 0) return [];
   return requiredResources!.value.map((resourceId: EntityID) => {
+    // remove leading zeros due to mudv1 hashing behavior
     const resourceCost = getComponentValue(
       components.Item,
-      world.entityToIndex.get(hashKeyEntity(resourceId, entityId) as EntityID)!
+      world.entityToIndex.get(
+        BigNumber.from(
+          hashKeyEntity(resourceId, entityId)
+        ).toHexString() as EntityID
+      )!
     );
+
     return {
       id: resourceId,
       amount: resourceCost ? parseInt(resourceCost!.value.toString()) : -1,
