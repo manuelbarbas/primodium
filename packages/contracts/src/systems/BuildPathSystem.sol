@@ -24,7 +24,7 @@ import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibPath } from "../libraries/LibPath.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
-import { LibClaim } from "../libraries/LibClaim.sol";
+import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 uint256 constant ID = uint256(keccak256("system.BuildPath"));
@@ -102,7 +102,7 @@ contract BuildPathSystem is System {
     uint256 playerEntity,
     uint256 startCoordEntity
   ) internal {
-    LibClaim.updateUnclaimedForResource(
+    LibUnclaimedResource.updateUnclaimedForResource(
       UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
       LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
       mineComponent,

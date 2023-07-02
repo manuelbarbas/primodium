@@ -25,14 +25,14 @@ import { LibPath } from "../libraries/LibPath.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
-import { LibClaim } from "../libraries/LibClaim.sol";
+import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 
 contract DestroyPathSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function updateUnclaimedForResource(MineComponent mineComponent, uint256 playerEntity, uint256 resourceId) internal {
-    LibClaim.updateUnclaimedForResource(
+    LibUnclaimedResource.updateUnclaimedForResource(
       UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
       LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
       mineComponent,

@@ -6,7 +6,7 @@ import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComp
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { LibEncode } from "./LibEncode.sol";
-import { LibClaim } from "./LibClaim.sol";
+import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
 import { LibStorage } from "./LibStorage.sol";
 import { LibMath } from "./LibMath.sol";
 import { LibTerrain } from "./LibTerrain.sol";
@@ -25,7 +25,7 @@ library LibNewMine {
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
       if (!mineComponent.has(playerResourceEntity)) continue;
-      LibClaim.updateUnclaimedForResource(
+      LibUnclaimedResource.updateUnclaimedForResource(
         unclaimedResourceComponent,
         lastClaimedAtComponent,
         mineComponent,

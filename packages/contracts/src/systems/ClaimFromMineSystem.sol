@@ -25,7 +25,7 @@ import { Coord } from "../types.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "../libraries/LibMath.sol";
-import { LibClaim } from "../libraries/LibClaim.sol";
+import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));

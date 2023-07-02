@@ -7,7 +7,7 @@ import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { LibStorage } from "./LibStorage.sol";
 
-library LibClaim {
+library LibUnclaimedResource {
   function updateUnclaimedForResource(
     Uint256Component unclaimedResourceComponent, //writes to
     Uint256Component lastClaimedAtComponent, //writes to
