@@ -26,6 +26,7 @@ export type TilesetConfig = {
     key: Assets;
     tileWidth: number;
     tileHeight: number;
+    extrusion?: number;
   };
 };
 

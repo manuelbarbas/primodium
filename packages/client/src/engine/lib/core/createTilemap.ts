@@ -27,7 +27,9 @@ export const createTilemap = (
         key,
         value.key,
         value.tileWidth,
-        value.tileHeight
+        value.tileHeight,
+        value.extrusion ?? 0,
+        value.extrusion ? value.extrusion * 2 : 0
       )!;
     } catch (e) {
       throw new Error("Failed to load tileset: " + key + "/" + value);
