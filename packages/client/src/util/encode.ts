@@ -75,7 +75,16 @@ export function hashKeyEntity(
   return hash;
 }
 
-export function padTo64Bytes(hex: string): string {
+// Remove leading zeros due to mudv1 hashing behavior
+// if there are leading zeroes, the key in world.entityToIndex will be trimmed
+export function hashKeyEntityAndTrim(
+  key: EntityID,
+  entity: EntityID | string
+): string {
+  return BigNumber.from(hashKeyEntity(key, entity)).toHexString();
+}
+
+function padTo64Bytes(hex: string): string {
   // Remove "0x" prefix if present
   const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
   // Pad the hex string with zeros to 64 characters (32 bytes)
