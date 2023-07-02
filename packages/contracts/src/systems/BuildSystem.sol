@@ -96,12 +96,26 @@ contract BuildSystem is System {
     StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
-    LibStorage.checkAndUpdatePlayerStorageAfterBuild(
-      storageCapacityComponent,
-      storageCapacityResourcesComponent,
-      addressToEntity(msg.sender),
-      buildingId
-    );
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, 1);
+    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
+    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], addressToEntity(msg.sender));
+      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        playerResourceStorageEntity,
+        storageResources[i]
+      );
+      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        buildingIdLevel,
+        storageResources[i]
+      );
+      storageCapacityComponent.set(
+        playerResourceStorageEntity,
+        playerResourceStorageCapacity + storageCapacityIncrease
+      );
+    }
   }
 
   function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
