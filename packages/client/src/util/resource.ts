@@ -1,5 +1,5 @@
 import { EntityID, World, getComponentValue } from "@latticexyz/recs";
-import { BlockIdToKey, BlockType } from "./constants";
+import { BlockType } from "./constants";
 import { defineComponents } from "../network/components";
 import { NetworkComponents } from "@latticexyz/std-client";
 import { hashKeyEntity } from "./encode";
