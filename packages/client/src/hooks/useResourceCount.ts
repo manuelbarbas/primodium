@@ -41,17 +41,6 @@ export default function useResourceCount(
     }
   }, [resourceId, entityIndex, address, singletonIndex, world]);
 
-  // const resourceKey: EntityIndex = entityIndex
-  //   ? world.entityToIndex.get(
-  //       hashFromAddress(
-  //         resourceId,
-  //         applyUint160Mask(world.entities[entityIndex])
-  //       ) as EntityID
-  //     )!
-  //   : address
-  //   ? world.entityToIndex.get(hashFromAddress(resourceId, address) as EntityID)!
-  //   : singletonIndex;
-
   const resource = useComponentValue(resourceComponent, resourceKey);
 
   if (resource) {
