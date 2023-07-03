@@ -5,11 +5,11 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  getComponentValue,
 } from "@latticexyz/recs";
 import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
 import { createSelectionTile } from "../factory/selectionTile";
 
 export const renderSelectionTile = (scene: Scene, network: Network) => {
@@ -33,7 +33,10 @@ export const renderSelectionTile = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = update.value[0] as Coord;
+    const tileCoord = getComponentValue(
+      offChainComponents.SelectedTile,
+      entityIndex
+    );
 
     if (!tileCoord) return;
 

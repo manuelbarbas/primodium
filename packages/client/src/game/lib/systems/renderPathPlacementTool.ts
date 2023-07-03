@@ -5,12 +5,12 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  getComponentValue,
 } from "@latticexyz/recs";
 import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
 import { BlockType } from "src/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
 import { createSelectionTile } from "../factory/selectionTile";
 import * as components from "src/game/api/components";
 import { createPath } from "../factory/path";
@@ -40,7 +40,10 @@ export const renderPathPlacementTool = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = update.value[0] as Coord;
+    const tileCoord = getComponentValue(
+      offChainComponents.HoverTile,
+      entityIndex
+    );
 
     if (!tileCoord) return;
 

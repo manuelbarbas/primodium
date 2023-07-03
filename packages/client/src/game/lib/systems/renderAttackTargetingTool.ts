@@ -5,12 +5,12 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  getComponentValue,
 } from "@latticexyz/recs";
 import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
 import { BlockType } from "src/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
 import { createSelectionTile } from "../factory/selectionTile";
 import * as components from "src/game/api/components";
 import { createAttackPath } from "../factory/attackPath";
@@ -43,7 +43,10 @@ export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
     //we don't need to do anything if both are set
     if (attackSelection.origin && attackSelection.target) return;
 
-    const tileCoord = update.value[0] as Coord;
+    const tileCoord = getComponentValue(
+      offChainComponents.HoverTile,
+      entityIndex
+    );
 
     if (!tileCoord) return;
 

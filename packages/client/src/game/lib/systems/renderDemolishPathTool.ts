@@ -5,6 +5,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  getComponentValue,
 } from "@latticexyz/recs";
 import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
@@ -37,7 +38,10 @@ export const renderDemolishPathTool = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = update.value[0] as Coord;
+    const tileCoord = getComponentValue(
+      offChainComponents.HoverTile,
+      entityIndex
+    );
 
     if (!tileCoord) return;
 

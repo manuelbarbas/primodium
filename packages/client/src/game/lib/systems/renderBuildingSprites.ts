@@ -4,7 +4,6 @@ import {
   Has,
   defineEnterSystem,
   defineExitSystem,
-  defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
@@ -26,15 +25,7 @@ export const renderBuildingSprites = (scene: Scene, network: Network) => {
     const entityIndex = update.entity;
     const objIndex = entityIndex + objIndexSuffix;
 
-    // Avoid updating on optimistic overrides
-    if (
-      typeof entityIndex !== "number" ||
-      entityIndex >= world.entities.length
-    ) {
-      return;
-    }
-
-    const tilePosition = update.value[0];
+    const tilePosition = getComponentValue(components.Position, entityIndex);
 
     const tile = getComponentValue(components.Tile, entityIndex);
     const tileEntityId = tile?.value as unknown as EntityID;
@@ -60,7 +51,9 @@ export const renderBuildingSprites = (scene: Scene, network: Network) => {
   };
 
   defineEnterSystem(world, query, render);
-  defineUpdateSystem(world, query, render);
+
+  // not needed for now
+  // defineUpdateSystem(world, query, render);
 
   defineExitSystem(world, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
