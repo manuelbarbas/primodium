@@ -9,13 +9,14 @@ import { BlockType } from "../../util/constants";
 
 import MunitionsButton from "./MunitionsButton";
 import { useNotificationStore } from "../../store/NotificationStore";
+import { primodium } from "@game/api";
 
 function ChooseMunitions() {
   // executeTyped(Coord memory coord, Coord memory targetCoord, uint256 weaponKey)
-
-  const { components, systems, providers } = useMud();
-  const [selectedAttackTiles, setTransactionLoading] = useGameStore((state) => [
-    state.selectedAttackTiles,
+  const network = useMud();
+  const { components, systems, providers } = network;
+  const selectedAttackTiles = primodium.hooks.useSelectedAttack(network);
+  const [setTransactionLoading] = useGameStore((state) => [
     state.setTransactionLoading,
   ]);
   const [setNotification] = useNotificationStore((state) => [
@@ -24,15 +25,12 @@ function ChooseMunitions() {
 
   const attackAction = useCallback(
     async (weaponKey: EntityID) => {
-      if (
-        selectedAttackTiles.start !== null &&
-        selectedAttackTiles.end !== null
-      ) {
+      if (selectedAttackTiles.origin && selectedAttackTiles.target) {
         setTransactionLoading(true);
         await execute(
           systems["system.Attack"].executeTyped(
-            selectedAttackTiles.start,
-            selectedAttackTiles.end,
+            selectedAttackTiles.origin,
+            selectedAttackTiles.target,
             weaponKey,
             {
               gasLimit: 1_000_000,
@@ -52,14 +50,14 @@ function ChooseMunitions() {
     [
       Has(components.Tile),
       HasValue(components.Position, {
-        x: selectedAttackTiles.start ? selectedAttackTiles.start.x : 0,
-        y: selectedAttackTiles.start ? selectedAttackTiles.start.y : 0,
+        x: selectedAttackTiles.origin ? selectedAttackTiles.origin.x : 0,
+        y: selectedAttackTiles.origin ? selectedAttackTiles.origin.y : 0,
       }),
     ],
     { updateOnValueChange: true }
   );
 
-  if (!selectedAttackTiles.start || tilesAtPosition.length === 0) {
+  if (!selectedAttackTiles.origin || tilesAtPosition.length === 0) {
     return <></>;
   }
 

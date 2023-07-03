@@ -1,15 +1,14 @@
 import { CardinalOrientation, Step, WalktourLogic } from "walktour";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
+import { primodium } from "@game/api";
+
 import { SimpleCardinal, TourStep } from "../../util/types";
 import { BlockType } from "../../util/constants";
 import { useTourStore } from "../../store/TourStore";
-import { _TourHintLayer } from "../../map-components/TourHintLayer";
 import Arrow from "./Arrow";
-import MapArrow from "./MapArrow";
-import MapResourceHints from "./MapResourceHints";
-import MapBuildingHints from "./MapBuildingHints";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
-import type { useMud } from "../../context/MudContext";
 import { hashKeyEntityAndTrim } from "../../util/encode";
+
+import { Network } from "src/network/layer";
 
 const isQueryString = (selector: string) => {
   try {
@@ -62,22 +61,22 @@ const buildRoute = (_route: {
       });
     }
 
+    //!! does not work, mud network is undefined here
     return buildStep({
       name: `routing to ${selector}`,
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       narration: narration[index],
       hideUI: true,
       customTooltipRenderer: () => {
-        const spawn = useTourStore.getState().spawn;
+        // const spawn = useTourStore.getState().spawn;
 
-        //we set spawn in previous step
-        return (
-          <MapBuildingHints
-            origin={spawn!}
-            range={10}
-            blockType={selector as EntityID}
-          />
-        );
+        //mud context not ava
+
+        // primodium.components
+        //   .marker(ctx!)
+        //   .target(route[index] as EntityID, spawn, 10, 2, { x: 1, y: 0 });
+
+        return <></>;
       },
       orientation,
     });
@@ -98,6 +97,7 @@ const buildStep = (step: {
   orientation?: CardinalOrientation[];
   disableMask?: boolean;
   hideUI?: boolean;
+  ctx?: Network;
 }): TourStep => {
   const defaults = {
     checkpoint: false,
@@ -134,7 +134,6 @@ const buildStep = (step: {
 
       //need this since we are overriding the next function
       if (checkpoint) setCheckpoint(tour.allSteps[tour.stepIndex]);
-      _TourHintLayer.clearLayers();
 
       //call custom onNext function
       onNext();
@@ -161,18 +160,14 @@ const buildStep = (step: {
   return _step;
 };
 
-export default function buildTourSteps(
-  ctx: ReturnType<typeof useMud>,
-  address: string
-) {
+export default function buildTourSteps(ctx: Network, address: string) {
   const { components, world } = ctx;
 
   return [
     // CHECKPOINT 0: START
     buildStep({
       name: "start",
-      selector: ".screen-container",
-      checkpoint: true,
+      selector: "#game-container",
       customTooltipRenderer: (tour) => {
         return (
           <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">
@@ -188,6 +183,12 @@ export default function buildTourSteps(
             </button>
           </div>
         );
+      },
+      onNext: () => {
+        const spawn = useTourStore.getState().spawn;
+
+        primodium.camera.pan(spawn!);
+        primodium.components.selectedTile(ctx).set(spawn!);
       },
     }),
     //ROUTE TO MAIN BASE BUILDING ICON
@@ -216,7 +217,8 @@ export default function buildTourSteps(
     // CHECKPOINT 1: PLACE DOWN MAIN BASE
     buildStep({
       name: "place down main base",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
+      // disableMask: true,
       checkpoint: true,
       hideUI: true,
       narration: (
@@ -230,7 +232,10 @@ export default function buildTourSteps(
       ),
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
-        return <MapArrow x={spawn!.x} y={spawn!.y} highlight />;
+
+        primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+
+        return <></>;
       },
     }),
     // // ROUTE TO RESOURCE BOX
@@ -267,6 +272,9 @@ export default function buildTourSteps(
       customTooltipRenderer: () => {
         return <Arrow direction="right" bounce />;
       },
+      validate: async () => {
+        return true;
+      },
       orientation: [CardinalOrientation.CENTER, CardinalOrientation.WEST],
     }),
     //ROUTE TO MINER
@@ -285,7 +293,7 @@ export default function buildTourSteps(
     //CHECKPOINT 3: PLACED DOWN MINER
     buildStep({
       name: "place down miner",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       narration: (
@@ -294,14 +302,11 @@ export default function buildTourSteps(
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
 
-        //we set spawn in previous step
-        return (
-          <MapResourceHints
-            origin={spawn!}
-            range={10}
-            blockType={BlockType.Iron}
-          />
-        );
+        primodium.components
+          .marker(ctx)
+          .target(BlockType.Iron, BlockType.ArrowMarker, spawn, 10, 2);
+
+        return <></>;
       },
     }),
     //ROUTE TO NODE
@@ -322,21 +327,21 @@ export default function buildTourSteps(
     //CHECKPOINT 4: PLACE DOWN MINER NODE
     buildStep({
       name: "place down miner node",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
 
+        primodium.components
+          .marker(ctx)
+          .target(BlockType.BasicMiner, BlockType.ArrowMarker, spawn, 10, 2, {
+            x: 1,
+            y: 0,
+          });
+
         //we set spawn in previous step
-        return (
-          <MapBuildingHints
-            origin={spawn!}
-            range={10}
-            near
-            blockType={BlockType.BasicMiner}
-          />
-        );
+        return <></>;
       },
     }),
     //ROUTE TO NODE
@@ -354,21 +359,20 @@ export default function buildTourSteps(
     //CHECKPOINT 5: PLACE DOWN BASE NODE
     buildStep({
       name: "place down base node",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
 
-        //we set spawn in previous step
-        return (
-          <MapBuildingHints
-            origin={spawn!}
-            range={10}
-            near
-            blockType={BlockType.MainBase}
-          />
-        );
+        primodium.components
+          .marker(ctx)
+          .target(BlockType.MainBase, BlockType.ArrowMarker, spawn, 10, 2, {
+            x: 1,
+            y: 0,
+          });
+
+        return <></>;
       },
     }),
     //ROUTE TO PATH/CONVEYOR
@@ -387,7 +391,7 @@ export default function buildTourSteps(
     //PLACE DOWN START NODE OF CONVEYOR
     buildStep({
       name: "place down conveyor",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       hideUI: true,
       narration: (
         <p>
@@ -400,21 +404,20 @@ export default function buildTourSteps(
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
 
-        //we set spawn in previous step
-        return (
-          <MapBuildingHints
-            origin={spawn!}
-            range={10}
-            near
-            blockType={BlockType.BasicMiner}
-          />
-        );
+        primodium.components
+          .marker(ctx)
+          .target(BlockType.BasicMiner, BlockType.ArrowMarker, spawn, 10, 2, {
+            x: 1,
+            y: 0,
+          });
+
+        return <></>;
       },
     }),
     //CHECKPOINT 6: PLACE DOWN END NODE OF CONVEYOR
     buildStep({
       name: "place down conveyor",
-      selector: ".leaflet-container",
+      selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
       narration: (
@@ -428,21 +431,28 @@ export default function buildTourSteps(
       customTooltipRenderer: () => {
         const spawn = useTourStore.getState().spawn;
 
-        //we set spawn in previous step
-        return (
-          <MapBuildingHints
-            origin={spawn!}
-            range={10}
-            near
-            blockType={BlockType.MainBase}
-          />
-        );
+        primodium.components
+          .marker(ctx)
+          .target(BlockType.MainBase, BlockType.ArrowMarker, spawn, 10, 2, {
+            x: 1,
+            y: 0,
+          });
+
+        return <></>;
       },
     }),
-    //ROUTE TO CLAIM STORAGE
-    ...buildRoute({
-      route: [BlockType.MainBase, "#minimize-button-tooltip-box"],
-      narration: [
+    buildStep({
+      name: "select main base",
+      selector: "#phaser-container",
+      hideUI: true,
+      customTooltipRenderer: () => {
+        const spawn = useTourStore.getState().spawn;
+
+        primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+
+        return <></>;
+      },
+      narration: (
         <p>
           Now that you have your conveyor, you need to claim the iron from the
           miner.
@@ -453,8 +463,12 @@ export default function buildTourSteps(
           <br />
           <br />
           Let's get <b>30</b> iron. We will need this for the next step.
-        </p>,
-      ],
+        </p>
+      ),
+    }),
+    //ROUTE TO CLAIM STORAGE
+    ...buildRoute({
+      route: ["#minimize-button-tooltip-box"],
       arrowDirection: "down",
       orientation: [CardinalOrientation.NORTH, CardinalOrientation.EAST],
     }),
@@ -519,21 +533,26 @@ export default function buildTourSteps(
           mine copper!
         </p>
       ),
+      validate: async () => {
+        return true;
+      },
       orientation: [CardinalOrientation.WEST],
     }),
     // END
     buildStep({
       name: "end screen",
-      selector: ".screen-container",
+      selector: "#game-container",
       customTooltipRenderer: (tour) => {
         return (
           <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">
             <div className="text-2xl font-bold">You are ready recruit!</div>
             <br />
-            <div className="text-md">
-              It's time to expand your empire. Use your newfound knowledge to
-              gather more advanced resources, research new factories and attack
-              others.
+            <div className="text-md text-center">
+              It's time to expand your empire.
+              <br />
+              <br />
+              Use your newfound knowledge to gather more advanced resources,
+              research new factories and attack others.
               {/* <br />
               <br />
               <b>You can always retry this tutorial in the upper left.</b> */}

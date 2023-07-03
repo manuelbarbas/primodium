@@ -1,12 +1,12 @@
-import { DisplayTile } from "../util/constants";
+import { Coord } from "@latticexyz/utils";
 import ArrowedPolyline from "./ArrowedPolyline";
 
 export default function SelectedAttack({
   startCoord,
   endCoord,
 }: {
-  startCoord: DisplayTile;
-  endCoord: DisplayTile;
+  startCoord: Coord;
+  endCoord: Coord;
 }) {
   return (
     <ArrowedPolyline

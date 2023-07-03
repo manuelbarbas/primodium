@@ -10,7 +10,6 @@ import { useAccount } from "../../hooks/useAccount";
 
 import StarterPackButton from "../StarterPackButton";
 import AllResourceLabels from "./AllResourceLabels";
-import Spinner from "../Spinner";
 import { useGameStore } from "../../store/GameStore";
 
 function ResourceBox() {
@@ -51,7 +50,10 @@ function ResourceBox() {
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
           <p className="text-lg font-bold mb-3">Inventory</p>
-          <Spinner />
+          ...
+          <div className="h-64 overflow-y-scroll scrollbar">
+            {!claimedStarterPack ? <StarterPackButton /> : <></>}
+          </div>
         </div>
       </div>
     );
@@ -69,9 +71,6 @@ function ResourceBox() {
           <p className="text-lg font-bold mb-3">Inventory</p>
           <div className="h-64 overflow-y-scroll scrollbar">
             <AllResourceLabels />
-            {/* <p className="text-sm mb-3 mt-3">
-              Close and re-open this box to refresh inventory.
-            </p> */}
             {!claimedStarterPack ? <StarterPackButton /> : <></>}
           </div>
         </div>

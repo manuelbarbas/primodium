@@ -17,6 +17,7 @@ import {
   BackgroundImage,
   ResourceImage,
 } from "../util/constants";
+import { primodium } from "@game/api";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
@@ -26,7 +27,8 @@ import ResourceIconTooltip from "./shared/ResourceIconTooltip";
 import ClaimCraftButton from "./action/ClaimCraftButton";
 
 function TooltipBox() {
-  const { components, singletonIndex } = useMud();
+  const network = useMud();
+  const { components, singletonIndex } = network;
 
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
@@ -55,7 +57,7 @@ function TooltipBox() {
   );
 
   // Get information on the selected tile
-  const [selectedTile] = useGameStore((state) => [state.selectedTile]);
+  const selectedTile = primodium.hooks.useSelectedTile(network);
 
   const tilesAtPosition = useEntityQuery(
     [
