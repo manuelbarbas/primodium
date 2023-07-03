@@ -11,7 +11,6 @@ import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
 import { BlockType } from "src/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
 import { createSelectionTile } from "../factory/selectionTile";
 
 export const renderDemolishPathTool = (scene: Scene, network: Network) => {

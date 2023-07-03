@@ -11,7 +11,6 @@ import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
 import { BlockType } from "src/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
 import { createBuilding } from "../factory/building";
 import { createSelectionTile } from "../factory/selectionTile";
 import * as components from "src/game/api/components";
