@@ -38,13 +38,6 @@ uint256 constant KimberliteMineID = uint256(keccak256("block.KimberliteMine"));
 uint256 constant UraniniteMineID = uint256(keccak256("block.UraniniteMine"));
 uint256 constant BolutiteMineID = uint256(keccak256("block.BolutiteMine"));
 
-uint256 constant MinerID = uint256(keccak256("block.Miner"));
-uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
-
-uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
-uint256 constant SiloID = uint256(keccak256("block.Silo"));
-uint256 constant DebugPlatingFactoryID = uint256(keccak256("block.DebugPlatingFactory"));
-
 // in-game blocks/factories
 uint256 constant BasicMinerID = uint256(keccak256("block.BasicMiner"));
 uint256 constant NodeID = uint256(keccak256("block.Node"));
