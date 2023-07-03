@@ -22,7 +22,7 @@ contract ResearchSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function checkMainBaseLevelRequirement(
-    Uint256Component buildingComponent,
+    BuildingComponent buildingComponent,
     uint256 playerEntity,
     uint256 entity
   ) internal view returns (bool) {
