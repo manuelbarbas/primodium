@@ -34,7 +34,8 @@
     "LibStorageDesignInitializer",
     "LibMineDesignInitializer",
     "LibFactoryDesignInitializer",
-    "LibTechnologyDesignInitializer"
+    "LibTechnologyDesignInitializer",
+    "LibDebugInitializer"
   ],
   "systems": [
     {

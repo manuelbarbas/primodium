@@ -20,7 +20,7 @@ import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, Ir
 
 // Research
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
-
+import { LibDebug } from "../libraries/LibDebug.sol";
 uint256 constant MinerID = uint256(keccak256("block.Miner"));
 uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 uint256 constant DebugNodeID = uint256(keccak256("block.DebugNode"));
@@ -28,12 +28,15 @@ uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
 uint256 constant SiloID = uint256(keccak256("block.Silo"));
 uint256 constant DebugPlatingFactoryID = uint256(keccak256("block.DebugPlatingFactory"));
 
-uint256 constant DebugSimpleBuildingID = uint256(keccak256("block.Miner"));
+uint256 constant DebugSimpleBuildingID = uint256(keccak256("block.DebugSimpleBuilding"));
 
 // the purpose of this lib is to define and initialize debug buildings that can be used for testing
 // so additions and removal of actual game design elements don't effect the already written tests
 library LibDebugInitializer {
   function init(IWorld world) internal {
+    //should only work if debug is enabled
+    if (!LibDebug.isDebu()) return;
+
     IUint256Component components = world.components();
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     RequiredResearchComponent requiredResearch = RequiredResearchComponent(
