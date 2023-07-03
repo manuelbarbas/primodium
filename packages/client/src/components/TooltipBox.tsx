@@ -11,7 +11,12 @@ import { BigNumber } from "ethers";
 import { useMud } from "../context/MudContext";
 
 import { getTopLayerKeyPair } from "../util/tile";
-import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
+import {
+  CraftRecipe,
+  isClaimable,
+  isClaimableFactory,
+  isMainBase,
+} from "../util/resource";
 import {
   BlockIdToKey,
   BackgroundImage,
@@ -274,9 +279,10 @@ function TooltipBox() {
                 {builtTile && (
                   <>
                     {(isClaimable(builtTile) ||
-                      isClaimableFactory(builtTile)) && (
-                      <div className="font-bold mb-1">Storage:</div>
-                    )}
+                      isClaimableFactory(builtTile)) &&
+                      !isMainBase(builtTile) && (
+                        <div className="font-bold mb-1">Storage:</div>
+                      )}
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
                         <ClaimButton
