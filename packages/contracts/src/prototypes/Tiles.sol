@@ -25,7 +25,6 @@ uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 
 // Special blocks
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));
-uint256 constant DebugNodeID = uint256(keccak256("block.DebugNode"));
 
 // Mine Blocks
 uint256 constant LithiumMineID = uint256(keccak256("block.LithiumMine"));

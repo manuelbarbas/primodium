@@ -70,12 +70,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     uint256[] memory resources = requiredResourcesComponent.getValue(BasicMinerID);
     console.log("Resources:");
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], BasicMinerID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], BasicMinerID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], BasicMinerID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], BasicMinerID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], BasicMinerID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], BasicMinerID)));
     }
 
     assertTrue(!requiredResearchComponent.has(NodeID));
@@ -85,12 +85,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(NodeID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], NodeID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], NodeID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], NodeID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], NodeID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], NodeID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], NodeID)));
     }
 
     assertTrue(requiredResearchComponent.has(PlatingFactoryID));
@@ -101,12 +101,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(PlatingFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], PlatingFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PlatingFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], PlatingFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PlatingFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PlatingFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PlatingFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(BasicBatteryFactoryID));
@@ -117,12 +117,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(BasicBatteryFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], BasicBatteryFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], BasicBatteryFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], BasicBatteryFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], BasicBatteryFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], BasicBatteryFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], BasicBatteryFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(KineticMissileFactoryID));
@@ -133,12 +133,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(KineticMissileFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], KineticMissileFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], KineticMissileFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], KineticMissileFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], KineticMissileFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], KineticMissileFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], KineticMissileFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(ProjectileLauncherID));
@@ -149,12 +149,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(ProjectileLauncherID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], ProjectileLauncherID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], ProjectileLauncherID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], ProjectileLauncherID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], ProjectileLauncherID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], ProjectileLauncherID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], ProjectileLauncherID)));
     }
 
     assertTrue(requiredResearchComponent.has(HardenedDrillID));
@@ -165,12 +165,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(HardenedDrillID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], HardenedDrillID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], HardenedDrillID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], HardenedDrillID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], HardenedDrillID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], HardenedDrillID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], HardenedDrillID)));
     }
 
     assertTrue(requiredResearchComponent.has(DenseMetalRefineryID));
@@ -181,12 +181,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(DenseMetalRefineryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], DenseMetalRefineryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], DenseMetalRefineryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], DenseMetalRefineryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], DenseMetalRefineryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], DenseMetalRefineryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], DenseMetalRefineryID)));
     }
 
     assertTrue(requiredResearchComponent.has(AdvancedBatteryFactoryID));
@@ -197,12 +197,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(AdvancedBatteryFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], AdvancedBatteryFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], AdvancedBatteryFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], AdvancedBatteryFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], AdvancedBatteryFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], AdvancedBatteryFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], AdvancedBatteryFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(HighTempFoundryID));
@@ -213,12 +213,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(HighTempFoundryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], HighTempFoundryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], HighTempFoundryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], HighTempFoundryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], HighTempFoundryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], HighTempFoundryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], HighTempFoundryID)));
     }
 
     assertTrue(requiredResearchComponent.has(PrecisionMachineryFactoryID));
@@ -229,12 +229,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(PrecisionMachineryFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], PrecisionMachineryFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PrecisionMachineryFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], PrecisionMachineryFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PrecisionMachineryFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PrecisionMachineryFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PrecisionMachineryFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(IridiumDrillbitFactoryID));
@@ -245,12 +245,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(IridiumDrillbitFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], IridiumDrillbitFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], IridiumDrillbitFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], IridiumDrillbitFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], IridiumDrillbitFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], IridiumDrillbitFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], IridiumDrillbitFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(PrecisionPneumaticDrillID));
@@ -261,12 +261,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(PrecisionPneumaticDrillID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], PrecisionPneumaticDrillID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PrecisionPneumaticDrillID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], PrecisionPneumaticDrillID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PrecisionPneumaticDrillID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PrecisionPneumaticDrillID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PrecisionPneumaticDrillID)));
     }
 
     assertTrue(requiredResearchComponent.has(PenetratorFactoryID));
@@ -277,12 +277,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(PenetratorFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], PenetratorFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PenetratorFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], PenetratorFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PenetratorFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PenetratorFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PenetratorFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(PenetratingMissileFactoryID));
@@ -293,12 +293,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(PenetratingMissileFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], PenetratingMissileFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PenetratingMissileFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], PenetratingMissileFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PenetratingMissileFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], PenetratingMissileFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], PenetratingMissileFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(MissileLaunchComplexID));
@@ -309,12 +309,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(MissileLaunchComplexID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], MissileLaunchComplexID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], MissileLaunchComplexID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], MissileLaunchComplexID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], MissileLaunchComplexID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], MissileLaunchComplexID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], MissileLaunchComplexID)));
     }
 
     assertTrue(requiredResearchComponent.has(HighEnergyLaserFactoryID));
@@ -325,12 +325,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(HighEnergyLaserFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], HighEnergyLaserFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], HighEnergyLaserFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], HighEnergyLaserFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], HighEnergyLaserFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], HighEnergyLaserFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], HighEnergyLaserFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(ThermobaricWarheadFactoryID));
@@ -341,12 +341,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(ThermobaricWarheadFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], ThermobaricWarheadFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], ThermobaricWarheadFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], ThermobaricWarheadFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], ThermobaricWarheadFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], ThermobaricWarheadFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], ThermobaricWarheadFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(ThermobaricMissileFactoryID));
@@ -357,12 +357,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(ThermobaricMissileFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], ThermobaricMissileFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], ThermobaricMissileFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], ThermobaricMissileFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], ThermobaricMissileFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], ThermobaricMissileFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], ThermobaricMissileFactoryID)));
     }
 
     assertTrue(requiredResearchComponent.has(KimberliteCatalystFactoryID));
@@ -373,12 +373,12 @@ contract LibBuildingDesignInitializerTest is MudTest {
     console.log("Resources:");
     resources = requiredResourcesComponent.getValue(KimberliteCatalystFactoryID);
     for (uint256 i = 0; i < resources.length; i++) {
-      assertTrue(itemComponent.has(LibEncode.hashFromKey(resources[i], KimberliteCatalystFactoryID)));
-      assertTrue(itemComponent.getValue(LibEncode.hashFromKey(resources[i], KimberliteCatalystFactoryID)) > 0);
+      assertTrue(itemComponent.has(LibEncode.hashKeyEntity(resources[i], KimberliteCatalystFactoryID)));
+      assertTrue(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], KimberliteCatalystFactoryID)) > 0);
       console.log("id:");
       console.log(resources[i]);
       console.log("value:");
-      console.log(itemComponent.getValue(LibEncode.hashFromKey(resources[i], KimberliteCatalystFactoryID)));
+      console.log(itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], KimberliteCatalystFactoryID)));
     }
 
     vm.stopPrank();
