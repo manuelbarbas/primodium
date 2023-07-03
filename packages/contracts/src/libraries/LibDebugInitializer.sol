@@ -21,6 +21,7 @@ import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, Ir
 // Research
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
+
 uint256 constant MinerID = uint256(keccak256("block.Miner"));
 uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 uint256 constant DebugNodeID = uint256(keccak256("block.DebugNode"));
@@ -35,7 +36,7 @@ uint256 constant DebugSimpleBuildingID = uint256(keccak256("block.DebugSimpleBui
 library LibDebugInitializer {
   function init(IWorld world) internal {
     //should only work if debug is enabled
-    if (!LibDebug.isDebu()) return;
+    if (!LibDebug.isDebug()) return;
 
     IUint256Component components = world.components();
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
