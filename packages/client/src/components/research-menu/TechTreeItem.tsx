@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
@@ -35,18 +35,6 @@ function TechTreeItem({
   const { components, world, singletonIndex, systems, providers } = useMud();
   const { address } = useAccount();
 
-  // const researchOwner = useMemo(() => {
-  //   if (address) {
-  //     const encodedEntityId = hashFromAddress(
-  //       data.id,
-  //       address.toString().toLowerCase()
-  //     ) as EntityID;
-  //     return world.entityToIndex.get(encodedEntityId)!;
-  //   } else {
-  //     return singletonIndex;
-  //   }
-  // }, [address, singletonIndex, world]);
-
   const researchOwner = address
     ? world.entityToIndex.get(
         hashKeyEntityAndTrim(
@@ -65,7 +53,7 @@ function TechTreeItem({
     return isDefaultUnlocked || isResearched?.value;
   }, [isDefaultUnlocked, isResearched]);
 
-  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+  const [_, setTransactionLoading] = useGameStore((state) => [
     state.transactionLoading,
     state.setTransactionLoading,
   ]);
@@ -73,7 +61,11 @@ function TechTreeItem({
     state.setNotification,
   ]);
 
+  // New state so not every other research item button shows loading when only current research button is clicked.
+  const [userClickedLoading, setUserClickedLoading] = useState(false);
+
   const research = useCallback(async () => {
+    setUserClickedLoading(true);
     setTransactionLoading(true);
     await execute(
       systems["system.Research"].executeTyped(BigNumber.from(data.id), {
@@ -83,6 +75,7 @@ function TechTreeItem({
       setNotification
     );
     setTransactionLoading(false);
+    setUserClickedLoading(false);
   }, []);
 
   return (
@@ -120,7 +113,7 @@ function TechTreeItem({
           className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-teal-600 hover:bg-teal-700  py-2 rounded shadow"
           onClick={research}
         >
-          {transactionLoading ? <Spinner /> : "Research"}
+          {userClickedLoading ? <Spinner /> : "Research"}
         </button>
       )}
     </div>
