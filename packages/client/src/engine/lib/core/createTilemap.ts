@@ -61,5 +61,8 @@ export const createTilemap = (
     tileWidth,
     map: tilemap,
     chunks,
+    dispose: () => {
+      tilemap.dispose();
+    },
   };
 };

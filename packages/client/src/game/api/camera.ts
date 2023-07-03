@@ -18,8 +18,9 @@ export const pan = (
   ease: string = "Power2",
   targetScene: string = "Main"
 ) => {
-  const { phaserScene, camera, tilemap } =
-    engine.getGame()?.sceneManager.scenes[targetScene]!;
+  const { phaserScene, camera, tilemap } = engine
+    .getGame()
+    ?.sceneManager.scenes.get(targetScene)!;
 
   const pixelCoord = tileCoordToPixelCoord(
     coord,
@@ -50,8 +51,9 @@ export const pan = (
  * @returns {Coord} The current position of the camera.
  */
 export const getPosition = (targetScene: string = "Main") => {
-  const { camera, tilemap } =
-    engine.getGame()?.sceneManager.scenes[targetScene]!;
+  const { camera, tilemap } = engine
+    .getGame()
+    ?.sceneManager.scenes.get(targetScene)!;
 
   const { centerX: x, centerY: y } = camera?.phaserCamera.worldView!;
 
@@ -72,7 +74,7 @@ export const getPosition = (targetScene: string = "Main") => {
  * @param {Scenes} [targetScene=Scenes.Main] The scene to update the camera world view in.
  */
 export const updateWorldView = (targetScene: string = "Main") => {
-  const { camera } = engine.getGame()?.sceneManager.scenes[targetScene]!;
+  const { camera } = engine.getGame()?.sceneManager.scenes.get(targetScene)!;
 
   requestAnimationFrame(() =>
     camera?.worldView$.next(camera.phaserCamera.worldView)

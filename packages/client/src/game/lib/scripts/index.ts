@@ -19,6 +19,7 @@ import { runSystems } from "../systems";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
 
 export const init = async (address: string | undefined, network: Network) => {
+  const { world } = network;
   const game = await engine.createGame(gameConfig);
   const scene = await game.sceneManager.addScene(Scenes.Main, mainSceneConfig);
 
@@ -113,4 +114,9 @@ export const init = async (address: string | undefined, network: Network) => {
   });
 
   runSystems(scene, network);
+
+  world.registerDisposer(() => {
+    chunkManager.dispose();
+    game.dispose();
+  });
 };

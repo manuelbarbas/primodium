@@ -15,7 +15,7 @@ export const createGame = async (config: GameConfig) => {
     phaserGame.events.on("ready", resolve);
     await promise;
 
-    resizePhaserGame(phaserGame);
+    const resizer = resizePhaserGame(phaserGame);
 
     /* -------------------------- Create Scene Manager -------------------------- */
 
@@ -25,6 +25,11 @@ export const createGame = async (config: GameConfig) => {
     const context = {
       phaserGame,
       sceneManager,
+      dispose: () => {
+        resizer.dispose();
+        phaserGame.destroy(true);
+        sceneManager.dispose();
+      },
     };
 
     api.initializeContext(context);

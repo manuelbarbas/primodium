@@ -138,5 +138,11 @@ export const createScene = async (
     objectPool,
     config,
     input,
+    dispose: () => {
+      input.dispose();
+      tilemap.dispose();
+      camera.dispose();
+      culling.dispose();
+    },
   };
 };

@@ -2,9 +2,7 @@ import { useEngineStore } from "../../store/EngineStore";
 import { createScene } from "./createScene";
 
 export const createSceneManager = () => {
-  const scenes: Partial<
-    Record<string, Awaited<ReturnType<typeof createScene>>>
-  > = {};
+  const scenes = new Map<string, Awaited<ReturnType<typeof createScene>>>();
 
   const addScene = async (
     key: string,
@@ -12,7 +10,7 @@ export const createSceneManager = () => {
     autoStart: boolean = true
   ) => {
     const scene = await createScene(config, autoStart);
-    scenes[key] = scene;
+    scenes.set(key, scene);
 
     return scene;
   };
@@ -21,7 +19,9 @@ export const createSceneManager = () => {
     const { phaserGame } = useEngineStore.getState().game!;
     if (!phaserGame) throw new Error("Phaser game not initialized");
 
-    delete scenes[key];
+    scenes.get(key)?.dispose();
+
+    scenes.delete(key);
     phaserGame.scene.remove(key);
   };
 
@@ -29,5 +29,10 @@ export const createSceneManager = () => {
     scenes,
     addScene,
     removeScene,
+    dispose: () => {
+      for (const [key] of scenes) {
+        removeScene(key);
+      }
+    },
   };
 };
