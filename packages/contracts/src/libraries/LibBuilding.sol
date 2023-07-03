@@ -3,7 +3,6 @@ pragma solidity >=0.8.0;
 // Production Buildings
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import "forge-std/console.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
@@ -75,10 +74,7 @@ library LibBuilding {
     uint256 mainBuildingLevel
   ) internal view returns (uint256) {
     if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
-    else {
-      console.log("Invalid Main Building Level: %s", mainBuildingLevel);
-      revert("Invalid Main Building Level");
-    }
+    else revert("Invalid Main Building Level");
   }
 
   function isMainBase(uint256 tileId) internal pure returns (bool) {
