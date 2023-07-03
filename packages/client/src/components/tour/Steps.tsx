@@ -45,17 +45,7 @@ const buildRoute = (_route: {
           return <Arrow direction={arrowDirection} bounce />;
         },
         validate: async () => {
-          if (index === steps.length - 1) {
-            return true;
-          }
-
-          //check if next step selector is visible to DOM
-          const nextStep = steps[index + 1];
-
-          //sleep for 10ms to allow DOM to update
-          await new Promise((resolve) => setTimeout(resolve, 10));
-
-          return document.querySelector(nextStep.selector) ? true : false;
+          return true;
         },
         orientation,
       });
