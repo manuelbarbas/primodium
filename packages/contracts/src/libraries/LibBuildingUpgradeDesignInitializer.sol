@@ -33,19 +33,19 @@ library LibBuildingUpgradeDesignInitializer {
     );
 
     //MainBaseID Level 2 Upgrade
-    uint256 buildingIdLevel = LibEncode.hashFromKey(MainBaseID, 2);
-    itemComponent.set(LibEncode.hashFromKey(IronResourceItemID, buildingIdLevel), 500);
-    itemComponent.set(LibEncode.hashFromKey(CopperResourceItemID, buildingIdLevel), 500);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 2);
+    itemComponent.set(LibEncode.hashKeyEntity(IronResourceItemID, buildingIdLevel), 500);
+    itemComponent.set(LibEncode.hashKeyEntity(CopperResourceItemID, buildingIdLevel), 500);
     uint256[] memory requiredResourceIDs = new uint256[](2);
     requiredResourceIDs[0] = IronResourceItemID;
     requiredResourceIDs[1] = CopperResourceItemID;
     requiredResources.set(buildingIdLevel, requiredResourceIDs);
 
     //MainBaseID Level 3 Upgrade
-    buildingIdLevel = LibEncode.hashFromKey(MainBaseID, 3);
-    itemComponent.set(LibEncode.hashFromKey(IronPlateCraftedItemID, buildingIdLevel), 500);
-    itemComponent.set(LibEncode.hashFromKey(BasicPowerSourceCraftedItemID, buildingIdLevel), 100);
-    itemComponent.set(LibEncode.hashFromKey(CopperResourceItemID, buildingIdLevel), 2000);
+    buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 3);
+    itemComponent.set(LibEncode.hashKeyEntity(IronPlateCraftedItemID, buildingIdLevel), 500);
+    itemComponent.set(LibEncode.hashKeyEntity(BasicPowerSourceCraftedItemID, buildingIdLevel), 100);
+    itemComponent.set(LibEncode.hashKeyEntity(CopperResourceItemID, buildingIdLevel), 2000);
     requiredResourceIDs = new uint256[](3);
     requiredResourceIDs[0] = IronPlateCraftedItemID;
     requiredResourceIDs[1] = BasicPowerSourceCraftedItemID;
@@ -61,7 +61,7 @@ library LibBuildingUpgradeDesignInitializer {
     uint256 resourceCost1,
     uint256 level
   ) internal {
-    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(entity, level);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResourcesComponent,
       itemComponent,
@@ -81,7 +81,7 @@ library LibBuildingUpgradeDesignInitializer {
     uint256 resourceCost2,
     uint256 level
   ) internal {
-    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(entity, level);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResourcesComponent,
       itemComponent,
@@ -105,7 +105,7 @@ library LibBuildingUpgradeDesignInitializer {
     uint256 resourceCost3,
     uint256 level
   ) internal {
-    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(entity, level);
     LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResourcesComponent,
       itemComponent,
@@ -133,7 +133,7 @@ library LibBuildingUpgradeDesignInitializer {
     uint256 resourceCost4,
     uint256 level
   ) internal {
-    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(entity, level);
     LibSetRequiredResources.set4RequiredResourcesForEntity(
       requiredResourcesComponent,
       itemComponent,

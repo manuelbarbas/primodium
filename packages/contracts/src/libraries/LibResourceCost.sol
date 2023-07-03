@@ -21,7 +21,7 @@ library LibResourceCost {
     for (uint256 i = 0; i < requiredResources.length; i++) {
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashFromKey(requiredResources[i], entity)
+        LibEncode.hashKeyEntity(requiredResources[i], entity)
       );
       if (
         resourceCost >
@@ -45,7 +45,7 @@ library LibResourceCost {
     for (uint256 i = 0; i < requiredResourceIds.length; i++) {
       requiredResources[i] = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashFromKey(requiredResourceIds[i], entity)
+        LibEncode.hashKeyEntity(requiredResourceIds[i], entity)
       );
       currentResources[i] = LibMath.getSafeUint256Value(
         itemComponent,
@@ -77,7 +77,7 @@ library LibResourceCost {
       uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources[i], playerEntity);
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashFromKey(requiredResources[i], entity)
+        LibEncode.hashKeyEntity(requiredResources[i], entity)
       );
       uint256 curItem = LibMath.getSafeUint256Value(itemComponent, playerResourceHash);
       itemComponent.set(playerResourceHash, curItem - resourceCost);

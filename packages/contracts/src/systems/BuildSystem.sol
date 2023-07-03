@@ -95,7 +95,7 @@ contract BuildSystem is System {
     StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
-    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, 1);
     if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
@@ -122,7 +122,7 @@ contract BuildSystem is System {
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
     uint256 buildingId = tileComponent.getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashFromKey(buildingId, 1);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
     if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
       return;
     }
@@ -201,7 +201,6 @@ contract BuildSystem is System {
 
     tileComponent.set(entity, blockType);
     ownedByComponent.set(entity, addressToEntity(msg.sender));
-    lastBuiltAtComponent.set(entity, block.number);
 
     checkAndUpdatePlayerStorageAfterBuild(blockType);
     setupFactoryComponents(tileComponent, entity);

@@ -58,9 +58,9 @@ library LibStorageDesignInitializer {
     uint256[] memory storageCapacity = new uint256[](allResourceIds.length);
 
     //MainBaseID Level 1 Storage
-    uint256 buildingIdLevel = LibEncode.hashFromKey(MainBaseID, 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 1);
     for (uint256 i = 0; i < allResourceIds.length; i++) {
-      storageCapacityComponent.set(LibEncode.hashFromKey(allResourceIds[i], buildingIdLevel), uint256(1000000000000));
+      storageCapacityComponent.set(LibEncode.hashKeyEntity(allResourceIds[i], buildingIdLevel), uint256(1000000000000));
       storageCapacity[i] = allResourceIds[i];
     }
     storageCapacityResourcesComponent.set(buildingIdLevel, storageCapacity);

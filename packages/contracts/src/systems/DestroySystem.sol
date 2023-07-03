@@ -38,7 +38,7 @@ contract DestroySystem is System {
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
-    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingLevel);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingLevel);
     if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
     uint256 playerEntity = addressToEntity(msg.sender);

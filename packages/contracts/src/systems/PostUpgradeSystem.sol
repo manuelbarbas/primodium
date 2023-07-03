@@ -55,8 +55,8 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
     StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
-    uint256 buildingIdNewLevel = LibEncode.hashFromKey(buildingId, newLevel);
-    uint256 buildingIdOldLevel = LibEncode.hashFromKey(buildingId, newLevel - 1);
+    uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingId, newLevel);
+    uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingId, newLevel - 1);
     if (!storageCapacityResourcesComponent.has(buildingIdNewLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdNewLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
@@ -120,7 +120,7 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
       getAddressById(components, FactoryProductionComponentID)
     );
 
-    uint256 buildingLevelEntity = LibEncode.hashFromKey(
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
       tileComponent.getValue(factoryEntity),
       buildingComponent.getValue(factoryEntity)
     );
@@ -252,7 +252,7 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
         FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
           getAddressById(components, FactoryProductionComponentID)
         );
-        uint256 buildingLevelEntity = LibEncode.hashFromKey(
+        uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
           tileComponent.getValue(factoryEntity),
           buildingComponent.getValue(factoryEntity)
         );
@@ -292,7 +292,7 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
     uint256 newLevel = buildingComponent.getValue(entity);
 
     uint256 buildingId = tileComponent.getValue(entity);
-    uint256 buildingIdLevelEntity = LibEncode.hashFromKey(buildingId, newLevel);
+    uint256 buildingIdLevelEntity = LibEncode.hashKeyEntity(buildingId, newLevel);
     if (mineComponent.has(buildingIdLevelEntity)) {
       handleMineUpgrade(mineComponent, buildingComponent, tileComponent, playerEntity, entity);
     } else if (factoryMineBuildingsComponent.has(buildingIdLevelEntity)) {
