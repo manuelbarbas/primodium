@@ -16,8 +16,8 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, DebugNodeID, MinerID, BulletFactoryID } from "../../prototypes/Tiles.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { IronResourceItemID, CopperResourceItemID, BulletCraftedItemID } from "../../prototypes/Keys.sol";
 

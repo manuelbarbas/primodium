@@ -6,8 +6,8 @@ import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
 
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, DebugNodeID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { Coord } from "../../types.sol";
@@ -109,8 +109,6 @@ contract BuildSystemTest is MudTest {
     console.log(SandstoneID);
     console.log("ALLUVIUM:");
     console.log(AlluviumID);
-    console.log("LITHIUM MINER:");
-    console.log(LithiumMinerID);
     console.log("BIOFILM:");
     console.log(BiofilmID);
     console.log("BEDROCK:");

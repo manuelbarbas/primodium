@@ -8,11 +8,10 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "../../components/RequiredResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
-import { MainBaseID, LithiumMinerID, DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 
 // in-game blocks/factories
-import { MainBaseID, DebugNodeID, MinerID, BulletFactoryID, LithiumMinerID, SiloID, DebugPlatingFactoryID, BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../../prototypes/Tiles.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
 
@@ -23,34 +22,6 @@ contract LibBuildingDesignInitializerTest is MudTest {
     super.setUp();
     vm.startPrank(deployer);
 
-    vm.stopPrank();
-  }
-
-  function testDebugBuildingsNoResearchRequirements() public {
-    vm.startPrank(alice);
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      component(RequiredResearchComponentID)
-    );
-    assertTrue(!requiredResearchComponent.has(DebugNodeID));
-    assertTrue(!requiredResearchComponent.has(MinerID));
-    assertTrue(!requiredResearchComponent.has(BulletFactoryID));
-    assertTrue(!requiredResearchComponent.has(LithiumMinerID));
-    assertTrue(!requiredResearchComponent.has(SiloID));
-    assertTrue(!requiredResearchComponent.has(DebugPlatingFactoryID));
-    vm.stopPrank();
-  }
-
-  function testDebugBuildingsNoResourceRequirements() public {
-    vm.startPrank(alice);
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      component(RequiredResourcesComponentID)
-    );
-    assertTrue(!requiredResourcesComponent.has(DebugNodeID));
-    assertTrue(!requiredResourcesComponent.has(MinerID));
-    assertTrue(!requiredResourcesComponent.has(BulletFactoryID));
-    assertTrue(!requiredResourcesComponent.has(LithiumMinerID));
-    assertTrue(!requiredResourcesComponent.has(SiloID));
-    assertTrue(!requiredResourcesComponent.has(DebugPlatingFactoryID));
     vm.stopPrank();
   }
 

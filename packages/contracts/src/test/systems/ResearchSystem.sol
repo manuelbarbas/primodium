@@ -23,7 +23,7 @@ import { LibHealth } from "../../libraries/LibHealth.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
-import { MainBaseID, DebugNodeID, MinerID, IronID, CopperID, LithiumID, DebugPlatingFactoryID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, IronID, CopperID, LithiumID } from "../../prototypes/Tiles.sol";
 import { FastMinerResearchID, LithiumResearchID } from "../../prototypes/Keys.sol";
 
 contract ResearchSystemTest is MudTest {

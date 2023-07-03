@@ -20,8 +20,8 @@ import { BuildingComponent, ID as BuildingComponentID } from "../../components/B
 import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 import { MainBaseID, IronMineID, CopperMineID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, DebugNodeID, MinerID, PlatingFactoryID } from "../../prototypes/Tiles.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
+import { MainBaseID, PlatingFactoryID } from "../../prototypes/Tiles.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 import { IronPlateCraftedItemID } from "../../prototypes/Keys.sol";
 import { BuildingKey } from "../../prototypes/Keys.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
