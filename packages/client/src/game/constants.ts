@@ -21,6 +21,14 @@ export enum Tilesets {
   Resource = "Resource",
 }
 
+export enum DepthLayers {
+  Terrain = 0,
+  Building = 10,
+  Path = 20,
+  Tooltip = 30,
+  Marker = 40,
+}
+
 export enum TerrainTilekeys {
   Air,
   Alluvium,

@@ -1,3 +1,4 @@
+import { DepthLayers } from "@game/constants";
 import { GameObjectComponent } from "../../../engine/types";
 
 interface Circle {
@@ -48,7 +49,6 @@ export const createSelectionPath = (
     gameObject.lineStyle(1, color);
     gameObject.strokeRect(x, y, tileHeight, tileWidth);
     gameObject.fillRect(x, y, tileWidth, tileHeight);
-    gameObject.setDepth(200);
   }
 
   const moveCircle = (circle: Circle, delta: number, currentTime: number) => {
@@ -104,6 +104,7 @@ export const createSelectionPath = (
 
       gameObject.x = startX;
       gameObject.y = startY;
+      gameObject.setDepth(DepthLayers.Tooltip);
 
       //initialize circles if it has not been populated yet
       if (!circles.length) {

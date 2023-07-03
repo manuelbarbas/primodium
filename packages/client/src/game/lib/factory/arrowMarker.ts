@@ -1,3 +1,4 @@
+import { DepthLayers } from "@game/constants";
 import { GameObjectComponent } from "../../../engine/types";
 
 export const createArrowMarker = (options: {
@@ -23,7 +24,6 @@ export const createArrowMarker = (options: {
     gameObject.lineStyle(1, color);
     gameObject.strokeRect(0, 0, tileHeight, tileWidth);
     gameObject.fillRect(0, 0, tileWidth, tileHeight);
-    gameObject.setDepth(200);
   }
 
   function drawArrow(gameObject: Phaser.GameObjects.Graphics) {
@@ -45,6 +45,7 @@ export const createArrowMarker = (options: {
     once: (gameObject) => {
       gameObject.x = Math.floor(x / tileWidth) * tileWidth;
       gameObject.y = Math.floor(y / tileHeight) * tileHeight;
+      gameObject.setDepth(DepthLayers.Marker);
 
       gameObject.clear();
       drawTile(gameObject);

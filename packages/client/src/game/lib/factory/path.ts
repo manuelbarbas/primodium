@@ -1,3 +1,4 @@
+import { DepthLayers } from "@game/constants";
 import { GameObjectComponent } from "../../../engine/types";
 
 interface Circle {
@@ -122,7 +123,6 @@ const drawTile = (
     tileWidth,
     tileHeight
   );
-  gameObject.setDepth(200);
 };
 
 const moveCircle = (
@@ -173,7 +173,6 @@ const drawCircle = (
     circle.y - gameObject.y,
     circleRadius
   );
-  gameObject.setZ(300);
 };
 
 export const createPath = (
@@ -204,6 +203,7 @@ export const createPath = (
       gameObject.clear();
       gameObject.x = startX;
       gameObject.y = startY;
+      gameObject.setDepth(DepthLayers.Path);
 
       if (!circles.length) {
         const delay = 2000;

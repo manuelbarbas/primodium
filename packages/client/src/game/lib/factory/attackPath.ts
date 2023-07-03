@@ -1,3 +1,4 @@
+import { DepthLayers } from "@game/constants";
 import { GameObjectComponent } from "../../../engine/types";
 
 interface Triangle {
@@ -23,7 +24,6 @@ const drawTile = (
   gameObject.lineStyle(1, color);
   gameObject.strokeRect(x, y, tileHeight, tileWidth);
   gameObject.fillRect(x, y, tileWidth, tileHeight);
-  gameObject.setDepth(200);
 };
 
 // Function to draw a path line
@@ -174,6 +174,7 @@ export const createAttackPath = (options: {
       gameObject.clear();
       gameObject.x = startX;
       gameObject.y = startY;
+      gameObject.setDepth(DepthLayers.Tooltip);
 
       //we dont want to render at the start and end of the path
       const nTriangles = triangleCount + 2;

@@ -1,3 +1,4 @@
+import { DepthLayers } from "@game/constants";
 import { GameObjectComponent } from "../../../engine/types";
 
 export const createSelectionTile = (options: {
@@ -23,7 +24,7 @@ export const createSelectionTile = (options: {
     gameObject.lineStyle(1, color);
     gameObject.strokeRect(0, 0, tileHeight, tileWidth);
     gameObject.fillRect(0, 0, tileWidth, tileHeight);
-    gameObject.setDepth(200);
+    gameObject.setDepth(DepthLayers.Tooltip);
   }
 
   return {

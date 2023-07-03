@@ -2,6 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { GameObjectComponent } from "../../../engine/types";
 import {
   Assets,
+  DepthLayers,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
   SpriteKeys,
@@ -23,6 +24,7 @@ export const createBuilding = (options: {
       //set sprite
       const sprite = EntityIDtoSpriteKey[tile];
       gameObject.setTexture(Assets.SpriteAtlas, sprite ?? SpriteKeys.Node);
+      gameObject.setDepth(DepthLayers.Building);
 
       //set animation if it exists
       const anim = EntityIDtoAnimationKey[tile];
