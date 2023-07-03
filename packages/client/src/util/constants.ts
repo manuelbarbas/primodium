@@ -70,8 +70,11 @@ export const BlockType = {
   DemolishPath: keccak256("demolish.Path") as EntityID,
 
   // Dummy block for selecting tiles
-  SelectPath: keccak256("select.path") as EntityID,
-  SelectAttack: keccak256("select.attack") as EntityID,
+  SelectPath: keccak256("select.Path") as EntityID,
+  SelectAttack: keccak256("select.Attack") as EntityID,
+
+  //Dummy block for map markers
+  ArrowMarker: keccak256("marker.Arrow") as EntityID,
 
   // Buildings
   BasicMiner: keccak256("block.BasicMiner") as EntityID,
@@ -472,11 +475,6 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
 ]);
 
-export type DisplayTile = {
-  x: number;
-  y: number;
-};
-
 export type DisplayKeyPair = {
   terrain: EntityID;
   resource: EntityID | null;
@@ -551,13 +549,3 @@ export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
   BlockType.BulletFactoryResearch,
   BlockType.SiloResearch,
 ]);
-
-export const TutorialStepToNarrationStep: {
-  [key: number]: number | undefined;
-} = {
-  0: undefined,
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 3,
-};

@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { EntityID } from "@latticexyz/recs";
+import { primodium } from "@game/api";
 
 import { useMud } from "../../../context/MudContext";
 import {
@@ -10,9 +11,8 @@ import {
 } from "../../../util/constants";
 import { BuildingReceipe } from "../../../util/resource";
 import { useComponentValue } from "@latticexyz/react";
-import { hashFromAddress } from "../../../util/encode";
+import { hashKeyEntityAndTrim } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
-import { useGameStore } from "../../../store/GameStore";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -24,18 +24,9 @@ function BuildingIconButton({
   label: string;
   blockType: EntityID;
 }) {
-  const { components, world, singletonIndex } = useMud();
-  const [
-    setSelectedBlock,
-    selectedBlock,
-    setStartSelectedPathTile,
-    setEndSelectedPathTile,
-  ] = useGameStore((state) => [
-    state.setSelectedBlock,
-    state.selectedBlock,
-    state.setStartSelectedPathTile,
-    state.setEndSelectedPathTile,
-  ]);
+  const network = useMud();
+  const { components, world, singletonIndex } = network;
+  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
 
   const { address } = useAccount();
 
@@ -43,7 +34,7 @@ function BuildingIconButton({
   const researchRequirement = BuildingResearchRequirements.get(blockType)![0];
   const researchOwner = address
     ? world.entityToIndex.get(
-        hashFromAddress(
+        hashKeyEntityAndTrim(
           researchRequirement,
           address.toString().toLowerCase()
         ) as EntityID
@@ -71,11 +62,9 @@ function BuildingIconButton({
           ? cannotBuildTile
           : () => {
               //set selected block, if clicked again deselect
-              selectedBlock === blockType
-                ? setSelectedBlock(null)
-                : setSelectedBlock(blockType);
-              setStartSelectedPathTile(null);
-              setEndSelectedPathTile(null);
+              selectedBuilding === blockType
+                ? primodium.components.selectedBuilding(network).remove()
+                : primodium.components.selectedBuilding(network).set(blockType);
             }
       }
     >
@@ -108,7 +97,7 @@ function BuildingIconButton({
         <img
           src={BackgroundImage.get(blockType)}
           className={`"w-16 h-16 pixel-images hover:brightness-75 ${
-            selectedBlock === blockType ? "border-4 border-yellow-300" : ""
+            selectedBuilding === blockType ? "border-4 border-yellow-300" : ""
           }`}
         />
         {buildingLocked && (

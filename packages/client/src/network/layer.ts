@@ -12,6 +12,9 @@ import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { defineComponents, defineOffChainComponents } from "./components";
 import { faucetUrl } from "./config";
+import { syncPositionComponent } from "./syncPositionComponent";
+
+export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
 export async function createNetworkLayer(config: SetupContractConfig) {
   // The world contains references to all entities, all components and disposers.
@@ -81,9 +84,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   }, 20000);
   world.registerDisposer(() => clearInterval(intervalId2));
 
-  startSync();
-
-  return {
+  const context = {
     world,
     systems,
     components,
@@ -91,4 +92,9 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     singletonIndex,
     providers: network.providers,
   };
+
+  startSync();
+  syncPositionComponent(context);
+
+  return context;
 }

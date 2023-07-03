@@ -30,7 +30,7 @@ contract BuildSystemTest is MudTest {
     starterPackSystem.executeTyped();
     starterPackSystem.executeTyped();
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    assertEq(itemComponent.getValue(LibEncode.hashFromAddress(IronResourceItemID, alice)), 200);
+    assertEq(itemComponent.getValue(LibEncode.hashKeyEntity(IronResourceItemID, addressToEntity(alice))), 200);
     vm.stopPrank();
   }
 
