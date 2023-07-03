@@ -9,6 +9,7 @@ import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComp
 import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
+
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";

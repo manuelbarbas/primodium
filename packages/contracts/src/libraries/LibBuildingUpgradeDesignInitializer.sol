@@ -33,7 +33,7 @@ library LibBuildingUpgradeDesignInitializer {
     );
 
     //MainBaseID Level 2 Upgrade
-    LibSetRequiredResourcesUpgrade.set2RequiredResourcesForEntity(
+    LibSetRequiredResourcesUpgrade.set2RequiredResourcesForEntityUpgradeToLevel(
       requiredResourcesComponent,
       itemComponent,
       MainBaseID,
@@ -45,7 +45,7 @@ library LibBuildingUpgradeDesignInitializer {
     );
 
     //MainBaseID Level 3 Upgrade
-    LibSetRequiredResourcesUpgrade.set3RequiredResourcesForEntity(
+    LibSetRequiredResourcesUpgrade.set3RequiredResourcesForEntityUpgradeToLevel(
       requiredResourcesComponent,
       itemComponent,
       MainBaseID,

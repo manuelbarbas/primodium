@@ -9,7 +9,7 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 
-import { MainBaseID, NodeID, DebugNodeID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 library LibBuildingLimitDesignInitializer {
   function init(IWorld world) internal {
@@ -22,8 +22,6 @@ library LibBuildingLimitDesignInitializer {
     );
 
     ignoreBuildLimitComponent.set(MainBaseID);
-    ignoreBuildLimitComponent.set(NodeID);
-    ignoreBuildLimitComponent.set(DebugNodeID);
 
     buildingLimitComponent.set(uint256(1), 10000000);
     buildingLimitComponent.set(uint256(2), 10000005);

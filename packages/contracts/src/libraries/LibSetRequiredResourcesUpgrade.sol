@@ -8,7 +8,7 @@ import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
 
 library LibSetRequiredResourcesUpgrade {
-  function set1RequiredResourceForEntityLevel(
+  function set1RequiredResourcesForEntityUpgradeToLevel(
     Uint256ArrayComponent requiredResourcesComponent,
     Uint256Component itemComponent,
     uint256 entity,
@@ -26,7 +26,7 @@ library LibSetRequiredResourcesUpgrade {
     );
   }
 
-  function set2RequiredResourcesForEntity(
+  function set2RequiredResourcesForEntityUpgradeToLevel(
     Uint256ArrayComponent requiredResourcesComponent,
     Uint256Component itemComponent,
     uint256 entity,
@@ -48,7 +48,7 @@ library LibSetRequiredResourcesUpgrade {
     );
   }
 
-  function set3RequiredResourcesForEntity(
+  function set3RequiredResourcesForEntityUpgradeToLevel(
     Uint256ArrayComponent requiredResourcesComponent,
     Uint256Component itemComponent,
     uint256 entity,
@@ -74,7 +74,7 @@ library LibSetRequiredResourcesUpgrade {
     );
   }
 
-  function set4RequiredResourcesForEntity(
+  function set4RequiredResourcesForEntityUpgradeToLevel(
     Uint256ArrayComponent requiredResourcesComponent,
     Uint256Component itemComponent,
     uint256 entity,
