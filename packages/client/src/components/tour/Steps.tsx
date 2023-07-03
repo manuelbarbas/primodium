@@ -45,17 +45,7 @@ const buildRoute = (_route: {
           return <Arrow direction={arrowDirection} bounce />;
         },
         validate: async () => {
-          if (index === steps.length - 1) {
-            return true;
-          }
-
-          //check if next step selector is visible to DOM
-          const nextStep = steps[index + 1];
-
-          //sleep for 10ms to allow DOM to update
-          await new Promise((resolve) => setTimeout(resolve, 10));
-
-          return document.querySelector(nextStep.selector) ? true : false;
+          return true;
         },
         orientation,
       });
@@ -171,10 +161,10 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         return (
           <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">
-            <div className="text-2xl font-bold">Primodium</div>
-            <br />
-            <div className="text-md">Build a factory entirely on-chain</div>
-            <br />
+            <div className="text-2xl font-bold mb-4">Primodium</div>
+            <div className="text-md mb-4">
+              Build a factory entirely on-chain
+            </div>
             <button
               className="bg-green-500 p-4 rounded w-full"
               onClick={() => tour?.next()}
