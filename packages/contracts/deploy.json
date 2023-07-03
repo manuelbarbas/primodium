@@ -159,14 +159,17 @@
     },
     {
       "name": "UpgradeSystem",
+      "writeAccess": ["BuildingComponent", "ItemComponent"]
+    },
+    {
+      "name": "PostUpgradeSystem",
       "writeAccess": [
-        "BuildingComponent",
-        "ItemComponent",
         "StorageCapacityComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
-        "FactoryIsFunctionalComponent"
+        "FactoryIsFunctionalComponent",
+        "FactoryProductionComponent"
       ]
     },
     {
