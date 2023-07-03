@@ -4,6 +4,7 @@ import {
   defineBoolComponent,
   defineNumberComponent,
   defineCoordComponent,
+  defineStringComponent,
 } from "@latticexyz/std-client";
 
 export function defineComponents(world: World) {
@@ -123,6 +124,10 @@ export function defineOffChainComponents(world: World) {
       },
       { metadata: {}, id: "SelectedAttackComponent" }
     ),
-    Hint: defineBoolComponent(world, { metadata: {}, id: "HintkComponent" }),
+    // Market types are added to render custom map ui elements like waypoints, arrows, etc
+    Marker: defineStringComponent(world, {
+      metadata: {},
+      id: "MarkerComponent",
+    }),
   };
 }

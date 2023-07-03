@@ -1,33 +1,29 @@
 import {
   ComponentUpdate,
   Has,
-  HasValue,
+  Not,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
 } from "@latticexyz/recs";
 import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
-import { BlockType } from "src/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { createSelectionTile } from "../factory/selectionTile";
 
-export const renderDemolishBuildingTool = (scene: Scene, network: Network) => {
+export const renderSelectionTile = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
-  const objIndexSuffix = "_demolishBuilding";
 
   const query = [
-    Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.DemolishBuilding,
-    }),
+    Has(offChainComponents.SelectedTile),
+    Not(offChainComponents.SelectedBuilding),
   ];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
-    const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+    const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
 
     // Avoid updating on optimistic overrides
     if (
@@ -43,38 +39,37 @@ export const renderDemolishBuildingTool = (scene: Scene, network: Network) => {
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
-    const demolishTileGraphicsEmbodiedEntity = scene.objectPool.get(
+    const selectionTileGraphicsEmbodiedEntity = scene.objectPool.get(
       objGraphicsIndex,
       "Graphics"
     );
 
-    demolishTileGraphicsEmbodiedEntity.setComponent(
+    selectionTileGraphicsEmbodiedEntity.setComponent(
       createSelectionTile({
+        id: objGraphicsIndex,
         x: pixelCoord.x,
         y: -pixelCoord.y,
-        tileHeight,
         tileWidth,
-        color: 0xff0000,
+        tileHeight,
       })
     );
   };
 
   defineEnterSystem(world, query, (update) => {
     render(update);
-
     console.info(
-      "[ENTER SYSTEM](renderDemolishBuilding) Demolish Building tool has been added"
+      "[ENTER SYSTEM](renderSelectionTile) Selection tile has been added"
     );
   });
 
   defineUpdateSystem(world, query, render);
 
   defineExitSystem(world, query, (update) => {
-    const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+    const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
     scene.objectPool.remove(objGraphicsIndex);
 
     console.info(
-      "[EXIT SYSTEM](renderDemolishBuilding) Demolish building tool has been removed"
+      "[EXIT SYSTEM](renderSelectionTile) Selection tile has been removed"
     );
   });
 };

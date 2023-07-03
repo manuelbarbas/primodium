@@ -58,6 +58,7 @@ export const renderPathPlacementTool = (scene: Scene, network: Network) => {
     if (!startPathCoord) {
       pathGraphicsEmbodiedEntity.setComponent(
         createSelectionTile({
+          id: objGraphicsIndex,
           x: pixelHoverCoord.x,
           y: -pixelHoverCoord.y,
           tileHeight,

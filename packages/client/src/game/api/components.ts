@@ -1,14 +1,31 @@
 import {
   EntityID,
+  createEntity,
+  withValue,
+  Has,
+  HasValue,
   getComponentValue,
+  getEntitiesWithValue,
   removeComponent,
+  runQuery,
   setComponent,
   updateComponent,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Network } from "../../network/layer";
-import { getEntityTileAtCoord } from "src/util/tile";
+import {
+  getBuildingsOfTypeInRange,
+  getEntityTileAtCoord,
+  getTilesOfTypeInRange,
+} from "src/util/tile";
 import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
+import { Perlin, createPerlin } from "@latticexyz/noise";
+import { addCoords } from "@latticexyz/phaserx";
+
+let perlin: Perlin;
+(async () => {
+  perlin = await createPerlin();
+})();
 
 export const selectedTile = (network: Network) => {
   const { singletonIndex, offChainComponents } = network;
@@ -182,5 +199,110 @@ export const selectedAttack = (network: Network) => {
     setTarget,
     get,
     remove,
+  };
+};
+
+export const marker = (network: Network) => {
+  const { offChainComponents, components, world } = network;
+
+  const set = (coord: Coord, type: EntityID) => {
+    const entities = getEntitiesWithValue(components.Position, coord);
+
+    //check if there is an entity with given coord, if not create one and add position
+    if (!entities.size) {
+      //create entity
+      const entity = createEntity(world, [
+        withValue(components.Position, coord),
+        withValue(offChainComponents.Marker, { value: type }),
+      ]);
+
+      return entity;
+    } else {
+      const entity = entities.values().next().value;
+      setComponent(offChainComponents.Marker, entity, {
+        value: type,
+      });
+
+      return entity;
+    }
+  };
+
+  const target = async (
+    tile: EntityID,
+    type: EntityID,
+    origin: Coord,
+    range: number,
+    excludeRange: number = 0,
+    offset: Coord = { x: 0, y: 0 }
+  ) => {
+    const tiles = getTilesOfTypeInRange(
+      origin,
+      tile,
+      range,
+      excludeRange,
+      perlin
+    );
+
+    const buildings = getBuildingsOfTypeInRange(
+      origin,
+      tile,
+      range,
+      components
+    );
+
+    //handle terrain
+    for (const tile of tiles) {
+      set(addCoords(tile, offset), type);
+    }
+
+    //handle buildings
+    for (const building of buildings) {
+      set(addCoords(building, offset), type);
+    }
+  };
+
+  const get = (coord: Coord) => {
+    const entities = runQuery([
+      Has(offChainComponents.Marker),
+      HasValue(components.Position, coord),
+    ]);
+
+    return entities;
+  };
+
+  const getOfType = (type: EntityID) => {
+    const entities = runQuery([
+      HasValue(offChainComponents.Marker, { value: type }),
+    ]);
+
+    return entities;
+  };
+
+  const remove = (coord: Coord) => {
+    const entities = runQuery([
+      HasValue(components.Position, coord),
+      Has(offChainComponents.Marker),
+    ]);
+
+    const entityIndex = entities.values().next().value;
+
+    removeComponent(offChainComponents.Marker, entityIndex);
+  };
+
+  const removeAll = () => {
+    const entities = runQuery([Has(offChainComponents.Marker)]);
+
+    for (const entity of entities) {
+      removeComponent(offChainComponents.Marker, entity);
+    }
+  };
+
+  return {
+    set,
+    get,
+    getOfType,
+    target,
+    remove,
+    removeAll,
   };
 };

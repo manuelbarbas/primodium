@@ -1,11 +1,11 @@
-import { RENDER_INTERVAL, TileAnimationKeys } from "../../constants";
+import { RENDER_INTERVAL, TileAnimationKeys } from "../../../constants";
 import type { AnimatedTilemap } from "@latticexyz/phaserx";
-import { getTopLayerKeyPair } from "../../../util/tile";
+import { getTopLayerKeyPair } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
-import { EntityIdtoTilesetId, Tilekeys } from "../../constants";
+import { EntityIdtoTilesetId, Tilekeys } from "../../../constants";
 import { interval } from "rxjs";
-import { Scene } from "../../../engine/types";
+import { Scene } from "../../../../engine/types";
 
 const chunkCache = new CoordMap<boolean>();
 const perlin = createPerlin();

@@ -8,10 +8,10 @@ const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
   assetPackUrl: Assets.Pack,
   camera: {
-    minZoom: 1,
+    minZoom: 1.5,
     maxZoom: 5,
-    defaultZoom: 2,
-    pinchSpeed: 0.2,
+    defaultZoom: 3,
+    pinchSpeed: 0.1,
     scrollSpeed: 1,
     dragSpeed: 3,
   },

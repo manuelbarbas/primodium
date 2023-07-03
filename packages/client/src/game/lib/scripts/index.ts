@@ -1,13 +1,13 @@
 // PRIMODIUM ENTRY POINT
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { EntityID } from "@latticexyz/recs";
-import { engine } from "../../engine";
-import { Network } from "../../network/layer";
-import gameConfig from "../config/gameConfig";
-import mainSceneConfig from "../config/mainSceneConfig";
-import { Scenes } from "../constants";
+import { engine } from "../../../engine";
+import { Network } from "../../../network/layer";
+import gameConfig from "../../config/gameConfig";
+import mainSceneConfig from "../../config/mainSceneConfig";
+import { Scenes } from "../../constants";
 import { createChunkManager } from "./managers/chunkManager";
-import * as components from "../api/components";
+import * as components from "../../api/components";
 import { BlockType } from "src/util/constants";
 import {
   buildBuilding,
@@ -15,7 +15,8 @@ import {
   demolishPath,
   buildPath,
 } from "src/util/web3";
-import { runSystems } from "../gameComponents/systems";
+import { runSystems } from "../systems";
+import { inTutorial, validTutorialClick } from "src/util/tutorial";
 
 export const init = async (address: string | undefined, network: Network) => {
   const game = await engine.createGame(gameConfig);
@@ -36,7 +37,13 @@ export const init = async (address: string | undefined, network: Network) => {
 
     const gameCoord = { x, y: -y } as Coord;
 
+    //make sure player address is initialized
     if (!address) return;
+
+    //block invalid clicks in tutorial
+    if (inTutorial(address, network)) {
+      if (!validTutorialClick(gameCoord, network)) return;
+    }
 
     const selectedBuilding = components.selectedBuilding(network).get();
     components.selectedTile(network).set(gameCoord);
@@ -100,7 +107,6 @@ export const init = async (address: string | undefined, network: Network) => {
 
     //set hover tile if it is different
     const currentHoverTile = components.hoverTile(network).get();
-
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
     components.hoverTile(network).set(mouseCoord);

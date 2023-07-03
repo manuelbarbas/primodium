@@ -51,7 +51,7 @@ export const Game = () => {
 
   useEffect(() => {
     if (ready && mainBaseCoord) {
-      primodium.camera.pan(mainBaseCoord);
+      primodium.camera.pan(mainBaseCoord, 0);
       primodium.components.selectedTile(network).set(mainBaseCoord);
     }
   }, [mainBaseCoord, ready]);
@@ -75,7 +75,10 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div className={`${ready ? "opacity-100" : "opacity-0"}`}>
+      <div
+        id="game-container"
+        className={`${ready ? "opacity-100" : "opacity-0"}`}
+      >
         {!playerInitialized && !completedTutorial && <Tour />}
         <GameUI />
         <div id="phaser-container" />

@@ -1,15 +1,15 @@
-import { Walktour } from "walktour";
-import { useTourStore } from "../../store/TourStore";
-import buildTourSteps from "./Steps";
-import { useGameStore } from "../../store/GameStore";
-import NarrationBox from "./NarrationBox";
-import { _TourHintLayer } from "../../map-components/TourHintLayer";
 import { useEffect, useState } from "react";
+import { Walktour } from "walktour";
+import { primodium } from "@game/api";
 
-import { validMapClick } from "../../util/map";
+import buildTourSteps from "./Steps";
+import NarrationBox from "./NarrationBox";
+import { useTourStore } from "../../store/TourStore";
+import { useGameStore } from "../../store/GameStore";
 import { useMud } from "../../context/MudContext";
 import { TourStep } from "../../util/types";
 import { useAccount } from "../../hooks/useAccount";
+import { validTutorialClick } from "src/util/tutorial";
 
 export const Tour = () => {
   const mudCtx = useMud();
@@ -51,11 +51,6 @@ export const Tour = () => {
           ]
         : null
     );
-
-    // if (checkpoint) {
-    //   primodium.camera.pan(spawn);
-    //   primodium.components.selectedTile(mudCtx).set(spawn);
-    // }
   }, []);
 
   //hide ui if step specifies
@@ -66,6 +61,7 @@ export const Tour = () => {
     }
 
     setShowUI(!currentStep.hideUI);
+    primodium.components.marker(mudCtx).removeAll();
   }, [currentStep]);
 
   //steps needs to be defined for initialStepIndex to work
@@ -93,22 +89,13 @@ export const Tour = () => {
         disableNext
         disablePrev
         movingTarget
-        customPrevFunc={(tourLogic) => {
-          //wipe map hints
-          // _TourHintLayer.clearLayers();
-
-          tourLogic.prev();
-        }}
-        customNextFunc={(tourLogic) => {
-          //wipe map hints
-          // _TourHintLayer.clearLayers();
-
-          tourLogic.next();
-        }}
+        debug
         validateNextOnTargetClick={async () => {
-          const selectedTile = useGameStore.getState().selectedTile;
+          const hoverCoord = primodium.components.hoverTile(mudCtx).get();
 
-          return validMapClick(selectedTile);
+          if (!hoverCoord) return false;
+
+          return validTutorialClick(hoverCoord, mudCtx);
         }}
         customCloseFunc={(tourLogic) => {
           setCheckpoint(null);
@@ -117,8 +104,8 @@ export const Tour = () => {
           tourLogic.close();
         }}
         updateInterval={10}
+        rootSelector="#game-container"
         key="hints"
-        rootSelector=".screen-container"
       />
     </div>
   );

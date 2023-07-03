@@ -13,15 +13,15 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { createSelectionTile } from "../factory/selectionTile";
 
-export const renderDemolishPathTool = (scene: Scene, network: Network) => {
+export const renderDemolishBuildingTool = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
-  const objIndexSuffix = "_demolishPath";
+  const objIndexSuffix = "_demolishBuilding";
 
   const query = [
     Has(offChainComponents.HoverTile),
     HasValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.DemolishPath,
+      value: BlockType.DemolishBuilding,
     }),
   ];
 
@@ -50,11 +50,12 @@ export const renderDemolishPathTool = (scene: Scene, network: Network) => {
 
     demolishTileGraphicsEmbodiedEntity.setComponent(
       createSelectionTile({
+        id: objGraphicsIndex,
         x: pixelCoord.x,
         y: -pixelCoord.y,
         tileHeight,
         tileWidth,
-        color: 0xffa500,
+        color: 0xff0000,
       })
     );
   };
@@ -63,7 +64,7 @@ export const renderDemolishPathTool = (scene: Scene, network: Network) => {
     render(update);
 
     console.info(
-      "[ENTER SYSTEM](renderDemolishPath) Demolish Path tool has been added"
+      "[ENTER SYSTEM](renderDemolishBuilding) Demolish Building tool has been added"
     );
   });
 
@@ -74,7 +75,7 @@ export const renderDemolishPathTool = (scene: Scene, network: Network) => {
     scene.objectPool.remove(objGraphicsIndex);
 
     console.info(
-      "[EXIT SYSTEM](renderDemolishPath) Demolish Path tool has been removed"
+      "[EXIT SYSTEM](renderDemolishBuilding) Demolish building tool has been removed"
     );
   });
 };

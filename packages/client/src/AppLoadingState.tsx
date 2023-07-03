@@ -42,10 +42,10 @@ export default function AppLoadingState() {
     return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Game />} />
+          <Route path="/old" element={<Home />} />
           <Route path="/increment" element={<Increment />} />
           <Route path="/map" element={<Map />} />
-          <Route path="/game" element={<Game />} />
           <Route path="/leaflet" element={<LeafletMapDebug />} />
         </Routes>
       </BrowserRouter>

@@ -11,7 +11,7 @@ import { createPath } from "../factory/path";
 import { Scene } from "src/engine/types";
 import { Network } from "src/network/layer";
 
-export const renderEntityPaths = (scene: Scene, network: Network) => {
+export const renderBuildngPaths = (scene: Scene, network: Network) => {
   const { world, components } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_path";

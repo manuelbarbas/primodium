@@ -18,7 +18,6 @@ import SelectedTile from "./SelectedTile";
 import SelectedPath from "./SelectedPath";
 import HoverTile from "./HoverTile";
 import SelectedAttack from "./SelectedAttack";
-import { validMapClick } from "../util/map";
 import { useNotificationStore } from "../store/NotificationStore";
 
 const ResourceTileLayer = ({
@@ -212,9 +211,6 @@ const ResourceTileLayer = ({
         x: Math.floor(event.latlng.lng),
         y: Math.floor(event.latlng.lat),
       };
-
-      //do not process click if it is not a valid map click
-      if (!validMapClick(mousePos)) return;
 
       switch (selectedBlock) {
         case null:

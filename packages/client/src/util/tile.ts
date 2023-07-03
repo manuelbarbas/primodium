@@ -3,8 +3,10 @@ import { Coord } from "@latticexyz/utils";
 import { BlockType, DisplayKeyPair } from "./constants";
 import {
   EntityID,
+  Has,
+  HasValue,
   getComponentValue,
-  getEntitiesWithValue,
+  runQuery,
 } from "@latticexyz/recs";
 import { NetworkComponents } from "@latticexyz/std-client";
 import { defineComponents } from "../network/components";
@@ -146,7 +148,7 @@ export function getBuildingsOfTypeInRange(
   origin: Coord,
   type: EntityID,
   range: number,
-  component: NetworkComponents<ReturnType<typeof defineComponents>>
+  components: NetworkComponents<ReturnType<typeof defineComponents>>
 ) {
   const tiles: Coord[] = [];
 
@@ -155,9 +157,13 @@ export function getBuildingsOfTypeInRange(
       const currentCoord = { x: origin.x + x, y: origin.y + y };
 
       //get entity at coord
-      const entities = getEntitiesWithValue(component.Position, currentCoord);
+      const entities = runQuery([
+        HasValue(components.Position, currentCoord),
+        Has(components.Tile),
+      ]);
+
       const comp = getComponentValue(
-        component.Tile,
+        components.Tile,
         entities.values().next().value
       );
 
@@ -173,9 +179,13 @@ export function getBuildingsOfTypeInRange(
 export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
   const { components } = network;
 
-  const entities = getEntitiesWithValue(components.Position, coord);
+  const entities = runQuery([
+    HasValue(components.Position, coord),
+    Has(components.Tile),
+  ]);
 
   if (!entities.size) return undefined;
+
   const tileEntityID = entities.values().next().value;
 
   return getComponentValue(components.Tile, tileEntityID)

@@ -1,7 +1,7 @@
 import {
   ComponentUpdate,
   Has,
-  HasValue,
+  NotValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
@@ -11,26 +11,37 @@ import { Scene } from "src/engine/types";
 import { BlockType } from "src/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
+import { createBuilding } from "../factory/building";
 import { createSelectionTile } from "../factory/selectionTile";
 import * as components from "src/game/api/components";
-import { createAttackPath } from "../factory/attackPath";
 
-export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
+export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
-  const objIndexSuffix = "_attackTargeting";
+  const objIndexSuffix = "_buildingPlacement";
 
   const query = [
     Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedBuilding, {
+    Has(offChainComponents.SelectedBuilding),
+    NotValue(offChainComponents.SelectedBuilding, {
       value: BlockType.SelectAttack,
+    }),
+    NotValue(offChainComponents.SelectedBuilding, {
+      value: BlockType.DemolishPath,
+    }),
+    NotValue(offChainComponents.SelectedBuilding, {
+      value: BlockType.DemolishBuilding,
+    }),
+    NotValue(offChainComponents.SelectedBuilding, {
+      value: BlockType.Conveyor,
     }),
   ];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
-    const attackSelection = components.selectedAttack(network).get();
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+    const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
+    const selectedBuilding = components.selectedBuilding(network).get();
 
     // Avoid updating on optimistic overrides
     if (
@@ -40,54 +51,37 @@ export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
       return;
     }
 
-    //we don't need to do anything if both are set
-    if (attackSelection.origin && attackSelection.target) return;
-
     const tileCoord = update.value[0] as Coord;
 
     if (!tileCoord) return;
 
-    const pixelHoverCoord = tileCoordToPixelCoord(
-      tileCoord,
-      tileWidth,
-      tileHeight
-    );
+    const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
-    const pathGraphicsEmbodiedEntity = scene.objectPool.get(
+    const hoverTileGraphicsEmbodiedEntity = scene.objectPool.get(
       objGraphicsIndex,
       "Graphics"
     );
 
-    if (!attackSelection.origin) {
-      pathGraphicsEmbodiedEntity.setComponent(
-        createSelectionTile({
-          x: pixelHoverCoord.x,
-          y: -pixelHoverCoord.y,
-          tileHeight,
-          tileWidth,
-          color: 0xff00000,
-        })
-      );
-
-      return;
-    }
-
-    const pixelStartCoord = tileCoordToPixelCoord(
-      attackSelection.origin,
-      tileWidth,
-      tileHeight
+    const hoverTileSpriteEmbodiedEntity = scene.objectPool.get(
+      objSpriteIndex,
+      "Sprite"
     );
 
-    pathGraphicsEmbodiedEntity.setComponent(
-      createAttackPath({
+    hoverTileSpriteEmbodiedEntity.setComponent(
+      createBuilding({
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
+        tile: selectedBuilding!,
+      })
+    );
+
+    hoverTileGraphicsEmbodiedEntity.setComponent(
+      createSelectionTile({
         id: objGraphicsIndex,
-        startX: pixelStartCoord.x,
-        startY: -pixelStartCoord.y,
-        endX: pixelHoverCoord.x,
-        endY: -pixelHoverCoord.y,
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
         tileHeight,
         tileWidth,
-        triangleCount: 5,
       })
     );
   };
@@ -96,7 +90,7 @@ export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
     render(update);
 
     console.info(
-      "[ENTER SYSTEM](rrenderAttackTargetingTool) Attack Targeting tool has been added"
+      "[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added"
     );
   });
 
@@ -104,11 +98,13 @@ export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
 
   defineExitSystem(world, query, (update) => {
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+    const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
+
     scene.objectPool.remove(objGraphicsIndex);
-    components.selectedAttack(network).remove();
+    scene.objectPool.remove(objSpriteIndex);
 
     console.info(
-      "[EXIT SYSTEM](renderAttackTargetingTool) Attack targeting tool has been removed"
+      "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
     );
   });
 };
