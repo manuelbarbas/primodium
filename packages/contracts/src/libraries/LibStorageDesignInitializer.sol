@@ -19,34 +19,6 @@ import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, Ir
 
 library LibStorageDesignInitializer {
   function init(IWorld world) internal {
-    uint256[25] memory allResourceIds = [
-      BolutiteResourceItemID,
-      CopperResourceItemID,
-      IridiumResourceItemID,
-      IronResourceItemID,
-      KimberliteResourceItemID,
-      LithiumResourceItemID,
-      OsmiumResourceItemID,
-      TitaniumResourceItemID,
-      TungstenResourceItemID,
-      UraniniteResourceItemID,
-      IronPlateCraftedItemID,
-      BasicPowerSourceCraftedItemID,
-      KineticMissileCraftedItemID,
-      RefinedOsmiumCraftedItemID,
-      AdvancedPowerSourceCraftedItemID,
-      PenetratingWarheadCraftedItemID,
-      PenetratingMissileCraftedItemID,
-      TungstenRodsCraftedItemID,
-      IridiumCrystalCraftedItemID,
-      IridiumDrillbitCraftedItemID,
-      LaserPowerSourceCraftedItemID,
-      ThermobaricWarheadCraftedItemID,
-      ThermobaricMissileCraftedItemID,
-      KimberliteCrystalCatalystCraftedItemID,
-      BulletCraftedItemID
-    ];
-
     IUint256Component components = world.components();
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
@@ -55,14 +27,32 @@ library LibStorageDesignInitializer {
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
 
-    uint256[] memory storageCapacity = new uint256[](allResourceIds.length);
+    uint256[] memory storageCapacity = new uint256[](1);
 
     //MainBaseID Level 1 Storage
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 1);
-    for (uint256 i = 0; i < allResourceIds.length; i++) {
-      storageCapacityComponent.set(LibEncode.hashKeyEntity(allResourceIds[i], buildingIdLevel), uint256(1000000000000));
-      storageCapacity[i] = allResourceIds[i];
-    }
+    storageCapacity[0] = IronResourceItemID;
+    storageCapacityComponent.set(LibEncode.hashKeyEntity(IronResourceItemID, buildingIdLevel), uint256(1000));
+    storageCapacityResourcesComponent.set(buildingIdLevel, storageCapacity);
+
+    //MainBaseID Level 2 Storage
+    buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 2);
+    storageCapacity = new uint256[](2);
+    storageCapacity[0] = IronResourceItemID;
+    storageCapacityComponent.set(LibEncode.hashKeyEntity(IronResourceItemID, buildingIdLevel), uint256(1000));
+    storageCapacity[1] = CopperResourceItemID;
+    storageCapacityComponent.set(LibEncode.hashKeyEntity(IronResourceItemID, buildingIdLevel), uint256(2000));
+
+    //MainBaseID Level 3 Storage
+    buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 3);
+    storageCapacity = new uint256[](3);
+    storageCapacity[0] = IronResourceItemID;
+    storageCapacityComponent.set(LibEncode.hashKeyEntity(IronResourceItemID, buildingIdLevel), uint256(2000));
+    storageCapacity[1] = CopperResourceItemID;
+    storageCapacityComponent.set(LibEncode.hashKeyEntity(CopperResourceItemID, buildingIdLevel), uint256(2000));
+    storageCapacity[2] = LithiumResourceItemID;
+    storageCapacityComponent.set(LibEncode.hashKeyEntity(LithiumResourceItemID, buildingIdLevel), uint256(2000));
+
     storageCapacityResourcesComponent.set(buildingIdLevel, storageCapacity);
   }
 }
