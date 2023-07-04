@@ -535,26 +535,22 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         return (
           <div className="bg-gray-700 text-white p-5 font-mono rounded-2xl mt-4 w-96 shadow-2xl flex flex-col justify-center items-center">
-            <div className="text-2xl font-bold">You are ready recruit!</div>
-            <br />
-            <div className="text-md text-center">
+            <div className="text-2xl font-bold mb-4">
+              You are ready recruit!
+            </div>
+            <div className="text-md text-center mb-4">
               It's time to expand your empire.
-              <br />
-              <br />
+            </div>
+            <div className="text-md text-center mb-4">
               Use your newfound knowledge to gather more advanced resources,
               research new factories and attack others.
-              {/* <br />
-              <br />
-              <b>You can always retry this tutorial in the upper left.</b> */}
             </div>
-            <br />
             <button
               className="bg-green-500 p-4 rounded w-full"
               onClick={() => {
                 tour?.close();
               }}
             >
-              {" "}
               Start Building!
             </button>
           </div>
