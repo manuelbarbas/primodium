@@ -1,4 +1,4 @@
-import { World } from "@latticexyz/recs";
+import { World, defineComponent, Type } from "@latticexyz/recs";
 import { overridableComponent } from "@latticexyz/recs";
 import {
   defineBoolComponent,
@@ -82,6 +82,24 @@ export function defineComponents(world: World) {
         contractId: "component.MainBaseInitialized",
       },
     }),
+    // Resource data stored in components
+    RequiredResearchComponent: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.RequiredResearch",
+      },
+    }),
+    RequiredResourcesComponent: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.RequiredResources",
+        },
+      }
+    ),
+    // TODO: component data for crafting recipes
   };
 }
 

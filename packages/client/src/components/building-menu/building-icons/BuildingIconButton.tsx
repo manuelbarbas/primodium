@@ -1,18 +1,14 @@
 import { useCallback, useMemo } from "react";
-import { EntityID } from "@latticexyz/recs";
+
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 
 import { useMud } from "../../../context/MudContext";
-import {
-  BackgroundImage,
-  BuildingResearchRequirements,
-  BuildingResearchRequirementsDefaultUnlocked,
-  ResourceImage,
-} from "../../../util/constants";
-import { BuildingReceipe } from "../../../util/resource";
-import { useComponentValue } from "@latticexyz/react";
+import { BackgroundImage, ResourceImage } from "../../../util/constants";
+import { getRecipe } from "../../../util/resource";
 import { hashKeyEntity } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
 import { useGameStore } from "../../../store/GameStore";
+import { getBuildingResearchRequirement } from "../../../util/research";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -40,27 +36,32 @@ function BuildingIconButton({
   const { address } = useAccount();
 
   // Check if building is unlocked per research or not
-  const researchRequirement = BuildingResearchRequirements.get(blockType)![0];
-  const researchOwner = address
-    ? world.entityToIndex.get(
-        hashKeyEntity(
-          researchRequirement,
-          address.toString().toLowerCase()
-        ) as EntityID
-      )!
-    : singletonIndex;
-  const isResearched = useComponentValue(components.Research, researchOwner);
-
   const buildingLocked = useMemo(() => {
-    return !(
-      isResearched ||
-      BuildingResearchRequirementsDefaultUnlocked.has(researchRequirement)
+    const researchRequirement = getBuildingResearchRequirement(
+      blockType,
+      world,
+      components
     );
-  }, [isResearched, researchRequirement]);
+
+    if (!researchRequirement) {
+      return false;
+    }
+    const researchOwner = address
+      ? world.entityToIndex.get(
+          hashKeyEntity(
+            researchRequirement,
+            address.toString().toLowerCase()
+          ) as EntityID
+        )!
+      : singletonIndex;
+    const isResearched = getComponentValue(components.Research, researchOwner);
+
+    return !(isResearched && isResearched.value);
+  }, []);
 
   const cannotBuildTile = useCallback(() => {}, []);
 
-  const recipe = BuildingReceipe.get(blockType);
+  const recipe = getRecipe(blockType, world, components);
 
   return (
     <button
@@ -87,7 +88,7 @@ function BuildingIconButton({
         {label}
         <div className="flex-col">
           {recipe ? (
-            recipe[0].resources.map((resource) => {
+            recipe.map((resource) => {
               const resourceImage = ResourceImage.get(resource.id);
               return (
                 <div className="mr-2 inline-block" key={resource.id}>
