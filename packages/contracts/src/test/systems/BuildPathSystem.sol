@@ -19,7 +19,7 @@ import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, Air
 import { MainBaseID } from "../../prototypes/Tiles.sol";
 
 //main buildings
-import { BasicMinerID, IronMineID } from "../../prototypes/Tiles.sol";
+import { DebugIronMineID } from "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
@@ -51,16 +51,16 @@ contract BuildPathSystemTest is MudTest {
     PathComponent pathComponent = PathComponent(component(PathComponentID));
     TileComponent tileComponent = TileComponent(component(TileComponentID));
 
-    assertTrue(tileComponent.has(IronMineID), "IronMineID building should have tile type");
+    assertTrue(tileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
-      tileComponent.getValue(IronMineID),
+      tileComponent.getValue(DebugIronMineID),
       IronID,
       "IronMineID should have IronID as requireed tile type to build on"
     );
     // Build two conveyor blocks
     bytes memory startBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
     console.log("built MainBaseID");
-    bytes memory endBlockEntity = buildSystem.executeTyped(IronMineID, startCoord);
+    bytes memory endBlockEntity = buildSystem.executeTyped(DebugIronMineID, startCoord);
     console.log("built IronMineID");
 
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
@@ -106,16 +106,16 @@ contract BuildPathSystemTest is MudTest {
     PathComponent pathComponent = PathComponent(component(PathComponentID));
     TileComponent tileComponent = TileComponent(component(TileComponentID));
 
-    assertTrue(tileComponent.has(IronMineID), "IronMineID building should have tile type");
+    assertTrue(tileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
-      tileComponent.getValue(IronMineID),
+      tileComponent.getValue(DebugIronMineID),
       IronID,
       "IronMineID should have IronID as requireed tile type to build on"
     );
     // Build two conveyor blocks
     bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
     console.log("built MainBaseID");
-    bytes memory startBlockEntity = buildSystem.executeTyped(IronMineID, startCoord);
+    bytes memory startBlockEntity = buildSystem.executeTyped(DebugIronMineID, startCoord);
     console.log("built IronMineID");
 
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));

@@ -13,14 +13,15 @@ import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 import { DebugRemoveBuildingRequirementsSystem, ID as DebugRemoveBuildingRequirementsSystemID } from "../../systems/DebugRemoveBuildingRequirementsSystem.sol";
 import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
-
+import { DebugAquireStorageForAllResourcesSystem, ID as DebugAquireStorageForAllResourcesSystemID } from "../../systems/DebugAquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, IronMineID, CopperMineID } from "../../prototypes/Tiles.sol";
-import { MainBaseID, PlatingFactoryID } from "../../prototypes/Tiles.sol";
+
+import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { DebugCopperMineID, DebugIronMineID, DebugIronPlateFactoryID } from "../../libraries/LibDebugInitializer.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 import { IronPlateCraftedItemID } from "../../prototypes/Keys.sol";
 import { BuildingKey } from "../../prototypes/Keys.sol";
@@ -58,13 +59,13 @@ contract ClaimSystemTest is MudTest {
       system(DebugRemoveBuildingRequirementsSystemID)
     );
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(PlatingFactoryID);
-    buildSystem.executeTyped(PlatingFactoryID, platingFactoryCoord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    buildSystem.executeTyped(IronMineID, coord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
+    buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
 
     buildPathSystem.executeTyped(coord, platingFactoryCoord);
@@ -126,13 +127,14 @@ contract ClaimSystemTest is MudTest {
       system(DebugRemoveBuildingRequirementsSystemID)
     );
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(PlatingFactoryID);
-    buildSystem.executeTyped(PlatingFactoryID, platingFactoryCoord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    buildSystem.executeTyped(IronMineID, coord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
+    buildSystem.executeTyped(DebugIronMineID, coord);
+
     console.log("built IronMineID");
 
     buildPathSystem.executeTyped(coord, platingFactoryCoord);
@@ -158,8 +160,8 @@ contract ClaimSystemTest is MudTest {
     DebugRemoveUpgradeRequirementsSystem debugRemoveUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
       system(DebugRemoveUpgradeRequirementsSystemID)
     );
-    debugRemoveUpgradeRequirementsSystem.executeTyped(IronMineID);
-    debugRemoveUpgradeRequirementsSystem.executeTyped(PlatingFactoryID);
+    debugRemoveUpgradeRequirementsSystem.executeTyped(DebugIronMineID);
+    debugRemoveUpgradeRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
     upgradeSystem.executeTyped(platingFactoryCoord);
     console.log("upgraded factory");
@@ -209,13 +211,13 @@ contract ClaimSystemTest is MudTest {
       system(DebugRemoveBuildingRequirementsSystemID)
     );
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(PlatingFactoryID);
-    buildSystem.executeTyped(PlatingFactoryID, platingFactoryCoord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    buildSystem.executeTyped(IronMineID, coord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
+    buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
 
     buildPathSystem.executeTyped(coord, platingFactoryCoord);
@@ -274,13 +276,13 @@ contract ClaimSystemTest is MudTest {
       system(DebugRemoveBuildingRequirementsSystemID)
     );
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(PlatingFactoryID);
-    buildSystem.executeTyped(PlatingFactoryID, platingFactoryCoord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    buildSystem.executeTyped(IronMineID, coord);
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
+    buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
 
     buildPathSystem.executeTyped(coord, platingFactoryCoord);
@@ -335,11 +337,7 @@ contract ClaimSystemTest is MudTest {
     // START CLAIMING
     vm.roll(0);
 
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
-    );
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    buildSystem.executeTyped(IronMineID, coord);
+    buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
     buildPathSystem.executeTyped(coord, mainBaseCoord);
     console.log("built path from IronMine to main base");
@@ -381,11 +379,8 @@ contract ClaimSystemTest is MudTest {
     console.log("built main base");
     // START CLAIMING
     vm.roll(0);
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
-    );
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    buildSystem.executeTyped(IronMineID, coord);
+
+    buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
     buildPathSystem.executeTyped(coord, mainBaseCoord);
     console.log("built path from IronMine to main base");
@@ -431,11 +426,8 @@ contract ClaimSystemTest is MudTest {
     console.log("built main base");
     // START CLAIMING
     vm.roll(0);
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
-    );
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    buildSystem.executeTyped(IronMineID, coord);
+
+    buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
     buildPathSystem.executeTyped(coord, mainBaseCoord);
     console.log("built path from IronMine to main base");
@@ -445,12 +437,8 @@ contract ClaimSystemTest is MudTest {
     console.log("claimed from main base");
     uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceKey), "Alice should have iron");
-    assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 30 iron");
+    assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 10 iron");
 
-    DebugRemoveUpgradeRequirementsSystem debugRemoveUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
-      system(DebugRemoveUpgradeRequirementsSystemID)
-    );
-    debugRemoveUpgradeRequirementsSystem.executeTyped(IronMineID);
     upgradeSystem.executeTyped(coord);
 
     assertEq(
@@ -491,20 +479,20 @@ contract ClaimSystemTest is MudTest {
     // TEMP: current generation seed
     Coord memory IronCoord = Coord({ x: -5, y: 2 });
     Coord memory CopperCoord = Coord({ x: -10, y: -4 });
-    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID);
-    assertEq(LibTerrain.getTopLayerKey(CopperCoord), CopperID);
+    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getTopLayerKey(CopperCoord), CopperID, "Tile should have copper");
 
     Coord memory mainBaseCoord = Coord({ x: -5, y: -4 });
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
-    );
-    debugRemoveBuildingRequirementsSystem.executeTyped(IronMineID);
-    debugRemoveBuildingRequirementsSystem.executeTyped(CopperMineID);
+    DebugAquireStorageForAllResourcesSystem debugAquireStorageForAllResourcesSystem = DebugAquireStorageForAllResourcesSystem(
+        system(DebugAquireStorageForAllResourcesSystemID)
+      );
+    //gain capacity for all resources so can store copper
+    debugAquireStorageForAllResourcesSystem.executeTyped();
+    buildSystem.executeTyped(DebugIronMineID, IronCoord);
+    buildSystem.executeTyped(DebugCopperMineID, CopperCoord);
 
-    buildSystem.executeTyped(IronMineID, IronCoord);
-    buildSystem.executeTyped(CopperMineID, CopperCoord);
     vm.roll(0);
     // Iron to main base
     buildPathSystem.executeTyped(IronCoord, mainBaseCoord);
@@ -517,9 +505,10 @@ contract ClaimSystemTest is MudTest {
     claimSystem.executeTyped(mainBaseCoord);
     uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     uint256 hashedAliceCopperKey = LibEncode.hashKeyEntity(CopperID, addressToEntity(alice));
-    assertTrue(itemComponent.has(hashedAliceCopperKey));
-    assertEq(itemComponent.getValue(hashedAliceCopperKey), 20);
-    assertEq(itemComponent.getValue(hashedAliceIronKey), 20);
+    assertTrue(itemComponent.has(hashedAliceIronKey), "Alice should have iron");
+    assertTrue(itemComponent.has(hashedAliceCopperKey), "Alice should have copper");
+    assertEq(itemComponent.getValue(hashedAliceCopperKey), 20, "Alice should have 20 copper");
+    assertEq(itemComponent.getValue(hashedAliceIronKey), 20, "Alice should have 20 iron");
 
     vm.stopPrank();
   }

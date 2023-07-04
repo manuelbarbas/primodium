@@ -12,6 +12,7 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
@@ -25,7 +26,7 @@ import { LibSetMineBuildingProductionForLevel } from "../libraries/LibSetMineBui
 import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProductionForLevel.sol";
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
 //tiles
-import { IronID } from "../prototypes/Tiles.sol";
+import { IronID, CopperID } from "../prototypes/Tiles.sol";
 
 // Items
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
@@ -50,6 +51,8 @@ uint256 constant DebugSimpleBuildingWithUpgradeResearchReqsID = uint256(
 
 // mines
 uint256 constant DebugIronMineID = uint256(keccak256("block.DebugIronMine"));
+uint256 constant DebugCopperMineID = uint256(keccak256("block.DebugCopperMine"));
+uint256 constant DebugIronMineWithBuildLimitID = uint256(keccak256("block.DebugIronMineWithBuildLimit"));
 uint256 constant DebugIronMineNoTileReqID = uint256(keccak256("block.DebugIronMineNoTileReq"));
 
 //factories
@@ -110,8 +113,15 @@ library LibDebugInitializer {
     initializeFactories(ignoreBuildLimitComponent, factoryProductionComponent, factoryMineBuildingsComponent);
 
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
     //initialize technologies
-    initializeTechnologies(itemComponent, buildingComponent, requiredResearch, requiredResourcesComponent);
+    initializeTechnologies(
+      researchComponent,
+      itemComponent,
+      buildingComponent,
+      requiredResearch,
+      requiredResourcesComponent
+    );
   }
 
   function initializeSimpleBuildings(
@@ -240,6 +250,34 @@ library LibDebugInitializer {
       3,
       3
     );
+
+    //DebugIronMineWithBuildLimitID
+    tileComponent.set(DebugIronMineWithBuildLimitID, IronID);
+    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
+      mineComponent,
+      DebugIronMineWithBuildLimitID,
+      1,
+      1
+    );
+    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
+      mineComponent,
+      DebugIronMineWithBuildLimitID,
+      2,
+      2
+    );
+    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
+      mineComponent,
+      DebugIronMineWithBuildLimitID,
+      3,
+      3
+    );
+
+    //DebugCopperMineID
+    tileComponent.set(DebugCopperMineID, CopperID);
+    ignoreBuildLimitComponent.set(DebugCopperMineID);
+    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 1, 1);
+    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 2, 2);
+    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 3, 3);
   }
 
   function initializeFactories(
@@ -274,7 +312,7 @@ library LibDebugInitializer {
     );
 
     //DebugIronPlateFactoryID
-    ignoreBuildLimitComponent.set(DebugIronPlateFactoryNoMineReqID);
+    ignoreBuildLimitComponent.set(DebugIronPlateFactoryID);
 
     //DebugIronPlateFactoryID level 1
     LibSetFactoryMineRequirements.setFactory1MineRequirement(
@@ -286,7 +324,7 @@ library LibDebugInitializer {
     );
     LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
       factoryProductionComponent,
-      DebugIronPlateFactoryNoMineReqID,
+      DebugIronPlateFactoryID,
       1,
       IronPlateCraftedItemID,
       1
@@ -301,7 +339,7 @@ library LibDebugInitializer {
     );
     LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
       factoryProductionComponent,
-      DebugIronPlateFactoryNoMineReqID,
+      DebugIronPlateFactoryID,
       2,
       IronPlateCraftedItemID,
       2
@@ -317,7 +355,7 @@ library LibDebugInitializer {
     );
     LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
       factoryProductionComponent,
-      DebugIronPlateFactoryNoMineReqID,
+      DebugIronPlateFactoryID,
       3,
       IronPlateCraftedItemID,
       3
@@ -325,15 +363,20 @@ library LibDebugInitializer {
   }
 
   function initializeTechnologies(
+    ResearchComponent researchComponent,
     ItemComponent itemComponent,
     BuildingComponent buildingComponent,
     RequiredResearchComponent requiredResearchComponent,
     RequiredResourcesComponent requiredResourcesComponent
   ) internal {
+    // DebugSimpleTechnologyNoReqsID
+    researchComponent.set(DebugSimpleTechnologyNoReqsID);
+
     //DebugSimpleTechnologyResearchReqsID
     requiredResearchComponent.set(DebugSimpleTechnologyResearchReqsID, DebugSimpleTechnologyNoReqsID);
-
+    researchComponent.set(DebugSimpleTechnologyResearchReqsID);
     //DebugSimpleTechnologyResourceReqsID
+    researchComponent.set(DebugSimpleTechnologyResourceReqsID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResourcesComponent,
       itemComponent,
@@ -343,6 +386,7 @@ library LibDebugInitializer {
     );
 
     //DebugSimpleTechnologyMainBaseLevelReqsID
+    researchComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     buildingComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
   }
 }
