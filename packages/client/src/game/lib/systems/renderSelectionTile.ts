@@ -1,7 +1,6 @@
 import {
   ComponentUpdate,
   Has,
-  Not,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
