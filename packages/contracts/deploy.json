@@ -178,6 +178,10 @@
       "writeAccess": ["ItemComponent"]
     },
     {
+      "name": "DebugAquireResourcesBasedOnRequirementSystem",
+      "writeAccess": ["ItemComponent"]
+    },
+    {
       "name": "DebugIgnoreBuildLimitForBuildingSystem",
       "writeAccess": ["IgnoreBuildLimitComponent"]
     },
@@ -192,6 +196,10 @@
     {
       "name": "DebugRemoveBuildLimitSystem",
       "writeAccess": ["IgnoreBuildLimitComponent"]
+    },
+    {
+      "name": "DebugAquireStorageForAllResourcesSystem",
+      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent"]
     }
   ]
 }
