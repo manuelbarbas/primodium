@@ -17,6 +17,8 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
@@ -70,6 +72,9 @@ uint256 constant DebugSimpleTechnologyMainBaseLevelReqsID = uint256(
   keccak256("block.DebugSimpleTechnologyMainBaseLevelReqs")
 );
 
+//storage building
+uint256 constant DebugStorageBuildingID = uint256(keccak256("block.DebugStorageBuilding"));
+
 // the purpose of this lib is to define and initialize debug buildings that can be used for testing
 // so additions and removal of actual game design elements don't effect the already written tests
 library LibDebugInitializer {
@@ -122,6 +127,13 @@ library LibDebugInitializer {
       requiredResearch,
       requiredResourcesComponent
     );
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getAddressById(components, StorageCapacityResourcesComponentID)
+    );
+    initializeStorageBuildings(ignoreBuildLimitComponent, storageCapacityResourcesComponent, storageCapacityComponent);
   }
 
   function initializeSimpleBuildings(
@@ -388,5 +400,35 @@ library LibDebugInitializer {
     //DebugSimpleTechnologyMainBaseLevelReqsID
     researchComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     buildingComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
+  }
+
+  function initializeStorageBuildings(
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent,
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
+    StorageCapacityComponent storageCapacityComponent
+  ) internal {
+    //DebugStorageBuildingID
+    ignoreBuildLimitComponent.set(DebugStorageBuildingID);
+
+    //DebugStorageBuildingID level 1
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 1);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      buildingIdLevel,
+      IronResourceItemID,
+      200
+    );
+    //DebugStorageBuildingID level 2
+    buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 2);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      buildingIdLevel,
+      IronResourceItemID,
+      200,
+      CopperResourceItemID,
+      200
+    );
   }
 }

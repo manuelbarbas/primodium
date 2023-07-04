@@ -75,19 +75,6 @@ contract BuildSystem is System {
       );
   }
 
-  function spendRequiredResources(uint256 blockType) internal {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(
-      requiredResourcesComponent,
-      itemComponent,
-      blockType,
-      addressToEntity(msg.sender)
-    );
-  }
-
   function checkAndUpdatePlayerStorageAfterBuild(uint256 buildingId) internal {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
@@ -102,7 +89,7 @@ contract BuildSystem is System {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], addressToEntity(msg.sender));
       uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
-        playerResourceStorageEntity,
+        addressToEntity(msg.sender),
         storageResources[i]
       );
       uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
