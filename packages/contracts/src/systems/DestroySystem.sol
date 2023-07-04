@@ -38,35 +38,37 @@ contract DestroySystem is System {
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingLevel);
-    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
     uint256 playerEntity = addressToEntity(msg.sender);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        playerResourceStorageEntity,
-        storageResources[i]
-      );
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        buildingIdLevel,
-        storageResources[i]
-      );
-      storageCapacityComponent.set(
-        playerResourceStorageEntity,
-        playerResourceStorageCapacity - storageCapacityIncrease
-      );
-      uint256 playerResourceAmount = LibMath.getSafeUint256Value(
-        itemComponent,
-        LibEncode.hashKeyEntity(storageResources[i], playerEntity)
-      );
-      if (playerResourceAmount > playerResourceStorageCapacity) {
-        itemComponent.set(
-          LibEncode.hashKeyEntity(storageResources[i], playerEntity),
+    for (uint256 level = buildingLevel; level > 0; level--) {
+      uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, level);
+      if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
+      uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+      for (uint256 i = 0; i < storageResources.length; i++) {
+        uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
+        uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+          storageCapacityComponent,
+          playerResourceStorageEntity,
+          storageResources[i]
+        );
+        uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+          storageCapacityComponent,
+          buildingIdLevel,
+          storageResources[i]
+        );
+        storageCapacityComponent.set(
+          playerResourceStorageEntity,
           playerResourceStorageCapacity - storageCapacityIncrease
         );
+        uint256 playerResourceAmount = LibMath.getSafeUint256Value(
+          itemComponent,
+          LibEncode.hashKeyEntity(storageResources[i], playerEntity)
+        );
+        if (playerResourceAmount > playerResourceStorageCapacity) {
+          itemComponent.set(
+            LibEncode.hashKeyEntity(storageResources[i], playerEntity),
+            playerResourceStorageCapacity - storageCapacityIncrease
+          );
+        }
       }
     }
   }
