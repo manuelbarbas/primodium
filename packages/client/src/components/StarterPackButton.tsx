@@ -32,7 +32,7 @@ export default function StarterPackButton() {
       <button
         id="starter-pack-button"
         onClick={claimStarterPack}
-        className="h-10 bg-green-600 hover:bg-green-700 text-sm rounded font-bold w-full"
+        className="h-10 bg-green-600 hover:bg-green-700 text-sm rounded font-bold w-full py-2"
       >
         {transactionLoading ? <Spinner /> : "Claim 200 Iron"}
       </button>

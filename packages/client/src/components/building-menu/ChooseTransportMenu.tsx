@@ -19,7 +19,7 @@ function ChooseTransportMenu({
   const closeMenuHelper = useCallback(() => {
     setMenuOpenIndex(-1);
     primodium.components.selectedBuilding(network).remove();
-    primodium.components.startSelectedPath(network).remove();
+    // primodium.components.startSelectedPath(network).remove();
   }, [network]);
 
   const clearPath = useCallback(() => {

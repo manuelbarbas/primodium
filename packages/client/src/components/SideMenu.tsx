@@ -41,7 +41,7 @@ function SideBarIcon({
 
     // Remove selected building if menu is changed
     primodium.components.selectedBuilding(network).remove();
-    primodium.components.startSelectedPath(network).remove();
+    // primodium.components.startSelectedPath(network).remove();
   }, [menuIndex, menuOpenIndex]);
 
   return (
