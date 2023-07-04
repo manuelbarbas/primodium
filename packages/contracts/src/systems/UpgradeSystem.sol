@@ -10,6 +10,7 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
@@ -82,11 +83,11 @@ contract UpgradeSystem is System {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
     // Check there isn't another tile there
     uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
-    require(tileComponent.has(entity), "[DestroySystem] Cannot destroy tile at an empty coordinate");
-
+    require(tileComponent.has(entity), "[UpgradeSystem] Cannot upgrade tile at an empty coordinate");
     require(buildingComponent.has(entity), "[UpgradeSystem] Cannot upgrade a non-building");
     uint256 ownerKey = addressToEntity(msg.sender);
     require(
@@ -94,6 +95,10 @@ contract UpgradeSystem is System {
       "[UpgradeSystem] Cannot upgrade a building that is not owned by you"
     );
     uint256 blockType = tileComponent.getValue(entity);
+    require(
+      maxLevelComponent.has(blockType) && (buildingComponent.getValue(entity) < maxLevelComponent.getValue(blockType)),
+      "[UpgradeSystem] Cannot upgrade building that does not have max level or has reached max level"
+    );
     require(
       checkUpgradeResearchRequirements(
         buildingComponent,

@@ -13,12 +13,13 @@ import { BuildingComponent, ID as BuildingComponentID } from "../../components/B
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-
 import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { DebugSimpleBuildingNoReqsID, DebugIronMineNoTileReqID } from "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
+import { BuildingKey } from "../../prototypes/Keys.sol";
 
 contract UpgradeSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -27,6 +28,73 @@ contract UpgradeSystemTest is MudTest {
     super.setUp();
     vm.startPrank(deployer);
 
+    vm.stopPrank();
+  }
+
+  function testFailUpgradeNonUpgradableBuilding() public {
+    vm.startPrank(alice);
+    Coord memory coord = Coord({ x: 0, y: 0 });
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
+    upgradeSystem.executeTyped(coord);
+    vm.stopPrank();
+  }
+
+  function testUpgradeToMaxLevel() public {
+    vm.startPrank(alice);
+    Coord memory coord = Coord({ x: 0, y: 0 });
+    BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    buildSystem.executeTyped(DebugIronMineNoTileReqID, coord);
+    assertEq(
+      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      1,
+      "building should be level 1"
+    );
+    upgradeSystem.executeTyped(coord);
+    assertEq(
+      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      2,
+      "building should be level 2"
+    );
+    upgradeSystem.executeTyped(coord);
+    assertEq(
+      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      3,
+      "building should be level 3"
+    );
+    vm.stopPrank();
+  }
+
+  function testFailUpgradeMaxLevelReached() public {
+    vm.startPrank(alice);
+    Coord memory coord = Coord({ x: 0, y: 0 });
+    BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    buildSystem.executeTyped(DebugIronMineNoTileReqID, coord);
+    assertEq(
+      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      1,
+      "building should be level 1"
+    );
+    upgradeSystem.executeTyped(coord);
+    assertEq(
+      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      2,
+      "building should be level 2"
+    );
+    upgradeSystem.executeTyped(coord);
+    assertEq(
+      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      3,
+      "building should be level 3"
+    );
+    upgradeSystem.executeTyped(coord);
+    //should fail
     vm.stopPrank();
   }
 

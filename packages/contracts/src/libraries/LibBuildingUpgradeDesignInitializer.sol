@@ -10,7 +10,7 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-
+import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
@@ -31,7 +31,8 @@ library LibBuildingUpgradeDesignInitializer {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
-
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
+    maxLevelComponent.set(MainBaseID, 3);
     //MainBaseID Level 2 Upgrade
     LibSetRequiredResourcesUpgrade.set2RequiredResourcesForEntityUpgradeToLevel(
       requiredResourcesComponent,
