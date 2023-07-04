@@ -50,11 +50,6 @@ contract ResearchSystem is System {
     require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
-      requiredResourcesComponent.has(researchItem),
-      "[ResearchSystem] can not research a technology that does not have resource requirements"
-    );
-
-    require(
       checkMainBaseLevelRequirement(buildingComponent, addressToEntity(msg.sender), researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
