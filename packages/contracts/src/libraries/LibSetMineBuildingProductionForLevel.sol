@@ -14,6 +14,6 @@ library LibSetMineBuildingProductionForLevel {
     uint256 productionPerBlock
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(entity, level);
-    mineComponent.set(LibEncode.hashKeyEntity(0, buildingIdLevel), productionPerBlock);
+    mineComponent.set(buildingIdLevel, productionPerBlock);
   }
 }
