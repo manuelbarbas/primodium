@@ -21,7 +21,8 @@ import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, Air
 import { MainBaseID } from "../../prototypes/Tiles.sol";
 
 //main buildings
-import { BasicMinerID, IronMineID } from "../../prototypes/Tiles.sol";
+
+import { DebugSimpleBuildingBuildLimitReq, DebugIronMineID, DebugIronMineWithBuildLimitID, DebugSimpleBuildingResourceReqsID, DebugSimpleBuildingNoReqsID } from "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
@@ -89,7 +90,7 @@ contract BuildSystemTest is MudTest {
     assertTrue(ownedByComponent.has(mainBaseEntityID));
     assertEq(ownedByComponent.getValue(mainBaseEntityID), addressToEntity(alice));
 
-    bytes memory ironMineEntity = buildSystem.executeTyped(IronMineID, coord);
+    bytes memory ironMineEntity = buildSystem.executeTyped(DebugIronMineWithBuildLimitID, coord);
     uint256 ironMineEntityID = abi.decode(ironMineEntity, (uint256));
     position = LibEncode.decodeCoordEntity(ironMineEntityID);
 
@@ -110,7 +111,7 @@ contract BuildSystemTest is MudTest {
     assertTrue(LibTerrain.getTopLayerKey(nonIronCoord) != IronID, "Tile should not have iron");
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    bytes memory ironMineEntity = buildSystem.executeTyped(IronMineID, nonIronCoord);
+    bytes memory ironMineEntity = buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
 
     vm.stopPrank();
   }
@@ -131,7 +132,7 @@ contract BuildSystemTest is MudTest {
     debugRemoveBuildLimitSystem.executeTyped();
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
 
-    bytes memory ironMineEntity = buildSystem.executeTyped(IronMineID, nonIronCoord);
+    bytes memory ironMineEntity = buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
 
     vm.stopPrank();
   }
@@ -152,20 +153,27 @@ contract BuildSystemTest is MudTest {
       component(RequiredResourcesComponentID)
     );
 
-    assertTrue(requiredResourcesComponent.has(BasicMinerID), "BasicMinerID should have resource requirements");
-    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(BasicMinerID);
-    assertEq(resourceRequirements.length, 1, "BasicMinerID should have 1 resource requirement");
+    assertTrue(
+      requiredResourcesComponent.has(DebugSimpleBuildingResourceReqsID),
+      "DebugSimpleBuildingResourceReqs should have resource requirements"
+    );
+    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(DebugSimpleBuildingResourceReqsID);
+    assertEq(resourceRequirements.length, 1, "DebugSimpleBuildingResourceReqs should have 1 resource requirement");
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashKeyEntity(resourceRequirements[i], BasicMinerID)
+        LibEncode.hashKeyEntity(resourceRequirements[i], DebugSimpleBuildingResourceReqsID)
       );
-      console.log("BasicMiner requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
+      console.log(
+        "DebugSimpleBuildingResourceReqs requires resource: %s of amount %s",
+        resourceRequirements[i],
+        resourceCost
+      );
       debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
     }
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory ironCoord = Coord({ x: -5, y: 2 });
-    bytes memory blockEntity = buildSystem.executeTyped(IronMineID, ironCoord);
+    bytes memory blockEntity = buildSystem.executeTyped(DebugSimpleBuildingResourceReqsID, ironCoord);
 
     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
 
@@ -185,8 +193,8 @@ contract BuildSystemTest is MudTest {
     buildMainBaseAtZero();
     Coord memory coord = Coord({ x: 1, y: 1 });
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    buildSystem.executeTyped(LithiumMinerID, coord);
-    buildSystem.executeTyped(LithiumMinerID, coord);
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
 
     vm.stopPrank();
   }
@@ -212,7 +220,7 @@ contract BuildSystemTest is MudTest {
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
-      buildSystem.executeTyped(MinerID, coord1);
+      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
       secondIncrement++;
     }
     vm.stopPrank();
@@ -227,13 +235,13 @@ contract BuildSystemTest is MudTest {
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
-      buildSystem.executeTyped(MinerID, coord1);
+      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
       secondIncrement++;
     }
     vm.stopPrank();
   }
 
-  function testBuildUpToBuildLimitIgnoreMainBaseAndTransportNodes() public {
+  function testBuildUpToBuildLimitIgnoreMainBaseAndBuildingWithIgnoreLimit() public {
     vm.startPrank(alice);
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
@@ -244,12 +252,12 @@ contract BuildSystemTest is MudTest {
     buildSystem.executeTyped(MainBaseID, coord1);
 
     coord1 = Coord({ x: -1, y: -2 });
-    buildSystem.executeTyped(DebugNodeID, coord1);
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord1);
 
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
       coord1 = Coord({ x: secondIncrement, y: secondIncrement });
-      buildSystem.executeTyped(MinerID, coord1);
+      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
       secondIncrement++;
     }
     vm.stopPrank();
