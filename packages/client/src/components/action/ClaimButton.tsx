@@ -79,7 +79,7 @@ export default function ClaimButton({
       <div className="absolute inset-x-4 bottom-4">
         <button
           id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full py-2`}
         >
           <Spinner />
         </button>
