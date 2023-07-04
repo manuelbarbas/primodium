@@ -30,6 +30,7 @@ export default function NavigateMainBaseButton() {
   const navigateMainBase = useCallback(() => {
     if (mainBaseCoord) {
       primodium.camera.pan(mainBaseCoord);
+      primodium.components.selectedTile(network).set(mainBaseCoord);
     }
   }, [mainBaseCoord]);
 
