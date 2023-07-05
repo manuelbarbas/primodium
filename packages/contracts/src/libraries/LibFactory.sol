@@ -5,6 +5,7 @@ import { FactoryProductionComponent, ID as FactoryProductionComponentID, Factory
 
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
+import { LibResourceProduction } from "./LibResourceProduction.sol";
 
 library LibFactory {
   //checks all required conditions for a factory to be functional and updates factory is functional status
@@ -12,6 +13,7 @@ library LibFactory {
   function updateResourceProductionOnFactoryIsFunctionalChange(
     FactoryProductionComponent factoryProductionComponent,
     Uint256Component mineComponent,
+    Uint256Component lastClaimedAtComponent,
     uint256 playerEntity,
     uint256 factoryBuildingLevelEntity,
     bool isFunctional
@@ -20,16 +22,15 @@ library LibFactory {
       factoryBuildingLevelEntity
     );
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
-    if (isFunctional)
-      mineComponent.set(
-        playerResourceEntity, //player resource production entity
-        LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate
-      );
-    else
-      mineComponent.set(
-        playerResourceEntity, //player resource production entity
-        LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) - factoryProductionData.ResourceProductionRate
-      );
+    uint256 newResourceProductionRate = isFunctional
+      ? LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate
+      : LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) - factoryProductionData.ResourceProductionRate;
+    LibResourceProduction.updateResourceProduction(
+      mineComponent,
+      lastClaimedAtComponent,
+      playerResourceEntity,
+      newResourceProductionRate
+    );
   }
 }
 

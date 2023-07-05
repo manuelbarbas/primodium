@@ -18,6 +18,7 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
+import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
 
 import { MainBaseID } from "../../prototypes/Tiles.sol";
@@ -113,7 +114,9 @@ contract ClaimSystemTest is MudTest {
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-
+    UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
+      component(UnclaimedResourceComponentID)
+    );
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
@@ -149,15 +152,19 @@ contract ClaimSystemTest is MudTest {
       "Alice should not have any Iron"
     );
     assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 10, "Alice should have 10 IronPlates");
-
-    vm.roll(20);
-    DebugRemoveUpgradeRequirementsSystem debugRemoveUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
-      system(DebugRemoveUpgradeRequirementsSystemID)
+    assertEq(
+      unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
+      0,
+      "Alice should have 0 unclaimed IronPlates"
     );
-    debugRemoveUpgradeRequirementsSystem.executeTyped(DebugIronMineID);
-    debugRemoveUpgradeRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+    vm.roll(20);
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
     upgradeSystem.executeTyped(platingFactoryCoord);
+    assertEq(
+      unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
+      10,
+      "Alice should have 10 unclaimed IronPlates"
+    );
     console.log("upgraded factory");
     vm.roll(50);
     claimSystem.executeTyped(mainBaseCoord);
