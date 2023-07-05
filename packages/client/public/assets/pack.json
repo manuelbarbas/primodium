@@ -4,12 +4,12 @@
         {
           "type": "image",
           "key": "terrain-tileset",
-          "url": "/assets/tileset/terrain.png"
+          "url": "/assets/tilesets/terrain.png"
         },
         {
           "type": "image",
           "key": "resource-tileset",
-          "url": "/assets/tileset/resource.png"
+          "url": "/assets/tilesets/resource.png"
         },
         {
           "type": "atlas",
