@@ -55,6 +55,13 @@ export const BlockType = {
   Bolutite: keccak256("block.Bolutite") as EntityID,
 
   // Debug buildings
+  DebugIronMine: keccak256("block.DebugIronMine") as EntityID,
+  DebugIronMineNoTileReqID: keccak256(
+    "block.DebugIronMineNoTileReq"
+  ) as EntityID,
+  DebugIronPlateFactory: keccak256("block.DebugIronPlateFactory") as EntityID,
+  DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
+
   MainBase: keccak256("block.MainBase") as EntityID,
   DebugNode: keccak256("block.DebugNode") as EntityID,
   Miner: keccak256("block.Miner") as EntityID,
@@ -74,6 +81,7 @@ export const BlockType = {
   SelectAttack: keccak256("select.attack") as EntityID,
 
   // Buildings
+  IronMine: keccak256("block.IronMine") as EntityID,
   BasicMiner: keccak256("block.BasicMiner") as EntityID,
   Node: keccak256("block.Node") as EntityID,
   PlatingFactory: keccak256("block.PlatingFactory") as EntityID,
@@ -308,6 +316,9 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Bolutite, "/img/resource/bolutite_ore_layer.png"],
 
   // debug buildings
+  [BlockType.DebugIronMine, "/img/building/minerdrill.gif"],
+  [BlockType.DebugIronPlateFactory, "/img/building/newplatingfactory.gif"],
+  [BlockType.DebugStorageBuilding, "/img/building/node.gif"],
   [BlockType.Miner, "/img/building/minerdrill.gif"],
   [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
   [BlockType.MainBase, "/img/building/mainbase.gif"],
@@ -319,7 +330,7 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Conveyor, "/img/building/conveyor.gif"],
 
   //actual buildings
-  [BlockType.BasicMiner, "/img/building/minerdrill.gif"],
+  [BlockType.IronMine, "/img/building/minerdrill.gif"],
   [BlockType.Node, "/img/building/node.gif"],
   [BlockType.PlatingFactory, "/img/building/newplatingfactory.gif"],
   [BlockType.BasicBatteryFactory, "/img/building/newbasicbatteryfactory.gif"],
