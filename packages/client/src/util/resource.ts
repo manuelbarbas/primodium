@@ -505,3 +505,8 @@ export function isClaimableFactory(tileId: EntityID) {
     tileId == BlockType.BulletFactory
   );
 }
+
+// Main base claims to inventory, not storage
+export function isMainBase(tileId: EntityID) {
+  return tileId == BlockType.MainBase;
+}

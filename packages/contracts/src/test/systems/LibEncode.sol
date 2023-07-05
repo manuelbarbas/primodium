@@ -9,6 +9,9 @@ import { addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { Coord } from "std-contracts/components/CoordComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
+import { AdvancedPowerSourceCraftedItemID, TitaniumResourceItemID, ProjectileLauncherResearchID } from "../../prototypes/Keys.sol";
+import { PenetratorFactoryID } from "../../prototypes/Tiles.sol";
+
 import { LibEncode } from "../../libraries/LibEncode.sol";
 
 contract LibEncodeTest is MudTest {
@@ -20,6 +23,38 @@ contract LibEncodeTest is MudTest {
     vm.stopPrank();
   }
 
+  function testHashKeyEntity() public {
+    bytes32 clientTestOne = bytes32(LibEncode.hashKeyEntity(0, 0));
+    bytes32 clientTestTwo = bytes32(LibEncode.hashKeyEntity(90, 2));
+    bytes32 clientTestThree = bytes32(LibEncode.hashKeyEntity(10, 100));
+    bytes32 clientTestFour = bytes32(LibEncode.hashKeyEntity(12345, 678910));
+    bytes32 clientTestFive = bytes32(LibEncode.hashKeyEntity(25262728, 30313233));
+
+    assertEq(clientTestOne, 0xad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5);
+    assertEq(clientTestTwo, 0x045e11159efe5db0ada3cb8d2e196919e1d0ef71b9b06d0d60609840a64719a3);
+    assertEq(clientTestThree, 0x6b17b8cb5e84a99ff8477b1ce6041bf12d9716e79d07056760acebbb8354fbd1);
+    assertEq(clientTestFour, 0x0c5c051a91a8ab2d13ce6a81f1030321cbaa0af9e7d9b7f67acbfeb12def84d3);
+    assertEq(clientTestFive, 0xf7eea64553e727e221059874c9505c46a9e9ec09f44b6527830b639b77cb4ddd);
+  }
+
+  function testHashKeyEntityItems() public {
+    // Hashing edge cases discovered in #36 with leading zeroes (world.entityIndex on client trims leading zeroes)
+
+    // AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
+    // PenetratorFactoryID 97993341068949256531366201596922953741936964741343840392882074207030726058262
+    // Hash: 0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924
+
+    // TitaniumResourceItemID 29592648218955693310631313341848988444781730640864177349094518031889847668484
+    // ProjectileLauncherResearchID 115710791415720365844662016873039814882667321015852259562238368675311117449333
+    // Hash: 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249
+
+    bytes32 clientTestOne = bytes32(LibEncode.hashKeyEntity(AdvancedPowerSourceCraftedItemID, PenetratorFactoryID));
+    assertEq(clientTestOne, 0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924);
+
+    bytes32 clientTestTwo = bytes32(LibEncode.hashKeyEntity(TitaniumResourceItemID, ProjectileLauncherResearchID));
+    assertEq(clientTestTwo, 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249);
+  }
+
   function testCoordEncoding() public {
     uint256 coordEntity = LibEncode.encodeCoordEntity(Coord({ x: 1, y: 2 }), "test");
     Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
@@ -27,11 +62,15 @@ contract LibEncodeTest is MudTest {
     assertEq(2, decoded.y);
 
     // Check values used in client tests
-    bytes32 clientTestOne = bytes32(LibEncode.encodeCoordEntity(Coord({ x: -110, y: -19201929 }), "testtesttesttesttesttest"));
+    bytes32 clientTestOne = bytes32(
+      LibEncode.encodeCoordEntity(Coord({ x: -110, y: -19201929 }), "testtesttesttesttesttest")
+    );
     bytes32 clientTestTwo = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 124123, y: 3325 }), "building"));
-    bytes32 clientTestThree  = bytes32(LibEncode.encodeCoordEntity(Coord({ x: -12334, y: -1120 }), "sowm"));
+    bytes32 clientTestThree = bytes32(LibEncode.encodeCoordEntity(Coord({ x: -12334, y: -1120 }), "sowm"));
     bytes32 clientTestFour = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 222233332, y: 22324234 }), "taxcuts"));
-    bytes32 clientTestFive = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 2147483647, y: -2147483647 }), "smallbrain"));
+    bytes32 clientTestFive = bytes32(
+      LibEncode.encodeCoordEntity(Coord({ x: 2147483647, y: -2147483647 }), "smallbrain")
+    );
     assertEq(clientTestOne, 0xffffff92fedb0077746573747465737474657374746573747465737474657374);
     assertEq(clientTestTwo, 0x0001e4db00000cfd6275696c64696e6700000000000000000000000000000000);
     assertEq(clientTestThree, 0xffffcfd2fffffba0736f776d0000000000000000000000000000000000000000);
@@ -46,26 +85,4 @@ contract LibEncodeTest is MudTest {
     assertEq(coord.x, decoded.x);
     assertEq(coord.y, decoded.y);
   }
-
-  // function testUint160Mask() public {
-  //   uint256 rawAddr = 0xfcc5ba1a98fc477b8948a04d08c6f4a76181fe75021370ab5e6abd22b1792a2a;
-  //   address addr = 0x08c6F4A76181fe75021370ab5e6abd22b1792a2a;
-
-  //   assertEq(entityToAddress(rawAddr), addr);
-  // }
-
-  // function testHashLithiumAnomaly() public {
-  //   // control key, equivalent to CopperID
-  //   uint256 copperKey = 0x9182d0838cda5b8b8d04b7fdb048ae0d49c90dd4f4ef46ab0958cf6328dfb2ca;
-  //   assertEq(copperKey, CopperID, "copper key is correct");
-
-  //   // key is equivalent to LithiumID
-  //   uint256 key = 0x17025afdea42119548a0a5f9ec0cdbdcb19e7a9f4b475913071021a3cdbb5bfd;
-  //   assertEq(key, LithiumID, "lithium key is correct");
-
-  //   address addr = 0x08c6F4A76181fe75021370ab5e6abd22b1792a2a;
-  //   uint256 browserResult = 0xeca34f2b0223a68bf924ac6039230f608d3402b84363c664fc8e2dadbef21f9e;
-
-  //   assertEq(LibEncode.hashFromAddress(key, addr), browserResult);
-  // }
 }

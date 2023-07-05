@@ -3,10 +3,12 @@ import { execute } from "../network/actions";
 import { useMud } from "../context/MudContext";
 import { useGameStore } from "../store/GameStore";
 import { useNotificationStore } from "../store/NotificationStore";
+import Spinner from "./Spinner";
 
 export default function StarterPackButton() {
   const { systems, providers } = useMud();
-  const [setTransactionLoading] = useGameStore((state) => [
+  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+    state.transactionLoading,
     state.setTransactionLoading,
   ]);
   const [setNotification] = useNotificationStore((state) => [
@@ -32,7 +34,7 @@ export default function StarterPackButton() {
         onClick={claimStarterPack}
         className="h-10 bg-green-600 hover:bg-green-700 text-sm rounded font-bold w-full"
       >
-        Claim 200 Iron
+        {transactionLoading ? <Spinner /> : "Claim 200 Iron"}
       </button>
     </div>
   );
