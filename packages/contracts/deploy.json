@@ -152,7 +152,7 @@
     },
     {
       "name": "BlueprintSystem",
-      "writeAccess": ["*"]
+      "writeAccess": ["BlueprintComponent"]
     }
   ]
 }
