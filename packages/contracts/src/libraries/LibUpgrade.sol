@@ -75,11 +75,110 @@ library LibUpgrade {
     uint256 playerEntity
   ) internal view returns (bool) {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
-    uint256 currentLevel = buildingComponent.getValue(buildingEntity);
-    if (!researchRequirmentComponent.has(LibEncode.hashFromKey(buildingId, currentLevel + 1))) return true;
-    uint256 researchRequirement = researchRequirmentComponent.getValue(
-      LibEncode.hashFromKey(buildingId, currentLevel + 1)
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingComponent.getValue(buildingEntity) + 1);
+    return
+      !researchRequirmentComponent.has(buildingIdLevel) ||
+      LibResearch.checkResearchRequirements(
+        researchRequirmentComponent,
+        researchComponent,
+        buildingIdLevel,
+        playerEntity
+      );
+  }
+
+  function set1RequiredResourceForEntityLevel(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibResourceCost.set1RequiredResourceForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1
     );
-    return LibResearch.hasResearchedWithKey(researchComponent, researchRequirement, playerEntity);
+  }
+
+  function set2RequiredResourcesForEntity(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 resourceId2,
+    uint256 resourceCost2,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibResourceCost.set2RequiredResourcesForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1,
+      resourceId2,
+      resourceCost2
+    );
+  }
+
+  function set3RequiredResourcesForEntity(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 resourceId2,
+    uint256 resourceCost2,
+    uint256 resourceId3,
+    uint256 resourceCost3,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibResourceCost.set3RequiredResourcesForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1,
+      resourceId2,
+      resourceCost2,
+      resourceId3,
+      resourceCost3
+    );
+  }
+
+  function set4RequiredResourcesForEntity(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 resourceId2,
+    uint256 resourceCost2,
+    uint256 resourceId3,
+    uint256 resourceCost3,
+    uint256 resourceId4,
+    uint256 resourceCost4,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibResourceCost.set4RequiredResourcesForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1,
+      resourceId2,
+      resourceCost2,
+      resourceId3,
+      resourceCost3,
+      resourceId4,
+      resourceCost4
+    );
   }
 }

@@ -38,12 +38,22 @@ library LibBuilding {
     return buildingCount < buildCountLimit;
   }
 
+
   function checkCanBuildOnTile(
     Uint256Component tileComponent,
     uint256 tileId,
     Coord memory coord
   ) internal view returns (bool) {
     return !tileComponent.has(tileId) || tileComponent.getValue(tileId) == LibTerrain.getTopLayerKey(coord);
+  }
+  function checkMainBaseLevelRequirement(
+    Uint256Component buildingComponent,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    if (!buildingComponent.has(entity)) return true;
+    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
+    return mainBuildingLevel >= buildingComponent.getValue(entity);
   }
 
   function getMainBuildingLevelforPlayer(
