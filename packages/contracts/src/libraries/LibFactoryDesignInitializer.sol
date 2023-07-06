@@ -8,7 +8,7 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
-
+import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 // production buildings
@@ -29,7 +29,9 @@ library LibFactoryDesignInitializer {
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
     );
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
     //PlatingFactoryID
+    maxLevelComponent.set(PlatingFactoryID, 2);
     //PlatingFactoryID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(PlatingFactoryID, 1);
     FactoryMineBuildingsData memory factoryMineBuildingsData;

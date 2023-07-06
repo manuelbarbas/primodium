@@ -123,16 +123,10 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
-    );
-
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
     buildSystem.executeTyped(DebugIronMineID, coord);
 
     console.log("built IronMineID");
