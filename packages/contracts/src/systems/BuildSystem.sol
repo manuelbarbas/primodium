@@ -10,6 +10,8 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -27,7 +29,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
-
+import { LibStorage } from "../libraries/LibStorage.sol";
 uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is System {
@@ -88,6 +90,21 @@ contract BuildSystem is System {
     );
   }
 
+  function checkAndUpdatePlayerStorageAfterBuild(uint256 buildingId) internal {
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getAddressById(components, StorageCapacityResourcesComponentID)
+    );
+    LibStorage.checkAndUpdatePlayerStorageAfterBuild(
+      storageCapacityComponent,
+      storageCapacityResourcesComponent,
+      addressToEntity(msg.sender),
+      buildingId
+    );
+  }
+
   function execute(bytes memory args) public returns (bytes memory) {
     (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
@@ -107,6 +124,10 @@ contract BuildSystem is System {
     uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
+    require(
+      LibBuilding.checkCanBuildOnTile(tileComponent, blockType, entity),
+      "[BuildSystem] Cannot build on this tile"
+    );
     //check required research
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
 
@@ -169,6 +190,8 @@ contract BuildSystem is System {
     tileComponent.set(entity, blockType);
     ownedByComponent.set(entity, addressToEntity(msg.sender));
     lastBuiltAtComponent.set(entity, block.number);
+
+    checkAndUpdatePlayerStorageAfterBuild(blockType);
 
     return abi.encode(entity);
   }
