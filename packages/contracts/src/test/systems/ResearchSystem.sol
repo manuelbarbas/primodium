@@ -13,8 +13,8 @@ import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/
 import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "../../systems/ClaimFromFactorySystem.sol";
 import { CraftSystem, ID as CraftSystemID } from "../../systems/CraftSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
-import { DebugAquireResourcesSystem, ID as DebugAquireResourcesSystemID } from "../../systems/DebugAquireResourcesSystem.sol";
-import { DebugAquireResourcesBasedOnRequirementSystem, ID as DebugAquireResourcesBasedOnRequirementSystemID } from "../../systems/DebugAquireResourcesBasedOnRequirementSystem.sol";
+import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
+import { DebugAcquireResourcesBasedOnRequirementSystem, ID as DebugAcquireResourcesBasedOnRequirementSystemID } from "../../systems/DebugAcquireResourcesBasedOnRequirementSystem.sol";
 import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "../../components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
@@ -54,10 +54,10 @@ contract ResearchSystemTest is MudTest {
 
     ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
-    DebugAquireResourcesBasedOnRequirementSystem debugAquireResourcesBasedOnRequirementSystem = DebugAquireResourcesBasedOnRequirementSystem(
-        system(DebugAquireResourcesBasedOnRequirementSystemID)
+    DebugAcquireResourcesBasedOnRequirementSystem debugAcquireResourcesBasedOnRequirementSystem = DebugAcquireResourcesBasedOnRequirementSystem(
+        system(DebugAcquireResourcesBasedOnRequirementSystemID)
       );
-    debugAquireResourcesBasedOnRequirementSystem.executeTyped(DebugSimpleTechnologyResourceReqsID);
+    debugAcquireResourcesBasedOnRequirementSystem.executeTyped(DebugSimpleTechnologyResourceReqsID);
     // alice researches DebugSimpleTechnologyResourceReqsID
     researchSystem.executeTyped(DebugSimpleTechnologyResourceReqsID);
     assertTrue(

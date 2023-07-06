@@ -13,7 +13,7 @@ import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 import { DebugRemoveBuildingRequirementsSystem, ID as DebugRemoveBuildingRequirementsSystemID } from "../../systems/DebugRemoveBuildingRequirementsSystem.sol";
 import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
-import { DebugAquireStorageForAllResourcesSystem, ID as DebugAquireStorageForAllResourcesSystemID } from "../../systems/DebugAquireStorageForAllResourcesSystem.sol";
+import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
@@ -479,11 +479,11 @@ contract ClaimSystemTest is MudTest {
     Coord memory mainBaseCoord = Coord({ x: -5, y: -4 });
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
-    DebugAquireStorageForAllResourcesSystem debugAquireStorageForAllResourcesSystem = DebugAquireStorageForAllResourcesSystem(
-        system(DebugAquireStorageForAllResourcesSystemID)
+    DebugAcquireStorageForAllResourcesSystem debugAcquireStorageForAllResourcesSystem = DebugAcquireStorageForAllResourcesSystem(
+        system(DebugAcquireStorageForAllResourcesSystemID)
       );
     //gain capacity for all resources so can store copper
-    debugAquireStorageForAllResourcesSystem.executeTyped();
+    debugAcquireStorageForAllResourcesSystem.executeTyped();
     buildSystem.executeTyped(DebugIronMineID, IronCoord);
     buildSystem.executeTyped(DebugCopperMineID, CopperCoord);
 

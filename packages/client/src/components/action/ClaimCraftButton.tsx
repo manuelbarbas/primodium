@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { EntityID } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 
 import { useMud } from "../../context/MudContext";
-import { DisplayTile } from "../../util/constants";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
@@ -13,7 +13,7 @@ export default function ClaimCraftButton({
   coords: { x, y },
 }: {
   id: string;
-  coords: DisplayTile;
+  coords: Coord;
   builtTile: EntityID;
 }) {
   const { systems, providers } = useMud();

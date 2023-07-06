@@ -10,6 +10,7 @@ import { Coord } from "../types.sol";
 import { LibTerrain } from "./LibTerrain.sol";
 import { LibEncode } from "./LibEncode.sol";
 
+
 library LibBuilding {
   function checkBuildLimitConditionForBuildingId(
     BoolComponent ignoreBuildLimitComponent,

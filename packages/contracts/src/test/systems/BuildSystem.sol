@@ -6,7 +6,7 @@ import { MudTest } from "std-contracts/test/MudTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { DebugAquireResourcesSystem, ID as DebugAquireResourcesSystemID } from "../../systems/DebugAquireResourcesSystem.sol";
+import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
 import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "../../systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
 import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from "../../systems/DebugRemoveBuildLimitSystem.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
@@ -141,8 +141,8 @@ contract BuildSystemTest is MudTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    DebugAquireResourcesSystem debugAquireResourcesSystem = DebugAquireResourcesSystem(
-      system(DebugAquireResourcesSystemID)
+    DebugAcquireResourcesSystem debugAcquireResourcesSystem = DebugAcquireResourcesSystem(
+      system(DebugAcquireResourcesSystemID)
     );
 
     buildMainBaseAtZero();
@@ -169,7 +169,7 @@ contract BuildSystemTest is MudTest {
         resourceRequirements[i],
         resourceCost
       );
-      debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
+      debugAcquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
     }
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory ironCoord = Coord({ x: -5, y: 2 });
