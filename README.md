@@ -73,6 +73,29 @@ resource production is updated when:
 before production is changed `UnclaimedResourceComponent` is updated for the player entity and resource id.
 this component tracks how much resource is produced but not claimed. `UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point and will always be less than or equal to the available space for that resource in the players storage
 
+# Factories
+
+Factories are similar to Mines but to produce resources they require other Mines to be connected to them.
+for a factory to be functional the level of the Mines connected should not be lower then the level of the factory itself.
+
+`FactoryMineBuildingsComponent` : for a combination key of `BuildingID` and Level contains two arrays:
+
+- `MineBuildingId` : a list of mine building ids that has to be connected to the factory for it to be functional
+- `MineBuildingCount`: a list of how many of each mine building that has to be connected to the factory
+
+`FactoryProductionComponent` : for a combination key of `BuildingID` and Level contains two ids:
+
+- `ResourceID` : the resource type this factory produces
+- `ResourceProductionRate` : the production of this factory per block (note for future we should modify the way this value is interpreted so it isn't per block to be able to reduce the tempo. maybe the rate can be per 100 blocks for example)
+
+`FactoryIsFunctionalComponent`: for an existing factory entity declares if that factory is functional. this value is updated when a player action either results in the factory becoming functional or results in it becoming non functional
+
+`LibFactoryDesignInitializer`: writes the design data for factories for each of their levels on `FactoryMineBuildingsComponent` and `FactoryProductionComponent`
+
+`LibFactory` : contains the core logic functions for two main purposes:
+
+- updating the `FactoryIsFunctionalComponent` for a factory entity when a player action may result in the factory to become functional or non functional
+
 # Component Structure
 
 `OwnedByComponent` records building ownership while `ItemComponent` records mined and crafted item ownership.
