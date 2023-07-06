@@ -9,7 +9,7 @@ uint256 constant ID = uint256(keccak256("system.Blueprint"));
 contract PrimodiumSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function get(uint256 id) internal view returns (address) {
+  function getC(uint256 id) internal view returns (address) {
     return getAddressById(components, id);
   }
 

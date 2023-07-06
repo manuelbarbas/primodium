@@ -39,7 +39,7 @@ contract BlueprintSystem is PrimodiumSystem {
   }
 
   /**
-   * @dev Executes the blueprint creation using typed parameters.
+   * @dev Executes the blueprint creation using an array of integers.
    * @param buildingType The type of building for the blueprint.
    * @param blueprint The blueprint coordinates as an array of integers.
    * @return Empty bytes.
@@ -56,6 +56,8 @@ contract BlueprintSystem is PrimodiumSystem {
    */
   function createBlueprint(uint256 buildingType, int32[] memory blueprint) private {
     require(blueprint.length % 2 == 0, "blueprint: odd number of values");
-    Blueprint(get(BlueprintID)).set(buildingType, blueprint);
+    Blueprint blueprintComponent = Blueprint(getC(BlueprintID));
+    require(!blueprintComponent.has(buildingType), "[BlueprintSystem]: building already has a blueprint");
+    blueprintComponent.set(buildingType, blueprint);
   }
 }
