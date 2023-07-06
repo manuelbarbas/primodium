@@ -7,6 +7,7 @@ import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComp
 import { LibEncode } from "./LibEncode.sol";
 import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
 import { LibClaim } from "./LibClaim.sol";
+import { LibMath } from "./LibMath.sol";
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 library LibNewMine {
@@ -31,13 +32,16 @@ library LibNewMine {
         playerEntity,
         storageResourceIds[i]
       );
-      LibClaim.addResourceToStorage(
-        itemComponent,
-        storageCapacityComponent,
-        storageResourceIds[i],
-        unclaimedResourceComponent.getValue(playerResourceEntity),
-        playerEntity
-      );
+      uint256 unclaimedResourceAmount = LibMath.getSafeUint256Value(unclaimedResourceComponent, playerResourceEntity);
+      if (unclaimedResourceAmount > 0)
+        LibClaim.addResourceToStorage(
+          itemComponent,
+          storageCapacityComponent,
+          storageResourceIds[i],
+          unclaimedResourceAmount,
+          playerEntity
+        );
+      lastClaimedAtComponent.set(playerResourceEntity, block.number);
       unclaimedResourceComponent.set(playerResourceEntity, 0);
     }
   }

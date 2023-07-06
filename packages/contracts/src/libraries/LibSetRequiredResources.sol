@@ -18,7 +18,7 @@ library LibSetRequiredResources {
     uint256[] memory resourceIds = new uint256[](1);
     resourceIds[0] = resourceId1;
     requiredResourcesComponent.set(entity, resourceIds);
-    itemComponent.set(LibEncode.hashFromKey(resourceId1, entity), resourceCost1);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId1, entity), resourceCost1);
   }
 
   function set2RequiredResourcesForEntity(
@@ -34,8 +34,8 @@ library LibSetRequiredResources {
     resourceIds[0] = resourceId1;
     resourceIds[1] = resourceId2;
     requiredResourcesComponent.set(entity, resourceIds);
-    itemComponent.set(LibEncode.hashFromKey(resourceId1, entity), resourceCost1);
-    itemComponent.set(LibEncode.hashFromKey(resourceId2, entity), resourceCost2);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId1, entity), resourceCost1);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId2, entity), resourceCost2);
   }
 
   function set3RequiredResourcesForEntity(
@@ -54,9 +54,9 @@ library LibSetRequiredResources {
     resourceIds[1] = resourceId2;
     resourceIds[2] = resourceId3;
     requiredResourcesComponent.set(entity, resourceIds);
-    itemComponent.set(LibEncode.hashFromKey(resourceId1, entity), resourceCost1);
-    itemComponent.set(LibEncode.hashFromKey(resourceId2, entity), resourceCost2);
-    itemComponent.set(LibEncode.hashFromKey(resourceId3, entity), resourceCost3);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId1, entity), resourceCost1);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId2, entity), resourceCost2);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId3, entity), resourceCost3);
   }
 
   function set4RequiredResourcesForEntity(
@@ -78,9 +78,9 @@ library LibSetRequiredResources {
     resourceIds[2] = resourceId3;
     resourceIds[3] = resourceId4;
     requiredResourcesComponent.set(entity, resourceIds);
-    itemComponent.set(LibEncode.hashFromKey(resourceId1, entity), resourceCost1);
-    itemComponent.set(LibEncode.hashFromKey(resourceId2, entity), resourceCost2);
-    itemComponent.set(LibEncode.hashFromKey(resourceId3, entity), resourceCost3);
-    itemComponent.set(LibEncode.hashFromKey(resourceId4, entity), resourceCost4);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId1, entity), resourceCost1);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId2, entity), resourceCost2);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId3, entity), resourceCost3);
+    itemComponent.set(LibEncode.hashKeyEntity(resourceId4, entity), resourceCost4);
   }
 }

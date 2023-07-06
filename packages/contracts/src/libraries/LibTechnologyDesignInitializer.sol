@@ -10,7 +10,7 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 // Items
@@ -28,8 +28,10 @@ library LibTechnologyDesignInitializer {
     RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
+    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
 
     // Research FastMiner with 100 IronResource and 100 CopperResource
+    researchComponent.set(FastMinerResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -41,6 +43,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research Copper with 30 IronResource
+    researchComponent.set(CopperResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -50,6 +53,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research PlatingFactory with 200 IronResource and 200 CopperResource
+    researchComponent.set(PlatingFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -61,6 +65,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
+    researchComponent.set(LithiumResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -72,6 +77,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research BasicBatteryFactory with 50 IronPlateCrafted and 100 LithiumResource
+    researchComponent.set(BasicBatteryFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -83,6 +89,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research KineticMissileFactory with 50 BasicPowerSourceCrafted and 100 IronResource
+    researchComponent.set(KineticMissileFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -94,6 +101,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research Titanium with 50 BasicPowerSourceCrafted
+    researchComponent.set(TitaniumResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -103,6 +111,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research ProjectileLauncher with 50 BasicPowerSourceCrafted and 500 TitaniumResource
+    researchComponent.set(ProjectileLauncherResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -114,6 +123,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research HardenedDrill with 200 TitaniumResource, 500 IronPlateCrafted, and 50 BasicPowerSourceCrafted
+    researchComponent.set(HardenedDrillResearchID);
     LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -127,6 +137,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research Osmium with 300 TitaniumResource
+    researchComponent.set(OsmiumResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -136,6 +147,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research DenseMetalRefinery with 100 OsmiumResource, 300 TitaniumResource, and 100 BasicPowerSourceCrafted
+    researchComponent.set(DenseMetalRefineryResearchID);
     LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -149,6 +161,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research AdvancedBatteryFactory with 200 OsmiumResource, 100 IronPlateCrafted, and 400 TitaniumResource
+    researchComponent.set(AdvancedBatteryFactoryResearchID);
     LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -162,6 +175,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research Tungsten with 100 RefinedOsmiumCrafted 200 TitaniumResource
+    researchComponent.set(TungstenResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -173,6 +187,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research HighTempFoundry with 200 TungstenResource, 100 OsmiumResource, 50 AdvancedPowerSourceCrafted
+    researchComponent.set(HighTempFoundryResearchID);
     LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -186,6 +201,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research Iridium with 100 TungstenRodCrafted 100 OsmiumResource
+    researchComponent.set(IridiumResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -197,6 +213,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research PrecisionMachineryFactory with 200 IridiumResource and 100 TungstenRodsCrafted
+    researchComponent.set(PrecisionMachineryFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -208,6 +225,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research IridiumDrillbitFactory with 100 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
+    researchComponent.set(IridiumDrillbitFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -219,6 +237,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research PrecisionPneumaticDrill with 200 TungstenRodsCrafted and 50 IridiumDrillbitCrafted
+    researchComponent.set(PrecisionPneumaticDrillResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -230,6 +249,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research PenetratorFactory with 500 OsmiumResource and 50 AdvancedPowerSourceCrafted
+    researchComponent.set(PenetratorFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -241,6 +261,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research PenetratingMissileFactory with 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
+    researchComponent.set(PenetratingMissileFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -252,6 +273,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research MissileLaunchComplex with 50 TungstenRodsCrafted and 100 AdvancedPowerSourceCrafted
+    researchComponent.set(MissileLaunchComplexResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -263,6 +285,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research HighEnergyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
+    researchComponent.set(HighEnergyLaserFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -274,6 +297,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research ThermobaricWarheadFactory with 200 IridiumCrystalCrafted
+    researchComponent.set(ThermobaricWarheadFactoryResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -283,6 +307,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Resesarch ThermobaricMissileFactory with 200 IridiumCrystalCrafted and 100 TungstenRodsCrafted
+    researchComponent.set(ThermobaricMissileFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -294,6 +319,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research Kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
+    researchComponent.set(KimberliteResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -305,6 +331,7 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research KimberliteCatalystFactory with 300 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
+    researchComponent.set(KimberliteCatalystFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,

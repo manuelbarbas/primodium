@@ -13,40 +13,12 @@ import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesCompon
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-
+import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 // Items
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 library LibStorageDesignInitializer {
   function init(IWorld world) internal {
-    uint256[25] memory allResourceIds = [
-      BolutiteResourceItemID,
-      CopperResourceItemID,
-      IridiumResourceItemID,
-      IronResourceItemID,
-      KimberliteResourceItemID,
-      LithiumResourceItemID,
-      OsmiumResourceItemID,
-      TitaniumResourceItemID,
-      TungstenResourceItemID,
-      UraniniteResourceItemID,
-      IronPlateCraftedItemID,
-      BasicPowerSourceCraftedItemID,
-      KineticMissileCraftedItemID,
-      RefinedOsmiumCraftedItemID,
-      AdvancedPowerSourceCraftedItemID,
-      PenetratingWarheadCraftedItemID,
-      PenetratingMissileCraftedItemID,
-      TungstenRodsCraftedItemID,
-      IridiumCrystalCraftedItemID,
-      IridiumDrillbitCraftedItemID,
-      LaserPowerSourceCraftedItemID,
-      ThermobaricWarheadCraftedItemID,
-      ThermobaricMissileCraftedItemID,
-      KimberliteCrystalCatalystCraftedItemID,
-      BulletCraftedItemID
-    ];
-
     IUint256Component components = world.components();
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
@@ -55,14 +27,40 @@ library LibStorageDesignInitializer {
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
 
-    uint256[] memory storageCapacity = new uint256[](allResourceIds.length);
-
     //MainBaseID Level 1 Storage
-    uint256 buildingIdLevel = LibEncode.hashFromKey(MainBaseID, 1);
-    for (uint256 i = 0; i < allResourceIds.length; i++) {
-      storageCapacityComponent.set(LibEncode.hashFromKey(allResourceIds[i], buildingIdLevel), uint256(1000000000000));
-      storageCapacity[i] = allResourceIds[i];
-    }
-    storageCapacityResourcesComponent.set(buildingIdLevel, storageCapacity);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 1);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      buildingIdLevel,
+      IronResourceItemID,
+      200
+    );
+
+    //MainBaseID Level 2 Storage
+    buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 2);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      buildingIdLevel,
+      IronResourceItemID,
+      400,
+      CopperResourceItemID,
+      400
+    );
+
+    //MainBaseID Level 3 Storage
+    buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 3);
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      buildingIdLevel,
+      IronResourceItemID,
+      600,
+      CopperResourceItemID,
+      600,
+      LithiumResourceItemID,
+      600
+    );
   }
 }

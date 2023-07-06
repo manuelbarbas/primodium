@@ -2,12 +2,8 @@ pragma solidity >=0.8.0;
 // Production Buildings
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
-import { LibDebug } from "libraries/LibDebug.sol";
-import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
-import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 import { LibTerrain } from "libraries/LibTerrain.sol";
 

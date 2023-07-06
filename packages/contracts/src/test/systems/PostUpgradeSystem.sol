@@ -14,7 +14,7 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
-import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";

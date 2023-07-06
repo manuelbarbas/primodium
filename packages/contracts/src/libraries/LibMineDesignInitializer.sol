@@ -26,26 +26,26 @@ library LibMineDesignInitializer {
     //IronMineID
     tileComponent.set(IronMineID, IronResourceItemID);
     //IronMineID Level 1
-    uint256 buildingIdLevel = LibEncode.hashFromKey(IronMineID, 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 1);
     mineComponent.set(buildingIdLevel, 1);
     //IronMineID Level 2
-    buildingIdLevel = LibEncode.hashFromKey(IronMineID, 2);
+    buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 2);
     mineComponent.set(buildingIdLevel, 2);
     //IronMineID Level 3
-    buildingIdLevel = LibEncode.hashFromKey(IronMineID, 3);
+    buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 3);
     mineComponent.set(buildingIdLevel, 3);
 
     //CopperMineID
     tileComponent.set(CopperMineID, CopperResourceItemID);
 
     //CopperMineID Level 1
-    buildingIdLevel = LibEncode.hashFromKey(CopperMineID, 1);
+    buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 1);
     mineComponent.set(buildingIdLevel, 1);
     //CopperMineID Level 2
-    buildingIdLevel = LibEncode.hashFromKey(CopperMineID, 2);
+    buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 2);
     mineComponent.set(buildingIdLevel, 2);
     //CopperMineID Level 3
-    buildingIdLevel = LibEncode.hashFromKey(CopperMineID, 3);
+    buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 3);
     mineComponent.set(buildingIdLevel, 3);
   }
 }
