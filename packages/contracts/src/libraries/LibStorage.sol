@@ -125,6 +125,17 @@ library LibStorage {
     return getEntityStorageCapacityForResource(storageComponent, LibEncode.hashFromKey(buildingId, level), resourceId);
   }
 
+  function getAvailableSpaceInStorageForResource(
+    Uint256Component storageComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId
+  ) internal view returns (uint256) {
+    return
+      getEntityStorageCapacityForResource(storageComponent, entity, resourceId) -
+      LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceId, entity));
+  }
+
   function getEntityStorageCapacityForResource(
     Uint256Component storageComponent,
     uint256 entity,
@@ -156,17 +167,25 @@ library LibStorage {
     uint256 resourceAmount,
     uint256 playerEntity
   ) internal returns (uint256) {
-    uint256 currentStorage = getEntityStorageCapacityForResource(storageComponent, playerEntity, resourceId);
-    uint256 currentStoredAmount = LibMath.getSafeUint256Value(
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    uint256 availableSpaceInPlayerStorage = getAvailableSpaceInStorageForResource(
+      storageComponent,
       itemComponent,
-      LibEncode.hashKeyEntity(resourceId, playerEntity)
+      playerEntity,
+      resourceId
     );
-    if (currentStoredAmount + resourceAmount > currentStorage) {
-      uint256 amountToStore = currentStorage - currentStoredAmount;
-      itemComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), currentStoredAmount + amountToStore);
-      return resourceAmount - amountToStore;
+    if (availableSpaceInPlayerStorage > resourceAmount) {
+      itemComponent.set(
+        playerResourceEntity,
+        LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + resourceAmount
+      );
+      return 0;
+    } else {
+      itemComponent.set(
+        playerResourceEntity,
+        LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
+      );
+      return resourceAmount - availableSpaceInPlayerStorage;
     }
-    itemComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), currentStoredAmount + resourceAmount);
-    return 0;
   }
 }
