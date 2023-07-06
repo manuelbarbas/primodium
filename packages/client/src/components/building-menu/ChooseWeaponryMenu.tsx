@@ -30,7 +30,6 @@ function ChooseWeaponryMenu({
           label="Projectile launcher"
           blockType={BlockType.ProjectileLauncher}
         />
-        {/* third resource not being read */}
         <BuildingIconButton
           label="Penetrator factory"
           blockType={BlockType.PenetratorFactory}

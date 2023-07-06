@@ -480,12 +480,72 @@ export type DisplayKeyPair = {
   resource: EntityID | null;
 };
 
-export const TutorialStepToNarrationStep: {
-  [key: number]: number | undefined;
-} = {
-  0: undefined,
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 3,
-};
+export const BuildingResearchRequirements = new Map<EntityID, EntityID[]>([
+  [BlockType.MainBase, [BlockType.MainBaseResearch]],
+  [BlockType.BasicMiner, [BlockType.BasicMinerResearch]],
+  [BlockType.Node, [BlockType.NodeResearch]],
+  [BlockType.Conveyor, [BlockType.ConveyorResearch]],
+
+  [BlockType.Miner, [BlockType.BasicMinerResearch]],
+  [BlockType.DebugNode, [BlockType.NodeResearch]],
+  [BlockType.BulletFactory, [BlockType.BulletFactoryResearch]],
+  [BlockType.Silo, [BlockType.SiloResearch]],
+
+  [BlockType.PlatingFactory, [BlockType.PlatingFactoryResearch]],
+  [BlockType.BasicBatteryFactory, [BlockType.BasicBatteryFactoryResearch]],
+  [BlockType.KineticMissileFactory, [BlockType.KineticMissileFactoryResearch]],
+  [BlockType.ProjectileLauncher, [BlockType.ProjectileLauncherResearch]],
+  [BlockType.HardenedDrill, [BlockType.HardenedDrillResearch]],
+  [BlockType.DenseMetalRefinery, [BlockType.DenseMetalRefineryResearch]],
+  [
+    BlockType.AdvancedBatteryFactory,
+    [BlockType.AdvancedBatteryFactoryResearch],
+  ],
+  [BlockType.HighTempFoundry, [BlockType.HighTempFoundryResearch]],
+  [
+    BlockType.PrecisionMachineryFactory,
+    [BlockType.PrecisionMachineryFactoryResearch],
+  ],
+  [
+    BlockType.IridiumDrillbitFactory,
+    [BlockType.IridiumDrillbitFactoryResearch],
+  ],
+  [
+    BlockType.PrecisionPneumaticDrill,
+    [BlockType.PrecisionPneumaticDrillResearch],
+  ],
+  [BlockType.PenetratorFactory, [BlockType.PenetratorFactoryResearch]],
+  [
+    BlockType.PenetratingMissileFactory,
+    [BlockType.PenetratingMissileFactoryResearch],
+  ],
+  [BlockType.MissileLaunchComplex, [BlockType.MissileLaunchComplexResearch]],
+  [
+    BlockType.HighEnergyLaserFactory,
+    [BlockType.HighEnergyLaserFactoryResearch],
+  ],
+  [
+    BlockType.ThermobaricWarheadFactory,
+    [BlockType.ThermobaricWarheadFactoryResearch],
+  ],
+  [
+    BlockType.ThermobaricMissileFactory,
+    [BlockType.ThermobaricMissileFactoryResearch],
+  ],
+  [
+    BlockType.KimberliteCatalystFactory,
+    [BlockType.KimberliteCatalystFactoryResearch],
+  ],
+]);
+
+export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
+  BlockType.MainBaseResearch,
+  BlockType.Iron,
+  BlockType.BasicMinerResearch,
+  BlockType.NodeResearch,
+
+  // debug
+  BlockType.ConveyorResearch,
+  BlockType.BulletFactoryResearch,
+  BlockType.SiloResearch,
+]);

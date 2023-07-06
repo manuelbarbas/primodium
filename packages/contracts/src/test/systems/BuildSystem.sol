@@ -14,19 +14,16 @@ import { BuildingComponent, ID as BuildingComponentID } from "../../components/B
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 //debug buildings
 import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
 
 //main buildings
-import { BasicMinerID, IronMineID } from "../../prototypes/Tiles.sol";
+import { BasicMinerID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
-import { LibTerrain } from "../../libraries/LibTerrain.sol";
 
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -173,6 +170,46 @@ contract BuildSystemTest is MudTest {
       buildSystem.executeTyped(MinerID, coord1);
       secondIncrement++;
     }
+    vm.stopPrank();
+  }
+
+  function testBuildPath() public {
+    vm.startPrank(alice);
+
+    Coord memory startCoord = Coord({ x: 0, y: 0 });
+    Coord memory endCoord = Coord({ x: 0, y: 1 });
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
+
+    OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
+    PathComponent pathComponent = PathComponent(component(PathComponentID));
+
+    // Build two conveyor blocks
+    bytes memory startBlockEntity = buildSystem.executeTyped(DebugNodeID, startCoord);
+    bytes memory endBlockEntity = buildSystem.executeTyped(DebugNodeID, endCoord);
+
+    uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
+    uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
+
+    Coord memory startPosition = LibEncode.decodeCoordEntity(startBlockEntityID);
+    assertEq(startPosition.x, startCoord.x);
+    assertEq(startPosition.y, startCoord.y);
+
+    Coord memory endPosition = LibEncode.decodeCoordEntity(endBlockEntityID);
+    assertEq(endPosition.x, endCoord.x);
+    assertEq(endPosition.y, endCoord.y);
+
+    assertTrue(ownedByComponent.has(startBlockEntityID));
+    assertEq(ownedByComponent.getValue(startBlockEntityID), addressToEntity(alice));
+
+    assertTrue(ownedByComponent.has(endBlockEntityID));
+    assertEq(ownedByComponent.getValue(endBlockEntityID), addressToEntity(alice));
+
+    // Build a path
+    buildPathSystem.executeTyped(startCoord, endCoord);
+    assertEq(pathComponent.getValue(startBlockEntityID), endBlockEntityID);
+
     vm.stopPrank();
   }
 }

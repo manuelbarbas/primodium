@@ -18,18 +18,12 @@
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
-    "IgnoreBuildLimitComponent",
-    "StorageCapacityComponent",
-    "StorageCapacityResourcesComponent",
-    "MineComponent",
-    "UnclaimedResourceComponent"
+    "IgnoreBuildLimitComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibBuildingUpgradeDesignInitializer",
-    "LibStorageDesignInitializer",
-    "LibMineDesignInitializer",
     "LibTechnologyDesignInitializer"
   ],
   "systems": [
@@ -68,8 +62,7 @@
         "MainBaseInitializedComponent",
         "BuildingComponent",
         "MainBaseInitializedComponent",
-        "BuildingLimitComponent",
-        "StorageCapacityComponent"
+        "BuildingLimitComponent"
       ]
     },
     {
@@ -84,31 +77,16 @@
 
         "MainBaseInitializedComponent",
         "BuildingComponent",
-        "BuildingLimitComponent",
-        "StorageCapacityComponent"
+        "BuildingLimitComponent"
       ]
     },
     {
       "name": "BuildPathSystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent"
-      ]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "DestroyPathSystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent"
-      ]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent"]
     },
     {
       "name": "ClaimFromMineSystem",
@@ -118,8 +96,8 @@
         "PathComponent",
         "LastBuiltAtComponent",
         "LastClaimedAtComponent",
-        "ItemComponent",
-        "UnclaimedResourceComponent"
+
+        "ItemComponent"
       ]
     },
     {
@@ -148,14 +126,7 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": [
-        "BuildingComponent",
-        "ItemComponent",
-        "StorageCapacityComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent"
-      ]
+      "writeAccess": ["BuildingComponent", "ItemComponent"]
     },
     {
       "name": "DebugAquireResourcesSystem",
