@@ -4,7 +4,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 
 import { MinerID, LithiumMinerID, BasicMinerID, HardenedDrillID, PrecisionPneumaticDrillID, BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TungstenID, UraniniteID } from "../prototypes/Tiles.sol";
-
+import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibDebug } from "./LibDebug.sol";
 import { LibEncode } from "./LibEncode.sol";
 
@@ -16,6 +16,21 @@ library LibMine {
     } else {
       return resourceKey == IronID;
     }
+  }
+
+  function checkAndUpdateResourceProductionOnBuildPathFromMine(
+    Uint256Component mineComponent,
+    Uint256Component buildingComponent,
+    Uint256Component tileComponent,
+    uint256 playerEntity,
+    uint256 fromEntity,
+    uint256 toEntity
+  ) internal {
+    if (!mineComponent.has(fromEntity) || tileComponent.getValue(toEntity) != MainBaseID) return;
+    uint256 resourceId = tileComponent.getValue(fromEntity);
+    uint256 resourceProductionIncrease = mineComponent.getValue(fromEntity);
+    uint256 playerResourceProductionEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    mineComponent.set(fromEntity, 0);
   }
 
   // allow mine resource if unlocked.

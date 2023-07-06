@@ -45,6 +45,34 @@ To craft from factory
 - CraftSystem: Crafting Items (called from factories)
   - Called from factories (items already in factories, no resource flows)
 
+# Storage
+
+In the `LibStorageDesignInitializer` Buildings which increase storage capacity are designated the Resources they provide capacity for via `StorageCapacityResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `StorageCapacityComponent`
+
+`buildingLevelId = hashKeyEntity(buildingId, level)`
+`resourceBuildingLevelId = hashKeyEntity(resourceId, buildingLevelId)`
+
+the amount of Iron storage that is provided by a level 2 MainBase is :
+`storageCapacityComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
+
+When Buildings are Built, Upgraded or Destroyed `StorageCapacityComponent` is updated for the player and the resources they modify the capacity for.
+`playerResourceID = hashKeyEntity(resourceId, playerEntity)`
+
+# Resource Production
+
+`MineComponent`:
+
+- for the combination of player entity and resource id stores the production of that resource per block
+- for the combination of building id, level and resource stores the production rate of that resource for that level of that building
+
+resource production is updated when:
+
+- a path is built or destroyed from a building with resource production to MainBase
+- a building that has a path to main base is upgraded
+
+before production is changed `UnclaimedResourceComponent` is updated for the player entity and resource id.
+this component tracks how much resource is produced but not claimed. `UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point and will always be less than or equal to the available space for that resource in the players storage
+
 # Component Structure
 
 `OwnedByComponent` records building ownership while `ItemComponent` records mined and crafted item ownership.
@@ -56,7 +84,6 @@ To craft from factory
 ```
   CounterComponent
   GameConfigComponent
-  PositionComponent
   TileComponent
   OwnedByComponent
   PathComponent
@@ -73,6 +100,19 @@ The keys of the following component is a hash of the uint256 representation of a
 ```
   ItemComponent
   ResearchComponent
+```
+
+## Game metadata
+
+The following components are used to store metadata that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `BuildingLimitComponent` stores building limit requirements.
+
+`TileComponent`: set for a building ID to only allow that building to be built on the set tile type
+
+```
+  RequiredResearchComponent
+  RequiredResourcesComponent
+  ItemComponent
+  BuildingLimitComponent
 ```
 
 ## Game mechanics
