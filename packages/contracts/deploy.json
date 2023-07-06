@@ -19,14 +19,15 @@
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
     "IgnoreBuildLimitComponent",
-    "BuildingBlockComponent",
+    "BuildingBlocksComponent",
     "BlueprintComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibBuildingUpgradeDesignInitializer",
-    "LibTechnologyDesignInitializer"
+    "LibTechnologyDesignInitializer",
+    "LibBlueprintInitializer"
   ],
   "systems": [
     {
@@ -64,7 +65,8 @@
         "MainBaseInitializedComponent",
         "BuildingComponent",
         "MainBaseInitializedComponent",
-        "BuildingLimitComponent"
+        "BuildingLimitComponent",
+        "BuildingBlocksComponent"
       ]
     },
     {

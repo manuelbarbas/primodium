@@ -3,8 +3,11 @@ pragma solidity >=0.8.0;
 
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { Coord } from "../types.sol";
+
 import { BlueprintComponent as Blueprint, ID as BlueprintID } from "components/BlueprintComponent.sol";
+
+import { LibBlueprint } from "libraries/LibBlueprint.sol";
+import { Coord } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("system.Blueprint"));
 
@@ -24,7 +27,7 @@ contract BlueprintSystem is PrimodiumSystem {
       blueprintArray[i * 2] = blueprint[i].x;
       blueprintArray[i * 2 + 1] = blueprint[i].y;
     }
-    createBlueprint(buildingType, blueprintArray);
+    LibBlueprint.createBlueprint(Blueprint(getC(BlueprintID)), buildingType, blueprintArray);
     return new bytes(0);
   }
 
@@ -45,19 +48,7 @@ contract BlueprintSystem is PrimodiumSystem {
    * @return Empty bytes.
    */
   function executeTyped(uint256 buildingType, int32[] memory blueprint) public returns (bytes memory) {
-    createBlueprint(buildingType, blueprint);
+    LibBlueprint.createBlueprint(Blueprint(getC(BlueprintID)), buildingType, blueprint);
     return new bytes(0);
-  }
-
-  /**
-   * @dev Creates a blueprint by setting the building type and coordinates in the BlueprintComponent.
-   * @param buildingType The type of building for the blueprint.
-   * @param blueprint The blueprint coordinates as an array of integers.
-   */
-  function createBlueprint(uint256 buildingType, int32[] memory blueprint) private {
-    require(blueprint.length % 2 == 0, "[BlueprintSystem]: odd array length");
-    Blueprint blueprintComponent = Blueprint(getC(BlueprintID));
-    require(!blueprintComponent.has(buildingType), "[BlueprintSystem]: building already has a blueprint");
-    blueprintComponent.set(buildingType, blueprint);
   }
 }

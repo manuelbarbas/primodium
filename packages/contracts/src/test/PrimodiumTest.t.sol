@@ -12,6 +12,8 @@ contract PrimodiumTest is MudTest {
   Coord public coord1 = Coord(0, 0);
   Coord public coord2 = Coord(0, 0);
 
+  uint256 public DummyBuilding = uint256(bytes32("dummy"));
+
   function setUp() public virtual override {
     super.setUp();
   }
