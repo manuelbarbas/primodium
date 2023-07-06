@@ -11,6 +11,7 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingBlocksComponent, ID as BuildingBlocksComponentID } from "components/BuildingBlocksComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
@@ -18,7 +19,7 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 
 // prototpyes
 import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { BlockKey, BuildingKey } from "../prototypes/Keys.sol";
 
 // libraries
 import { Coord } from "../types.sol";
@@ -36,11 +37,20 @@ contract BuildSystem is PrimodiumSystem {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
     uint256 playerEntity = addressToEntity(msg.sender);
     BuildingComponent buildingComponent = BuildingComponent(getC(BuildingComponentID));
+    BlueprintComponent blueprintComponent = BlueprintComponent(getC(BlueprintComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
 
-    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    performChecks(buildingType, playerEntity);
 
-    performChecks(entity, buildingType, playerEntity);
+    int32[] memory blueprint = blueprintComponent.getValue(buildingType);
+
+    uint256[] memory blocks = new uint256[](blueprint.length / 2);
+    for (uint32 i = 0; i < blueprint.length; i += 2) {
+      Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
+      blocks[i / 2] = placeBuildingBlock(buildingEntity, buildingType, coord, relativeCoord);
+    }
+    BuildingBlocksComponent(getC(BuildingBlocksComponentID)).set(buildingEntity, blocks);
 
     if (buildingType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
@@ -50,13 +60,13 @@ contract BuildSystem is PrimodiumSystem {
       if (mainBaseInitializedComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
-        mainBaseInitializedComponent.set(playerEntity, coord);
+        mainBaseInitializedComponent.set(playerEntity, buildingEntity);
       }
     }
 
     //set MainBase id for player address for easy lookup
     if (buildingType == MainBaseID) {
-      buildingComponent.set(playerEntity, entity);
+      buildingComponent.set(playerEntity, buildingEntity);
     }
 
     // update building count if the built building counts towards the build limit
@@ -65,21 +75,23 @@ contract BuildSystem is PrimodiumSystem {
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
     //set level of building to 1
-    buildingComponent.set(entity, 1);
+    buildingComponent.set(buildingEntity, 1);
 
-    TileComponent(getC(TileComponentID)).set(entity, buildingType);
-    OwnedByComponent(getC(OwnedByComponentID)).set(entity, playerEntity);
-    LastBuiltAtComponent(getC(LastBuiltAtComponentID)).set(entity, block.number);
+    OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
+    LastBuiltAtComponent(getC(LastBuiltAtComponentID)).set(buildingEntity, block.number);
 
-    return abi.encode(entity);
+    return abi.encode(buildingEntity);
   }
 
   function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
     return execute(abi.encode(buildingType, coord));
   }
 
-  function performChecks(uint256 entity, uint256 buildingType, uint256 playerEntity) private {
-    require(!TileComponent(getC(TileComponentID)).has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
+  function performChecks(uint256 buildingType, uint256 playerEntity) private {
+    require(
+      BlueprintComponent(getC(BlueprintComponentID)).has(buildingType),
+      "[BuildSystem] building type must have a blueprint"
+    );
 
     //check required research
     require(
@@ -119,5 +131,19 @@ contract BuildSystem is PrimodiumSystem {
       // debug buildings, do nothing
       revert("[BuildSystem] Debug buildings are not allowed to be built");
     }
+  }
+
+  function placeBuildingBlock(
+    uint256 buildingEntity,
+    uint256 buildingType,
+    Coord memory baseCoord,
+    Coord memory relativeCoord
+  ) private returns (uint256 blockEntity) {
+    TileComponent tileComponent = TileComponent(getC(TileComponentID));
+    Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
+    blockEntity = LibEncode.encodeCoordEntity(coord, BlockKey);
+    require(!tileComponent.has(blockEntity), "[BuildSystem] Cannot build on a non-empty coordinate");
+    tileComponent.set(blockEntity, buildingType);
+    OwnedByComponent(getC(OwnedByComponentID)).set(blockEntity, buildingEntity);
   }
 }

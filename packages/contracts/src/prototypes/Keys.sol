@@ -68,3 +68,4 @@ uint256 constant FastMinerResearchID = uint256(keccak256("research.FastMiner"));
 
 // Building key
 string constant BuildingKey = "building";
+string constant BlockKey = "block";
