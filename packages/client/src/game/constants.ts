@@ -57,8 +57,7 @@ export const Tilekeys = { ...TerrainTilekeys, ...ResourceTilekeys };
 export enum TileAnimationKeys {
   Water = "Water",
 }
-
-export enum KeyindActions {
+export enum KeybindActions {
   Up,
   Down,
   Left,

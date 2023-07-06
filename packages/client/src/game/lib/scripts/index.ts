@@ -17,11 +17,15 @@ import {
 } from "src/util/web3";
 import { runSystems } from "../systems";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
+import { useSettingsStore } from "src/game/stores/SettingsStore";
 
 export const init = async (address: string | undefined, network: Network) => {
   const { world } = network;
   const game = await engine.createGame(gameConfig);
   const scene = await game.sceneManager.addScene(Scenes.Main, mainSceneConfig);
+  const keybinds = useSettingsStore.getState().keybinds;
+
+  console.log("keybinds", keybinds);
 
   const chunkManager = await createChunkManager(scene.tilemap);
   chunkManager.renderInitialChunks();
