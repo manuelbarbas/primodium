@@ -40,7 +40,7 @@ contract UpgradeSystem is System {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
     uint256 currentLevel = buildingComponent.getValue(buildingEntity);
     require(currentLevel > 0, "[LibUpgrade] can not upgrade building that is level 0");
-    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, currentLevel + 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, currentLevel + 1);
     return
       LibResourceCost.checkAndSpendRequiredResources(
         resourceRequirementsComponent,
@@ -59,7 +59,7 @@ contract UpgradeSystem is System {
     uint256 playerEntity
   ) internal view returns (bool) {
     require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
-    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingComponent.getValue(buildingEntity) + 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(buildingEntity) + 1);
     return
       !researchRequirmentComponent.has(buildingIdLevel) ||
       LibResearch.checkResearchRequirements(

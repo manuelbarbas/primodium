@@ -35,8 +35,8 @@ contract DebugRemoveUpgradeRequirementsSystem is System {
     RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
-    requiredResearch.remove(LibEncode.hashFromKey(buildingId, level));
-    requiredResources.remove(LibEncode.hashFromKey(buildingId, level));
+    requiredResearch.remove(LibEncode.hashKeyEntity(buildingId, level));
+    requiredResources.remove(LibEncode.hashKeyEntity(buildingId, level));
   }
 
   function executeTyped(uint256 buildingId) public returns (bytes memory) {

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -38,15 +39,15 @@ contract DestroySystem is System {
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
-    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingLevel);
+    uint256 playerEntity = addressToEntity(msg.sender);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingLevel);
     if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
-    uint256 playerEntity = addressToEntity(msg.sender);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
       uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
-        playerResourceStorageEntity,
+        playerEntity,
         storageResources[i]
       );
       uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
@@ -58,15 +59,9 @@ contract DestroySystem is System {
         playerResourceStorageEntity,
         playerResourceStorageCapacity - storageCapacityIncrease
       );
-      uint256 playerResourceAmount = LibMath.getSafeUint256Value(
-        itemComponent,
-        LibEncode.hashKeyEntity(storageResources[i], playerEntity)
-      );
-      if (playerResourceAmount > playerResourceStorageCapacity) {
-        itemComponent.set(
-          LibEncode.hashKeyEntity(storageResources[i], playerEntity),
-          playerResourceStorageCapacity - storageCapacityIncrease
-        );
+      uint256 playerResourceAmount = LibMath.getSafeUint256Value(itemComponent, playerResourceStorageEntity);
+      if (playerResourceAmount > playerResourceStorageCapacity - storageCapacityIncrease) {
+        itemComponent.set(playerResourceStorageEntity, playerResourceStorageCapacity - storageCapacityIncrease);
       }
     }
   }
@@ -119,7 +114,7 @@ contract DestroySystem is System {
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) - 1
       );
     }
-
+    console.log("reached before storage check");
     checkAndUpdatePlayerStorageAfterDestroy(tileComponent.getValue(entity), buildingComponent.getValue(entity));
 
     buildingComponent.remove(entity);

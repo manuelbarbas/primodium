@@ -31,7 +31,7 @@ library LibFactoryDesignInitializer {
     );
     //PlatingFactoryID
     //PlatingFactoryID Level 1
-    uint256 buildingIdLevel = LibEncode.hashFromKey(PlatingFactoryID, 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(PlatingFactoryID, 1);
     FactoryMineBuildingsData memory factoryMineBuildingsData;
     factoryMineBuildingsData.MineBuildingCount = new uint256[](1);
     factoryMineBuildingsData.MineBuildingCount[0] = 1;
@@ -42,7 +42,7 @@ library LibFactoryDesignInitializer {
     factoryProductionComponent.set(buildingIdLevel, FactoryProductionData(IronPlateCraftedItemID, 1));
 
     //PlatingFactoryID Level 2
-    buildingIdLevel = LibEncode.hashFromKey(PlatingFactoryID, 2);
+    buildingIdLevel = LibEncode.hashKeyEntity(PlatingFactoryID, 2);
     factoryMineBuildingsComponent.set(buildingIdLevel, factoryMineBuildingsData);
 
     factoryProductionComponent.set(buildingIdLevel, FactoryProductionData(IronPlateCraftedItemID, 2));

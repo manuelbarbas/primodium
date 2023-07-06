@@ -14,7 +14,7 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
-import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -54,11 +54,11 @@ contract UpgradeSystemTest is MudTest {
     assertTrue(buildingComponent.has(blockEntityID), "MainBase entity id should have building component");
     assertTrue(buildingComponent.getValue(blockEntityID) == 1, "MainBase entity id should be level 1");
     console.log("upgrading MainBase to level 2");
-    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashFromKey(MainBaseID, 2));
+    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashKeyEntity(MainBaseID, 2));
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
       uint256 resourceCost = LibMath.getSafeUint256Value(
         itemComponent,
-        LibEncode.hashFromKey(resourceRequirements[i], LibEncode.hashFromKey(MainBaseID, 2))
+        LibEncode.hashKeyEntity(resourceRequirements[i], LibEncode.hashKeyEntity(MainBaseID, 2))
       );
       console.log("MainBase level 2 requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
       debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);

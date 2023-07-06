@@ -21,6 +21,16 @@ uint256 constant ID = uint256(keccak256("system.Research"));
 contract ResearchSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
+  function checkMainBaseLevelRequirement(
+    BuildingComponent buildingComponent,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    if (!buildingComponent.has(entity)) return true;
+    uint256 mainBuildingLevel = LibBuilding.getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
+    return mainBuildingLevel >= buildingComponent.getValue(entity);
+  }
+
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
@@ -36,13 +46,11 @@ contract ResearchSystem is System {
       getAddressById(components, RequiredResearchComponentID)
     );
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    require(
-      requiredResourcesComponent.has(researchItem),
-      "[ResearchSystem] can not research a technology that does not have resource requirements"
-    );
+
+    require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
-      LibBuilding.checkMainBaseLevelRequirement(buildingComponent, addressToEntity(msg.sender), researchItem),
+      checkMainBaseLevelRequirement(buildingComponent, addressToEntity(msg.sender), researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
 

@@ -9,15 +9,12 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-// debug buildings
-import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
 import { BuildingKey } from "../prototypes/Keys.sol";
 
@@ -25,10 +22,12 @@ import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
+
+import { MainBaseID } from "../prototypes/Tiles.sol";
+
 uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is System {
@@ -76,19 +75,6 @@ contract BuildSystem is System {
       );
   }
 
-  function spendRequiredResources(uint256 blockType) internal {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(
-      requiredResourcesComponent,
-      itemComponent,
-      blockType,
-      addressToEntity(msg.sender)
-    );
-  }
-
   function checkAndUpdatePlayerStorageAfterBuild(uint256 buildingId) internal {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
@@ -96,14 +82,14 @@ contract BuildSystem is System {
     StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
-    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, 1);
     if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], addressToEntity(msg.sender));
       uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
-        playerResourceStorageEntity,
+        addressToEntity(msg.sender),
         storageResources[i]
       );
       uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
@@ -123,7 +109,7 @@ contract BuildSystem is System {
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
     uint256 buildingId = tileComponent.getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashFromKey(buildingId, 1);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
     if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
       return;
     }
@@ -138,9 +124,6 @@ contract BuildSystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
-      getAddressById(components, LastBuiltAtComponentID)
-    );
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
       getAddressById(components, BuildingLimitComponentID)
     );
@@ -173,19 +156,7 @@ contract BuildSystem is System {
 
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
-    if (
-      blockType == DebugNodeID ||
-      blockType == MinerID ||
-      blockType == LithiumMinerID ||
-      blockType == BulletFactoryID ||
-      blockType == DebugPlatingFactoryID ||
-      blockType == SiloID
-    ) {
-      // debug buildings, do nothing
-      if (!LibDebug.isDebug()) {
-        revert("[BuildSystem] Debug buildings are not allowed to be built");
-      }
-    } else if (blockType == MainBaseID) {
+    if (blockType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getAddressById(components, MainBaseInitializedComponentID)
       );
@@ -217,7 +188,6 @@ contract BuildSystem is System {
 
     tileComponent.set(entity, blockType);
     ownedByComponent.set(entity, addressToEntity(msg.sender));
-    lastBuiltAtComponent.set(entity, block.number);
 
     checkAndUpdatePlayerStorageAfterBuild(blockType);
     setupFactoryComponents(tileComponent, entity);
