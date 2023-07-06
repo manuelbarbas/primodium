@@ -78,6 +78,8 @@ The keys of the following component is a hash of the uint256 representation of a
 
 The following components are used to store metadata that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `BuildingLimitComponent` stores building limit requirements.
 
+`TileComponent`: set for a building ID to only allow that building to be built on the set tile type
+
 ```
   RequiredResearchComponent
   RequiredResourcesComponent
