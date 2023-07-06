@@ -45,6 +45,19 @@ To craft from factory
 - CraftSystem: Crafting Items (called from factories)
   - Called from factories (items already in factories, no resource flows)
 
+# Storage
+
+In the `LibStorageDesignInitializer` Buildings which increase storage capacity are designated the Resources they provide capacity for via `StorageCapacityResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `StorageCapacityComponent`
+
+`buildingLevelId = hashKeyEntity(buildingId, level)`
+`resourceBuildingLevelId = hashKeyEntity(resourceId, buildingLevelId)`
+
+the amount of Iron storage that is provided by a level 2 MainBase is :
+`storageCapacityComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
+
+When Buildings are Built, Upgraded or Destroyed `StorageCapacityComponent` is updated for the player and the resources they modify the capacity for.
+`playerResourceID = hashKeyEntity(resourceId, playerEntity)`
+
 # Component Structure
 
 `OwnedByComponent` records building ownership while `ItemComponent` records mined and crafted item ownership.
