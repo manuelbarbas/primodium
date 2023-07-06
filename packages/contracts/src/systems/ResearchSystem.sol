@@ -42,7 +42,7 @@ contract ResearchSystem is System {
     );
 
     require(
-      LibBuilding.checkMainBaseLevelRequirement(buildingComponent, addressToEntity(msg.sender), researchItem),
+      LibBuilding.meetsMainBaseLevelReq(buildingComponent, addressToEntity(msg.sender), researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
 

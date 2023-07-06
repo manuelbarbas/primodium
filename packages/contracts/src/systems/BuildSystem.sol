@@ -8,6 +8,7 @@ import { addressToEntity } from "solecs/utils.sol";
 
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
@@ -59,7 +60,7 @@ contract BuildSystem is PrimodiumSystem {
     }
 
     // update building count if the built building counts towards the build limit
-    if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, buildingType)) {
+    if (!ignoreBuildLimitComponent.has(buildingType)) {
       BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
@@ -94,7 +95,7 @@ contract BuildSystem is PrimodiumSystem {
 
     //check build limit
     require(
-      LibBuilding.checkBuildLimitConditionForBuildingId(
+      LibBuilding.isBuildLimitMet(
         IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)),
         BuildingLimitComponent(getC(BuildingLimitComponentID)),
         BuildingComponent(getC(BuildingComponentID)),
@@ -107,7 +108,7 @@ contract BuildSystem is PrimodiumSystem {
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (
-      LibDebug.isDebug() &&
+      !LibDebug.isDebug() &&
       (buildingType == DebugNodeID ||
         buildingType == MinerID ||
         buildingType == LithiumMinerID ||

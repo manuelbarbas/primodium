@@ -25,7 +25,7 @@ import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 
 library LibBuilding {
-  function checkBuildLimitConditionForBuildingId(
+  function isBuildLimitMet(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
     Uint256Component buildingComponent,
@@ -33,11 +33,11 @@ library LibBuilding {
     uint256 buildingId
   ) internal view returns (bool) {
     return
-      !doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, buildingId) ||
-      checkBuildingCountNotExceedBuildLimit(buildingLimitComponent, buildingComponent, playerEntity);
+      ignoreBuildLimitComponent.has(buildingId) ||
+      isBuildingCountWithinLimit(buildingLimitComponent, buildingComponent, playerEntity);
   }
 
-  function checkBuildingCountNotExceedBuildLimit(
+  function isBuildingCountWithinLimit(
     Uint256Component buildingLimitComponent,
     Uint256Component buildingComponent,
     uint256 playerEntity
@@ -48,7 +48,7 @@ library LibBuilding {
     return buildingCount < buildCountLimit;
   }
 
-  function checkMainBaseLevelRequirement(
+  function meetsMainBaseLevelReq(
     Uint256Component buildingComponent,
     uint256 playerEntity,
     uint256 entity
@@ -83,13 +83,6 @@ library LibBuilding {
 
   function isMainBase(uint256 tileId) internal pure returns (bool) {
     return tileId == MainBaseID;
-  }
-
-  function doesTileCountTowardsBuildingLimit(
-    BoolComponent ignoreBuildLimitComponent,
-    uint256 tileId
-  ) internal view returns (bool) {
-    return !ignoreBuildLimitComponent.has(tileId) || !ignoreBuildLimitComponent.getValue(tileId);
   }
 
   function checkResearchReqs(IWorld world, uint256 blockType) internal view returns (bool) {

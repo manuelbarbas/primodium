@@ -68,7 +68,7 @@ contract DestroySystem is System {
       mainBaseInitializedComponent.remove(addressToEntity(msg.sender));
     }
 
-    if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, tileComponent.getValue(entity))) {
+    if (!ignoreBuildLimitComponent.has(tileComponent.getValue(entity))) {
       buildingLimitComponent.set(
         addressToEntity(msg.sender),
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) - 1
