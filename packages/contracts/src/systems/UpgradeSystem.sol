@@ -10,7 +10,7 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { MaxLevelComponent, ID as MaxLevelComponentID };
+import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
