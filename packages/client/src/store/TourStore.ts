@@ -9,7 +9,7 @@ type TourState = {
   currentStep: TourStep | null;
   checkpoint: TourStep | null;
   prevCheckpoint: TourStep | null;
-  spawn: Coord | null;
+  spawn: Coord;
 };
 
 type TourActions = {
@@ -25,8 +25,8 @@ const defaults: TourState = {
   currentStep: null,
   prevCheckpoint: null,
   spawn: {
-    x: Math.floor(Math.random() * 2000),
-    y: Math.floor(Math.random() * 2000),
+    x: Math.floor(Math.random() * 1000) - 500,
+    y: Math.floor(Math.random() * 1000) - 500,
   },
 };
 

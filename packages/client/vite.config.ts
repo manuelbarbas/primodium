@@ -1,13 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { comlink } from "vite-plugin-comlink";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), comlink(), tsconfigPaths()],
   server: {
     port: 3000,
     fs: {
       strict: false,
     },
+  },
+  worker: {
+    plugins: [comlink()],
   },
   optimizeDeps: {
     esbuildOptions: {

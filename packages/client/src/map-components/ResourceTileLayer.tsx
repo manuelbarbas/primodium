@@ -7,7 +7,7 @@ import { randomBytes } from "ethers/lib/utils";
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 
-import { BlockType, DisplayKeyPair, DisplayTile } from "../util/constants";
+import { BlockType, DisplayKeyPair } from "../util/constants";
 import { execute } from "../network/actions";
 import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
@@ -18,7 +18,6 @@ import SelectedTile from "./SelectedTile";
 import SelectedPath from "./SelectedPath";
 import HoverTile from "./HoverTile";
 import SelectedAttack from "./SelectedAttack";
-import { validMapClick } from "../util/map";
 import { useNotificationStore } from "../store/NotificationStore";
 
 const ResourceTileLayer = ({
@@ -76,7 +75,7 @@ const ResourceTileLayer = ({
     state.setNotification,
   ]);
 
-  const [displayTileRange, setDisplayTileRange] = useState({
+  const [displayTileRange, setCoordRange] = useState({
     x1: 0,
     x2: 0,
     y1: 0,
@@ -86,20 +85,20 @@ const ResourceTileLayer = ({
   // Map events
   const setNewBounds = useCallback(() => {
     const bounds = map.getBounds();
-    const newDisplayTileRange = {
+    const newCoordRange = {
       x1: Math.floor(bounds.getWest()),
       x2: Math.ceil(bounds.getEast()),
       y1: Math.floor(bounds.getSouth()),
       y2: Math.ceil(bounds.getNorth()),
     };
-    setDisplayTileRange(newDisplayTileRange);
+    setCoordRange(newCoordRange);
   }, [map]);
   useEffect(setNewBounds, [map]);
   useMapEvent("moveend", setNewBounds);
 
   // Component overrides
   const addTileOverride = useCallback(
-    (pos: DisplayTile, blockType: EntityID) => {
+    (pos: Coord, blockType: EntityID) => {
       const tempPositionId = uuid();
       const tempEntityIndex = BigNumber.from(
         randomBytes(32)
@@ -143,7 +142,7 @@ const ResourceTileLayer = ({
   );
 
   const buildTile = useCallback(
-    async (pos: DisplayTile, blockType: EntityID) => {
+    async (pos: Coord, blockType: EntityID) => {
       setTransactionLoading(true);
       const { tempPositionId } = addTileOverride(pos, blockType);
       try {
@@ -163,7 +162,7 @@ const ResourceTileLayer = ({
   );
 
   const createPath = useCallback(
-    async (start: DisplayTile, end: DisplayTile) => {
+    async (start: Coord, end: Coord) => {
       if (selectedPathTiles.start === null || selectedPathTiles.end === null) {
         return;
       }
@@ -180,7 +179,7 @@ const ResourceTileLayer = ({
     [selectedPathTiles, providers]
   );
 
-  const destroyTile = async (pos: DisplayTile) => {
+  const destroyTile = async (pos: Coord) => {
     setTransactionLoading(true);
     await execute(
       systems["system.Destroy"].executeTyped(pos, {
@@ -192,7 +191,7 @@ const ResourceTileLayer = ({
     setTransactionLoading(false);
   };
 
-  const destroyPath = async (pos: DisplayTile) => {
+  const destroyPath = async (pos: Coord) => {
     setTransactionLoading(true);
     await execute(
       systems["system.DestroyPath"].executeTyped(pos, {
@@ -212,9 +211,6 @@ const ResourceTileLayer = ({
         x: Math.floor(event.latlng.lng),
         y: Math.floor(event.latlng.lat),
       };
-
-      //do not process click if it is not a valid map click
-      if (!validMapClick(mousePos)) return;
 
       switch (selectedBlock) {
         case null:
