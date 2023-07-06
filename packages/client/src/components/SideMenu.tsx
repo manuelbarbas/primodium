@@ -8,8 +8,9 @@ import BuildingPage from "./building-menu/BuildingPage";
 import DemolishBuildingBox from "./demolish-menu/DemolishBuildingBox";
 import ResearchModal from "./research-menu/ResearchModal";
 import AttackBox from "./attack-menu/AttackBox";
+import { useMud } from "src/context/MudContext";
+import { primodium } from "@game/api";
 
-import { useGameStore } from "../store/GameStore";
 import { useTourStore } from "../store/TourStore";
 
 function SideBarIcon({
@@ -29,38 +30,17 @@ function SideBarIcon({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
   children?: ReactNode;
 }) {
-  const [
-    setSelectedBlock,
-    setStartSelectedPathTile,
-    setEndSelectedPathTile,
-    setStartSelectedAttackTile,
-    setEndSelectedAttackTile,
-    setLockedAttackTarget,
-  ] = useGameStore((state) => [
-    state.setSelectedBlock,
-    state.setStartSelectedPathTile,
-    state.setEndSelectedPathTile,
-    state.setStartSelectedAttackTile,
-    state.setEndSelectedAttackTile,
-    state.setLockedAttackTarget,
-  ]);
+  const network = useMud();
 
   const setMenuOpenIndexHelper = useCallback(() => {
-    // clear selected block on menu index change
-    setSelectedBlock(null);
-
     if (menuIndex !== menuOpenIndex) {
       setMenuOpenIndex(menuIndex);
     } else {
       setMenuOpenIndex(-1);
     }
 
-    // upon changing menu index or hide menu, hide and reset selected path tiles and selected attack tiles
-    setStartSelectedPathTile(null);
-    setEndSelectedPathTile(null);
-    setStartSelectedAttackTile(null);
-    setEndSelectedAttackTile(null);
-    setLockedAttackTarget(false);
+    // Remove selected building if menu is changed
+    primodium.components.selectedBuilding(network).remove();
   }, [menuIndex, menuOpenIndex]);
 
   return (

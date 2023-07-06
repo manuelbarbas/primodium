@@ -70,6 +70,40 @@ test("hashKeyEntity matches LibEncode outputs", () => {
   }
 });
 
+// Hashing edge cases discovered in #36 with leading zeroes (world.entityIndex on client trims leading zeroes)
+// AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
+// PenetratorFactoryID 97993341068949256531366201596922953741936964741343840392882074207030726058262
+// Hash: 0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924
+
+// TitaniumResourceItemID 29592648218955693310631313341848988444781730640864177349094518031889847668484
+// ProjectileLauncherResearchID 115710791415720365844662016873039814882667321015852259562238368675311117449333
+// Hash: 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249
+
+const hashKeyResourceEntityOutputs = [
+  {
+    key: "11699589371590179690663298539456535383454944084246709593455824231284844824000",
+    entity:
+      "97993341068949256531366201596922953741936964741343840392882074207030726058262",
+    output:
+      "0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924",
+  },
+  {
+    key: "29592648218955693310631313341848988444781730640864177349094518031889847668484",
+    entity:
+      "115710791415720365844662016873039814882667321015852259562238368675311117449333",
+    output:
+      "0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249",
+  },
+];
+
+test("hashKeyEntity matches LibEncode outputs, additional tests", () => {
+  for (const example of hashKeyResourceEntityOutputs) {
+    expect(example.output).eq(
+      hashKeyEntity(example.key as EntityID, example.entity as EntityID)
+    );
+  }
+});
+
 // Outputs of LibEncode.sol's encodeCoordEntity function
 // E.g. console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 0, y: 0 }), "primodium")));
 const encodeCoordEntityOutputs = [
@@ -144,9 +178,13 @@ const encodeCoordEntityOutputs = [
 test("encodeCoordEntity matches LibEncode outputs", () => {
   for (const example of encodeCoordEntityOutputs) {
     expect(example.output).eq(encodeCoordEntity(example.coord, example.key));
-    expect(example.output).not.eq(encodeCoordEntity({x: example.coord.x - 10, y: example.coord.y}, example.key));
+    expect(example.output).not.eq(
+      encodeCoordEntity(
+        { x: example.coord.x - 10, y: example.coord.y },
+        example.key
+      )
+    );
   }
-
 });
 
 test("decodeCoordEntity matches LibEncode outputs", () => {

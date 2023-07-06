@@ -1,9 +1,10 @@
-import { World } from "@latticexyz/recs";
+import { World, defineComponent, Type } from "@latticexyz/recs";
 import { overridableComponent } from "@latticexyz/recs";
 import {
   defineBoolComponent,
   defineNumberComponent,
   defineCoordComponent,
+  defineStringComponent,
 } from "@latticexyz/std-client";
 
 export function defineComponents(world: World) {
@@ -82,6 +83,24 @@ export function defineComponents(world: World) {
         contractId: "component.MainBaseInitialized",
       },
     }),
+    // Resource data stored in components
+    RequiredResearchComponent: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.RequiredResearch",
+      },
+    }),
+    RequiredResourcesComponent: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.RequiredResources",
+        },
+      }
+    ),
+    // TODO: component data for crafting recipes
   };
 }
 
@@ -90,6 +109,43 @@ export function defineOffChainComponents(world: World) {
     DoubleCounter: defineNumberComponent(world, {
       metadata: {},
       id: "DoubleCounter",
+    }),
+    SelectedTile: defineCoordComponent(world, {
+      metadata: {},
+      id: "SelectedTile",
+    }),
+    // Tile position mouse is hovering over
+    HoverTile: defineCoordComponent(world, {
+      metadata: {},
+      id: "HoverTile",
+    }),
+    // Building entity ID user selected from menu
+    SelectedBuilding: defineComponent(
+      world,
+      {
+        value: Type.Entity,
+      },
+      {
+        metadata: {},
+        id: "SelectedBuilding",
+      }
+    ),
+    StartSelectedPath: defineCoordComponent(world, {
+      metadata: {},
+      id: "StartSelectedPath",
+    }),
+    SelectedAttack: defineComponent(
+      world,
+      {
+        origin: Type.OptionalString,
+        target: Type.OptionalString,
+      },
+      { metadata: {}, id: "SelectedAttackComponent" }
+    ),
+    // Market types are added to render custom map ui elements like waypoints, arrows, etc
+    Marker: defineStringComponent(world, {
+      metadata: {},
+      id: "MarkerComponent",
     }),
   };
 }

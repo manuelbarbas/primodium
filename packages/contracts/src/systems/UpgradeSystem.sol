@@ -13,9 +13,11 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
@@ -27,6 +29,7 @@ import { LibUpgrade } from "../libraries/LibUpgrade.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
+
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is System {

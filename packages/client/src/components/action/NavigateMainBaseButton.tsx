@@ -8,6 +8,7 @@ import { BigNumber } from "ethers";
 import { BlockType } from "../../util/constants";
 import { useGameStore } from "../../store/GameStore";
 import { useNotificationStore } from "../../store/NotificationStore";
+import { primodium } from "@game/api";
 
 export default function NavigateMainBaseButton() {
   const { world, components, singletonIndex } = useMud();
@@ -28,24 +29,16 @@ export default function NavigateMainBaseButton() {
   // Navigate to Main Base if it exists for this wallet
   const navigateMainBase = useCallback(() => {
     if (mainBaseCoord) {
-      setSelectedTile(mainBaseCoord);
-      setNavigateToTile(true);
+      primodium.camera.pan(mainBaseCoord);
     }
   }, [mainBaseCoord]);
 
   // Otherwise build a main base
-  const { systems, providers } = useMud();
+  const network = useMud();
+  const { systems, providers } = network;
 
-  const [
-    selectedTile,
-    setSelectedTile,
-    setTransactionLoading,
-    setNavigateToTile,
-  ] = useGameStore((state) => [
-    state.selectedTile,
-    state.setSelectedTile,
+  const [setTransactionLoading] = useGameStore((state) => [
     state.setTransactionLoading,
-    state.setNavigateToTile,
   ]);
   const [setNotification] = useNotificationStore((state) => [
     state.setNotification,
@@ -53,10 +46,16 @@ export default function NavigateMainBaseButton() {
 
   const buildMainBase = useCallback(async () => {
     setTransactionLoading(true);
+    const cameraCoord = primodium.camera.getPosition();
+    const selectedTile = primodium.components.selectedTile(network).get();
+
+    if (!selectedTile)
+      primodium.components.selectedTile(network).set(cameraCoord);
+
     await execute(
       systems["system.Build"].executeTyped(
         BigNumber.from(BlockType.MainBase),
-        selectedTile,
+        selectedTile ?? cameraCoord,
         {
           gasLimit: 1_500_000,
         }
@@ -65,7 +64,7 @@ export default function NavigateMainBaseButton() {
       setNotification
     );
     setTransactionLoading(false);
-  }, [selectedTile]);
+  }, [network]);
 
   if (mainBaseCoord) {
     return (

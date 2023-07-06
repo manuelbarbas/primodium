@@ -1,18 +1,12 @@
 import { useCallback, useMemo } from "react";
-import { EntityID } from "@latticexyz/recs";
-
+import { primodium } from "@game/api";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { useMud } from "../../../context/MudContext";
-import {
-  BackgroundImage,
-  BuildingResearchRequirements,
-  BuildingResearchRequirementsDefaultUnlocked,
-  ResourceImage,
-} from "../../../util/constants";
-import { BuildingReceipe } from "../../../util/resource";
-import { useComponentValue } from "@latticexyz/react";
-import { hashKeyEntity } from "../../../util/encode";
+import { BackgroundImage, ResourceImage } from "../../../util/constants";
+import { getRecipe } from "../../../util/resource";
+import { hashKeyEntityAndTrim } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
-import { useGameStore } from "../../../store/GameStore";
+import { getBuildingResearchRequirement } from "../../../util/research";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -24,43 +18,39 @@ function BuildingIconButton({
   label: string;
   blockType: EntityID;
 }) {
-  const { components, world, singletonIndex } = useMud();
-  const [
-    setSelectedBlock,
-    selectedBlock,
-    setStartSelectedPathTile,
-    setEndSelectedPathTile,
-  ] = useGameStore((state) => [
-    state.setSelectedBlock,
-    state.selectedBlock,
-    state.setStartSelectedPathTile,
-    state.setEndSelectedPathTile,
-  ]);
+  const network = useMud();
+  const { components, world, singletonIndex } = network;
+  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
 
   const { address } = useAccount();
 
   // Check if building is unlocked per research or not
-  const researchRequirement = BuildingResearchRequirements.get(blockType)![0];
-  const researchOwner = address
-    ? world.entityToIndex.get(
-        hashKeyEntity(
-          researchRequirement,
-          address.toString().toLowerCase()
-        ) as EntityID
-      )!
-    : singletonIndex;
-  const isResearched = useComponentValue(components.Research, researchOwner);
-
   const buildingLocked = useMemo(() => {
-    return !(
-      isResearched ||
-      BuildingResearchRequirementsDefaultUnlocked.has(researchRequirement)
+    const researchRequirement = getBuildingResearchRequirement(
+      blockType,
+      world,
+      components
     );
-  }, [isResearched, researchRequirement]);
+
+    if (!researchRequirement) {
+      return false;
+    }
+    const researchOwner = address
+      ? world.entityToIndex.get(
+          hashKeyEntityAndTrim(
+            researchRequirement,
+            address.toString().toLowerCase()
+          ) as EntityID
+        )!
+      : singletonIndex;
+    const isResearched = getComponentValue(components.Research, researchOwner);
+
+    return !(isResearched && isResearched.value);
+  }, []);
 
   const cannotBuildTile = useCallback(() => {}, []);
 
-  const recipe = BuildingReceipe.get(blockType);
+  const recipe = getRecipe(blockType, world, components);
 
   return (
     <button
@@ -71,11 +61,9 @@ function BuildingIconButton({
           ? cannotBuildTile
           : () => {
               //set selected block, if clicked again deselect
-              selectedBlock === blockType
-                ? setSelectedBlock(null)
-                : setSelectedBlock(blockType);
-              setStartSelectedPathTile(null);
-              setEndSelectedPathTile(null);
+              selectedBuilding === blockType
+                ? primodium.components.selectedBuilding(network).remove()
+                : primodium.components.selectedBuilding(network).set(blockType);
             }
       }
     >
@@ -87,7 +75,7 @@ function BuildingIconButton({
         {label}
         <div className="flex-col">
           {recipe ? (
-            recipe[0].resources.map((resource) => {
+            recipe.map((resource) => {
               const resourceImage = ResourceImage.get(resource.id);
               return (
                 <div className="mr-2 inline-block" key={resource.id}>
@@ -108,7 +96,7 @@ function BuildingIconButton({
         <img
           src={BackgroundImage.get(blockType)}
           className={`"w-16 h-16 pixel-images hover:brightness-75 ${
-            selectedBlock === blockType ? "border-4 border-yellow-300" : ""
+            selectedBuilding === blockType ? "border-4 border-yellow-300" : ""
           }`}
         />
         {buildingLocked && (
