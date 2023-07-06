@@ -11,10 +11,6 @@ import { LibMath } from "libraries/LibMath.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
-import { Coord } from "../types.sol";
-import { LibTerrain } from "./LibTerrain.sol";
-import { LibEncode } from "./LibEncode.sol";
-
 
 library LibBuilding {
   function checkBuildLimitConditionForBuildingId(
@@ -38,16 +34,6 @@ library LibBuilding {
     uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent, mainBuildingLevel);
     uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingLimitComponent, playerEntity);
     return buildingCount < buildCountLimit;
-  }
-
-  function checkCanBuildOnTile(
-    Uint256Component tileComponent,
-    uint256 buildingId,
-    uint256 buildingEntity
-  ) internal view returns (bool) {
-    return
-      !tileComponent.has(buildingId) ||
-      tileComponent.getValue(buildingId) == LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
   }
 
   function checkMainBaseLevelRequirement(

@@ -27,18 +27,6 @@ uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));
 uint256 constant DebugNodeID = uint256(keccak256("block.DebugNode"));
 
-// Mine Blocks
-uint256 constant LithiumMineID = uint256(keccak256("block.LithiumMine"));
-uint256 constant IronMineID = uint256(keccak256("block.IronMine"));
-uint256 constant CopperMineID = uint256(keccak256("block.CopperMine"));
-uint256 constant TitaniumMineID = uint256(keccak256("block.TitaniumMine"));
-uint256 constant IridiumMineID = uint256(keccak256("block.IridiumMine"));
-uint256 constant OsmiumMineID = uint256(keccak256("block.OsmiumMine"));
-uint256 constant TungstenMineID = uint256(keccak256("block.TungstenMine"));
-uint256 constant KimberliteMineID = uint256(keccak256("block.KimberliteMine"));
-uint256 constant UraniniteMineID = uint256(keccak256("block.UraniniteMine"));
-uint256 constant BolutiteMineID = uint256(keccak256("block.BolutiteMine"));
-
 uint256 constant MinerID = uint256(keccak256("block.Miner"));
 uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
 
