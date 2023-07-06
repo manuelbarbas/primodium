@@ -18,12 +18,15 @@
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
-    "IgnoreBuildLimitComponent"
+    "IgnoreBuildLimitComponent",
+    "StorageCapacityComponent",
+    "StorageCapacityResourcesComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibBuildingUpgradeDesignInitializer",
+    "LibStorageDesignInitializer",
     "LibTechnologyDesignInitializer"
   ],
   "systems": [
@@ -62,7 +65,8 @@
         "MainBaseInitializedComponent",
         "BuildingComponent",
         "MainBaseInitializedComponent",
-        "BuildingLimitComponent"
+        "BuildingLimitComponent",
+        "StorageCapacityComponent"
       ]
     },
     {
@@ -77,7 +81,8 @@
 
         "MainBaseInitializedComponent",
         "BuildingComponent",
-        "BuildingLimitComponent"
+        "BuildingLimitComponent",
+        "StorageCapacityComponent"
       ]
     },
     {
@@ -126,7 +131,7 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingComponent", "ItemComponent"]
+      "writeAccess": ["BuildingComponent", "ItemComponent", "StorageCapacityComponent"]
     },
     {
       "name": "DebugAquireResourcesSystem",
