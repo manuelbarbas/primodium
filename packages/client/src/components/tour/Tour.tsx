@@ -72,7 +72,6 @@ export const Tour = () => {
       <div className="absolute top-0 left-0 z-[1001] ml-4">
         <NarrationBox />
       </div>
-
       <Walktour
         steps={steps}
         zIndex={1000}
@@ -89,13 +88,12 @@ export const Tour = () => {
         disableNext
         disablePrev
         movingTarget
-        debug
         validateNextOnTargetClick={async () => {
-          const hoverCoord = primodium.components.hoverTile(mudCtx).get();
+          const selectedTile = primodium.components.selectedTile(mudCtx).get();
 
-          if (!hoverCoord) return false;
+          if (!selectedTile) return false;
 
-          return validTutorialClick(hoverCoord, mudCtx);
+          return validTutorialClick(selectedTile, mudCtx);
         }}
         customCloseFunc={(tourLogic) => {
           setCheckpoint(null);

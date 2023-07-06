@@ -9,10 +9,12 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.NONE,
   },
-  autoFocus: true,
-  desynchronized: true,
-  preserveDrawingBuffer: true,
-  autoMobilePipeline: true,
+  dom: {
+    createContainer: true,
+  },
+  // autoFocus: true,
+  // desynchronized: true,
+  // preserveDrawingBuffer: true,
   autoRound: true,
   transparent: true,
   pixelArt: true,
