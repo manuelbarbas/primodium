@@ -14,7 +14,7 @@ import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSyste
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { DebugRemoveBuildingRequirementsSystem, ID as DebugRemoveBuildingRequirementsSystemID } from "../../systems/DebugRemoveBuildingRequirementsSystem.sol";
 import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
-import { DebugAquireStorageForAllResourcesSystem, ID as DebugAquireStorageForAllResourcesSystemID } from "../../systems/DebugAquireStorageForAllResourcesSystem.sol";
+import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";

@@ -7,9 +7,9 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 
-uint256 constant ID = uint256(keccak256("system.DebugAquireResources"));
+uint256 constant ID = uint256(keccak256("system.DebugAcquireResources"));
 
-contract DebugAquireResourcesSystem is System {
+contract DebugAcquireResourcesSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory args) public returns (bytes memory) {
