@@ -11,12 +11,18 @@ import { BigNumber } from "ethers";
 import { useMud } from "../context/MudContext";
 
 import { getTopLayerKeyPair } from "../util/tile";
-import { CraftRecipe, isClaimable, isClaimableFactory } from "../util/resource";
+import {
+  CraftRecipe,
+  isClaimable,
+  isClaimableFactory,
+  isMainBase,
+} from "../util/resource";
 import {
   BlockIdToKey,
   BackgroundImage,
   ResourceImage,
 } from "../util/constants";
+import { primodium } from "@game/api";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
@@ -26,7 +32,8 @@ import ResourceIconTooltip from "./shared/ResourceIconTooltip";
 import ClaimCraftButton from "./action/ClaimCraftButton";
 
 function TooltipBox() {
-  const { components, singletonIndex } = useMud();
+  const network = useMud();
+  const { components, singletonIndex } = network;
 
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
@@ -55,7 +62,7 @@ function TooltipBox() {
   );
 
   // Get information on the selected tile
-  const [selectedTile] = useGameStore((state) => [state.selectedTile]);
+  const selectedTile = primodium.hooks.useSelectedTile(network);
 
   const tilesAtPosition = useEntityQuery(
     [
@@ -272,9 +279,10 @@ function TooltipBox() {
                 {builtTile && (
                   <>
                     {(isClaimable(builtTile) ||
-                      isClaimableFactory(builtTile)) && (
-                      <div className="font-bold mb-1">Storage:</div>
-                    )}
+                      isClaimableFactory(builtTile)) &&
+                      !isMainBase(builtTile) && (
+                        <div className="font-bold mb-1">Storage:</div>
+                      )}
                     {isClaimable(builtTile) &&
                       !isClaimableFactory(builtTile) && (
                         <ClaimButton

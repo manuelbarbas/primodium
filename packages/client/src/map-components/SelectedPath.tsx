@@ -1,12 +1,12 @@
-import { DisplayTile } from "../util/constants";
+import { Coord } from "@latticexyz/utils";
 import MovingCirclePolyline from "./MovingCirclePolyline";
 
 export default function SelectedPath({
   startCoord,
   endCoord,
 }: {
-  startCoord: DisplayTile;
-  endCoord: DisplayTile;
+  startCoord: Coord;
+  endCoord: Coord;
 }) {
   return (
     <MovingCirclePolyline

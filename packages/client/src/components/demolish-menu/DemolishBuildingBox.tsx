@@ -1,27 +1,29 @@
 import { useCallback } from "react";
-import { useGameStore } from "../../store/GameStore";
+import { primodium } from "@game/api";
 
 import { BlockType } from "../../util/constants";
+import { useMud } from "src/context/MudContext";
 
 function DemolishBuildingBox() {
-  const [selectedBlock, setSelectedBlock] = useGameStore((state) => [
-    state.selectedBlock,
-    state.setSelectedBlock,
-  ]);
+  const network = useMud();
+
+  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
 
   const destroyPath = useCallback(() => {
-    setSelectedBlock(BlockType.DemolishPath);
+    primodium.components.selectedBuilding(network).set(BlockType.DemolishPath);
   }, []);
 
   const destroyTile = useCallback(() => {
-    setSelectedBlock(BlockType.DemolishBuilding);
+    primodium.components
+      .selectedBuilding(network)
+      .set(BlockType.DemolishBuilding);
   }, []);
 
   const resetSetSelectedBlock = useCallback(() => {
-    setSelectedBlock(null);
+    primodium.components.selectedBuilding(network).remove();
   }, []);
 
-  if (selectedBlock === BlockType.DemolishPath) {
+  if (selectedBuilding === BlockType.DemolishPath) {
     return (
       <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">
@@ -44,7 +46,7 @@ function DemolishBuildingBox() {
         </div>
       </div>
     );
-  } else if (selectedBlock === BlockType.DemolishBuilding) {
+  } else if (selectedBuilding === BlockType.DemolishBuilding) {
     return (
       <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">
@@ -72,7 +74,7 @@ function DemolishBuildingBox() {
       <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">
           <p className="text-lg font-bold mb-3">Demolish</p>
-          <p>Demolish a tile or path below.</p>
+          <p>Select an option below.</p>
           <div className="absolute bottom-4 right-4 space-x-2">
             <button
               className="h-10 w-36 bg-orange-600 hover:bg-orange-700 font-bold rounded text-sm"
