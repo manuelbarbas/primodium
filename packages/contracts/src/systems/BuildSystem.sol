@@ -107,6 +107,7 @@ contract BuildSystem is System {
     uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
+    require(LibBuilding.checkCanBuildOnTile(tileComponent, blockType, coord));
     //check required research
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
 
