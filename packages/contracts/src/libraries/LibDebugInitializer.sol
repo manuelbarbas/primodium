@@ -19,6 +19,7 @@ import { FactoryProductionComponent, ID as FactoryProductionComponentID, Factory
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
@@ -93,20 +94,21 @@ library LibDebugInitializer {
       getAddressById(components, IgnoreBuildLimitComponentID)
     );
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
     //initialize simple buildings
     initializeSimpleBuildings(
       itemComponent,
       requiredResearch,
       requiredResourcesComponent,
       ignoreBuildLimitComponent,
-      tileComponent
+      tileComponent,
+      maxLevelComponent
     );
 
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
 
     //initialize Mines
-    initializeMines(ignoreBuildLimitComponent, tileComponent, mineComponent);
+    initializeMines(ignoreBuildLimitComponent, tileComponent, mineComponent, maxLevelComponent);
 
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
@@ -114,8 +116,21 @@ library LibDebugInitializer {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getAddressById(components, StorageCapacityResourcesComponentID)
+    );
     //initialize factories
-    initializeFactories(ignoreBuildLimitComponent, factoryProductionComponent, factoryMineBuildingsComponent);
+    initializeFactories(
+      ignoreBuildLimitComponent,
+      factoryProductionComponent,
+      factoryMineBuildingsComponent,
+      maxLevelComponent,
+      storageCapacityResourcesComponent,
+      storageCapacityComponent
+    );
 
     BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
@@ -127,13 +142,13 @@ library LibDebugInitializer {
       requiredResearch,
       requiredResourcesComponent
     );
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
+
+    initializeStorageBuildings(
+      ignoreBuildLimitComponent,
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      maxLevelComponent
     );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
-    );
-    initializeStorageBuildings(ignoreBuildLimitComponent, storageCapacityResourcesComponent, storageCapacityComponent);
   }
 
   function initializeSimpleBuildings(
@@ -141,7 +156,8 @@ library LibDebugInitializer {
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResourcesComponent,
     IgnoreBuildLimitComponent ignoreBuildLimitComponent,
-    TileComponent tileComponent
+    TileComponent tileComponent,
+    MaxLevelComponent maxLevelComponent
   ) internal {
     // DebugSimpleBuildingNoReqsID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingNoReqsID);
@@ -168,7 +184,7 @@ library LibDebugInitializer {
 
     //DebugSimpleBuildingWithUpgradeResourceReqsID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID);
-
+    maxLevelComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID, 4);
     //DebugSimpleBuildingWithUpgradeResourceReqsID level 2
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResourcesComponent,
@@ -222,6 +238,7 @@ library LibDebugInitializer {
     );
 
     //DebugSimpleBuildingWithUpgradeResearchReqsID
+    maxLevelComponent.set(DebugSimpleBuildingWithUpgradeResearchReqsID, 2);
     LibSetUpgradeResearchRequirements.setRequiredResearchForEntityUpgradeToLevel(
       requiredResearch,
       DebugSimpleBuildingWithUpgradeResearchReqsID,
@@ -233,17 +250,20 @@ library LibDebugInitializer {
   function initializeMines(
     IgnoreBuildLimitComponent ignoreBuildLimitComponent,
     TileComponent tileComponent,
-    MineComponent mineComponent
+    MineComponent mineComponent,
+    MaxLevelComponent maxLevelComponent
   ) internal {
     // DebugIronMineID
     ignoreBuildLimitComponent.set(DebugIronMineID);
     tileComponent.set(DebugIronMineID, IronID);
+    maxLevelComponent.set(DebugIronMineID, 3);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugIronMineID, 1, 1);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugIronMineID, 2, 2);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugIronMineID, 3, 3);
 
     // DebugIronMineNoTileReqID
     ignoreBuildLimitComponent.set(DebugIronMineNoTileReqID);
+    maxLevelComponent.set(DebugIronMineNoTileReqID, 3);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
       mineComponent,
       DebugIronMineNoTileReqID,
@@ -264,6 +284,7 @@ library LibDebugInitializer {
     );
 
     //DebugIronMineWithBuildLimitID
+    maxLevelComponent.set(DebugIronMineWithBuildLimitID, 3);
     tileComponent.set(DebugIronMineWithBuildLimitID, IronID);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
       mineComponent,
@@ -285,6 +306,7 @@ library LibDebugInitializer {
     );
 
     //DebugCopperMineID
+    maxLevelComponent.set(DebugCopperMineID, 3);
     tileComponent.set(DebugCopperMineID, CopperID);
     ignoreBuildLimitComponent.set(DebugCopperMineID);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 1, 1);
@@ -295,10 +317,23 @@ library LibDebugInitializer {
   function initializeFactories(
     IgnoreBuildLimitComponent ignoreBuildLimitComponent,
     FactoryProductionComponent factoryProductionComponent,
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    MaxLevelComponent maxLevelComponent,
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
+    StorageCapacityComponent storageCapacityComponent
   ) internal {
     //DebugIronPlateFactoryNoMineReqID
+    maxLevelComponent.set(DebugIronPlateFactoryNoMineReqID, 3);
     ignoreBuildLimitComponent.set(DebugIronPlateFactoryNoMineReqID);
+
+    //set a storage amount for IronPlateCraftedItemID to stream line usage
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 1),
+      IronPlateCraftedItemID,
+      1000
+    );
     LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
       factoryProductionComponent,
       DebugIronPlateFactoryNoMineReqID,
@@ -324,8 +359,15 @@ library LibDebugInitializer {
     );
 
     //DebugIronPlateFactoryID
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
+      IronPlateCraftedItemID,
+      1000
+    );
     ignoreBuildLimitComponent.set(DebugIronPlateFactoryID);
-
+    maxLevelComponent.set(DebugIronPlateFactoryID, 3);
     //DebugIronPlateFactoryID level 1
     LibSetFactoryMineRequirements.setFactory1MineRequirement(
       factoryMineBuildingsComponent,
@@ -357,7 +399,7 @@ library LibDebugInitializer {
       2
     );
 
-    //DebugIronPlateFactoryID level 2
+    //DebugIronPlateFactoryID level 3
     LibSetFactoryMineRequirements.setFactory1MineRequirement(
       factoryMineBuildingsComponent,
       DebugIronPlateFactoryID,
@@ -405,11 +447,12 @@ library LibDebugInitializer {
   function initializeStorageBuildings(
     IgnoreBuildLimitComponent ignoreBuildLimitComponent,
     StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent
+    StorageCapacityComponent storageCapacityComponent,
+    MaxLevelComponent maxLevelComponent
   ) internal {
     //DebugStorageBuildingID
     ignoreBuildLimitComponent.set(DebugStorageBuildingID);
-
+    maxLevelComponent.set(DebugStorageBuildingID, 2);
     //DebugStorageBuildingID level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 1);
     LibSetRequiredResources.set1RequiredResourceForEntity(

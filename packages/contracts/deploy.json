@@ -25,7 +25,8 @@
     "UnclaimedResourceComponent",
     "FactoryIsFunctionalComponent",
     "FactoryMineBuildingsComponent",
-    "FactoryProductionComponent"
+    "FactoryProductionComponent",
+    "MaxLevelComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",

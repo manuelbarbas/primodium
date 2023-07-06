@@ -8,7 +8,7 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-
+import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 // Items
@@ -22,9 +22,10 @@ library LibMineDesignInitializer {
 
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
     //IronMineID
     tileComponent.set(IronMineID, IronResourceItemID);
+    maxLevelComponent.set(IronMineID, 3);
     //IronMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 1);
     mineComponent.set(buildingIdLevel, 1);
@@ -37,7 +38,7 @@ library LibMineDesignInitializer {
 
     //CopperMineID
     tileComponent.set(CopperMineID, CopperResourceItemID);
-
+    maxLevelComponent.set(CopperMineID, 3);
     //CopperMineID Level 1
     buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 1);
     mineComponent.set(buildingIdLevel, 1);
