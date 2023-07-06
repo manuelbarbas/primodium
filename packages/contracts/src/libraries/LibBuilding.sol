@@ -2,10 +2,22 @@
 pragma solidity >=0.8.0;
 // Production Buildings
 import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID, MinerID } from "../prototypes/Tiles.sol";
+import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+import { IWorld } from "solecs/System.sol";
+
+//components
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
+import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
 import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
 import { LibDebug } from "libraries/LibDebug.sol";
+import { LibResearch } from "../libraries/LibResearch.sol";
+import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
@@ -78,5 +90,47 @@ library LibBuilding {
     uint256 tileId
   ) internal view returns (bool) {
     return !ignoreBuildLimitComponent.has(tileId) || !ignoreBuildLimitComponent.getValue(tileId);
+  }
+
+  function checkResearchReqs(IWorld world, uint256 blockType) internal view returns (bool) {
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
+      getAddressById(world.components(), RequiredResearchComponentID)
+    );
+    ResearchComponent researchComponent = ResearchComponent(getAddressById(world.components(), ResearchComponentID));
+    return
+      LibResearch.checkResearchRequirements(
+        requiredResearchComponent,
+        researchComponent,
+        blockType,
+        addressToEntity(msg.sender)
+      );
+  }
+
+  function checkResourceReqs(IWorld world, uint256 blockType) internal view returns (bool) {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+    return
+      LibResourceCost.hasRequiredResources(
+        requiredResourcesComponent,
+        itemComponent,
+        blockType,
+        addressToEntity(msg.sender)
+      );
+  }
+
+  function checkAndSpendResourceReqs(IWorld world, uint256 blockType) internal returns (bool) {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+    return
+      LibResourceCost.checkAndSpendRequiredResources(
+        requiredResourcesComponent,
+        itemComponent,
+        blockType,
+        addressToEntity(msg.sender)
+      );
   }
 }
