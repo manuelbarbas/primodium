@@ -32,6 +32,23 @@ npx mud deploy --chainSpec chainSpecSkyStrife.json --deployerPrivateKey <testnet
 
 The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world address>` with the rpc settings to the 0xPARC/Lattice testnet.
 
+# Debug
+
+To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`
+For testing purposes in the context of writing tests and play testing with client two core methods are available:
+
+- DebugSystems: these systems can modify game design data and game state based on the testers needs. currently these systems are developed:
+
+  - `DebugAcquireResourcesBasedOnRequirementSystem`
+  - `DebugAcquireResourcesSystem`
+  - `DebugAcquireStorageForAllResourcesSystem`
+  - `DebugIgnoreBuildLimitForBuildingSystem`
+  - `DebugRemoveBuildingRequirementsSystem`
+  - `DebugRemoveBuildLimitSystem`
+  - `DebugRemoveUpgradeRequirementsSystem`
+
+- LibDebugInitializer: configure different buildings and technologies in this initializer library based on your requirements. currently most tests are written using this method
+
 # Claiming/Crafting Design
 
 Claiming from a MainBase stores items in the user's inventory, where the user's address is hashed for `ItemComponent`. Claiming from factories stores items in the factory, where the address representation of the building's entity ID is hashed for `ItemComponent`.
