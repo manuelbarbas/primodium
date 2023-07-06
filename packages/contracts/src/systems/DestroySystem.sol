@@ -37,14 +37,38 @@ contract DestroySystem is System {
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibStorage.checkAndUpdatePlayerStorageAfterDestroy(
-      storageCapacityComponent,
-      storageCapacityResourcesComponent,
-      itemComponent,
-      addressToEntity(msg.sender),
-      buildingId,
-      buildingLevel
-    );
+
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingLevel);
+    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
+    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+    uint256 playerEntity = addressToEntity(msg.sender);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
+      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        playerResourceStorageEntity,
+        storageResources[i]
+      );
+      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        buildingIdLevel,
+        storageResources[i]
+      );
+      storageCapacityComponent.set(
+        playerResourceStorageEntity,
+        playerResourceStorageCapacity - storageCapacityIncrease
+      );
+      uint256 playerResourceAmount = LibMath.getSafeUint256Value(
+        itemComponent,
+        LibEncode.hashKeyEntity(storageResources[i], playerEntity)
+      );
+      if (playerResourceAmount > playerResourceStorageCapacity) {
+        itemComponent.set(
+          LibEncode.hashKeyEntity(storageResources[i], playerEntity),
+          playerResourceStorageCapacity - storageCapacityIncrease
+        );
+      }
+    }
   }
 
   function execute(bytes memory args) public returns (bytes memory) {

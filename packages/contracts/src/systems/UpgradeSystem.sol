@@ -1,72 +1,73 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-
-import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 
 import { BuildingKey } from "../prototypes/Keys.sol";
+
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibDebug } from "../libraries/LibDebug.sol";
-import { LibBuilding } from "../libraries/LibBuilding.sol";
-import { LibUpgrade } from "../libraries/LibUpgrade.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibNewMine } from "../libraries/LibNewMine.sol";
+import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as PostUpgradeSystemID } from "./PostUpgradeSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function updateUnclaimedForResource(
-    MineComponent mineComponent,
-    StorageCapacityComponent storageCapacityComponent,
-    uint256 playerEntity,
-    uint256 startCoordEntity
-  ) internal {
-    LibNewMine.updateUnclaimedForResource(
-      UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
-      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
-      mineComponent,
-      storageCapacityComponent,
-      ItemComponent(getAddressById(components, ItemComponentID)),
-      playerEntity,
-      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startCoordEntity))
-    );
+  function checkAndSpendUpgradeResourceRequirements(
+    BuildingComponent buildingComponent,
+    RequiredResourcesComponent resourceRequirementsComponent,
+    ItemComponent itemComponent,
+    uint256 buildingId,
+    uint256 buildingEntity,
+    uint256 playerEntity
+  ) internal returns (bool) {
+    require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
+    uint256 currentLevel = buildingComponent.getValue(buildingEntity);
+    require(currentLevel > 0, "[LibUpgrade] can not upgrade building that is level 0");
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, currentLevel + 1);
+    return
+      LibResourceCost.checkAndSpendRequiredResources(
+        resourceRequirementsComponent,
+        itemComponent,
+        buildingIdLevel,
+        playerEntity
+      );
   }
 
-  function checkAndUpdatePlayerStorageAfterUpgrade(
-    StorageCapacityComponent storageCapacityComponent,
+  function checkUpgradeResearchRequirements(
+    BuildingComponent buildingComponent,
+    RequiredResearchComponent researchRequirmentComponent,
+    ResearchComponent researchComponent,
     uint256 buildingId,
-    uint256 newLevel
-  ) internal {
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
-    );
-    LibStorage.checkAndUpdatePlayerStorageAfterUpgrade(
-      storageCapacityComponent,
-      storageCapacityResourcesComponent,
-      addressToEntity(msg.sender),
-      buildingId,
-      newLevel
-    );
+    uint256 buildingEntity,
+    uint256 playerEntity
+  ) internal view returns (bool) {
+    require(buildingComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, buildingComponent.getValue(buildingEntity) + 1);
+    return
+      !researchRequirmentComponent.has(buildingIdLevel) ||
+      LibResearch.checkResearchRequirements(
+        researchRequirmentComponent,
+        researchComponent,
+        buildingIdLevel,
+        playerEntity
+      );
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -97,7 +98,7 @@ contract UpgradeSystem is System {
     );
     uint256 blockType = tileComponent.getValue(entity);
     require(
-      LibUpgrade.checkUpgradeResearchRequirements(
+      checkUpgradeResearchRequirements(
         buildingComponent,
         requiredResearchComponent,
         researchComponent,
@@ -108,7 +109,7 @@ contract UpgradeSystem is System {
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
     require(
-      LibUpgrade.checkAndSpendUpgradeResourceRequirements(
+      checkAndSpendUpgradeResourceRequirements(
         buildingComponent,
         requiredResourcesComponent,
         itemComponent,
@@ -118,23 +119,10 @@ contract UpgradeSystem is System {
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), entity);
-
     uint256 newLevel = buildingComponent.getValue(entity) + 1;
     buildingComponent.set(entity, newLevel);
 
-    checkAndUpdatePlayerStorageAfterUpgrade(storageCapacityComponent, blockType, newLevel);
-    LibNewMine.checkAndUpdateResourceProductionOnUpgradeMine(
-      mineComponent,
-      buildingComponent,
-      tileComponent,
-      addressToEntity(msg.sender),
-      entity
-    );
+    IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeSystemID)).executeTyped(msg.sender, entity);
 
     return abi.encode(entity);
   }

@@ -11,9 +11,9 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 
-import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-
+import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 // production buildings
 import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
@@ -51,5 +51,101 @@ library LibBuildingUpgradeDesignInitializer {
     requiredResourceIDs[1] = BasicPowerSourceCraftedItemID;
     requiredResourceIDs[2] = CopperResourceItemID;
     requiredResources.set(buildingIdLevel, requiredResourceIDs);
+  }
+
+  function set1RequiredResourceForEntityLevel(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1
+    );
+  }
+
+  function set2RequiredResourcesForEntity(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 resourceId2,
+    uint256 resourceCost2,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1,
+      resourceId2,
+      resourceCost2
+    );
+  }
+
+  function set3RequiredResourcesForEntity(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 resourceId2,
+    uint256 resourceCost2,
+    uint256 resourceId3,
+    uint256 resourceCost3,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1,
+      resourceId2,
+      resourceCost2,
+      resourceId3,
+      resourceCost3
+    );
+  }
+
+  function set4RequiredResourcesForEntity(
+    Uint256ArrayComponent requiredResourcesComponent,
+    Uint256Component itemComponent,
+    uint256 entity,
+    uint256 resourceId1,
+    uint256 resourceCost1,
+    uint256 resourceId2,
+    uint256 resourceCost2,
+    uint256 resourceId3,
+    uint256 resourceCost3,
+    uint256 resourceId4,
+    uint256 resourceCost4,
+    uint256 level
+  ) internal {
+    uint256 buildingIdLevel = LibEncode.hashFromKey(entity, level);
+    LibSetRequiredResources.set4RequiredResourcesForEntity(
+      requiredResourcesComponent,
+      itemComponent,
+      buildingIdLevel,
+      resourceId1,
+      resourceCost1,
+      resourceId2,
+      resourceCost2,
+      resourceId3,
+      resourceCost3,
+      resourceId4,
+      resourceCost4
+    );
   }
 }

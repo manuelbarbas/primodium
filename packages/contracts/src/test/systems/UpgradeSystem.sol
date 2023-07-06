@@ -17,7 +17,6 @@ import { ItemComponent, ID as ItemComponentID } from "../../components/ItemCompo
 import { MainBaseID, LithiumMinerID, DebugNodeID, MinerID, NodeID, DebugNodeID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
-import { LibUpgrade } from "../../libraries/LibUpgrade.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 

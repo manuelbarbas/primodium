@@ -12,13 +12,12 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 // debug buildings
 import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
-
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { BuildingKey } from "../prototypes/Keys.sol";
 
@@ -97,12 +96,41 @@ contract BuildSystem is System {
     StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
-    LibStorage.checkAndUpdatePlayerStorageAfterBuild(
-      storageCapacityComponent,
-      storageCapacityResourcesComponent,
-      addressToEntity(msg.sender),
-      buildingId
+    uint256 buildingIdLevel = LibEncode.hashFromKey(buildingId, 1);
+    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
+    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], addressToEntity(msg.sender));
+      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        playerResourceStorageEntity,
+        storageResources[i]
+      );
+      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        buildingIdLevel,
+        storageResources[i]
+      );
+      storageCapacityComponent.set(
+        playerResourceStorageEntity,
+        playerResourceStorageCapacity + storageCapacityIncrease
+      );
+    }
+  }
+
+  function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(components, FactoryMineBuildingsComponentID)
     );
+    uint256 buildingId = tileComponent.getValue(factoryEntity);
+    uint256 buildingLevelEntity = LibEncode.hashFromKey(buildingId, 1);
+    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
+      return;
+    }
+    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
+      buildingLevelEntity
+    );
+    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -192,7 +220,7 @@ contract BuildSystem is System {
     lastBuiltAtComponent.set(entity, block.number);
 
     checkAndUpdatePlayerStorageAfterBuild(blockType);
-
+    setupFactoryComponents(tileComponent, entity);
     return abi.encode(entity);
   }
 

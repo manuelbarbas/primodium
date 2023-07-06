@@ -22,7 +22,10 @@
     "StorageCapacityComponent",
     "StorageCapacityResourcesComponent",
     "MineComponent",
-    "UnclaimedResourceComponent"
+    "UnclaimedResourceComponent",
+    "FactoryIsFunctionalComponent",
+    "FactoryMineBuildingsComponent",
+    "FactoryProductionComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -30,6 +33,7 @@
     "LibBuildingUpgradeDesignInitializer",
     "LibStorageDesignInitializer",
     "LibMineDesignInitializer",
+    "LibFactoryDesignInitializer",
     "LibTechnologyDesignInitializer"
   ],
   "systems": [
@@ -69,7 +73,8 @@
         "BuildingComponent",
         "MainBaseInitializedComponent",
         "BuildingLimitComponent",
-        "StorageCapacityComponent"
+        "StorageCapacityComponent",
+        "FactoryMineBuildingsComponent"
       ]
     },
     {
@@ -96,7 +101,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent"
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
+        "FactoryMineBuildingsComponent",
+        "FactoryProductionComponent"
       ]
     },
     {
@@ -107,7 +115,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent"
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
+        "FactoryMineBuildingsComponent",
+        "FactoryProductionComponent"
       ]
     },
     {
@@ -148,13 +159,17 @@
     },
     {
       "name": "UpgradeSystem",
+      "writeAccess": ["BuildingComponent", "ItemComponent"]
+    },
+    {
+      "name": "PostUpgradeSystem",
       "writeAccess": [
-        "BuildingComponent",
-        "ItemComponent",
         "StorageCapacityComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent"
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
+        "FactoryProductionComponent"
       ]
     },
     {
