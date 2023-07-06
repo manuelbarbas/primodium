@@ -26,15 +26,21 @@ import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
+import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
 uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 
 contract DestroyPathSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function updateUnclaimedForResource(MineComponent mineComponent, uint256 playerEntity, uint256 resourceId) internal {
+  function updateUnclaimedForResource(
+    MineComponent mineComponent,
+    LastClaimedAtComponent lastClaimedAtComponent,
+    uint256 playerEntity,
+    uint256 resourceId
+  ) internal {
     LibUnclaimedResource.updateUnclaimedForResource(
       UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
-      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
+      lastClaimedAtComponent,
       mineComponent,
       StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
       ItemComponent(getAddressById(components, ItemComponentID)),
@@ -46,11 +52,13 @@ contract DestroyPathSystem is System {
   function handleOnDestroyPathFromMineToMainBase(
     MineComponent mineComponent,
     TileComponent tileComponent,
+    LastClaimedAtComponent lastClaimedAtComponent,
     uint256 mineEntity
   ) internal {
     // update unclaimed resources
     updateUnclaimedForResource(
       mineComponent,
+      lastClaimedAtComponent,
       addressToEntity(msg.sender),
       LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity))
     );
@@ -61,7 +69,12 @@ contract DestroyPathSystem is System {
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
     uint256 resourceProductionOfMine = mineComponent.getValue(buildingLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, addressToEntity(msg.sender));
-    mineComponent.set(playerResourceEntity, mineComponent.getValue(playerResourceEntity) - resourceProductionOfMine);
+    LibResourceProduction.updateResourceProduction(
+      mineComponent,
+      lastClaimedAtComponent,
+      playerResourceEntity,
+      mineComponent.getValue(playerResourceEntity) - resourceProductionOfMine
+    );
   }
 
   function handleOnDestroyPathFromMineToFactory(
@@ -69,6 +82,7 @@ contract DestroyPathSystem is System {
     TileComponent tileComponent,
     BuildingComponent buildingComponent,
     MineComponent mineComponent,
+    LastClaimedAtComponent lastClaimedAtComponent,
     uint256 mineEntity,
     uint256 factoryEntity
   ) internal {
@@ -90,6 +104,7 @@ contract DestroyPathSystem is System {
       // update unclaimed resources
       updateUnclaimedForResource(
         mineComponent,
+        lastClaimedAtComponent,
         addressToEntity(msg.sender),
         factoryProductionComponent.getValue(factoryBuildingLevelEntity).ResourceID
       );
@@ -113,6 +128,7 @@ contract DestroyPathSystem is System {
       LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
         factoryProductionComponent,
         mineComponent,
+        lastClaimedAtComponent,
         addressToEntity(msg.sender),
         factoryBuildingLevelEntity,
         false
@@ -123,6 +139,7 @@ contract DestroyPathSystem is System {
     MineComponent mineComponent,
     BuildingComponent buildingComponent,
     TileComponent tileComponent,
+    LastClaimedAtComponent lastClaimedAtComponent,
     uint256 playerEntity,
     uint256 factoryEntity
   ) internal {
@@ -147,6 +164,7 @@ contract DestroyPathSystem is System {
     // update unclaimed resources
     updateUnclaimedForResource(
       mineComponent,
+      lastClaimedAtComponent,
       addressToEntity(msg.sender),
       factoryProductionComponent.getValue(factoryBuildingLevelEntity).ResourceID
     );
@@ -155,7 +173,9 @@ contract DestroyPathSystem is System {
     );
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
     //update resource production
-    mineComponent.set(
+    LibResourceProduction.updateResourceProduction(
+      mineComponent,
+      lastClaimedAtComponent,
       playerResourceEntity,
       mineComponent.getValue(playerResourceEntity) - factoryProductionData.ResourceProductionRate
     );
@@ -194,15 +214,19 @@ contract DestroyPathSystem is System {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
     if (mineComponent.has(startCoordBuildingLevelEntity)) {
       if (endCoordBuildingId == MainBaseID) {
-        handleOnDestroyPathFromMineToMainBase(mineComponent, tileComponent, startCoordEntity);
+        handleOnDestroyPathFromMineToMainBase(mineComponent, tileComponent, lastClaimedAtComponent, startCoordEntity);
       } else {
         handleOnDestroyPathFromMineToFactory(
           factoryMineBuildingsComponent,
           tileComponent,
           buildingComponent,
           mineComponent,
+          lastClaimedAtComponent,
           startCoordEntity,
           endCoordEntity
         );
@@ -212,6 +236,7 @@ contract DestroyPathSystem is System {
         mineComponent,
         buildingComponent,
         tileComponent,
+        lastClaimedAtComponent,
         addressToEntity(msg.sender),
         startCoordEntity
       );

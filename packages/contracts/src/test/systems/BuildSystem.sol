@@ -90,12 +90,12 @@ contract BuildSystemTest is MudTest {
     assertTrue(ownedByComponent.has(mainBaseEntityID));
     assertEq(ownedByComponent.getValue(mainBaseEntityID), addressToEntity(alice));
 
-    bytes memory ironMineEntity = buildSystem.executeTyped(DebugIronMineWithBuildLimitID, coord);
+    bytes memory ironMineEntity = buildSystem.executeTyped(DebugIronMineWithBuildLimitID, ironCoord);
     uint256 ironMineEntityID = abi.decode(ironMineEntity, (uint256));
     position = LibEncode.decodeCoordEntity(ironMineEntityID);
 
-    assertEq(position.x, coord.x);
-    assertEq(position.y, coord.y);
+    assertEq(position.x, ironCoord.x);
+    assertEq(position.y, ironCoord.y);
 
     assertTrue(ownedByComponent.has(ironMineEntityID));
     assertEq(ownedByComponent.getValue(ironMineEntityID), addressToEntity(alice));

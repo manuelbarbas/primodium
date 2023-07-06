@@ -27,6 +27,7 @@ import { LibNewMine } from "../libraries/LibNewMine.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
+import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
 uint256 constant ID = uint256(keccak256("system.BuildPath"));
 
 contract BuildPathSystem is System {
@@ -39,6 +40,7 @@ contract BuildPathSystem is System {
     MineComponent mineComponent, //writes to
     BuildingComponent buildingComponent,
     TileComponent tileComponent,
+    LastClaimedAtComponent lastClaimedAtComponent,
     uint256 playerEntity,
     uint256 factoryEntity
   ) internal {
@@ -47,9 +49,11 @@ contract BuildPathSystem is System {
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(factoryEntity));
     FactoryProductionData memory factoryProductionData = factoryProductionComponent.getValue(buildingLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
-    mineComponent.set(
-      playerResourceEntity, //player resource production entity
-      LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate //current total resource production // resource production of factory
+    LibResourceProduction.updateResourceProduction(
+      mineComponent,
+      lastClaimedAtComponent,
+      playerResourceEntity,
+      LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate
     );
   }
 
@@ -99,12 +103,13 @@ contract BuildPathSystem is System {
   function updateUnclaimedForResource(
     MineComponent mineComponent,
     StorageCapacityComponent storageCapacityComponent,
+    LastClaimedAtComponent lastClaimedAtComponent,
     uint256 playerEntity,
     uint256 startCoordEntity
   ) internal {
     LibUnclaimedResource.updateUnclaimedForResource(
       UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
-      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
+      lastClaimedAtComponent,
       mineComponent,
       storageCapacityComponent,
       ItemComponent(getAddressById(components, ItemComponentID)),
@@ -113,21 +118,33 @@ contract BuildPathSystem is System {
     );
   }
 
-  function handleBuildingPathFromMineToMainBase(uint256 mineEntity) internal {
+  function handleBuildingPathFromMineToMainBase(
+    TileComponent tileComponent,
+    BuildingComponent buildingComponent,
+    MineComponent mineComponent,
+    uint256 mineEntity
+  ) internal {
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
     );
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
     //update unclaimed resources before updating resouce production
-    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), mineEntity);
+    updateUnclaimedForResource(
+      mineComponent,
+      storageCapacityComponent,
+      lastClaimedAtComponent,
+      addressToEntity(msg.sender),
+      mineEntity
+    );
     //update resource production based on new path
     updateResourceProductionOnBuildPathFromMine(
       mineComponent,
       buildingComponent,
       tileComponent,
+      lastClaimedAtComponent,
       addressToEntity(msg.sender),
       mineEntity
     );
@@ -137,6 +154,7 @@ contract BuildPathSystem is System {
     MineComponent mineComponent, //writes to
     BuildingComponent buildingComponent,
     TileComponent tileComponent,
+    LastClaimedAtComponent lastClaimedAtComponent,
     uint256 playerEntity,
     uint256 fromEntity
   ) internal {
@@ -145,23 +163,32 @@ contract BuildPathSystem is System {
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromEntity));
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
     require(mineComponent.has(buildingLevelEntity), "Mine level entity not found");
-    mineComponent.set(
-      playerResourceEntity, //player resource production entity
-      LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + mineComponent.getValue(buildingLevelEntity) //current total resource production // resource production of mine
+    LibResourceProduction.updateResourceProduction(
+      mineComponent,
+      lastClaimedAtComponent,
+      playerResourceEntity,
+      LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + mineComponent.getValue(buildingLevelEntity)
     );
   }
 
-  function handleBuildingPathFromMineToFactory(uint256 mineEntity, uint256 factoryEntity) internal {
+  function handleBuildingPathFromMineToFactory(
+    TileComponent tileComponent,
+    BuildingComponent buildingComponent,
+    MineComponent mineComponent,
+    PathComponent pathComponent,
+    uint256 mineEntity,
+    uint256 factoryEntity
+  ) internal {
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
+    );
     FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
       getAddressById(components, FactoryIsFunctionalComponentID)
     );
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+
     uint256 factoryBuildingLevelEntity = LibEncode.hashKeyEntity(
       tileComponent.getValue(factoryEntity),
       buildingComponent.getValue(factoryEntity)
@@ -189,6 +216,7 @@ contract BuildPathSystem is System {
       LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
         factoryProductionComponent,
         mineComponent,
+        lastClaimedAtComponent,
         addressToEntity(msg.sender),
         factoryBuildingLevelEntity,
         true
@@ -196,11 +224,19 @@ contract BuildPathSystem is System {
     }
   }
 
-  function handleBuildingPathFromFactoryToMainBase(uint256 factoryEntity, uint256 mainBaseEntity) internal {
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+  function handleBuildingPathFromFactoryToMainBase(
+    TileComponent tileComponent,
+    MineComponent mineComponent,
+    BuildingComponent buildingComponent,
+    uint256 factoryEntity,
+    uint256 mainBaseEntity
+  ) internal {
     require(
       tileComponent.getValue(mainBaseEntity) == MainBaseID,
       "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
+    );
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      getAddressById(components, LastClaimedAtComponentID)
     );
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
@@ -211,10 +247,14 @@ contract BuildPathSystem is System {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
     );
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
 
-    updateUnclaimedForResource(mineComponent, storageCapacityComponent, addressToEntity(msg.sender), factoryEntity);
+    updateUnclaimedForResource(
+      mineComponent,
+      storageCapacityComponent,
+      lastClaimedAtComponent,
+      addressToEntity(msg.sender),
+      factoryEntity
+    );
 
     updateResourceProductionOnBuildPathFromFactoryToMainBase(
       factoryProductionComponent,
@@ -222,9 +262,17 @@ contract BuildPathSystem is System {
       mineComponent,
       buildingComponent,
       tileComponent,
+      lastClaimedAtComponent,
       addressToEntity(msg.sender),
       factoryEntity
     );
+  }
+
+  function checkOwnership(uint256 fromEntity, uint256 toEntity) internal view returns (bool) {
+    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+    return
+      ownedByComponent.getValue(fromEntity) == addressToEntity(msg.sender) &&
+      ownedByComponent.getValue(toEntity) == addressToEntity(msg.sender);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
@@ -244,16 +292,7 @@ contract BuildPathSystem is System {
     require(tileComponent.has(endCoordEntity), "[BuildPathSystem] Cannot end path at an empty coordinate");
 
     // Check that the coordinates are both owned by the msg.sender
-    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(startCoordEntity);
-    require(
-      ownedEntityAtStartCoord == addressToEntity(msg.sender),
-      "[BuildPathSystem] Cannot start path at a tile you do not own"
-    );
-    uint256 ownedEntityAtEndCoord = ownedByComponent.getValue(endCoordEntity);
-    require(
-      ownedEntityAtEndCoord == addressToEntity(msg.sender),
-      "[BuildPathSystem] Cannot end path at a tile you do not own"
-    );
+    require(checkOwnership(startCoordEntity, endCoordEntity), "[BuildPathSystem] Cannot build path on unowned tiles");
 
     // Check that a path doesn't already start there (each tile can only be the start of one path)
     require(
@@ -271,14 +310,28 @@ contract BuildPathSystem is System {
       startCoordBuildingId,
       buildingComponent.getValue(startCoordEntity)
     );
+
     if (mineComponent.has(startCoordBuildingLevelEntity)) {
       if (endCoordBuildingId == MainBaseID) {
-        handleBuildingPathFromMineToMainBase(startCoordEntity);
+        handleBuildingPathFromMineToMainBase(tileComponent, buildingComponent, mineComponent, startCoordEntity);
       } else {
-        handleBuildingPathFromMineToFactory(startCoordEntity, endCoordEntity);
+        handleBuildingPathFromMineToFactory(
+          tileComponent,
+          buildingComponent,
+          mineComponent,
+          pathComponent,
+          startCoordEntity,
+          endCoordEntity
+        );
       }
     } else if (factoryMineBuildingsComponent.has(startCoordBuildingLevelEntity)) {
-      handleBuildingPathFromFactoryToMainBase(startCoordEntity, endCoordEntity);
+      handleBuildingPathFromFactoryToMainBase(
+        tileComponent,
+        mineComponent,
+        buildingComponent,
+        startCoordEntity,
+        endCoordEntity
+      );
     }
 
     // Add key

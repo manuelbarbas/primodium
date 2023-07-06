@@ -172,7 +172,8 @@
         "UnclaimedResourceComponent",
         "MineComponent",
         "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent"
+        "FactoryProductionComponent",
+        "LastClaimedAtComponent"
       ]
     },
     {

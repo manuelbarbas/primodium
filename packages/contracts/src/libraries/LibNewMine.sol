@@ -3,7 +3,6 @@ pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
-
 import { LibEncode } from "./LibEncode.sol";
 import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
 import { LibClaim } from "./LibClaim.sol";
@@ -22,16 +21,16 @@ library LibNewMine {
     uint256[25] memory storageResourceIds = getAllResourceIds();
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
-      if (!mineComponent.has(playerResourceEntity)) continue;
-      LibUnclaimedResource.updateUnclaimedForResource(
-        unclaimedResourceComponent,
-        lastClaimedAtComponent,
-        mineComponent,
-        storageCapacityComponent,
-        itemComponent,
-        playerEntity,
-        storageResourceIds[i]
-      );
+      if (mineComponent.has(playerResourceEntity))
+        LibUnclaimedResource.updateUnclaimedForResource(
+          unclaimedResourceComponent,
+          lastClaimedAtComponent,
+          mineComponent,
+          storageCapacityComponent,
+          itemComponent,
+          playerEntity,
+          storageResourceIds[i]
+        );
       uint256 unclaimedResourceAmount = LibMath.getSafeUint256Value(unclaimedResourceComponent, playerResourceEntity);
       if (unclaimedResourceAmount > 0)
         LibClaim.addResourceToStorage(
