@@ -58,6 +58,21 @@ the amount of Iron storage that is provided by a level 2 MainBase is :
 When Buildings are Built, Upgraded or Destroyed `StorageCapacityComponent` is updated for the player and the resources they modify the capacity for.
 `playerResourceID = hashKeyEntity(resourceId, playerEntity)`
 
+# Resource Production
+
+`MineComponent`:
+
+- for the combination of player entity and resource id stores the production of that resource per block
+- for the combination of building id, level and resource stores the production rate of that resource for that level of that building
+
+resource production is updated when:
+
+- a path is built or destroyed from a building with resource production to MainBase
+- a building that has a path to main base is upgraded
+
+before production is changed `UnclaimedResourceComponent` is updated for the player entity and resource id.
+this component tracks how much resource is produced but not claimed. `UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point and will always be less than or equal to the available space for that resource in the players storage
+
 # Component Structure
 
 `OwnedByComponent` records building ownership while `ItemComponent` records mined and crafted item ownership.
