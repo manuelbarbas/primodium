@@ -62,6 +62,11 @@ To craft from factory
 - CraftSystem: Crafting Items (called from factories)
   - Called from factories (items already in factories, no resource flows)
 
+# Upgrading
+
+`MaxLevelComponent` for a building id indicates that that building can be upgraded and up to what level
+`BuildingComponent` for a building entity indicates that the entity is a building and what level it is
+
 # Storage
 
 In the `LibStorageDesignInitializer` Buildings which increase storage capacity are designated the Resources they provide capacity for via `StorageCapacityResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `StorageCapacityComponent`
