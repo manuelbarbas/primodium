@@ -31,14 +31,13 @@ contract DestroySystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
-    Coord memory coord = abi.decode(args, (Coord));
+    uint256 buildingEntity = abi.decode(args, (uint256));
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
     BuildingTilesComponent buildingTilesComponent = BuildingTilesComponent(getC(BuildingTilesComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
 
-    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
 
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
@@ -46,8 +45,9 @@ contract DestroySystem is PrimodiumSystem {
       clearBuildingTile(tileComponent, buildingTiles[i]);
     }
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
-    pathComponent.remove(buildingEntity);
-
+    if (pathComponent.has(buildingEntity)) {
+      pathComponent.remove(buildingEntity);
+    }
     uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(buildingEntity);
     for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
       pathComponent.remove(pathWithEndingTile[i]);
@@ -76,8 +76,8 @@ contract DestroySystem is PrimodiumSystem {
     return abi.encode(buildingEntity);
   }
 
-  function executeTyped(Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(coord));
+  function executeTyped(uint256 buildingEntity) public returns (bytes memory) {
+    return execute(abi.encode(buildingEntity));
   }
 
   function clearBuildingTile(Uint256Component tileComponent, uint256 tileEntity) private {

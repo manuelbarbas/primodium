@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 // external
 import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSystem.sol";
+import "forge-std/console.sol";
 
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -70,6 +71,7 @@ contract BuildSystem is PrimodiumSystem {
     // update building count if the built building counts towards the build limit
     if (!ignoreBuildLimitComponent.has(buildingType)) {
       BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
+      console.log("setting building limit");
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
     //set level of building to 1

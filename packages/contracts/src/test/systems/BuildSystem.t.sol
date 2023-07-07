@@ -58,16 +58,16 @@ contract BuildSystemTest is PrimodiumTest {
 
     Coord memory coord = Coord({ x: 0, y: 0 });
 
-    bytes memory blockEntity = buildSystem.executeTyped(LithiumMinerID, coord);
+    bytes memory buildingEntity = buildSystem.executeTyped(LithiumMinerID, coord);
 
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
+    uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
 
-    Coord memory position = LibEncode.decodeCoordEntity(blockEntityID);
+    Coord memory position = LibEncode.decodeCoordEntity(buildingEntityID);
     assertEq(position.x, coord.x);
     assertEq(position.y, coord.y);
 
-    assertTrue(ownedByComponent.has(blockEntityID));
-    assertEq(ownedByComponent.getValue(blockEntityID), addressToEntity(alice));
+    assertTrue(ownedByComponent.has(buildingEntityID));
+    assertEq(ownedByComponent.getValue(buildingEntityID), addressToEntity(alice));
 
     vm.stopPrank();
   }
@@ -76,17 +76,17 @@ contract BuildSystemTest is PrimodiumTest {
     Coord[] memory blueprint = makeBlueprint();
     blueprintSystem.executeTyped(dummyBuilding, blueprint);
 
-    bytes memory blockEntity = buildSystem.executeTyped(dummyBuilding, coord);
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-    Coord memory position = LibEncode.decodeCoordEntity(blockEntityID);
+    bytes memory buildingEntity = buildSystem.executeTyped(dummyBuilding, coord);
+    uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
+    Coord memory position = LibEncode.decodeCoordEntity(buildingEntityID);
 
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(blockEntityID);
+    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntityID);
     assertEq(blueprint.length, buildingTiles.length);
 
     for (uint i = 0; i < buildingTiles.length; i++) {
       position = LibEncode.decodeCoordEntity(buildingTiles[i]);
       assertCoordEq(position, blueprint[i]);
-      assertEq(blockEntityID, ownedByComponent.getValue(buildingTiles[i]));
+      assertEq(buildingEntityID, ownedByComponent.getValue(buildingTiles[i]));
       assertEq(dummyBuilding, tileComponent.getValue(buildingTiles[i]));
     }
   }
@@ -116,16 +116,16 @@ contract BuildSystemTest is PrimodiumTest {
       console.log("BasicMiner requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
       debugAquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
     }
-    bytes memory blockEntity = buildSystem.executeTyped(BasicMinerID, coord);
+    bytes memory buildingEntity = buildSystem.executeTyped(BasicMinerID, coord);
 
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
+    uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
 
-    Coord memory position = LibEncode.decodeCoordEntity(blockEntityID);
+    Coord memory position = LibEncode.decodeCoordEntity(buildingEntityID);
     assertEq(position.x, coord.x);
     assertEq(position.y, coord.y);
 
-    assertTrue(ownedByComponent.has(blockEntityID));
-    assertEq(ownedByComponent.getValue(blockEntityID), addressToEntity(alice));
+    assertTrue(ownedByComponent.has(buildingEntityID));
+    assertEq(ownedByComponent.getValue(buildingEntityID), addressToEntity(alice));
 
     vm.stopPrank();
   }
