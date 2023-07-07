@@ -60,6 +60,7 @@ export const init = async (address: string | undefined, network: Network) => {
       case BlockType.DemolishPath:
         components.selectedBuilding(network).remove();
         demolishPath(gameCoord, network);
+        return;
       case BlockType.Conveyor:
         const startCoord = components.startSelectedPath(network).get();
 
