@@ -100,6 +100,20 @@ export function defineComponents(world: World) {
         },
       }
     ),
+    MaxLevel: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.MaxLevel",
+        },
+      })
+    ),
+    Building: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Building",
+        },
+      })
+    ),
     // TODO: component data for crafting recipes
   };
 }

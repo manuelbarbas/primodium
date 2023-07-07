@@ -45,26 +45,101 @@ export function getBuildingResearchRequirement(
 // below kept for compatibility
 
 export const ResearchTechnologyTree = [
-  // {
-  //   id: "1",
-  //   type: "techTree",
-  //   data: {
-  //     name: "Main Base",
-  //     id: BlockType.MainBaseResearch,
-  //     description:
-  //       "Unlocked by default. The heart of your operation, protect it at all costs.",
-  //     resources: [],
-  //   },
-  //   position: { x: 150, y: 50 },
-  // },
+  //Main Base Level 2
+  {
+    id: "1",
+    type: "techTree",
+    data: {
+      name: "Copper Mine",
+      id: BlockType.CopperMineResearchID,
+      description:
+        "allows you to build Copper Mine building which produces Copper Ore.",
+      resources: [],
+    },
+    position: { x: 250, y: 275 },
+  },
   {
     id: "2",
     type: "techTree",
     data: {
-      name: "Iron",
-      id: BlockType.Iron,
+      name: "Iron Mine 2",
+      id: BlockType.IronMine2ResearchID,
       description:
-        "Unlocked by default. A common metal. Allows you to mine iron ore and store iron.",
+        "allows you to upgrade Iron Mine building to level 2 increasing production to 2",
+      resources: [],
+    },
+    position: { x: 250, y: 275 },
+  },
+  //Main Base Level 3
+  {
+    id: "3",
+    type: "techTree",
+    data: {
+      name: "Storage Unit",
+      id: BlockType.StorageUnit,
+      description:
+        "allows you to build Storage Unit building which increases your Iron and Copper storage by 1000 each",
+      resources: [],
+    },
+    position: { x: 250, y: 275 },
+  },
+  {
+    id: "4",
+    type: "techTree",
+    data: {
+      name: "IronPlate Factory",
+      id: BlockType.IronPlateFactory,
+      description:
+        "allows you to build IronPlate Factory building which produces Iron Plates from Iron Ore. Requires 1 connected Iron Mine to function",
+      resources: [],
+    },
+    position: { x: 250, y: 275 },
+  },
+  //Main Base Level 4
+  {
+    id: "5",
+    type: "techTree",
+    data: {
+      name: "Lithium Mine",
+      id: BlockType.LithiumMine,
+      description:
+        "allows you to build Lithium Mine building to level 2 increasing production to 2",
+      resources: [],
+    },
+    position: { x: 250, y: 275 },
+  },
+  {
+    id: "6",
+    type: "techTree",
+    data: {
+      name: "Copper Mine 2",
+      id: BlockType.CopperMine2ResearchID,
+      description:
+        "allows you to upgrade Copper Mine building to level 2 increasing production to 2",
+      resources: [],
+    },
+    position: { x: 250, y: 275 },
+  },
+  {
+    id: "7",
+    type: "techTree",
+    data: {
+      name: "Iron Mine 3",
+      id: BlockType.IronMine3ResearchID,
+      description:
+        "allows you to upgrade Iron Mine building to level 3 increasing production to 3",
+      resources: [],
+    },
+    position: { x: 250, y: 275 },
+  },
+  {
+    id: "8",
+    type: "techTree",
+    data: {
+      name: "Storage Unit 2",
+      id: BlockType.IronMine3ResearchID,
+      description:
+        "allows you to upgrade Storage Unit building to level 2 increasing production to 3",
       resources: [],
     },
     position: { x: 250, y: 275 },
@@ -106,49 +181,49 @@ export const ResearchTechnologyTree = [
   //   position: { x: 450, y: 275 },
   // },
   // Research Copper with 30 IronResource
-  {
-    id: "6",
-    type: "techTree",
-    data: {
-      name: "Copper",
-      id: BlockType.Copper,
-      description:
-        "A versatile and conductive metal. Researching allows you to mine copper ore and store copper.",
-      resources: [{ id: BlockType.Iron, amount: 30 }],
-    },
-    position: { x: 150, y: 500 },
-  },
-  // Research PlatingFactory with 200 IronResource and 200 CopperResource
-  {
-    id: "7",
-    type: "techTree",
-    data: {
-      name: "Plating Factory",
-      id: BlockType.PlatingFactoryResearch,
-      description: "Makes iron plates from iron.",
-      resources: [
-        { id: BlockType.Iron, amount: 200 },
-        { id: BlockType.Copper, amount: 200 },
-      ],
-    },
-    position: { x: 150, y: 725 },
-  },
-  // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
-  {
-    id: "8",
-    type: "techTree",
-    data: {
-      name: "Lithium",
-      id: BlockType.Lithium,
-      description:
-        "A highly reactive metal. Researching allows you to mine lithium ore and store lithium.",
-      resources: [
-        { id: BlockType.IronPlateCrafted, amount: 20 },
-        { id: BlockType.Copper, amount: 100 },
-      ],
-    },
-    position: { x: 150, y: 950 },
-  },
+  // {
+  //   id: "6",
+  //   type: "techTree",
+  //   data: {
+  //     name: "Copper",
+  //     id: BlockType.Copper,
+  //     description:
+  //       "A versatile and conductive metal. Researching allows you to mine copper ore and store copper.",
+  //     resources: [{ id: BlockType.Iron, amount: 30 }],
+  //   },
+  //   position: { x: 150, y: 500 },
+  // },
+  // // Research PlatingFactory with 200 IronResource and 200 CopperResource
+  // {
+  //   id: "7",
+  //   type: "techTree",
+  //   data: {
+  //     name: "Plating Factory",
+  //     id: BlockType.PlatingFactoryResearch,
+  //     description: "Makes iron plates from iron.",
+  //     resources: [
+  //       { id: BlockType.Iron, amount: 200 },
+  //       { id: BlockType.Copper, amount: 200 },
+  //     ],
+  //   },
+  //   position: { x: 150, y: 725 },
+  // },
+  // // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
+  // {
+  //   id: "8",
+  //   type: "techTree",
+  //   data: {
+  //     name: "Lithium",
+  //     id: BlockType.Lithium,
+  //     description:
+  //       "A highly reactive metal. Researching allows you to mine lithium ore and store lithium.",
+  //     resources: [
+  //       { id: BlockType.IronPlateCrafted, amount: 20 },
+  //       { id: BlockType.Copper, amount: 100 },
+  //     ],
+  //   },
+  //   position: { x: 150, y: 950 },
+  // },
   // Research BasicBatteryFactory with 50 IronPlateCrafted and 100 LithiumResource
   {
     id: "9",
