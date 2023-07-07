@@ -38,6 +38,12 @@ uint256 constant KimberliteMineID = uint256(keccak256("block.KimberliteMine"));
 uint256 constant UraniniteMineID = uint256(keccak256("block.UraniniteMine"));
 uint256 constant BolutiteMineID = uint256(keccak256("block.BolutiteMine"));
 
+// Factory Blocks
+uint256 constant IronPlateFactoryID = uint256(keccak256("block.IronPlateFactory"));
+
+//Storage Unit
+uint256 constant StorageUnitID = uint256(keccak256("block.StorageUnit"));
+
 // in-game blocks/factories
 uint256 constant BasicMinerID = uint256(keccak256("block.BasicMiner"));
 uint256 constant NodeID = uint256(keccak256("block.Node"));

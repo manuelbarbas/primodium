@@ -31,10 +31,6 @@
   "initializers": [
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
-    "LibBuildingUpgradeDesignInitializer",
-    "LibStorageDesignInitializer",
-    "LibMineDesignInitializer",
-    "LibFactoryDesignInitializer",
     "LibTechnologyDesignInitializer",
     "LibDebugInitializer"
   ],
