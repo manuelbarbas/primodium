@@ -3,6 +3,8 @@ import { init as _init } from "../lib/scripts";
 import * as hooks from "./hooks";
 import * as components from "./components";
 import * as camera from "./camera";
+import { debug } from "./debug";
+import { BlockType } from "src/util/constants";
 
 const init = async (
   address: string | undefined,
@@ -31,13 +33,17 @@ const init = async (
 
   //expose api to window for debugging
   // @ts-ignore
-  if (import.meta.env.VITE_DEV === "true") window.mudNetwork = network;
+  if (import.meta.env.VITE_DEV === "true") window.network = network;
 
   await _init(address, network);
 };
 
-export const api = { init, hooks, components, camera };
+export const api = { init, hooks, components, camera, debug };
 
 //expose api to window for debugging
-// @ts-ignore
-if (import.meta.env.VITE_DEV === "true") window.primodium = api;
+if (import.meta.env.VITE_DEV === "true") {
+  // @ts-ignore
+  window.primodium = api;
+  // @ts-ignore
+  window.BlockType = BlockType;
+}
