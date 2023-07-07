@@ -23,18 +23,8 @@ uint256 constant KimberliteID = uint256(keccak256("block.Kimberlite"));
 uint256 constant UraniniteID = uint256(keccak256("block.Uraninite"));
 uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 
-// Special blocks
+// buildings
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));
-uint256 constant DebugNodeID = uint256(keccak256("block.DebugNode"));
-
-uint256 constant MinerID = uint256(keccak256("block.Miner"));
-uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
-
-uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
-uint256 constant SiloID = uint256(keccak256("block.Silo"));
-uint256 constant DebugPlatingFactoryID = uint256(keccak256("block.DebugPlatingFactory"));
-
-// in-game blocks/factories
 uint256 constant BasicMinerID = uint256(keccak256("block.BasicMiner"));
 uint256 constant NodeID = uint256(keccak256("block.Node"));
 uint256 constant PlatingFactoryID = uint256(keccak256("block.PlatingFactory"));
@@ -55,3 +45,11 @@ uint256 constant HighEnergyLaserFactoryID = uint256(keccak256("block.HighEnergyL
 uint256 constant ThermobaricWarheadFactoryID = uint256(keccak256("block.ThermobaricWarheadFactory"));
 uint256 constant ThermobaricMissileFactoryID = uint256(keccak256("block.ThermobaricMissileFactory"));
 uint256 constant KimberliteCatalystFactoryID = uint256(keccak256("block.KimberliteCatalystFactory"));
+
+// debug buildings
+uint256 constant DebugNodeID = uint256(keccak256("block.DebugNode"));
+uint256 constant MinerID = uint256(keccak256("block.Miner"));
+uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
+uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
+uint256 constant DebugPlatingFactoryID = uint256(keccak256("block.DebugPlatingFactory"));
+uint256 constant SiloID = uint256(keccak256("block.Silo"));

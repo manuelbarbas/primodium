@@ -18,7 +18,9 @@
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
-    "IgnoreBuildLimitComponent"
+    "IgnoreBuildLimitComponent",
+    "BuildingBlockComponent",
+    "BlueprintComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -147,6 +149,10 @@
     {
       "name": "DebugRemoveBuildLimitSystem",
       "writeAccess": ["IgnoreBuildLimitComponent"]
+    },
+    {
+      "name": "BlueprintSystem",
+      "writeAccess": ["BlueprintComponent"]
     }
   ]
 }
