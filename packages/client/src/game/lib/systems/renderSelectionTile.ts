@@ -1,7 +1,6 @@
 import {
   ComponentUpdate,
   Has,
-  Not,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
@@ -16,10 +15,7 @@ export const renderSelectionTile = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
 
-  const query = [
-    Has(offChainComponents.SelectedTile),
-    Not(offChainComponents.SelectedBuilding),
-  ];
+  const query = [Has(offChainComponents.SelectedTile)];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;

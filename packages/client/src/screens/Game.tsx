@@ -80,8 +80,8 @@ export const Game = () => {
         className={`${ready ? "opacity-100" : "opacity-0"}`}
       >
         {!playerInitialized && !completedTutorial && <Tour />}
-        <GameUI />
         <div id="phaser-container" />
+        <GameUI />
       </div>
     </div>
   );

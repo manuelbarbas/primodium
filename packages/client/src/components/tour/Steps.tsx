@@ -19,6 +19,23 @@ const isQueryString = (selector: string) => {
   return true;
 };
 
+const addCanvasListener = (tour: WalktourLogic) => {
+  const canvas = document.querySelector("#phaser-container canvas");
+  canvas?.addEventListener(
+    "pointerdown",
+    async () => {
+      //sleep for 200 ms to allow objects to be placed
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      if (await tour?.stepContent?.validateNextOnTargetClick?.())
+        tour?.stepContent?.customNextFunc?.(tour) ?? tour?.next();
+    },
+    {
+      once: true,
+    }
+  );
+};
+
 const buildRoute = (_route: {
   route: (string | EntityID)[];
   narration?: (JSX.Element | undefined)[];
@@ -178,7 +195,6 @@ export default function buildTourSteps(ctx: Network, address: string) {
         const spawn = useTourStore.getState().spawn;
 
         primodium.camera.pan(spawn!);
-        primodium.components.selectedTile(ctx).set(spawn!);
       },
     }),
     //ROUTE TO MAIN BASE BUILDING ICON
@@ -207,7 +223,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
     // CHECKPOINT 1: PLACE DOWN MAIN BASE
     buildStep({
       name: "place down main base",
-      selector: "#phaser-container",
+      selector: "#phaser-container > canvas",
       // disableMask: true,
       checkpoint: true,
       hideUI: true,
@@ -220,10 +236,10 @@ export default function buildTourSteps(ctx: Network, address: string) {
           Remember, it is important that you start near iron deposits.
         </p>
       ),
-      customTooltipRenderer: () => {
+      customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
-
         primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+        addCanvasListener(tour!);
 
         return <></>;
       },
@@ -289,12 +305,13 @@ export default function buildTourSteps(ctx: Network, address: string) {
       narration: (
         <p>Place the miner on any of the highlighted iron deposits.</p>
       ),
-      customTooltipRenderer: () => {
+      customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
         primodium.components
           .marker(ctx)
           .target(BlockType.Iron, BlockType.ArrowMarker, spawn, 10, 2);
+        addCanvasListener(tour!);
 
         return <></>;
       },
@@ -320,7 +337,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
       selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
-      customTooltipRenderer: () => {
+      customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
         primodium.components
@@ -329,6 +346,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
             x: 1,
             y: 0,
           });
+        addCanvasListener(tour!);
 
         //we set spawn in previous step
         return <></>;
@@ -352,7 +370,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
       selector: "#phaser-container",
       checkpoint: true,
       hideUI: true,
-      customTooltipRenderer: () => {
+      customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
         primodium.components
@@ -361,6 +379,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
             x: 1,
             y: 0,
           });
+        addCanvasListener(tour!);
 
         return <></>;
       },
@@ -391,7 +410,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
           Place the start of the conveyor on the highlighted map tile.
         </p>
       ),
-      customTooltipRenderer: () => {
+      customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
         primodium.components
@@ -400,6 +419,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
             x: 1,
             y: 0,
           });
+        addCanvasListener(tour!);
 
         return <></>;
       },
@@ -418,7 +438,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
           Place the end of the conveyor on the highlighted map tile.
         </p>
       ),
-      customTooltipRenderer: () => {
+      customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
         primodium.components
@@ -427,6 +447,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
             x: 1,
             y: 0,
           });
+        addCanvasListener(tour!);
 
         return <></>;
       },
@@ -435,10 +456,11 @@ export default function buildTourSteps(ctx: Network, address: string) {
       name: "select main base",
       selector: "#phaser-container",
       hideUI: true,
-      customTooltipRenderer: () => {
+      customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
         primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+        addCanvasListener(tour!);
 
         return <></>;
       },
