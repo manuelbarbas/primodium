@@ -53,14 +53,7 @@ For testing purposes in the context of writing tests and play testing with clien
 
 Claiming from a MainBase stores items in the user's inventory, where the user's address is hashed for `ItemComponent`. Claiming from factories stores items in the factory, where the address representation of the building's entity ID is hashed for `ItemComponent`.
 
-To craft from factory
-
-- ClaimSystem: Claiming Resources from Mine.
-  - Called from factories (mines -> factories), main base (mines -> main base)
-- ClaimFactory: Claiming finished crafted items from factory.
-  - Called from factories (factories -> factories), main base (factories -> main base)
-- CraftSystem: Crafting Items (called from factories)
-  - Called from factories (items already in factories, no resource flows)
+To craft from factory (TODO)
 
 # Upgrading
 
@@ -162,7 +155,7 @@ The following components are used to store metadata that is read before a buildi
 
 ## Game mechanics
 
-`MainBaseInitializedComponent` stores the coordianates of the user's base, where the map is panned to by default. New users are provided 200 free iron in the tutorial, the status of which is recorded by the boolean `StarterPackInitializedComponent`.
+`MainBaseInitializedComponent` stores the coordinates of the user's base, where the map is panned to by default. New users are provided 200 free iron in the tutorial, the status of which is recorded by the boolean `StarterPackInitializedComponent`.
 
 ```
   MainBaseInitializedComponent
