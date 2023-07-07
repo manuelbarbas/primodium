@@ -170,31 +170,29 @@ export const BlockType = {
   ConveyorResearch: keccak256("research.Conveyor") as EntityID,
   NodeResearch: keccak256("research.Node") as EntityID,
 
-  IronMine2ResearchID: keccak256("research.IronMine2") as EntityID,
-  IronMine3ResearchID: keccak256("research.IronMine3") as EntityID,
-  IronMine4ResearchID: keccak256("research.IronMine4") as EntityID,
+  IronMine2Research: keccak256("research.IronMine2") as EntityID,
+  IronMine3Research: keccak256("research.IronMine3") as EntityID,
+  IronMine4Research: keccak256("research.IronMine4") as EntityID,
 
-  CopperMineResearchID: keccak256("research.CopperMine") as EntityID,
-  CopperMine2ResearchID: keccak256("research.CopperMine2") as EntityID,
-  CopperMine3ResearchID: keccak256("research.CopperMine3") as EntityID,
+  CopperMineResearch: keccak256("research.CopperMine") as EntityID,
+  CopperMine2Research: keccak256("research.CopperMine2") as EntityID,
+  CopperMine3Research: keccak256("research.CopperMine3") as EntityID,
 
-  StorageUnitResearchID: keccak256("research.StorageUnit") as EntityID,
-  StorageUnit2ResearchID: keccak256("research.StorageUnit2") as EntityID,
-  StorageUnit3ResearchID: keccak256("research.StorageUnit3") as EntityID,
+  StorageUnitResearch: keccak256("research.StorageUnit") as EntityID,
+  StorageUnit2Research: keccak256("research.StorageUnit2") as EntityID,
+  StorageUnit3Research: keccak256("research.StorageUnit3") as EntityID,
 
-  IronPlateFactoryResearchID: keccak256(
-    "research.IronPlateFactory"
-  ) as EntityID,
-  IronPlateFactory2ResearchID: keccak256(
+  IronPlateFactoryResearch: keccak256("research.IronPlateFactory") as EntityID,
+  IronPlateFactory2Research: keccak256(
     "research.IronPlateFactory2"
   ) as EntityID,
-  IronPlateFactory3ResearchID: keccak256(
+  IronPlateFactory3Research: keccak256(
     "research.IronPlateFactory3"
   ) as EntityID,
 
-  LithiumMineResearchID: keccak256("research.LithiumMine") as EntityID,
-  LithiumMine2ResearchID: keccak256("research.LithiumMine2") as EntityID,
-  LithiumMine3ResearchID: keccak256("research.LithiumMine3") as EntityID,
+  LithiumMineResearch: keccak256("research.LithiumMine") as EntityID,
+  LithiumMine2Research: keccak256("research.LithiumMine2") as EntityID,
+  LithiumMine3Research: keccak256("research.LithiumMine3") as EntityID,
   // IronResearch: keccak256("research.Iron") as EntityID,
 
   // CopperResearch: keccak256("block.Copper") as EntityID,
@@ -432,31 +430,25 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.Iridium, "/img/resource/iridium_resource.png"],
   [BlockType.Kimberlite, "/img/resource/kimberlite_resource.png"],
 
-  [BlockType.IronMine2ResearchID, "/img/building/iron_resource.png"],
-  [BlockType.IronMine3ResearchID, "/img/building/iron_resource.png"],
-  [BlockType.IronMine4ResearchID, "/img/building/iron_resource.png"],
+  [BlockType.IronMine2Research, "/img/resource/iron_resource.png"],
+  [BlockType.IronMine3Research, "/img/resource/iron_resource.png"],
+  [BlockType.IronMine4Research, "/img/resource/iron_resource.png"],
 
-  [BlockType.CopperMineResearchID, "/img/building/copper_resource.png"],
-  [BlockType.CopperMine2ResearchID, "/img/building/copper_resource.png"],
-  [BlockType.CopperMine3ResearchID, "/img/building/copper_resource.png"],
+  [BlockType.CopperMineResearch, "/img/resource/copper_resource.png"],
+  [BlockType.CopperMine2Research, "/img/resource/copper_resource.png"],
+  [BlockType.CopperMine3Research, "/img/resource/copper_resource.png"],
 
-  [BlockType.StorageUnitResearchID, "/img/building/node.gif"],
-  [BlockType.StorageUnit2ResearchID, "/img/building/node.gif"],
-  [BlockType.StorageUnit3ResearchID, "/img/building/node.gif"],
+  [BlockType.StorageUnitResearch, "/img/building/node.gif"],
+  [BlockType.StorageUnit2Research, "/img/building/node.gif"],
+  [BlockType.StorageUnit3Research, "/img/building/node.gif"],
 
-  [BlockType.LithiumMineResearchID, "/img/building/lithium_resource.png"],
-  [BlockType.LithiumMine2ResearchID, "/img/building/lithium_resource.png"],
-  [BlockType.LithiumMine3ResearchID, "/img/building/lithium_resource.png"],
+  [BlockType.LithiumMineResearch, "/img/resource/lithium_resource.png"],
+  [BlockType.LithiumMine2Research, "/img/resource/lithium_resource.png"],
+  [BlockType.LithiumMine3Research, "/img/resource/lithium_resource.png"],
 
-  [BlockType.IronPlateFactoryResearchID, "/img/building/newplatingfactory.gif"],
-  [
-    BlockType.IronPlateFactory2ResearchID,
-    "/img/building/newplatingfactory.gif",
-  ],
-  [
-    BlockType.IronPlateFactory3ResearchID,
-    "/img/building/newplatingfactory.gif",
-  ],
+  [BlockType.IronPlateFactoryResearch, "/img/building/newplatingfactory.gif"],
+  [BlockType.IronPlateFactory2Research, "/img/building/newplatingfactory.gif"],
+  [BlockType.IronPlateFactory3Research, "/img/building/newplatingfactory.gif"],
 
   [BlockType.PlatingFactoryResearch, "/img/building/newplatingfactory.gif"],
   [
