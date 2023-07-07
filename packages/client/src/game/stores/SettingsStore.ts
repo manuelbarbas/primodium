@@ -5,8 +5,13 @@ import Phaser from "phaser";
 
 import { KeybindActions } from "@game/constants";
 
+type Key =
+  | keyof typeof Phaser.Input.Keyboard.KeyCodes
+  | "POINTER_LEFT"
+  | "POINTER_RIGHT";
+
 type Keybinds = Partial<{
-  [key in KeybindActions]: Set<number>;
+  [key in KeybindActions]: Set<Key>;
 }>;
 
 type SettingsState = {
@@ -17,32 +22,15 @@ type SettingsActions = {};
 
 const defaults: SettingsState = {
   keybinds: {
-    [KeybindActions.Up]: new Set([
-      Phaser.Input.Keyboard.KeyCodes.W,
-      Phaser.Input.Keyboard.KeyCodes.UP,
-    ]),
-    [KeybindActions.Down]: new Set([
-      Phaser.Input.Keyboard.KeyCodes.S,
-      Phaser.Input.Keyboard.KeyCodes.DOWN,
-    ]),
-    [KeybindActions.Left]: new Set([
-      Phaser.Input.Keyboard.KeyCodes.A,
-      Phaser.Input.Keyboard.KeyCodes.LEFT,
-    ]),
-    [KeybindActions.Right]: new Set([
-      Phaser.Input.Keyboard.KeyCodes.D,
-      Phaser.Input.Keyboard.KeyCodes.RIGHT,
-    ]),
-    [KeybindActions.Base]: new Set([Phaser.Input.Keyboard.KeyCodes.B]),
-    [KeybindActions.Center]: new Set([Phaser.Input.Keyboard.KeyCodes.C]),
-    [KeybindActions.ZoomIn]: new Set([
-      Phaser.Input.Keyboard.KeyCodes.PLUS,
-      Phaser.Input.Keyboard.KeyCodes.X,
-    ]),
-    [KeybindActions.ZoomOut]: new Set([
-      Phaser.Input.Keyboard.KeyCodes.MINUS,
-      Phaser.Input.Keyboard.KeyCodes.Z,
-    ]),
+    [KeybindActions.Up]: new Set(["W", "UP"]),
+    [KeybindActions.Down]: new Set(["S", "DOWN"]),
+    [KeybindActions.Left]: new Set(["A", "LEFT"]),
+    [KeybindActions.Right]: new Set(["D", "RIGHT"]),
+    [KeybindActions.Center]: new Set(["C", "SPACE"]),
+    [KeybindActions.Base]: new Set(["B"]),
+    [KeybindActions.ZoomIn]: new Set(["X", "PLUS"]),
+    [KeybindActions.ZoomOut]: new Set(["Z", "MINUS"]),
+    [KeybindActions.Modifier]: new Set(["SHIFT"]),
   },
 };
 
@@ -59,7 +47,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
           const str = localStorage.getItem(key);
           const result: SettingsState["keybinds"] = {};
           const keybinds = JSON.parse(str!).state.keybinds as Partial<{
-            [key in KeybindActions]: number[];
+            [key in KeybindActions]: Key[];
           }>;
 
           for (const _action in keybinds) {
@@ -78,7 +66,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         },
         setItem: (key, value) => {
           const result: Partial<{
-            [key in KeybindActions]: number[];
+            [key in KeybindActions]: Key[];
           }> = {};
           const keybinds = value.state.keybinds as Keybinds;
 
@@ -88,7 +76,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
 
             if (!set) continue;
 
-            const array = Array.from(set) as number[];
+            const array = Array.from(set) as Key[];
             result[action] = array;
           }
 

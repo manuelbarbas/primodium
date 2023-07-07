@@ -9,6 +9,7 @@ export const resizePhaserGame = (game: Phaser.Game) => {
       }
     }
   };
+
   window.addEventListener("resize", resize.bind(this));
 
   const dispose = () => {

@@ -46,15 +46,10 @@ export const createScene = async (
 
   if (!phaserGame) throw new Error("Phaser game not initialized");
 
-  const scriptManager = createScriptManager();
-
   const phaserScene = createPhaserScene({
     key: config.key,
     preload: (scene: Phaser.Scene) => {
       scene.load.pack(config.assetPackUrl);
-    },
-    update: (scene) => {
-      scriptManager.update(scene.time.now, scene.game.loop.delta);
     },
   });
 
@@ -107,6 +102,8 @@ export const createScene = async (
     camera.worldView$,
     cullingChunkSize * tileWidth
   );
+
+  const scriptManager = createScriptManager(scene);
 
   // const debug = createDebugger(
   //   camera,

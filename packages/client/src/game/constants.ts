@@ -90,6 +90,7 @@ export enum KeybindActions {
   Debug,
   DeleteBuilding,
   DeletePath,
+  Modifier,
 }
 
 export enum SpriteKeys {
