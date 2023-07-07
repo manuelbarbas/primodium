@@ -23,9 +23,19 @@ function ChooseMinerMenu({
       <p className="text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
         <BuildingIconButton
-          id="basic-miner"
+          id="iron-mine"
           label="Iron Mine"
           blockType={BlockType.IronMine}
+        />
+        <BuildingIconButton
+          id="copper-mine"
+          label="Copper Mine"
+          blockType={BlockType.CopperMine}
+        />
+        <BuildingIconButton
+          id="lithium-mine"
+          label="Lithium Mine"
+          blockType={BlockType.CopperMine}
         />
         <BuildingIconButton
           label="Hardened drill"
