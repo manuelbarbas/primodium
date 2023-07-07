@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
-import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
+// components
 import { BlueprintComponent as Blueprint, ID as BlueprintID } from "components/BlueprintComponent.sol";
 
 import { LibBlueprint } from "libraries/LibBlueprint.sol";

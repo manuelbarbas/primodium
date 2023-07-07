@@ -2,9 +2,7 @@
 pragma solidity >=0.8.0;
 
 // external
-import { IWorld } from "solecs/System.sol";
-import { PrimodiumSystem } from "./internal/PrimodiumSystem.sol";
-import { addressToEntity } from "solecs/utils.sol";
+import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSystem.sol";
 
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -79,6 +77,7 @@ contract BuildSystem is PrimodiumSystem {
 
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
     LastBuiltAtComponent(getC(LastBuiltAtComponentID)).set(buildingEntity, block.number);
+    TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
 
     return abi.encode(buildingEntity);
   }
