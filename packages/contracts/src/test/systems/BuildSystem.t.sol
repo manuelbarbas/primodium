@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
+
+import "../PrimodiumTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
+import { BuildingTilesComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
+import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { DebugAquireResourcesSystem, ID as DebugAquireResourcesSystemID } from "../../systems/DebugAquireResourcesSystem.sol";
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
+import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
+import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
@@ -25,23 +28,35 @@ import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 
-contract BuildSystemTest is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract BuildSystemTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
+
+  BlueprintSystem public blueprintSystem;
+  BuildSystem public buildSystem;
+
+  OwnedByComponent public ownedByComponent;
+  BuildingTilesComponent public buildingTilesComponent;
+  TileComponent public tileComponent;
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
 
-    vm.stopPrank();
+    // init systems
+    blueprintSystem = BlueprintSystem(system(BlueprintSystemID));
+    buildSystem = BuildSystem(system(BuildSystemID));
+
+    // init components
+    ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
+    buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
+    tileComponent = TileComponent(component(TileComponentID));
+
+    // init other
   }
 
   function testBuild() public {
     vm.startPrank(alice);
 
     Coord memory coord = Coord({ x: 0, y: 0 });
-
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
 
     bytes memory blockEntity = buildSystem.executeTyped(LithiumMinerID, coord);
 
@@ -57,18 +72,35 @@ contract BuildSystemTest is MudTest {
     vm.stopPrank();
   }
 
+  function testBuildLargeBuilding() public {
+    Coord[] memory blueprint = makeBlueprint();
+    blueprintSystem.executeTyped(dummyBuilding, blueprint);
+
+    bytes memory blockEntity = buildSystem.executeTyped(dummyBuilding, coord);
+    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
+    Coord memory position = LibEncode.decodeCoordEntity(blockEntityID);
+
+    uint256[] memory buildingTiles = buildingTilesComponent.getValue(blockEntityID);
+    assertEq(blueprint.length, buildingTiles.length);
+
+    for (uint i = 0; i < buildingTiles.length; i++) {
+      position = LibEncode.decodeCoordEntity(buildingTiles[i]);
+      assertCoordEq(position, blueprint[i]);
+      assertEq(blockEntityID, ownedByComponent.getValue(buildingTiles[i]));
+      assertEq(dummyBuilding, tileComponent.getValue(buildingTiles[i]));
+    }
+  }
+
   function testBuildWithResourceRequirements() public {
     vm.startPrank(alice);
 
     Coord memory coord = Coord({ x: 0, y: 0 });
 
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     DebugAquireResourcesSystem debugAquireResourcesSystem = DebugAquireResourcesSystem(
       system(DebugAquireResourcesSystemID)
     );
 
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       component(RequiredResourcesComponentID)
     );
@@ -102,7 +134,6 @@ contract BuildSystemTest is MudTest {
     vm.startPrank(alice);
 
     Coord memory coord = Coord({ x: 0, y: 0 });
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     buildSystem.executeTyped(LithiumMinerID, coord);
     buildSystem.executeTyped(LithiumMinerID, coord);
 
@@ -115,7 +146,6 @@ contract BuildSystemTest is MudTest {
     Coord memory coord1 = Coord({ x: 0, y: 0 });
     Coord memory coord2 = Coord({ x: 0, y: 1 });
 
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     buildSystem.executeTyped(MainBaseID, coord1);
     buildSystem.executeTyped(MainBaseID, coord2);
     vm.stopPrank();
@@ -126,7 +156,6 @@ contract BuildSystemTest is MudTest {
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
     uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement, y: secondIncrement });
@@ -141,7 +170,6 @@ contract BuildSystemTest is MudTest {
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
     uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement, y: secondIncrement });
@@ -156,7 +184,6 @@ contract BuildSystemTest is MudTest {
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
     uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
 
     Coord memory coord1 = Coord({ x: -1, y: -1 });
     buildSystem.executeTyped(MainBaseID, coord1);
@@ -179,10 +206,8 @@ contract BuildSystemTest is MudTest {
     Coord memory startCoord = Coord({ x: 0, y: 0 });
     Coord memory endCoord = Coord({ x: 0, y: 1 });
 
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
 
-    OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     PathComponent pathComponent = PathComponent(component(PathComponentID));
 
     // Build two conveyor blocks

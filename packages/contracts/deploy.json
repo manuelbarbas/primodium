@@ -19,7 +19,7 @@
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
     "IgnoreBuildLimitComponent",
-    "BuildingBlocksComponent",
+    "BuildingTilesComponent",
     "BlueprintComponent"
   ],
   "initializers": [
@@ -66,7 +66,7 @@
         "BuildingComponent",
         "MainBaseInitializedComponent",
         "BuildingLimitComponent",
-        "BuildingBlocksComponent"
+        "BuildingTilesComponent"
       ]
     },
     {

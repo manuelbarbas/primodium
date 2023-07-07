@@ -9,10 +9,10 @@ contract PrimodiumTest is MudTest {
   constructor() MudTest(new Deploy()) {}
 
   Coord public coord = Coord(0, 0);
-  Coord public coord1 = Coord(0, 0);
-  Coord public coord2 = Coord(0, 0);
+  Coord public coord1 = Coord(0, 1);
+  Coord public coord2 = Coord(0, 2);
 
-  uint256 public DummyBuilding = uint256(bytes32("dummy"));
+  uint256 public dummyBuilding = uint256(bytes32("dummy"));
 
   function setUp() public virtual override {
     super.setUp();
@@ -27,5 +27,13 @@ contract PrimodiumTest is MudTest {
   function assertCoordEq(Coord memory coordA, Coord memory coordB) internal {
     assertEq(coordA.x, coordB.x, "[assertCoordEq]: x doesn't match");
     assertEq(coordA.y, coordB.y, "[assertCoordEq]: y doesn't match");
+  }
+
+  function makeBlueprint() internal view returns (Coord[] memory blueprint) {
+    blueprint = new Coord[](3);
+
+    blueprint[0] = coord;
+    blueprint[1] = coord1;
+    blueprint[2] = coord2;
   }
 }

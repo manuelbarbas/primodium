@@ -11,7 +11,7 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
-import { BuildingBlocksComponent, ID as BuildingBlocksComponentID } from "components/BuildingBlocksComponent.sol";
+import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
@@ -19,7 +19,7 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 
 // prototpyes
 import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
-import { BlockKey, BuildingKey } from "../prototypes/Keys.sol";
+import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
 
 // libraries
 import { Coord } from "../types.sol";
@@ -50,7 +50,7 @@ contract BuildSystem is PrimodiumSystem {
       Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
       blocks[i / 2] = placeBuildingBlock(buildingEntity, buildingType, coord, relativeCoord);
     }
-    BuildingBlocksComponent(getC(BuildingBlocksComponentID)).set(buildingEntity, blocks);
+    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, blocks);
 
     if (buildingType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
@@ -141,7 +141,7 @@ contract BuildSystem is PrimodiumSystem {
   ) private returns (uint256 blockEntity) {
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
     Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
-    blockEntity = LibEncode.encodeCoordEntity(coord, BlockKey);
+    blockEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
     require(!tileComponent.has(blockEntity), "[BuildSystem] Cannot build on a non-empty coordinate");
     tileComponent.set(blockEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(blockEntity, buildingEntity);
