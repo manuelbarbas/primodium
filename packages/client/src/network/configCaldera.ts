@@ -4,35 +4,14 @@ import { SetupContractConfig } from "@latticexyz/std-client";
 import { Wallet } from "ethers";
 const params = new URLSearchParams(window.location.search);
 
-export const defaultParams = {
-  chainId: "4242",
-  worldAddress: "0xc1c15CCE34E16684d36B0F76B9fa4f74b3a279f4",
-  rpc: "https://follower.testnet-chain.linfra.xyz",
-  wsRpc: "wss://follower.testnet-chain.linfra.xyz",
-  initialBlockNumber: "1443526",
-  snapshot: "https://ecs-snapshot.testnet-mud-services.linfra.xyz",
-  stream: "https://ecs-stream.testnet-mud-services.linfra.xyz",
-  relay: "https://ecs-relay.testnet-mud-services.linfra.xyz",
-  faucet: "https://faucet.testnet-mud-services.linfra.xyz",
-  blockTime: "1000",
-  blockExplorer: "https://explorer.testnet-chain.linfra.xyz",
-  dev: "false",
-};
-
-// from skystrife
-
-export const defaultParamsSkyStrife = {
-  chainId: 4242,
-  blockTime: 1,
-  chainGasLimit: 100000000,
-  rpc: "https://miner.skystrife-chain.linfra.xyz",
-  wsRpc: "wss://follower.skystrife-chain.linfra.xyz",
-  faucet: "https://faucet.skystrife-mud-services.linfra.xyz",
-  snapshot: "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
-  dev: "false",
-};
-
+// from caldera
+export const jsonRpcUrl = "https://bubs.calderachain.xyz/replica-http";
+export const wsRpcUrl = "wss://bubs.calderachain.xyz/replica-ws";
 export const faucetUrl = "https://primodium-services.caldera.gg/faucet";
+export const snapshotServiceUrl =
+  "https://primodium-services.caldera.gg/ecs-snapshot";
+export const chainId = 1582;
+export const initialBlockNumber = 33740;
 
 // change flag before deployment
 const DEV = import.meta.env.VITE_DEV === "true";
@@ -57,13 +36,13 @@ export const devConfig = () => {
         syncInterval: 60_000,
       },
       provider: {
-        jsonRpcUrl: "https://primodium-testnet.calderachain.xyz/http",
-        wsRpcUrl: "wss://primodium-testnet.calderachain.xyz/ws",
-        chainId: 5011708,
+        jsonRpcUrl: jsonRpcUrl,
+        wsRpcUrl: wsRpcUrl,
+        chainId: chainId,
       },
-      chainId: 5011708,
-      snapshotServiceUrl: "https://primodium-services.caldera.gg/ecs-snapshot",
-      initialBlockNumber: 0,
+      chainId: chainId,
+      snapshotServiceUrl: snapshotServiceUrl,
+      initialBlockNumber: initialBlockNumber,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
       privateKey: privateKey,
@@ -103,14 +82,14 @@ export const getNetworkLayerConfig = (
         syncInterval: 60_000,
       },
       provider: {
-        jsonRpcUrl: "https://primodium-testnet.calderachain.xyz/http",
-        wsRpcUrl: "wss://primodium-testnet.calderachain.xyz/ws",
-        chainId: 5011708,
+        jsonRpcUrl: jsonRpcUrl,
+        wsRpcUrl: wsRpcUrl,
+        chainId: chainId,
         externalProvider: externalProvider,
       },
-      chainId: 5011708,
-      snapshotServiceUrl: "https://primodium-services.caldera.gg/ecs-snapshot",
-      initialBlockNumber: 0,
+      chainId: chainId,
+      snapshotServiceUrl: snapshotServiceUrl,
+      initialBlockNumber: initialBlockNumber,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
     };

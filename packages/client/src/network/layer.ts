@@ -11,7 +11,7 @@ import { utils } from "ethers";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { defineComponents, defineOffChainComponents } from "./components";
-import { faucetUrl } from "./config";
+import { faucetUrl } from "./configCaldera";
 import { syncPositionComponent } from "./syncPositionComponent";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
