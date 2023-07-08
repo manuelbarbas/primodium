@@ -85,15 +85,10 @@ export const Game = () => {
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div
         id="game-container"
-        className={`${
-          ready ? "opacity-100" : "opacity-0"
-        } h-full w-full relative`}
+        className={`${ready ? "opacity-100" : "opacity-0"}`}
       >
         {!playerInitialized && !completedTutorial && <Tour />}
-        <div
-          id="phaser-container"
-          className=" absolute top-0 left-0 cursor-pointer"
-        />
+        <div id="phaser-container" className="absolute cursor-pointer" />
         <GameUI />
       </div>
     </div>
