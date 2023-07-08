@@ -41,6 +41,14 @@ export const Game = () => {
           network,
           params.get("version") ? params.get("version")! : "🔥"
         );
+
+        //set game resolution here to prevent initial incorrect scaling problems
+        // ex: https://cdn.discordapp.com/attachments/1101613209477189726/1126541021984067674/cd2a378e890959432c098c2382e4dc49.png
+        primodium.game.setResolution(
+          window.innerWidth * window.devicePixelRatio,
+          window.innerHeight * window.devicePixelRatio
+        );
+
         setReady(true);
       } catch (e) {
         console.log(e);
@@ -80,7 +88,7 @@ export const Game = () => {
         className={`${ready ? "opacity-100" : "opacity-0"}`}
       >
         {!playerInitialized && !completedTutorial && <Tour />}
-        <div id="phaser-container" />
+        <div id="phaser-container" className="absolute cursor-pointer" />
         <GameUI />
       </div>
     </div>

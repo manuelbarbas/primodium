@@ -3,6 +3,7 @@ import { init as _init } from "../lib/scripts";
 import * as hooks from "./hooks";
 import * as components from "./components";
 import * as camera from "./camera";
+import * as game from "./game";
 
 const init = async (
   address: string | undefined,
@@ -36,7 +37,7 @@ const init = async (
   await _init(address, network);
 };
 
-export const api = { init, hooks, components, camera };
+export const api = { init, hooks, components, camera, game };
 
 //expose api to window for debugging
 // @ts-ignore
