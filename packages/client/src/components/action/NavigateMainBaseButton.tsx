@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { EntityID } from "@latticexyz/recs";
-import { useComponentValue } from "@latticexyz/react";
+import { useComponentValue } from "../../hooks/useComponentValue";
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";

@@ -8,7 +8,7 @@ import {
 } from "wagmi";
 import { ExternalProvider } from "@ethersproject/providers";
 import { getDefaultProvider } from "ethers";
-import { devConfig, getNetworkLayerConfig } from "./network/config";
+import { devConfig, getNetworkLayerConfig } from "./network/configCaldera";
 import { createNetworkLayer } from "./network/layer";
 
 import MudProvider from "./context/MudContext";
