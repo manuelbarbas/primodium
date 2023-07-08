@@ -1,9 +1,9 @@
 {
-  "chainId": 5011708,
+  "chainId": 1582,
   "blockTime": 1,
   "chainGasLimit": 15000000,
-  "rpc": "https://primodium-testnet.calderachain.xyz/http",
-  "wsRpc": "wss://primodium-testnet.calderachain.xyz/ws",
+  "rpc": "https://bubs.calderachain.xyz/http",
+  "wsRpc": "wss://bubs.calderachain.xyz/ws",
   "faucet": "https://primodium-services.caldera.gg/faucet",
   "snapshot": "https://primodium-services.caldera.gg/ecs-snapshot",
   "dev": "false"
