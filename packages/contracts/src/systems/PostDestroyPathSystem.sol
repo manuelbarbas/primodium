@@ -64,7 +64,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     updateUnclaimedForResource(
       mineComponent,
       lastClaimedAtComponent,
-      addressToEntity(msg.sender),
+      playerEntity,
       LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity))
     );
     // when path from mine to main base is destroyed resource production is reduced by the mines resource production
