@@ -168,8 +168,19 @@
         "UnclaimedResourceComponent",
         "MineComponent",
         "FactoryIsFunctionalComponent",
+        "FactoryProductionComponent"
+      ]
+    },
+    {
+      "name": "PostDestroyPathSystem",
+      "writeAccess": [
+        "StorageCapacityComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
         "FactoryProductionComponent",
-        "LastClaimedAtComponent"
+        "FactoryMineBuildingsComponent"
       ]
     },
     {

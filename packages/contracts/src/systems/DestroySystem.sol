@@ -18,6 +18,9 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
+import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+
 import { Coord } from "../types.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibMath } from "../libraries/LibMath.sol";
@@ -90,12 +93,17 @@ contract DestroySystem is System {
 
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(entity)) {
+      IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(msg.sender, entity);
       pathComponent.remove(entity);
     }
 
     uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(entity);
     if (pathWithEndingTile.length > 0) {
       for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
+        IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
+          msg.sender,
+          pathWithEndingTile[i]
+        );
         pathComponent.remove(pathWithEndingTile[i]);
       }
     }
