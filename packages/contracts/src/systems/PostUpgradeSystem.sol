@@ -67,7 +67,6 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
 
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdNewLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
       uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         playerEntity,
@@ -88,7 +87,7 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
             : 0
         );
       storageCapacityComponent.set(
-        playerResourceStorageEntity,
+        LibEncode.hashKeyEntity(storageResources[i], playerEntity),
         playerResourceStorageCapacity + storageCapacityIncrease
       );
     }

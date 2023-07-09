@@ -158,7 +158,7 @@ library LibBuildingDesignInitializer {
       500
     );
     //StorageUnitID Level 1
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(StorageUnitID, 1);
     //storage increase
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       storageCapacityResourcesComponent,

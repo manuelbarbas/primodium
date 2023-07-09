@@ -11,9 +11,13 @@ library LibStorage {
     uint256 entity,
     uint256 resourceId
   ) internal view returns (uint256) {
-    return
-      getEntityStorageCapacityForResource(storageComponent, entity, resourceId) -
-      LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceId, entity));
+    uint256 currentStorageCapacity = getEntityStorageCapacityForResource(storageComponent, entity, resourceId);
+    uint256 currentOccupiedStorage = LibMath.getSafeUint256Value(
+      itemComponent,
+      LibEncode.hashKeyEntity(resourceId, entity)
+    );
+    if (currentStorageCapacity <= currentOccupiedStorage) return 0;
+    return currentStorageCapacity - currentOccupiedStorage;
   }
 
   function getEntityStorageCapacityForResource(
