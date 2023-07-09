@@ -114,6 +114,13 @@ export function defineComponents(world: World) {
         },
       })
     ),
+    StorageCapacity: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.StorageCapacity",
+        },
+      })
+    ),
     // TODO: component data for crafting recipes
   };
 }

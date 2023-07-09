@@ -19,6 +19,11 @@ export default function ResourceLabel({
     resourceId,
     entityIndex
   );
+  const storageCount = useResourceCount(
+    components.StorageCapacity,
+    resourceId,
+    entityIndex
+  );
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceCount > 0) {
@@ -27,6 +32,7 @@ export default function ResourceLabel({
         <p className="w-16 text-sm">{resourceCount}</p>
         <img className="w-4 h-4 my-auto" src={resourceIcon}></img>
         <p className=" ml-2 my-auto text-sm">{name}</p>
+        <p className="ml-2 my-auto text-sm">{storageCount}</p>
       </div>
     );
   } else {
