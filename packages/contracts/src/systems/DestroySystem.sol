@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -122,7 +121,6 @@ contract DestroySystem is System {
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) - 1
       );
     }
-    console.log("reached before storage check");
     checkAndUpdatePlayerStorageAfterDestroy(tileComponent.getValue(entity), buildingComponent.getValue(entity));
 
     buildingComponent.remove(entity);
