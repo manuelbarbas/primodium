@@ -9,7 +9,7 @@ library LibResearch {
   // ###########################################################################
   // Check that the user has researched a given component
 
-  function checkResearchRequirements(
+  function hasResearched(
     Uint256Component requiredResearchComponent,
     BoolComponent researchComponent,
     uint256 entity,
@@ -23,7 +23,7 @@ library LibResearch {
   // ###########################################################################
   // Write last researched time into LastResearchedComponent
 
-  function setLastResearched(Uint256Component component, uint256 researchKey, uint256 entity) internal {
+  function setResearchTime(Uint256Component component, uint256 researchKey, uint256 entity) internal {
     uint256 hashedResearchKey = LibEncode.hashKeyEntity(researchKey, entity);
     component.set(hashedResearchKey, block.number);
   }

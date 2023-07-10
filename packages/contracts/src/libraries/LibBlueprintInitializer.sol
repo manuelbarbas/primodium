@@ -9,6 +9,8 @@ import { getAddressById } from "solecs/utils.sol";
 import { BlueprintComponent as Blueprint, ID as BlueprintID } from "components/BlueprintComponent.sol";
 import { MainBaseID, BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
 
+import { LithiumMineID, IronMineID, CopperMineID, TitaniumMineID, IridiumMineID, OsmiumMineID, TungstenMineID, KimberliteMineID, UraniniteMineID, BolutiteMineID } from "../prototypes/Tiles.sol";
+
 library LibBlueprintInitializer {
   function init(IWorld world) internal {
     Blueprint blueprintComponent = Blueprint(getAddressById(world.components(), BlueprintID));
@@ -38,6 +40,17 @@ library LibBlueprintInitializer {
     LibBlueprint.createBlueprint(blueprintComponent, ThermobaricWarheadFactoryID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, ThermobaricMissileFactoryID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, KimberliteCatalystFactoryID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, LithiumMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, IronMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, CopperMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, TitaniumMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, IridiumMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, OsmiumMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, TungstenMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, KimberliteMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, UraniniteMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, BolutiteMineID, coords);
+
     if (LibDebug.isDebug()) {
       LibBlueprint.createBlueprint(blueprintComponent, DebugNodeID, coords);
       LibBlueprint.createBlueprint(blueprintComponent, MinerID, coords);

@@ -141,8 +141,8 @@ contract DestroySystem is PrimodiumSystem {
     return abi.encode(buildingEntity);
   }
 
-  function executeTyped(uint256 buildingEntity) public returns (bytes memory) {
-    return execute(abi.encode(buildingEntity));
+  function executeTyped(Coord memory coord) public returns (bytes memory) {
+    return execute(abi.encode(coord));
   }
 
   function clearBuildingTile(Uint256Component tileComponent, uint256 tileEntity) private {

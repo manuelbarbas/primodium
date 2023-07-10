@@ -62,12 +62,7 @@ contract UpgradeSystem is System {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(buildingEntity) + 1);
     return
       !researchRequirmentComponent.has(buildingIdLevel) ||
-      LibResearch.checkResearchRequirements(
-        researchRequirmentComponent,
-        researchComponent,
-        buildingIdLevel,
-        playerEntity
-      );
+      LibResearch.hasResearched(researchRequirmentComponent, researchComponent, buildingIdLevel, playerEntity);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {

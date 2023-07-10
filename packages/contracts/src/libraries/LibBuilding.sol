@@ -23,7 +23,7 @@ import { LibTerrain } from "./LibTerrain.sol";
 import { LibEncode } from "./LibEncode.sol";
 
 library LibBuilding {
-  function isBuildLimitMet(
+  function meetsBuildCondition(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
     Uint256Component buildingComponent,
@@ -35,14 +35,36 @@ library LibBuilding {
       isBuildingCountWithinLimit(buildingLimitComponent, buildingComponent, playerEntity);
   }
 
+  function isBuildingLimitMet(
+    BoolComponent ignoreBuildLimitComponent,
+    Uint256Component buildingLimitComponent,
+    Uint256Component buildingComponent,
+    uint256 playerEntity,
+    uint256 buildingId
+  ) internal view returns (bool) {
+    return
+      ignoreBuildLimitComponent.has(buildingId) ||
+      isBuildingCountWithinLimit(buildingLimitComponent, buildingComponent, playerEntity);
+  }
+
+  function canBuildOnTile(
+    Uint256Component tileComponent,
+    uint256 buildingType,
+    uint256 buildingEntity
+  ) internal view returns (bool) {
+    return
+      !tileComponent.has(buildingType) ||
+      tileComponent.getValue(buildingType) == LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
+  }
+
   function isBuildingCountWithinLimit(
     Uint256Component buildingLimitComponent,
     Uint256Component buildingComponent,
     uint256 playerEntity
   ) internal view returns (bool) {
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
-    uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent, mainBuildingLevel);
-    uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingLimitComponent, playerEntity);
+    uint256 baseLevel = getBaseLevel(buildingComponent, playerEntity);
+    uint256 buildCountLimit = getBuildingCountLimit(buildingLimitComponent, baseLevel);
+    uint256 buildingCount = getBuildingCount(buildingLimitComponent, playerEntity);
     return buildingCount < buildCountLimit;
   }
 
@@ -55,22 +77,19 @@ library LibBuilding {
       !tileComponent.has(buildingEntity) || tileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
   }
 
-  function getMainBuildingLevelforPlayer(
-    Uint256Component buildingComponent,
-    uint256 playerEntity
-  ) internal view returns (uint256) {
+  function getBaseLevel(Uint256Component buildingComponent, uint256 playerEntity) internal view returns (uint256) {
     return
       buildingComponent.has(playerEntity) ? buildingComponent.getValue(buildingComponent.getValue(playerEntity)) : 0;
   }
 
-  function getNumberOfBuildingsForPlayer(
+  function getBuildingCount(
     Uint256Component buildingLimitComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
     return LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity);
   }
 
-  function getBuildCountLimit(
+  function getBuildingCountLimit(
     Uint256Component buildingLimitComponent,
     uint256 mainBuildingLevel
   ) internal view returns (uint256) {
@@ -80,47 +99,5 @@ library LibBuilding {
 
   function isMainBase(uint256 tileId) internal pure returns (bool) {
     return tileId == MainBaseID;
-  }
-
-  function checkResearchReqs(IWorld world, uint256 blockType) internal view returns (bool) {
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(world.components(), RequiredResearchComponentID)
-    );
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(world.components(), ResearchComponentID));
-    return
-      LibResearch.checkResearchRequirements(
-        requiredResearchComponent,
-        researchComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
-  }
-
-  function checkResourceReqs(IWorld world, uint256 blockType) internal view returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(world.components(), RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-    return
-      LibResourceCost.hasRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
-  }
-
-  function checkAndSpendResourceReqs(IWorld world, uint256 blockType) internal returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(world.components(), RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-    return
-      LibResourceCost.checkAndSpendRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
   }
 }

@@ -20,6 +20,8 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 
 // prototpyes
 import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
@@ -33,6 +35,7 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
+import { LibResearch } from "../libraries/LibResearch.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
@@ -75,6 +78,27 @@ contract BuildSystem is PrimodiumSystem {
     }
   }
 
+  function hasResearched(uint256 blockType) internal view returns (bool) {
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(getC(RequiredResearchComponentID));
+    ResearchComponent researchComponent = ResearchComponent(getC(ResearchComponentID));
+    return
+      LibResearch.hasResearched(requiredResearchComponent, researchComponent, blockType, addressToEntity(msg.sender));
+  }
+
+  function hasRequiredResources(uint256 blockType) internal view returns (bool) {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getC(RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
+    return
+      LibResourceCost.hasRequiredResources(
+        requiredResourcesComponent,
+        itemComponent,
+        blockType,
+        addressToEntity(msg.sender)
+      );
+  }
+
   function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getC(FactoryMineBuildingsComponentID)
@@ -102,13 +126,31 @@ contract BuildSystem is PrimodiumSystem {
     // Check there isn't another tile there
     uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
-    require(!tileComponent.has(buildingEntity), "[BuildSystem] Cannot build on a non-empty coordinate");
+    require(buildingEntity == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
+    require(
+      LibBuilding.canBuildOnTile(tileComponent, buildingType, buildingEntity),
+      "[BuildSystem] Cannot build on this tile"
+    );
+    //check required research
+    require(hasResearched(buildingType), "[BuildSystem] You have not researched the required Technology");
+
+    //check build limit
+    require(
+      LibBuilding.isBuildingLimitMet(
+        ignoreBuildLimitComponent,
+        buildingLimitComponent,
+        buildingComponent,
+        playerEntity,
+        buildingType
+      ),
+      "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
+    );
 
     int32[] memory blueprint = blueprintComponent.getValue(buildingType);
-    uint256[] memory blocks = new uint256[](blueprint.length / 2);
+    uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
       Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
-      blocks[i / 2] = placeBuildingTile(buildingEntity, buildingType, coord, relativeCoord);
+      tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
 
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
@@ -135,20 +177,19 @@ contract BuildSystem is PrimodiumSystem {
     ownedByComponent.set(buildingEntity, playerEntity);
     checkAndUpdatePlayerStorageAfterBuild(buildingType);
     setupFactoryComponents(tileComponent, buildingEntity);
+    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
     return abi.encode(buildingEntity);
   }
 
   function placeBuildingTile(
     uint256 buildingEntity,
-    uint256 buildingType,
     Coord memory baseCoord,
     Coord memory relativeCoord
   ) private returns (uint256 blockEntity) {
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
     Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
     blockEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
-    require(!tileComponent.has(blockEntity), "[BuildSystem] Cannot build on a non-empty coordinate");
-    tileComponent.set(blockEntity, buildingType);
+    require(!tileComponent.has(blockEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
     OwnedByComponent(getC(OwnedByComponentID)).set(blockEntity, buildingEntity);
   }
 }

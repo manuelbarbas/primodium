@@ -20,7 +20,6 @@
     "BuildingLimitComponent",
     "IgnoreBuildLimitComponent",
     "BuildingTilesComponent",
-    "BuildingBlockComponent",
     "BlueprintComponent",
     "StorageCapacityComponent",
     "StorageCapacityResourcesComponent",
@@ -34,7 +33,6 @@
   "initializers": [
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
-    "LibBuildingUpgradeDesignInitializer",
     "LibTechnologyDesignInitializer",
     "LibBlueprintInitializer",
     "LibDebugInitializer"

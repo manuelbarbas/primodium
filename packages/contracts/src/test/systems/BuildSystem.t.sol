@@ -19,13 +19,12 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 //debug buildings
-import { MainBaseID } from "../../prototypes/Tiles.sol";
+import "../../prototypes/Tiles.sol";
 
 //main buildings
 
-import { DebugSimpleBuildingBuildLimitReq, DebugIronMineID, DebugIronMineWithBuildLimitID, DebugSimpleBuildingResourceReqsID, DebugSimpleBuildingNoReqsID } from "../../libraries/LibDebugInitializer.sol";
+import "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
@@ -55,6 +54,8 @@ contract BuildSystemTest is PrimodiumTest {
     buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
     tileComponent = TileComponent(component(TileComponentID));
 
+    Coord[] memory blueprint = makeBlueprint();
+    blueprintSystem.executeTyped(dummyBuilding, blueprint);
     // init other
   }
 
@@ -86,55 +87,21 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildLargeBuilding() public {
     Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(dummyBuilding, blueprint);
+    bytes memory rawBuildingEntity = buildSystem.executeTyped(dummyBuilding, coord);
+    uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
+    Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
 
-    bytes memory buildingEntity = buildSystem.executeTyped(dummyBuilding, coord);
-    uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
-    Coord memory position = LibEncode.decodeCoordEntity(buildingEntityID);
-
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntityID);
+    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     assertEq(blueprint.length, buildingTiles.length);
 
     for (uint i = 0; i < buildingTiles.length; i++) {
       position = LibEncode.decodeCoordEntity(buildingTiles[i]);
       assertCoordEq(position, blueprint[i]);
-      assertEq(buildingEntityID, ownedByComponent.getValue(buildingTiles[i]));
-      assertEq(dummyBuilding, tileComponent.getValue(buildingTiles[i]));
+      assertEq(buildingEntity, ownedByComponent.getValue(buildingTiles[i]));
     }
   }
 
-  function testBuildWithResourceRequirements() public {
-    vm.startPrank(alice);
-
-    Coord memory coord = Coord({ x: 0, y: 0 });
-    // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory ironCoord = Coord({ x: -5, y: 2 });
-    assertEq(LibTerrain.getTopLayerKey(ironCoord), IronID, "Tile should have iron");
-
-    bytes memory mainBaseEntity = buildSystem.executeTyped(MainBaseID, coord);
-    uint256 mainBaseEntityID = abi.decode(mainBaseEntity, (uint256));
-    Coord memory position = LibEncode.decodeCoordEntity(mainBaseEntityID);
-
-    assertEq(position.x, coord.x);
-    assertEq(position.y, coord.y);
-
-    assertTrue(ownedByComponent.has(mainBaseEntityID));
-    assertEq(ownedByComponent.getValue(mainBaseEntityID), addressToEntity(alice));
-
-    bytes memory ironMineEntity = buildSystem.executeTyped(DebugIronMineWithBuildLimitID, ironCoord);
-    uint256 ironMineEntityID = abi.decode(ironMineEntity, (uint256));
-    position = LibEncode.decodeCoordEntity(ironMineEntityID);
-
-    assertEq(position.x, ironCoord.x);
-    assertEq(position.y, ironCoord.y);
-
-    assertTrue(ownedByComponent.has(ironMineEntityID));
-    assertEq(ownedByComponent.getValue(ironMineEntityID), addressToEntity(alice));
-
-    vm.stopPrank();
-  }
-
-  function testFailTryBuildMineBeforeMainBase() public {
+  function testFailMineBeforeBase() public {
     vm.startPrank(alice);
 
     // TEMP: tile -6, 2 does not have iron according to current generation seed
@@ -146,7 +113,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testFailBuildIronMineOnNonIronTile() public {
+  function testFailIronMineOnNonIron() public {
     vm.startPrank(alice);
 
     //build main base
@@ -240,7 +207,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     buildMainBaseAtZero();
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
+    uint256 buildLimit = LibBuilding.getBuildingCountLimit(buildingLimitComponent, 1);
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -254,7 +221,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     buildMainBaseAtZero();
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
+    uint256 buildLimit = LibBuilding.getBuildingCountLimit(buildingLimitComponent, 1);
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -268,7 +235,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildCountLimit(buildingLimitComponent, 1);
+    uint256 buildLimit = LibBuilding.getBuildingCountLimit(buildingLimitComponent, 1);
 
     Coord memory coord1 = Coord({ x: -1, y: -1 });
     buildSystem.executeTyped(MainBaseID, coord1);

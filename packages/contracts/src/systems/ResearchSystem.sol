@@ -27,7 +27,7 @@ contract ResearchSystem is System {
     uint256 entity
   ) internal view returns (bool) {
     if (!buildingComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = LibBuilding.getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
+    uint256 mainBuildingLevel = LibBuilding.getBaseLevel(buildingComponent, playerEntity);
     return mainBuildingLevel >= buildingComponent.getValue(entity);
   }
 
@@ -55,7 +55,7 @@ contract ResearchSystem is System {
     );
 
     require(
-      LibResearch.checkResearchRequirements(
+      LibResearch.hasResearched(
         requiredResearchComponent,
         researchComponent,
         researchItem,
@@ -74,7 +74,7 @@ contract ResearchSystem is System {
       "[ResearchSystem] Not enough resources to research"
     );
     researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
-    LibResearch.setLastResearched(lastResearchedAtComponent, researchItem, addressToEntity(msg.sender));
+    LibResearch.setResearchTime(lastResearchedAtComponent, researchItem, addressToEntity(msg.sender));
     return abi.encode(true);
   }
 

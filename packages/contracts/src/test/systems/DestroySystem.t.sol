@@ -70,7 +70,7 @@ contract DestroySystemTest is PrimodiumTest {
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     uint256 buildingLimit = buildingLimitComponent.getValue(playerEntity);
     uint256 playerBase = buildingComponent.getValue(buildingEntity);
-    destroySystem.executeTyped(buildingEntity);
+    destroySystem.executeTyped(coord);
 
     for (uint256 i = 0; i < buildingTiles.length; i++) {
       assertFalse(ownedByComponent.has(buildingTiles[i]));
