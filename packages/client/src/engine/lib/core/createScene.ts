@@ -8,7 +8,7 @@ import { ObjectPool } from "@latticexyz/phaserx/dist/types";
 
 import createInput from "./createInput";
 import getSceneLoadPromise from "../util/getSceneLoadPromise";
-import createPhaserScene from "../util/createPhaserScene";
+import { createPhaserScene } from "../util/createPhaserScene";
 import { createCamera } from "./createCamera";
 import { createScriptManager } from "./createScriptManager";
 import { createTilemap } from "./createTilemap";
@@ -21,14 +21,7 @@ export const createScene = async (
   autoStart: boolean = true
 ) => {
   const {
-    camera: {
-      minZoom,
-      maxZoom,
-      pinchSpeed,
-      scrollSpeed,
-      defaultZoom,
-      dragSpeed,
-    },
+    camera: { minZoom, maxZoom, pinchSpeed, wheelSpeed, defaultZoom },
     tilemap: {
       chunkSize,
       tileWidth,
@@ -49,11 +42,11 @@ export const createScene = async (
   const phaserScene = createPhaserScene({
     key: config.key,
     preload: (scene: Phaser.Scene) => {
-      scene.load.pack(config.assetPackUrl);
+      scene.load.pack(config.key, config.assetPackUrl);
     },
   });
 
-  const scene = new phaserScene();
+  let scene = new phaserScene();
 
   phaserGame.scene.add(config.key, scene, autoStart);
 
@@ -63,8 +56,7 @@ export const createScene = async (
     maxZoom,
     minZoom,
     pinchSpeed,
-    wheelSpeed: scrollSpeed,
-    dragSpeed,
+    wheelSpeed,
     defaultZoom,
   });
 

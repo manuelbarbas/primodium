@@ -17,13 +17,18 @@ import {
 } from "src/util/web3";
 import { runSystems } from "../systems";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
-import { isPressed } from "src/game/api/input";
+import { isDown } from "src/game/api/input";
 import { pan } from "src/game/api/camera";
 
-export const init = async (address: string | undefined, network: Network) => {
+export const init = async (address: string, network: Network) => {
   const { world } = network;
   const game = await engine.createGame(gameConfig);
-  const scene = await game.sceneManager.addScene(Scenes.Main, mainSceneConfig);
+  const scene = await game.sceneManager.addScene(
+    Scenes.Main,
+    mainSceneConfig,
+    true
+  );
+  const { maxZoom, minZoom, wheelSpeed } = scene.config.camera;
 
   const chunkManager = await createChunkManager(scene.tilemap);
   chunkManager.renderInitialChunks();
@@ -115,6 +120,26 @@ export const init = async (address: string | undefined, network: Network) => {
     components.hoverTile(network).set(mouseCoord);
   });
 
+  scene.input.phaserInput.on("wheel", ({ deltaY }: { deltaY: number }) => {
+    let scale = 0.02;
+
+    if (isDown(KeybindActions.Modifier)) scale /= 2;
+
+    if (deltaY < 0) {
+      const zoom = Math.min(
+        scene.camera.phaserCamera.zoom + wheelSpeed * scale,
+        maxZoom
+      );
+      scene.camera.setZoom(zoom);
+    } else if (deltaY > 0) {
+      const zoom = Math.max(
+        scene.camera.phaserCamera.zoom - wheelSpeed * scale,
+        minZoom
+      );
+      scene.camera.setZoom(zoom);
+    }
+  });
+
   //accumalate sub-pixel movement during a gametick and add to next game tick.
   let accumulatedX = 0;
   let accumulatedY = 0;
@@ -126,39 +151,56 @@ export const init = async (address: string | undefined, network: Network) => {
   const SMOOTHNESS = 0.95;
   const handleCameraMovement = (_: number, delta: number) => {
     const zoom = scene.camera.phaserCamera.zoom;
-    const maxZoom = scene.config.camera.maxZoom;
-    const minZoom = scene.config.camera.minZoom;
-    const zoomSpeed = isPressed(KeybindActions.Modifier)
-      ? ZOOM_SPEED / 2
+    const zoomSpeed = isDown(KeybindActions.Modifier)
+      ? ZOOM_SPEED / 3
       : ZOOM_SPEED;
 
     const zoomAmount = zoomSpeed * (delta / 1000);
-    if (isPressed(KeybindActions.ZoomIn)) {
+    if (isDown(KeybindActions.ZoomIn)) {
       const targetZoom = Math.min(zoom + zoomAmount, maxZoom);
       scene.camera.setZoom(targetZoom);
     }
 
-    if (isPressed(KeybindActions.ZoomOut)) {
+    if (isDown(KeybindActions.ZoomOut)) {
       const targetZoom = Math.max(zoom - zoomAmount, minZoom);
       scene.camera.setZoom(targetZoom);
     }
 
-    if (isPressed(KeybindActions.Center)) {
+    if (isDown(KeybindActions.Center)) {
       pan({ x: 0, y: 0 });
     }
 
+    if (isDown(KeybindActions.Base)) {
+      const mainBaseCoord = components.mainBase(network).get(address);
+
+      if (mainBaseCoord) pan(mainBaseCoord);
+    }
+
+    if (isDown(KeybindActions.LeftClick)) {
+      const { x, y } = scene.input.phaserInput.activePointer.position;
+      const { x: prevX, y: prevY } =
+        scene.input.phaserInput.activePointer.prevPosition;
+
+      let scrollX = scene.camera.phaserCamera.scrollX;
+      let scrollY = scene.camera.phaserCamera.scrollY;
+
+      const dx = Math.round((x - prevX) / zoom);
+      const dy = Math.round((y - prevY) / zoom);
+
+      scene.camera.setScroll(scrollX - dx, scrollY - dy);
+    }
+
     // HANDLE CAMERA SCROLL MOVEMENT KEYS
-    const speed = isPressed(KeybindActions.Modifier) ? SPEED / 2 : SPEED;
+    const speed = isDown(KeybindActions.Modifier) ? SPEED / 3 : SPEED;
     const moveDistance = speed * (delta / 1000);
     let scrollX = scene.camera.phaserCamera.scrollX;
     let scrollY = scene.camera.phaserCamera.scrollY;
-
     let moveX = 0;
     let moveY = 0;
-    if (isPressed(KeybindActions.Up)) moveY--;
-    if (isPressed(KeybindActions.Down)) moveY++;
-    if (isPressed(KeybindActions.Left)) moveX--;
-    if (isPressed(KeybindActions.Right)) moveX++;
+    if (isDown(KeybindActions.Up)) moveY--;
+    if (isDown(KeybindActions.Down)) moveY++;
+    if (isDown(KeybindActions.Left)) moveX--;
+    if (isDown(KeybindActions.Right)) moveX++;
 
     //only register movement when no tweens are running
     if (

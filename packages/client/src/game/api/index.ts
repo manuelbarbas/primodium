@@ -4,9 +4,10 @@ import * as hooks from "./hooks";
 import * as components from "./components";
 import * as camera from "./camera";
 import * as game from "./game";
+import * as input from "./input";
 
 const init = async (
-  address: string | undefined,
+  address: string,
   network: Network,
   version: string = "v1"
 ) => {
@@ -37,7 +38,7 @@ const init = async (
   await _init(address, network);
 };
 
-export const api = { init, hooks, components, camera, game };
+export const api = { init, hooks, components, camera, game, input };
 
 //expose api to window for debugging
 // @ts-ignore

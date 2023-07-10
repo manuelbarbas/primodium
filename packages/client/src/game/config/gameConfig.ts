@@ -1,7 +1,7 @@
 const RENDER_RESOLUTION = 1;
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   parent: "phaser-container",
   backgroundColor: "64748b",
   width: window.innerWidth * window.devicePixelRatio * RENDER_RESOLUTION,
