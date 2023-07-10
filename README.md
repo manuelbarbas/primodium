@@ -108,7 +108,6 @@ When a building is upgraded, `PostUpgradeSystem` is called to update the buildin
 
 # Building Storage
 
-(TODO reword)
 In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `StorageCapacityResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `StorageCapacityComponent`.
 
 ```
@@ -119,7 +118,7 @@ In `LibStorageDesignInitializer`, buildings which increase storage capacity are 
 For example, the amount of Iron storage that is provided by a level 2 MainBase is:
 `storageCapacityComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
 
-When buildings are built, upgraded, or destroyed, `StorageCapacityComponent` is updated for the player and the resources they modify the capacity for.
+When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent` is updated for the player and the resources they modify the capacity for.
 
 # Player Storage
 
