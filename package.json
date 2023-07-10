@@ -1,11 +1,12 @@
 {
-  "name": "amudproject",
+  "name": "primodium",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "workspaces": [
     "packages/contracts",
-    "packages/client"
+    "packages/client",
+    "packages/sprites"
   ],
   "scripts": {
     "dev": "run-pty % yarn dev:node % yarn dev:client % yarn dev:contracts",

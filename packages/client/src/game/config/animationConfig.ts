@@ -8,7 +8,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 169,
     repeat: -1,
-    prefix: "mainbase/mainbase-",
+    prefix: "sprites/mainbase/mainbase-",
     suffix: ".png",
   },
   {
@@ -18,7 +18,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 49,
     repeat: -1,
-    prefix: "node/node-",
+    prefix: "sprites/node/node-",
     suffix: ".png",
   },
   {
@@ -28,7 +28,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 14,
     repeat: -1,
-    prefix: "advancedbatteryfactory/advancedbatteryfactory-",
+    prefix: "sprites/advancedbatteryfactory/advancedbatteryfactory-",
     suffix: ".png",
   },
   {
@@ -38,7 +38,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 17,
     repeat: -1,
-    prefix: "basicbatteryfactory/basicbatteryfactory-",
+    prefix: "sprites/basicbatteryfactory/basicbatteryfactory-",
     suffix: ".png",
   },
   {
@@ -48,7 +48,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 39,
     repeat: -1,
-    prefix: "densemetalrefinery/densemetalrefinery-",
+    prefix: "sprites/densemetalrefinery/densemetalrefinery-",
     suffix: ".png",
   },
   {
@@ -58,7 +58,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 3,
     repeat: -1,
-    prefix: "hardeneddrill/hardeneddrill-",
+    prefix: "sprites/hardeneddrill/hardeneddrill-",
     suffix: ".png",
   },
   {
@@ -68,7 +68,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 39,
     repeat: -1,
-    prefix: "hightempfoundry/hightempfoundry-",
+    prefix: "sprites/hightempfoundry/hightempfoundry-",
     suffix: ".png",
   },
   {
@@ -78,7 +78,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 15,
     repeat: -1,
-    prefix: "iridiumdrillbitfactory/iridiumdrillbitfactory-",
+    prefix: "sprites/iridiumdrillbitfactory/iridiumdrillbitfactory-",
     suffix: ".png",
   },
   {
@@ -88,7 +88,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 15,
     repeat: -1,
-    prefix: "kimberlitecatalyst/kimberlitecatalyst-",
+    prefix: "sprites/kimberlitecatalyst/kimberlitecatalyst-",
     suffix: ".png",
   },
   {
@@ -98,7 +98,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 13,
     repeat: -1,
-    prefix: "laserfactory/laserfactory-",
+    prefix: "sprites/laserfactory/laserfactory-",
     suffix: ".png",
   },
   {
@@ -108,7 +108,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 3,
     repeat: -1,
-    prefix: "minerdrill/minerdrill-",
+    prefix: "sprites/minerdrill/minerdrill-",
     suffix: ".png",
   },
   {
@@ -118,7 +118,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 7,
     repeat: -1,
-    prefix: "missilelaunchcomplex/missilelaunchcomplex-",
+    prefix: "sprites/missilelaunchcomplex/missilelaunchcomplex-",
     suffix: ".png",
   },
   {
@@ -128,7 +128,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 10,
     repeat: -1,
-    prefix: "platingfactory/platingfactory-",
+    prefix: "sprites/platingfactory/platingfactory-",
     suffix: ".png",
   },
   {
@@ -138,7 +138,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 9,
     repeat: -1,
-    prefix: "precisionmachineryfactory/precisionmachineryfactory-",
+    prefix: "sprites/precisionmachineryfactory/precisionmachineryfactory-",
     suffix: ".png",
   },
   {
@@ -148,7 +148,7 @@ export const animationConfig: Animation<any>[] = [
     startFrame: 0,
     endFrame: 59,
     repeat: -1,
-    prefix: "precisionpneumaticdrill/precisionpneumaticdrill-",
+    prefix: "sprites/precisionpneumaticdrill/precisionpneumaticdrill-",
     suffix: ".png",
   },
 ];

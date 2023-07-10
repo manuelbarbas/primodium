@@ -14,6 +14,12 @@ import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "componen
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 
 // prototpyes
 import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
@@ -23,34 +29,92 @@ import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
 import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
+import { LibResourceCost } from "../libraries/LibResourceCost.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
+import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
+
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
+  function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
+    return execute(abi.encode(buildingType, coord));
+  }
+
+  function checkAndUpdatePlayerStorageAfterBuild(uint256 buildingId) internal {
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getC(StorageCapacityResourcesComponentID)
+    );
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, 1);
+    uint256 playerEntity = addressToEntity(msg.sender);
+    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
+    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        playerEntity,
+        storageResources[i]
+      );
+      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        buildingIdLevel,
+        storageResources[i]
+      );
+      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
+        storageCapacityResourcesComponent,
+        storageCapacityComponent,
+        playerEntity,
+        storageResources[i],
+        playerResourceStorageCapacity + storageCapacityIncrease
+      );
+    }
+  }
+
+  function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getC(FactoryMineBuildingsComponentID)
+    );
+    uint256 buildingId = tileComponent.getValue(factoryEntity);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
+    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
+      return;
+    }
+    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
+      buildingLevelEntity
+    );
+    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
+  }
+
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-    uint256 playerEntity = addressToEntity(msg.sender);
+    TileComponent tileComponent = TileComponent(getC(TileComponentID));
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     BuildingComponent buildingComponent = BuildingComponent(getC(BuildingComponentID));
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
     BlueprintComponent blueprintComponent = BlueprintComponent(getC(BlueprintComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
 
-    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
-    performChecks(buildingType, playerEntity);
+    // Check there isn't another tile there
+    uint256 buildingEntity = getBuildingFromCoord(coord);
+    uint256 playerEntity = addressToEntity(msg.sender);
+    require(!tileComponent.has(buildingEntity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
     int32[] memory blueprint = blueprintComponent.getValue(buildingType);
-
     uint256[] memory blocks = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
       Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
-      blocks[i / 2] = placeBuildingBlock(buildingEntity, buildingType, coord, relativeCoord);
+      blocks[i / 2] = placeBuildingTile(buildingEntity, buildingType, coord, relativeCoord);
     }
-    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, blocks);
 
+    // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
+      buildingComponent.set(playerEntity, buildingEntity);
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getC(MainBaseInitializedComponentID)
       );
@@ -62,77 +126,19 @@ contract BuildSystem is PrimodiumSystem {
       }
     }
 
-    //set MainBase id for player address for easy lookup
-    if (buildingType == MainBaseID) {
-      buildingComponent.set(playerEntity, buildingEntity);
-    }
-
     // update building count if the built building counts towards the build limit
     if (!ignoreBuildLimitComponent.has(buildingType)) {
-      BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
-    //set level of building to 1
     buildingComponent.set(buildingEntity, 1);
-
-    OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
-    LastBuiltAtComponent(getC(LastBuiltAtComponentID)).set(buildingEntity, block.number);
-    TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
-
+    tileComponent.set(buildingEntity, buildingType);
+    ownedByComponent.set(buildingEntity, playerEntity);
+    checkAndUpdatePlayerStorageAfterBuild(buildingType);
+    setupFactoryComponents(tileComponent, buildingEntity);
     return abi.encode(buildingEntity);
   }
 
-  function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(buildingType, coord));
-  }
-
-  function performChecks(uint256 buildingType, uint256 playerEntity) private {
-    require(
-      BlueprintComponent(getC(BlueprintComponentID)).has(buildingType),
-      "[BuildSystem] building type must have a blueprint"
-    );
-
-    //check required research
-    require(
-      LibBuilding.checkResearchReqs(world, buildingType),
-      "[BuildSystem] You have not researched the required Technology"
-    );
-
-    //check resource requirements and if ok spend required resources
-    require(
-      LibBuilding.checkAndSpendResourceReqs(world, buildingType),
-      "[BuildSystem] You do not have the required resources"
-    );
-
-    //check build limit
-    require(
-      LibBuilding.isBuildLimitMet(
-        IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)),
-        BuildingLimitComponent(getC(BuildingLimitComponentID)),
-        BuildingComponent(getC(BuildingComponentID)),
-        playerEntity,
-        buildingType
-      ),
-      "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
-    );
-
-    // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
-    //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
-    if (
-      !LibDebug.isDebug() &&
-      (buildingType == DebugNodeID ||
-        buildingType == MinerID ||
-        buildingType == LithiumMinerID ||
-        buildingType == BulletFactoryID ||
-        buildingType == DebugPlatingFactoryID ||
-        buildingType == SiloID)
-    ) {
-      // debug buildings, do nothing
-      revert("[BuildSystem] Debug buildings are not allowed to be built");
-    }
-  }
-
-  function placeBuildingBlock(
+  function placeBuildingTile(
     uint256 buildingEntity,
     uint256 buildingType,
     Coord memory baseCoord,

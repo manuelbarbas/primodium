@@ -7,22 +7,20 @@ import { IWorld } from "solecs/System.sol";
 
 //components
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
-import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
+import { MainBaseID, BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
-import { LibDebug } from "libraries/LibDebug.sol";
+import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibMath } from "libraries/LibMath.sol";
-
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
-import { entityToAddress } from "solecs/utils.sol";
+import { LibTerrain } from "./LibTerrain.sol";
+import { LibEncode } from "./LibEncode.sol";
 
 library LibBuilding {
   function isBuildLimitMet(
@@ -48,21 +46,21 @@ library LibBuilding {
     return buildingCount < buildCountLimit;
   }
 
-  function meetsMainBaseLevelReq(
-    Uint256Component buildingComponent,
-    uint256 playerEntity,
-    uint256 entity
+  function canBuildOnTile(
+    Uint256Component tileComponent,
+    uint256 buildingEntity,
+    Coord memory coord
   ) internal view returns (bool) {
-    if (!buildingComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
-    return mainBuildingLevel >= buildingComponent.getValue(entity);
+    return
+      !tileComponent.has(buildingEntity) || tileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
   }
 
   function getMainBuildingLevelforPlayer(
     Uint256Component buildingComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
-    return buildingComponent.has(playerEntity) ? buildingComponent.getValue(playerEntity) : 0;
+    return
+      buildingComponent.has(playerEntity) ? buildingComponent.getValue(buildingComponent.getValue(playerEntity)) : 0;
   }
 
   function getNumberOfBuildingsForPlayer(
@@ -76,8 +74,7 @@ library LibBuilding {
     Uint256Component buildingLimitComponent,
     uint256 mainBuildingLevel
   ) internal view returns (uint256) {
-    if (LibDebug.isDebug()) return 100;
-    else if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
+    if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
     else revert("Invalid Main Building Level");
   }
 

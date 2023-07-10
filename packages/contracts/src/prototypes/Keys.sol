@@ -44,6 +44,26 @@ uint256 constant KimberliteResearchID = KimberliteID;
 uint256 constant UraniniteResearchID = UraniniteID;
 uint256 constant BolutiteResearchID = BolutiteID;
 
+uint256 constant IronMine2ResearchID = uint256(keccak256("research.IronMine2"));
+uint256 constant IronMine3ResearchID = uint256(keccak256("research.IronMine3"));
+uint256 constant IronMine4ResearchID = uint256(keccak256("research.IronMine4"));
+
+uint256 constant CopperMineResearchID = uint256(keccak256("research.CopperMine"));
+uint256 constant CopperMine2ResearchID = uint256(keccak256("research.CopperMine2"));
+uint256 constant CopperMine3ResearchID = uint256(keccak256("research.CopperMine3"));
+
+uint256 constant StorageUnitResearchID = uint256(keccak256("research.StorageUnit"));
+uint256 constant StorageUnit2ResearchID = uint256(keccak256("research.StorageUnit2"));
+uint256 constant StorageUnit3ResearchID = uint256(keccak256("research.StorageUnit3"));
+
+uint256 constant IronPlateFactoryResearchID = uint256(keccak256("research.IronPlateFactory"));
+uint256 constant IronPlateFactory2ResearchID = uint256(keccak256("research.IronPlateFactory2"));
+uint256 constant IronPlateFactory3ResearchID = uint256(keccak256("research.IronPlateFactory3"));
+
+uint256 constant LithiumMineResearchID = uint256(keccak256("research.LithiumMine"));
+uint256 constant LithiumMine2ResearchID = uint256(keccak256("research.LithiumMine2"));
+uint256 constant LithiumMine3ResearchID = uint256(keccak256("research.LithiumMine3"));
+
 uint256 constant PlatingFactoryResearchID = uint256(keccak256("research.PlatingFactory"));
 uint256 constant BasicBatteryFactoryResearchID = uint256(keccak256("research.BasicBatteryFactory"));
 uint256 constant KineticMissileFactoryResearchID = uint256(keccak256("research.KineticMissileFactory"));

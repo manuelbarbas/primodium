@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { Coord } from "../types.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, LithiumMinerID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../prototypes/Tiles.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../prototypes/Tiles.sol";
 
 import { Perlin } from "./Perlin.sol";
 import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";

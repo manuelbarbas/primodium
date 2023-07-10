@@ -19,27 +19,77 @@ import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "componen
 // types
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { BuildingKey, BuildingTileKey } from "../prototypes/Keys.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
+import { BuildingKey } from "../prototypes/Keys.sol";
+
+import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+
 import { Coord } from "../types.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
+import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
 contract DestroySystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
+  function checkAndUpdatePlayerStorageAfterDestroy(uint256 buildingId, uint256 buildingLevel) internal {
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getC(StorageCapacityResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
+
+    uint256 playerEntity = addressToEntity(msg.sender);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingLevel);
+    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
+    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
+      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        playerEntity,
+        storageResources[i]
+      );
+      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+        storageCapacityComponent,
+        buildingIdLevel,
+        storageResources[i]
+      );
+      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
+        storageCapacityResourcesComponent,
+        storageCapacityComponent,
+        playerEntity,
+        storageResources[i],
+        playerResourceStorageCapacity - storageCapacityIncrease
+      );
+
+      uint256 playerResourceAmount = LibMath.getSafeUint256Value(itemComponent, playerResourceStorageEntity);
+      if (playerResourceAmount > playerResourceStorageCapacity - storageCapacityIncrease) {
+        itemComponent.set(playerResourceStorageEntity, playerResourceStorageCapacity - storageCapacityIncrease);
+      }
+    }
+  }
+
   function execute(bytes memory args) public override returns (bytes memory) {
-    uint256 buildingEntity = abi.decode(args, (uint256));
+    Coord memory coord = abi.decode(args, (Coord));
+    TileComponent tileComponent = TileComponent(getC(TileComponentID));
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
+    BuildingComponent buildingComponent = BuildingComponent(getC(BuildingComponentID));
     BuildingTilesComponent buildingTilesComponent = BuildingTilesComponent(getC(BuildingTilesComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-    TileComponent tileComponent = TileComponent(getC(TileComponentID));
-
-    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-
+    // Check there isn't another tile there
+    uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
 
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
@@ -50,15 +100,25 @@ contract DestroySystem is PrimodiumSystem {
     }
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
+      IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity
+      );
       pathComponent.remove(buildingEntity);
     }
+
     uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(buildingEntity);
-    for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
-      pathComponent.remove(pathWithEndingTile[i]);
+    if (pathWithEndingTile.length > 0) {
+      for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
+        IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
+          msg.sender,
+          pathWithEndingTile[i]
+        );
+        pathComponent.remove(pathWithEndingTile[i]);
+      }
     }
 
     uint256 buildingType = tileComponent.getValue(buildingEntity);
-
     // for main base tile, remove main base initialized.
     if (buildingType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
@@ -70,6 +130,7 @@ contract DestroySystem is PrimodiumSystem {
     if (!ignoreBuildLimitComponent.has(buildingType)) {
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) - 1);
     }
+    checkAndUpdatePlayerStorageAfterDestroy(buildingType, buildingComponent.getValue(buildingEntity));
 
     tileComponent.remove(buildingEntity);
     BuildingComponent(getC(BuildingComponentID)).remove(buildingEntity);
