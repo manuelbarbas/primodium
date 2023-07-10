@@ -29,6 +29,10 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.y, coordB.y, "[assertCoordEq]: y doesn't match");
   }
 
+  function assertFalse(bool input) internal {
+    assertTrue(!input);
+  }
+
   function makeBlueprint() internal view returns (Coord[] memory blueprint) {
     blueprint = new Coord[](3);
 

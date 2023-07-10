@@ -56,35 +56,37 @@ contract DestroySystemTest is PrimodiumTest {
     buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
 
     // init other
+    vm.startPrank(alice);
     Coord[] memory blueprint = makeBlueprint();
     blueprintSystem.executeTyped(dummyBuilding, blueprint);
     bytes memory rawBuildingEntity = buildSystem.executeTyped(dummyBuilding, coord);
     buildingEntity = abi.decode(rawBuildingEntity, (uint256));
     playerEntity = addressToEntity(alice);
+
+    vm.stopPrank();
   }
 
   function testDestroy() public prank(alice) {
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     uint256 buildingLimit = buildingLimitComponent.getValue(playerEntity);
-    uint256 level = buildingComponent.getValue(buildingEntity);
     uint256 playerBase = buildingComponent.getValue(buildingEntity);
-    // destroySystem.executeTyped(buildingEntity);
+    destroySystem.executeTyped(buildingEntity);
 
-    // for (uint256 i = 0; i < buildingTiles.length; i++) {
-    //   assertTrue(!ownedByComponent.has(buildingTiles[i]));
-    //   assertTrue(!tileComponent.has(buildingTiles[i]));
-    // }
+    for (uint256 i = 0; i < buildingTiles.length; i++) {
+      assertFalse(ownedByComponent.has(buildingTiles[i]));
+      assertFalse(tileComponent.has(buildingTiles[i]));
+    }
 
-    // assertTrue(!ownedByComponent.has(buildingEntity));
-    // assertTrue(!tileComponent.has(buildingEntity));
-    // assertTrue(!lastBuiltAtComponent.has(buildingEntity));
-    // assertEq(buildingComponent.getValue(buildingEntity), level - 1);
-    // assertEq(buildingLimitComponent.getValue(buildingEntity), buildingLimit - 1);
-    // bool hasMainBase = buildingComponent.has(playerEntity);
-    // if (playerBase == buildingEntity) {
-    //   assertTrue(hasMainBase);
-    // } else {
-    //   assertTrue(!hasMainBase);
-    // }
+    assertFalse(ownedByComponent.has(buildingEntity));
+    assertFalse(tileComponent.has(buildingEntity));
+    assertFalse(lastBuiltAtComponent.has(buildingEntity));
+    assertFalse(buildingComponent.has(buildingEntity));
+    assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1);
+    bool hasMainBase = buildingComponent.has(playerEntity);
+    if (playerBase == buildingEntity) {
+      assertTrue(hasMainBase);
+    } else {
+      assertFalse(hasMainBase);
+    }
   }
 }

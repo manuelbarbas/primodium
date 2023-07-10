@@ -38,7 +38,11 @@ contract DestroySystem is PrimodiumSystem {
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
 
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
+
     uint256 playerEntity = addressToEntity(msg.sender);
+
+    require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     for (uint i = 0; i < buildingTiles.length; i++) {
@@ -69,7 +73,7 @@ contract DestroySystem is PrimodiumSystem {
 
     tileComponent.remove(buildingEntity);
     BuildingComponent(getC(BuildingComponentID)).remove(buildingEntity);
-    OwnedByComponent(getC(OwnedByComponentID)).remove(buildingEntity);
+    ownedByComponent.remove(buildingEntity);
     LastBuiltAtComponent(getC(LastBuiltAtComponentID)).remove(buildingEntity);
     LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
 
