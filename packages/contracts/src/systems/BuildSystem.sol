@@ -3,7 +3,6 @@ pragma solidity >=0.8.0;
 
 // external
 import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSystem.sol";
-import "forge-std/console.sol";
 
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
