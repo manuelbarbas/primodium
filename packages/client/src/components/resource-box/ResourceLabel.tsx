@@ -24,15 +24,19 @@ export default function ResourceLabel({
     resourceId,
     entityIndex
   );
+
+  const production = useResourceCount(components.Mine, resourceId, entityIndex);
+
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (resourceCount > 0) {
+  if (storageCount > 0) {
     return (
       <div className="flex mb-1">
-        <p className="w-16 text-sm">{resourceCount}</p>
+        <p className="w-10 text-sm">{resourceCount}</p>
         <img className="w-4 h-4 my-auto" src={resourceIcon}></img>
-        <p className=" ml-2 my-auto text-sm">{name}</p>
+        <p className="w-20 ml-2 my-auto text-sm">{name}</p>
         <p className="ml-2 my-auto text-sm">{storageCount}</p>
+        <p className="w-4 ml-2 my-auto text-sm">{production}</p>
       </div>
     );
   } else {

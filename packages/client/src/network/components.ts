@@ -121,6 +121,24 @@ export function defineComponents(world: World) {
         },
       })
     ),
+    StorageCapacityResources: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.StorageCapacityResources",
+        },
+      }
+    ),
+    Mine: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Mine",
+        },
+      })
+    ),
     // TODO: component data for crafting recipes
   };
 }
