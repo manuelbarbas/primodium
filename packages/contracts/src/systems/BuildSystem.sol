@@ -25,6 +25,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
+import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
@@ -83,13 +84,13 @@ contract BuildSystem is System {
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, 1);
+    uint256 playerEntity = addressToEntity(msg.sender);
     if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], addressToEntity(msg.sender));
       uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
-        addressToEntity(msg.sender),
+        playerEntity,
         storageResources[i]
       );
       uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
@@ -97,8 +98,11 @@ contract BuildSystem is System {
         buildingIdLevel,
         storageResources[i]
       );
-      storageCapacityComponent.set(
-        playerResourceStorageEntity,
+      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
+        storageCapacityResourcesComponent,
+        storageCapacityComponent,
+        playerEntity,
+        storageResources[i],
         playerResourceStorageCapacity + storageCapacityIncrease
       );
     }

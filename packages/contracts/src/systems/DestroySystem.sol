@@ -26,6 +26,7 @@ import { LibMath } from "../libraries/LibMath.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
+import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -57,10 +58,14 @@ contract DestroySystem is System {
         buildingIdLevel,
         storageResources[i]
       );
-      storageCapacityComponent.set(
-        playerResourceStorageEntity,
+      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
+        storageCapacityResourcesComponent,
+        storageCapacityComponent,
+        playerEntity,
+        storageResources[i],
         playerResourceStorageCapacity - storageCapacityIncrease
       );
+
       uint256 playerResourceAmount = LibMath.getSafeUint256Value(itemComponent, playerResourceStorageEntity);
       if (playerResourceAmount > playerResourceStorageCapacity - storageCapacityIncrease) {
         itemComponent.set(playerResourceStorageEntity, playerResourceStorageCapacity - storageCapacityIncrease);

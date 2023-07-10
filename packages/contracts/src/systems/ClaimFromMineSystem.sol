@@ -66,6 +66,9 @@ contract ClaimFromMineSystem is System {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       getAddressById(components, StorageCapacityComponentID)
     );
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getAddressById(components, StorageCapacityResourcesComponentID)
+    );
     UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
       getAddressById(components, UnclaimedResourceComponentID)
     );
@@ -75,6 +78,7 @@ contract ClaimFromMineSystem is System {
       c.lastClaimedAtComponent, //writes to
       unclaimedResourceComponent, //writes to
       mineComponent,
+      storageCapacityResourcesComponent,
       storageCapacityComponent,
       addressToEntity(msg.sender)
     );

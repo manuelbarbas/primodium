@@ -25,6 +25,7 @@ import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 uint256 constant ID = uint256(keccak256("system.PostUpgrade"));
@@ -72,6 +73,7 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
         playerEntity,
         storageResources[i]
       );
+
       uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         buildingIdNewLevel,
@@ -86,8 +88,12 @@ contract PostUpgradeSystem is IOnEntitySubsystem, System {
             )
             : 0
         );
-      storageCapacityComponent.set(
-        LibEncode.hashKeyEntity(storageResources[i], playerEntity),
+
+      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
+        storageCapacityResourcesComponent,
+        storageCapacityComponent,
+        playerEntity,
+        storageResources[i],
         playerResourceStorageCapacity + storageCapacityIncrease
       );
     }

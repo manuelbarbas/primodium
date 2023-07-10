@@ -72,6 +72,7 @@
         "MainBaseInitializedComponent",
         "BuildingLimitComponent",
         "StorageCapacityComponent",
+        "StorageCapacityResourcesComponent",
         "FactoryMineBuildingsComponent"
       ]
     },
@@ -89,6 +90,7 @@
         "BuildingComponent",
         "BuildingLimitComponent",
         "StorageCapacityComponent",
+        "StorageCapacityResourcesComponent",
         "ItemComponent"
       ]
     },
@@ -164,6 +166,7 @@
       "name": "PostUpgradeSystem",
       "writeAccess": [
         "StorageCapacityComponent",
+        "StorageCapacityResourcesComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",

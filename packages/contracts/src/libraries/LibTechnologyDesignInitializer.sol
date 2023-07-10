@@ -120,10 +120,10 @@ library LibTechnologyDesignInitializer {
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      IronPlateFactoryResearchID,
+      IronPlateFactory3ResearchID,
       IronPlateCraftedItemID,
       1200,
-      CopperResearchID,
+      CopperResourceItemID,
       1000
     );
 

@@ -15,10 +15,12 @@ library LibNewMine {
     Uint256Component lastClaimedAtComponent, //writes to
     Uint256Component unclaimedResourceComponent, //writes to
     Uint256Component mineComponent,
+    Uint256ArrayComponent storageCapacityResourcesComponent,
     Uint256Component storageCapacityComponent,
     uint256 playerEntity
   ) internal {
-    uint256[25] memory storageResourceIds = getAllResourceIds();
+    if (!storageCapacityResourcesComponent.has(playerEntity)) return;
+    uint256[] memory storageResourceIds = storageCapacityResourcesComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
       if (mineComponent.has(playerResourceEntity))
