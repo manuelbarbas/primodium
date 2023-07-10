@@ -134,7 +134,7 @@ contract BuildSystem is System {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       getAddressById(components, IgnoreBuildLimitComponentID)
     );
-
+    uint256 playerEntity = addressToEntity(msg.sender);
     // Check there isn't another tile there
     uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
@@ -152,7 +152,7 @@ contract BuildSystem is System {
         ignoreBuildLimitComponent,
         buildingLimitComponent,
         buildingComponent,
-        addressToEntity(msg.sender),
+        playerEntity,
         blockType
       ),
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
@@ -165,10 +165,10 @@ contract BuildSystem is System {
         getAddressById(components, MainBaseInitializedComponentID)
       );
 
-      if (mainBaseInitializedComponent.has(addressToEntity(msg.sender))) {
+      if (mainBaseInitializedComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
-        mainBaseInitializedComponent.set(addressToEntity(msg.sender), coord);
+        mainBaseInitializedComponent.set(playerEntity, coord);
       }
     }
 
@@ -177,21 +177,18 @@ contract BuildSystem is System {
 
     //set MainBase id for player address for easy lookup
     if (blockType == MainBaseID) {
-      buildingComponent.set(addressToEntity(msg.sender), entity);
+      buildingComponent.set(playerEntity, entity);
     }
 
     // update building count if the built building counts towards the build limit
     if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {
-      buildingLimitComponent.set(
-        addressToEntity(msg.sender),
-        LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) + 1
-      );
+      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
     //set level of building to 1
     buildingComponent.set(entity, 1);
 
     tileComponent.set(entity, blockType);
-    ownedByComponent.set(entity, addressToEntity(msg.sender));
+    ownedByComponent.set(entity, playerEntity);
 
     checkAndUpdatePlayerStorageAfterBuild(blockType);
     setupFactoryComponents(tileComponent, entity);
