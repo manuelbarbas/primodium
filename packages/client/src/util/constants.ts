@@ -55,6 +55,13 @@ export const BlockType = {
   Bolutite: keccak256("block.Bolutite") as EntityID,
 
   // Debug buildings
+  DebugIronMine: keccak256("block.DebugIronMine") as EntityID,
+  DebugIronMineNoTileReqID: keccak256(
+    "block.DebugIronMineNoTileReq"
+  ) as EntityID,
+  DebugIronPlateFactory: keccak256("block.DebugIronPlateFactory") as EntityID,
+  DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
+
   MainBase: keccak256("block.MainBase") as EntityID,
   DebugNode: keccak256("block.DebugNode") as EntityID,
   Miner: keccak256("block.Miner") as EntityID,
@@ -76,7 +83,14 @@ export const BlockType = {
   //Dummy block for map markers
   ArrowMarker: keccak256("marker.Arrow") as EntityID,
 
-  // Buildings
+  // New Buildings
+  IronMine: keccak256("block.IronMine") as EntityID,
+  CopperMine: keccak256("block.CopperMine") as EntityID,
+  LithiumMine: keccak256("block.LithiumMine") as EntityID,
+  StorageUnit: keccak256("block.StorageUnit") as EntityID,
+  IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
+
+  // Old Buildings
   BasicMiner: keccak256("block.BasicMiner") as EntityID,
   Node: keccak256("block.Node") as EntityID,
   PlatingFactory: keccak256("block.PlatingFactory") as EntityID,
@@ -155,6 +169,30 @@ export const BlockType = {
   BasicMinerResearch: keccak256("research.BasicMiner") as EntityID,
   ConveyorResearch: keccak256("research.Conveyor") as EntityID,
   NodeResearch: keccak256("research.Node") as EntityID,
+
+  IronMine2Research: keccak256("research.IronMine2") as EntityID,
+  IronMine3Research: keccak256("research.IronMine3") as EntityID,
+  IronMine4Research: keccak256("research.IronMine4") as EntityID,
+
+  CopperMineResearch: keccak256("research.CopperMine") as EntityID,
+  CopperMine2Research: keccak256("research.CopperMine2") as EntityID,
+  CopperMine3Research: keccak256("research.CopperMine3") as EntityID,
+
+  StorageUnitResearch: keccak256("research.StorageUnit") as EntityID,
+  StorageUnit2Research: keccak256("research.StorageUnit2") as EntityID,
+  StorageUnit3Research: keccak256("research.StorageUnit3") as EntityID,
+
+  IronPlateFactoryResearch: keccak256("research.IronPlateFactory") as EntityID,
+  IronPlateFactory2Research: keccak256(
+    "research.IronPlateFactory2"
+  ) as EntityID,
+  IronPlateFactory3Research: keccak256(
+    "research.IronPlateFactory3"
+  ) as EntityID,
+
+  LithiumMineResearch: keccak256("research.LithiumMine") as EntityID,
+  LithiumMine2Research: keccak256("research.LithiumMine2") as EntityID,
+  LithiumMine3Research: keccak256("research.LithiumMine3") as EntityID,
   // IronResearch: keccak256("research.Iron") as EntityID,
 
   // CopperResearch: keccak256("block.Copper") as EntityID,
@@ -311,6 +349,9 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.Bolutite, "/img/resource/bolutite_ore_layer.png"],
 
   // debug buildings
+  [BlockType.DebugIronMine, "/img/building/minerdrill.gif"],
+  [BlockType.DebugIronPlateFactory, "/img/building/newplatingfactory.gif"],
+  [BlockType.DebugStorageBuilding, "/img/building/node.gif"],
   [BlockType.Miner, "/img/building/minerdrill.gif"],
   [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
   [BlockType.MainBase, "/img/building/mainbase.gif"],
@@ -320,6 +361,13 @@ export const BackgroundImage = new Map<EntityID, string>([
 
   // dummy buildings
   [BlockType.Conveyor, "/img/building/conveyor.gif"],
+
+  //new buildings
+  [BlockType.CopperMine, "/img/building/minerdrill.gif"],
+  [BlockType.IronMine, "/img/building/minerdrill.gif"],
+  [BlockType.LithiumMine, "/img/building/minerdrill.gif"],
+  [BlockType.StorageUnit, "/img/building/node.gif"],
+  [BlockType.IronPlateFactory, "/img/building/newplatingfactory.gif"],
 
   //actual buildings
   [BlockType.BasicMiner, "/img/building/minerdrill.gif"],
@@ -381,6 +429,26 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.Tungsten, "/img/resource/tungsten_resource.png"],
   [BlockType.Iridium, "/img/resource/iridium_resource.png"],
   [BlockType.Kimberlite, "/img/resource/kimberlite_resource.png"],
+
+  [BlockType.IronMine2Research, "/img/resource/iron_resource.png"],
+  [BlockType.IronMine3Research, "/img/resource/iron_resource.png"],
+  [BlockType.IronMine4Research, "/img/resource/iron_resource.png"],
+
+  [BlockType.CopperMineResearch, "/img/resource/copper_resource.png"],
+  [BlockType.CopperMine2Research, "/img/resource/copper_resource.png"],
+  [BlockType.CopperMine3Research, "/img/resource/copper_resource.png"],
+
+  [BlockType.StorageUnitResearch, "/img/building/node.gif"],
+  [BlockType.StorageUnit2Research, "/img/building/node.gif"],
+  [BlockType.StorageUnit3Research, "/img/building/node.gif"],
+
+  [BlockType.LithiumMineResearch, "/img/resource/lithium_resource.png"],
+  [BlockType.LithiumMine2Research, "/img/resource/lithium_resource.png"],
+  [BlockType.LithiumMine3Research, "/img/resource/lithium_resource.png"],
+
+  [BlockType.IronPlateFactoryResearch, "/img/building/newplatingfactory.gif"],
+  [BlockType.IronPlateFactory2Research, "/img/building/newplatingfactory.gif"],
+  [BlockType.IronPlateFactory3Research, "/img/building/newplatingfactory.gif"],
 
   [BlockType.PlatingFactoryResearch, "/img/building/newplatingfactory.gif"],
   [
@@ -480,72 +548,12 @@ export type DisplayKeyPair = {
   resource: EntityID | null;
 };
 
-export const BuildingResearchRequirements = new Map<EntityID, EntityID[]>([
-  [BlockType.MainBase, [BlockType.MainBaseResearch]],
-  [BlockType.BasicMiner, [BlockType.BasicMinerResearch]],
-  [BlockType.Node, [BlockType.NodeResearch]],
-  [BlockType.Conveyor, [BlockType.ConveyorResearch]],
-
-  [BlockType.Miner, [BlockType.BasicMinerResearch]],
-  [BlockType.DebugNode, [BlockType.NodeResearch]],
-  [BlockType.BulletFactory, [BlockType.BulletFactoryResearch]],
-  [BlockType.Silo, [BlockType.SiloResearch]],
-
-  [BlockType.PlatingFactory, [BlockType.PlatingFactoryResearch]],
-  [BlockType.BasicBatteryFactory, [BlockType.BasicBatteryFactoryResearch]],
-  [BlockType.KineticMissileFactory, [BlockType.KineticMissileFactoryResearch]],
-  [BlockType.ProjectileLauncher, [BlockType.ProjectileLauncherResearch]],
-  [BlockType.HardenedDrill, [BlockType.HardenedDrillResearch]],
-  [BlockType.DenseMetalRefinery, [BlockType.DenseMetalRefineryResearch]],
-  [
-    BlockType.AdvancedBatteryFactory,
-    [BlockType.AdvancedBatteryFactoryResearch],
-  ],
-  [BlockType.HighTempFoundry, [BlockType.HighTempFoundryResearch]],
-  [
-    BlockType.PrecisionMachineryFactory,
-    [BlockType.PrecisionMachineryFactoryResearch],
-  ],
-  [
-    BlockType.IridiumDrillbitFactory,
-    [BlockType.IridiumDrillbitFactoryResearch],
-  ],
-  [
-    BlockType.PrecisionPneumaticDrill,
-    [BlockType.PrecisionPneumaticDrillResearch],
-  ],
-  [BlockType.PenetratorFactory, [BlockType.PenetratorFactoryResearch]],
-  [
-    BlockType.PenetratingMissileFactory,
-    [BlockType.PenetratingMissileFactoryResearch],
-  ],
-  [BlockType.MissileLaunchComplex, [BlockType.MissileLaunchComplexResearch]],
-  [
-    BlockType.HighEnergyLaserFactory,
-    [BlockType.HighEnergyLaserFactoryResearch],
-  ],
-  [
-    BlockType.ThermobaricWarheadFactory,
-    [BlockType.ThermobaricWarheadFactoryResearch],
-  ],
-  [
-    BlockType.ThermobaricMissileFactory,
-    [BlockType.ThermobaricMissileFactoryResearch],
-  ],
-  [
-    BlockType.KimberliteCatalystFactory,
-    [BlockType.KimberliteCatalystFactoryResearch],
-  ],
-]);
-
-export const BuildingResearchRequirementsDefaultUnlocked = new Set<EntityID>([
-  BlockType.MainBaseResearch,
-  BlockType.Iron,
-  BlockType.BasicMinerResearch,
-  BlockType.NodeResearch,
-
-  // debug
-  BlockType.ConveyorResearch,
-  BlockType.BulletFactoryResearch,
-  BlockType.SiloResearch,
-]);
+export const TutorialStepToNarrationStep: {
+  [key: number]: number | undefined;
+} = {
+  0: undefined,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 3,
+};

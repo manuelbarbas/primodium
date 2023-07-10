@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
-import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID, MinerID } from "../prototypes/Tiles.sol";
-
-import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
-
-import { LibDebug } from "libraries/LibDebug.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibMath } from "libraries/LibMath.sol";
-
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
+import { Coord } from "../types.sol";
+import { LibTerrain } from "./LibTerrain.sol";
+import { LibEncode } from "./LibEncode.sol";
+
 
 library LibBuilding {
   function checkBuildLimitConditionForBuildingId(
@@ -36,21 +35,22 @@ library LibBuilding {
     return buildingCount < buildCountLimit;
   }
 
-  function checkMainBaseLevelRequirement(
-    Uint256Component buildingComponent,
-    uint256 playerEntity,
-    uint256 entity
+  function checkCanBuildOnTile(
+    Uint256Component tileComponent,
+    uint256 buildingId,
+    uint256 buildingEntity
   ) internal view returns (bool) {
-    if (!buildingComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
-    return mainBuildingLevel >= buildingComponent.getValue(entity);
+    return
+      !tileComponent.has(buildingId) ||
+      tileComponent.getValue(buildingId) == LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
   }
 
   function getMainBuildingLevelforPlayer(
     Uint256Component buildingComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
-    return buildingComponent.has(playerEntity) ? buildingComponent.getValue(playerEntity) : 0;
+    return
+      buildingComponent.has(playerEntity) ? buildingComponent.getValue(buildingComponent.getValue(playerEntity)) : 0;
   }
 
   function getNumberOfBuildingsForPlayer(
@@ -64,8 +64,7 @@ library LibBuilding {
     Uint256Component buildingLimitComponent,
     uint256 mainBuildingLevel
   ) internal view returns (uint256) {
-    if (LibDebug.isDebug()) return 100;
-    else if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
+    if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
     else revert("Invalid Main Building Level");
   }
 

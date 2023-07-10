@@ -25,6 +25,26 @@ uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 
 // buildings
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));
+
+// Mine Blocks
+uint256 constant LithiumMineID = uint256(keccak256("block.LithiumMine"));
+uint256 constant IronMineID = uint256(keccak256("block.IronMine"));
+uint256 constant CopperMineID = uint256(keccak256("block.CopperMine"));
+uint256 constant TitaniumMineID = uint256(keccak256("block.TitaniumMine"));
+uint256 constant IridiumMineID = uint256(keccak256("block.IridiumMine"));
+uint256 constant OsmiumMineID = uint256(keccak256("block.OsmiumMine"));
+uint256 constant TungstenMineID = uint256(keccak256("block.TungstenMine"));
+uint256 constant KimberliteMineID = uint256(keccak256("block.KimberliteMine"));
+uint256 constant UraniniteMineID = uint256(keccak256("block.UraniniteMine"));
+uint256 constant BolutiteMineID = uint256(keccak256("block.BolutiteMine"));
+
+// Factory Blocks
+uint256 constant IronPlateFactoryID = uint256(keccak256("block.IronPlateFactory"));
+
+//Storage Unit
+uint256 constant StorageUnitID = uint256(keccak256("block.StorageUnit"));
+
+// in-game blocks/factories
 uint256 constant BasicMinerID = uint256(keccak256("block.BasicMiner"));
 uint256 constant NodeID = uint256(keccak256("block.Node"));
 uint256 constant PlatingFactoryID = uint256(keccak256("block.PlatingFactory"));

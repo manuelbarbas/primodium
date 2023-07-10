@@ -22,11 +22,13 @@ import {
   BackgroundImage,
   ResourceImage,
 } from "../util/constants";
+
 import { primodium } from "@game/api";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
+import UpgradeButton from "./action/UpgradeButton";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import ResourceIconTooltip from "./shared/ResourceIconTooltip";
 import ClaimCraftButton from "./action/ClaimCraftButton";
@@ -34,7 +36,6 @@ import ClaimCraftButton from "./action/ClaimCraftButton";
 function TooltipBox() {
   const network = useMud();
   const { components, singletonIndex } = network;
-
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
   const perlinRef = useRef(null as null | Perlin);
@@ -101,16 +102,6 @@ function TooltipBox() {
     builtTile = undefined;
     tileOwner = undefined;
   }
-
-  // const tileLastBuiltAt = useComponentValue(
-  //   components.LastBuiltAt,
-  //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  // );
-
-  // const tileLastClaimedAt = useComponentValue(
-  //   components.LastClaimedAt,
-  //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  // );
 
   // display actions
   const [minimized, setMinimize] = useState(true);
@@ -298,6 +289,13 @@ function TooltipBox() {
                         coords={selectedTile}
                       />
                     )}
+                    {
+                      <UpgradeButton
+                        id="upgrade-button"
+                        builtTile={builtTile}
+                        coords={selectedTile}
+                      />
+                    }
                     {transactionLoading ? (
                       <p>...</p>
                     ) : (
