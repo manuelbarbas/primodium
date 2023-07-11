@@ -128,7 +128,6 @@ contract BuildSystem is PrimodiumSystem {
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-    BlueprintComponent blueprintComponent = BlueprintComponent(getC(BlueprintComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
     MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent = MainBaseBuildingEntityComponent(
       getC(MainBaseBuildingEntityComponentID)
@@ -159,14 +158,13 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
     );
 
-    int32[] memory blueprint = blueprintComponent.getValue(buildingType);
+    int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
       Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
-
-    // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       buildingLevelComponent.set(playerEntity, buildingEntity);
@@ -181,20 +179,12 @@ contract BuildSystem is PrimodiumSystem {
       }
     }
 
-    //check resource requirements and if ok spend required resources
-
-    //set MainBase id for player address for easy lookup
-    if (buildingType == MainBaseID) {
-      mainBaseBuildingEntityComponent.set(playerEntity, buildingType);
-    }
-
     // update building count if the built building counts towards the build limit
     if (!ignoreBuildLimitComponent.has(buildingType)) {
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
     //set level of building to 1
     buildingLevelComponent.set(buildingEntity, 1);
-
     tileComponent.set(buildingEntity, buildingType);
     ownedByComponent.set(buildingEntity, playerEntity);
 

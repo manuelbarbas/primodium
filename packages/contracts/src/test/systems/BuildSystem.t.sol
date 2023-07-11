@@ -10,7 +10,9 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
 import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "../../systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
 import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from "../../systems/DebugRemoveBuildLimitSystem.sol";
+
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
+import { BlueprintComponent, ID as BlueprintComponentID } from "../../components/BlueprintComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
@@ -54,8 +56,6 @@ contract BuildSystemTest is PrimodiumTest {
     buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
     tileComponent = TileComponent(component(TileComponentID));
 
-    Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(dummyBuilding, blueprint);
     // init other
   }
 
@@ -71,7 +71,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     Coord memory coord = Coord({ x: 0, y: 0 });
 
-    bytes memory buildingEntity = buildSystem.executeTyped(LithiumMinerID, coord);
+    bytes memory buildingEntity = buildSystem.executeTyped(MainBaseID, coord);
 
     uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
 
@@ -85,9 +85,11 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testBuildLargeBuilding() public {
+  function testBuildLargeBuilding() public prank(deployer) {
+    BlueprintComponent(component(BlueprintComponentID)).remove(MainBaseID);
     Coord[] memory blueprint = makeBlueprint();
-    bytes memory rawBuildingEntity = buildSystem.executeTyped(dummyBuilding, coord);
+    blueprintSystem.executeTyped(MainBaseID, blueprint);
+    bytes memory rawBuildingEntity = buildSystem.executeTyped(MainBaseID, coord);
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
     Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
 

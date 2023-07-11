@@ -7,7 +7,7 @@ import { LibDebug } from "libraries/LibDebug.sol";
 import { getAddressById } from "solecs/utils.sol";
 
 import { BlueprintComponent as Blueprint, ID as BlueprintID } from "components/BlueprintComponent.sol";
-import { MainBaseID, BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { LithiumMineID, IronMineID, CopperMineID, TitaniumMineID, IridiumMineID, OsmiumMineID, TungstenMineID, KimberliteMineID, UraniniteMineID, BolutiteMineID } from "../prototypes/Tiles.sol";
 
@@ -20,26 +20,6 @@ library LibBlueprintInitializer {
     coords[1] = 0;
 
     LibBlueprint.createBlueprint(blueprintComponent, MainBaseID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, BasicMinerID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, NodeID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, PlatingFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, BasicBatteryFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, KineticMissileFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, ProjectileLauncherID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, HardenedDrillID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DenseMetalRefineryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, AdvancedBatteryFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, HighTempFoundryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, PrecisionMachineryFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, IridiumDrillbitFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, PrecisionPneumaticDrillID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, PenetratorFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, PenetratingMissileFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, MissileLaunchComplexID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, HighEnergyLaserFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, ThermobaricWarheadFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, ThermobaricMissileFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, KimberliteCatalystFactoryID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, LithiumMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, IronMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, CopperMineID, coords);
@@ -50,14 +30,5 @@ library LibBlueprintInitializer {
     LibBlueprint.createBlueprint(blueprintComponent, KimberliteMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, UraniniteMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, BolutiteMineID, coords);
-
-    if (LibDebug.isDebug()) {
-      LibBlueprint.createBlueprint(blueprintComponent, DebugNodeID, coords);
-      LibBlueprint.createBlueprint(blueprintComponent, MinerID, coords);
-      LibBlueprint.createBlueprint(blueprintComponent, LithiumMinerID, coords);
-      LibBlueprint.createBlueprint(blueprintComponent, BulletFactoryID, coords);
-      LibBlueprint.createBlueprint(blueprintComponent, DebugPlatingFactoryID, coords);
-      LibBlueprint.createBlueprint(blueprintComponent, SiloID, coords);
-    }
   }
 }

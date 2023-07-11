@@ -11,7 +11,7 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 
 // components
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
@@ -32,7 +32,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   OwnedByComponent public ownedByComponent;
   BuildingTilesComponent public buildingTilesComponent;
-  BuildingComponent public buildingComponent;
+  BuildingLevelComponent public buildingLevelComponent;
   BuildingLimitComponent public buildingLimitComponent;
   TileComponent public tileComponent;
   LastBuiltAtComponent public lastBuiltAtComponent;
@@ -49,7 +49,7 @@ contract DestroySystemTest is PrimodiumTest {
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
-    buildingComponent = BuildingComponent(component(BuildingComponentID));
+    buildingLevelComponent = BuildingLevelComponent(component(BuildingLevelComponentID));
     tileComponent = TileComponent(component(TileComponentID));
     lastBuiltAtComponent = LastBuiltAtComponent(component(LastBuiltAtComponentID));
     mainBaseInitializedComponent = MainBaseInitializedComponent(component(MainBaseInitializedComponentID));
@@ -69,7 +69,7 @@ contract DestroySystemTest is PrimodiumTest {
   function testDestroy() public prank(alice) {
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     uint256 buildingLimit = buildingLimitComponent.getValue(playerEntity);
-    uint256 playerBase = buildingComponent.getValue(buildingEntity);
+    uint256 playerBase = buildingLevelComponent.getValue(buildingEntity);
     destroySystem.executeTyped(coord);
 
     for (uint256 i = 0; i < buildingTiles.length; i++) {
@@ -80,9 +80,9 @@ contract DestroySystemTest is PrimodiumTest {
     assertFalse(ownedByComponent.has(buildingEntity));
     assertFalse(tileComponent.has(buildingEntity));
     assertFalse(lastBuiltAtComponent.has(buildingEntity));
-    assertFalse(buildingComponent.has(buildingEntity));
+    assertFalse(buildingLevelComponent.has(buildingEntity));
     assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1);
-    bool hasMainBase = buildingComponent.has(playerEntity);
+    bool hasMainBase = buildingLevelComponent.has(playerEntity);
     if (playerBase == buildingEntity) {
       assertTrue(hasMainBase);
     } else {
