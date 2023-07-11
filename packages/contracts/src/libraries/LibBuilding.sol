@@ -12,9 +12,9 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
@@ -23,9 +23,11 @@ import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+import { CoordComponent } from "std-contracts/components/CoordComponent.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { LibTerrain } from "./LibTerrain.sol";
 import { LibEncode } from "./LibEncode.sol";
+import { BuildingKey } from "../prototypes/Keys.sol";
 
 library LibBuilding {
   function isBuildingLimitMet(IWorld world, uint256 playerEntity, uint256 buildingId) internal view returns (bool) {
@@ -48,12 +50,12 @@ library LibBuilding {
   }
 
   function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint256) {
-    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent = MainBaseBuildingEntityComponent(
-      getAddressById(world.components(), MainBaseBuildingEntityComponentID)
+    MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
+      getAddressById(world.components(), MainBaseInitializedComponentID)
     );
 
-    if (!mainBaseBuildingEntityComponent.has(playerEntity)) return 0;
-    uint256 mainBase = mainBaseBuildingEntityComponent.getValue(playerEntity);
+    if (!mainBaseInitializedComponent.has(playerEntity)) return 0;
+    uint256 mainBase = mainBaseInitializedComponent.getValue(playerEntity);
     return BuildingLevelComponent(getAddressById(world.components(), BuildingLevelComponentID)).getValue(mainBase);
   }
 

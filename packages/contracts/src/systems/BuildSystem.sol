@@ -16,12 +16,10 @@ import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/L
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
 
 // prototpyes
 import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
@@ -100,9 +98,6 @@ contract BuildSystem is PrimodiumSystem {
     BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
-    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent = MainBaseBuildingEntityComponent(
-      getC(MainBaseBuildingEntityComponentID)
-    );
 
     // Check there isn't another tile there
     uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
@@ -138,7 +133,6 @@ contract BuildSystem is PrimodiumSystem {
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       buildingLevelComponent.set(playerEntity, buildingEntity);
-      mainBaseBuildingEntityComponent.set(playerEntity, buildingEntity);
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getC(MainBaseInitializedComponentID)
       );
