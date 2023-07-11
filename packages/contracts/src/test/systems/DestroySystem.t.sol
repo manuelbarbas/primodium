@@ -74,11 +74,10 @@ contract DestroySystemTest is PrimodiumTest {
     return abi.decode(rawBuilding, (uint256));
   }
 
-  function testDestroy() public {
-    uint256 buildingEntity = buildDummy();
+  function destroy(uint256 buildingEntity, Coord memory _coord) public {
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     uint256 buildingLimit = buildingLimitComponent.getValue(playerEntity);
-    destroySystem.executeTyped(coord);
+    destroySystem.executeTyped(_coord);
 
     for (uint256 i = 0; i < buildingTiles.length; i++) {
       assertFalse(ownedByComponent.has(buildingTiles[i]));
@@ -90,5 +89,16 @@ contract DestroySystemTest is PrimodiumTest {
     assertFalse(lastBuiltAtComponent.has(buildingEntity), "has lastbuild");
     assertFalse(buildingLevelComponent.has(buildingEntity), "has level");
     assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1, "wrong limit");
+  }
+
+  function testDestroyWithTile() public {
+    uint256 buildingEntity = buildDummy();
+    Coord[] memory blueprint = makeBlueprint();
+    destroy(buildingEntity, blueprint[blueprint.length - 1]);
+  }
+
+  function testDestroyWithBase() public {
+    uint256 buildingEntity = buildDummy();
+    destroy(buildingEntity, coord1);
   }
 }
