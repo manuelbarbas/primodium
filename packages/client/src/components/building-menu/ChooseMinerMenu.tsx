@@ -35,7 +35,7 @@ function ChooseMinerMenu({
         <BuildingIconButton
           id="lithium-mine"
           label="Lithium Mine"
-          blockType={BlockType.CopperMine}
+          blockType={BlockType.LithiumMine}
         />
       </div>
       <button
