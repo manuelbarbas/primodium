@@ -8,7 +8,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
@@ -84,10 +84,13 @@ contract DestroySystem is PrimodiumSystem {
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getC(BuildingComponentID));
     BuildingTilesComponent buildingTilesComponent = BuildingTilesComponent(getC(BuildingTilesComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(components, BuildingComponentID)
+    );
+
     // Check there isn't another tile there
     uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
@@ -130,10 +133,10 @@ contract DestroySystem is PrimodiumSystem {
     if (!ignoreBuildLimitComponent.has(buildingType)) {
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) - 1);
     }
-    checkAndUpdatePlayerStorageAfterDestroy(buildingType, buildingComponent.getValue(buildingEntity));
+    checkAndUpdatePlayerStorageAfterDestroy(buildingType, buildingLevelComponent.getValue(buildingEntity));
 
     tileComponent.remove(buildingEntity);
-    BuildingComponent(getC(BuildingComponentID)).remove(buildingEntity);
+    buildingLevelComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
     LastBuiltAtComponent(getC(LastBuiltAtComponentID)).remove(buildingEntity);
     LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);

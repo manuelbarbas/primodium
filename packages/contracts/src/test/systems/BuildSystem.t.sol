@@ -14,7 +14,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";

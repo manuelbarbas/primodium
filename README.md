@@ -102,7 +102,7 @@ Factory production is similar to how mining resource production is calculated. H
 Each building can be upgraded to unlock more capabilities. Specifications are located [here](https://www.notion.so/palifer/abe7f4855bb441198acd4bae918b4619?v=54c17e8787e24596bc3d4f94f81761bd&p=96af4ae778304d11b40b773a94a826df&pm=s).
 
 - `MaxLevelComponent` with a building ID (e.g. DebugIronMineID) as key, indicates that that a building can be upgraded and up to what level.
-- `BuildingComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
+- `BuildingLevelComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
 
 When a building is upgraded, `PostUpgradeSystem` is called to update the building's components and the player's resource production.
 

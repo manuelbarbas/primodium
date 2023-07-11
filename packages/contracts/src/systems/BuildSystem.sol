@@ -8,8 +8,10 @@ import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSy
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
@@ -22,10 +24,11 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
+import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
 
 // prototpyes
-import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
 import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
+import { BuildingKey } from "../prototypes/Keys.sol";
 
 // libraries
 import { Coord } from "../types.sol";
@@ -78,14 +81,19 @@ contract BuildSystem is PrimodiumSystem {
     }
   }
 
-  function hasResearched(uint256 blockType) internal view returns (bool) {
+  function hasResearched(uint256 buildingType) internal view returns (bool) {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(getC(RequiredResearchComponentID));
     ResearchComponent researchComponent = ResearchComponent(getC(ResearchComponentID));
     return
-      LibResearch.hasResearched(requiredResearchComponent, researchComponent, blockType, addressToEntity(msg.sender));
+      LibResearch.hasResearched(
+        requiredResearchComponent,
+        researchComponent,
+        buildingType,
+        addressToEntity(msg.sender)
+      );
   }
 
-  function hasRequiredResources(uint256 blockType) internal view returns (bool) {
+  function hasRequiredResources(uint256 buildingType) internal view returns (bool) {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       getC(RequiredResourcesComponentID)
     );
@@ -94,7 +102,7 @@ contract BuildSystem is PrimodiumSystem {
       LibResourceCost.hasRequiredResources(
         requiredResourcesComponent,
         itemComponent,
-        blockType,
+        buildingType,
         addressToEntity(msg.sender)
       );
   }
@@ -118,10 +126,13 @@ contract BuildSystem is PrimodiumSystem {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getC(BuildingComponentID));
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
     BlueprintComponent blueprintComponent = BlueprintComponent(getC(BlueprintComponentID));
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
+    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent = MainBaseBuildingEntityComponent(
+      getC(MainBaseBuildingEntityComponentID)
+    );
 
     // Check there isn't another tile there
     uint256 buildingEntity = getBuildingFromCoord(coord);
@@ -134,12 +145,14 @@ contract BuildSystem is PrimodiumSystem {
     //check required research
     require(hasResearched(buildingType), "[BuildSystem] You have not researched the required Technology");
 
+    require(hasRequiredResources(buildingType), "[BuildSystem] You do not have the required resources");
     //check build limit
     require(
       LibBuilding.isBuildingLimitMet(
         ignoreBuildLimitComponent,
         buildingLimitComponent,
-        buildingComponent,
+        buildingLevelComponent,
+        mainBaseBuildingEntityComponent,
         playerEntity,
         buildingType
       ),
@@ -156,7 +169,7 @@ contract BuildSystem is PrimodiumSystem {
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
-      buildingComponent.set(playerEntity, buildingEntity);
+      buildingLevelComponent.set(playerEntity, buildingEntity);
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getC(MainBaseInitializedComponentID)
       );
@@ -168,16 +181,25 @@ contract BuildSystem is PrimodiumSystem {
       }
     }
 
+    //check resource requirements and if ok spend required resources
+
+    //set MainBase id for player address for easy lookup
+    if (buildingType == MainBaseID) {
+      mainBaseBuildingEntityComponent.set(playerEntity, buildingType);
+    }
+
     // update building count if the built building counts towards the build limit
     if (!ignoreBuildLimitComponent.has(buildingType)) {
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
-    buildingComponent.set(buildingEntity, 1);
+    //set level of building to 1
+    buildingLevelComponent.set(buildingEntity, 1);
+
     tileComponent.set(buildingEntity, buildingType);
     ownedByComponent.set(buildingEntity, playerEntity);
+
     checkAndUpdatePlayerStorageAfterBuild(buildingType);
     setupFactoryComponents(tileComponent, buildingEntity);
-    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
     return abi.encode(buildingEntity);
   }
 

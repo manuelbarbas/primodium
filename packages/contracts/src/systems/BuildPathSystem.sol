@@ -5,14 +5,13 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
 import { BuildingKey, BuildingTileKey } from "../prototypes/Keys.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
@@ -40,7 +39,7 @@ contract BuildPathSystem is PrimodiumSystem {
     FactoryProductionComponent factoryProductionComponent,
     FactoryIsFunctionalComponent factoryIsFunctionalComponent,
     MineComponent mineComponent, //writes to
-    BuildingComponent buildingComponent,
+    BuildingLevelComponent buildingLevelComponent,
     TileComponent tileComponent,
     LastClaimedAtComponent lastClaimedAtComponent,
     uint256 playerEntity,
@@ -48,7 +47,7 @@ contract BuildPathSystem is PrimodiumSystem {
   ) internal {
     if (!factoryIsFunctionalComponent.has(factoryEntity)) return;
     uint256 buildingId = tileComponent.getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(factoryEntity));
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingLevelComponent.getValue(factoryEntity));
     FactoryProductionData memory factoryProductionData = factoryProductionComponent.getValue(buildingLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
     LibResourceProduction.updateResourceProduction(
@@ -63,14 +62,14 @@ contract BuildPathSystem is PrimodiumSystem {
   function checkOnBuildPathFromMineToFactory(
     FactoryIsFunctionalComponent factoryIsFunctionalComponent,
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
-    BuildingComponent buildingComponent,
+    BuildingLevelComponent buildingLevelComponent,
     TileComponent tileComponent,
     PathComponent pathComponent,
     uint256 mineEntity,
     uint256 factoryEntity
   ) internal returns (bool) {
     if (factoryIsFunctionalComponent.has(factoryEntity)) return false;
-    uint256 factoryLevel = buildingComponent.getValue(factoryEntity);
+    uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
     bool isFunctional = true;
     bool isMineConnected = false;
     FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(factoryEntity);
@@ -81,7 +80,7 @@ contract BuildPathSystem is PrimodiumSystem {
         factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
         isMineConnected = true;
         if (factoryMineBuildingsData.MineBuildingCount[i] > 0) isFunctional = false;
-        if (buildingComponent.getValue(mineEntity) < factoryLevel) isFunctional = false;
+        if (buildingLevelComponent.getValue(mineEntity) < factoryLevel) isFunctional = false;
       } else {
         if (factoryMineBuildingsData.MineBuildingCount[i] > 0) isFunctional = false;
       }
@@ -89,7 +88,7 @@ contract BuildPathSystem is PrimodiumSystem {
 
     uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(factoryEntity);
     for (uint256 i = 0; i < connectedMineEntities.length; i++) {
-      if (buildingComponent.getValue(connectedMineEntities[i]) < factoryLevel) {
+      if (buildingLevelComponent.getValue(connectedMineEntities[i]) < factoryLevel) {
         isFunctional = false;
         return isMineConnected;
       }
@@ -107,7 +106,7 @@ contract BuildPathSystem is PrimodiumSystem {
     StorageCapacityComponent storageCapacityComponent,
     LastClaimedAtComponent lastClaimedAtComponent,
     uint256 playerEntity,
-    uint256 startCoordEntity
+    uint256 startBuilding
   ) internal {
     LibUnclaimedResource.updateUnclaimedForResource(
       UnclaimedResourceComponent(getAddressById(components, UnclaimedResourceComponentID)),
@@ -116,13 +115,13 @@ contract BuildPathSystem is PrimodiumSystem {
       storageCapacityComponent,
       ItemComponent(getAddressById(components, ItemComponentID)),
       playerEntity,
-      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startCoordEntity))
+      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startBuilding))
     );
   }
 
   function handleBuildingPathFromMineToMainBase(
     TileComponent tileComponent,
-    BuildingComponent buildingComponent,
+    BuildingLevelComponent buildingLevelComponent,
     MineComponent mineComponent,
     uint256 mineEntity
   ) internal {
@@ -144,7 +143,7 @@ contract BuildPathSystem is PrimodiumSystem {
     //update resource production based on new path
     updateResourceProductionOnBuildPathFromMine(
       mineComponent,
-      buildingComponent,
+      buildingLevelComponent,
       tileComponent,
       lastClaimedAtComponent,
       addressToEntity(msg.sender),
@@ -154,14 +153,14 @@ contract BuildPathSystem is PrimodiumSystem {
 
   function updateResourceProductionOnBuildPathFromMine(
     MineComponent mineComponent, //writes to
-    BuildingComponent buildingComponent,
+    BuildingLevelComponent buildingLevelComponent,
     TileComponent tileComponent,
     LastClaimedAtComponent lastClaimedAtComponent,
     uint256 playerEntity,
     uint256 fromEntity
   ) internal {
     uint256 buildingId = tileComponent.getValue(fromEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingComponent.getValue(fromEntity));
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, buildingLevelComponent.getValue(fromEntity));
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromEntity));
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
     require(mineComponent.has(buildingLevelEntity), "Mine level entity not found");
@@ -175,7 +174,7 @@ contract BuildPathSystem is PrimodiumSystem {
 
   function handleBuildingPathFromMineToFactory(
     TileComponent tileComponent,
-    BuildingComponent buildingComponent,
+    BuildingLevelComponent buildingLevelComponent,
     MineComponent mineComponent,
     PathComponent pathComponent,
     uint256 mineEntity,
@@ -193,7 +192,7 @@ contract BuildPathSystem is PrimodiumSystem {
 
     uint256 factoryBuildingLevelEntity = LibEncode.hashKeyEntity(
       tileComponent.getValue(factoryEntity),
-      buildingComponent.getValue(factoryEntity)
+      buildingLevelComponent.getValue(factoryEntity)
     );
     require(
       factoryMineBuildingsComponent.has(factoryBuildingLevelEntity),
@@ -203,7 +202,7 @@ contract BuildPathSystem is PrimodiumSystem {
       checkOnBuildPathFromMineToFactory(
         factoryIsFunctionalComponent,
         factoryMineBuildingsComponent,
-        buildingComponent,
+        buildingLevelComponent,
         tileComponent,
         pathComponent,
         mineEntity,
@@ -229,7 +228,7 @@ contract BuildPathSystem is PrimodiumSystem {
   function handleBuildingPathFromFactoryToMainBase(
     TileComponent tileComponent,
     MineComponent mineComponent,
-    BuildingComponent buildingComponent,
+    BuildingLevelComponent buildingLevelComponent,
     uint256 factoryEntity,
     uint256 mainBaseEntity
   ) internal {
@@ -262,7 +261,7 @@ contract BuildPathSystem is PrimodiumSystem {
       factoryProductionComponent,
       factoryIsFunctionalComponent,
       mineComponent,
-      buildingComponent,
+      buildingLevelComponent,
       tileComponent,
       lastClaimedAtComponent,
       addressToEntity(msg.sender),
@@ -300,7 +299,9 @@ contract BuildPathSystem is PrimodiumSystem {
       "[BuildPathSystem] Cannot start more than one path from the same building"
     );
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(components, BuildingComponentID)
+    );
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
@@ -308,16 +309,16 @@ contract BuildPathSystem is PrimodiumSystem {
     uint256 endCoordBuildingId = tileComponent.getValue(endBuilding);
     uint256 startCoordBuildingLevelEntity = LibEncode.hashKeyEntity(
       startCoordBuildingId,
-      buildingComponent.getValue(startBuilding)
+      buildingLevelComponent.getValue(startBuilding)
     );
 
     if (mineComponent.has(startCoordBuildingLevelEntity)) {
       if (endCoordBuildingId == MainBaseID) {
-        handleBuildingPathFromMineToMainBase(tileComponent, buildingComponent, mineComponent, startBuilding);
+        handleBuildingPathFromMineToMainBase(tileComponent, buildingLevelComponent, mineComponent, startBuilding);
       } else {
         handleBuildingPathFromMineToFactory(
           tileComponent,
-          buildingComponent,
+          buildingLevelComponent,
           mineComponent,
           pathComponent,
           startBuilding,
@@ -328,7 +329,7 @@ contract BuildPathSystem is PrimodiumSystem {
       handleBuildingPathFromFactoryToMainBase(
         tileComponent,
         mineComponent,
-        buildingComponent,
+        buildingLevelComponent,
         startBuilding,
         endBuilding
       );

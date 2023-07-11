@@ -107,10 +107,10 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    Building: overridableComponent(
+    BuildingLevel: overridableComponent(
       defineNumberComponent(world, {
         metadata: {
-          contractId: "component.Building",
+          contractId: "component.BuildingLevel",
         },
       })
     ),
@@ -136,6 +136,13 @@ export function defineComponents(world: World) {
       defineNumberComponent(world, {
         metadata: {
           contractId: "component.Mine",
+        },
+      })
+    ),
+    BuildingLimit: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLimit",
         },
       })
     ),

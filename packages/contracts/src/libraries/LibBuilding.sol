@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
-import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID, MinerID } from "../prototypes/Tiles.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 
@@ -11,7 +10,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
-import { MainBaseID, BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
@@ -26,25 +25,32 @@ library LibBuilding {
   function meetsBuildCondition(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity,
     uint256 buildingId
   ) internal view returns (bool) {
     return
       ignoreBuildLimitComponent.has(buildingId) ||
-      isBuildingCountWithinLimit(buildingLimitComponent, buildingComponent, playerEntity);
+      isBuildingCountWithinLimit(
+        buildingLimitComponent,
+        buildingLevelComponent,
+        mainBaseBuildingEntityComponent,
+        playerEntity
+      );
   }
 
   function isBuildingLimitMet(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseComponent,
     uint256 playerEntity,
     uint256 buildingId
   ) internal view returns (bool) {
     return
       ignoreBuildLimitComponent.has(buildingId) ||
-      isBuildingCountWithinLimit(buildingLimitComponent, buildingComponent, playerEntity);
+      isBuildingCountWithinLimit(buildingLimitComponent, buildingLevelComponent, mainBaseComponent, playerEntity);
   }
 
   function canBuildOnTile(
@@ -59,10 +65,11 @@ library LibBuilding {
 
   function isBuildingCountWithinLimit(
     Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseComponent,
     uint256 playerEntity
   ) internal view returns (bool) {
-    uint256 baseLevel = getBaseLevel(buildingComponent, playerEntity);
+    uint256 baseLevel = getBaseLevel(buildingLimitComponent, buildingLevelComponent, mainBaseComponent, playerEntity);
     uint256 buildCountLimit = getBuildingCountLimit(buildingLimitComponent, baseLevel);
     uint256 buildingCount = getBuildingCount(buildingLimitComponent, playerEntity);
     return buildingCount < buildCountLimit;
@@ -77,9 +84,16 @@ library LibBuilding {
       !tileComponent.has(buildingEntity) || tileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
   }
 
-  function getBaseLevel(Uint256Component buildingComponent, uint256 playerEntity) internal view returns (uint256) {
+  function getBaseLevel(
+    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
+    uint256 playerEntity
+  ) internal view returns (uint256) {
     return
-      buildingComponent.has(playerEntity) ? buildingComponent.getValue(buildingComponent.getValue(playerEntity)) : 0;
+      mainBaseBuildingEntityComponent.has(playerEntity)
+        ? buildingLevelComponent.getValue(mainBaseBuildingEntityComponent.getValue(playerEntity))
+        : 0;
   }
 
   function getBuildingCount(
