@@ -43,33 +43,3 @@ uint256 constant IronPlateFactoryID = uint256(keccak256("block.IronPlateFactory"
 
 //Storage Unit
 uint256 constant StorageUnitID = uint256(keccak256("block.StorageUnit"));
-
-// in-game blocks/factories
-uint256 constant BasicMinerID = uint256(keccak256("block.BasicMiner"));
-uint256 constant NodeID = uint256(keccak256("block.Node"));
-uint256 constant PlatingFactoryID = uint256(keccak256("block.PlatingFactory"));
-uint256 constant BasicBatteryFactoryID = uint256(keccak256("block.BasicBatteryFactory"));
-uint256 constant KineticMissileFactoryID = uint256(keccak256("block.KineticMissileFactory"));
-uint256 constant ProjectileLauncherID = uint256(keccak256("block.ProjectileLauncher"));
-uint256 constant HardenedDrillID = uint256(keccak256("block.HardenedDrill"));
-uint256 constant DenseMetalRefineryID = uint256(keccak256("block.DenseMetalRefinery"));
-uint256 constant AdvancedBatteryFactoryID = uint256(keccak256("block.AdvancedBatteryFactory"));
-uint256 constant HighTempFoundryID = uint256(keccak256("block.HighTempFoundry"));
-uint256 constant PrecisionMachineryFactoryID = uint256(keccak256("block.PrecisionMachineryFactory"));
-uint256 constant IridiumDrillbitFactoryID = uint256(keccak256("block.IridiumDrillbitFactory"));
-uint256 constant PrecisionPneumaticDrillID = uint256(keccak256("block.PrecisionPneumaticDrill"));
-uint256 constant PenetratorFactoryID = uint256(keccak256("block.PenetratorFactory"));
-uint256 constant PenetratingMissileFactoryID = uint256(keccak256("block.PenetratingMissileFactory"));
-uint256 constant MissileLaunchComplexID = uint256(keccak256("block.MissileLaunchComplex"));
-uint256 constant HighEnergyLaserFactoryID = uint256(keccak256("block.HighEnergyLaserFactory"));
-uint256 constant ThermobaricWarheadFactoryID = uint256(keccak256("block.ThermobaricWarheadFactory"));
-uint256 constant ThermobaricMissileFactoryID = uint256(keccak256("block.ThermobaricMissileFactory"));
-uint256 constant KimberliteCatalystFactoryID = uint256(keccak256("block.KimberliteCatalystFactory"));
-
-// debug buildings
-uint256 constant DebugNodeID = uint256(keccak256("block.DebugNode"));
-uint256 constant MinerID = uint256(keccak256("block.Miner"));
-uint256 constant LithiumMinerID = uint256(keccak256("block.LithiumMiner"));
-uint256 constant BulletFactoryID = uint256(keccak256("block.BulletFactory"));
-uint256 constant DebugPlatingFactoryID = uint256(keccak256("block.DebugPlatingFactory"));
-uint256 constant SiloID = uint256(keccak256("block.Silo"));

@@ -34,10 +34,6 @@ function ChooseDebugMenu({
           label="Debug Storage Building"
           blockType={BlockType.DebugStorageBuilding}
         />
-        <BuildingIconButton label="Node" blockType={BlockType.DebugNode} />
-        <BuildingIconButton label="Base" blockType={BlockType.MainBase} />
-        <BuildingIconButton label="BulF" blockType={BlockType.BulletFactory} />
-        <BuildingIconButton label="silo" blockType={BlockType.Silo} />
       </div>
       <button
         onClick={closeMenuHelper}
