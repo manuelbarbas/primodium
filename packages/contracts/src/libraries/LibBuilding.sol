@@ -4,18 +4,20 @@ pragma solidity >=0.8.0;
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+import { CoordComponent } from "std-contracts/components/CoordComponent.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
 import { Coord } from "../types.sol";
 import { LibTerrain } from "./LibTerrain.sol";
 import { LibEncode } from "./LibEncode.sol";
+import { BuildingKey } from "../prototypes/Keys.sol";
 
 library LibBuilding {
   function checkBuildLimitConditionForBuildingId(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
     Uint256Component buildingLevelComponent,
-    Uint256Component mainBaseBuildingEntityComponent,
+    CoordComponent mainBaseInitializedComponent,
     uint256 playerEntity,
     uint256 buildingId
   ) internal view returns (bool) {
@@ -24,7 +26,7 @@ library LibBuilding {
       checkBuildingCountNotExceedBuildLimit(
         buildingLimitComponent,
         buildingLevelComponent,
-        mainBaseBuildingEntityComponent,
+        mainBaseInitializedComponent,
         playerEntity
       );
   }
@@ -32,12 +34,12 @@ library LibBuilding {
   function checkBuildingCountNotExceedBuildLimit(
     Uint256Component buildingLimitComponent,
     Uint256Component buildingLevelComponent,
-    Uint256Component mainBaseBuildingEntityComponent,
+    CoordComponent mainBaseInitializedComponent,
     uint256 playerEntity
   ) internal view returns (bool) {
     uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(
       buildingLevelComponent,
-      mainBaseBuildingEntityComponent,
+      mainBaseInitializedComponent,
       playerEntity
     );
     uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent, mainBuildingLevel);
@@ -57,12 +59,14 @@ library LibBuilding {
 
   function getMainBuildingLevelforPlayer(
     Uint256Component buildingLevelComponent,
-    Uint256Component mainBaseBuildingEntityComponent,
+    CoordComponent mainBaseInitializedComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
     return
-      mainBaseBuildingEntityComponent.has(playerEntity)
-        ? buildingLevelComponent.getValue(mainBaseBuildingEntityComponent.getValue(playerEntity))
+      mainBaseInitializedComponent.has(playerEntity)
+        ? buildingLevelComponent.getValue(
+          LibEncode.encodeCoordEntity(mainBaseInitializedComponent.getValue(playerEntity), BuildingKey)
+        )
         : 0;
   }
 

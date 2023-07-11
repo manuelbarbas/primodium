@@ -15,7 +15,6 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
@@ -147,16 +146,17 @@ contract BuildSystem is System {
     );
     //check required research
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
-    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent = MainBaseBuildingEntityComponent(
-      getAddressById(components, MainBaseBuildingEntityComponentID)
-    );
+
     //check build limit
+    MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
+      getAddressById(components, MainBaseInitializedComponentID)
+    );
     require(
       LibBuilding.checkBuildLimitConditionForBuildingId(
         ignoreBuildLimitComponent,
         buildingLimitComponent,
         buildingLevelComponent,
-        mainBaseBuildingEntityComponent,
+        mainBaseInitializedComponent,
         playerEntity,
         blockType
       ),
@@ -166,10 +166,6 @@ contract BuildSystem is System {
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (blockType == MainBaseID) {
-      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-        getAddressById(components, MainBaseInitializedComponentID)
-      );
-
       if (mainBaseInitializedComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
@@ -181,9 +177,6 @@ contract BuildSystem is System {
     require(checkAndSpendResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
 
     //set MainBase id for player address for easy lookup
-    if (blockType == MainBaseID) {
-      mainBaseBuildingEntityComponent.set(playerEntity, entity);
-    }
 
     // update building count if the built building counts towards the build limit
     if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {

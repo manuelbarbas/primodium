@@ -8,7 +8,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
-import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -25,14 +25,14 @@ contract ResearchSystem is System {
 
   function checkMainBaseLevelRequirement(
     BuildingLevelComponent buildingLevelComponent,
-    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent,
+    MainBaseInitializedComponent mainBaseInitializedComponent,
     uint256 playerEntity,
     uint256 entity
   ) internal view returns (bool) {
     if (!buildingLevelComponent.has(entity)) return true;
     uint256 mainBuildingLevel = LibBuilding.getMainBuildingLevelforPlayer(
       buildingLevelComponent,
-      mainBaseBuildingEntityComponent,
+      mainBaseInitializedComponent,
       playerEntity
     );
     return mainBuildingLevel >= buildingLevelComponent.getValue(entity);
@@ -61,7 +61,7 @@ contract ResearchSystem is System {
     require(
       checkMainBaseLevelRequirement(
         buildingLevelComponent,
-        MainBaseBuildingEntityComponent(getAddressById(components, MainBaseBuildingEntityComponentID)),
+        MainBaseInitializedComponent(getAddressById(components, MainBaseInitializedComponentID)),
         addressToEntity(msg.sender),
         researchItem
       ),
