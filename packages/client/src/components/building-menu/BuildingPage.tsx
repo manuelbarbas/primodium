@@ -107,14 +107,14 @@ function BuildingPage() {
             menuOpenIndex={menuOpenIndex}
             setMenuOpenIndex={setMenuOpenIndex}
           ></BuildingMenuButton>
-          <BuildingMenuButton
+          {/* <BuildingMenuButton
             id="weaponry"
             icon={"/img/icons/weaponryicon.png"}
             label={"Weaponry"}
             menuIndex={4}
             menuOpenIndex={menuOpenIndex}
             setMenuOpenIndex={setMenuOpenIndex}
-          ></BuildingMenuButton>
+          ></BuildingMenuButton> */}
           {import.meta.env.VITE_DEV === "true" ? (
             <BuildingMenuButton
               id="debug"

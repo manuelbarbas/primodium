@@ -37,14 +37,6 @@ function ChooseMinerMenu({
           label="Lithium Mine"
           blockType={BlockType.CopperMine}
         />
-        <BuildingIconButton
-          label="Hardened drill"
-          blockType={BlockType.HardenedDrill}
-        />
-        <BuildingIconButton
-          label="Precision pneumatic drill"
-          blockType={BlockType.PrecisionPneumaticDrill}
-        />
       </div>
       <button
         onClick={closeMenuHelper}

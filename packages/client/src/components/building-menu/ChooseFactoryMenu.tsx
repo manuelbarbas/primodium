@@ -30,42 +30,6 @@ function ChooseFactoryMenu({
           label="Iron Plate Factory"
           blockType={BlockType.IronPlateFactory}
         />
-        <BuildingIconButton
-          label="Plating factory"
-          blockType={BlockType.PlatingFactory}
-        />
-        <BuildingIconButton
-          label="Basic battery factory"
-          blockType={BlockType.BasicBatteryFactory}
-        />
-        <BuildingIconButton
-          label="Dense metal refinery"
-          blockType={BlockType.DenseMetalRefinery}
-        />
-        <BuildingIconButton
-          label="Advanced battery factory"
-          blockType={BlockType.AdvancedBatteryFactory}
-        />
-        <BuildingIconButton
-          label="High temp foundry"
-          blockType={BlockType.HighTempFoundry}
-        />
-        <BuildingIconButton
-          label="Precision machinery factory"
-          blockType={BlockType.PrecisionMachineryFactory}
-        />
-        <BuildingIconButton
-          label="Iridium drillbit factory"
-          blockType={BlockType.IridiumDrillbitFactory}
-        />
-        <BuildingIconButton
-          label="High-energy laser factory"
-          blockType={BlockType.HighEnergyLaserFactory}
-        />
-        <BuildingIconButton
-          label="Kimberlite catalyst factory"
-          blockType={BlockType.KimberliteCatalystFactory}
-        />
       </div>
       <button
         onClick={closeMenuHelper}
