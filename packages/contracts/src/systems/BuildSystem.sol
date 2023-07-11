@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -15,7 +16,6 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
@@ -142,21 +142,26 @@ contract BuildSystem is System {
     require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
     require(
-      LibBuilding.checkCanBuildOnTile(tileComponent, blockType, entity),
+      LibBuilding.checkCanBuildOnTile(
+        RequiredTileComponent(getAddressById(components, RequiredTileComponentID)),
+        blockType,
+        entity
+      ),
       "[BuildSystem] Cannot build on this tile"
     );
     //check required research
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
-    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent = MainBaseBuildingEntityComponent(
-      getAddressById(components, MainBaseBuildingEntityComponentID)
-    );
+
     //check build limit
+    MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
+      getAddressById(components, MainBaseInitializedComponentID)
+    );
     require(
       LibBuilding.checkBuildLimitConditionForBuildingId(
         ignoreBuildLimitComponent,
         buildingLimitComponent,
         buildingLevelComponent,
-        mainBaseBuildingEntityComponent,
+        mainBaseInitializedComponent,
         playerEntity,
         blockType
       ),
@@ -166,10 +171,6 @@ contract BuildSystem is System {
     // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (blockType == MainBaseID) {
-      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-        getAddressById(components, MainBaseInitializedComponentID)
-      );
-
       if (mainBaseInitializedComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
@@ -181,9 +182,6 @@ contract BuildSystem is System {
     require(checkAndSpendResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
 
     //set MainBase id for player address for easy lookup
-    if (blockType == MainBaseID) {
-      mainBaseBuildingEntityComponent.set(playerEntity, entity);
-    }
 
     // update building count if the built building counts towards the build limit
     if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {

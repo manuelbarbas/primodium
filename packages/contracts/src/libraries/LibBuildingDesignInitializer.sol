@@ -10,7 +10,7 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { RequiredTileComponent, ID as TileComponentID } from "components/RequiredTileComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
@@ -45,7 +45,7 @@ import { StorageUnitID } from "../prototypes/Tiles.sol";
 library LibBuildingDesignInitializer {
   function initIronMine(
     ItemComponent itemComponent,
-    TileComponent tileComponent,
+    RequiredTileComponent requiredTileComponent,
     MineComponent mineComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
@@ -53,15 +53,15 @@ library LibBuildingDesignInitializer {
     uint256[] memory requiredResourceIds
   ) internal {
     //IronMineID
-    tileComponent.set(IronMineID, IronResourceItemID);
+    requiredTileComponent.set(IronMineID, IronResourceItemID);
     maxLevelComponent.set(IronMineID, 3);
     //IronMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 1);
-    mineComponent.set(buildingIdLevel, 1);
+    mineComponent.set(buildingIdLevel, 5);
 
     //IronMineID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 2);
-    mineComponent.set(buildingIdLevel, 2);
+    mineComponent.set(buildingIdLevel, 7);
     requiredResearch.set(buildingIdLevel, IronMine2ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -74,7 +74,7 @@ library LibBuildingDesignInitializer {
 
     //IronMineID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 3);
-    mineComponent.set(buildingIdLevel, 3);
+    mineComponent.set(buildingIdLevel, 4);
     requiredResearch.set(buildingIdLevel, IronMine3ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -88,7 +88,7 @@ library LibBuildingDesignInitializer {
 
   function initCopperMine(
     ItemComponent itemComponent,
-    TileComponent tileComponent,
+    RequiredTileComponent requiredTileComponent,
     MineComponent mineComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
@@ -96,11 +96,11 @@ library LibBuildingDesignInitializer {
     uint256[] memory requiredResourceIds
   ) internal {
     //CopperMineID
-    tileComponent.set(CopperMineID, CopperResourceItemID);
+    requiredTileComponent.set(CopperMineID, CopperResourceItemID);
     maxLevelComponent.set(CopperMineID, 3);
     //CopperMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 1);
-    mineComponent.set(buildingIdLevel, 1);
+    mineComponent.set(buildingIdLevel, 2);
     requiredResearch.set(buildingIdLevel, CopperMineResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
@@ -112,7 +112,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 2);
-    mineComponent.set(buildingIdLevel, 2);
+    mineComponent.set(buildingIdLevel, 4);
     requiredResearch.set(buildingIdLevel, CopperMine2ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -125,7 +125,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 3);
-    mineComponent.set(buildingIdLevel, 3);
+    mineComponent.set(buildingIdLevel, 6);
     requiredResearch.set(buildingIdLevel, CopperMine3ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -139,7 +139,7 @@ library LibBuildingDesignInitializer {
 
   function initLithiumMine(
     ItemComponent itemComponent,
-    TileComponent tileComponent,
+    RequiredTileComponent requiredTileComponent,
     MineComponent mineComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
@@ -147,11 +147,11 @@ library LibBuildingDesignInitializer {
     uint256[] memory requiredResourceIds
   ) internal {
     //LithiumMineID
-    tileComponent.set(LithiumMineID, CopperResourceItemID);
+    requiredTileComponent.set(LithiumMineID, CopperResourceItemID);
     maxLevelComponent.set(LithiumMineID, 3);
     //LithiumMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(LithiumMineID, 1);
-    mineComponent.set(buildingIdLevel, 1);
+    mineComponent.set(buildingIdLevel, 2);
     requiredResearch.set(buildingIdLevel, LithiumMineResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
@@ -163,7 +163,7 @@ library LibBuildingDesignInitializer {
 
     //LithiumMineID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(LithiumMineID, 2);
-    mineComponent.set(buildingIdLevel, 2);
+    mineComponent.set(buildingIdLevel, 3);
     requiredResearch.set(buildingIdLevel, LithiumMine2ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -176,7 +176,7 @@ library LibBuildingDesignInitializer {
 
     //LithiumMineID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(LithiumMineID, 3);
-    mineComponent.set(buildingIdLevel, 3);
+    mineComponent.set(buildingIdLevel, 5);
     requiredResearch.set(buildingIdLevel, LithiumMine3ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -481,7 +481,7 @@ library LibBuildingDesignInitializer {
       getAddressById(components, RequiredResourcesComponentID)
     );
 
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    RequiredTileComponent requiredTileComponent = RequiredTileComponent(getAddressById(components, TileComponentID));
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
@@ -512,7 +512,7 @@ library LibBuildingDesignInitializer {
     //Iron Mine
     initIronMine(
       itemComponent,
-      tileComponent,
+      requiredTileComponent,
       mineComponent,
       maxLevelComponent,
       requiredResearch,
@@ -521,7 +521,7 @@ library LibBuildingDesignInitializer {
     );
     initCopperMine(
       itemComponent,
-      tileComponent,
+      requiredTileComponent,
       mineComponent,
       maxLevelComponent,
       requiredResearch,
@@ -530,7 +530,7 @@ library LibBuildingDesignInitializer {
     );
     initLithiumMine(
       itemComponent,
-      tileComponent,
+      requiredTileComponent,
       mineComponent,
       maxLevelComponent,
       requiredResearch,
