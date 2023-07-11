@@ -69,7 +69,7 @@ library LibBuilding {
     Uint256Component mainBaseComponent,
     uint256 playerEntity
   ) internal view returns (bool) {
-    uint256 baseLevel = getBaseLevel(buildingLimitComponent, buildingLevelComponent, mainBaseComponent, playerEntity);
+    uint256 baseLevel = getBaseLevel(buildingLevelComponent, mainBaseComponent, playerEntity);
     uint256 buildCountLimit = getBuildingCountLimit(buildingLimitComponent, baseLevel);
     uint256 buildingCount = getBuildingCount(buildingLimitComponent, playerEntity);
     return buildingCount < buildCountLimit;
@@ -85,7 +85,6 @@ library LibBuilding {
   }
 
   function getBaseLevel(
-    Uint256Component buildingComponent,
     Uint256Component buildingLevelComponent,
     Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity
