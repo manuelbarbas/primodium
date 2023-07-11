@@ -37,7 +37,10 @@ export default function UpgradeButton({
   const buildingEntity = encodeCoordEntity(coords, BlockType.BuildingKey);
   const buildingId = world.entityToIndex.get(buildingEntity);
 
-  const currLevel = useComponentValue(components.Building, buildingId)?.value;
+  const currLevel = useComponentValue(
+    components.BuildingLevel,
+    buildingId
+  )?.value;
 
   const buildingType = useComponentValue(components.Tile, buildingId, {
     value: 0,
@@ -48,7 +51,7 @@ export default function UpgradeButton({
   const maxLevel =
     getComponentValue(components.MaxLevel, buildingType)?.value || 0;
 
-  const buildingLevel = hashKeyEntity(world.entities[buildingType], currLevel);
+  const buildingLevel = hashKeyEntity(buildingType, currLevel);
 
   const upgradeLocked = () => {
     const researchRequirement = getBuildingResearchRequirement(
