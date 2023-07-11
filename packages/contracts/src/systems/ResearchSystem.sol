@@ -7,7 +7,9 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
+import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
+
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
@@ -20,6 +22,21 @@ uint256 constant ID = uint256(keccak256("system.Research"));
 
 contract ResearchSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
+
+  function checkMainBaseLevelRequirement(
+    BuildingLevelComponent buildingLevelComponent,
+    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    if (!buildingLevelComponent.has(entity)) return true;
+    uint256 mainBuildingLevel = LibBuilding.getMainBuildingLevelforPlayer(
+      buildingLevelComponent,
+      mainBaseBuildingEntityComponent,
+      playerEntity
+    );
+    return mainBuildingLevel >= buildingLevelComponent.getValue(entity);
+  }
 
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
@@ -35,14 +52,19 @@ contract ResearchSystem is System {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    require(
-      requiredResourcesComponent.has(researchItem),
-      "[ResearchSystem] can not research a technology that does not have resource requirements"
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(components, BuildingComponentID)
     );
 
+    require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
+
     require(
-      LibBuilding.checkMainBaseLevelRequirement(buildingComponent, addressToEntity(msg.sender), researchItem),
+      checkMainBaseLevelRequirement(
+        buildingLevelComponent,
+        MainBaseBuildingEntityComponent(getAddressById(components, MainBaseBuildingEntityComponentID)),
+        addressToEntity(msg.sender),
+        researchItem
+      ),
       "[ResearchSystem] MainBase level requirement not met"
     );
 

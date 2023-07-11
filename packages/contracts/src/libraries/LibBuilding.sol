@@ -1,56 +1,69 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
-import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID, MinerID } from "../prototypes/Tiles.sol";
-
-import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
-
-import { LibDebug } from "libraries/LibDebug.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibMath } from "libraries/LibMath.sol";
-
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress } from "solecs/utils.sol";
+import { Coord } from "../types.sol";
+import { LibTerrain } from "./LibTerrain.sol";
+import { LibEncode } from "./LibEncode.sol";
 
 library LibBuilding {
   function checkBuildLimitConditionForBuildingId(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity,
     uint256 buildingId
   ) internal view returns (bool) {
     return
       !doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, buildingId) ||
-      checkBuildingCountNotExceedBuildLimit(buildingLimitComponent, buildingComponent, playerEntity);
+      checkBuildingCountNotExceedBuildLimit(
+        buildingLimitComponent,
+        buildingLevelComponent,
+        mainBaseBuildingEntityComponent,
+        playerEntity
+      );
   }
 
   function checkBuildingCountNotExceedBuildLimit(
     Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity
   ) internal view returns (bool) {
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
+    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(
+      buildingLevelComponent,
+      mainBaseBuildingEntityComponent,
+      playerEntity
+    );
     uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent, mainBuildingLevel);
     uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingLimitComponent, playerEntity);
     return buildingCount < buildCountLimit;
   }
 
-  function checkMainBaseLevelRequirement(
-    Uint256Component buildingComponent,
-    uint256 playerEntity,
-    uint256 entity
+  function checkCanBuildOnTile(
+    Uint256Component tileComponent,
+    uint256 buildingId,
+    uint256 buildingEntity
   ) internal view returns (bool) {
-    if (!buildingComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
-    return mainBuildingLevel >= buildingComponent.getValue(entity);
+    return
+      !tileComponent.has(buildingId) ||
+      tileComponent.getValue(buildingId) == LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
   }
 
   function getMainBuildingLevelforPlayer(
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
-    return buildingComponent.has(playerEntity) ? buildingComponent.getValue(playerEntity) : 0;
+    return
+      mainBaseBuildingEntityComponent.has(playerEntity)
+        ? buildingLevelComponent.getValue(mainBaseBuildingEntityComponent.getValue(playerEntity))
+        : 0;
   }
 
   function getNumberOfBuildingsForPlayer(
@@ -64,8 +77,7 @@ library LibBuilding {
     Uint256Component buildingLimitComponent,
     uint256 mainBuildingLevel
   ) internal view returns (uint256) {
-    if (LibDebug.isDebug()) return 100;
-    else if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
+    if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
     else revert("Invalid Main Building Level");
   }
 

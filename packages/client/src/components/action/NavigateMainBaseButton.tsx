@@ -58,7 +58,7 @@ export default function NavigateMainBaseButton() {
         BigNumber.from(BlockType.MainBase),
         selectedTile ?? cameraCoord,
         {
-          gasLimit: 1_500_000,
+          gasLimit: 1_800_000,
         }
       ),
       providers,

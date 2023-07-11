@@ -93,7 +93,7 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
   setTransactionLoading(true);
   await execute(
     systems["system.BuildPath"].executeTyped(start, end, {
-      gasLimit: 500_000,
+      gasLimit: 1_500_000,
     }),
     providers,
     setNotification
@@ -109,7 +109,7 @@ export const demolishBuilding = async (pos: Coord, network: Network) => {
   setTransactionLoading(true);
   await execute(
     systems["system.Destroy"].executeTyped(pos, {
-      gasLimit: 1_000_000,
+      gasLimit: 2_000_000,
     }),
     providers,
     setNotification
@@ -125,7 +125,7 @@ export const demolishPath = async (pos: Coord, network: Network) => {
   setTransactionLoading(true);
   await execute(
     systems["system.DestroyPath"].executeTyped(pos, {
-      gasLimit: 500_000,
+      gasLimit: 2_000_000,
     }),
     providers,
     setNotification

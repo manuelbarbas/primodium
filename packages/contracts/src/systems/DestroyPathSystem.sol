@@ -5,12 +5,25 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
 
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
+import { BuildingKey } from "../prototypes/Keys.sol";
+import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
 import { Coord } from "../types.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
+import { LibPath } from "../libraries/LibPath.sol";
+import { LibNewMine } from "../libraries/LibNewMine.sol";
+import { LibTerrain } from "../libraries/LibTerrain.sol";
+import { LibFactory } from "../libraries/LibFactory.sol";
+import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
+import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 
@@ -27,13 +40,6 @@ contract DestroyPathSystem is System {
     uint256 startCoordEntity = LibEncode.encodeCoordEntity(coordStart, BuildingKey);
     require(tileComponent.has(startCoordEntity), "[DestroyPathSystem] Cannot destroy path from an empty coordinate");
 
-    // Check that the coordinates is a conveyor tile
-    uint256 tileEntityAtStartCoord = tileComponent.getValue(startCoordEntity);
-    require(
-      tileEntityAtStartCoord == DebugNodeID || tileEntityAtStartCoord == NodeID,
-      "[DestroyPathSystem] Cannot destroy path at a non-supported tile (Conveyor, Node)"
-    );
-
     // Check that the coordinates are both owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(startCoordEntity);
     require(
@@ -44,7 +50,11 @@ contract DestroyPathSystem is System {
     // Check that a path doesn't already start there (each tile can only be the start of one path)
     require(ownedByComponent.has(startCoordEntity), "[DestroyPathSystem] Path does not exist at the selected tile");
 
-    // remove key
+    IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
+      msg.sender,
+      startCoordEntity
+    );
+
     pathComponent.remove(startCoordEntity);
 
     return abi.encode(startCoordEntity);

@@ -10,20 +10,22 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-
-import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID } from "../prototypes/Tiles.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-
-// production buildings
-import { BasicMinerID, NodeID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
 
 // Items
 import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 // Research
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
-
-import { LibResourceCost } from "libraries/LibResourceCost.sol";
+import { StorageUnitResearchID, IronPlateFactoryResearchID, CopperMine2ResearchID, StorageUnit2ResearchID, IronPlateFactory2ResearchID, LithiumMineResearchID } from "../prototypes/Keys.sol";
+import { IronMine2ResearchID, IronMine3ResearchID } from "../prototypes/Keys.sol";
+import { StorageUnitResearchID, StorageUnit2ResearchID, StorageUnit3ResearchID } from "../prototypes/Keys.sol";
+import { CopperMineResearchID, CopperMine2ResearchID, CopperMine3ResearchID } from "../prototypes/Keys.sol";
+import { IronPlateFactoryResearchID, IronPlateFactory2ResearchID, IronPlateFactory3ResearchID } from "../prototypes/Keys.sol";
+import { LithiumMineResearchID, LithiumMine2ResearchID, LithiumMine3ResearchID } from "../prototypes/Keys.sol";
+import { LibSetRequiredResources } from "libraries/LibSetRequiredResources.sol";
 
 library LibTechnologyDesignInitializer {
   function init(IWorld world) internal {
@@ -32,291 +34,175 @@ library LibTechnologyDesignInitializer {
     RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
+    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(components, BuildingComponentID)
+    );
 
-    // Research FastMiner with 100 IronResource and 100 CopperResource
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research CopperMineResearchID with 300 IronResourceItemID
+    researchComponent.set(CopperMineResearchID);
+    buildingLevelComponent.set(CopperMineResearchID, 2);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      FastMinerResearchID,
+      CopperMineResearchID,
       IronResourceItemID,
-      100,
-      CopperResourceItemID,
-      100
-    );
-
-    // Research Copper with 30 IronResource
-    LibResourceCost.set1RequiredResourceForEntity(
-      requiredResources,
-      itemComponent,
-      CopperResearchID,
-      IronResourceItemID,
-      30
-    );
-
-    // Research PlatingFactory with 200 IronResource and 200 CopperResource
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      PlatingFactoryResearchID,
-      IronResourceItemID,
-      200,
-      CopperResourceItemID,
-      200
-    );
-
-    // Research Lithium with 20 IronPlateCrafted and 100 CopperResource
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      LithiumResearchID,
-      IronPlateCraftedItemID,
-      20,
-      CopperResourceItemID,
-      100
-    );
-
-    // Research BasicBatteryFactory with 50 IronPlateCrafted and 100 LithiumResource
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      BasicBatteryFactoryResearchID,
-      IronPlateCraftedItemID,
-      50,
-      LithiumResourceItemID,
-      100
-    );
-
-    // Research KineticMissileFactory with 50 BasicPowerSourceCrafted and 100 IronResource
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      KineticMissileFactoryResearchID,
-      BasicPowerSourceCraftedItemID,
-      50,
-      IronResourceItemID,
-      100
-    );
-
-    // Research Titanium with 50 BasicPowerSourceCrafted
-    LibResourceCost.set1RequiredResourceForEntity(
-      requiredResources,
-      itemComponent,
-      TitaniumResearchID,
-      BasicPowerSourceCraftedItemID,
-      50
-    );
-
-    // Research ProjectileLauncher with 50 BasicPowerSourceCrafted and 500 TitaniumResource
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      ProjectileLauncherResearchID,
-      BasicPowerSourceCraftedItemID,
-      50,
-      TitaniumResourceItemID,
-      500
-    );
-
-    // Research HardenedDrill with 200 TitaniumResource, 500 IronPlateCrafted, and 50 BasicPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      HardenedDrillResearchID,
-      TitaniumResourceItemID,
-      200,
-      IronPlateCraftedItemID,
-      500,
-      BasicPowerSourceCraftedItemID,
-      50
-    );
-
-    // Research Osmium with 300 TitaniumResource
-    LibResourceCost.set1RequiredResourceForEntity(
-      requiredResources,
-      itemComponent,
-      OsmiumResearchID,
-      TitaniumResourceItemID,
       300
     );
 
-    // Research DenseMetalRefinery with 100 OsmiumResource, 300 TitaniumResource, and 100 BasicPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    // Research CopperMine2ResearchID with 300 IronResourceItemID
+    researchComponent.set(CopperMine2ResearchID);
+    buildingLevelComponent.set(CopperMine2ResearchID, 4);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      DenseMetalRefineryResearchID,
-      OsmiumResourceItemID,
-      100,
-      TitaniumResourceItemID,
-      300,
-      BasicPowerSourceCraftedItemID,
-      100
+      CopperMine2ResearchID,
+      CopperResourceItemID,
+      1000
     );
 
-    // Research AdvancedBatteryFactory with 200 OsmiumResource, 100 IronPlateCrafted, and 400 TitaniumResource
-    LibResourceCost.set3RequiredResourcesForEntity(
+    // Research CopperMine3ResearchID with 300 IronResourceItemID
+    researchComponent.set(CopperMine3ResearchID);
+    buildingLevelComponent.set(CopperMine3ResearchID, 5);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      AdvancedBatteryFactoryResearchID,
-      OsmiumResourceItemID,
-      200,
       IronPlateCraftedItemID,
-      100,
-      TitaniumResourceItemID,
-      400
+      IronResourceItemID,
+      700
     );
 
-    // Research Tungsten with 100 RefinedOsmiumCrafted 200 TitaniumResource
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research IronMine2ResearchID with 300 CopperResourceItemID
+    researchComponent.set(IronMine2ResearchID);
+    buildingLevelComponent.set(IronMine2ResearchID, 2);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      TungstenResearchID,
-      RefinedOsmiumCraftedItemID,
-      100,
-      TitaniumResourceItemID,
-      200
+      IronMine2ResearchID,
+      CopperResourceItemID,
+      300
     );
 
-    // Research HighTempFoundry with 200 TungstenResource, 100 OsmiumResource, 50 AdvancedPowerSourceCrafted
-    LibResourceCost.set3RequiredResourcesForEntity(
+    // Research IronMine2ResearchID with 300 CopperResourceItemID
+    researchComponent.set(IronMine3ResearchID);
+    buildingLevelComponent.set(IronMine3ResearchID, 4);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      HighTempFoundryResearchID,
-      TungstenResourceItemID,
-      200,
-      OsmiumResourceItemID,
-      100,
-      AdvancedPowerSourceCraftedItemID,
-      50
+      IronMine3ResearchID,
+      CopperResourceItemID,
+      1000
     );
 
-    // Research Iridium with 100 TungstenRodCrafted 100 OsmiumResource
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research IronPlateFactoryResearchID with 1200 IronResourceItemID and 1000 CopperResourceItemID
+    researchComponent.set(IronPlateFactoryResearchID);
+    buildingLevelComponent.set(IronPlateFactoryResearchID, 3);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      IridiumResearchID,
-      TungstenRodsCraftedItemID,
-      100,
-      OsmiumResourceItemID,
-      100
+      IronPlateFactoryResearchID,
+      IronResourceItemID,
+      1200,
+      CopperResourceItemID,
+      1000
     );
 
-    // Research PrecisionMachineryFactory with 200 IridiumResource and 100 TungstenRodsCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    researchComponent.set(IronPlateFactory2ResearchID);
+    buildingLevelComponent.set(IronPlateFactory2ResearchID, 5);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      PrecisionMachineryFactoryResearchID,
-      IridiumResourceItemID,
-      200,
-      TungstenRodsCraftedItemID,
-      100
+      IronPlateFactory2ResearchID,
+      IronPlateCraftedItemID,
+      1200
     );
 
-    // Research IridiumDrillbitFactory with 100 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    researchComponent.set(IronPlateFactory3ResearchID);
+    buildingLevelComponent.set(IronPlateFactory3ResearchID, 6);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      IridiumDrillbitFactoryResearchID,
-      IridiumCrystalCraftedItemID,
-      100,
-      LaserPowerSourceCraftedItemID,
-      20
+      IronPlateFactory3ResearchID,
+      IronPlateCraftedItemID,
+      1200,
+      CopperResourceItemID,
+      1000
     );
 
-    // Research PrecisionPneumaticDrill with 200 TungstenRodsCrafted and 50 IridiumDrillbitCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research StorageUnitResearchID with 1000 IronResourceItemID and 1000 CopperResourceItemID
+    researchComponent.set(StorageUnitResearchID);
+    buildingLevelComponent.set(StorageUnitResearchID, 3);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      PrecisionPneumaticDrillResearchID,
-      TungstenRodsCraftedItemID,
-      200,
-      IridiumDrillbitCraftedItemID,
-      50
+      StorageUnitResearchID,
+      IronResourceItemID,
+      1000,
+      CopperResourceItemID,
+      1000
     );
 
-    // Research PenetratorFactory with 500 OsmiumResource and 50 AdvancedPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research StorageUnit2ResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
+    researchComponent.set(StorageUnit2ResearchID);
+    buildingLevelComponent.set(StorageUnit2ResearchID, 4);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      PenetratorFactoryResearchID,
-      OsmiumResourceItemID,
-      500,
-      AdvancedPowerSourceCraftedItemID,
-      50
+      StorageUnit2ResearchID,
+      IronResourceItemID,
+      2000,
+      CopperResourceItemID,
+      2000
     );
 
-    // Research PenetratingMissileFactory with 100 RefinedOsmiumCrafted and 50 AdvancedPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research StorageUnit3ResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
+    researchComponent.set(StorageUnit3ResearchID);
+    buildingLevelComponent.set(StorageUnit3ResearchID, 5);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      PenetratingMissileFactoryResearchID,
-      RefinedOsmiumCraftedItemID,
-      100,
-      AdvancedPowerSourceCraftedItemID,
-      50
+      StorageUnit3ResearchID,
+      IronPlateCraftedItemID,
+      2000,
+      CopperResourceItemID,
+      4000
     );
 
-    // Research MissileLaunchComplex with 50 TungstenRodsCrafted and 100 AdvancedPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research LithiumMineResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
+    researchComponent.set(LithiumMineResearchID);
+    buildingLevelComponent.set(LithiumMineResearchID, 4);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      MissileLaunchComplexResearchID,
-      TungstenRodsCraftedItemID,
-      50,
-      AdvancedPowerSourceCraftedItemID,
-      100
+      LithiumMineResearchID,
+      IronPlateCraftedItemID,
+      1000
     );
 
-    // Research HighEnergyLaserFactory with 200 IridiumCrystalCrafted 150 AdvancedPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
+    // Research LithiumMine2ResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
+    researchComponent.set(LithiumMine2ResearchID);
+    buildingLevelComponent.set(LithiumMine2ResearchID, 5);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      HighEnergyLaserFactoryResearchID,
-      IridiumCrystalCraftedItemID,
-      200,
-      AdvancedPowerSourceCraftedItemID,
-      150
+      LithiumMine2ResearchID,
+      IronPlateCraftedItemID,
+      2000,
+      CopperResourceItemID,
+      4000
     );
 
-    // Research ThermobaricWarheadFactory with 200 IridiumCrystalCrafted
-    LibResourceCost.set1RequiredResourceForEntity(
+    // Research LithiumMineResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
+    researchComponent.set(LithiumMine3ResearchID);
+    buildingLevelComponent.set(LithiumMine3ResearchID, 6);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
-      ThermobaricWarheadFactoryResearchID,
-      IridiumCrystalCraftedItemID,
-      200
-    );
-
-    // Resesarch ThermobaricMissileFactory with 200 IridiumCrystalCrafted and 100 TungstenRodsCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      ThermobaricMissileFactoryResearchID,
-      IridiumCrystalCraftedItemID,
-      200,
-      TungstenRodsCraftedItemID,
-      100
-    );
-
-    // Research Kimberlite with 100 IridiumCrystalCrafted 100 TungstenResource
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      KimberliteResearchID,
-      IridiumCrystalCraftedItemID,
-      100,
-      TungstenResourceItemID,
-      100
-    );
-
-    // Research KimberliteCatalystFactory with 300 IridiumCrystalCrafted and 20 LaserPowerSourceCrafted
-    LibResourceCost.set2RequiredResourcesForEntity(
-      requiredResources,
-      itemComponent,
-      KimberliteCatalystFactoryResearchID,
-      IridiumCrystalCraftedItemID,
-      300,
-      LaserPowerSourceCraftedItemID,
-      20
+      LithiumMine3ResearchID,
+      IronPlateCraftedItemID,
+      3000,
+      CopperResourceItemID,
+      8000
     );
   }
 }

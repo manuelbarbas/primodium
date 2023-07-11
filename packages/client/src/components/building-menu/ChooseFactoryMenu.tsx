@@ -24,40 +24,12 @@ function ChooseFactoryMenu({
       <p className="text-lg font-bold mb-3">{title}</p>
       <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
         <BuildingIconButton
-          label="Plating factory"
-          blockType={BlockType.PlatingFactory}
+          label="Storage Unit"
+          blockType={BlockType.StorageUnit}
         />
         <BuildingIconButton
-          label="Basic battery factory"
-          blockType={BlockType.BasicBatteryFactory}
-        />
-        <BuildingIconButton
-          label="Dense metal refinery"
-          blockType={BlockType.DenseMetalRefinery}
-        />
-        <BuildingIconButton
-          label="Advanced battery factory"
-          blockType={BlockType.AdvancedBatteryFactory}
-        />
-        <BuildingIconButton
-          label="High temp foundry"
-          blockType={BlockType.HighTempFoundry}
-        />
-        <BuildingIconButton
-          label="Precision machinery factory"
-          blockType={BlockType.PrecisionMachineryFactory}
-        />
-        <BuildingIconButton
-          label="Iridium drillbit factory"
-          blockType={BlockType.IridiumDrillbitFactory}
-        />
-        <BuildingIconButton
-          label="High-energy laser factory"
-          blockType={BlockType.HighEnergyLaserFactory}
-        />
-        <BuildingIconButton
-          label="Kimberlite catalyst factory"
-          blockType={BlockType.KimberliteCatalystFactory}
+          label="Iron Plate Factory"
+          blockType={BlockType.IronPlateFactory}
         />
       </div>
       <button

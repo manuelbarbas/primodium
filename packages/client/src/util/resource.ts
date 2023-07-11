@@ -1,5 +1,8 @@
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, World, getComponentValue } from "@latticexyz/recs";
 import { BlockType } from "./constants";
+import { defineComponents } from "../network/components";
+import { NetworkComponents } from "@latticexyz/std-client";
+import { hashKeyEntityAndTrim } from "./encode";
 
 export type ResourceCostData = {
   name: string;
@@ -196,276 +199,33 @@ export const CraftRecipe = new Map<EntityID, ResourceCostData[]>([
 ]);
 
 // building a building requires resources
-export const BuildingReceipe = new Map<EntityID, ResourceCostData[]>([
-  [
-    BlockType.BasicMiner,
-    [
-      {
-        name: "0",
-        id: BlockType.BasicMiner,
-        resources: [{ id: BlockType.Iron, amount: 100 }],
-      },
-    ],
-  ],
-  [
-    BlockType.Node,
-    [
-      {
-        name: "1",
-        id: BlockType.Node,
-        resources: [{ id: BlockType.Iron, amount: 50 }],
-      },
-    ],
-  ],
-  [
-    BlockType.PlatingFactory,
-    [
-      {
-        name: "2",
-        id: BlockType.PlatingFactory,
-        resources: [
-          { id: BlockType.Iron, amount: 100 },
-          { id: BlockType.Copper, amount: 50 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.BasicBatteryFactory,
-    [
-      {
-        name: "3",
-        id: BlockType.BasicBatteryFactory,
-        resources: [
-          { id: BlockType.IronPlateCrafted, amount: 20 },
-          { id: BlockType.Copper, amount: 50 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.KineticMissileFactory,
-    [
-      {
-        name: "4",
-        id: BlockType.KineticMissileFactory,
-        resources: [
-          { id: BlockType.IronPlateCrafted, amount: 100 },
-          { id: BlockType.Lithium, amount: 50 },
-          { id: BlockType.BasicPowerSourceCrafted, amount: 10 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.ProjectileLauncher,
-    [
-      {
-        name: "5",
-        id: BlockType.ProjectileLauncher,
-        resources: [
-          { id: BlockType.IronPlateCrafted, amount: 100 },
-          { id: BlockType.Titanium, amount: 100 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.HardenedDrill,
-    [
-      {
-        name: "6",
-        id: BlockType.HardenedDrill,
-        resources: [
-          { id: BlockType.Titanium, amount: 100 },
-          { id: BlockType.IronPlateCrafted, amount: 10 },
-          { id: BlockType.BasicPowerSourceCrafted, amount: 5 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.DenseMetalRefinery,
-    [
-      {
-        name: "7",
-        id: BlockType.DenseMetalRefinery,
-        resources: [
-          { id: BlockType.Osmium, amount: 50 },
-          { id: BlockType.Titanium, amount: 100 },
-          { id: BlockType.IronPlateCrafted, amount: 30 },
-          { id: BlockType.BasicPowerSourceCrafted, amount: 10 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.AdvancedBatteryFactory,
-    [
-      {
-        name: "8",
-        id: BlockType.AdvancedBatteryFactory,
-        resources: [
-          { id: BlockType.Osmium, amount: 150 },
-          { id: BlockType.Titanium, amount: 50 },
-          { id: BlockType.BasicPowerSourceCrafted, amount: 20 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.HighTempFoundry,
-    [
-      {
-        name: "9",
-        id: BlockType.HighTempFoundry,
-        resources: [
-          { id: BlockType.Tungsten, amount: 50 },
-          { id: BlockType.RefinedOsmiumCrafted, amount: 50 },
-          { id: BlockType.AdvancedPowerSourceCrafted, amount: 20 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.PrecisionMachineryFactory,
-    [
-      {
-        name: "10",
-        id: BlockType.PrecisionMachineryFactory,
-        resources: [
-          { id: BlockType.Iridium, amount: 50 },
-          { id: BlockType.TungstenRodsCrafted, amount: 50 },
-          { id: BlockType.AdvancedPowerSourceCrafted, amount: 10 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.IridiumDrillbitFactory,
-    [
-      {
-        name: "11",
-        id: BlockType.IridiumDrillbitFactory,
-        resources: [
-          { id: BlockType.TungstenRodsCrafted, amount: 50 },
-          { id: BlockType.LaserPowerSourceCrafted, amount: 5 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.PrecisionPneumaticDrill,
-    [
-      {
-        name: "12",
-        id: BlockType.PrecisionPneumaticDrill,
-        resources: [
-          { id: BlockType.Tungsten, amount: 100 },
+// fetch directly from component data
+export function getRecipe(
+  entityId: EntityID,
+  world: World,
+  components: NetworkComponents<ReturnType<typeof defineComponents>>
+): ResourceCostData["resources"] {
+  const requiredResources = getComponentValue(
+    components.RequiredResourcesComponent,
+    world.entityToIndex.get(entityId)!
+  );
 
-          { id: BlockType.Osmium, amount: 100 },
-          { id: BlockType.LaserPowerSourceCrafted, amount: 5 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.PenetratorFactory,
-    [
-      {
-        name: "13",
-        id: BlockType.PenetratorFactory,
-        resources: [
-          { id: BlockType.Osmium, amount: 200 },
-          { id: BlockType.IronPlateCrafted, amount: 50 },
-          { id: BlockType.AdvancedPowerSourceCrafted, amount: 10 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.PenetratingMissileFactory,
-    [
-      {
-        name: "14",
-        id: BlockType.PenetratingMissileFactory,
-        resources: [
-          { id: BlockType.Osmium, amount: 300 },
-          { id: BlockType.Titanium, amount: 100 },
-          { id: BlockType.AdvancedPowerSourceCrafted, amount: 15 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.MissileLaunchComplex,
-    [
-      {
-        name: "15",
-        id: BlockType.MissileLaunchComplex,
-        resources: [
-          { id: BlockType.TungstenRodsCrafted, amount: 100 },
-          { id: BlockType.Osmium, amount: 100 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.HighEnergyLaserFactory,
-    [
-      {
-        name: "16",
-        id: BlockType.HighEnergyLaserFactory,
-        resources: [
-          { id: BlockType.IridiumCrystalCrafted, amount: 50 },
-          { id: BlockType.RefinedOsmiumCrafted, amount: 100 },
-          { id: BlockType.AdvancedPowerSourceCrafted, amount: 50 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.ThermobaricWarheadFactory,
-    [
-      {
-        name: "17",
-        id: BlockType.ThermobaricWarheadFactory,
-        resources: [
-          { id: BlockType.RefinedOsmiumCrafted, amount: 200 },
-          { id: BlockType.IridiumCrystalCrafted, amount: 100 },
-          { id: BlockType.LaserPowerSourceCrafted, amount: 10 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.ThermobaricMissileFactory,
-    [
-      {
-        name: "18",
-        id: BlockType.ThermobaricMissileFactory,
-        resources: [
-          { id: BlockType.IridiumCrystalCrafted, amount: 100 },
-          { id: BlockType.TungstenRodsCrafted, amount: 100 },
-          { id: BlockType.LaserPowerSourceCrafted, amount: 20 },
-        ],
-      },
-    ],
-  ],
-  [
-    BlockType.KimberliteCatalystFactory,
-    [
-      {
-        name: "19",
-        id: BlockType.KimberliteCatalystFactory,
-        resources: [
-          { id: BlockType.IridiumCrystalCrafted, amount: 200 },
-          { id: BlockType.LaserPowerSourceCrafted, amount: 20 },
-        ],
-      },
-    ],
-  ],
-]);
+  if (!requiredResources || requiredResources.value.length == 0) return [];
+  return requiredResources!.value.map((resourceId: EntityID) => {
+    // remove leading zeros due to mudv1 hashing behavior
+    const resourceCost = getComponentValue(
+      components.Item,
+      world.entityToIndex.get(
+        hashKeyEntityAndTrim(resourceId, entityId) as EntityID
+      )!
+    );
+
+    return {
+      id: resourceId,
+      amount: resourceCost ? parseInt(resourceCost!.value.toString()) : -1,
+    };
+  });
+}
 
 // researching an item requires resources
 // refer to research.ts for the actual research tree

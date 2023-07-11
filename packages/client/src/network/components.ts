@@ -1,4 +1,4 @@
-import { Type, World, defineComponent } from "@latticexyz/recs";
+import { World, defineComponent, Type } from "@latticexyz/recs";
 import { overridableComponent } from "@latticexyz/recs";
 import {
   defineBoolComponent,
@@ -83,6 +83,70 @@ export function defineComponents(world: World) {
         contractId: "component.MainBaseInitialized",
       },
     }),
+    // Resource data stored in components
+    RequiredResearchComponent: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.RequiredResearch",
+      },
+    }),
+    RequiredResourcesComponent: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.RequiredResources",
+        },
+      }
+    ),
+    MaxLevel: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.MaxLevel",
+        },
+      })
+    ),
+    BuildingLevel: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLevel",
+        },
+      })
+    ),
+    StorageCapacity: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.StorageCapacity",
+        },
+      })
+    ),
+    StorageCapacityResources: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.StorageCapacityResources",
+        },
+      }
+    ),
+    Mine: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Mine",
+        },
+      })
+    ),
+    BuildingLimit: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLimit",
+        },
+      })
+    ),
+    // TODO: component data for crafting recipes
   };
 }
 
