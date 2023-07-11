@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 // Production Buildings
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
+import { console } from "forge-std/console.sol";
 
 //components
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -89,10 +90,8 @@ library LibBuilding {
     Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
-    return
-      mainBaseBuildingEntityComponent.has(playerEntity)
-        ? buildingLevelComponent.getValue(mainBaseBuildingEntityComponent.getValue(playerEntity))
-        : 0;
+    if (!mainBaseBuildingEntityComponent.has(playerEntity)) return 0;
+    return buildingLevelComponent.getValue(mainBaseBuildingEntityComponent.getValue(playerEntity));
   }
 
   function getBuildingCount(
@@ -104,10 +103,10 @@ library LibBuilding {
 
   function getBuildingCountLimit(
     Uint256Component buildingLimitComponent,
-    uint256 mainBuildingLevel
+    uint256 baseLevel
   ) internal view returns (uint256) {
-    if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
-    else revert("Invalid Main Building Level");
+    if (buildingLimitComponent.has(baseLevel)) return buildingLimitComponent.getValue(baseLevel);
+    else revert("Invalid Base Level");
   }
 
   function isMainBase(uint256 tileId) internal pure returns (bool) {

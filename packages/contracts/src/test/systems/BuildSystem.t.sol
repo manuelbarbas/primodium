@@ -59,13 +59,6 @@ contract BuildSystemTest is PrimodiumTest {
     // init other
   }
 
-  function buildMainBaseAtZero() internal returns (uint256) {
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
-    bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-    return blockEntityID;
-  }
-
   function testBuildMainBase() public {
     vm.startPrank(alice);
 
@@ -183,15 +176,11 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testFailBuildTwiceSameCoord() public {
-    vm.startPrank(alice);
-
+  function testFailBuildTwiceSameCoord() public prank(alice) {
     buildMainBaseAtZero();
     Coord memory coord = Coord({ x: 1, y: 1 });
     buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
     buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
-
-    vm.stopPrank();
   }
 
   function testFailBuildTwiceMainBase() public {
@@ -219,8 +208,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testBuildUpToBuildLimit() public {
-    vm.startPrank(alice);
+  function testBuildUpToBuildLimit() public prank(alice) {
     buildMainBaseAtZero();
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
     uint256 buildLimit = LibBuilding.getBuildingCountLimit(buildingLimitComponent, 1);
@@ -230,7 +218,6 @@ contract BuildSystemTest is PrimodiumTest {
       buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
       secondIncrement++;
     }
-    vm.stopPrank();
   }
 
   function testBuildUpToBuildLimitIgnoreMainBaseAndBuildingWithIgnoreLimit() public {
@@ -252,5 +239,12 @@ contract BuildSystemTest is PrimodiumTest {
       secondIncrement++;
     }
     vm.stopPrank();
+  }
+
+  function buildMainBaseAtZero() internal returns (uint256) {
+    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
+    return blockEntityID;
   }
 }

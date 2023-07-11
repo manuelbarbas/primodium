@@ -168,6 +168,7 @@ contract BuildSystem is PrimodiumSystem {
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       buildingLevelComponent.set(playerEntity, buildingEntity);
+      mainBaseBuildingEntityComponent.set(playerEntity, buildingEntity);
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getC(MainBaseInitializedComponentID)
       );
@@ -197,11 +198,11 @@ contract BuildSystem is PrimodiumSystem {
     uint256 buildingEntity,
     Coord memory baseCoord,
     Coord memory relativeCoord
-  ) private returns (uint256 blockEntity) {
-    TileComponent tileComponent = TileComponent(getC(TileComponentID));
+  ) private returns (uint256 tileEntity) {
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
-    blockEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
-    require(!tileComponent.has(blockEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
-    OwnedByComponent(getC(OwnedByComponentID)).set(blockEntity, buildingEntity);
+    tileEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
+    require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
+    ownedByComponent.set(tileEntity, buildingEntity);
   }
 }
