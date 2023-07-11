@@ -1,24 +1,23 @@
-import { useCallback, useMemo } from "react";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { useComponentValue } from "@latticexyz/react";
-import { useAccount } from "../../hooks/useAccount";
-import { useMud } from "../../context/MudContext";
-import { execute } from "../../network/actions";
-import { useGameStore } from "../../store/GameStore";
-import Spinner from "../Spinner";
-import { useNotificationStore } from "../../store/NotificationStore";
+import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
+import { BlockType } from "src/util/constants";
 import {
   encodeCoordEntity,
   hashKeyEntity,
   hashKeyEntityAndTrim,
 } from "src/util/encode";
-import { BlockType } from "src/util/constants";
+import { useMud } from "../../context/MudContext";
+import { useAccount } from "../../hooks/useAccount";
+import { execute } from "../../network/actions";
+import { useGameStore } from "../../store/GameStore";
+import { useNotificationStore } from "../../store/NotificationStore";
 import { getBuildingResearchRequirement } from "../../util/research";
+import Spinner from "../Spinner";
 
 export default function UpgradeButton({
   id,
-  coords: { x, y },
+  coords,
   builtTile,
 }: {
   id: string;
@@ -35,59 +34,25 @@ export default function UpgradeButton({
     state.setNotification,
   ]);
 
-  const claimAction = useCallback(async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Upgrade"].executeTyped(
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 30_000_000,
-        }
-      ),
-      providers,
-      setNotification
-    );
-    setTransactionLoading(false);
-  }, []);
+  const buildingEntity = encodeCoordEntity(coords, BlockType.BuildingKey);
+  const buildingId = world.entityToIndex.get(buildingEntity);
 
-  const upgradeText = useMemo(() => {
-    return "Upgrade Building";
-  }, [builtTile]);
-  const buildingEntity = encodeCoordEntity(
-    { x: x, y: y },
-    BlockType.BuildingKey
-  );
+  const currLevel = useComponentValue(components.Building, buildingId)?.value;
 
-  const currLevel = useComponentValue(
-    components.Building,
-    address
-      ? world.entityToIndex.get(buildingEntity as EntityID)
-      : singletonIndex
-  );
+  const buildingType = useComponentValue(components.Tile, buildingId, {
+    value: 0,
+  }).value as EntityIndex;
 
-  const buildingId = useComponentValue(
-    components.Tile,
-    address
-      ? world.entityToIndex.get(buildingEntity as EntityID)
-      : singletonIndex
-  );
+  if (!buildingId || !buildingType || currLevel == undefined) return null;
 
-  const buildingLevelId = hashKeyEntity(
-    buildingId?.toString() as EntityID,
-    currLevel?.toString() as EntityID
-  );
+  const maxLevel =
+    getComponentValue(components.MaxLevel, buildingType)?.value || 0;
 
-  const maxLevel = useComponentValue(
-    components.MaxLevel,
-    world.entityToIndex.get(buildingId?.value as unknown as EntityID)
-  );
+  const buildingLevel = hashKeyEntity(world.entities[buildingType], currLevel);
 
-  const upgradeLocked = useMemo(() => {
+  const upgradeLocked = () => {
     const researchRequirement = getBuildingResearchRequirement(
-      buildingLevelId as unknown as EntityID,
+      buildingLevel,
       world,
       components
     );
@@ -106,14 +71,25 @@ export default function UpgradeButton({
     const isResearched = getComponentValue(components.Research, researchOwner);
 
     return !(isResearched && isResearched.value);
-  }, []);
+  };
 
-  const colorCode = useMemo(() => {
-    return "bg-yellow-800 hover:bg-yellow-900";
-  }, [builtTile]);
+  const claimAction = async () => {
+    setTransactionLoading(true);
+    await execute(
+      systems["system.Upgrade"].executeTyped(coords, {
+        gasLimit: 30_000_000,
+      }),
+      providers,
+      setNotification
+    );
+    setTransactionLoading(false);
+  };
 
-  if (!maxLevel || (currLevel?.value as Number) >= (maxLevel.value as Number))
-    return;
+  const upgradeText = "Upgrade Building";
+
+  const colorCode = "bg-yellow-800 hover:bg-yellow-900";
+
+  if (!maxLevel || currLevel >= maxLevel) return;
 
   if (transactionLoading) {
     return (
