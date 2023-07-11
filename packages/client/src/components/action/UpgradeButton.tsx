@@ -1,4 +1,4 @@
-import { useComponentValue } from "@latticexyz/react";
+import { useComponentValue } from "src/hooks/useComponentValue";
 import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { BlockType } from "src/util/constants";
@@ -48,14 +48,13 @@ export default function UpgradeButton({
 
   if (!buildingId || !buildingType || currLevel == undefined) return null;
 
-  const maxLevel =
-    getComponentValue(components.MaxLevel, buildingType)?.value || 0;
+  const maxLevel = getComponentValue(components.MaxLevel, buildingType);
 
-  const buildingLevel = hashKeyEntity(buildingType, currLevel);
+  const buildingTypeLevel = hashKeyEntity(buildingType, currLevel);
 
   const upgradeLocked = () => {
     const researchRequirement = getBuildingResearchRequirement(
-      buildingLevel,
+      buildingTypeLevel,
       world,
       components
     );
@@ -92,7 +91,7 @@ export default function UpgradeButton({
 
   const colorCode = "bg-yellow-800 hover:bg-yellow-900";
 
-  if (!maxLevel || currLevel >= maxLevel) return;
+  if (!maxLevel || currLevel >= (maxLevel?.value || 0)) return;
 
   if (transactionLoading) {
     return (
