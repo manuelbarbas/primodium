@@ -33,7 +33,7 @@ if (params.get("defaultChain") === "lattice") {
   tempFaucetUrl = "https://primodium-services.caldera.gg/faucet";
   snapshotServiceUrl = "https://primodium-services.caldera.gg/ecs-snapshot";
   chainId = 12523;
-  initialBlockNumber = 33740;
+  initialBlockNumber = 29367;
 } else {
   // from skystrife
   jsonRpcUrl = "https://miner.skystrife-chain.linfra.xyz";
