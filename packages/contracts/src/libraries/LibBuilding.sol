@@ -54,16 +54,6 @@ library LibBuilding {
       isBuildingCountWithinLimit(buildingLimitComponent, buildingLevelComponent, mainBaseComponent, playerEntity);
   }
 
-  function canBuildOnTile(
-    Uint256Component tileComponent,
-    uint256 buildingType,
-    uint256 buildingEntity
-  ) internal view returns (bool) {
-    return
-      !tileComponent.has(buildingType) ||
-      tileComponent.getValue(buildingType) == LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
-  }
-
   function isBuildingCountWithinLimit(
     Uint256Component buildingLimitComponent,
     Uint256Component buildingLevelComponent,
@@ -81,6 +71,7 @@ library LibBuilding {
     uint256 buildingEntity,
     Coord memory coord
   ) internal view returns (bool) {
+    console.log("has tile: ", tileComponent.has(buildingEntity));
     return
       !tileComponent.has(buildingEntity) || tileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
   }

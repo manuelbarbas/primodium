@@ -35,7 +35,7 @@ contract BuildPathSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   //call after upgrade has been done and level has been increased
-  function updateResourceProductionOnBuildPathFromFactoryToMainBase(
+  function updateResourceProduction(
     FactoryProductionComponent factoryProductionComponent,
     FactoryIsFunctionalComponent factoryIsFunctionalComponent,
     MineComponent mineComponent, //writes to
@@ -59,7 +59,7 @@ contract BuildPathSystem is PrimodiumSystem {
   }
 
   //checks if path from mine to factory can be built, if yes updates factory is functional status
-  function checkOnBuildPathFromMineToFactory(
+  function canBuildPath(
     FactoryIsFunctionalComponent factoryIsFunctionalComponent,
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
     BuildingLevelComponent buildingLevelComponent,
@@ -199,7 +199,7 @@ contract BuildPathSystem is PrimodiumSystem {
       "[BuildPathSystem] Cannot build path a building which is not MainBase or a factory"
     );
     require(
-      checkOnBuildPathFromMineToFactory(
+      canBuildPath(
         factoryIsFunctionalComponent,
         factoryMineBuildingsComponent,
         buildingLevelComponent,
@@ -257,7 +257,7 @@ contract BuildPathSystem is PrimodiumSystem {
       factoryEntity
     );
 
-    updateResourceProductionOnBuildPathFromFactoryToMainBase(
+    updateResourceProduction(
       factoryProductionComponent,
       factoryIsFunctionalComponent,
       mineComponent,

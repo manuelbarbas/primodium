@@ -6,7 +6,6 @@ import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildingTilesComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
-import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
 import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "../../systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
 import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from "../../systems/DebugRemoveBuildLimitSystem.sol";

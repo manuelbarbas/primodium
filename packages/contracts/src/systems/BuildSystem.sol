@@ -134,13 +134,13 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     // Check there isn't another tile there
-    uint256 buildingEntity = getBuildingFromCoord(coord);
+    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
-    require(buildingEntity == 0, "[BuildSystem] Cannot build on a non-empty coordinate");
     require(
-      LibBuilding.canBuildOnTile(tileComponent, buildingType, buildingEntity),
-      "[BuildSystem] Cannot build on this tile"
+      !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
+      "[BuildSystem] Cannot build on a non-empty coordinate"
     );
+    require(LibBuilding.canBuildOnTile(tileComponent, buildingType, coord), "[BuildSystem] Cannot build on this tile");
     //check required research
     require(hasResearched(buildingType), "[BuildSystem] You have not researched the required Technology");
 
