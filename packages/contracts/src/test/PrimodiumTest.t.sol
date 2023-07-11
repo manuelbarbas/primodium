@@ -33,6 +33,10 @@ contract PrimodiumTest is MudTest {
     assertTrue(!input);
   }
 
+  function assertFalse(bool input, string memory message) internal {
+    assertTrue(!input, message);
+  }
+
   function makeBlueprint() internal view returns (Coord[] memory blueprint) {
     blueprint = new Coord[](3);
 

@@ -17,13 +17,14 @@ import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "componen
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
 import { Coord } from "../../types.sol";
+import { MainBaseID } from "../../prototypes/Tiles.sol";
 
 contract DestroySystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
-  uint256 public buildingEntity;
   uint256 public playerEntity;
 
   BlueprintSystem public blueprintSystem;
@@ -31,6 +32,7 @@ contract DestroySystemTest is PrimodiumTest {
   DestroySystem public destroySystem;
 
   OwnedByComponent public ownedByComponent;
+  BlueprintComponent public blueprintComponent;
   BuildingTilesComponent public buildingTilesComponent;
   BuildingLevelComponent public buildingLevelComponent;
   BuildingLimitComponent public buildingLimitComponent;
@@ -48,6 +50,7 @@ contract DestroySystemTest is PrimodiumTest {
 
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
+    blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
     buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
     buildingLevelComponent = BuildingLevelComponent(component(BuildingLevelComponentID));
     tileComponent = TileComponent(component(TileComponentID));
@@ -57,19 +60,24 @@ contract DestroySystemTest is PrimodiumTest {
 
     // init other
     vm.startPrank(alice);
-    Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(dummyBuilding, blueprint);
-    bytes memory rawBuildingEntity = buildSystem.executeTyped(dummyBuilding, coord);
-    buildingEntity = abi.decode(rawBuildingEntity, (uint256));
     playerEntity = addressToEntity(alice);
-
+    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     vm.stopPrank();
   }
 
-  function testDestroy() public prank(alice) {
+  function buildDummy() public returns (uint256) {
+    vm.startPrank(alice);
+    Coord[] memory blueprint = makeBlueprint();
+    blueprintSystem.executeTyped(dummyBuilding, blueprint);
+    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, coord1);
+    return abi.decode(rawBuilding, (uint256));
+  }
+
+  function testDestroy() public {
+    uint256 buildingEntity = buildDummy();
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     uint256 buildingLimit = buildingLimitComponent.getValue(playerEntity);
-    uint256 playerBase = buildingLevelComponent.getValue(buildingEntity);
     destroySystem.executeTyped(coord);
 
     for (uint256 i = 0; i < buildingTiles.length; i++) {
@@ -77,16 +85,10 @@ contract DestroySystemTest is PrimodiumTest {
       assertFalse(tileComponent.has(buildingTiles[i]));
     }
 
-    assertFalse(ownedByComponent.has(buildingEntity));
-    assertFalse(tileComponent.has(buildingEntity));
-    assertFalse(lastBuiltAtComponent.has(buildingEntity));
-    assertFalse(buildingLevelComponent.has(buildingEntity));
-    assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1);
-    bool hasMainBase = buildingLevelComponent.has(playerEntity);
-    if (playerBase == buildingEntity) {
-      assertTrue(hasMainBase);
-    } else {
-      assertFalse(hasMainBase);
-    }
+    assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");
+    assertFalse(tileComponent.has(buildingEntity), "has tile");
+    assertFalse(lastBuiltAtComponent.has(buildingEntity), "has lastbuild");
+    assertFalse(buildingLevelComponent.has(buildingEntity), "has level");
+    assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1, "wrong limit");
   }
 }

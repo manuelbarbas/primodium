@@ -99,7 +99,7 @@ contract DestroySystem is PrimodiumSystem {
 
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
     for (uint i = 0; i < buildingTiles.length; i++) {
-      clearBuildingTile(tileComponent, buildingTiles[i]);
+      clearBuildingTile(ownedByComponent, buildingTiles[i]);
     }
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
@@ -148,9 +148,8 @@ contract DestroySystem is PrimodiumSystem {
     return execute(abi.encode(coord));
   }
 
-  function clearBuildingTile(Uint256Component tileComponent, uint256 tileEntity) private {
-    require(tileComponent.has(tileEntity), "[DestroySystem] Cannot destroy tile at an empty coordinate");
-    tileComponent.remove(tileEntity);
-    OwnedByComponent(getC(OwnedByComponentID)).remove(tileEntity);
+  function clearBuildingTile(Uint256Component ownedByComponent, uint256 tileEntity) private {
+    require(ownedByComponent.has(tileEntity), "[DestroySystem] Cannot destroy unowned coordinate");
+    ownedByComponent.remove(tileEntity);
   }
 }
