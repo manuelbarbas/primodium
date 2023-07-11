@@ -10,8 +10,6 @@ import { BlueprintComponent, ID as BlueprintComponentID } from "components/Bluep
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
@@ -22,7 +20,6 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
 
@@ -81,32 +78,6 @@ contract BuildSystem is PrimodiumSystem {
     }
   }
 
-  function hasResearched(uint256 buildingType) internal view returns (bool) {
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(getC(RequiredResearchComponentID));
-    ResearchComponent researchComponent = ResearchComponent(getC(ResearchComponentID));
-    return
-      LibResearch.hasResearched(
-        requiredResearchComponent,
-        researchComponent,
-        buildingType,
-        addressToEntity(msg.sender)
-      );
-  }
-
-  function hasRequiredResources(uint256 buildingType) internal view returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getC(RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
-    return
-      LibResourceCost.hasRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        buildingType,
-        addressToEntity(msg.sender)
-      );
-  }
-
   function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getC(FactoryMineBuildingsComponentID)
@@ -142,9 +113,15 @@ contract BuildSystem is PrimodiumSystem {
     );
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
     //check required research
-    require(hasResearched(buildingType), "[BuildSystem] You have not researched the required Technology");
+    require(
+      LibResearch.hasResearched(world, buildingType, playerEntity),
+      "[BuildSystem] You have not researched the required Technology"
+    );
 
-    require(hasRequiredResources(buildingType), "[BuildSystem] You do not have the required resources");
+    require(
+      LibResourceCost.hasRequiredResources(world, buildingType, playerEntity),
+      "[BuildSystem] You do not have the required resources"
+    );
     //check build limit
     require(
       LibBuilding.isBuildingLimitMet(world, playerEntity, buildingType),

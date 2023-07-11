@@ -38,9 +38,7 @@ contract ResearchSystem is System {
 
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
-      getAddressById(components, LastResearchedAtComponentID)
-    );
+
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
@@ -59,12 +57,7 @@ contract ResearchSystem is System {
     );
 
     require(
-      LibResearch.hasResearched(
-        requiredResearchComponent,
-        researchComponent,
-        researchItem,
-        addressToEntity(msg.sender)
-      ),
+      LibResearch.hasResearched(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Research requirements not met"
     );
 
@@ -78,7 +71,7 @@ contract ResearchSystem is System {
       "[ResearchSystem] Not enough resources to research"
     );
     researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
-    LibResearch.setResearchTime(lastResearchedAtComponent, researchItem, addressToEntity(msg.sender));
+    LibResearch.setResearchTime(world, researchItem, addressToEntity(msg.sender));
     return abi.encode(true);
   }
 
