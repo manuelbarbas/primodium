@@ -193,6 +193,9 @@ export const BlockType = {
   LithiumMineResearch: keccak256("research.LithiumMine") as EntityID,
   LithiumMine2Research: keccak256("research.LithiumMine2") as EntityID,
   LithiumMine3Research: keccak256("research.LithiumMine3") as EntityID,
+
+  BuildingKey: keccak256("building") as EntityID,
+
   // IronResearch: keccak256("research.Iron") as EntityID,
 
   // CopperResearch: keccak256("block.Copper") as EntityID,
