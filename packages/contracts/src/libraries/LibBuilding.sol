@@ -10,26 +10,36 @@ import { Coord } from "../types.sol";
 import { LibTerrain } from "./LibTerrain.sol";
 import { LibEncode } from "./LibEncode.sol";
 
-
 library LibBuilding {
   function checkBuildLimitConditionForBuildingId(
     BoolComponent ignoreBuildLimitComponent,
     Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity,
     uint256 buildingId
   ) internal view returns (bool) {
     return
       !doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, buildingId) ||
-      checkBuildingCountNotExceedBuildLimit(buildingLimitComponent, buildingComponent, playerEntity);
+      checkBuildingCountNotExceedBuildLimit(
+        buildingLimitComponent,
+        buildingLevelComponent,
+        mainBaseBuildingEntityComponent,
+        playerEntity
+      );
   }
 
   function checkBuildingCountNotExceedBuildLimit(
     Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity
   ) internal view returns (bool) {
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
+    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(
+      buildingLevelComponent,
+      mainBaseBuildingEntityComponent,
+      playerEntity
+    );
     uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent, mainBuildingLevel);
     uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingLimitComponent, playerEntity);
     return buildingCount < buildCountLimit;
@@ -46,11 +56,14 @@ library LibBuilding {
   }
 
   function getMainBuildingLevelforPlayer(
-    Uint256Component buildingComponent,
+    Uint256Component buildingLevelComponent,
+    Uint256Component mainBaseBuildingEntityComponent,
     uint256 playerEntity
   ) internal view returns (uint256) {
     return
-      buildingComponent.has(playerEntity) ? buildingComponent.getValue(buildingComponent.getValue(playerEntity)) : 0;
+      mainBaseBuildingEntityComponent.has(playerEntity)
+        ? buildingLevelComponent.getValue(mainBaseBuildingEntityComponent.getValue(playerEntity))
+        : 0;
   }
 
   function getNumberOfBuildingsForPlayer(

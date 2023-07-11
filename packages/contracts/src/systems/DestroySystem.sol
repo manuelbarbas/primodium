@@ -5,7 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
@@ -78,7 +78,9 @@ contract DestroySystem is System {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(components, BuildingComponentID)
+    );
     LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
       getAddressById(components, LastBuiltAtComponentID)
     );
@@ -126,9 +128,9 @@ contract DestroySystem is System {
         LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) - 1
       );
     }
-    checkAndUpdatePlayerStorageAfterDestroy(tileComponent.getValue(entity), buildingComponent.getValue(entity));
+    checkAndUpdatePlayerStorageAfterDestroy(tileComponent.getValue(entity), buildingLevelComponent.getValue(entity));
 
-    buildingComponent.remove(entity);
+    buildingLevelComponent.remove(entity);
     tileComponent.remove(entity);
     ownedByComponent.remove(entity);
     lastBuiltAtComponent.remove(entity);

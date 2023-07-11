@@ -14,7 +14,7 @@
     "ResearchComponent",
     "MainBaseInitializedComponent",
     "StarterPackInitializedComponent",
-    "BuildingComponent",
+    "BuildingLevelComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
@@ -26,7 +26,8 @@
     "FactoryIsFunctionalComponent",
     "FactoryMineBuildingsComponent",
     "FactoryProductionComponent",
-    "MaxLevelComponent"
+    "MaxLevelComponent",
+    "MainBaseBuildingEntityComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -68,12 +69,13 @@
         "ItemComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingComponent",
+        "BuildingLevelComponent",
         "MainBaseInitializedComponent",
         "BuildingLimitComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
-        "FactoryMineBuildingsComponent"
+        "FactoryMineBuildingsComponent",
+        "MainBaseBuildingEntityComponent"
       ]
     },
     {
@@ -87,7 +89,7 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingComponent",
+        "BuildingLevelComponent",
         "BuildingLimitComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
@@ -160,7 +162,7 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingComponent", "ItemComponent"]
+      "writeAccess": ["BuildingLevelComponent", "ItemComponent"]
     },
     {
       "name": "PostUpgradeSystem",

@@ -19,7 +19,7 @@ import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequireme
 import { ResearchComponent, ID as ResearchComponentID } from "../../components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
 import { IronResourceItemID, CopperResourceItemID, LithiumResourceItemID, IronPlateCraftedItemID } from "../../prototypes/Keys.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";

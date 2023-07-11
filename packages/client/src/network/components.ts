@@ -107,10 +107,10 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    Building: overridableComponent(
+    BuildingLevel: overridableComponent(
       defineNumberComponent(world, {
         metadata: {
-          contractId: "component.Building",
+          contractId: "component.BuildingLevel",
         },
       })
     ),
