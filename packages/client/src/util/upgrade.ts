@@ -31,7 +31,7 @@ export function canBeUpgraded(
   );
 
   const currentLevel = getComponentValue(
-    components.Building,
+    components.BuildingLevel,
     world.entityToIndex.get(buildingEntity)!
   );
   return (currentLevel?.value as number) < (maxLevel?.value as number);

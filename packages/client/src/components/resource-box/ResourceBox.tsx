@@ -37,13 +37,13 @@ function ResourceBox() {
     state.transactionLoading,
   ]);
   const mainBuildingEntity = useComponentValue(
-    components.Building,
+    components.BuildingLevel,
     address
       ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
       : singletonIndex
   )?.value as unknown as EntityID;
   const mainBuildingLevel = useComponentValue(
-    components.Building,
+    components.BuildingLevel,
     world.entityToIndex.get(mainBuildingEntity)
   );
 
