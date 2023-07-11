@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
@@ -42,6 +42,7 @@ function ResourceBox() {
       ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
       : singletonIndex
   )?.value as unknown as EntityID;
+
   const mainBuildingLevel = useComponentValue(
     components.BuildingLevel,
     world.entityToIndex.get(mainBuildingEntity)
@@ -62,7 +63,8 @@ function ResourceBox() {
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
   );
-  if (transactionLoading) {
+
+  if (!minimized) {
     return (
       <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
@@ -73,32 +75,15 @@ function ResourceBox() {
           >
             <LinkIcon icon={<FaMinusSquare size="18" />} />
           </button>
-          <p className="text-lg font-bold mb-3">
-            Inventory {playerBuildingCountNumber} / {buildLimitNumber}
-          </p>
-          ...
+          <p className="text-lg font-bold mb-3">Inventory</p>
+          {transactionLoading && <p>...</p>}
+          {!transactionLoading && (
+            <p className="text-lg font-bold mb-3">
+              Inventory {playerBuildingCountNumber} / {buildLimitNumber}
+            </p>
+          )}
+          {!transactionLoading && <AllResourceLabels />}
           <div className="h-64 overflow-y-scroll scrollbar">
-            {!claimedStarterPack ? <StarterPackButton /> : <></>}
-          </div>
-        </div>
-      </div>
-    );
-  } else if (!minimized) {
-    return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className="mt-4 ml-5 flex flex-col h-56">
-          <button
-            id="minimize-resource-box"
-            onClick={minimizeBox}
-            className="viewport-container fixed right-9"
-          >
-            <LinkIcon icon={<FaMinusSquare size="18" />} />
-          </button>
-          <p className="text-lg font-bold mb-3">
-            Inventory {playerBuildingCountNumber} / {buildLimitNumber}
-          </p>
-          <div className="h-64 overflow-y-scroll scrollbar">
-            <AllResourceLabels />
             {!claimedStarterPack ? <StarterPackButton /> : <></>}
           </div>
         </div>

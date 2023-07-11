@@ -35,6 +35,7 @@ export type Key =
 
 export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const disposers = new Set<() => void>();
+  const phaserKeys = new Map<Key, Phaser.Input.Keyboard.Key>();
   const enabled = { current: true };
 
   inputPlugin.mouse?.disableContextMenu();
@@ -65,26 +66,26 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const pointerdown$: Observable<{
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
-  }> = fromEvent(document, "mousedown").pipe(
+  }> = fromEvent(document, "pointerdown").pipe(
     filter(() => enabled.current),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
     })),
-    filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
+    // filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 
   const pointerup$: Observable<{
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
-  }> = fromEvent(document, "mouseup").pipe(
+  }> = fromEvent(document, "pointerup").pipe(
     filter(() => enabled.current),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
     })),
-    filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
+    // filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
 
@@ -94,10 +95,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     map<
       { pointer: Phaser.Input.Pointer; event: MouseEvent },
       [boolean, number]
-    >(({ event }) => [
-      event.type === "mousedown" && event.button === 0,
-      Date.now(),
-    ]), // Map events to whether the left button is down and the current timestamp
+    >(({ event }) => [event.type === "pointerdown", Date.now()]), // Map events to whether the left button is down and the current timestamp
     bufferCount(2, 1), // Store the last two timestamps
     filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 250), // Only care if button was pressed before and is not anymore and it happened within 500ms
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
@@ -209,6 +207,9 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     // Store the cleartext key map
     codeToKey.set(keyObj.keyCode, key as Key);
 
+    //store the phaser key object
+    phaserKeys.set(key as Key, keyObj);
+
     keyObj.removeAllListeners();
     keyObj.emitOnRepeat = true;
     keyObj.on("down", (keyEvent: Phaser.Input.Keyboard.Key) =>
@@ -245,6 +246,9 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointerdown$,
     pointerup$,
     click$,
+    // phaserKeyboard,
+    phaserInput: inputPlugin,
+    phaserKeys,
     doubleClick$,
     rightClick$,
     drag$,

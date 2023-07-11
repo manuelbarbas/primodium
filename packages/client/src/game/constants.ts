@@ -1,7 +1,8 @@
 import { BlockType } from "../util/constants";
 
 export enum Scenes {
-  Main = "Main",
+  Main = "MAIN",
+  Test = "TEST",
 }
 
 export const TILE_HEIGHT = 16;
@@ -10,7 +11,7 @@ export const RENDER_INTERVAL = 35;
 export const ANIMATION_INTERVAL = 200;
 
 export enum Assets {
-  Pack = "/assets/pack",
+  Pack = "/assets/pack.json",
   SpriteAtlas = "sprite-atlas",
   ResourceTileset = "resource-tileset",
   TerrainTileset = "terrain-tileset",
@@ -57,8 +58,7 @@ export const Tilekeys = { ...TerrainTilekeys, ...ResourceTilekeys };
 export enum TileAnimationKeys {
   Water = "Water",
 }
-
-export enum KeyindActions {
+export enum KeybindActions {
   Up,
   Down,
   Left,
@@ -91,6 +91,8 @@ export enum KeyindActions {
   Debug,
   DeleteBuilding,
   DeletePath,
+  Modifier,
+  ToggleUI,
 }
 
 export enum SpriteKeys {
