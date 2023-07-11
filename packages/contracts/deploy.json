@@ -14,7 +14,7 @@
     "ResearchComponent",
     "MainBaseInitializedComponent",
     "StarterPackInitializedComponent",
-    "BuildingComponent",
+    "BuildingLevelComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
@@ -68,7 +68,7 @@
         "ItemComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingComponent",
+        "BuildingLevelComponent",
         "MainBaseInitializedComponent",
         "BuildingLimitComponent",
         "StorageCapacityComponent",
@@ -87,7 +87,7 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingComponent",
+        "BuildingLevelComponent",
         "BuildingLimitComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
@@ -160,7 +160,7 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingComponent", "ItemComponent"]
+      "writeAccess": ["BuildingLevelComponent", "ItemComponent"]
     },
     {
       "name": "PostUpgradeSystem",

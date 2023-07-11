@@ -4,7 +4,7 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
@@ -127,7 +127,9 @@ contract BuildSystem is System {
     (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(components, BuildingComponentID)
+    );
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
       getAddressById(components, BuildingLimitComponentID)
     );
@@ -151,7 +153,7 @@ contract BuildSystem is System {
       LibBuilding.checkBuildLimitConditionForBuildingId(
         ignoreBuildLimitComponent,
         buildingLimitComponent,
-        buildingComponent,
+        buildingLevelComponent,
         playerEntity,
         blockType
       ),
@@ -177,7 +179,7 @@ contract BuildSystem is System {
 
     //set MainBase id for player address for easy lookup
     if (blockType == MainBaseID) {
-      buildingComponent.set(playerEntity, entity);
+      buildingLevelComponent.set(playerEntity, entity);
     }
 
     // update building count if the built building counts towards the build limit
@@ -185,7 +187,7 @@ contract BuildSystem is System {
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
     //set level of building to 1
-    buildingComponent.set(entity, 1);
+    buildingLevelComponent.set(entity, 1);
 
     tileComponent.set(entity, blockType);
     ownedByComponent.set(entity, playerEntity);

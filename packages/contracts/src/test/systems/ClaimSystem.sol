@@ -16,7 +16,7 @@ import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequireme
 import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
@@ -409,7 +409,7 @@ contract ClaimSystemTest is MudTest {
   function testClaimOnUpgrade() public {
     vm.startPrank(alice);
 
-    BuildingComponent buildingComponent = BuildingComponent(component(BuildingComponentID));
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(component(BuildingComponentID));
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
@@ -443,7 +443,7 @@ contract ClaimSystemTest is MudTest {
     upgradeSystem.executeTyped(coord);
 
     assertEq(
-      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      buildingLevelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
       2,
       "IronMine should be level 2"
     );
@@ -453,7 +453,7 @@ contract ClaimSystemTest is MudTest {
     assertEq(itemComponent.getValue(hashedAliceKey), 30, "Alice should have 30 iron");
     upgradeSystem.executeTyped(coord);
     assertEq(
-      buildingComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
+      buildingLevelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
       3,
       "IronMine should be level 3"
     );

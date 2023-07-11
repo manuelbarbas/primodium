@@ -17,7 +17,7 @@ import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequireme
 import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "../../components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "../../components/StorageCapacityComponent.sol";
 // import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";

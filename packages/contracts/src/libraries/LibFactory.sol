@@ -38,14 +38,14 @@ library LibFactory {
 //   BoolComponent factoryIsFunctionalComponent, //writes
 //   FactoryMineBuildingsComponent factoryMineBuildingsComponent, //writes
 //   Uint256Component pathComponent,
-//   Uint256Component buildingComponent,
+//   Uint256Component buildingLevelComponent,
 //   uint256 factoryEntity
 // ) {
 //   if (
 //     checkFactoryConnectedMinesCountCondition(factoryMineBuildingsComponent, factoryEntity) &&
 //     checkFactoryConnectedMinesLevelCondition(
 //       factoryIsFunctionalComponent,
-//       buildingComponent,
+//       buildingLevelComponent,
 //       pathComponent,
 //       factoryEntity
 //     )
@@ -58,15 +58,15 @@ library LibFactory {
 
 // function checkFactoryConnectedMinesLevelCondition(
 //   BoolComponent factoryIsFunctionalComponent,
-//   Uint256Component buildingComponent,
+//   Uint256Component buildingLevelComponent,
 //   Uint256Component pathComponent,
 //   uint256 factoryEntity
 // ) view returns (bool) {
 //   if (!factoryIsFunctionalComponent.has(factoryEntity)) return false;
-//   uint256 factoryLevel = buildingComponent.getValue(factoryEntity);
+//   uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
 //   uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(factoryEntity);
 //   for (uint256 i = 0; i < connectedMineEntities.length; i++) {
-//     if (buildingComponent.getValue(connectedMineEntities[i]) < factoryLevel) return false;
+//     if (buildingLevelComponent.getValue(connectedMineEntities[i]) < factoryLevel) return false;
 //   }
 //   return true;
 // }
