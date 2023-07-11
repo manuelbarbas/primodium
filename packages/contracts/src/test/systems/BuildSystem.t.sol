@@ -127,7 +127,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testBuildWithResourceRequirements() public {
+  function testBuildWithResourceReqs() public {
     vm.startPrank(alice);
 
     DebugAcquireResourcesSystem debugAcquireResourcesSystem = DebugAcquireResourcesSystem(
@@ -166,8 +166,7 @@ contract BuildSystemTest is PrimodiumTest {
     uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
 
     Coord memory position = LibEncode.decodeCoordEntity(buildingEntityID);
-    assertEq(position.x, coord.x);
-    assertEq(position.y, coord.y);
+    assertCoordEq(position, ironCoord);
 
     assertTrue(ownedByComponent.has(buildingEntityID));
     assertEq(ownedByComponent.getValue(buildingEntityID), addressToEntity(alice));

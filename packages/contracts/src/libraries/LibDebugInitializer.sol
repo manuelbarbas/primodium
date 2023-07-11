@@ -111,6 +111,7 @@ library LibDebugInitializer {
     LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyResourceReqsID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyResearchReqsID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyMainBaseLevelReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugStorageBuildingID, coords);
 
     IUint256Component components = world.components();
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
