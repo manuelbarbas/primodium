@@ -1,15 +1,14 @@
-import { useState } from "react";
-import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
-import { FaMinusSquare } from "react-icons/fa";
-import { FaPlusSquare } from "react-icons/fa";
+import { EntityID } from "@latticexyz/recs";
+import { useState } from "react";
+import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 
+import { useGameStore } from "../../store/GameStore";
 import StarterPackButton from "../StarterPackButton";
 import AllResourceLabels from "./AllResourceLabels";
-import { useGameStore } from "../../store/GameStore";
 
 function ResourceBox() {
   const [minimized, setMinimize] = useState(false);

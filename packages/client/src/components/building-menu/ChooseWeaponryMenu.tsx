@@ -2,7 +2,8 @@ import { useCallback } from "react";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
-import { useGameStore } from "../../store/GameStore";
+import { primodium } from "@game/api";
+import { useMud } from "src/context/MudContext";
 
 function ChooseWeaponryMenu({
   title,
@@ -11,10 +12,10 @@ function ChooseWeaponryMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [setSelectedBlock] = useGameStore((state) => [state.setSelectedBlock]);
+  const network = useMud();
 
   const closeMenuHelper = useCallback(() => {
-    setSelectedBlock(null);
+    primodium.components.selectedBuilding(network).remove();
     setMenuOpenIndex(-1);
   }, []);
 
