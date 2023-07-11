@@ -28,7 +28,8 @@
     "FactoryIsFunctionalComponent",
     "FactoryMineBuildingsComponent",
     "FactoryProductionComponent",
-    "MaxLevelComponent"
+    "MaxLevelComponent",
+    "RequiredTileComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
