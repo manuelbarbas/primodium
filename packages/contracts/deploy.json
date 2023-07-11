@@ -26,7 +26,8 @@
     "FactoryIsFunctionalComponent",
     "FactoryMineBuildingsComponent",
     "FactoryProductionComponent",
-    "MaxLevelComponent"
+    "MaxLevelComponent",
+    "MainBaseBuildingEntityComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -73,7 +74,8 @@
         "BuildingLimitComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
-        "FactoryMineBuildingsComponent"
+        "FactoryMineBuildingsComponent",
+        "MainBaseBuildingEntityComponent"
       ]
     },
     {

@@ -15,7 +15,7 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-
+import { MainBaseBuildingEntityComponent, ID as MainBaseBuildingEntityComponentID } from "components/MainBaseBuildingEntityComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
@@ -147,13 +147,16 @@ contract BuildSystem is System {
     );
     //check required research
     require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
-
+    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent = MainBaseBuildingEntityComponent(
+      getAddressById(components, MainBaseBuildingEntityComponentID)
+    );
     //check build limit
     require(
       LibBuilding.checkBuildLimitConditionForBuildingId(
         ignoreBuildLimitComponent,
         buildingLimitComponent,
         buildingLevelComponent,
+        mainBaseBuildingEntityComponent,
         playerEntity,
         blockType
       ),
@@ -179,7 +182,7 @@ contract BuildSystem is System {
 
     //set MainBase id for player address for easy lookup
     if (blockType == MainBaseID) {
-      buildingLevelComponent.set(playerEntity, entity);
+      mainBaseBuildingEntityComponent.set(playerEntity, entity);
     }
 
     // update building count if the built building counts towards the build limit
