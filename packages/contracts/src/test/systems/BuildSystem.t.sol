@@ -195,8 +195,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailBuildMoreThenBuildLimit() public {
     vm.startPrank(alice);
     buildMainBaseAtZero();
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(buildingLimitComponent, 1);
+    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -208,8 +207,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildUpToBuildLimit() public prank(alice) {
     buildMainBaseAtZero();
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(buildingLimitComponent, 1);
+    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -221,8 +219,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildUpToBuildLimitIgnoreMainBaseAndBuildingWithIgnoreLimit() public {
     vm.startPrank(alice);
 
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(buildingLimitComponent, 1);
+    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
 
     Coord memory coord1 = Coord({ x: -1, y: -1 });
     buildSystem.executeTyped(MainBaseID, coord1);

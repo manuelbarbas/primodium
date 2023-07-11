@@ -140,21 +140,14 @@ contract BuildSystem is PrimodiumSystem {
       !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
       "[BuildSystem] Cannot build on a non-empty coordinate"
     );
-    require(LibBuilding.canBuildOnTile(tileComponent, buildingType, coord), "[BuildSystem] Cannot build on this tile");
+    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
     //check required research
     require(hasResearched(buildingType), "[BuildSystem] You have not researched the required Technology");
 
     require(hasRequiredResources(buildingType), "[BuildSystem] You do not have the required resources");
     //check build limit
     require(
-      LibBuilding.isBuildingLimitMet(
-        ignoreBuildLimitComponent,
-        buildingLimitComponent,
-        buildingLevelComponent,
-        mainBaseBuildingEntityComponent,
-        playerEntity,
-        buildingType
-      ),
+      LibBuilding.isBuildingLimitMet(world, playerEntity, buildingType),
       "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
     );
 

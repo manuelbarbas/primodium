@@ -25,16 +25,11 @@ contract ResearchSystem is System {
 
   function checkMainBaseLevelRequirement(
     BuildingLevelComponent buildingLevelComponent,
-    MainBaseBuildingEntityComponent mainBaseBuildingEntityComponent,
     uint256 playerEntity,
     uint256 entity
   ) internal view returns (bool) {
     if (!buildingLevelComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = LibBuilding.getBaseLevel(
-      buildingLevelComponent,
-      mainBaseBuildingEntityComponent,
-      playerEntity
-    );
+    uint256 mainBuildingLevel = LibBuilding.getBaseLevel(world, playerEntity);
     return mainBuildingLevel >= buildingLevelComponent.getValue(entity);
   }
 
@@ -59,12 +54,7 @@ contract ResearchSystem is System {
     require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
-      checkMainBaseLevelRequirement(
-        buildingLevelComponent,
-        MainBaseBuildingEntityComponent(getAddressById(components, MainBaseBuildingEntityComponentID)),
-        addressToEntity(msg.sender),
-        researchItem
-      ),
+      checkMainBaseLevelRequirement(buildingLevelComponent, addressToEntity(msg.sender), researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
 
