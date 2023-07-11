@@ -4,44 +4,47 @@ import { SetupContractConfig } from "@latticexyz/std-client";
 import { Wallet } from "ethers";
 const params = new URLSearchParams(window.location.search);
 
-// from opcraft, for deploying on mud testnet
-// rpc: https://follower.testnet-chain.linfra.xyz
-// wsRpc: wss://follower.testnet-chain.linfra.xyz
-// block explorer:  https://explorer.testnet-chain.linfra.xyz
-// stream service: https://ecs-stream.testnet-mud-services.linfra.xyz
-// snapshot service: https://ecs-snapshot.testnet-mud-services.linfra.xyz
-// relay service: https://ecs-relay.testnet-mud-services.linfra.xyz
-// faucet: https://faucet.testnet-mud-services.linfra.xyz
+// The default production testnet is `skystrife`.
+// All valid options are `lattice`, `caldera`, and `skystrife.
 
-export const defaultParams = {
-  chainId: "4242",
-  worldAddress: "0xc1c15CCE34E16684d36B0F76B9fa4f74b3a279f4",
-  rpc: "https://follower.testnet-chain.linfra.xyz",
-  wsRpc: "wss://follower.testnet-chain.linfra.xyz",
-  initialBlockNumber: "1443526",
-  snapshot: "https://ecs-snapshot.testnet-mud-services.linfra.xyz",
-  stream: "https://ecs-stream.testnet-mud-services.linfra.xyz",
-  relay: "https://ecs-relay.testnet-mud-services.linfra.xyz",
-  faucet: "https://faucet.testnet-mud-services.linfra.xyz",
-  blockTime: "1000",
-  blockExplorer: "https://explorer.testnet-chain.linfra.xyz",
-  dev: "false",
-};
+// If VITE_DEV is true:
+// - localhost options are used as described below.
+// - Options provided as specific query params are prioritized over `defaultChain`.
 
-// from skystrife
+let jsonRpcUrl: string;
+let wsRpcUrl: string;
+let tempFaucetUrl: string;
+let snapshotServiceUrl: string;
+let chainId: number;
+let initialBlockNumber: number;
 
-export const defaultParamsSkyStrife = {
-  chainId: 4242,
-  blockTime: 1,
-  chainGasLimit: 100000000,
-  rpc: "https://miner.skystrife-chain.linfra.xyz",
-  wsRpc: "wss://follower.skystrife-chain.linfra.xyz",
-  faucet: "https://faucet.skystrife-mud-services.linfra.xyz",
-  snapshot: "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
-  dev: "false",
-};
+if (params.get("defaultChain") === "lattice") {
+  // from lattice
+  jsonRpcUrl = "https://follower.testnet-chain.linfra.xyz";
+  wsRpcUrl = "wss://follower.testnet-chain.linfra.xyz";
+  tempFaucetUrl = "https://faucet.testnet-mud-services.linfra.xyz";
+  snapshotServiceUrl = "https://ecs-snapshot.testnet-mud-services.linfra.xyz";
+  chainId = 4242;
+  initialBlockNumber = 1443526;
+} else if (params.get("defaultChain") === "caldera") {
+  // from caldera
+  jsonRpcUrl = "https://primodium-bedrock.calderachain.xyz/http";
+  wsRpcUrl = "wss://primodium-bedrock.calderachain.xyz/ws";
+  tempFaucetUrl = "https://primodium-services.caldera.gg/faucet";
+  snapshotServiceUrl = "https://primodium-services.caldera.gg/ecs-snapshot";
+  chainId = 12523;
+  initialBlockNumber = 33740;
+} else {
+  // from skystrife
+  jsonRpcUrl = "https://miner.skystrife-chain.linfra.xyz";
+  wsRpcUrl = "wss://follower.skystrife-chain.linfra.xyz";
+  tempFaucetUrl = "https://faucet.skystrife-mud-services.linfra.xyz";
+  snapshotServiceUrl = "https://ecs-snapshot.skystrife-mud-services.linfra.xyz";
+  chainId = 4242;
+  initialBlockNumber = 10139750;
+}
 
-export const faucetUrl = "https://faucet.skystrife-mud-services.linfra.xyz";
+export const faucetUrl = tempFaucetUrl;
 
 // change flag before deployment
 const DEV = import.meta.env.VITE_DEV === "true";
@@ -66,14 +69,13 @@ export const devConfig = () => {
         syncInterval: 60_000,
       },
       provider: {
-        jsonRpcUrl: "https://follower.skystrife-chain.linfra.xyz",
-        wsRpcUrl: "wss://follower.skystrife-chain.linfra.xyz",
-        chainId: 4242,
+        jsonRpcUrl: jsonRpcUrl,
+        wsRpcUrl: wsRpcUrl,
+        chainId: chainId,
       },
-      chainId: 4242,
-      snapshotServiceUrl:
-        "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
-      initialBlockNumber: 10139750,
+      chainId: chainId,
+      snapshotServiceUrl: snapshotServiceUrl,
+      initialBlockNumber: initialBlockNumber,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
       privateKey: privateKey,
@@ -113,15 +115,14 @@ export const getNetworkLayerConfig = (
         syncInterval: 60_000,
       },
       provider: {
-        jsonRpcUrl: "https://follower.skystrife-chain.linfra.xyz",
-        wsRpcUrl: "wss://follower.skystrife-chain.linfra.xyz",
-        chainId: 4242,
+        jsonRpcUrl: jsonRpcUrl,
+        wsRpcUrl: wsRpcUrl,
+        chainId: chainId,
         externalProvider: externalProvider,
       },
-      chainId: 4242,
-      snapshotServiceUrl:
-        "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
-      initialBlockNumber: 10139750,
+      chainId: chainId,
+      snapshotServiceUrl: snapshotServiceUrl,
+      initialBlockNumber: initialBlockNumber,
       worldAddress: params.get("worldAddress")!,
       devMode: false,
     };
