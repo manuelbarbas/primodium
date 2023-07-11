@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -141,7 +142,11 @@ contract BuildSystem is System {
     require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
     require(
-      LibBuilding.checkCanBuildOnTile(tileComponent, blockType, entity),
+      LibBuilding.checkCanBuildOnTile(
+        RequiredTileComponent(getAddressById(components, RequiredTileComponentID)),
+        blockType,
+        entity
+      ),
       "[BuildSystem] Cannot build on this tile"
     );
     //check required research
