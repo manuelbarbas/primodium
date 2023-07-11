@@ -15,10 +15,14 @@ export const isDown = (
   if (!keybinds[keybindAction]) return false;
 
   if (KeybindActions.LeftClick === keybindAction) {
+    if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS")
+      return false;
     return input.phaserInput.activePointer.leftButtonDown();
   }
 
   if (KeybindActions.RightClick === keybindAction) {
+    if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS")
+      return false;
     return input.phaserInput.activePointer.rightButtonDown();
   }
 

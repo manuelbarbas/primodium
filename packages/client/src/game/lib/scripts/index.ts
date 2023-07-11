@@ -120,31 +120,36 @@ export const init = async (address: string, network: Network) => {
     components.hoverTile(network).set(mouseCoord);
   });
 
-  scene.input.phaserInput.on("wheel", ({ deltaY }: { deltaY: number }) => {
-    let scale = 0.02;
+  scene.input.phaserInput.on(
+    "wheel",
+    ({ deltaY }: { deltaY: number; event: any }) => {
+      let scale = 0.02;
 
-    if (isDown(KeybindActions.Modifier)) scale /= 2;
+      if (isDown(KeybindActions.Modifier)) scale /= 2;
 
-    if (deltaY < 0) {
-      const zoom = Math.min(
-        scene.camera.phaserCamera.zoom + wheelSpeed * scale,
-        maxZoom
-      );
-      scene.camera.setZoom(zoom);
-    } else if (deltaY > 0) {
-      const zoom = Math.max(
-        scene.camera.phaserCamera.zoom - wheelSpeed * scale,
-        minZoom
-      );
-      scene.camera.setZoom(zoom);
+      if (deltaY < 0) {
+        const zoom = Math.min(
+          scene.camera.phaserCamera.zoom + wheelSpeed * scale,
+          maxZoom
+        );
+        scene.camera.setZoom(zoom);
+      } else if (deltaY > 0) {
+        const zoom = Math.max(
+          scene.camera.phaserCamera.zoom - wheelSpeed * scale,
+          minZoom
+        );
+        scene.camera.setZoom(zoom);
+      }
     }
-  });
+  );
 
   //accumalate sub-pixel movement during a gametick and add to next game tick.
   let accumulatedX = 0;
   let accumulatedY = 0;
   let targetX = 0;
   let targetY = 0;
+
+  let originDragPoint: Phaser.Math.Vector2 | undefined;
 
   const SPEED = 1000;
   const ZOOM_SPEED = 5;
@@ -174,20 +179,6 @@ export const init = async (address: string, network: Network) => {
       const mainBaseCoord = components.mainBase(network).get(address);
 
       if (mainBaseCoord) pan(mainBaseCoord);
-    }
-
-    if (isDown(KeybindActions.LeftClick)) {
-      const { x, y } = scene.input.phaserInput.activePointer.position;
-      const { x: prevX, y: prevY } =
-        scene.input.phaserInput.activePointer.prevPosition;
-
-      let scrollX = scene.camera.phaserCamera.scrollX;
-      let scrollY = scene.camera.phaserCamera.scrollY;
-
-      const dx = Math.round((x - prevX) / zoom);
-      const dy = Math.round((y - prevY) / zoom);
-
-      scene.camera.setScroll(scrollX - dx, scrollY - dy);
     }
 
     // HANDLE CAMERA SCROLL MOVEMENT KEYS
@@ -224,6 +215,27 @@ export const init = async (address: string, network: Network) => {
       scrollY = Phaser.Math.Linear(scrollY, targetY, 1 - SMOOTHNESS);
       scene.camera.setScroll(scrollX, scrollY);
       return;
+    }
+
+    if (isDown(KeybindActions.LeftClick)) {
+      if (originDragPoint) {
+        const { x, y } = scene.input.phaserInput.activePointer.position;
+        const { x: prevX, y: prevY } = originDragPoint;
+        // don't move camera if pointer is not moving much
+        if (scene.input.phaserInput.activePointer.velocity.length() < 10)
+          return;
+
+        let scrollX = scene.camera.phaserCamera.scrollX;
+        let scrollY = scene.camera.phaserCamera.scrollY;
+
+        let dx = Math.round((x - prevX) / zoom);
+        let dy = Math.round((y - prevY) / zoom);
+
+        scene.camera.setScroll(scrollX - dx, scrollY - dy);
+      }
+      originDragPoint = scene.phaserScene.input.activePointer.position.clone();
+    } else {
+      originDragPoint = undefined;
     }
 
     targetX = scene.camera.phaserCamera.scrollX;
