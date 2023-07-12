@@ -72,7 +72,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   // interval drip
   const intervalId2 = setInterval(async () => {
     const playerBalance: BigNumber =
-      (await network.signer.get()?.getBalance()) || BigNumber.from(0);
+      (await network.signer.get()?.getBalance()) || BigNumber.from("0");
     console.info("[Dev Faucet] Player balance: " + playerBalance.toString());
 
     const playerIsBroke = playerBalance?.lte(
