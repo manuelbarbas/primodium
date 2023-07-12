@@ -46,15 +46,15 @@ contract BuildSystem is PrimodiumSystem {
     return execute(abi.encode(buildingType, coord));
   }
 
-  function checkAndUpdatePlayerStorageAfterBuild(uint256 buildingId) internal {
+  function updatePlayerStorage(uint256 buildingType) internal {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
     StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
       getC(StorageCapacityResourcesComponentID)
     );
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, 1);
+    uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
     uint256 playerEntity = addressToEntity(msg.sender);
-    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+    if (!storageCapacityResourcesComponent.has(buildingTypeLevel)) return;
+    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
@@ -63,7 +63,7 @@ contract BuildSystem is PrimodiumSystem {
       );
       uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
-        buildingIdLevel,
+        buildingTypeLevel,
         storageResources[i]
       );
       LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
@@ -76,11 +76,11 @@ contract BuildSystem is PrimodiumSystem {
     }
   }
 
-  function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
+  function setupFactory(uint256 factoryEntity) internal {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getC(FactoryMineBuildingsComponentID)
     );
-    uint256 buildingId = tileComponent.getValue(factoryEntity);
+    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(factoryEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
     if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
       return;
@@ -93,24 +93,17 @@ contract BuildSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-    TileComponent tileComponent = TileComponent(getC(TileComponentID));
-    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
 
-    // Check there isn't another tile there
     uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
     require(
       !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
-      "[BuildSystem] Cannot build on a non-empty coordinate"
+      "[BuildSystem] Cannot build a building with tiles"
     );
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
-    //check required research
     require(
       LibResearch.hasResearched(world, buildingType, playerEntity),
-      "[BuildSystem] You have not researched the required Technology"
+      "[BuildSystem] You have not researched the required technology"
     );
 
     require(
@@ -120,7 +113,7 @@ contract BuildSystem is PrimodiumSystem {
     //check build limit
     require(
       LibBuilding.isBuildingLimitMet(world, playerEntity, buildingType),
-      "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
+      "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
     int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
@@ -130,6 +123,7 @@ contract BuildSystem is PrimodiumSystem {
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
     BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       buildingLevelComponent.set(playerEntity, buildingEntity);
@@ -145,16 +139,17 @@ contract BuildSystem is PrimodiumSystem {
     }
 
     // update building count if the built building counts towards the build limit
-    if (!ignoreBuildLimitComponent.has(buildingType)) {
+    if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
+      BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
     }
     //set level of building to 1
     buildingLevelComponent.set(buildingEntity, 1);
-    tileComponent.set(buildingEntity, buildingType);
-    ownedByComponent.set(buildingEntity, playerEntity);
+    TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
+    OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
-    checkAndUpdatePlayerStorageAfterBuild(buildingType);
-    setupFactoryComponents(tileComponent, buildingEntity);
+    updatePlayerStorage(buildingType);
+    setupFactory(buildingEntity);
     return abi.encode(buildingEntity);
   }
 
