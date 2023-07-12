@@ -397,10 +397,10 @@ export const BackgroundImage = new Map<EntityID, string>([
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
-  [BlockType.MainBaseResearch, "/img/building/mainbase.gif"],
-  [BlockType.BasicMinerResearch, "/img/building/minerdrill.gif"],
-  [BlockType.ConveyorResearch, "/img/building/conveyor.gif"],
-  [BlockType.NodeResearch, "/img/building/node.gif"],
+  // [BlockType.MainBaseResearch, "/img/building/mainbase.gif"],
+  // [BlockType.BasicMinerResearch, "/img/building/minerdrill.gif"],
+  // [BlockType.ConveyorResearch, "/img/building/conveyor.gif"],
+  // [BlockType.NodeResearch, "/img/building/node.gif"],
 
   [BlockType.Iron, "/img/resource/iron_resource.png"],
   [BlockType.Copper, "/img/resource/copper_resource.png"],
@@ -431,63 +431,63 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.IronPlateFactory2Research, "/img/building/newplatingfactory.gif"],
   [BlockType.IronPlateFactory3Research, "/img/building/newplatingfactory.gif"],
 
-  [BlockType.PlatingFactoryResearch, "/img/building/newplatingfactory.gif"],
-  [
-    BlockType.BasicBatteryFactoryResearch,
-    "/img/building/newbasicbatteryfactory.gif",
-  ],
-  [
-    BlockType.KineticMissileFactoryResearch,
-    "/img/building/kineticmissilefactory.png",
-  ],
-  [
-    BlockType.ProjectileLauncherResearch,
-    "/img/building/projectilelauncher.png",
-  ],
-  [BlockType.HardenedDrillResearch, "/img/building/hardeneddrill.gif"],
-  [
-    BlockType.DenseMetalRefineryResearch,
-    "/img/building/densemetalrefinery.gif",
-  ],
-  [
-    BlockType.AdvancedBatteryFactoryResearch,
-    "/img/building/advancedbatteryfactory.gif",
-  ],
-  [BlockType.HighTempFoundryResearch, "/img/building/hightempfoundry.gif"],
-  [
-    BlockType.PrecisionMachineryFactoryResearch,
-    "/img/building/precisionmachineryfactory.gif",
-  ],
-  [
-    BlockType.IridiumDrillbitFactoryResearch,
-    "/img/building/iridiumdrillbitfactory.gif",
-  ],
-  [
-    BlockType.PrecisionPneumaticDrillResearch,
-    "/img/building/precisionpneumaticdrill.gif",
-  ],
-  [BlockType.PenetratorFactoryResearch, "/img/building/penetratorfactory.png"],
-  [
-    BlockType.PenetratingMissileFactoryResearch,
-    "/img/building/penetratingmissilefactory.png",
-  ],
-  [
-    BlockType.MissileLaunchComplexResearch,
-    "/img/building/missilelaunchcomplex.gif",
-  ],
-  [BlockType.HighEnergyLaserFactoryResearch, "/img/building/laserfactory.gif"],
-  [
-    BlockType.ThermobaricWarheadFactoryResearch,
-    "/img/building/thermobaricwarheadfactory.png",
-  ],
-  [
-    BlockType.ThermobaricMissileFactoryResearch,
-    "/img/building/thermobaricmissilefactory.png",
-  ],
-  [
-    BlockType.KimberliteCatalystFactoryResearch,
-    "/img/building/kimberlitecatalyst.gif",
-  ],
+  // [BlockType.PlatingFactoryResearch, "/img/building/newplatingfactory.gif"],
+  // [
+  //   BlockType.BasicBatteryFactoryResearch,
+  //   "/img/building/newbasicbatteryfactory.gif",
+  // ],
+  // [
+  //   BlockType.KineticMissileFactoryResearch,
+  //   "/img/building/kineticmissilefactory.png",
+  // ],
+  // [
+  //   BlockType.ProjectileLauncherResearch,
+  //   "/img/building/projectilelauncher.png",
+  // ],
+  // [BlockType.HardenedDrillResearch, "/img/building/hardeneddrill.gif"],
+  // [
+  //   BlockType.DenseMetalRefineryResearch,
+  //   "/img/building/densemetalrefinery.gif",
+  // ],
+  // [
+  //   BlockType.AdvancedBatteryFactoryResearch,
+  //   "/img/building/advancedbatteryfactory.gif",
+  // ],
+  // [BlockType.HighTempFoundryResearch, "/img/building/hightempfoundry.gif"],
+  // [
+  //   BlockType.PrecisionMachineryFactoryResearch,
+  //   "/img/building/precisionmachineryfactory.gif",
+  // ],
+  // [
+  //   BlockType.IridiumDrillbitFactoryResearch,
+  //   "/img/building/iridiumdrillbitfactory.gif",
+  // ],
+  // [
+  //   BlockType.PrecisionPneumaticDrillResearch,
+  //   "/img/building/precisionpneumaticdrill.gif",
+  // ],
+  // [BlockType.PenetratorFactoryResearch, "/img/building/penetratorfactory.png"],
+  // [
+  //   BlockType.PenetratingMissileFactoryResearch,
+  //   "/img/building/penetratingmissilefactory.png",
+  // ],
+  // [
+  //   BlockType.MissileLaunchComplexResearch,
+  //   "/img/building/missilelaunchcomplex.gif",
+  // ],
+  // [BlockType.HighEnergyLaserFactoryResearch, "/img/building/laserfactory.gif"],
+  // [
+  //   BlockType.ThermobaricWarheadFactoryResearch,
+  //   "/img/building/thermobaricwarheadfactory.png",
+  // ],
+  // [
+  //   BlockType.ThermobaricMissileFactoryResearch,
+  //   "/img/building/thermobaricmissilefactory.png",
+  // ],
+  // [
+  //   BlockType.KimberliteCatalystFactoryResearch,
+  //   "/img/building/kimberlitecatalyst.gif",
+  // ],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([
