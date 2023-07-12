@@ -5,7 +5,7 @@ import { Wallet } from "ethers";
 const params = new URLSearchParams(window.location.search);
 
 // The default production testnet is `skystrife`.
-// All valid options are `lattice`, `caldera`, and `skystrife.
+// All valid options are `lattice`, `caldera`, and `skystrife`.
 
 // If VITE_DEV is true:
 // - localhost options are used as described below.
