@@ -48,13 +48,14 @@ library LibBuilding {
   }
 
   function checkCanBuildOnTile(
-    Uint256Component tileComponent,
+    Uint256Component requiredTileComponent,
     uint256 buildingId,
     uint256 buildingEntity
   ) internal view returns (bool) {
     return
-      !tileComponent.has(buildingId) ||
-      tileComponent.getValue(buildingId) == LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
+      !requiredTileComponent.has(buildingId) ||
+      requiredTileComponent.getValue(buildingId) ==
+      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(buildingEntity));
   }
 
   function getMainBuildingLevelforPlayer(
