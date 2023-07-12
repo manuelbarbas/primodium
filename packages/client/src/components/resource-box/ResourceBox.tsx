@@ -1,15 +1,14 @@
-import { useState } from "react";
-import { EntityID } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
-import { FaMinusSquare } from "react-icons/fa";
-import { FaPlusSquare } from "react-icons/fa";
+import { EntityID } from "@latticexyz/recs";
+import { useState } from "react";
+import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 
+import { useGameStore } from "../../store/GameStore";
 import StarterPackButton from "../StarterPackButton";
 import AllResourceLabels from "./AllResourceLabels";
-import { useGameStore } from "../../store/GameStore";
 
 function ResourceBox() {
   const [minimized, setMinimize] = useState(false);
@@ -63,30 +62,44 @@ function ResourceBox() {
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
   );
-
-  if (!minimized) {
+  if (transactionLoading) {
     return (
-      <div className="pixel-corners-wrapper viewport-container fixed top-4 right-4">
-        <div className="z-[1000] h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono pixel-corners">
-          <div className="m-4 ml-5 flex flex-col h-56">
-            <button
-              id="minimize-resource-box"
-              onClick={minimizeBox}
-              className="viewport-container fixed right-9"
-            >
-              <LinkIcon icon={<FaMinusSquare size="18" />} />
-            </button>
-            <p className="text-lg font-bold mb-3">Inventory</p>
-            {transactionLoading && <p>...</p>}
-            {!transactionLoading && (
-              <p className="text-lg font-bold mb-3">
-                Inventory {playerBuildingCountNumber} / {buildLimitNumber}
-              </p>
-            )}
-            {!transactionLoading && <AllResourceLabels />}
-            <div className="h-64 overflow-y-scroll scrollbar">
-              {!claimedStarterPack ? <StarterPackButton /> : <></>}
-            </div>
+      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+        <div className="mt-4 ml-5 flex flex-col h-56">
+          <button
+            id="minimize-resource-box"
+            onClick={minimizeBox}
+            className="viewport-container fixed right-9"
+          >
+            <LinkIcon icon={<FaMinusSquare size="18" />} />
+          </button>
+          <p className="text-lg font-bold mb-3">
+            Inventory {playerBuildingCountNumber} / {buildLimitNumber}
+          </p>
+          ...
+          <div className="h-64 overflow-y-scroll scrollbar">
+            {!claimedStarterPack ? <StarterPackButton /> : <></>}
+          </div>
+        </div>
+      </div>
+    );
+  } else if (!minimized) {
+    return (
+      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+        <div className="mt-4 ml-5 flex flex-col h-56">
+          <button
+            id="minimize-resource-box"
+            onClick={minimizeBox}
+            className="viewport-container fixed right-9"
+          >
+            <LinkIcon icon={<FaMinusSquare size="18" />} />
+          </button>
+          <p className="text-lg font-bold mb-3">
+            Inventory {playerBuildingCountNumber} / {buildLimitNumber}
+          </p>
+          <div className="h-64 overflow-y-scroll scrollbar">
+            <AllResourceLabels />
+            {!claimedStarterPack ? <StarterPackButton /> : <></>}
           </div>
         </div>
       </div>

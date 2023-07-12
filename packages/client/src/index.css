@@ -29,6 +29,7 @@
 
   #phaser-container > canvas {
     touch-action: none;
+    @apply h-full w-full;
   }
 
   .screen-container {

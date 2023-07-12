@@ -1,6 +1,4 @@
 import { useCallback } from "react";
-import BuildingIconButton from "./building-icons/BuildingIconButton";
-import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
 import { primodium } from "@game/api";
 import { useMud } from "src/context/MudContext";
