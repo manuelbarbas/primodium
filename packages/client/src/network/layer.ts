@@ -6,12 +6,12 @@ import {
 } from "@latticexyz/recs";
 import { createFaucetService } from "@latticexyz/network";
 import { SingletonID } from "@latticexyz/network";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { defineComponents, defineOffChainComponents } from "./components";
-import { faucetUrl } from "./config";
+import { faucetUrl, faucetMinDripAmount } from "./config";
 import { syncPositionComponent } from "./syncPositionComponent";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
@@ -61,7 +61,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
 
   // initial drip
   const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-    utils.parseEther("2")
+    utils.parseEther(faucetMinDripAmount)
   );
   if (playerIsBroke) {
     console.info("[Dev Faucet] Dripping funds to player");
@@ -71,8 +71,12 @@ export async function createNetworkLayer(config: SetupContractConfig) {
 
   // interval drip
   const intervalId2 = setInterval(async () => {
-    const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-      utils.parseEther("2")
+    const playerBalance: BigNumber =
+      (await network.signer.get()?.getBalance()) || BigNumber.from("0");
+    console.info("[Dev Faucet] Player balance: " + playerBalance.toString());
+
+    const playerIsBroke = playerBalance?.lte(
+      utils.parseEther(faucetMinDripAmount)
     );
     if (playerIsBroke) {
       console.info("[Dev Faucet] Dripping funds to player");
