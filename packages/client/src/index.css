@@ -27,24 +27,10 @@
     height: 100vh;
   }
 
-  #phaser-container {
-    @apply fixed top-0 left-0;
-    cursor: pointer;
-  }
-
   #phaser-container > canvas {
     touch-action: none;
     @apply h-full w-full;
   }
-
-  /* #phase-container > canvas {
-    display: block;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  } */
 
   .screen-container {
     width: 100vw;

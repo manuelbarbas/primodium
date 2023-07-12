@@ -41,6 +41,14 @@ export const Game = () => {
           network,
           params.get("version") ? params.get("version")! : "🔥"
         );
+
+        //set game resolution here to prevent initial incorrect scaling problems
+        // ex: https://cdn.discordapp.com/attachments/1101613209477189726/1126541021984067674/cd2a378e890959432c098c2382e4dc49.png
+        primodium.game.setResolution(
+          window.innerWidth * window.devicePixelRatio,
+          window.innerHeight * window.devicePixelRatio
+        );
+
         setReady(true);
       } catch (e) {
         console.log(e);
@@ -77,10 +85,15 @@ export const Game = () => {
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div
         id="game-container"
-        className={`${ready ? "opacity-100" : "opacity-0"}`}
+        className={`${
+          ready ? "opacity-100" : "opacity-0"
+        } h-full w-full relative`}
       >
         {!playerInitialized && !completedTutorial && <Tour />}
-        <div id="phaser-container" />
+        <div
+          id="phaser-container"
+          className=" absolute top-0 left-0 cursor-pointer"
+        />
         <GameUI />
       </div>
     </div>
