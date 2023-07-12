@@ -2,6 +2,7 @@ import { SingletonID } from "@latticexyz/network";
 import { Network } from "../../network/layer";
 import { useComponentValue } from "src/hooks/useComponentValue";
 import { Coord } from "@latticexyz/utils";
+import { useSettingsStore } from "../stores/SettingsStore";
 
 export const useSelectedTile = (network: Network) => {
   const { offChainComponents, world } = network;
@@ -62,4 +63,10 @@ export const useSelectedAttack = (network: Network) => {
       | Coord
       | undefined,
   };
+};
+
+export const useKeybinds = () => {
+  const keybinds = useSettingsStore((state) => state.keybinds);
+
+  return keybinds;
 };

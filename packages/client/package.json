@@ -51,6 +51,7 @@
     "async-mutex": "^0.4.0",
     "comlink": "^4.4.1",
     "ethers": "^5.7.2",
+    "framer-motion": "^10.12.18",
     "keccak-wasm": "^0.10.3",
     "leaflet": "^1.9.3",
     "lodash": "^4.17.21",

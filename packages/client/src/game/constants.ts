@@ -93,6 +93,8 @@ export enum KeybindActions {
   DeletePath,
   Modifier,
   ToggleUI,
+  NextHotbar,
+  PrevHotbar,
 }
 
 export enum SpriteKeys {

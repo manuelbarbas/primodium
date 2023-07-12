@@ -151,9 +151,9 @@ export const init = async (address: string, network: Network) => {
 
   let originDragPoint: Phaser.Math.Vector2 | undefined;
 
-  const SPEED = 1000;
+  const SPEED = 750;
   const ZOOM_SPEED = 5;
-  const SMOOTHNESS = 0.95;
+  const SMOOTHNESS = 0.9;
   const handleCameraMovement = (_: number, delta: number) => {
     const zoom = scene.camera.phaserCamera.zoom;
     const zoomSpeed = isDown(KeybindActions.Modifier)

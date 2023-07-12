@@ -1,12 +1,13 @@
-import InfoBox from "./InfoBox";
-import ResourceBox from "./resource-box/ResourceBox";
-import SideMenu from "./SideMenu";
-import TooltipBox from "./TooltipBox";
-import NotificationBox from "./NotificationBox";
-import { useGameStore } from "../store/GameStore";
+import InfoBox from "../InfoBox";
+import ResourceBox from "../resource-box/ResourceBox";
+import SideMenu from "../SideMenu";
+import TooltipBox from "../TooltipBox";
+import NotificationBox from "../NotificationBox";
+import { useGameStore } from "../../store/GameStore";
 import { useEffect } from "react";
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
+import { Hotbar } from "./Hotbar";
 
 function GameUI() {
   const [showUI, toggleShowUI, isReady] = useGameStore((state) => [
@@ -31,10 +32,11 @@ function GameUI() {
   return (
     <div className="screen-container">
       <div className={`${showUI ? "" : "hidden pointer-events-none"}`}>
-        <InfoBox />
+        <Hotbar />
+        {/* <InfoBox /> */}
         <NotificationBox />
         <ResourceBox />
-        <TooltipBox />
+        {/* <TooltipBox /> */}
         <SideMenu />
       </div>
     </div>

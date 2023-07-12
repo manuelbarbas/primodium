@@ -66,43 +66,47 @@ function ResourceBox() {
 
   if (!minimized) {
     return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className="mt-4 ml-5 flex flex-col h-56">
-          <button
-            id="minimize-resource-box"
-            onClick={minimizeBox}
-            className="viewport-container fixed right-9"
-          >
-            <LinkIcon icon={<FaMinusSquare size="18" />} />
-          </button>
-          <p className="text-lg font-bold mb-3">Inventory</p>
-          {transactionLoading && <p>...</p>}
-          {!transactionLoading && (
-            <p className="text-lg font-bold mb-3">
-              Inventory {playerBuildingCountNumber} / {buildLimitNumber}
-            </p>
-          )}
-          {!transactionLoading && <AllResourceLabels />}
-          <div className="h-64 overflow-y-scroll scrollbar">
-            {!claimedStarterPack ? <StarterPackButton /> : <></>}
+      <div className="pixel-corners-wrapper viewport-container fixed top-4 right-4">
+        <div className="z-[1000] h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono pixel-corners">
+          <div className="m-4 ml-5 flex flex-col h-56">
+            <button
+              id="minimize-resource-box"
+              onClick={minimizeBox}
+              className="viewport-container fixed right-9"
+            >
+              <LinkIcon icon={<FaMinusSquare size="18" />} />
+            </button>
+            <p className="text-lg font-bold mb-3">Inventory</p>
+            {transactionLoading && <p>...</p>}
+            {!transactionLoading && (
+              <p className="text-lg font-bold mb-3">
+                Inventory {playerBuildingCountNumber} / {buildLimitNumber}
+              </p>
+            )}
+            {!transactionLoading && <AllResourceLabels />}
+            <div className="h-64 overflow-y-scroll scrollbar">
+              {!claimedStarterPack ? <StarterPackButton /> : <></>}
+            </div>
           </div>
         </div>
       </div>
     );
   } else {
     return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-14 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className="mt-4 ml-5 flex flex-col h-56">
-          <button
-            id="minimize-resource-box"
-            onClick={minimizeBox}
-            className="viewport-container fixed right-9"
-          >
-            <LinkIcon icon={<FaPlusSquare size="18" />} />
-          </button>
-          <p className="text-lg font-bold mb-3">
-            Inventory {playerBuildingCountNumber} / {buildLimitNumber}
-          </p>
+      <div className="pixel-corners-wrapper viewport-container fixed top-4 right-4 w-64">
+        <div className="z-[1000] flex flex-col bg-gray-700 text-white shadow-xl font-mono pixel-corners p-10">
+          <div className="flex">
+            <p className="text-lg font-bold">
+              Inventory {playerBuildingCountNumber} / {buildLimitNumber}
+            </p>
+            <button
+              id="minimize-resource-box"
+              onClick={minimizeBox}
+              className=""
+            >
+              <LinkIcon icon={<FaPlusSquare size="18" />} />
+            </button>
+          </div>
         </div>
       </div>
     );

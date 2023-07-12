@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { primodium } from "../game";
-import GameUI from "../components/GameUI";
+import GameUI from "../components/game-ui/GameUI";
 import { useMud } from "../context/MudContext";
 import { useAccount } from "src/hooks/useAccount";
 import { Tour } from "src/components/tour/Tour";

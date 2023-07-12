@@ -41,6 +41,18 @@ const defaults: SettingsState = {
     [KeybindActions.ZoomOut]: new Set(["Z", "MINUS"]),
     [KeybindActions.Modifier]: new Set(["SHIFT"]),
     [KeybindActions.ToggleUI]: new Set(["H"]),
+    [KeybindActions.Hotbar0]: new Set(["ONE"]),
+    [KeybindActions.Hotbar1]: new Set(["TWO"]),
+    [KeybindActions.Hotbar2]: new Set(["THREE"]),
+    [KeybindActions.Hotbar3]: new Set(["FOUR"]),
+    [KeybindActions.Hotbar4]: new Set(["FIVE"]),
+    [KeybindActions.Hotbar5]: new Set(["SIX"]),
+    [KeybindActions.Hotbar6]: new Set(["SEVEN"]),
+    [KeybindActions.Hotbar7]: new Set(["EIGHT"]),
+    [KeybindActions.Hotbar8]: new Set(["NINE"]),
+    [KeybindActions.Hotbar9]: new Set(["ZERO"]),
+    [KeybindActions.NextHotbar]: new Set(["E"]),
+    [KeybindActions.PrevHotbar]: new Set(["Q"]),
   },
 };
 
