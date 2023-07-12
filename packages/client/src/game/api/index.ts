@@ -4,6 +4,7 @@ import * as hooks from "./hooks";
 import * as components from "./components";
 import * as camera from "./camera";
 import * as input from "./input";
+import * as game from "./game";
 import { debug } from "./debug";
 import { BlockType } from "src/util/constants";
 
@@ -39,7 +40,7 @@ const init = async (
   await _init(address, network);
 };
 
-export const api = { init, hooks, components, camera, debug, input };
+export const api = { init, hooks, components, camera, debug, input, game };
 
 //expose api to window for debugging
 if (import.meta.env.VITE_DEV === "true") {
