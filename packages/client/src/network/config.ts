@@ -17,6 +17,7 @@ let tempFaucetUrl: string;
 let snapshotServiceUrl: string;
 let chainId: number;
 let initialBlockNumber: number;
+let faucetMinDripAmount: string;
 
 if (params.get("defaultChain") === "lattice") {
   // from lattice
@@ -26,6 +27,7 @@ if (params.get("defaultChain") === "lattice") {
   snapshotServiceUrl = "https://ecs-snapshot.testnet-mud-services.linfra.xyz";
   chainId = 4242;
   initialBlockNumber = 1443526;
+  faucetMinDripAmount = "2";
 } else if (params.get("defaultChain") === "caldera") {
   // from caldera
   jsonRpcUrl = "https://primodium-bedrock.calderachain.xyz/http";
@@ -34,6 +36,7 @@ if (params.get("defaultChain") === "lattice") {
   snapshotServiceUrl = "https://primodium-services.caldera.gg/ecs-snapshot";
   chainId = 12523;
   initialBlockNumber = 29367;
+  faucetMinDripAmount = "0.001";
 } else {
   // from skystrife
   jsonRpcUrl = "https://miner.skystrife-chain.linfra.xyz";
@@ -42,6 +45,7 @@ if (params.get("defaultChain") === "lattice") {
   snapshotServiceUrl = "https://ecs-snapshot.skystrife-mud-services.linfra.xyz";
   chainId = 4242;
   initialBlockNumber = 10139750;
+  faucetMinDripAmount = "2";
 }
 
 export const faucetUrl = tempFaucetUrl;
