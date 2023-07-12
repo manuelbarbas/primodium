@@ -29,7 +29,7 @@
     "FactoryMineBuildingsComponent",
     "FactoryProductionComponent",
     "MaxLevelComponent",
-    "MainBaseBuildingEntityComponent"
+    "RequiredTileComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -76,8 +76,7 @@
         "BuildingLimitComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
-        "FactoryMineBuildingsComponent",
-        "MainBaseBuildingEntityComponent"
+        "FactoryMineBuildingsComponent"
       ]
     },
     {
