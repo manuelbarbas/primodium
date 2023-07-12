@@ -34,7 +34,7 @@ export default function ClaimCraftButton({
           y: y,
         },
         {
-          gasLimit: 30_000_000,
+          gasLimit: 29_000_000,
         }
       ),
       providers,
@@ -47,7 +47,7 @@ export default function ClaimCraftButton({
           y: y,
         },
         {
-          gasLimit: 30_000_000,
+          gasLimit: 29_000_000,
         }
       ),
       providers,
