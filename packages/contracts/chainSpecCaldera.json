@@ -1,7 +1,7 @@
 {
   "chainId": 12523,
   "blockTime": 1,
-  "chainGasLimit": 15000000,
+  "chainGasLimit": 30000000,
   "rpc": "https://primodium-bedrock.calderachain.xyz/http",
   "wsRpc": "wss://primodium-bedrock.calderachain.xyz/ws",
   "faucet": "https://primodium-services.caldera.gg/faucet",
