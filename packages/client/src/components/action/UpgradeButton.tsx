@@ -1,12 +1,7 @@
 import { useComponentValue } from "src/hooks/useComponentValue";
 import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { BlockType } from "src/util/constants";
-import {
-  encodeCoordEntity,
-  hashKeyEntity,
-  hashKeyEntityAndTrim,
-} from "src/util/encode";
+import { hashKeyEntity, hashKeyEntityAndTrim } from "src/util/encode";
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
@@ -14,15 +9,18 @@ import { useGameStore } from "../../store/GameStore";
 import { useNotificationStore } from "../../store/NotificationStore";
 import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../Spinner";
+import { useMemo } from "react";
 
 export default function UpgradeButton({
   id,
   coords,
   builtTile,
+  buildingEntity,
 }: {
   id: string;
   coords: Coord;
   builtTile: EntityID;
+  buildingEntity: EntityID;
 }) {
   const { systems, providers, components, world, singletonIndex } = useMud();
   const { address } = useAccount();
@@ -34,23 +32,21 @@ export default function UpgradeButton({
     state.setNotification,
   ]);
 
-  const buildingEntity = encodeCoordEntity(coords, BlockType.BuildingKey);
-  const buildingId = world.entityToIndex.get(buildingEntity);
-
   const currLevel = useComponentValue(
     components.BuildingLevel,
-    buildingId
-  )?.value;
+    world.entityToIndex.get(buildingEntity) as EntityIndex
+  );
+  const maxLevel = useComponentValue(
+    components.MaxLevel,
+    world.entityToIndex.get(builtTile) as EntityIndex
+  );
 
-  const buildingType = useComponentValue(components.Tile, buildingId, {
-    value: 0,
-  }).value as EntityIndex;
-
-  if (!buildingId || !buildingType || currLevel == undefined) return null;
-
-  const maxLevel = getComponentValue(components.MaxLevel, buildingType);
-
-  const buildingTypeLevel = hashKeyEntity(buildingType, currLevel);
+  const buildingTypeLevel = useMemo(() => {
+    return hashKeyEntity(
+      builtTile as unknown as EntityID,
+      currLevel?.value as unknown as EntityID
+    );
+  }, [currLevel]);
 
   const upgradeLocked = () => {
     const researchRequirement = getBuildingResearchRequirement(
@@ -86,13 +82,24 @@ export default function UpgradeButton({
     );
     setTransactionLoading(false);
   };
+  const upgradedLevel = useMemo(() => {
+    return parseInt(currLevel?.value.toString() ?? "0") + 1;
+  }, [currLevel]);
 
-  const upgradeText = "Upgrade Building";
+  const levelCondition = useMemo(() => {
+    return (currLevel?.value ?? 0) < (maxLevel?.value ?? 0);
+  }, [currLevel, maxLevel]);
 
-  const colorCode = "bg-yellow-800 hover:bg-yellow-900";
+  const upgradeText = useMemo(() => {
+    return levelCondition
+      ? "Upgrade Building to Level " + upgradedLevel.toString()
+      : "Max Level Reached";
+  }, [upgradedLevel]);
 
-  if (!maxLevel || currLevel >= (maxLevel?.value || 0)) return;
-
+  const colorCode = useMemo(() => {
+    return "bg-yellow-800 hover:bg-yellow-900";
+  }, []);
+  console.log("reached rendering upgrade button");
   if (transactionLoading) {
     return (
       <div className="absolute inset-x-3 bottom-3">
@@ -104,22 +111,17 @@ export default function UpgradeButton({
         </button>
       </div>
     );
-  } else if (!upgradeLocked) {
+  } else {
     return (
       <div className="absolute inset-x-4 bottom-">
         <button
+          disabled={upgradeLocked() || !levelCondition}
           id={id}
           className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
           onClick={claimAction}
         >
           {upgradeText}
         </button>
-      </div>
-    );
-  } else {
-    return (
-      <div className="absolute inset-x-4 bottom-">
-        <p className="h-10 text-sm rounded font-bold w-full">{upgradeText}</p>
       </div>
     );
   }
