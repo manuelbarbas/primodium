@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { System, IWorld } from "solecs/System.sol";
+import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -26,8 +26,8 @@ import { ID as PostUpgradeSystemID } from "./PostUpgradeSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
-contract UpgradeSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
+contract UpgradeSystem is PrimodiumSystem {
+  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function checkAndSpendUpgradeResourceRequirements(
     BuildingLevelComponent buildingLevelComponent,
@@ -53,7 +53,6 @@ contract UpgradeSystem is System {
   function checkUpgradeResearchRequirements(
     BuildingLevelComponent buildingLevelComponent,
     RequiredResearchComponent researchRequirmentComponent,
-    ResearchComponent researchComponent,
     uint256 buildingId,
     uint256 buildingEntity,
     uint256 playerEntity
@@ -65,7 +64,7 @@ contract UpgradeSystem is System {
       LibResearch.hasResearched(world, buildingIdLevel, playerEntity);
   }
 
-  function execute(bytes memory args) public returns (bytes memory) {
+  function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
@@ -74,7 +73,6 @@ contract UpgradeSystem is System {
       getAddressById(components, BuildingComponentID)
     );
 
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
@@ -85,26 +83,25 @@ contract UpgradeSystem is System {
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
     // Check there isn't another tile there
-    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
-    require(tileComponent.has(entity), "[UpgradeSystem] Cannot upgrade tile at an empty coordinate");
+    uint256 entity = getBuildingFromCoord(coord);
+    require(entity != 0, "[UpgradeSystem] no building at this coordinate");
     require(buildingLevelComponent.has(entity), "[UpgradeSystem] Cannot upgrade a non-building");
-    uint256 ownerKey = addressToEntity(msg.sender);
+    uint256 playerEntity = addressToEntity(msg.sender);
     require(
-      ownedByComponent.getValue(entity) == ownerKey,
+      ownedByComponent.getValue(entity) == playerEntity,
       "[UpgradeSystem] Cannot upgrade a building that is not owned by you"
     );
-    uint256 blockType = tileComponent.getValue(entity);
+    uint256 buildingType = tileComponent.getValue(entity);
     require(
-      maxLevelComponent.has(blockType) &&
-        (buildingLevelComponent.getValue(entity) < maxLevelComponent.getValue(blockType)),
+      maxLevelComponent.has(buildingType) &&
+        (buildingLevelComponent.getValue(entity) < maxLevelComponent.getValue(buildingType)),
       "[UpgradeSystem] Cannot upgrade building that does not have max level or has reached max level"
     );
     require(
       checkUpgradeResearchRequirements(
         buildingLevelComponent,
         requiredResearchComponent,
-        researchComponent,
-        blockType,
+        buildingType,
         entity,
         addressToEntity(msg.sender)
       ),
@@ -115,7 +112,7 @@ contract UpgradeSystem is System {
         buildingLevelComponent,
         requiredResourcesComponent,
         itemComponent,
-        blockType,
+        buildingType,
         entity,
         addressToEntity(msg.sender)
       ),

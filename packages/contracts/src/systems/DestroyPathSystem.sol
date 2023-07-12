@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { System, IWorld } from "solecs/System.sol";
+import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
@@ -27,17 +27,17 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 
-contract DestroyPathSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
+contract DestroyPathSystem is PrimodiumSystem {
+  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function execute(bytes memory args) public returns (bytes memory) {
+  function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coordStart = abi.decode(args, (Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
     // Check that the coordinates exist tiles
-    uint256 startCoordEntity = LibEncode.encodeCoordEntity(coordStart, BuildingKey);
+    uint256 startCoordEntity = getBuildingFromCoord(coordStart);
     require(tileComponent.has(startCoordEntity), "[DestroyPathSystem] Cannot destroy path from an empty coordinate");
 
     // Check that the coordinates are both owned by the msg.sender
