@@ -36,7 +36,7 @@ export default function ClaimButton({
           y: y,
         },
         {
-          gasLimit: 30_000_000,
+          gasLimit: 29_000_000,
         }
       ),
       providers,
@@ -49,7 +49,7 @@ export default function ClaimButton({
           y: y,
         },
         {
-          gasLimit: 30_000_000,
+          gasLimit: 29_000_000,
         }
       ),
       providers,
@@ -79,7 +79,7 @@ export default function ClaimButton({
       <div className="absolute inset-x-4 bottom-4">
         <button
           id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full py-2`}
         >
           <Spinner />
         </button>

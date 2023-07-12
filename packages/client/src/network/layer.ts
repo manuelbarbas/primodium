@@ -61,7 +61,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
 
   // initial drip
   const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-    utils.parseEther("0.9")
+    utils.parseEther("2")
   );
   if (playerIsBroke) {
     console.info("[Dev Faucet] Dripping funds to player");
@@ -72,7 +72,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   // interval drip
   const intervalId2 = setInterval(async () => {
     const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-      utils.parseEther("0.9")
+      utils.parseEther("2")
     );
     if (playerIsBroke) {
       console.info("[Dev Faucet] Dripping funds to player");

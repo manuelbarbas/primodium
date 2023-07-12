@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
 import { FaMinusSquare } from "react-icons/fa";
 import { FaPlusSquare } from "react-icons/fa";
