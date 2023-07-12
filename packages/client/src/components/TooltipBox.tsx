@@ -9,7 +9,7 @@ import {
   HasValue,
   getComponentValue,
 } from "@latticexyz/recs";
-import { useComponentValue } from "src/hooks/useComponentValue";
+import { useComponentValue } from "@latticexyz/react";
 import { useEntityQuery } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
@@ -43,9 +43,10 @@ import ClaimCraftButton from "./action/ClaimCraftButton";
 import { encodeCoordEntity } from "src/util/encode";
 import { useMemo } from "react";
 import { canBeUpgraded } from "src/util/upgrade";
+import { decodeCoordEntity } from "../util/encode";
 function TooltipBox() {
   const network = useMud();
-  const { world, components, singletonIndex } = network;
+  const { world, components, singletonIndex, offChainComponents } = network;
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
   const perlinRef = useRef(null as null | Perlin);
@@ -73,24 +74,23 @@ function TooltipBox() {
   );
 
   // Get information on the selected tile
-  const selectedTile = primodium.hooks.useSelectedTile(network);
-
-  const entity = useMemo(() => {
-    return encodeCoordEntity(
-      { x: selectedTile.x, y: selectedTile.y },
-      BlockType.BuildingKey
-    );
-  }, [selectedTile]);
+  //const selectedTile = primodium.hooks.useSelectedTile(network);
+  const selectedTile = useComponentValue(
+    offChainComponents.SelectedTile,
+    singletonIndex,
+    { x: 0, y: 0 }
+  );
+  const entity = encodeCoordEntity(selectedTile, BlockType.BuildingKey);
 
   const tile = useComponentValue(
     components.Tile,
     world.entityToIndex.get(entity) as EntityIndex
   );
+  console.log("for entity", entity, "tile is", tile?.value ?? "undefined");
+  const entityCoord = decodeCoordEntity(entity);
   console.log(
-    "for entity",
-    entity,
-    "tile is",
-    tile?.value.toString() ?? "undefined"
+    "received coord is " + selectedTile.x + " , " + selectedTile.y,
+    " and decoded coord is " + entityCoord.x + " , " + entityCoord.y
   );
   const tileOwnedBy = useComponentValue(
     components.OwnedBy,
@@ -311,7 +311,13 @@ function TooltipBox() {
                   </>
                 )}
                 {builtTile &&
-                  canBeUpgraded(entity, builtTile, world, components) && (
+                  canBeUpgraded(
+                    entity,
+                    builtTile,
+                    selectedTile,
+                    world,
+                    components
+                  ) && (
                     <UpgradeButton
                       id="upgrade-button"
                       buildingEntity={entity}

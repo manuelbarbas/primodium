@@ -10,7 +10,7 @@ import { useNotificationStore } from "../../store/NotificationStore";
 import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../Spinner";
 import { useMemo } from "react";
-
+import { decodeCoordEntity } from "src/util/encode";
 export default function UpgradeButton({
   id,
   coords,
@@ -31,6 +31,20 @@ export default function UpgradeButton({
   const [setNotification] = useNotificationStore((state) => [
     state.setNotification,
   ]);
+  const entityCoord = useMemo(() => {
+    return decodeCoordEntity(buildingEntity);
+  }, [buildingEntity]);
+
+  console.log(
+    "received coord is ",
+    coords.x,
+    " , ",
+    coords.y,
+    " and decoded coord is ",
+    entityCoord.x,
+    " , ",
+    entityCoord.y
+  );
 
   const currLevel = useComponentValue(
     components.BuildingLevel,
@@ -40,35 +54,51 @@ export default function UpgradeButton({
     components.MaxLevel,
     world.entityToIndex.get(builtTile) as EntityIndex
   );
+  const upgradedLevel = useMemo(() => {
+    return parseInt(currLevel?.value.toString() ?? "0") + 1;
+  }, [currLevel]);
+
+  const levelCondition = useMemo(() => {
+    return (currLevel?.value ?? 0) < (maxLevel?.value ?? 0);
+  }, [currLevel, maxLevel]);
 
   const buildingTypeLevel = useMemo(() => {
     return hashKeyEntity(
       builtTile as unknown as EntityID,
       currLevel?.value as unknown as EntityID
     );
-  }, [currLevel]);
+  }, [currLevel, builtTile]);
 
-  const upgradeLocked = () => {
-    const researchRequirement = getBuildingResearchRequirement(
-      buildingTypeLevel,
-      world,
-      components
-    );
+  const upgradeText = useMemo(() => {
+    return levelCondition
+      ? "Upgrade Building to Level " + upgradedLevel.toString()
+      : "Max Level Reached";
+  }, [upgradedLevel]);
 
-    if (!researchRequirement) {
-      return false;
-    }
-    const researchOwner = address
+  const colorCode = useMemo(() => {
+    return "bg-yellow-800 hover:bg-yellow-900";
+  }, []);
+  const researchRequirement = useMemo(() => {
+    return getBuildingResearchRequirement(buildingTypeLevel, world, components);
+  }, [buildingTypeLevel]);
+
+  const researchOwner = useMemo(() => {
+    return address && researchRequirement != null
       ? world.entityToIndex.get(
           hashKeyEntityAndTrim(
-            researchRequirement,
+            researchRequirement as EntityID,
             address.toString().toLowerCase()
           ) as EntityID
         )!
       : singletonIndex;
-    const isResearched = getComponentValue(components.Research, researchOwner);
+  }, [researchRequirement]);
 
-    return !(isResearched && isResearched.value);
+  const isResearched = useMemo(() => {
+    return getComponentValue(components.Research, researchOwner);
+  }, [researchOwner]);
+
+  const upgradeLocked = () => {
+    return researchRequirement != null && !(isResearched && isResearched.value);
   };
 
   const claimAction = async () => {
@@ -82,23 +112,7 @@ export default function UpgradeButton({
     );
     setTransactionLoading(false);
   };
-  const upgradedLevel = useMemo(() => {
-    return parseInt(currLevel?.value.toString() ?? "0") + 1;
-  }, [currLevel]);
 
-  const levelCondition = useMemo(() => {
-    return (currLevel?.value ?? 0) < (maxLevel?.value ?? 0);
-  }, [currLevel, maxLevel]);
-
-  const upgradeText = useMemo(() => {
-    return levelCondition
-      ? "Upgrade Building to Level " + upgradedLevel.toString()
-      : "Max Level Reached";
-  }, [upgradedLevel]);
-
-  const colorCode = useMemo(() => {
-    return "bg-yellow-800 hover:bg-yellow-900";
-  }, []);
   console.log("reached rendering upgrade button");
   if (transactionLoading) {
     return (
