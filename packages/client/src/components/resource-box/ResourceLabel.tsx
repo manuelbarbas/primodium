@@ -37,13 +37,13 @@ export default function ResourceLabel({
   const lastClaimedAt = useResourceCount(
     components.LastClaimedAt,
     resourceId,
-    undefined
+    entityIndex
   );
 
   const unclaimedResource = useResourceCount(
     components.UnclaimedResource,
     resourceId,
-    undefined
+    entityIndex
   );
 
   const resourcesToClaim = useMemo(() => {
