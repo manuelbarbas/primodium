@@ -161,7 +161,8 @@ function TechTreeItem({
         </button>
       ) : isLocked ? (
         <button className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-gray-600 py-2 rounded shadow">
-          Locked
+          Locked: Requires MainBase Level{" "}
+          {parseInt(requiredMainBaseLevel?.value.toString() ?? "0")}
         </button>
       ) : (
         <button
