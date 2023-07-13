@@ -199,6 +199,8 @@ export function defineOffChainComponents(world: World) {
         id: "SelectedBuilding",
       }
     ),
+    SelectedAction: defineNumberComponent(world, { id: "SelectedAction" }),
+
     StartSelectedPath: defineCoordComponent(world, {
       metadata: {},
       id: "StartSelectedPath",

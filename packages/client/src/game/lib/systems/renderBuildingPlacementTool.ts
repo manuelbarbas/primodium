@@ -1,3 +1,4 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   Has,
@@ -7,13 +8,12 @@ import {
   defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
-import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
-import { BlockType } from "src/util/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import * as components from "src/game/api/components";
+import { Network } from "src/network/layer";
+import { Action } from "src/util/constants";
 import { createBuilding } from "../factory/building";
 import { createSelectionTile } from "../factory/selectionTile";
-import * as components from "src/game/api/components";
 
 export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
@@ -22,18 +22,18 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
   const query = [
     Has(offChainComponents.HoverTile),
-    Has(offChainComponents.SelectedBuilding),
-    NotValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.SelectAttack,
+    Has(offChainComponents.SelectedAction),
+    NotValue(offChainComponents.SelectedAction, {
+      value: Action.SelectAttack,
     }),
-    NotValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.DemolishPath,
+    NotValue(offChainComponents.SelectedAction, {
+      value: Action.DemolishPath,
     }),
-    NotValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.DemolishBuilding,
+    NotValue(offChainComponents.SelectedAction, {
+      value: Action.DemolishBuilding,
     }),
-    NotValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.Conveyor,
+    NotValue(offChainComponents.SelectedAction, {
+      value: Action.Conveyor,
     }),
   ];
 
@@ -74,7 +74,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       createBuilding({
         x: pixelCoord.x,
         y: -pixelCoord.y,
-        tile: selectedBuilding!,
+        buildingType: selectedBuilding!,
       })
     );
 

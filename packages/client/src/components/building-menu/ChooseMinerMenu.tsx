@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { removeComponent } from "@latticexyz/recs";
+import { useMud } from "src/context/MudContext";
+import { singletonIndex } from "src/network/world";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
-import { primodium } from "@game/api";
-import { useMud } from "src/context/MudContext";
+import BuildingIconButton from "./building-icons/BuildingIconButton";
 
 function ChooseMinerMenu({
   title,
@@ -14,10 +14,10 @@ function ChooseMinerMenu({
 }) {
   const network = useMud();
 
-  const closeMenuHelper = useCallback(() => {
-    primodium.components.selectedBuilding(network).remove();
+  const closeMenuHelper = () => {
+    removeComponent(network.offChainComponents.SelectedAction, singletonIndex);
     setMenuOpenIndex(-1);
-  }, []);
+  };
 
   return (
     <BuildingContentBox>

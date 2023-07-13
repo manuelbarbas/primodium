@@ -1,14 +1,10 @@
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { EntityID } from "@latticexyz/recs";
+import { getComponentValue, removeComponent } from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
-import { BlockType } from "src/util/constants";
+import { offChainComponents, singletonIndex } from "src/network/world";
+import { Action } from "src/util/constants";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
-import {
-  buildBuilding,
-  buildPath,
-  demolishBuilding,
-  demolishPath,
-} from "src/util/web3";
+import { buildPath, demolishBuilding, demolishPath } from "src/util/web3";
 import { Network } from "../../../network/layer";
 import * as components from "../../api/components";
 
@@ -20,32 +16,34 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
       scene.tilemap.tileHeight
     );
 
-    const gameCoord = { x, y: -y } as Coord;
-
-    //make sure player address is initialized
-    if (!address) return;
+    const gameCoord = { x, y: -y };
 
     //block invalid clicks in tutorial
     if (inTutorial(address, network)) {
       if (!validTutorialClick(gameCoord, network)) return;
     }
 
-    const selectedBuilding = components.selectedBuilding(network).get();
-    components.selectedTile(network).set(gameCoord);
+    const { SelectedAction } = offChainComponents;
+    const selectedAction = getComponentValue(
+      SelectedAction,
+      singletonIndex
+    )?.value;
 
+    const removeSelectedAction = () =>
+      removeComponent(SelectedAction, singletonIndex);
+
+    components.selectedTile(network).set(gameCoord);
     //handle web3 mutations
-    switch (selectedBuilding) {
+    switch (selectedAction) {
       case undefined:
         break;
-      case BlockType.DemolishBuilding:
-        components.selectedBuilding(network).remove();
+      case Action.DemolishBuilding:
         demolishBuilding(gameCoord, network);
         return;
-      case BlockType.DemolishPath:
-        components.selectedBuilding(network).remove();
+      case Action.DemolishPath:
         demolishPath(gameCoord, network);
         return;
-      case BlockType.Conveyor:
+      case Action.Conveyor:
         const startCoord = components.startSelectedPath(network).get();
 
         if (!startCoord) {
@@ -53,33 +51,12 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
           return;
         }
 
-        components.selectedBuilding(network).remove();
         buildPath(startCoord, gameCoord, network);
         return;
-      case BlockType.SelectAttack:
-        const selectedAttackTiles = components.selectedAttack(network).get();
-
-        if (!selectedAttackTiles.origin) {
-          components.selectedAttack(network).setOrigin(gameCoord);
-          return;
-        }
-
-        if (!selectedAttackTiles.target) {
-          components.selectedAttack(network).setTarget(gameCoord);
-          return;
-        }
-        //if both origin and target are set, don't do anything
-        break;
-      default:
-        components.selectedBuilding(network).remove();
-        buildBuilding(
-          gameCoord,
-          selectedBuilding as EntityID,
-          address,
-          network
-        );
+      case Action.SelectAttack:
         return;
     }
+    if (selectedAction) removeSelectedAction();
   });
 
   scene.input.pointermove$.pipe().subscribe((event) => {

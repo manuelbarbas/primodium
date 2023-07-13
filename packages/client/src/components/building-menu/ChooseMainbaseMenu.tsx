@@ -1,9 +1,10 @@
+import { removeComponent } from "@latticexyz/recs";
 import { useCallback } from "react";
-import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { useMud } from "src/context/MudContext";
+import { singletonIndex } from "src/network/world";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
-import { primodium } from "@game/api";
-import { useMud } from "src/context/MudContext";
+import BuildingIconButton from "./building-icons/BuildingIconButton";
 
 function ChooseMainBaseMenu({
   title,
@@ -15,7 +16,7 @@ function ChooseMainBaseMenu({
   const network = useMud();
 
   const closeMenuHelper = useCallback(() => {
-    primodium.components.selectedBuilding(network).remove();
+    removeComponent(network.offChainComponents.SelectedAction, singletonIndex);
     setMenuOpenIndex(-1);
   }, []);
 

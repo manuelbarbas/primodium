@@ -1,4 +1,4 @@
-import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "src/util/constants";
 import { GameObjectComponent } from "../../../engine/types";
 import {
@@ -15,7 +15,6 @@ export const createBuilding = ({
   y,
   buildingType,
 }: {
-  entityIndex: EntityIndex;
   renderId?: string;
   x: number;
   y: number;

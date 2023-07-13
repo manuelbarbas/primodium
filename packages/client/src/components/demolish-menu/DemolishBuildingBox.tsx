@@ -1,29 +1,36 @@
-import { useCallback } from "react";
-import { primodium } from "@game/api";
-
-import { BlockType } from "../../util/constants";
+import { useComponentValue } from "@latticexyz/react";
+import { removeComponent, setComponent } from "@latticexyz/recs";
 import { useMud } from "src/context/MudContext";
+import { singletonIndex } from "src/network/world";
+import { Action } from "../../util/constants";
 
 function DemolishBuildingBox() {
-  const network = useMud();
+  const {
+    offChainComponents: { SelectedAction },
+  } = useMud();
 
-  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
+  const selectedAction = useComponentValue(
+    SelectedAction,
+    singletonIndex
+  )?.value;
 
-  const destroyPath = useCallback(() => {
-    primodium.components.selectedBuilding(network).set(BlockType.DemolishPath);
-  }, []);
+  const destroyPath = () => {
+    setComponent(SelectedAction, singletonIndex, {
+      value: Action.DemolishPath,
+    });
+  };
 
-  const destroyTile = useCallback(() => {
-    primodium.components
-      .selectedBuilding(network)
-      .set(BlockType.DemolishBuilding);
-  }, []);
+  const destroyTile = () => {
+    setComponent(SelectedAction, singletonIndex, {
+      value: Action.DemolishBuilding,
+    });
+  };
 
-  const resetSetSelectedBlock = useCallback(() => {
-    primodium.components.selectedBuilding(network).remove();
-  }, []);
+  const resetSetSelectedBlock = () => {
+    removeComponent(SelectedAction, singletonIndex);
+  };
 
-  if (selectedBuilding === BlockType.DemolishPath) {
+  if (selectedAction === Action.DemolishPath) {
     return (
       <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">
@@ -46,7 +53,7 @@ function DemolishBuildingBox() {
         </div>
       </div>
     );
-  } else if (selectedBuilding === BlockType.DemolishBuilding) {
+  } else if (selectedAction === Action.DemolishBuilding) {
     return (
       <div className="z-[1000] viewport-container fixed bottom-4 left-20 h-72 w-96 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded">
         <div className="mt-4 mx-5 flex flex-col h-72">

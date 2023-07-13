@@ -1,6 +1,15 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 
+export enum Action {
+  DemolishBuilding,
+  DemolishPath,
+  SelectPath,
+  SelectBuilding,
+  Conveyor,
+  SelectAttack,
+}
+
 export const BlockKey = {
   //landscape blocks
   Water: "Water",
@@ -71,17 +80,6 @@ export const BlockType = {
 
   // Dummy block for Conveyor between tiles
   Conveyor: keccak256("block.Conveyor") as EntityID,
-
-  // Dummy blocks for Demolish
-  DemolishBuilding: keccak256("demolish.Building") as EntityID,
-  DemolishPath: keccak256("demolish.Path") as EntityID,
-
-  // Dummy block for selecting tiles
-  SelectPath: keccak256("select.Path") as EntityID,
-  SelectAttack: keccak256("select.Attack") as EntityID,
-
-  //Dummy block for map markers
-  ArrowMarker: keccak256("marker.Arrow") as EntityID,
 
   // New Buildings
   IronMine: keccak256("block.IronMine") as EntityID,
