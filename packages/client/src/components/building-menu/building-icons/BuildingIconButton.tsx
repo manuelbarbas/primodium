@@ -24,29 +24,31 @@ function BuildingIconButton({
 
   const { address } = useAccount();
 
-  // Check if building is unlocked per research or not
-  const buildingLocked = useMemo(() => {
-    const researchRequirement = getBuildingResearchRequirement(
-      blockType,
-      world,
-      components
-    );
+  const researchRequirement = useMemo(() => {
+    return getBuildingResearchRequirement(blockType, world, components);
+  }, [blockType]);
 
-    if (!researchRequirement) {
-      return false;
-    }
-    const researchOwner = address
+  const researchOwner = useMemo(() => {
+    return address && researchRequirement
       ? world.entityToIndex.get(
           hashKeyEntityAndTrim(
-            researchRequirement,
+            researchRequirement as EntityID,
             address.toString().toLowerCase()
           ) as EntityID
         )!
       : singletonIndex;
-    const isResearched = getComponentValue(components.Research, researchOwner);
+  }, [researchRequirement]);
 
-    return !(isResearched && isResearched.value);
-  }, []);
+  const isResearched = useMemo(() => {
+    return getComponentValue(components.Research, researchOwner);
+  }, [researchOwner]);
+
+  // Check if building is unlocked per research or not
+  const buildingLocked = useMemo(() => {
+    return (
+      researchRequirement != undefined && !(isResearched && isResearched.value)
+    );
+  }, [isResearched, researchRequirement]);
 
   const cannotBuildTile = useCallback(() => {}, []);
 

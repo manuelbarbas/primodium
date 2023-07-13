@@ -94,6 +94,6 @@ library LibBuilding {
     BoolComponent ignoreBuildLimitComponent,
     uint256 tileId
   ) internal view returns (bool) {
-    return !ignoreBuildLimitComponent.has(tileId) || !ignoreBuildLimitComponent.getValue(tileId);
+    return !ignoreBuildLimitComponent.has(tileId);
   }
 }
