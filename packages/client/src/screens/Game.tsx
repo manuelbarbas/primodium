@@ -7,7 +7,8 @@ import { Tour } from "src/components/tour/Tour";
 import { useTourStore } from "src/store/TourStore";
 import { EntityID } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
-
+import { decodeCoordEntity } from "src/util/encode";
+import { useMemo } from "react";
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
@@ -27,10 +28,17 @@ export const Game = () => {
     : singletonIndex;
 
   // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
   );
+
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(() => {
+    if (mainBaseEntity)
+      return decodeCoordEntity(mainBaseEntity?.value as unknown as EntityID);
+    return undefined;
+  }, [mainBaseEntity]);
 
   useEffect(() => {
     (async () => {
