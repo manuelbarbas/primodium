@@ -2,6 +2,7 @@ import {
   TransactionResponse,
   WebSocketProvider,
 } from "@ethersproject/providers";
+import { primodium } from "@game/api";
 import { getRevertReason } from "@latticexyz/network";
 import { ContractTransaction } from "ethers";
 import { IComputedValue } from "mobx";
@@ -28,6 +29,7 @@ export async function execute(
       );
       if (setNotification) {
         setNotification("Warning", reason);
+        primodium.camera.shake();
       } else {
         alert(reason);
       }
@@ -37,6 +39,7 @@ export async function execute(
       // so we tell the user to try again
       if (setNotification) {
         setNotification("Try Again", `${error}`);
+        primodium.camera.shake();
       } else {
         alert(error);
       }

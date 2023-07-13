@@ -74,6 +74,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
       utils.parseEther("2")
     );
+
     if (playerIsBroke) {
       console.info("[Dev Faucet] Dripping funds to player");
       const address = network.connectedAddress.get();

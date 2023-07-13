@@ -54,11 +54,17 @@ export const init = async (address: string, network: Network) => {
     }
 
     const selectedBuilding = components.selectedBuilding(network).get();
-    components.selectedTile(network).set(gameCoord);
+
+    // scene.camera.phaserCamera.shake(
+    //   200,
+    //   0.001 / scene.camera.phaserCamera.zoom,
+    //   true
+    // );
 
     //handle web3 mutations
     switch (selectedBuilding) {
       case undefined:
+        components.selectedTile(network).set(gameCoord);
         break;
       case BlockType.DemolishBuilding:
         components.selectedBuilding(network).remove();

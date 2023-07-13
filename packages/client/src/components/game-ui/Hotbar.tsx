@@ -201,7 +201,7 @@ export const Hotbar = () => {
 
   return (
     <AnimatePresence>
-      <div className=" z-[1000] viewport-container fixed inset-x-0 bottom-4 flex justify-center text-white drop-shadow-xl font-mono select-none">
+      <div className=" z-[1000] viewport-container fixed bottom-0 right-1/2 translate-x-1/2 flex justify-center text-white drop-shadow-xl font-mono select-none">
         <div className="flex flex-col items-center">
           <div
             className="relative flex flex-col items-center mb-2 cursor-pointer"
@@ -284,7 +284,7 @@ export const Hotbar = () => {
 
           <Hotbar.Pagination
             index={activeBar}
-            className="mt-4"
+            className="mt-2"
             onClick={() =>
               setActiveBar(wrap(activeBarRef.current + 1, config.length))
             }

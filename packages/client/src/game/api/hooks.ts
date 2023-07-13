@@ -9,10 +9,7 @@ export const useSelectedTile = (network: Network) => {
 
   const singletonIndex = world.entityToIndex.get(SingletonID);
 
-  return useComponentValue(offChainComponents.SelectedTile, singletonIndex, {
-    x: 0,
-    y: 0,
-  });
+  return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
 };
 
 export const useHoverTile = (network: Network) => {

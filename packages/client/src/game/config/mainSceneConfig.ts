@@ -11,7 +11,7 @@ const mainSceneConfig: SceneConfig = {
     minZoom: 2,
     maxZoom: 5,
     defaultZoom: 3,
-    pinchSpeed: 0.1,
+    pinchSpeed: 0.01,
     wheelSpeed: 3,
   },
   animations: animationConfig,

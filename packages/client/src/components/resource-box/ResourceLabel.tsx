@@ -27,7 +27,15 @@ export default function ResourceLabel({
 
   const production = useResourceCount(components.Mine, resourceId, entityIndex);
 
+  const unclaimed = useResourceCount(
+    components.UnclaimedResources,
+    resourceId,
+    entityIndex
+  );
+
   const resourceIcon = ResourceImage.get(resourceId);
+
+  console.log(name, unclaimed);
 
   if (storageCount > 0) {
     return (

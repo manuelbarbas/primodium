@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
 import { Hotbar } from "./Hotbar";
+import { TileInfo } from "./TileInfo";
 
 function GameUI() {
   const [showUI, toggleShowUI, isReady] = useGameStore((state) => [
@@ -33,10 +34,11 @@ function GameUI() {
     <div className="screen-container">
       <div className={`${showUI ? "" : "hidden pointer-events-none"}`}>
         <Hotbar />
-        {/* <InfoBox /> */}
+        <TileInfo />
+        <InfoBox />
         <NotificationBox />
         <ResourceBox />
-        {/* <TooltipBox /> */}
+        <TooltipBox />
         <SideMenu />
       </div>
     </div>

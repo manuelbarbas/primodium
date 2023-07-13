@@ -82,3 +82,9 @@ export const updateWorldView = (targetScene: string = Scenes.Main) => {
     camera?.worldView$.next(camera.phaserCamera.worldView)
   );
 };
+
+export const shake = (targetScene: string = Scenes.Main) => {
+  const { camera } = engine.getGame()?.sceneManager.scenes.get(targetScene)!;
+
+  camera.phaserCamera.shake(200, 0.001 / camera.phaserCamera.zoom, true);
+};

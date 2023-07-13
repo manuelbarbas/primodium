@@ -10,6 +10,9 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.NONE,
     zoom: 1 / window.devicePixelRatio,
   },
+  dom: {
+    createContainer: true,
+  },
   autoFocus: true,
   desynchronized: true,
   preserveDrawingBuffer: true,
