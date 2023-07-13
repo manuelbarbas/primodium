@@ -97,7 +97,9 @@ library LibBuildingDesignInitializer {
   ) internal {
     //CopperMineID
     requiredTileComponent.set(CopperMineID, CopperResourceItemID);
+    requiredResearch.set(CopperMineID, CopperMineResearchID);
     maxLevelComponent.set(CopperMineID, 3);
+
     //CopperMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 1);
     mineComponent.set(buildingIdLevel, 2);
@@ -148,6 +150,7 @@ library LibBuildingDesignInitializer {
   ) internal {
     //LithiumMineID
     requiredTileComponent.set(LithiumMineID, CopperResourceItemID);
+    requiredResearch.set(LithiumMineID, LithiumMineResearchID);
     maxLevelComponent.set(LithiumMineID, 3);
     //LithiumMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(LithiumMineID, 1);
