@@ -1,7 +1,6 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
-import { randomBytes } from "ethers/lib/utils";
 
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
@@ -17,21 +16,18 @@ export const addTileOverride = (
 ) => {
   const { components, providers } = network;
   const tempPositionId = uuid();
-  const tempEntityIndex = BigNumber.from(
-    randomBytes(32)
-  ) as unknown as EntityIndex;
-
+  const tempEntityIndex = 34567543456 as EntityIndex;
   components.Position.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: pos,
   });
   components.BuildingType.addOverride(tempPositionId, {
     entity: tempEntityIndex,
-    value: { value: blockType as unknown as number },
+    value: { value: blockType },
   });
   components.OwnedBy.addOverride(tempPositionId, {
     entity: tempEntityIndex,
-    value: { value: address as unknown as number },
+    value: { value: address },
   });
   components.LastBuiltAt.addOverride(tempPositionId, {
     entity: tempEntityIndex,

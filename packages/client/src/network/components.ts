@@ -33,14 +33,14 @@ export function defineComponents(world: World) {
       })
     ),
     Path: overridableComponent(
-      defineNumberComponent(world, {
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.Path",
         },
       })
     ),
     OwnedBy: overridableComponent(
-      defineNumberComponent(world, {
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.OwnedBy",
         },
@@ -82,7 +82,7 @@ export function defineComponents(world: World) {
       },
     }),
     // main base initialized
-    MainBaseInitialized: defineNumberComponent(world, {
+    MainBaseInitialized: defineStringComponent(world, {
       metadata: {
         contractId: "component.MainBaseInitialized",
       },

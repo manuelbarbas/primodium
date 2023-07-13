@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
-import { primodium } from "../game";
+import { useComponentValue } from "@latticexyz/react";
+import { EntityID } from "@latticexyz/recs";
+import { useEffect, useMemo, useState } from "react";
+import { Tour } from "src/components/tour/Tour";
+import { useAccount } from "src/hooks/useAccount";
+import { useTourStore } from "src/store/TourStore";
+import { decodeCoordEntity } from "src/util/encode";
 import GameUI from "../components/GameUI";
 import { useMud } from "../context/MudContext";
-import { useAccount } from "src/hooks/useAccount";
-import { Tour } from "src/components/tour/Tour";
-import { useTourStore } from "src/store/TourStore";
-import { EntityID } from "@latticexyz/recs";
-import { useComponentValue } from "@latticexyz/react";
-import { decodeCoordEntity } from "src/util/encode";
-import { useMemo } from "react";
+import { primodium } from "../game";
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
@@ -36,7 +35,7 @@ export const Game = () => {
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(() => {
     if (mainBaseEntity)
-      return decodeCoordEntity(mainBaseEntity?.value as unknown as EntityID);
+      return decodeCoordEntity(mainBaseEntity?.value as EntityID);
     return undefined;
   }, [mainBaseEntity]);
 

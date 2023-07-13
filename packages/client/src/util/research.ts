@@ -1,9 +1,9 @@
 import { EntityID, World, getComponentValue } from "@latticexyz/recs";
 import { NetworkComponents } from "@latticexyz/std-client";
 
+import { defineComponents } from "../network/components";
 import { BlockType } from "./constants";
 import { ResourceCostData } from "./resource";
-import { defineComponents } from "../network/components";
 
 // Research Technology Tree
 export type TechnologyTreeNode = {
@@ -38,7 +38,7 @@ export function getBuildingResearchRequirement(
   );
 
   if (!requiredResearch) return null;
-  return requiredResearch.value as unknown as EntityID;
+  return requiredResearch.value.toString() as EntityID;
 }
 
 // Research resource data should be read from getRecipe() in ../util/resource.ts

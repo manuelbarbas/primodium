@@ -1,37 +1,37 @@
-import { useCallback, useEffect, useRef, useState, memo } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
-import { EntityID, Has, HasValue } from "@latticexyz/recs";
+import { Perlin, createPerlin } from "@latticexyz/noise";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
+import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { createPerlin, Perlin } from "@latticexyz/noise";
 import { BigNumber } from "ethers";
 
 import { useMud } from "../context/MudContext";
 
-import { getTopLayerKeyPair } from "../util/tile";
+import {
+  BackgroundImage,
+  BlockIdToKey,
+  ResourceImage,
+} from "../util/constants";
 import {
   CraftRecipe,
   isClaimable,
   isClaimableFactory,
   isMainBase,
 } from "../util/resource";
-import {
-  BlockIdToKey,
-  BackgroundImage,
-  ResourceImage,
-} from "../util/constants";
+import { getTopLayerKeyPair } from "../util/tile";
 
 import { primodium } from "@game/api";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
+import ClaimCraftButton from "./action/ClaimCraftButton";
 import UpgradeButton from "./action/UpgradeButton";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import ResourceIconTooltip from "./shared/ResourceIconTooltip";
-import ClaimCraftButton from "./action/ClaimCraftButton";
 
 function TooltipBox() {
   const network = useMud();
@@ -94,9 +94,9 @@ function TooltipBox() {
   });
 
   let builtTile: EntityID | undefined;
-  let tileOwner: number | undefined;
+  let tileOwner: string | undefined;
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile && tileOwnedBy) {
-    builtTile = tile.value as unknown as EntityID;
+    builtTile = tile.value as EntityID;
     tileOwner = tileOwnedBy.value;
   } else {
     builtTile = undefined;

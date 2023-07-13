@@ -1,5 +1,5 @@
-import { solidityKeccak256 } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
+import { solidityKeccak256 } from "ethers/lib/utils";
 
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";

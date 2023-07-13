@@ -1,6 +1,4 @@
 import { Perlin } from "@latticexyz/noise";
-import { Coord } from "@latticexyz/utils";
-import { BlockType, DisplayKeyPair } from "./constants";
 import {
   EntityID,
   Has,
@@ -9,8 +7,10 @@ import {
   runQuery,
 } from "@latticexyz/recs";
 import { NetworkComponents } from "@latticexyz/std-client";
-import { defineComponents } from "../network/components";
+import { Coord } from "@latticexyz/utils";
 import { Network } from "src/network/layer";
+import { defineComponents } from "../network/components";
+import { BlockType, DisplayKeyPair } from "./constants";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -167,7 +167,7 @@ export function getBuildingsOfTypeInRange(
         entities.values().next().value
       );
 
-      if (type === (comp?.value as unknown as EntityID)) {
+      if (type === (comp?.value as EntityID)) {
         tiles.push(currentCoord);
       }
     }
@@ -189,5 +189,5 @@ export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
   const tileEntityID = entities.values().next().value;
 
   return getComponentValue(components.BuildingType, tileEntityID)
-    ?.value as unknown as EntityID;
+    ?.value as EntityID;
 };

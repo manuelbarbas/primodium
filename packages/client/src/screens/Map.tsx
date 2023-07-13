@@ -1,14 +1,14 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import { FixedSizeGrid as Grid } from "react-window";
-import { Has, HasValue, EntityID } from "@latticexyz/recs";
-import { createPerlin, Perlin } from "@latticexyz/noise";
-import { Coord } from "@latticexyz/utils";
+import { Perlin, createPerlin } from "@latticexyz/noise";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
+import { EntityID, Has, HasValue } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FixedSizeGrid as Grid } from "react-window";
 
-import { getTopLayerKey } from "../util/tile";
-import { BlockColors } from "../util/constants";
-import useWindowDimensions from "../hooks/useWindowDimensions";
 import { useMud } from "../context/MudContext";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+import { BlockColors } from "../util/constants";
+import { getTopLayerKey } from "../util/tile";
 
 export default function Map() {
   const { components, singletonIndex } = useMud();

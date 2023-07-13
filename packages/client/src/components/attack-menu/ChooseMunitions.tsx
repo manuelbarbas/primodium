@@ -1,15 +1,15 @@
-import { useCallback } from "react";
 import { useEntityQuery } from "@latticexyz/react";
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
+import { useCallback } from "react";
 
 import { useMud } from "../../context/MudContext";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import { BlockType } from "../../util/constants";
 
-import MunitionsButton from "./MunitionsButton";
-import { useNotificationStore } from "../../store/NotificationStore";
 import { primodium } from "@game/api";
+import { useNotificationStore } from "../../store/NotificationStore";
+import MunitionsButton from "./MunitionsButton";
 
 function ChooseMunitions() {
   // executeTyped(Coord memory coord, Coord memory targetCoord, uint256 weaponKey)

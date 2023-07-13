@@ -1,20 +1,20 @@
 import { useCallback, useState } from "react";
 
-import { useAccount } from "../../hooks/useAccount";
+import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import { useMud } from "../../context/MudContext";
-import { useComponentValue } from "@latticexyz/react";
+import { useAccount } from "../../hooks/useAccount";
 
-import BuildingMenuButton from "./building-icons/BuildingMenuButton";
-import ChooseMinerMenu from "./ChooseMinerMenu";
-import ChooseDebugMenu from "./ChooseDebugMenu";
-import ChooseTransportMenu from "./ChooseTransportMenu";
-import ChooseFactoryMenu from "./ChooseFactoryMenu";
-import ChooseWeaponryMenu from "./ChooseWeaponryMenu";
-import ChooseMainBaseMenu from "./ChooseMainbaseMenu";
-import BuildingContentBox from "./BuildingBox";
-import { decodeCoordEntity } from "../../util/encode";
 import { useMemo } from "react";
+import { decodeCoordEntity } from "../../util/encode";
+import BuildingContentBox from "./BuildingBox";
+import ChooseDebugMenu from "./ChooseDebugMenu";
+import ChooseFactoryMenu from "./ChooseFactoryMenu";
+import ChooseMainBaseMenu from "./ChooseMainbaseMenu";
+import ChooseMinerMenu from "./ChooseMinerMenu";
+import ChooseTransportMenu from "./ChooseTransportMenu";
+import ChooseWeaponryMenu from "./ChooseWeaponryMenu";
+import BuildingMenuButton from "./building-icons/BuildingMenuButton";
 function BuildingPage() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
   const doNothing = useCallback(() => {}, []);
@@ -33,7 +33,7 @@ function BuildingPage() {
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(() => {
     if (mainBaseEntity)
-      return decodeCoordEntity(mainBaseEntity?.value as unknown as EntityID);
+      return decodeCoordEntity(mainBaseEntity?.value as EntityID);
     return undefined;
   }, [mainBaseEntity]);
 
