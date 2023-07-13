@@ -63,6 +63,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
   const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
     utils.parseEther("2")
   );
+
   if (playerIsBroke) {
     console.info("[Dev Faucet] Dripping funds to player");
     const address = network.connectedAddress.get();
@@ -96,6 +97,16 @@ export async function createNetworkLayer(config: SetupContractConfig) {
 
   startSync();
   syncPositionComponent(context);
+
+  setComponent(offChainComponents.BlockNumber, singletonIndex, {
+    value: (await network.providers.get().ws?.getBlockNumber()) ?? 0,
+  });
+
+  network.blockNumber$.subscribe((blockNumber) => {
+    setComponent(offChainComponents.BlockNumber, singletonIndex, {
+      value: blockNumber,
+    });
+  });
 
   return context;
 }

@@ -2,6 +2,7 @@ import { EntityID, EntityIndex } from "@latticexyz/recs";
 import useResourceCount from "../../hooks/useResourceCount";
 import { ResourceImage } from "../../util/constants";
 import { useMud } from "../../context/MudContext";
+import { useComponentValue } from "@latticexyz/react";
 
 export default function ResourceLabel({
   name,
@@ -12,13 +13,19 @@ export default function ResourceLabel({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) {
-  const { components } = useMud();
+  const { components, offChainComponents, singletonIndex } = useMud();
+
+  const blockNumber = useComponentValue(
+    offChainComponents.BlockNumber,
+    singletonIndex
+  );
 
   const resourceCount = useResourceCount(
     components.Item,
     resourceId,
     entityIndex
   );
+
   const storageCount = useResourceCount(
     components.StorageCapacity,
     resourceId,
@@ -27,15 +34,7 @@ export default function ResourceLabel({
 
   const production = useResourceCount(components.Mine, resourceId, entityIndex);
 
-  const unclaimed = useResourceCount(
-    components.UnclaimedResources,
-    resourceId,
-    entityIndex
-  );
-
   const resourceIcon = ResourceImage.get(resourceId);
-
-  console.log(name, unclaimed);
 
   if (storageCount > 0) {
     return (
@@ -46,6 +45,7 @@ export default function ResourceLabel({
         <img className="w-4 h-4 ml-2 my-auto" src={resourceIcon}></img>
         <p className="w-20 ml-2 my-auto text-sm">{name}</p>
         <p className="w-4 ml-1 my-auto text-sm">{production}</p>
+        <p>{blockNumber?.value}</p>
       </div>
     );
   } else {

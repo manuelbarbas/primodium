@@ -157,6 +157,10 @@ export function defineComponents(world: World) {
 
 export function defineOffChainComponents(world: World) {
   return {
+    BlockNumber: defineNumberComponent(world, {
+      metadata: {},
+      id: "BlockNumber",
+    }),
     DoubleCounter: defineNumberComponent(world, {
       metadata: {},
       id: "DoubleCounter",
