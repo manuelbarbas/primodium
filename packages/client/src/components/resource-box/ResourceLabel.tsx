@@ -2,8 +2,8 @@ import { EntityID, EntityIndex } from "@latticexyz/recs";
 import useResourceCount from "../../hooks/useResourceCount";
 import { ResourceImage } from "../../util/constants";
 import { useMud } from "../../context/MudContext";
+import { useMemo } from "react";
 import { useComponentValue } from "@latticexyz/react";
-
 export default function ResourceLabel({
   name,
   resourceId,
@@ -34,18 +34,37 @@ export default function ResourceLabel({
 
   const production = useResourceCount(components.Mine, resourceId, entityIndex);
 
+  const lastClaimedAt = useResourceCount(
+    components.LastClaimedAt,
+    resourceId,
+    undefined
+  );
+
+  const unclaimedResource = useResourceCount(
+    components.UnclaimedResource,
+    resourceId,
+    undefined
+  );
+
+  const resourcesToClaim = useMemo(() => {
+    return (
+      unclaimedResource +
+      ((blockNumber?.value ?? 0) - lastClaimedAt) * production
+    );
+  }, [unclaimedResource, lastClaimedAt, blockNumber]);
+
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (storageCount > 0) {
     return (
       <div className="flex mb-1">
-        <p className="w-40 my-auto text-sm">
+        <p className="w-44 my-auto text-sm">
           {resourceCount} / {storageCount}
         </p>
         <img className="w-4 h-4 ml-2 my-auto" src={resourceIcon}></img>
         <p className="w-20 ml-2 my-auto text-sm">{name}</p>
         <p className="w-4 ml-1 my-auto text-sm">{production}</p>
-        <p>{blockNumber?.value}</p>
+        <p className="w-4 ml-1 my-auto text-sm">+({resourcesToClaim})</p>
       </div>
     );
   } else {
