@@ -1,8 +1,10 @@
 import { useEngineStore } from "../../store/EngineStore";
 import { createScene } from "./createScene";
 
+export type Scene = Awaited<ReturnType<typeof createScene>>;
+
 export const createSceneManager = () => {
-  const scenes = new Map<string, Awaited<ReturnType<typeof createScene>>>();
+  const scenes = new Map<string, Scene>();
 
   const addScene = async (
     key: string,

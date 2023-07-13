@@ -1,12 +1,12 @@
 import { Network } from "../../network/layer";
 import { init as _init } from "../lib/scripts";
-import * as hooks from "./hooks";
-import * as components from "./components";
 import * as camera from "./camera";
+import * as components from "./components";
 import * as game from "./game";
+import * as hooks from "./hooks";
 
 const init = async (
-  address: string | undefined,
+  address: string,
   network: Network,
   version: string = "v1"
 ) => {

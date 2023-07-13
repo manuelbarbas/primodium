@@ -10,7 +10,6 @@ import {
 } from "../../constants";
 
 export const createBuilding = ({
-  entityIndex,
   renderId = "building",
   x,
   y,
