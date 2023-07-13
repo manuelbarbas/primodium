@@ -10,6 +10,8 @@ import { useNotificationStore } from "../../store/NotificationStore";
 import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../Spinner";
 import { useMemo } from "react";
+import { getRecipe } from "../../util/resource";
+import { ResourceImage } from "../../util/constants";
 export default function UpgradeButton({
   id,
   coords,
@@ -53,6 +55,10 @@ export default function UpgradeButton({
       upgradedLevel as unknown as EntityID
     ) as EntityID;
   }, [currLevel, builtTile]);
+
+  // const recipe = useMemo(() => {
+  //   return getRecipe(buildingTypeLevel, world, components);
+  // }, [buildingTypeLevel]);
 
   const upgradeText = useMemo(() => {
     return "Upgrade Building to Level " + upgradedLevel.toString();
@@ -149,6 +155,22 @@ export default function UpgradeButton({
           onClick={claimAction}
         >
           {upgradeText}
+          {/* <div className={`building-tooltip group-hover:scale-100`}>
+            <div className="flex-col">
+              {recipe.map((resource) => {
+                const resourceImage = ResourceImage.get(resource.id);
+                return (
+                  <div className="mr-2 inline-block" key={resource.id}>
+                    <img
+                      src={resourceImage}
+                      className="w-4 h-4 inline-block mr-1 pixel-images"
+                    />
+                    {resource.amount}
+                  </div>
+                );
+              })}
+            </div>
+          </div> */}
         </button>
       </div>
     );
