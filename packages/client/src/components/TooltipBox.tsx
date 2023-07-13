@@ -296,13 +296,7 @@ function TooltipBox() {
                   </>
                 )}
                 {builtTile &&
-                  canBeUpgraded(
-                    entity,
-                    builtTile,
-                    selectedTile,
-                    world,
-                    components
-                  ) && (
+                  canBeUpgraded(entity, builtTile, world, components) && (
                     <UpgradeButton
                       id="upgrade-button"
                       buildingEntity={entity}
