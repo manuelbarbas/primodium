@@ -12,6 +12,7 @@ export const ANIMATION_INTERVAL = 200;
 export enum Assets {
   Pack = "/assets/pack",
   SpriteAtlas = "sprite-atlas",
+  BaseAtlas = "base-atlas",
   ResourceTileset = "resource-tileset",
   TerrainTileset = "terrain-tileset",
 }
@@ -94,7 +95,7 @@ export enum KeyindActions {
 }
 
 export enum SpriteKeys {
-  Mainbase = "sprites/mainbase/mainbase-0.png",
+  Mainbase = "bigbase.png",
   Node = "sprites/node/node-0.png",
   BasicMiner = "sprites/minerdrill/minerdrill-0.png",
   Miner = "sprites/miner/miner.png",
@@ -181,7 +182,6 @@ export const EntityIDtoSpriteKey = {
 };
 
 export const EntityIDtoAnimationKey = {
-  [BlockType.MainBase]: AnimationKeys.Mainbase,
   [BlockType.Node]: AnimationKeys.Node,
   [BlockType.BasicMiner]: AnimationKeys.BasicMiner,
   [BlockType.Miner]: AnimationKeys.BasicMiner,

@@ -3,7 +3,7 @@ import {
   tileCoordToPixelCoord,
 } from "@latticexyz/phaserx";
 import {
-  ComponentUpdate,
+  EntityIndex,
   Has,
   defineEnterSystem,
   defineExitSystem,
@@ -15,12 +15,14 @@ import { Network } from "src/network/layer";
 import { hoverTile } from "../../api/components";
 import { createHoverTile } from "../factory/createHoverTile";
 
+const objGraphicsIndex = (entity: EntityIndex) =>
+  `${entity}_hoverTile_graphics`;
+
 export const renderHoverTile = (scene: Scene, network: Network) => {
   const { world, offChainComponents, singletonIndex } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
 
   const query = [Has(offChainComponents.HoverTile)];
-
   scene.input.pointermove$.pipe().subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.pointer.worldX, y: event.pointer.worldY },
@@ -35,15 +37,9 @@ export const renderHoverTile = (scene: Scene, network: Network) => {
     hoverTile(network).set(mouseCoord);
   });
 
-  const render = (update: ComponentUpdate) => {
-    const entityIndex = update.entity;
-    const objGraphicsIndex = update.entity + "_hoverTile" + "_graphics";
-
+  const render = ({ entity }: { entity: EntityIndex }) => {
     // Avoid updating on optimistic overrides
-    if (
-      typeof entityIndex !== "number" ||
-      entityIndex >= world.entities.length
-    ) {
+    if (typeof entity !== "number" || entity >= world.entities.length) {
       return;
     }
 
@@ -54,13 +50,13 @@ export const renderHoverTile = (scene: Scene, network: Network) => {
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
     const hoverRenderObject = scene.objectPool.get(
-      objGraphicsIndex,
+      objGraphicsIndex(entity),
       "Graphics"
     );
 
     hoverRenderObject.setComponent(
       createHoverTile({
-        id: objGraphicsIndex,
+        id: objGraphicsIndex(entity),
         x: pixelCoord.x,
         y: -pixelCoord.y,
         tileWidth,
@@ -79,8 +75,7 @@ export const renderHoverTile = (scene: Scene, network: Network) => {
   defineUpdateSystem(world, query, render);
 
   defineExitSystem(world, query, (update) => {
-    const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
-    scene.objectPool.remove(objGraphicsIndex);
+    scene.objectPool.remove(objGraphicsIndex(update.entity));
 
     console.info(
       "[EXIT SYSTEM](renderSelectionTile) Hover tile has been removed"

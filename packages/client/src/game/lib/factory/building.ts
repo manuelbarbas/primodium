@@ -1,4 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
+import { BlockType } from "src/util/constants";
 import { GameObjectComponent } from "../../../engine/types";
 import {
   Assets,
@@ -22,8 +23,10 @@ export const createBuilding = (options: {
       gameObject.setPosition(x, y);
 
       //set sprite
+      const atlas =
+        tile == BlockType.MainBase ? Assets.BaseAtlas : Assets.SpriteAtlas;
       const sprite = EntityIDtoSpriteKey[tile];
-      gameObject.setTexture(Assets.SpriteAtlas, sprite ?? SpriteKeys.Node);
+      gameObject.setTexture(atlas, sprite ?? SpriteKeys.Node);
       gameObject.setDepth(DepthLayers.Building);
 
       //set animation if it exists

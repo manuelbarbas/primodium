@@ -1,9 +1,13 @@
-import { World, defineComponent, Type } from "@latticexyz/recs";
-import { overridableComponent } from "@latticexyz/recs";
+import {
+  Type,
+  World,
+  defineComponent,
+  overridableComponent,
+} from "@latticexyz/recs";
 import {
   defineBoolComponent,
-  defineNumberComponent,
   defineCoordComponent,
+  defineNumberComponent,
   defineStringComponent,
 } from "@latticexyz/std-client";
 
@@ -146,13 +150,25 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    BuildingLimit: overridableComponent(
+    BuildingTiles: overridableComponent(
       defineNumberComponent(world, {
         metadata: {
-          contractId: "component.BuildingLimit",
+          contractId: "component.BuildingTiles",
         },
       })
     ),
+    RawBlueprint: defineComponent(
+      world,
+      {
+        value: Type.NumberArray,
+      },
+      {
+        metadata: {
+          contractId: "component.Blueprint",
+        },
+      }
+    ),
+
     // TODO: component data for crafting recipes
   };
 }
