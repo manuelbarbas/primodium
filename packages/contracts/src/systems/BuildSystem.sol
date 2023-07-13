@@ -99,7 +99,7 @@ contract BuildSystem is PrimodiumSystem {
     uint256 playerEntity = addressToEntity(msg.sender);
     require(
       !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
-      "[BuildSystem] Cannot build a building with tiles"
+      "[BuildSystem] Building already exists here"
     );
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
     require(
