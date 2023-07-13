@@ -2,15 +2,8 @@ import { useCallback, useEffect, useRef, useState, memo } from "react";
 
 import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
-import {
-  EntityID,
-  EntityIndex,
-  Has,
-  HasValue,
-  getComponentValue,
-} from "@latticexyz/recs";
+import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
-import { useEntityQuery } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { BigNumber } from "ethers";
@@ -40,10 +33,9 @@ import UpgradeButton from "./action/UpgradeButton";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import ResourceIconTooltip from "./shared/ResourceIconTooltip";
 import ClaimCraftButton from "./action/ClaimCraftButton";
-import { encodeCoordEntity } from "src/util/encode";
+import { encodeCoordEntityAndTrim } from "src/util/encode";
 import { useMemo } from "react";
 import { canBeUpgraded } from "src/util/upgrade";
-import { decodeCoordEntity } from "../util/encode";
 function TooltipBox() {
   const network = useMud();
   const { world, components, singletonIndex, offChainComponents } = network;
@@ -74,23 +66,16 @@ function TooltipBox() {
   );
 
   // Get information on the selected tile
-  //const selectedTile = primodium.hooks.useSelectedTile(network);
-  const selectedTile = useComponentValue(
-    offChainComponents.SelectedTile,
-    singletonIndex,
-    { x: 0, y: 0 }
-  );
-  const entity = encodeCoordEntity(selectedTile, BlockType.BuildingKey);
+  const selectedTile = primodium.hooks.useSelectedTile(network);
+
+  const entity = encodeCoordEntityAndTrim(
+    selectedTile,
+    BlockType.BuildingKey
+  ) as EntityID;
 
   const tile = useComponentValue(
     components.Tile,
     world.entityToIndex.get(entity) as EntityIndex
-  );
-  console.log("for entity", entity, "tile is", tile?.value ?? "undefined");
-  const entityCoord = decodeCoordEntity(entity);
-  console.log(
-    "received coord is " + selectedTile.x + " , " + selectedTile.y,
-    " and decoded coord is " + entityCoord.x + " , " + entityCoord.y
   );
   const tileOwnedBy = useComponentValue(
     components.OwnedBy,

@@ -1,7 +1,7 @@
 import { useComponentValue } from "src/hooks/useComponentValue";
 import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { hashKeyEntity, hashKeyEntityAndTrim } from "src/util/encode";
+import { hashKeyEntityAndTrim } from "src/util/encode";
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 import { execute } from "../../network/actions";
@@ -10,7 +10,6 @@ import { useNotificationStore } from "../../store/NotificationStore";
 import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../Spinner";
 import { useMemo } from "react";
-import { decodeCoordEntity } from "src/util/encode";
 export default function UpgradeButton({
   id,
   coords,
@@ -31,20 +30,6 @@ export default function UpgradeButton({
   const [setNotification] = useNotificationStore((state) => [
     state.setNotification,
   ]);
-  const entityCoord = useMemo(() => {
-    return decodeCoordEntity(buildingEntity);
-  }, [buildingEntity]);
-
-  console.log(
-    "received coord is ",
-    coords.x,
-    " , ",
-    coords.y,
-    " and decoded coord is ",
-    entityCoord.x,
-    " , ",
-    entityCoord.y
-  );
 
   const currLevel = useComponentValue(
     components.BuildingLevel,
@@ -58,35 +43,38 @@ export default function UpgradeButton({
     return parseInt(currLevel?.value.toString() ?? "0") + 1;
   }, [currLevel]);
 
-  const levelCondition = useMemo(() => {
+  const isLevelConditionMet = useMemo(() => {
     return (currLevel?.value ?? 0) < (maxLevel?.value ?? 0);
   }, [currLevel, maxLevel]);
 
   const buildingTypeLevel = useMemo(() => {
-    return hashKeyEntity(
-      builtTile as unknown as EntityID,
-      currLevel?.value as unknown as EntityID
-    );
+    return hashKeyEntityAndTrim(
+      builtTile,
+      upgradedLevel as unknown as EntityID
+    ) as EntityID;
   }, [currLevel, builtTile]);
 
   const upgradeText = useMemo(() => {
-    return levelCondition
-      ? "Upgrade Building to Level " + upgradedLevel.toString()
-      : "Max Level Reached";
+    return "Upgrade Building to Level " + upgradedLevel.toString();
   }, [upgradedLevel]);
 
-  const colorCode = useMemo(() => {
-    return "bg-yellow-800 hover:bg-yellow-900";
+  const maxLevelReachedText = useMemo(() => {
+    return "Max Level Reached";
   }, []);
+
+  const technologyRequirementsNotMetText = useMemo(() => {
+    return "Technology Requirements Not Met";
+  }, []);
+
   const researchRequirement = useMemo(() => {
     return getBuildingResearchRequirement(buildingTypeLevel, world, components);
   }, [buildingTypeLevel]);
 
   const researchOwner = useMemo(() => {
-    return address && researchRequirement != null
+    return address && researchRequirement
       ? world.entityToIndex.get(
           hashKeyEntityAndTrim(
-            researchRequirement as EntityID,
+            researchRequirement,
             address.toString().toLowerCase()
           ) as EntityID
         )!
@@ -97,9 +85,15 @@ export default function UpgradeButton({
     return getComponentValue(components.Research, researchOwner);
   }, [researchOwner]);
 
-  const upgradeLocked = () => {
-    return researchRequirement != null && !(isResearched && isResearched.value);
-  };
+  const isUpgradeLocked = useMemo(() => {
+    return (
+      researchRequirement != undefined && !(isResearched && isResearched.value)
+    );
+  }, [isResearched, researchRequirement]);
+
+  const colorCode = useMemo(() => {
+    return "bg-yellow-800 hover:bg-yellow-900";
+  }, []);
 
   const claimAction = async () => {
     setTransactionLoading(true);
@@ -113,7 +107,6 @@ export default function UpgradeButton({
     setTransactionLoading(false);
   };
 
-  console.log("reached rendering upgrade button");
   if (transactionLoading) {
     return (
       <div className="absolute inset-x-3 bottom-3">
@@ -125,11 +118,32 @@ export default function UpgradeButton({
         </button>
       </div>
     );
+  } else if (isUpgradeLocked) {
+    return (
+      <div className="absolute inset-x-3 bottom-3">
+        <button
+          id={id}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+        >
+          {technologyRequirementsNotMetText}
+        </button>
+      </div>
+    );
+  } else if (!isLevelConditionMet) {
+    return (
+      <div className="absolute inset-x-3 bottom-3">
+        <button
+          id={id}
+          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
+        >
+          {maxLevelReachedText}
+        </button>
+      </div>
+    );
   } else {
     return (
       <div className="absolute inset-x-4 bottom-">
         <button
-          disabled={upgradeLocked() || !levelCondition}
           id={id}
           className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
           onClick={claimAction}

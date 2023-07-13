@@ -6,6 +6,11 @@ import { Coord } from "@latticexyz/utils";
 
 import { Buffer } from "buffer";
 
+// use this when you want to pass the entity to world.getEntityIndex
+export function encodeCoordEntityAndTrim(coord: Coord, key: string): string {
+  return BigNumber.from(encodeCoordEntity(coord, key)).toHexString();
+}
+
 // Identical to encodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
 export function encodeCoordEntity(coord: Coord, key: string): EntityID {
   function encodeCoordinate(value: number): Buffer {
@@ -82,7 +87,7 @@ export function hashKeyEntityAndTrim(
   return BigNumber.from(hashKeyEntity(key, entity)).toHexString();
 }
 
-function padTo64Bytes(hex: string): string {
+export function padTo64Bytes(hex: string): string {
   // Remove "0x" prefix if present
   const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
   // Pad the hex string with zeros to 64 characters (32 bytes)
