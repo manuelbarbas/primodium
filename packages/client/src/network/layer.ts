@@ -1,22 +1,25 @@
-import { SetupContractConfig, setupMUDNetwork } from "@latticexyz/std-client";
+import { SingletonID, createFaucetService } from "@latticexyz/network";
 import {
   createWorld,
   defineComponentSystem,
   setComponent,
 } from "@latticexyz/recs";
-import { createFaucetService } from "@latticexyz/network";
-import { SingletonID } from "@latticexyz/network";
+import { setupMUDNetwork } from "@latticexyz/std-client";
 import { utils } from "ethers";
 
-import { SystemTypes } from "../../../contracts/types/SystemTypes";
+import { NetworkConfig } from "src/util/types";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
+import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import { defineComponents, defineOffChainComponents } from "./components";
 import { faucetUrl } from "./config";
 import { syncPositionComponent } from "./syncPositionComponent";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
-export async function createNetworkLayer(config: SetupContractConfig) {
+export async function createNetworkLayer({
+  config,
+  defaultWalletAddress,
+}: NetworkConfig) {
   // The world contains references to all entities, all components and disposers.
   const world = createWorld();
   const singletonIndex = world.registerEntity({ id: SingletonID });
@@ -91,6 +94,7 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     offChainComponents,
     singletonIndex,
     providers: network.providers,
+    defaultWalletAddress,
   };
 
   startSync();

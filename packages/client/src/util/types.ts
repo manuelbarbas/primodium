@@ -1,5 +1,10 @@
+import { SetupContractConfig } from "@latticexyz/std-client";
 import { Step } from "walktour";
 
+export type NetworkConfig = {
+  config: SetupContractConfig;
+  defaultWalletAddress: string | undefined;
+};
 export type BlockTypeActionComponent = {
   action: () => void;
 };
