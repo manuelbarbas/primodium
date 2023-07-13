@@ -1,18 +1,19 @@
-import { SingletonID, createFaucetService } from "@latticexyz/network";
-import {
-  createWorld,
-  defineComponentSystem,
-  setComponent,
-} from "@latticexyz/recs";
+import { createFaucetService } from "@latticexyz/network";
+import { defineComponentSystem, setComponent } from "@latticexyz/recs";
 import { setupMUDNetwork } from "@latticexyz/std-client";
 import { utils } from "ethers";
 
 import { NetworkConfig } from "src/util/types";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
-import { defineComponents, defineOffChainComponents } from "./components";
 import { faucetUrl } from "./config";
 import { syncPositionComponent } from "./syncPositionComponent";
+import {
+  contractComponents,
+  offChainComponents,
+  singletonIndex,
+  world,
+} from "./world";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
@@ -20,16 +21,9 @@ export async function createNetworkLayer({
   config,
   defaultWalletAddress,
 }: NetworkConfig) {
-  // The world contains references to all entities, all components and disposers.
-  const world = createWorld();
-  const singletonIndex = world.registerEntity({ id: SingletonID });
-
   // Components contain the application state.
   // If a contractId is provided, MUD syncs the state with the corresponding
   // component contract (in this case `CounterComponent.sol`)
-
-  const contractComponents = defineComponents(world);
-  const offChainComponents = defineOffChainComponents(world);
 
   const { startSync, systems, components, network, gasPriceInput$ } =
     await setupMUDNetwork<typeof contractComponents, SystemTypes>(

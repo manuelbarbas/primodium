@@ -24,12 +24,11 @@ export default function NavigateMainBaseButton() {
   const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
-  );
+  )?.value;
 
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(() => {
-    if (mainBaseEntity)
-      return decodeCoordEntity(mainBaseEntity?.value as unknown as EntityID);
+    if (mainBaseEntity) return decodeCoordEntity(mainBaseEntity as EntityID);
     return undefined;
   }, [mainBaseEntity]);
   // Navigate to Main Base if it exists for this wallet
