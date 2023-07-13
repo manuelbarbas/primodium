@@ -48,6 +48,12 @@ To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`. For
   - `DebugRemoveBuildLimitSystem`
   - `DebugRemoveUpgradeRequirementsSystem`
 
+# Blueprints
+
+Each building has a blueprint which determines its size and shape when an instance of that building is created. In order to add a building to the world, you must initialize its blueprint as an array of coordinates (relative to the origin) in the `LibBlueprintInitializer` library. 
+
+When a building is created, its tiles are determined based on the prototype's blueprint. A building cannot be placed if its tile overlaps another building's tile.
+
 # Resource and Research Requirements
 
 The following components are used to store _metadata_ that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `BuildingLimitComponent` stores building limit requirements.

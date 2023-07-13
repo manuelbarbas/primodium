@@ -17,7 +17,8 @@ import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
-
+import { decodeCoordEntity } from "../util/encode";
+import { useMemo } from "react";
 export default function LeafletMap() {
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
@@ -35,10 +36,17 @@ export default function LeafletMap() {
     : singletonIndex;
 
   // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
   );
+
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(() => {
+    if (mainBaseEntity)
+      return decodeCoordEntity(mainBaseEntity?.value as unknown as EntityID);
+    return undefined;
+  }, [mainBaseEntity]);
 
   useEffect(() => {
     createPerlin().then((perlin: Perlin) => {

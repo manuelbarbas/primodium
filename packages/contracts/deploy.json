@@ -19,7 +19,7 @@
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
     "IgnoreBuildLimitComponent",
-    "BuildingBlockComponent",
+    "BuildingTilesComponent",
     "BlueprintComponent",
     "StorageCapacityComponent",
     "StorageCapacityResourcesComponent",
@@ -35,6 +35,7 @@
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibTechnologyDesignInitializer",
+    "LibBlueprintInitializer",
     "LibDebugInitializer"
   ],
   "systems": [
@@ -74,6 +75,7 @@
         "BuildingLevelComponent",
         "MainBaseInitializedComponent",
         "BuildingLimitComponent",
+        "BuildingTilesComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
         "FactoryMineBuildingsComponent"

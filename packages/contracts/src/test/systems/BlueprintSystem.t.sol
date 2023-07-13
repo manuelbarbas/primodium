@@ -33,9 +33,9 @@ contract BlueprintSystemTest is PrimodiumTest {
 
   function testBlueprint() public prank(alice) {
     Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(SiloID, blueprint);
+    blueprintSystem.executeTyped(dummyBuilding, blueprint);
 
-    int32[] memory coords = blueprintComponent.getValue(SiloID);
+    int32[] memory coords = blueprintComponent.getValue(dummyBuilding);
 
     for (uint i = 0; i < blueprint.length; i++) {
       Coord memory testCoord = Coord(coords[i * 2], coords[i * 2 + 1]);
@@ -47,16 +47,16 @@ contract BlueprintSystemTest is PrimodiumTest {
     testBlueprint();
 
     vm.expectRevert("[BlueprintSystem]: building already has a blueprint");
-    blueprintSystem.executeTyped(SiloID, new Coord[](0));
+    blueprintSystem.executeTyped(dummyBuilding, new Coord[](0));
   }
 
   function testRawIntArray() public prank(alice) {
     Coord[] memory blueprint = makeBlueprint();
     int32[] memory blueprintInt = coordArrayToIntArray(blueprint);
 
-    blueprintSystem.executeTyped(SiloID, blueprintInt);
+    blueprintSystem.executeTyped(dummyBuilding, blueprintInt);
 
-    int32[] memory coords = blueprintComponent.getValue(SiloID);
+    int32[] memory coords = blueprintComponent.getValue(dummyBuilding);
 
     for (uint i = 0; i < blueprint.length; i++) {
       Coord memory testCoord = Coord(coords[i * 2], coords[i * 2 + 1]);
@@ -68,7 +68,7 @@ contract BlueprintSystemTest is PrimodiumTest {
     int32[] memory blueprintInt = new int32[](1);
     blueprintInt[0] = 69;
     vm.expectRevert("[BlueprintSystem]: odd array length");
-    blueprintSystem.executeTyped(SiloID, blueprintInt);
+    blueprintSystem.executeTyped(dummyBuilding, blueprintInt);
   }
 
   function coordArrayToIntArray(Coord[] memory coords) private pure returns (int32[] memory ints) {
@@ -77,13 +77,5 @@ contract BlueprintSystemTest is PrimodiumTest {
       ints[i * 2] = coords[i].x;
       ints[i * 2 + 1] = coords[i].y;
     }
-  }
-
-  function makeBlueprint() private view returns (Coord[] memory blueprint) {
-    blueprint = new Coord[](3);
-
-    blueprint[0] = coord;
-    blueprint[1] = coord1;
-    blueprint[2] = coord2;
   }
 }

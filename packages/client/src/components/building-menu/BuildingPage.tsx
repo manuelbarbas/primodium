@@ -13,7 +13,8 @@ import ChooseFactoryMenu from "./ChooseFactoryMenu";
 import ChooseWeaponryMenu from "./ChooseWeaponryMenu";
 import ChooseMainBaseMenu from "./ChooseMainbaseMenu";
 import BuildingContentBox from "./BuildingBox";
-
+import { decodeCoordEntity } from "../../util/encode";
+import { useMemo } from "react";
 function BuildingPage() {
   const [menuOpenIndex, setMenuOpenIndex] = useState(-1);
   const doNothing = useCallback(() => {}, []);
@@ -24,10 +25,17 @@ function BuildingPage() {
   const resourceKey = address
     ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
     : singletonIndex;
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
   );
+
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(() => {
+    if (mainBaseEntity)
+      return decodeCoordEntity(mainBaseEntity?.value as unknown as EntityID);
+    return undefined;
+  }, [mainBaseEntity]);
 
   if (menuOpenIndex === 0) {
     return (
