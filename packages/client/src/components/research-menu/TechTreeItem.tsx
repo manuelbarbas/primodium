@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
+import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
 
 import { useMud } from "../../context/MudContext";
@@ -14,8 +14,10 @@ import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
 import { useNotificationStore } from "../../store/NotificationStore";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
-import { ResearchDefaultUnlocked } from "../../util/research";
-
+import { getBuildingResearchRequirement } from "../../util/research";
+import { useComponentValue } from "@latticexyz/react";
+import { encodeCoordEntityAndTrim } from "../../util/encode";
+import { BlockType } from "../../util/constants";
 function TechTreeItem({
   data,
   icon,
@@ -31,19 +33,75 @@ function TechTreeItem({
   const { components, world, singletonIndex, systems, providers } = useMud();
   const { address } = useAccount();
 
-  const isLocked = useMemo(() => {
-    if (ResearchDefaultUnlocked.has(data.id)) return false;
-    const researchOwner = address
+  const isResearched = useComponentValue(
+    components.Research,
+    world.entityToIndex.get(
+      hashKeyEntityAndTrim(
+        data.id,
+        address.toString().toLowerCase()
+      ) as EntityID
+    )
+  );
+
+  const researchRequirement = useMemo(() => {
+    return getBuildingResearchRequirement(data.id, world, components);
+  }, []);
+
+  const researchOwner = useMemo(() => {
+    return address != null && researchRequirement != null
       ? world.entityToIndex.get(
           hashKeyEntityAndTrim(
-            data.id,
+            researchRequirement as EntityID,
             address.toString().toLowerCase()
           ) as EntityID
         )!
       : singletonIndex;
-    const isResearched = getComponentValue(components.Research, researchOwner);
-    return !(isResearched && isResearched.value);
-  }, []);
+  }, [researchRequirement, address]);
+
+  const isResearchRequirementsMet = useMemo(() => {
+    return (
+      getComponentValue(components.Research, researchOwner)?.value ?? false
+    );
+  }, [researchOwner]);
+
+  const mainBaseCoord = useComponentValue(
+    components.MainBaseInitialized,
+    world.entityToIndex.get(
+      address.toString().toLowerCase() as EntityID
+    ) as EntityIndex
+  );
+  const mainBaseEntity = useMemo(() => {
+    return encodeCoordEntityAndTrim(
+      { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
+      BlockType.BuildingKey
+    );
+  }, [mainBaseCoord]);
+
+  const mainBaseLevel = useComponentValue(
+    components.BuildingLevel,
+    world.entityToIndex.get(mainBaseEntity as EntityID) as EntityIndex
+  );
+
+  const requiredMainBaseLevel = useComponentValue(
+    components.BuildingLevel,
+    world.entityToIndex.get(data.id) as EntityIndex
+  );
+
+  const isMainBaseLevelRequirementsMet = useMemo(() => {
+    return (mainBaseLevel?.value ?? 0) >= (requiredMainBaseLevel?.value ?? 0);
+  }, [mainBaseLevel, requiredMainBaseLevel]);
+
+  // Check if building can be researched
+  const isLocked = useMemo(() => {
+    return (
+      (researchRequirement != null && !isResearchRequirementsMet) ||
+      !isMainBaseLevelRequirementsMet
+    );
+  }, [
+    isResearchRequirementsMet,
+    researchRequirement,
+    isMainBaseLevelRequirementsMet,
+  ]);
 
   const [_, setTransactionLoading] = useGameStore((state) => [
     state.transactionLoading,
@@ -97,9 +155,13 @@ function TechTreeItem({
         })}
       </div>
       <div className="mt-3 text-xs">{description}</div>
-      {!isLocked ? (
+      {isResearched?.value ?? false ? (
+        <button className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-blue-600 py-2 rounded shadow">
+          Researched
+        </button>
+      ) : isLocked ? (
         <button className="text-white text-xs font-bold h-10 absolute inset-x-2 bottom-2 text-center bg-gray-600 py-2 rounded shadow">
-          Unlocked
+          Locked
         </button>
       ) : (
         <button

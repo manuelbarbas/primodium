@@ -16,15 +16,7 @@ export type TechnologyTreeNode = {
 };
 
 export const ResearchDefaultUnlocked = new Set<EntityID>([
-  BlockType.MainBaseResearch,
-  BlockType.Iron,
-  BlockType.BasicMinerResearch,
-  BlockType.NodeResearch,
-
   // debug
-  BlockType.ConveyorResearch,
-  BlockType.BulletFactoryResearch,
-  BlockType.SiloResearch,
 ]);
 
 export function getBuildingResearchRequirement(
