@@ -32,11 +32,12 @@ export default function ResourceLabel({
   if (storageCount > 0) {
     return (
       <div className="flex mb-1">
-        <p className="w-10 text-sm">{resourceCount}</p>
-        <img className="w-4 h-4 my-auto" src={resourceIcon}></img>
+        <p className="w-40 my-auto text-sm">
+          {resourceCount} / {storageCount}
+        </p>
+        <img className="w-4 h-4 ml-2 my-auto" src={resourceIcon}></img>
         <p className="w-20 ml-2 my-auto text-sm">{name}</p>
-        <p className="ml-2 my-auto text-sm">{storageCount}</p>
-        <p className="w-4 ml-2 my-auto text-sm">{production}</p>
+        <p className="w-4 ml-1 my-auto text-sm">{production}</p>
       </div>
     );
   } else {
