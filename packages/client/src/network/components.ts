@@ -146,9 +146,9 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    UnclaimedResources: defineNumberComponent(world, {
+    UnclaimedResource: defineNumberComponent(world, {
       metadata: {
-        contractId: "component.UnclaimedResources",
+        contractId: "component.UnclaimedResource",
       },
     }),
     // TODO: component data for crafting recipes

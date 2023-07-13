@@ -2,7 +2,7 @@ import { EntityID, EntityIndex } from "@latticexyz/recs";
 import useResourceCount from "../../hooks/useResourceCount";
 import { ResourceImage } from "../../util/constants";
 import { useMud } from "../../context/MudContext";
-
+import { useMemo } from "react";
 export default function ResourceLabel({
   name,
   resourceId,
@@ -27,15 +27,25 @@ export default function ResourceLabel({
 
   const production = useResourceCount(components.Mine, resourceId, entityIndex);
 
-  const unclaimed = useResourceCount(
-    components.UnclaimedResources,
+  const lastClaimedAt = useResourceCount(
+    components.LastClaimedAt,
     resourceId,
-    entityIndex
+    undefined
   );
 
-  const resourceIcon = ResourceImage.get(resourceId);
+  const unclaimedResource = useResourceCount(
+    components.UnclaimedResource,
+    resourceId,
+    undefined
+  );
 
-  console.log(name, unclaimed);
+  let currBlockNumber = 0;
+
+  const resourcesToClaim = useMemo(() => {
+    return unclaimedResource + (currBlockNumber - lastClaimedAt) * production;
+  }, [unclaimedResource, lastClaimedAt, currBlockNumber]);
+
+  const resourceIcon = ResourceImage.get(resourceId);
 
   if (storageCount > 0) {
     return (
