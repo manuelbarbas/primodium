@@ -30,7 +30,11 @@ import { LibEncode } from "./LibEncode.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 library LibBuilding {
-  function isBuildingLimitMet(IWorld world, uint256 playerEntity, uint256 buildingId) internal view returns (bool) {
+  function isBuildingLimitConditionMet(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 buildingId
+  ) internal view returns (bool) {
     return
       IgnoreBuildLimitComponent(getAddressById(world.components(), IgnoreBuildLimitComponentID)).has(buildingId) ||
       isBuildingCountWithinLimit(world, playerEntity);

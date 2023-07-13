@@ -113,7 +113,7 @@ contract BuildSystem is PrimodiumSystem {
     );
     //check build limit
     require(
-      LibBuilding.isBuildingLimitMet(world, playerEntity, buildingType),
+      LibBuilding.isBuildingLimitConditionMet(world, playerEntity, buildingType),
       "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
