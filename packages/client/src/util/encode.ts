@@ -1,13 +1,18 @@
-import { solidityKeccak256 } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
+import { solidityKeccak256 } from "ethers/lib/utils";
 
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 import { Buffer } from "buffer";
 
+// use this when you want to pass the entity to world.getEntityIndex
+export function encodeCoordEntityAndTrim(coord: Coord, key: string): string {
+  return BigNumber.from(encodeCoordEntity(coord, key)).toHexString();
+}
+
 // Identical to encodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
-export function encodeCoordEntity(coord: Coord, key: string): string {
+export function encodeCoordEntity(coord: Coord, key: string): EntityID {
   function encodeCoordinate(value: number): Buffer {
     const bytes = Buffer.alloc(4);
     if (value >= 0) {
@@ -32,7 +37,7 @@ export function encodeCoordEntity(coord: Coord, key: string): string {
   }
   const concatenatedBytes = Buffer.concat([xBytes, yBytes, keyBytes]);
   const encodedValue = `0x${concatenatedBytes.toString("hex")}`;
-  return encodedValue;
+  return encodedValue as EntityID;
 }
 
 // Identical to decodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
@@ -63,16 +68,14 @@ export function decodeCoordEntity(entity: EntityID): Coord {
 
 // Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
 export function hashKeyEntity(
-  key: EntityID,
-  entity: EntityID | string
-): string {
+  key: EntityID | string | number,
+  entity: EntityID | string | number
+): EntityID {
   // Compute the Keccak-256 hash of the concatenated key and entity
-  const hash: string = solidityKeccak256(
+  return solidityKeccak256(
     ["uint256", "uint256"],
     [BigNumber.from(key), BigNumber.from(entity)]
-  );
-
-  return hash;
+  ) as EntityID;
 }
 
 // Remove leading zeros due to mudv1 hashing behavior
@@ -84,7 +87,7 @@ export function hashKeyEntityAndTrim(
   return BigNumber.from(hashKeyEntity(key, entity)).toHexString();
 }
 
-function padTo64Bytes(hex: string): string {
+export function padTo64Bytes(hex: string): string {
   // Remove "0x" prefix if present
   const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;
   // Pad the hex string with zeros to 64 characters (32 bytes)

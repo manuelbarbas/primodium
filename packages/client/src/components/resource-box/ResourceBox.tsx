@@ -9,6 +9,8 @@ import { useAccount } from "../../hooks/useAccount";
 import { useGameStore } from "../../store/GameStore";
 import StarterPackButton from "../StarterPackButton";
 import AllResourceLabels from "./AllResourceLabels";
+import { encodeCoordEntity } from "src/util/encode";
+import { BlockType } from "src/util/constants";
 
 function ResourceBox() {
   const [minimized, setMinimize] = useState(false);
@@ -35,16 +37,21 @@ function ResourceBox() {
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);
-  const mainBuildingEntity = useComponentValue(
-    components.BuildingLevel,
+  const mainBuildingCoord = useComponentValue(
+    components.MainBaseInitialized,
     address
       ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
       : singletonIndex
-  )?.value as unknown as EntityID;
+  );
 
   const mainBuildingLevel = useComponentValue(
     components.BuildingLevel,
-    world.entityToIndex.get(mainBuildingEntity)
+    world.entityToIndex.get(
+      encodeCoordEntity(
+        { x: mainBuildingCoord?.x ?? 0, y: mainBuildingCoord?.y ?? 0 },
+        BlockType.BuildingKey
+      )
+    )
   );
 
   const buildLimit = useComponentValue(
