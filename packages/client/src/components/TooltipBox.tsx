@@ -38,7 +38,7 @@ import { useMemo } from "react";
 import { canBeUpgraded } from "src/util/upgrade";
 function TooltipBox() {
   const network = useMud();
-  const { world, components, singletonIndex, offChainComponents } = network;
+  const { world, components } = network;
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
   const perlinRef = useRef(null as null | Perlin);
