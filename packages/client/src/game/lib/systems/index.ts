@@ -3,7 +3,7 @@ import { Network } from "src/network/layer";
 import { renderAttackTargetingTool } from "./renderAttackTargetingTool";
 import { renderBuildngPaths } from "./renderBuildingPaths";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
-import { renderBuildingSprites } from "./renderBuildingSprites";
+import { renderBuildingSprite } from "./renderBuildingSprite";
 import { renderDemolishBuildingTool } from "./renderDemolishBuildingTool";
 import { renderDemolishPathTool } from "./renderDemolishPathTool";
 import { renderHoverTile } from "./renderHoverTile";
@@ -13,7 +13,7 @@ import { renderSelectionTile } from "./renderSelectionTile";
 
 export const runSystems = (scene: Scene, network: Network) => {
   //Render world entity's sprites and paths
-  renderBuildingSprites(scene, network);
+  renderBuildingSprite(scene, network);
   renderBuildngPaths(scene, network);
 
   // Render map utility elements, placement indicators, etc

@@ -25,8 +25,8 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    Tile: overridableComponent(
-      defineNumberComponent(world, {
+    BuildingType: overridableComponent(
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.Tile",
         },

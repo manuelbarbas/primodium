@@ -3,10 +3,10 @@ import { Coord, uuid } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
 import { randomBytes } from "ethers/lib/utils";
 
+import { execute } from "src/network/actions";
+import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { Network } from "src/network/layer";
-import { execute } from "src/network/actions";
 
 // Component overrides
 export const addTileOverride = (
@@ -25,7 +25,7 @@ export const addTileOverride = (
     entity: tempEntityIndex,
     value: pos,
   });
-  components.Tile.addOverride(tempPositionId, {
+  components.BuildingType.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockType as unknown as number },
   });
@@ -52,7 +52,7 @@ export const removeTileOverride = (
   const { components } = network;
 
   components.Position.removeOverride(tempPositionId);
-  components.Tile.removeOverride(tempPositionId);
+  components.BuildingType.removeOverride(tempPositionId);
   components.OwnedBy.removeOverride(tempPositionId);
   components.LastBuiltAt.removeOverride(tempPositionId);
   components.LastClaimedAt.removeOverride(tempPositionId);

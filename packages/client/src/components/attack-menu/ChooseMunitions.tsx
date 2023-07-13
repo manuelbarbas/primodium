@@ -48,7 +48,7 @@ function ChooseMunitions() {
   // Fetch the entityIndex of the end building being selected
   const tilesAtPosition = useEntityQuery(
     [
-      Has(components.Tile),
+      Has(components.BuildingType),
       HasValue(components.Position, {
         x: selectedAttackTiles.origin ? selectedAttackTiles.origin.x : 0,
         y: selectedAttackTiles.origin ? selectedAttackTiles.origin.y : 0,

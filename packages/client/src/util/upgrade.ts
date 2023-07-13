@@ -14,10 +14,11 @@ export function canBeUpgraded(
   world: World,
   components: NetworkComponents<ReturnType<typeof defineComponents>>
 ): undefined | boolean {
-  const buildingID = getComponentValue(
-    components.Tile,
+  const buildingType = getComponentValue(
+    components.BuildingType,
     world.entityToIndex.get(buildingEntity)!
-  );
+  )?.value;
+  if (!buildingType) return false;
   if (
     !hasComponent(
       components.MaxLevel,
@@ -27,7 +28,7 @@ export function canBeUpgraded(
     return false;
   const maxLevel = getComponentValue(
     components.MaxLevel,
-    world.entityToIndex.get(buildingID?.value as unknown as EntityID)!
+    world.entityToIndex.get(buildingType as EntityID)!
   );
 
   const currentLevel = getComponentValue(

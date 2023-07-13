@@ -159,11 +159,11 @@ export function getBuildingsOfTypeInRange(
       //get entity at coord
       const entities = runQuery([
         HasValue(components.Position, currentCoord),
-        Has(components.Tile),
+        Has(components.BuildingType),
       ]);
 
       const comp = getComponentValue(
-        components.Tile,
+        components.BuildingType,
         entities.values().next().value
       );
 
@@ -181,13 +181,13 @@ export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
 
   const entities = runQuery([
     HasValue(components.Position, coord),
-    Has(components.Tile),
+    Has(components.BuildingType),
   ]);
 
   if (!entities.size) return undefined;
 
   const tileEntityID = entities.values().next().value;
 
-  return getComponentValue(components.Tile, tileEntityID)
+  return getComponentValue(components.BuildingType, tileEntityID)
     ?.value as unknown as EntityID;
 };

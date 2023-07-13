@@ -4,16 +4,16 @@ import {
   removeComponent,
   setComponent,
 } from "@latticexyz/recs";
-import { Network } from "./layer";
 import { decodeCoordEntity } from "../util/encode";
+import { Network } from "./layer";
 
 export function syncPositionComponent(network: Network) {
   const {
     world,
-    components: { Tile, Position },
+    components: { BuildingType, Position },
   } = network;
 
-  defineComponentSystem(world, Tile, (update) => {
+  defineComponentSystem(world, BuildingType, (update) => {
     // Avoid updating on optimistic overrides
     if (
       typeof update.entity !== "number" ||
@@ -22,7 +22,7 @@ export function syncPositionComponent(network: Network) {
       return;
     }
     const coord = decodeCoordEntity(world.entities[update.entity]);
-    if (!hasComponent(Tile, update.entity)) {
+    if (!hasComponent(BuildingType, update.entity)) {
       removeComponent(Position, update.entity);
       return;
     }

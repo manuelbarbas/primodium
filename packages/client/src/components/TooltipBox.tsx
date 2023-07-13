@@ -67,14 +67,14 @@ function TooltipBox() {
 
   const tilesAtPosition = useEntityQuery(
     [
-      Has(components.Tile),
+      Has(components.BuildingType),
       HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
     ],
     { updateOnValueChange: true }
   );
 
   const tile = useComponentValue(
-    components.Tile,
+    components.BuildingType,
     tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
   );
 
