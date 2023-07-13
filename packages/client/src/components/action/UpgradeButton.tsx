@@ -12,6 +12,8 @@ import Spinner from "../Spinner";
 import { useMemo } from "react";
 import { getRecipe } from "../../util/resource";
 import { ResourceImage } from "../../util/constants";
+import ResourceIconTooltip from "../shared/ResourceIconTooltip";
+import { BlockIdToKey } from "../../util/constants";
 export default function UpgradeButton({
   id,
   coords,
@@ -56,9 +58,9 @@ export default function UpgradeButton({
     ) as EntityID;
   }, [currLevel, builtTile]);
 
-  // const recipe = useMemo(() => {
-  //   return getRecipe(buildingTypeLevel, world, components);
-  // }, [buildingTypeLevel]);
+  const recipe = useMemo(() => {
+    return getRecipe(buildingTypeLevel, world, components);
+  }, [buildingTypeLevel]);
 
   const upgradeText = useMemo(() => {
     return "Upgrade Building to Level " + upgradedLevel.toString();
@@ -155,23 +157,22 @@ export default function UpgradeButton({
           onClick={claimAction}
         >
           {upgradeText}
-          {/* <div className={`building-tooltip group-hover:scale-100`}>
-            <div className="flex-col">
-              {recipe.map((resource) => {
-                const resourceImage = ResourceImage.get(resource.id);
-                return (
-                  <div className="mr-2 inline-block" key={resource.id}>
-                    <img
-                      src={resourceImage}
-                      className="w-4 h-4 inline-block mr-1 pixel-images"
-                    />
-                    {resource.amount}
-                  </div>
-                );
-              })}
-            </div>
-          </div> */}
         </button>
+        <div className="mt-2 flex justify-center items-center text-sm">
+          {recipe.map((resource) => {
+            const resourceImage = ResourceImage.get(resource.id)!;
+            const resourceName = BlockIdToKey[resource.id];
+            return (
+              <ResourceIconTooltip
+                key={resource.id}
+                image={resourceImage}
+                resourceId={resource.id}
+                name={resourceName}
+                amount={resource.amount}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   }
