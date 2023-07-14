@@ -2,19 +2,17 @@ import { useState } from "react";
 
 import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
-import { useMud } from "../../context/MudContext";
-
 import { primodium } from "@game/api";
 
+import SelectedBuilding from "./SelectedBuilding";
 import SelectedTile from "./SelectedTile";
 
 function TooltipBox() {
-  const network = useMud();
-
   const [minimized, setMinimize] = useState(true);
 
   const Icon = !minimized ? FaMinusSquare : FaPlusSquare;
-  const selectedTile = primodium.hooks.useSelectedTile(network);
+  const selectedTile = primodium.hooks.useSelectedTile();
+  const selectedBuilding = primodium.hooks.useSelectedBuilding();
 
   return (
     <div
@@ -34,14 +32,12 @@ function TooltipBox() {
         >
           <LinkIcon icon={<Icon size="18" />} />
         </button>
-        {selectedTile &&
-          (minimized ? (
-            <p className="text-lg font-bold mb-3">
-              Tile ({selectedTile.x}, {selectedTile.y})
-            </p>
-          ) : (
-            <SelectedTile tile={selectedTile} />
-          ))}
+        {selectedTile && (
+          <SelectedTile tile={selectedTile} minimized={minimized} />
+        )}
+        {selectedBuilding && (
+          <SelectedBuilding building={selectedBuilding} minimized={minimized} />
+        )}
       </div>
     </div>
   );

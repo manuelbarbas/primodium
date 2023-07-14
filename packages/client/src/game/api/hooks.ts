@@ -1,38 +1,26 @@
-import { SingletonID } from "@latticexyz/network";
 import { Coord } from "@latticexyz/utils";
 import { useComponentValue } from "src/hooks/useComponentValue";
+import { offChainComponents, singletonIndex, world } from "src/network/world";
 import { Network } from "../../network/layer";
 
-export const useSelectedTile = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
+export const useSelectedTile = () => {
   return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
 };
 
-export const useHoverTile = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
+export const useHoverTile = () => {
   return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
 };
 
-export const useSelectedBuilding = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
-  return useComponentValue(offChainComponents.SelectedBuilding, singletonIndex)
-    ?.value;
+export const useSelectedBuilding = () => {
+  const buildingEntity = useComponentValue(
+    offChainComponents.SelectedBuilding,
+    singletonIndex
+  )?.value;
+  if (!buildingEntity) return;
+  return world.entityToIndex.get(buildingEntity);
 };
 
-export const useStartSelectedPath = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
+export const useStartSelectedPath = () => {
   return useComponentValue(
     offChainComponents.StartSelectedPath,
     singletonIndex

@@ -22,23 +22,32 @@ library LibBlueprintInitializer {
     int32[] memory baseCoords = new int32[](18);
     baseCoords[0] = 0;
     baseCoords[1] = 0;
+
     baseCoords[2] = 0;
-    baseCoords[3] = 1;
+    baseCoords[3] = -1;
+
     baseCoords[4] = 0;
-    baseCoords[5] = 2;
+    baseCoords[5] = -2;
+
     baseCoords[6] = 1;
     baseCoords[7] = 0;
+
     baseCoords[8] = 1;
-    baseCoords[9] = 1;
+    baseCoords[9] = -1;
+
     baseCoords[10] = 1;
-    baseCoords[11] = 2;
+    baseCoords[11] = -2;
+
     baseCoords[12] = 2;
     baseCoords[13] = 0;
+
     baseCoords[14] = 2;
-    baseCoords[15] = 1;
+    baseCoords[15] = -1;
+
     baseCoords[16] = 2;
-    baseCoords[17] = 2;
-    LibBlueprint.createBlueprint(blueprintComponent, MainBaseID, coords);
+    baseCoords[17] = -2;
+
+    LibBlueprint.createBlueprint(blueprintComponent, MainBaseID, baseCoords);
     LibBlueprint.createBlueprint(blueprintComponent, LithiumMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, IronMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, CopperMineID, coords);
