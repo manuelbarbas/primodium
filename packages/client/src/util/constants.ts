@@ -8,6 +8,7 @@ export enum Action {
   SelectBuilding,
   Conveyor,
   SelectAttack,
+  PlaceBuilding,
 }
 
 export const BlockKey = {

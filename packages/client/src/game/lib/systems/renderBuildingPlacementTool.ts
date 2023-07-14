@@ -2,7 +2,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   Has,
-  NotValue,
+  HasValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
@@ -22,18 +22,8 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
   const query = [
     Has(offChainComponents.HoverTile),
-    Has(offChainComponents.SelectedAction),
-    NotValue(offChainComponents.SelectedAction, {
-      value: Action.SelectAttack,
-    }),
-    NotValue(offChainComponents.SelectedAction, {
-      value: Action.DemolishPath,
-    }),
-    NotValue(offChainComponents.SelectedAction, {
-      value: Action.DemolishBuilding,
-    }),
-    NotValue(offChainComponents.SelectedAction, {
-      value: Action.Conveyor,
+    HasValue(offChainComponents.SelectedAction, {
+      value: Action.PlaceBuilding,
     }),
   ];
 
@@ -45,6 +35,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
 
     // Avoid updating on optimistic overrides
     if (
+      !selectedBuilding ||
       typeof entityIndex !== "number" ||
       entityIndex >= world.entities.length
     ) {
@@ -74,7 +65,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       createBuilding({
         x: pixelCoord.x,
         y: -pixelCoord.y,
-        buildingType: selectedBuilding!,
+        buildingType: selectedBuilding,
       })
     );
 
