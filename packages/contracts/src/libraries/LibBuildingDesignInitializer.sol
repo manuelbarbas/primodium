@@ -29,15 +29,20 @@ import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeRes
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
 
 // Items
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, AlloyCraftedItemID, LithiumCopperOxideCraftedItemID, SpaceFuelCraftedItemID } from "../prototypes/Keys.sol";
+import { ElectricityPassiveResourceID, BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, AlloyCraftedItemID, LithiumCopperOxideCraftedItemID, SpaceFuelCraftedItemID } from "../prototypes/Keys.sol";
 
 import { IronMine2ResearchID, IronMine3ResearchID, IronMine4ResearchID } from "../prototypes/Keys.sol";
 import { CopperMineResearchID, CopperMine2ResearchID, CopperMine3ResearchID } from "../prototypes/Keys.sol";
 import { LithiumMineResearchID, LithiumMine2ResearchID, LithiumMine3ResearchID } from "../prototypes/Keys.sol";
 import { StorageUnitResearchID, StorageUnit2ResearchID, StorageUnit3ResearchID } from "../prototypes/Keys.sol";
 import { IronPlateFactoryResearchID, IronPlateFactory2ResearchID, IronPlateFactory3ResearchID } from "../prototypes/Keys.sol";
+import { AlloyFactoryResearchID, AlloyFactory2ResearchID, AlloyFactory3ResearchID } from "../prototypes/Keys.sol";
+import { LithiumCopperOxideFactoryResearchID, LithiumCopperOxideFactory2ResearchID, LithiumCopperOxideFactory3ResearchID } from "../prototypes/Keys.sol";
+import { SpaceFuelFactoryResearchID, SpaceFuelFactory2ResearchID, SpaceFuelFactory3ResearchID } from "../prototypes/Keys.sol";
+import { SolarPanelResearchID, SolarPanel2ResearchID, SolarPanel3ResearchID } from "../prototypes/Keys.sol";
+
 import { IronMineID, CopperMineID, LithiumMineID } from "../prototypes/Tiles.sol";
-import { IronPlateFactoryID, AlloyFactoryID } from "../prototypes/Tiles.sol";
+import { IronPlateFactoryID, AlloyFactoryID, LithiumCopperOxideFactoryID } from "../prototypes/Tiles.sol";
 import { StorageUnitID } from "../prototypes/Tiles.sol";
 
 library LibBuildingDesignInitializer {
@@ -375,7 +380,7 @@ library LibBuildingDesignInitializer {
     //AlloyFactoryID
     maxLevelComponent.set(AlloyFactoryID, 3);
 
-    requiredResearch.set(AlloyFactoryID, IronPlateFactoryResearchID);
+    requiredResearch.set(AlloyFactoryID, AlloyFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -408,50 +413,55 @@ library LibBuildingDesignInitializer {
 
     //AlloyFactoryID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(AlloyFactoryID, 2);
-    requiredResearch.set(buildingIdLevel, IronPlateFactory2ResearchID);
-    LibSetRequiredResources.set1RequiredResourceForEntity(
+    requiredResearch.set(buildingIdLevel, AlloyFactoryResearchID);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       buildingIdLevel,
+      IronPlateCraftedItemID,
+      1500,
       CopperResourceItemID,
-      3000
+      4000
     );
-
+    //AlloyFactoryID Level 2
     //required Mines
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
+    LibSetFactoryMineRequirements.setFactory2MineRequirement(
       factoryMineBuildingsComponent,
       AlloyFactoryID,
       2,
       IronMineID,
+      1,
+      CopperMineID,
       1
     );
-
     // production
     LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
       factoryProductionComponent,
       AlloyFactoryID,
       2,
-      IronPlateCraftedItemID,
+      AlloyCraftedItemID,
       2
     );
 
     //AlloyFactoryID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(AlloyFactoryID, 3);
-    requiredResearch.set(buildingIdLevel, IronPlateFactory3ResearchID);
+    requiredResearch.set(buildingIdLevel, AlloyFactory3ResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
       buildingIdLevel,
-      CopperResourceItemID,
+      IronPlateCraftedItemID,
       10000
     );
 
     //required Mines
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
+    LibSetFactoryMineRequirements.setFactory2MineRequirement(
       factoryMineBuildingsComponent,
       AlloyFactoryID,
       3,
       IronMineID,
+      2,
+      CopperMineID,
       2
     );
 
@@ -460,8 +470,116 @@ library LibBuildingDesignInitializer {
       factoryProductionComponent,
       AlloyFactoryID,
       3,
+      AlloyCraftedItemID,
+      5
+    );
+  }
+
+  function initLithiumCopperOxideFactory(
+    ItemComponent itemComponent,
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    FactoryProductionComponent factoryProductionComponent,
+    MaxLevelComponent maxLevelComponent,
+    RequiredResearchComponent requiredResearch,
+    RequiredResourcesComponent requiredResources
+  ) internal {
+    //LithiumCopperOxideFactoryID
+    maxLevelComponent.set(LithiumCopperOxideFactoryID, 2);
+
+    requiredResearch.set(LithiumCopperOxideFactoryID, LithiumCopperOxideFactoryResearchID);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      LithiumCopperOxideFactoryID,
       IronPlateCraftedItemID,
+      800,
+      CopperResourceItemID,
+      1500
+    );
+    //LithiumCopperOxideFactoryID Level 1
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1);
+    //required Mines
+    LibSetFactoryMineRequirements.setFactory2MineRequirement(
+      factoryMineBuildingsComponent,
+      LithiumCopperOxideFactoryID,
+      1,
+      LithiumMineID,
+      1,
+      CopperMineID,
+      1
+    );
+    // production
+    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
+      factoryProductionComponent,
+      LithiumCopperOxideFactoryID,
+      1,
+      LithiumCopperOxideCraftedItemID,
+      1
+    );
+
+    //LithiumCopperOxideFactoryID Level 2
+    buildingIdLevel = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 2);
+    requiredResearch.set(buildingIdLevel, LithiumCopperOxideFactoryResearchID);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      buildingIdLevel,
+      AlloyCraftedItemID,
+      1500,
+      IronPlateCraftedItemID,
+      4000
+    );
+    //LithiumCopperOxideFactoryID Level 2
+    //required Mines
+    LibSetFactoryMineRequirements.setFactory2MineRequirement(
+      factoryMineBuildingsComponent,
+      LithiumCopperOxideFactoryID,
+      2,
+      LithiumMineID,
+      1,
+      CopperMineID,
+      1
+    );
+    // production
+    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
+      factoryProductionComponent,
+      LithiumCopperOxideFactoryID,
+      2,
+      LithiumCopperOxideCraftedItemID,
       3
+    );
+
+    //LithiumCopperOxideFactoryID Level 3
+    buildingIdLevel = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 3);
+    requiredResearch.set(buildingIdLevel, LithiumCopperOxideFactory3ResearchID);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
+      requiredResources,
+      itemComponent,
+      buildingIdLevel,
+      AlloyCraftedItemID,
+      5000,
+      IronResourceItemID,
+      20000
+    );
+
+    //required Mines
+    LibSetFactoryMineRequirements.setFactory2MineRequirement(
+      factoryMineBuildingsComponent,
+      LithiumCopperOxideFactoryID,
+      3,
+      LithiumMineID,
+      2,
+      CopperMineID,
+      2
+    );
+
+    // production
+    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
+      factoryProductionComponent,
+      LithiumCopperOxideFactoryID,
+      3,
+      LithiumCopperOxideCraftedItemID,
+      7
     );
   }
 
@@ -596,8 +714,6 @@ library LibBuildingDesignInitializer {
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
 
-    uint256[] memory reUsabelArray;
-
     initMainBase(
       itemComponent,
       storageCapacityResourcesComponent,
@@ -642,6 +758,23 @@ library LibBuildingDesignInitializer {
     );
 
     initIronPlateFactory(
+      itemComponent,
+      factoryMineBuildingsComponent,
+      factoryProductionComponent,
+      maxLevelComponent,
+      requiredResearch,
+      requiredResources
+    );
+
+    initAlloyFactory(
+      itemComponent,
+      factoryMineBuildingsComponent,
+      factoryProductionComponent,
+      maxLevelComponent,
+      requiredResearch,
+      requiredResources
+    );
+    initLithiumCopperOxideFactory(
       itemComponent,
       factoryMineBuildingsComponent,
       factoryProductionComponent,

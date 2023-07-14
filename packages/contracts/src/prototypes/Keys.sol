@@ -15,6 +15,8 @@ uint256 constant TitaniumResourceItemID = TitaniumID;
 uint256 constant TungstenResourceItemID = TungstenID;
 uint256 constant UraniniteResourceItemID = UraniniteID;
 
+uint256 constant ElectricityPassiveResourceID = uint256(keccak256("item.ElectricityPassiveResource"));
+
 uint256 constant IronPlateCraftedItemID = uint256(keccak256("item.IronPlateCrafted"));
 uint256 constant AlloyCraftedItemID = uint256(keccak256("item.AlloyCrafted"));
 uint256 constant LithiumCopperOxideCraftedItemID = uint256(keccak256("item.LithiumCopperOxideCrafted"));

@@ -16,6 +16,8 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
+import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { Coord } from "../types.sol";
@@ -26,13 +28,82 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
-
+import { LibClaim } from "../libraries/LibClaim.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
+
+  function checkPassiveResourceRequirements(uint256 blockType) internal view returns (bool) {
+    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
+      getAddressById(components, RequiredPassiveResourceComponentID)
+    );
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    if (requiredPassiveResourceComponent.has(blockType)) {
+      uint256 playerEntity = addressToEntity(msg.sender);
+      ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
+      uint256[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
+      for (uint256 i = 0; i < resourceIDs.length; i++) {
+        if (
+          LibStorage.getAvailableSpaceInStorageForResource(
+            storageCapacityComponent,
+            itemComponent,
+            playerEntity,
+            resourceIDs[i]
+          ) < requiredAmounts[i]
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function updatePassiveResourcesBasedOnRequirements(uint256 blockType) internal {
+    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
+      getAddressById(components, RequiredPassiveResourceComponentID)
+    );
+    if (requiredPassiveResourceComponent.has(blockType)) {
+      uint256 playerEntity = addressToEntity(msg.sender);
+      ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
+      uint256[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
+
+      for (uint256 i = 0; i < resourceIDs.length; i++) {
+        uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
+        itemComponent.set(
+          playerResourceEntity,
+          LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + requiredAmounts[i]
+        );
+      }
+    }
+  }
+
+  function updatePassiveResourceProduction(uint256 blockType) internal {
+    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
+      getAddressById(components, PassiveResourceProductionComponentID)
+    );
+    if (passiveResourceProductionComponent.has(blockType)) {
+      uint256 playerEntity = addressToEntity(msg.sender);
+      StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+        getAddressById(components, StorageCapacityComponentID)
+      );
+      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
+      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
+        StorageCapacityResourcesComponent(getAddressById(components, StorageCapacityResourcesComponentID)),
+        storageCapacityComponent,
+        playerEntity,
+        resourceId,
+        LibMath.getSafeUint256Value(storageCapacityComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
+          passiveResourceProductionComponent.getValue(blockType).ResourceProduction
+      );
+    }
+  }
 
   function checkResearchRequirements(uint256 blockType) internal view returns (bool) {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
@@ -177,10 +248,15 @@ contract BuildSystem is System {
         mainBaseInitializedComponent.set(playerEntity, coord);
       }
     }
-
+    require(
+      checkPassiveResourceRequirements(blockType),
+      "[BuildSystem] You do not have the required passive resources"
+    );
     //check resource requirements and if ok spend required resources
     require(checkAndSpendResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
 
+    updatePassiveResourcesBasedOnRequirements(blockType);
+    updatePassiveResourceProduction(blockType);
     //set MainBase id for player address for easy lookup
 
     // update building count if the built building counts towards the build limit

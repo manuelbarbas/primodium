@@ -27,7 +27,9 @@
     "FactoryMineBuildingsComponent",
     "FactoryProductionComponent",
     "MaxLevelComponent",
-    "RequiredTileComponent"
+    "RequiredTileComponent",
+    "RequiredPassiveResourceComponent",
+    "PassiveResourceProductionComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
