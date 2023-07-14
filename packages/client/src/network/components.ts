@@ -150,12 +150,14 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    BuildingTiles: overridableComponent(
-      defineNumberComponent(world, {
+    BuildingTiles: defineComponent(
+      world,
+      { value: Type.EntityArray },
+      {
         metadata: {
           contractId: "component.BuildingTiles",
         },
-      })
+      }
     ),
     RawBlueprint: defineComponent(
       world,

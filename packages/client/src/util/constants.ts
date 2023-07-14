@@ -42,7 +42,11 @@ export const BlockKey = {
   Silo: "Silo",
 };
 
-export const BlockType = {
+export interface BlockTypeInterface {
+  [x: string]: EntityID;
+}
+
+export const BlockType: BlockTypeInterface = {
   // Landscape blocks
   Water: keccak256("block.Water") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,

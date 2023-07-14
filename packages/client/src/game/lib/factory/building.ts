@@ -9,6 +9,17 @@ import {
   SpriteKeys,
 } from "../../constants";
 
+function findBlockByValue(value: string): string | undefined {
+  for (const key in BlockType) {
+    if (BlockType.hasOwnProperty(key)) {
+      if (BlockType[key] === value) {
+        return key;
+      }
+    }
+  }
+  return undefined;
+}
+
 export const createBuilding = ({
   renderId = "building",
   x,
@@ -20,6 +31,7 @@ export const createBuilding = ({
   y: number;
   buildingType: EntityID;
 }): GameObjectComponent<"Sprite"> => {
+  console.log("building type: ", findBlockByValue(buildingType));
   return {
     id: renderId,
     once: (gameObject) => {

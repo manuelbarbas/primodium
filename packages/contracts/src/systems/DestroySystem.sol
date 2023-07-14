@@ -98,10 +98,10 @@ contract DestroySystem is PrimodiumSystem {
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
-    buildingTilesComponent.remove(buildingEntity);
     for (uint i = 0; i < buildingTiles.length; i++) {
       clearBuildingTile(ownedByComponent, buildingTiles[i]);
     }
+    buildingTilesComponent.remove(buildingEntity);
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
       IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(

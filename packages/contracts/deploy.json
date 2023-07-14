@@ -96,7 +96,8 @@
         "BuildingLimitComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
-        "ItemComponent"
+        "ItemComponent",
+        "BuildingTilesComponent"
       ]
     },
     {
