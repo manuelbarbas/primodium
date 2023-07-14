@@ -7,7 +7,6 @@ import { LibEncode } from "./LibEncode.sol";
 import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
 import { LibClaim } from "./LibClaim.sol";
 import { LibMath } from "./LibMath.sol";
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 
 library LibNewMine {
   function claimResourcesFromMines(
@@ -45,35 +44,5 @@ library LibNewMine {
       lastClaimedAtComponent.set(playerResourceEntity, block.number);
       unclaimedResourceComponent.set(playerResourceEntity, 0);
     }
-  }
-
-  function getAllResourceIds() internal pure returns (uint256[25] memory) {
-    return [
-      BolutiteResourceItemID,
-      CopperResourceItemID,
-      IridiumResourceItemID,
-      IronResourceItemID,
-      KimberliteResourceItemID,
-      LithiumResourceItemID,
-      OsmiumResourceItemID,
-      TitaniumResourceItemID,
-      TungstenResourceItemID,
-      UraniniteResourceItemID,
-      IronPlateCraftedItemID,
-      BasicPowerSourceCraftedItemID,
-      KineticMissileCraftedItemID,
-      RefinedOsmiumCraftedItemID,
-      AdvancedPowerSourceCraftedItemID,
-      PenetratingWarheadCraftedItemID,
-      PenetratingMissileCraftedItemID,
-      TungstenRodsCraftedItemID,
-      IridiumCrystalCraftedItemID,
-      IridiumDrillbitCraftedItemID,
-      LaserPowerSourceCraftedItemID,
-      ThermobaricWarheadCraftedItemID,
-      ThermobaricMissileCraftedItemID,
-      KimberliteCrystalCatalystCraftedItemID,
-      BulletCraftedItemID
-    ];
   }
 }

@@ -29,10 +29,8 @@ import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeRes
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
 
 // Items
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID } from "../prototypes/Keys.sol";
+import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, AlloyCraftedItemID, LithiumCopperOxideCraftedItemID, SpaceFuelCraftedItemID } from "../prototypes/Keys.sol";
 
-// Research
-import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
 import { IronMine2ResearchID, IronMine3ResearchID, IronMine4ResearchID } from "../prototypes/Keys.sol";
 import { CopperMineResearchID, CopperMine2ResearchID, CopperMine3ResearchID } from "../prototypes/Keys.sol";
 import { LithiumMineResearchID, LithiumMine2ResearchID, LithiumMine3ResearchID } from "../prototypes/Keys.sol";
@@ -303,7 +301,7 @@ library LibBuildingDesignInitializer {
       IronPlateFactoryID,
       1,
       IronPlateCraftedItemID,
-      1
+      2
     );
 
     //IronPlateFactoryID Level 2
@@ -332,7 +330,7 @@ library LibBuildingDesignInitializer {
       IronPlateFactoryID,
       2,
       IronPlateCraftedItemID,
-      2
+      3
     );
 
     //IronPlateFactoryID Level 3
@@ -361,10 +359,11 @@ library LibBuildingDesignInitializer {
       IronPlateFactoryID,
       3,
       IronPlateCraftedItemID,
-      3
+      4
     );
   }
 
+  //wip
   function initAlloyFactory(
     ItemComponent itemComponent,
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
@@ -377,21 +376,25 @@ library LibBuildingDesignInitializer {
     maxLevelComponent.set(AlloyFactoryID, 3);
 
     requiredResearch.set(AlloyFactoryID, IronPlateFactoryResearchID);
-    LibSetRequiredResources.set1RequiredResourceForEntity(
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       AlloyFactoryID,
+      IronPlateCraftedItemID,
+      800,
       CopperResourceItemID,
-      1000
+      1500
     );
     //AlloyFactoryID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(AlloyFactoryID, 1);
     //required Mines
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
+    LibSetFactoryMineRequirements.setFactory2MineRequirement(
       factoryMineBuildingsComponent,
       AlloyFactoryID,
       1,
       IronMineID,
+      1,
+      CopperMineID,
       1
     );
     // production
@@ -399,7 +402,7 @@ library LibBuildingDesignInitializer {
       factoryProductionComponent,
       AlloyFactoryID,
       1,
-      IronPlateCraftedItemID,
+      AlloyCraftedItemID,
       1
     );
 
