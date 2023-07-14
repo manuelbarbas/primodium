@@ -1,12 +1,13 @@
 import { useComponentValue } from "@latticexyz/react";
-import { EntityIndex } from "@latticexyz/recs";
+import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
 import { useMud } from "src/context/MudContext";
-import { world } from "src/network/world";
+import { useAccount } from "src/hooks/useAccount";
 import { useGameStore } from "src/store/GameStore";
 import {
   BackgroundImage,
   BlockIdToKey,
+  BlockType,
   ResourceImage,
 } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
@@ -26,20 +27,32 @@ import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 type Props = { building: EntityIndex; minimized: boolean };
 const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
   const { components, perlin } = useMud();
+  const { address } = useAccount();
   const owner = useComponentValue(components.OwnedBy, building)?.value;
+  const ownerName = !owner
+    ? ""
+    : owner == address
+    ? "you"
+    : owner.toString().slice(0, 8) + "...";
 
-  const buildingEntity = world.entities[building];
+  const buildingType = useComponentValue(components.BuildingType, building, {
+    value: BlockType.Node,
+  })?.value as EntityID;
+  const name = BlockIdToKey[buildingType]
+    .replace(/([A-Z]+)/g, " $1")
+    .replace(/([A-Z][a-z])/g, " $1");
+
   const position = useComponentValue(components.Position, building);
   const terrain = position ? getTopLayerKeyPair(position, perlin) : undefined;
 
-  const claimable = isClaimable(buildingEntity);
-  const claimableFactory = isClaimableFactory(buildingEntity);
+  const claimable = isClaimable(buildingType);
+  const claimableFactory = isClaimableFactory(buildingType);
   const tileHealth = useComponentValue(components.Health, building);
 
   const CraftRecipeDisplay = () => {
-    if (!isClaimableFactory(buildingEntity)) return null;
+    if (!isClaimableFactory(buildingType)) return null;
 
-    const craftRecipe = CraftRecipe.get(buildingEntity);
+    const craftRecipe = CraftRecipe.get(buildingType);
     if (!craftRecipe) return null;
     return (
       <p>
@@ -70,11 +83,10 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
     state.transactionLoading,
   ]);
 
-  const name = "building";
   if (minimized)
     return (
-      <div>
-        {name} <p className="italic">{owner}</p>
+      <div className="flex gap-1.5 text-lg font-bold mb-3 items-center">
+        {name} <p className="italic text-xs">{ownerName}</p>
       </div>
     );
 
@@ -85,7 +97,7 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
           <div
             className="inline-block w-16 h-16 flex-shrink-0"
             style={{
-              backgroundImage: `url(${BackgroundImage.get(buildingEntity)!})`,
+              backgroundImage: `url(${BackgroundImage.get(buildingType)!})`,
               backgroundSize: "cover",
               imageRendering: "pixelated",
             }}
@@ -105,11 +117,11 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
           </div>
         </div>
       </div>
-      {owner && (
+      {ownerName && (
         <div className="flex-col">
           <div className="inline-block font-bold mb-1">Owner:</div>
           <div className="mx-2 inline-block">
-            <div>{owner.toString().slice(0, 8) + "..."}</div>
+            <div>{ownerName}</div>
           </div>
         </div>
       )}
@@ -119,14 +131,14 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
           <div>
             {tileHealth
               ? BigNumber.from(tileHealth?.value).toString()
-              : getBuildingMaxHealth(buildingEntity)}
-            /{getBuildingMaxHealth(buildingEntity)}
+              : getBuildingMaxHealth(buildingType)}
+            /{getBuildingMaxHealth(buildingType)}
           </div>
         </div>
       </div>
       <CraftRecipeDisplay />
       <div className="flex-row mt-2 mb-2">
-        {(claimable || claimableFactory) && !isMainBase(buildingEntity) && (
+        {(claimable || claimableFactory) && !isMainBase(buildingType) && (
           <div className="font-bold mb-1">Storage:</div>
         )}
         {!!position && (
@@ -134,21 +146,21 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
             {claimable && !claimableFactory && (
               <ClaimButton
                 id="claim-button"
-                builtTile={buildingEntity}
+                builtTile={buildingType}
                 coords={position}
               />
             )}
             {claimableFactory && (
               <ClaimCraftButton
                 id="claim-button-factory"
-                builtTile={buildingEntity}
+                builtTile={buildingType}
                 coords={position}
               />
             )}
             {
               <UpgradeButton
                 id="upgrade-button"
-                builtTile={buildingEntity}
+                builtTile={buildingType}
                 coords={position}
               />
             }
