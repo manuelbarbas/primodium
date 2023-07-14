@@ -67,9 +67,10 @@ export const buildBuilding = async (
 
   try {
     setTransactionLoading(true);
+    console.log("building ", pos);
     await execute(
       systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
-        gasLimit: 1_800_000,
+        gasLimit: 5_000_000,
       }),
       providers,
       setNotification
@@ -87,6 +88,7 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
+  console.log("building path", start, end);
   await execute(
     systems["system.BuildPath"].executeTyped(start, end, {
       gasLimit: 1_500_000,
@@ -98,6 +100,7 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
 };
 
 export const demolishBuilding = async (pos: Coord, network: Network) => {
+  console.log("demolishing", pos);
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;

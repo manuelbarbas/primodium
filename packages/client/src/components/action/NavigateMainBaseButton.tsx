@@ -1,14 +1,11 @@
 import { primodium } from "@game/api";
 import { EntityID } from "@latticexyz/recs";
-import { BigNumber } from "ethers";
 import { useCallback, useMemo } from "react";
 import { decodeCoordEntity } from "src/util/encode";
+import { buildBuilding } from "src/util/web3";
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 import { useComponentValue } from "../../hooks/useComponentValue";
-import { execute } from "../../network/actions";
-import { useGameStore } from "../../store/GameStore";
-import { useNotificationStore } from "../../store/NotificationStore";
 import { BlockType } from "../../util/constants";
 export default function NavigateMainBaseButton() {
   const { world, components, singletonIndex } = useMud();
@@ -40,36 +37,16 @@ export default function NavigateMainBaseButton() {
 
   // Otherwise build a main base
   const network = useMud();
-  const { systems, providers } = network;
 
-  const [setTransactionLoading] = useGameStore((state) => [
-    state.setTransactionLoading,
-  ]);
-  const [setNotification] = useNotificationStore((state) => [
-    state.setNotification,
-  ]);
-
-  const buildMainBase = useCallback(async () => {
-    setTransactionLoading(true);
+  const buildMainBase = async () => {
     const cameraCoord = primodium.camera.getPosition();
     const selectedTile = primodium.components.selectedTile(network).get();
 
     if (!selectedTile)
-      primodium.components.selectedTile(network).set(cameraCoord);
+      return primodium.components.selectedTile(network).set(cameraCoord);
 
-    await execute(
-      systems["system.Build"].executeTyped(
-        BigNumber.from(BlockType.MainBase),
-        selectedTile ?? cameraCoord,
-        {
-          gasLimit: 2_800_000,
-        }
-      ),
-      providers,
-      setNotification
-    );
-    setTransactionLoading(false);
-  }, [network]);
+    await buildBuilding(selectedTile, BlockType.MainBase, address, network);
+  };
 
   if (mainBaseCoord) {
     return (
