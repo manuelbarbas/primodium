@@ -3,6 +3,7 @@ import { defineComponentSystem, setComponent } from "@latticexyz/recs";
 import { setupMUDNetwork } from "@latticexyz/std-client";
 import { utils } from "ethers";
 
+import { createPerlin } from "@latticexyz/noise";
 import { NetworkConfig } from "src/util/types";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
@@ -82,6 +83,7 @@ export async function createNetworkLayer({
     }, 20000);
     world.registerDisposer(() => clearInterval(intervalId2));
   }
+  const perlin = await createPerlin();
 
   const context = {
     world,
@@ -91,6 +93,7 @@ export async function createNetworkLayer({
     singletonIndex,
     providers: network.providers,
     defaultWalletAddress,
+    perlin,
   };
 
   startSync();

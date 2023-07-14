@@ -1,17 +1,14 @@
 import { SingletonID } from "@latticexyz/network";
-import { Network } from "../../network/layer";
-import { useComponentValue } from "src/hooks/useComponentValue";
 import { Coord } from "@latticexyz/utils";
+import { useComponentValue } from "src/hooks/useComponentValue";
+import { Network } from "../../network/layer";
 
 export const useSelectedTile = (network: Network) => {
   const { offChainComponents, world } = network;
 
   const singletonIndex = world.entityToIndex.get(SingletonID);
 
-  return useComponentValue(offChainComponents.SelectedTile, singletonIndex, {
-    x: 0,
-    y: 0,
-  });
+  return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
 };
 
 export const useHoverTile = (network: Network) => {

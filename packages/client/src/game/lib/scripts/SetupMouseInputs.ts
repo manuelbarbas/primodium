@@ -72,7 +72,6 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
       setComponent(SelectedBuilding, singletonIndex, { value: building });
       removeComponent(SelectedTile, singletonIndex);
     }
-    components.selectedTile(network).set(gameCoord);
   });
 
   scene.input.pointermove$.pipe().subscribe((event) => {

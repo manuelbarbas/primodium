@@ -1,10 +1,10 @@
 import InfoBox from "../components/InfoBox";
-import ResourceBox from "../components/resource-box/ResourceBox";
-import SideMenu from "../components/SideMenu";
-import TooltipBox from "../components/TooltipBox";
 import NotificationBox from "../components/NotificationBox";
+import SideMenu from "../components/SideMenu";
+import ResourceBox from "../components/resource-box/ResourceBox";
 import { useGameStore } from "../store/GameStore";
 
+import TooltipBox from "src/components/tooltip-box/TooltipBox";
 import LeafletMap from "./LeafletMap";
 
 export default function Home() {
