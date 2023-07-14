@@ -98,6 +98,7 @@ contract DestroySystem is PrimodiumSystem {
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
+    buildingTilesComponent.remove(buildingEntity);
     for (uint i = 0; i < buildingTiles.length; i++) {
       clearBuildingTile(ownedByComponent, buildingTiles[i]);
     }

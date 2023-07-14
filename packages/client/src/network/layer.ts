@@ -53,21 +53,11 @@ export async function createNetworkLayer({
     });
   });
 
-  // Faucet setup
-  const faucet = faucetUrl ? createFaucetService(faucetUrl) : undefined;
+  if (!config.devMode) {
+    // Faucet setup
+    const faucet = faucetUrl ? createFaucetService(faucetUrl) : undefined;
 
-  // initial drip
-  const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-    utils.parseEther("2")
-  );
-  if (playerIsBroke) {
-    console.info("[Dev Faucet] Dripping funds to player");
-    const address = network.connectedAddress.get();
-    address && (await faucet?.dripDev({ address }));
-  }
-
-  // interval drip
-  const intervalId2 = setInterval(async () => {
+    // initial drip
     const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
       utils.parseEther("2")
     );
@@ -75,11 +65,23 @@ export async function createNetworkLayer({
       console.info("[Dev Faucet] Dripping funds to player");
       const address = network.connectedAddress.get();
       address && (await faucet?.dripDev({ address }));
-    } else {
-      console.info("[Dev Faucet] Player has enough funds");
     }
-  }, 20000);
-  world.registerDisposer(() => clearInterval(intervalId2));
+
+    // interval drip
+    const intervalId2 = setInterval(async () => {
+      const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
+        utils.parseEther("2")
+      );
+      if (playerIsBroke) {
+        console.info("[Dev Faucet] Dripping funds to player");
+        const address = network.connectedAddress.get();
+        address && (await faucet?.dripDev({ address }));
+      } else {
+        console.info("[Dev Faucet] Player has enough funds");
+      }
+    }, 20000);
+    world.registerDisposer(() => clearInterval(intervalId2));
+  }
 
   const context = {
     world,
