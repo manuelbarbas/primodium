@@ -9,7 +9,7 @@ import { renderDemolishPathTool } from "./renderDemolishPathTool";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderMapMarkers } from "./renderMapMarkers";
 import { renderPathPlacementTool } from "./renderPathPlacementTool";
-import { renderSelectionTile } from "./renderSelectionTile";
+import { renderSelectedTile } from "./renderSelectedTile";
 
 export const runSystems = (scene: Scene, network: Network) => {
   //Render world entity's sprites and paths
@@ -17,7 +17,7 @@ export const runSystems = (scene: Scene, network: Network) => {
   renderBuildngPaths(scene, network);
 
   // Render map utility elements, placement indicators, etc
-  renderSelectionTile(scene, network);
+  renderSelectedTile(scene, network);
   renderHoverTile(scene, network);
   renderBuildingPlacementTool(scene, network);
   renderPathPlacementTool(scene, network);

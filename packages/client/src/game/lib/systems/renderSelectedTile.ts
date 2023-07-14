@@ -1,3 +1,4 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   Has,
@@ -6,12 +7,11 @@ import {
   defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
-import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Network } from "src/network/layer";
 import { createSelectionTile } from "../factory/selectionTile";
 
-export const renderSelectionTile = (scene: Scene, network: Network) => {
+export const renderSelectedTile = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
 

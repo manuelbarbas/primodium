@@ -25,11 +25,13 @@ export const createBuilding = ({
   x,
   y,
   buildingType,
+  selected = false,
 }: {
   renderId?: string;
   x: number;
   y: number;
   buildingType: EntityID;
+  selected?: boolean;
 }): GameObjectComponent<"Sprite"> => {
   console.log("building type: ", findBlockByValue(buildingType));
   return {
@@ -45,6 +47,9 @@ export const createBuilding = ({
       const sprite = EntityIDtoSpriteKey[buildingType];
       gameObject.setTexture(atlas, sprite ?? SpriteKeys.Node);
       gameObject.setDepth(DepthLayers.Building);
+      if (selected) {
+        gameObject.setTint(0xff0000);
+      }
 
       //set animation if it exists
       const anim = EntityIDtoAnimationKey[buildingType];

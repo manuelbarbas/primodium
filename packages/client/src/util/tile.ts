@@ -191,3 +191,14 @@ export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
   return getComponentValue(components.BuildingType, tileEntityID)
     ?.value as EntityID;
 };
+
+export const getBuildingAtCoord = (coord: Coord, network: Network) => {
+  const { components } = network;
+
+  const entities = runQuery([HasValue(components.Position, coord)]);
+
+  if (entities.size === 0) return undefined;
+  const tileEntity = [...entities][0];
+
+  return getComponentValue(components.OwnedBy, tileEntity)?.value as EntityID;
+};

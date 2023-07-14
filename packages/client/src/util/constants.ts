@@ -256,12 +256,10 @@ export const BlockType: BlockTypeInterface = {
   ) as EntityID,
 };
 
-export type BlockTypeKey = keyof typeof BlockType;
-
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
-  [key: EntityID]: BlockTypeKey;
+  [key: EntityID]: string;
 }>((acc, [key, id]) => {
-  acc[id] = key as BlockTypeKey;
+  acc[id] = key;
   return acc;
 }, {});
 

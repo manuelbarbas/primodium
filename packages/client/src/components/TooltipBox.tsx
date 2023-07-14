@@ -65,7 +65,7 @@ function TooltipBox() {
   // Get information on the selected tile
   const selectedTile = primodium.hooks.useSelectedTile(network);
 
-  const tilesAtPosition = useEntityQuery(
+  const buildingsAtPosition = useEntityQuery(
     [
       Has(components.BuildingType),
       HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
@@ -73,19 +73,21 @@ function TooltipBox() {
     { updateOnValueChange: true }
   );
 
+  const building =
+    buildingsAtPosition.length > 0 ? buildingsAtPosition[0] : undefined;
   const tile = useComponentValue(
     components.BuildingType,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+    building ?? singletonIndex
   );
 
   const tileOwnedBy = useComponentValue(
     components.OwnedBy,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+    building ?? singletonIndex
   );
 
   const tileHealth = useComponentValue(
     components.Health,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+    building ?? singletonIndex
   );
 
   const terrainTile = getTopLayerKeyHelper({
@@ -95,7 +97,12 @@ function TooltipBox() {
 
   let builtTile: EntityID | undefined;
   let tileOwner: string | undefined;
-  if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile && tileOwnedBy) {
+  if (
+    buildingsAtPosition.length > 0 &&
+    buildingsAtPosition[0] &&
+    tile &&
+    tileOwnedBy
+  ) {
     builtTile = tile.value as EntityID;
     tileOwner = tileOwnedBy.value;
   } else {
@@ -299,7 +306,7 @@ function TooltipBox() {
                     {transactionLoading ? (
                       <p>...</p>
                     ) : (
-                      <AllResourceLabels entityIndex={tilesAtPosition[0]} />
+                      <AllResourceLabels entityIndex={buildingsAtPosition[0]} />
                     )}
                   </>
                 )}

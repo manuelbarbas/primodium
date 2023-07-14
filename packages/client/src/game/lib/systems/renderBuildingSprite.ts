@@ -42,7 +42,6 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
       const buildingRenderEntity = scene.objectPool.get(renderId, "Sprite");
 
       const buildingComponent = createBuilding({
-        entityIndex,
         renderId,
         x: pixelCoord.x,
         y: -pixelCoord.y,

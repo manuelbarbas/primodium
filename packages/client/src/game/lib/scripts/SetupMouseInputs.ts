@@ -1,14 +1,20 @@
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { getComponentValue, removeComponent } from "@latticexyz/recs";
+import {
+  getComponentValue,
+  removeComponent,
+  setComponent,
+} from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
 import { offChainComponents, singletonIndex } from "src/network/world";
 import { Action } from "src/util/constants";
+import { getBuildingAtCoord } from "src/util/tile";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
 import { buildPath, demolishBuilding, demolishPath } from "src/util/web3";
 import { Network } from "../../../network/layer";
 import * as components from "../../api/components";
 
 const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
+  const { SelectedAction, SelectedBuilding, SelectedTile } = offChainComponents;
   scene.input.click$.subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
@@ -23,16 +29,15 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
       if (!validTutorialClick(gameCoord, network)) return;
     }
 
-    const { SelectedAction } = offChainComponents;
     const selectedAction = getComponentValue(
       SelectedAction,
       singletonIndex
     )?.value;
 
+    // update selected action
     const removeSelectedAction = () =>
       removeComponent(SelectedAction, singletonIndex);
 
-    components.selectedTile(network).set(gameCoord);
     //handle web3 mutations
     switch (selectedAction) {
       case undefined:
@@ -57,6 +62,17 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
         return;
     }
     if (selectedAction) removeSelectedAction();
+
+    // update selected building
+    const building = getBuildingAtCoord(gameCoord, network);
+    if (!building) {
+      removeComponent(SelectedBuilding, singletonIndex);
+      setComponent(SelectedTile, singletonIndex, gameCoord);
+    } else {
+      setComponent(SelectedBuilding, singletonIndex, { value: building });
+      removeComponent(SelectedTile, singletonIndex);
+    }
+    components.selectedTile(network).set(gameCoord);
   });
 
   scene.input.pointermove$.pipe().subscribe((event) => {
