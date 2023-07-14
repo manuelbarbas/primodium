@@ -71,7 +71,7 @@ function ResourceBox() {
   );
   if (transactionLoading) {
     return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-80 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
           <button
             id="minimize-resource-box"
@@ -92,7 +92,7 @@ function ResourceBox() {
     );
   } else if (!minimized) {
     return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-80 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
           <button
             id="minimize-resource-box"
@@ -113,7 +113,7 @@ function ResourceBox() {
     );
   } else {
     return (
-      <div className="pixel-corners-wrapper viewport-container fixed top-4 right-4 w-64">
+      <div className="pixel-corners-wrapper viewport-container fixed top-4 right-4 w-80">
         <div className="z-[1000] flex flex-col bg-gray-700 text-white shadow-xl font-mono pixel-corners p-10">
           <div className="flex">
             <p className="text-lg font-bold">
