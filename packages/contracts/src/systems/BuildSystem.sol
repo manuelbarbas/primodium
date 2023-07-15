@@ -1,280 +1,122 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
 
+// external
+import { PrimodiumSystem, IWorld, addressToEntity ,getAddressById} from "./internal/PrimodiumSystem.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as PostBuildSystemID} from "systems/PostBuildSystem.sol";
+
+// components
+import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+
+
+
+import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
+
+// libraries
 import { Coord } from "../types.sol";
-import { LibMath } from "../libraries/LibMath.sol";
-import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
-import { LibClaim } from "../libraries/LibClaim.sol";
+import { LibResearch } from "../libraries/LibResearch.sol";
+import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
-contract BuildSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
-
-  function checkPassiveResourceRequirements(uint256 blockType) internal view returns (bool) {
-    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
-      getAddressById(components, RequiredPassiveResourceComponentID)
-    );
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    if (requiredPassiveResourceComponent.has(blockType)) {
-      uint256 playerEntity = addressToEntity(msg.sender);
-      ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
-      uint256[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
-      for (uint256 i = 0; i < resourceIDs.length; i++) {
-        if (
-          LibStorage.getAvailableSpaceInStorageForResource(
-            storageCapacityComponent,
-            itemComponent,
-            playerEntity,
-            resourceIDs[i]
-          ) < requiredAmounts[i]
-        ) {
-          return false;
-        }
-      }
-    }
-    return true;
+contract BuildSystem is PrimodiumSystem {
+  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
+  
+  function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
+    return execute(abi.encode(buildingType, coord));
   }
 
-  function updatePassiveResourcesBasedOnRequirements(uint256 blockType) internal {
-    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
-      getAddressById(components, RequiredPassiveResourceComponentID)
-    );
-    if (requiredPassiveResourceComponent.has(blockType)) {
-      uint256 playerEntity = addressToEntity(msg.sender);
-      ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
-      uint256[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
 
-      for (uint256 i = 0; i < resourceIDs.length; i++) {
-        uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
-        itemComponent.set(
-          playerResourceEntity,
-          LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + requiredAmounts[i]
-        );
-      }
-    }
-  }
+  
 
-  function updatePassiveResourceProduction(uint256 blockType) internal {
-    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
-      getAddressById(components, PassiveResourceProductionComponentID)
-    );
-    if (passiveResourceProductionComponent.has(blockType)) {
-      uint256 playerEntity = addressToEntity(msg.sender);
-      StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-        getAddressById(components, StorageCapacityComponentID)
-      );
-      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        StorageCapacityResourcesComponent(getAddressById(components, StorageCapacityResourcesComponentID)),
-        storageCapacityComponent,
-        playerEntity,
-        resourceId,
-        LibMath.getSafeUint256Value(storageCapacityComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
-          passiveResourceProductionComponent.getValue(blockType).ResourceProduction
-      );
-    }
-  }
 
-  function checkResearchRequirements(uint256 blockType) internal view returns (bool) {
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(components, RequiredResearchComponentID)
-    );
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    return
-      LibResearch.checkResearchRequirements(
-        requiredResearchComponent,
-        researchComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
-  }
+  
 
-  function checkResourceRequirements(uint256 blockType) internal view returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return
-      LibResourceCost.hasRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
-  }
+  function execute(bytes memory args) public override returns (bytes memory) {
+    (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
 
-  function checkAndSpendResourceRequirements(uint256 blockType) internal returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return
-      LibResourceCost.checkAndSpendRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
-  }
-
-  function checkAndUpdatePlayerStorageAfterBuild(uint256 buildingId) internal {
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
-    );
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, 1);
+    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
-    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i]
-      );
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        buildingIdLevel,
-        storageResources[i]
-      );
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        storageCapacityResourcesComponent,
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i],
-        playerResourceStorageCapacity + storageCapacityIncrease
-      );
-    }
-  }
-
-  function setupFactoryComponents(TileComponent tileComponent, uint256 factoryEntity) internal {
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getAddressById(components, FactoryMineBuildingsComponentID)
+    require(
+      !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
+      "[BuildSystem] Cannot build a building with tiles"
     );
-    uint256 buildingId = tileComponent.getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
-    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
-      return;
-    }
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
-      buildingLevelEntity
+    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
+    require(
+      LibResearch.hasResearched(world, buildingType, playerEntity),
+      "[BuildSystem] You have not researched the required technology"
     );
-    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
-  }
-
-  function execute(bytes memory args) public returns (bytes memory) {
-    (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingComponentID)
-    );
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
-      getAddressById(components, BuildingLimitComponentID)
-    );
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
-      getAddressById(components, IgnoreBuildLimitComponentID)
-    );
-    uint256 playerEntity = addressToEntity(msg.sender);
-    // Check there isn't another tile there
-    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
-    require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
 
     require(
-      LibBuilding.checkCanBuildOnTile(
-        RequiredTileComponent(getAddressById(components, RequiredTileComponentID)),
-        blockType,
-        entity
-      ),
-      "[BuildSystem] Cannot build on this tile"
+      LibResourceCost.hasRequiredResources(world, buildingType, playerEntity),
+      "[BuildSystem] You do not have the required resources"
     );
-    //check required research
-    require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
-
     //check build limit
-    MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-      getAddressById(components, MainBaseInitializedComponentID)
-    );
     require(
-      LibBuilding.checkBuildLimitConditionForBuildingId(
-        ignoreBuildLimitComponent,
-        buildingLimitComponent,
-        buildingLevelComponent,
-        mainBaseInitializedComponent,
-        playerEntity,
-        blockType
-      ),
-      "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
+      LibBuilding.isBuildingLimitConditionMet(world, playerEntity, buildingType),
+      "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
-    // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
+    uint256[] memory tiles = new uint256[](blueprint.length / 2);
+    for (uint32 i = 0; i < blueprint.length; i += 2) {
+      Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
+      tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
+    }
+    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
-    if (blockType == MainBaseID) {
+    if (buildingType == MainBaseID) {
+      buildingLevelComponent.set(playerEntity, buildingEntity);
+      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
+        getC(MainBaseInitializedComponentID)
+      );
+
       if (mainBaseInitializedComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
-        mainBaseInitializedComponent.set(playerEntity, coord);
+        mainBaseInitializedComponent.set(playerEntity, buildingEntity);
       }
     }
     require(
-      checkPassiveResourceRequirements(blockType),
+      LibPassiveResource.checkPassiveResourceRequirements(world,playerEntity,buildingType),
       "[BuildSystem] You do not have the required passive resources"
     );
+
     //check resource requirements and if ok spend required resources
-    require(checkAndSpendResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
+    LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
 
-    updatePassiveResourcesBasedOnRequirements(blockType);
-    updatePassiveResourceProduction(blockType);
-    //set MainBase id for player address for easy lookup
-
-    // update building count if the built building counts towards the build limit
-    if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
-    }
+    
     //set level of building to 1
-    buildingLevelComponent.set(entity, 1);
+    buildingLevelComponent.set(buildingEntity, 1);
+    TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
+    OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
-    tileComponent.set(entity, blockType);
-    ownedByComponent.set(entity, playerEntity);
+    IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);
 
-    checkAndUpdatePlayerStorageAfterBuild(blockType);
-    setupFactoryComponents(tileComponent, entity);
-    return abi.encode(entity);
+    return abi.encode(buildingEntity);
   }
 
-  function executeTyped(uint256 blockType, Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(blockType, coord));
+  function placeBuildingTile(
+    uint256 buildingEntity,
+    Coord memory baseCoord,
+    Coord memory relativeCoord
+  ) private returns (uint256 tileEntity) {
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
+    Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
+    tileEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
+    require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
+    ownedByComponent.set(tileEntity, buildingEntity);
   }
 }

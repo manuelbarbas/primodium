@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { System, IWorld } from "solecs/System.sol";
+import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -26,51 +26,13 @@ import { ID as PostUpgradeSystemID } from "./PostUpgradeSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
-contract UpgradeSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
+contract UpgradeSystem is PrimodiumSystem {
+  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function checkAndSpendUpgradeResourceRequirements(
-    BuildingLevelComponent buildingLevelComponent,
-    RequiredResourcesComponent resourceRequirementsComponent,
-    ItemComponent itemComponent,
-    uint256 buildingId,
-    uint256 buildingEntity,
-    uint256 playerEntity
-  ) internal returns (bool) {
-    require(buildingLevelComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
-    uint256 currentLevel = buildingLevelComponent.getValue(buildingEntity);
-    require(currentLevel > 0, "[LibUpgrade] can not upgrade building that is level 0");
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, currentLevel + 1);
-    return
-      LibResourceCost.checkAndSpendRequiredResources(
-        resourceRequirementsComponent,
-        itemComponent,
-        buildingIdLevel,
-        playerEntity
-      );
-  }
 
-  function checkUpgradeResearchRequirements(
-    BuildingLevelComponent buildingLevelComponent,
-    RequiredResearchComponent researchRequirmentComponent,
-    ResearchComponent researchComponent,
-    uint256 buildingId,
-    uint256 buildingEntity,
-    uint256 playerEntity
-  ) internal view returns (bool) {
-    require(buildingLevelComponent.has(buildingEntity), "[LibUpgrade] can not upgrade building that does not exist");
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingLevelComponent.getValue(buildingEntity) + 1);
-    return
-      !researchRequirmentComponent.has(buildingIdLevel) ||
-      LibResearch.checkResearchRequirements(
-        researchRequirmentComponent,
-        researchComponent,
-        buildingIdLevel,
-        playerEntity
-      );
-  }
 
-  function execute(bytes memory args) public returns (bytes memory) {
+
+  function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
@@ -79,59 +41,46 @@ contract UpgradeSystem is System {
       getAddressById(components, BuildingComponentID)
     );
 
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
+    
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
     // Check there isn't another tile there
-    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
-    require(tileComponent.has(entity), "[UpgradeSystem] Cannot upgrade tile at an empty coordinate");
-    require(buildingLevelComponent.has(entity), "[UpgradeSystem] Cannot upgrade a non-building");
-    uint256 ownerKey = addressToEntity(msg.sender);
+    uint256 buildingEntity = getBuildingFromCoord(coord);
+    require(buildingEntity != 0, "[UpgradeSystem] no building at this coordinate");
+    require(buildingLevelComponent.has(buildingEntity), "[UpgradeSystem] Cannot upgrade a non-building");
+    uint256 playerEntity = addressToEntity(msg.sender);
     require(
-      ownedByComponent.getValue(entity) == ownerKey,
+      ownedByComponent.getValue(buildingEntity) == playerEntity,
       "[UpgradeSystem] Cannot upgrade a building that is not owned by you"
     );
-    uint256 blockType = tileComponent.getValue(entity);
+    uint256 buildingType = tileComponent.getValue(buildingEntity);
     require(
-      maxLevelComponent.has(blockType) &&
-        (buildingLevelComponent.getValue(entity) < maxLevelComponent.getValue(blockType)),
+      maxLevelComponent.has(buildingType) &&
+        (buildingLevelComponent.getValue(buildingEntity) < maxLevelComponent.getValue(buildingType)),
       "[UpgradeSystem] Cannot upgrade building that does not have max level or has reached max level"
     );
+
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingType, buildingLevelComponent.getValue(buildingEntity) + 1);
     require(
-      checkUpgradeResearchRequirements(
-        buildingLevelComponent,
-        requiredResearchComponent,
-        researchComponent,
-        blockType,
-        entity,
-        addressToEntity(msg.sender)
-      ),
+      LibResearch.hasResearched(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
-    require(
-      checkAndSpendUpgradeResourceRequirements(
-        buildingLevelComponent,
-        requiredResourcesComponent,
-        itemComponent,
-        blockType,
-        entity,
-        addressToEntity(msg.sender)
+    require(LibResourceCost.checkAndSpendRequiredResources(
+        world,
+        buildingIdLevel,
+        playerEntity
       ),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
-    uint256 newLevel = buildingLevelComponent.getValue(entity) + 1;
-    buildingLevelComponent.set(entity, newLevel);
+    uint256 newLevel = buildingLevelComponent.getValue(buildingEntity) + 1;
+    buildingLevelComponent.set(buildingEntity, newLevel);
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeSystemID)).executeTyped(msg.sender, entity);
+    IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeSystemID)).executeTyped(msg.sender, buildingEntity);
 
-    return abi.encode(entity);
+    return abi.encode(buildingEntity);
   }
 
   function executeTyped(Coord memory coord) public returns (bytes memory) {

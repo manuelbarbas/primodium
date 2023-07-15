@@ -19,6 +19,8 @@
     "RequiredResourcesComponent",
     "BuildingLimitComponent",
     "IgnoreBuildLimitComponent",
+    "BuildingTilesComponent",
+    "BlueprintComponent",
     "StorageCapacityComponent",
     "StorageCapacityResourcesComponent",
     "MineComponent",
@@ -35,6 +37,7 @@
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibTechnologyDesignInitializer",
+    "LibBlueprintInitializer",
     "LibDebugInitializer"
   ],
   "systems": [
@@ -73,10 +76,8 @@
         "MainBaseInitializedComponent",
         "BuildingLevelComponent",
         "MainBaseInitializedComponent",
-        "BuildingLimitComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent",
-        "FactoryMineBuildingsComponent"
+        "BuildingTilesComponent"
+      
       ]
     },
     {
@@ -190,6 +191,17 @@
       ]
     },
     {
+      "name": "PostBuildSystem",
+      "writeAccess": [
+        "ItemComponent",
+        "StorageCapacityComponent",
+        "StorageCapacityResourcesComponent",
+        "FactoryMineBuildingsComponent",
+        "LastClaimedAtComponent",
+        "BuildingLimitComponent"
+      ]
+    },
+    {
       "name": "DebugAcquireResourcesSystem",
       "writeAccess": ["ItemComponent"]
     },
@@ -212,6 +224,10 @@
     {
       "name": "DebugRemoveBuildLimitSystem",
       "writeAccess": ["IgnoreBuildLimitComponent"]
+    },
+    {
+      "name": "BlueprintSystem",
+      "writeAccess": ["BlueprintComponent"]
     },
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",

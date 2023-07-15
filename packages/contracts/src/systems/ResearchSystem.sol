@@ -7,7 +7,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -22,71 +22,46 @@ contract ResearchSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function checkMainBaseLevelRequirement(
-    BuildingLevelComponent buildingLevelComponent,
-    MainBaseInitializedComponent mainBaseInitializedComponent,
+    IWorld world,
     uint256 playerEntity,
     uint256 entity
   ) internal view returns (bool) {
-    if (!buildingLevelComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = LibBuilding.getMainBuildingLevelforPlayer(
-      buildingLevelComponent,
-      mainBaseInitializedComponent,
-      playerEntity
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(world.components(), BuildingLevelComponentID)
     );
+    if (!buildingLevelComponent.has(entity)) return true;
+    uint256 mainBuildingLevel = LibBuilding.getBaseLevel(world, playerEntity);
     return mainBuildingLevel >= buildingLevelComponent.getValue(entity);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
-      getAddressById(components, LastResearchedAtComponentID)
-    );
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(components, RequiredResearchComponentID)
-    );
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingComponentID)
-    );
+
 
     require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
-      checkMainBaseLevelRequirement(
-        buildingLevelComponent,
-        MainBaseInitializedComponent(getAddressById(components, MainBaseInitializedComponentID)),
-        addressToEntity(msg.sender),
-        researchItem
-      ),
+      checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
 
     require(
-      LibResearch.checkResearchRequirements(
-        requiredResearchComponent,
-        researchComponent,
-        researchItem,
-        addressToEntity(msg.sender)
-      ),
+      LibResearch.hasResearched(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Research requirements not met"
     );
 
     require(
       LibResourceCost.checkAndSpendRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
+        world,
         researchItem,
         addressToEntity(msg.sender)
       ),
       "[ResearchSystem] Not enough resources to research"
     );
     researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
-    LibResearch.setLastResearched(lastResearchedAtComponent, researchItem, addressToEntity(msg.sender));
+    LibResearch.setResearchTime(world, researchItem, addressToEntity(msg.sender));
     return abi.encode(true);
   }
 

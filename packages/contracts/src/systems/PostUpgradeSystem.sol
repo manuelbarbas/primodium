@@ -28,6 +28,7 @@ import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
 import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
+
 uint256 constant ID = uint256(keccak256("system.PostUpgrade"));
 
 contract PostUpgradeSystem is IOnEntitySubsystem, System {

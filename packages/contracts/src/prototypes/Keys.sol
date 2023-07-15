@@ -75,3 +75,4 @@ uint256 constant HousingUnit3ResearchID = uint256(keccak256("research.HousingUni
 
 // Building key
 string constant BuildingKey = "building";
+string constant BuildingTileKey = "building.tile";
