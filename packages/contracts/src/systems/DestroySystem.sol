@@ -210,7 +210,7 @@ contract DestroySystem is PrimodiumSystem {
     ownedByComponent.remove(buildingEntity);
     LastBuiltAtComponent(getC(LastBuiltAtComponentID)).remove(buildingEntity);
     LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
-
+    buildingTilesComponent.remove(buildingEntity);
     return abi.encode(buildingEntity);
   }
 
