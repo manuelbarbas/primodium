@@ -23,7 +23,7 @@ uint256 constant KimberliteID = uint256(keccak256("block.Kimberlite"));
 uint256 constant UraniniteID = uint256(keccak256("block.Uraninite"));
 uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 
-// Special blocks
+// buildings
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));
 
 // Mine Blocks

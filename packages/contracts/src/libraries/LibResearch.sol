@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
+
+import { IWorld } from "solecs/System.sol";
+import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
+import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
+
 import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
 
@@ -9,22 +15,25 @@ library LibResearch {
   // ###########################################################################
   // Check that the user has researched a given component
 
-  function checkResearchRequirements(
-    Uint256Component requiredResearchComponent,
-    BoolComponent researchComponent,
-    uint256 entity,
-    uint256 playerEntity
-  ) internal view returns (bool) {
-    return
-      !requiredResearchComponent.has(entity) ||
-      researchComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
+  function hasResearched(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
+      getAddressById(world.components(), RequiredResearchComponentID)
+    );
+    ResearchComponent researchComponent = ResearchComponent(getAddressById(world.components(), ResearchComponentID));
+
+    if (!requiredResearchComponent.has(entity)) return true;
+
+    return researchComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
   }
 
   // ###########################################################################
   // Write last researched time into LastResearchedComponent
 
-  function setLastResearched(Uint256Component component, uint256 researchKey, uint256 entity) internal {
+  function setResearchTime(IWorld world, uint256 researchKey, uint256 entity) internal {
+    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
+      getAddressById(world.components(), LastResearchedAtComponentID)
+    );
     uint256 hashedResearchKey = LibEncode.hashKeyEntity(researchKey, entity);
-    component.set(hashedResearchKey, block.number);
+    lastResearchedAtComponent.set(hashedResearchKey, block.number);
   }
 }

@@ -19,6 +19,7 @@ import { FactoryProductionComponent, ID as FactoryProductionComponentID, Factory
 import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -37,6 +38,7 @@ import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, Ir
 // Research
 import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
+import { LibBlueprint } from "../libraries/LibBlueprint.sol";
 
 //buildings
 uint256 constant DebugSimpleBuildingNoReqsID = uint256(keccak256("block.DebugSimpleBuildingNoReqs"));
@@ -82,6 +84,35 @@ library LibDebugInitializer {
   function init(IWorld world) internal {
     //should only work if debug is enabled
     if (!LibDebug.isDebug()) return;
+
+    BlueprintComponent blueprintComponent = BlueprintComponent(
+      getAddressById(world.components(), BlueprintComponentID)
+    );
+    int32[] memory coords = new int32[](2);
+    coords[0] = 0;
+    coords[1] = 0;
+
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingNoReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingResourceReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingResearchReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingBuildLimitReq, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingTileReqID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingWithUpgradeResourceReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingWithUpgradeResearchReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugIronMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugCopperMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugIronMineWithBuildLimitID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugIronMineNoTileReqID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugIronPlateFactoryNoMineReqID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugIronPlateFactoryID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSuperIronMineID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSuperIronPlateFactoryID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyNoReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyResourceReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyResearchReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyMainBaseLevelReqsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugStorageBuildingID, coords);
+
     IUint256Component components = world.components();
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     RequiredResearchComponent requiredResearch = RequiredResearchComponent(
