@@ -64,22 +64,17 @@ function TechTreeItem({
     );
   }, [researchOwner]);
 
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     world.entityToIndex.get(
       address.toString().toLowerCase() as EntityID
     ) as EntityIndex
   );
-  const mainBaseEntity = useMemo(() => {
-    return encodeCoordEntityAndTrim(
-      { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
-      BlockType.BuildingKey
-    );
-  }, [mainBaseCoord]);
+  
 
   const mainBaseLevel = useComponentValue(
     components.BuildingLevel,
-    world.entityToIndex.get(mainBaseEntity as EntityID) as EntityIndex
+    world.entityToIndex.get(mainBaseEntity?.value as unknown as EntityID) as EntityIndex
   );
 
   const requiredMainBaseLevel = useComponentValue(

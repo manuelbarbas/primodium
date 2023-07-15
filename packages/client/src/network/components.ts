@@ -146,13 +146,6 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    BuildingLimit: overridableComponent(
-      defineNumberComponent(world, {
-        metadata: {
-          contractId: "component.BuildingLimit",
-        },
-      })
-    ),
     // TODO: component data for crafting recipes
   };
 }
