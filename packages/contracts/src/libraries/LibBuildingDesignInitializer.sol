@@ -103,7 +103,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 1);
-    mineComponent.set(buildingIdLevel, 2);
+    mineComponent.set(buildingIdLevel, 3);
     requiredResearch.set(buildingIdLevel, CopperMineResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
@@ -115,7 +115,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 2);
-    mineComponent.set(buildingIdLevel, 4);
+    mineComponent.set(buildingIdLevel, 5);
     requiredResearch.set(buildingIdLevel, CopperMine2ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -128,7 +128,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 3);
-    mineComponent.set(buildingIdLevel, 6);
+    mineComponent.set(buildingIdLevel, 7);
     requiredResearch.set(buildingIdLevel, CopperMine3ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -335,7 +335,7 @@ library LibBuildingDesignInitializer {
       IronPlateFactoryID,
       2,
       IronPlateCraftedItemID,
-      3
+      4
     );
 
     //IronPlateFactoryID Level 3
@@ -364,7 +364,7 @@ library LibBuildingDesignInitializer {
       IronPlateFactoryID,
       3,
       IronPlateCraftedItemID,
-      4
+      9
     );
   }
 

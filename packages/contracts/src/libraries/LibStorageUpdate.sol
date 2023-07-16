@@ -1,14 +1,16 @@
 pragma solidity >=0.8.0;
 // Production Buildings
+import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
+import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 
 library LibStorageUpdate {
   function updateStorageCapacityOfResourceForEntity(
-    Uint256ArrayComponent storageCapacityResourcesComponent,
-    Uint256Component storageCapacityComponent,
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
+    StorageCapacityComponent storageCapacityComponent,
     uint256 entity,
     uint256 resourceId,
     uint256 newStorageCapacity

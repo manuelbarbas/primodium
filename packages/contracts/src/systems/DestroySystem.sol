@@ -4,7 +4,6 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 // components
-import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -17,17 +16,15 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
 
 // types
-import { MainBaseID } from "../prototypes/Tiles.sol";
-import { BuildingKey, BuildingTileKey } from "../prototypes/Keys.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
+import { ID as PostDestroySystemID } from "./PostDestroySystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { Coord } from "../types.sol";
@@ -48,96 +45,15 @@ contract DestroySystem is PrimodiumSystem {
       getAddressById(components, PassiveResourceProductionComponentID)
     );
     if (passiveResourceProductionComponent.has(blockType)) {
-      uint256 playerEntity = addressToEntity(msg.sender);
-
-      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
-      uint256 resourceProduction = passiveResourceProductionComponent.getValue(blockType).ResourceProduction;
-
-      uint256 availableResourceAmount = LibStorage.getAvailableSpaceInStorageForResource(
-        StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
-        ItemComponent(getAddressById(components, ItemComponentID)),
-        playerEntity,
-        resourceId
-      );
-      return availableResourceAmount >= resourceProduction;
+      return
+        LibStorage.getAvailableSpaceInStorageForResource(
+          StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
+          ItemComponent(getAddressById(components, ItemComponentID)),
+          addressToEntity(msg.sender),
+          passiveResourceProductionComponent.getValue(blockType).ResourceID
+        ) >= passiveResourceProductionComponent.getValue(blockType).ResourceProduction;
     }
     return true;
-  }
-
-  function updatePassiveResourcesBasedOnRequirements(uint256 blockType) internal {
-    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
-      getAddressById(components, RequiredPassiveResourceComponentID)
-    );
-    if (requiredPassiveResourceComponent.has(blockType)) {
-      uint256 playerEntity = addressToEntity(msg.sender);
-      ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
-      uint256[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
-
-      for (uint256 i = 0; i < resourceIDs.length; i++) {
-        uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
-        itemComponent.set(playerResourceEntity, itemComponent.getValue(playerResourceEntity) - requiredAmounts[i]);
-      }
-    }
-  }
-
-  function updatePassiveResourceProduction(uint256 blockType) internal {
-    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
-      getAddressById(components, PassiveResourceProductionComponentID)
-    );
-    if (passiveResourceProductionComponent.has(blockType)) {
-      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
-      StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-        getAddressById(components, StorageCapacityComponentID)
-      );
-      uint256 playerEntity = addressToEntity(msg.sender);
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        StorageCapacityResourcesComponent(getAddressById(components, StorageCapacityResourcesComponentID)),
-        storageCapacityComponent,
-        playerEntity,
-        resourceId,
-        storageCapacityComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
-          passiveResourceProductionComponent.getValue(blockType).ResourceProduction
-      );
-    }
-  }
-
-  function checkAndUpdatePlayerStorageAfterDestroy(uint256 buildingId, uint256 buildingLevel) internal {
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getC(StorageCapacityResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
-
-    uint256 playerEntity = addressToEntity(msg.sender);
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingLevel);
-    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i]
-      );
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        buildingIdLevel,
-        storageResources[i]
-      );
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        storageCapacityResourcesComponent,
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i],
-        playerResourceStorageCapacity - storageCapacityIncrease
-      );
-
-      uint256 playerResourceAmount = LibMath.getSafeUint256Value(itemComponent, playerResourceStorageEntity);
-      if (playerResourceAmount > playerResourceStorageCapacity - storageCapacityIncrease) {
-        itemComponent.set(playerResourceStorageEntity, playerResourceStorageCapacity - storageCapacityIncrease);
-      }
-    }
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -146,7 +62,7 @@ contract DestroySystem is PrimodiumSystem {
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     BuildingTilesComponent buildingTilesComponent = BuildingTilesComponent(getC(BuildingTilesComponentID));
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID));
+
     BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
     BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
       getAddressById(components, BuildingComponentID)
@@ -154,9 +70,9 @@ contract DestroySystem is PrimodiumSystem {
 
     uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
-
+    uint256 buildingType = tileComponent.getValue(buildingEntity);
     require(
-      checkPassiveResourceRequirementsMetAfterDestroy(tileComponent.getValue(buildingEntity)),
+      checkPassiveResourceRequirementsMetAfterDestroy(buildingType),
       "[DestroySystem] can not destory passive resource production building if requirements are not met, destroy passive resource consumers first or increase passive resource production"
     );
 
@@ -186,7 +102,6 @@ contract DestroySystem is PrimodiumSystem {
       }
     }
 
-    uint256 buildingType = tileComponent.getValue(buildingEntity);
     // for main base tile, remove main base initialized.
     if (buildingType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
@@ -195,12 +110,11 @@ contract DestroySystem is PrimodiumSystem {
       mainBaseInitializedComponent.remove(playerEntity);
     }
 
-    if (!ignoreBuildLimitComponent.has(buildingType)) {
+    if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
       buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) - 1);
     }
-    checkAndUpdatePlayerStorageAfterDestroy(buildingType, buildingLevelComponent.getValue(buildingEntity));
-    updatePassiveResourcesBasedOnRequirements(buildingType);
-    updatePassiveResourceProduction(buildingType);
+
+    IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);
 
     buildingLevelComponent.remove(buildingEntity);
     tileComponent.remove(buildingEntity);
@@ -215,7 +129,7 @@ contract DestroySystem is PrimodiumSystem {
     return execute(abi.encode(coord));
   }
 
-  function clearBuildingTile(Uint256Component ownedByComponent, uint256 tileEntity) private {
+  function clearBuildingTile(OwnedByComponent ownedByComponent, uint256 tileEntity) private {
     require(ownedByComponent.has(tileEntity), "[DestroySystem] Cannot destroy unowned coordinate");
     ownedByComponent.remove(tileEntity);
   }

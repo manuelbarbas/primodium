@@ -18,7 +18,8 @@ import { MainBaseID } from "../../prototypes/Tiles.sol";
 import { Coord } from "../../types.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
-import { PostUpgradeSystem, ID as PostUpgradeSystemID } from "../../systems/PostUpgradeSystem.sol";
+import { PostUpgradeMineSystem, ID as PostUpgradeMineSystemID } from "../../systems/PostUpgradeMineSystem.sol";
+import { PostUpgradeFactorySystem, ID as PostUpgradeFactorySystemID } from "../../systems/PostUpgradeFactorySystem.sol";
 
 contract UpgradeSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -30,9 +31,16 @@ contract UpgradeSystemTest is MudTest {
     vm.stopPrank();
   }
 
-  function testFailCallPostUpgradeSystemFromUser() public {
+  function testFailCallPostUpgradeMineSystemFromUser() public {
     vm.startPrank(alice);
-    PostUpgradeSystem postUpgradeSystem = PostUpgradeSystem(system(PostUpgradeSystemID));
+    PostUpgradeMineSystem postUpgradeSystem = PostUpgradeMineSystem(system(PostUpgradeMineSystemID));
+    postUpgradeSystem.executeTyped(alice, addressToEntity(alice));
+    vm.stopPrank();
+  }
+
+  function testFailCallPostUpgradeFactorySystemFromUser() public {
+    vm.startPrank(alice);
+    PostUpgradeFactorySystem postUpgradeSystem = PostUpgradeFactorySystem(system(PostUpgradeFactorySystemID));
     postUpgradeSystem.executeTyped(alice, addressToEntity(alice));
     vm.stopPrank();
   }

@@ -1,3 +1,4 @@
+pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 import { ID as BuildSystemID } from "systems/BuildSystem.sol";

@@ -11,6 +11,8 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
+import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 import { BuildingKey } from "../prototypes/Keys.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
@@ -20,9 +22,11 @@ import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
+import { LibStorageUpgrade } from "../libraries/LibStorageUpgrade.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as PostUpgradeSystemID } from "./PostUpgradeSystem.sol";
+import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
+import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
@@ -38,9 +42,6 @@ contract UpgradeSystem is PrimodiumSystem {
       getAddressById(components, BuildingComponentID)
     );
 
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(components, RequiredResearchComponentID)
-    );
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
     // Check there isn't another tile there
@@ -74,7 +75,27 @@ contract UpgradeSystem is PrimodiumSystem {
     uint256 newLevel = buildingLevelComponent.getValue(buildingEntity) + 1;
     buildingLevelComponent.set(buildingEntity, newLevel);
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeSystemID)).executeTyped(msg.sender, buildingEntity);
+    if (MineComponent(getAddressById(components, MineComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel)))
+      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeMineSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity
+      );
+    else if (
+      FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, newLevel)
+      )
+    )
+      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeFactorySystemID)).executeTyped(
+        msg.sender,
+        buildingEntity
+      );
+
+    LibStorageUpgrade.checkAndUpdatePlayerStorageAfterUpgrade(
+      world,
+      playerEntity,
+      tileComponent.getValue(buildingEntity),
+      buildingLevelComponent.getValue(buildingEntity)
+    );
 
     return abi.encode(buildingEntity);
   }

@@ -49,18 +49,18 @@ library LibTechnologyDesignInitializer {
       300
     );
 
-    // Research CopperMine2ResearchID with 300 IronResourceItemID
+    // Research CopperMine2ResearchID with 1000 IronResourceItemID
     researchComponent.set(CopperMine2ResearchID);
     buildingLevelComponent.set(CopperMine2ResearchID, 4);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
       CopperMine2ResearchID,
-      CopperResourceItemID,
+      IronResourceItemID,
       1000
     );
 
-    // Research CopperMine3ResearchID with 300 IronResourceItemID
+    // Research CopperMine3ResearchID with 3000 IronResourceItemID
     researchComponent.set(CopperMine3ResearchID);
     buildingLevelComponent.set(CopperMine3ResearchID, 5);
     LibSetRequiredResources.set1RequiredResourceForEntity(
@@ -68,7 +68,7 @@ library LibTechnologyDesignInitializer {
       itemComponent,
       IronPlateCraftedItemID,
       IronResourceItemID,
-      700
+      3000
     );
 
     // Research IronMine2ResearchID with 300 CopperResourceItemID
