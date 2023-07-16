@@ -1,5 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
+import { Key } from "src/engine/lib/core/createInput";
 
 export const BlockKey = {
   //landscape blocks
@@ -529,12 +530,17 @@ export type DisplayKeyPair = {
   resource: EntityID | null;
 };
 
-export const TutorialStepToNarrationStep: {
-  [key: number]: number | undefined;
-} = {
-  0: undefined,
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 3,
-};
+export const KeyImages = new Map<Key, string>([
+  ["ONE", "/img/keys/one.png"],
+  ["TWO", "/img/keys/two.png"],
+  ["THREE", "/img/keys/three.png"],
+  ["FOUR", "/img/keys/four.png"],
+  ["FIVE", "/img/keys/five.png"],
+  ["SIX", "/img/keys/six.png"],
+  ["SEVEN", "/img/keys/seven.png"],
+  ["EIGHT", "/img/keys/eight.png"],
+  ["NINE", "/img/keys/nine.png"],
+  ["ZERO", "/img/keys/zero.png"],
+  ["Q", "/img/keys/q.png"],
+  ["E", "/img/keys/e.png"],
+]);

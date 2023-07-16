@@ -146,12 +146,21 @@ export function defineComponents(world: World) {
         },
       })
     ),
+    UnclaimedResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.UnclaimedResource",
+      },
+    }),
     // TODO: component data for crafting recipes
   };
 }
 
 export function defineOffChainComponents(world: World) {
   return {
+    BlockNumber: defineNumberComponent(world, {
+      metadata: {},
+      id: "BlockNumber",
+    }),
     DoubleCounter: defineNumberComponent(world, {
       metadata: {},
       id: "DoubleCounter",
