@@ -39,7 +39,6 @@ contract ResearchSystem is System {
 
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
 
-
     require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
@@ -53,11 +52,7 @@ contract ResearchSystem is System {
     );
 
     require(
-      LibResourceCost.checkAndSpendRequiredResources(
-        world,
-        researchItem,
-        addressToEntity(msg.sender)
-      ),
+      LibResourceCost.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Not enough resources to research"
     );
     researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));

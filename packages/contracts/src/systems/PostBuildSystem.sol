@@ -1,7 +1,6 @@
-import { PrimodiumSystem, IWorld, addressToEntity ,getAddressById} from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
-
-import {ID as BuildSystemID} from "systems/BuildSystem.sol";
+import { ID as BuildSystemID } from "systems/BuildSystem.sol";
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
@@ -11,9 +10,6 @@ import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "comp
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-
-
-
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
@@ -29,7 +25,6 @@ uint256 constant ID = uint256(keccak256("system.PostBuild"));
 
 contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
-
 
   function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
@@ -75,8 +70,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
   }
 
-
-function execute(bytes memory args) public override returns (bytes memory) {
+  function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID),
       "PostUpgradeSystem: Only BuildSystem can call this function"
@@ -85,9 +79,9 @@ function execute(bytes memory args) public override returns (bytes memory) {
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
     uint256 buildingType = TileComponent(getAddressById(components, TileComponentID)).getValue(buildingEntity);
-    
-    LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world,playerEntity,buildingType);
-    LibPassiveResource.updatePassiveResourceProduction(world,playerEntity,buildingType);
+
+    LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world, playerEntity, buildingType);
+    LibPassiveResource.updatePassiveResourceProduction(world, playerEntity, buildingType);
     //set MainBase id for player address for easy lookup
 
     // update building count if the built building counts towards the build limit
@@ -105,5 +99,4 @@ function execute(bytes memory args) public override returns (bytes memory) {
   function executeTyped(address playerAddress, uint256 buildingEntity) public returns (bytes memory) {
     return execute(abi.encode(playerAddress, buildingEntity));
   }
-
 }

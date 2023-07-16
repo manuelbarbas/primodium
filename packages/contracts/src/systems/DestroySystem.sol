@@ -152,7 +152,6 @@ contract DestroySystem is PrimodiumSystem {
       getAddressById(components, BuildingComponentID)
     );
 
-
     uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
 
@@ -160,8 +159,6 @@ contract DestroySystem is PrimodiumSystem {
       checkPassiveResourceRequirementsMetAfterDestroy(tileComponent.getValue(buildingEntity)),
       "[DestroySystem] can not destory passive resource production building if requirements are not met, destroy passive resource consumers first or increase passive resource production"
     );
-
-
 
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
@@ -204,7 +201,7 @@ contract DestroySystem is PrimodiumSystem {
     checkAndUpdatePlayerStorageAfterDestroy(buildingType, buildingLevelComponent.getValue(buildingEntity));
     updatePassiveResourcesBasedOnRequirements(buildingType);
     updatePassiveResourceProduction(buildingType);
-    
+
     buildingLevelComponent.remove(buildingEntity);
     tileComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);

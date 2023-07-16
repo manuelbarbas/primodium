@@ -2,10 +2,10 @@
 pragma solidity >=0.8.0;
 
 // external
-import { PrimodiumSystem, IWorld, addressToEntity ,getAddressById} from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as PostBuildSystemID} from "systems/PostBuildSystem.sol";
+import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
 
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -14,8 +14,6 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
-
-
 
 import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
 
@@ -32,16 +30,10 @@ uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
-  
+
   function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
     return execute(abi.encode(buildingType, coord));
   }
-
-
-  
-
-
-  
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
@@ -90,14 +82,13 @@ contract BuildSystem is PrimodiumSystem {
       }
     }
     require(
-      LibPassiveResource.checkPassiveResourceRequirements(world,playerEntity,buildingType),
+      LibPassiveResource.checkPassiveResourceRequirements(world, playerEntity, buildingType),
       "[BuildSystem] You do not have the required passive resources"
     );
 
     //check resource requirements and if ok spend required resources
     LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
 
-    
     //set level of building to 1
     buildingLevelComponent.set(buildingEntity, 1);
     TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);

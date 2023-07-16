@@ -1,13 +1,9 @@
 pragma solidity >=0.8.0;
 
-
-
 // components
 
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
-
-
 
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
@@ -23,9 +19,12 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
-
 library LibPassiveResource {
-    function checkPassiveResourceRequirements(IWorld world,uint256 playerEntity,uint256 blockType) internal view returns (bool) {
+  function checkPassiveResourceRequirements(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 blockType
+  ) internal view returns (bool) {
     RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
       getAddressById(world.components(), RequiredPassiveResourceComponentID)
     );
@@ -52,7 +51,7 @@ library LibPassiveResource {
     return true;
   }
 
-  function updatePassiveResourcesBasedOnRequirements(IWorld world,uint256 playerEntity,uint256 blockType) internal {
+  function updatePassiveResourcesBasedOnRequirements(IWorld world, uint256 playerEntity, uint256 blockType) internal {
     RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
       getAddressById(world.components(), RequiredPassiveResourceComponentID)
     );
@@ -71,7 +70,7 @@ library LibPassiveResource {
     }
   }
 
-  function updatePassiveResourceProduction(IWorld world,uint256 playerEntity,uint256 blockType) internal {
+  function updatePassiveResourceProduction(IWorld world, uint256 playerEntity, uint256 blockType) internal {
     PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
       getAddressById(world.components(), PassiveResourceProductionComponentID)
     );

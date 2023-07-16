@@ -9,7 +9,7 @@ import { getAddressById } from "solecs/utils.sol";
 import { BlueprintComponent as Blueprint, ID as BlueprintID } from "components/BlueprintComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
-import  "../prototypes/Tiles.sol";
+import "../prototypes/Tiles.sol";
 
 library LibBlueprintInitializer {
   function init(IWorld world) internal {
@@ -40,7 +40,5 @@ library LibBlueprintInitializer {
     LibBlueprint.createBlueprint(blueprintComponent, StorageUnitID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, TrainingFacilityID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, StarMapID, coords);
-
-
   }
 }

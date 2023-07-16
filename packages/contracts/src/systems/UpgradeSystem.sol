@@ -29,9 +29,6 @@ uint256 constant ID = uint256(keccak256("system.Upgrade"));
 contract UpgradeSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-
-
-
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
@@ -41,7 +38,6 @@ contract UpgradeSystem is PrimodiumSystem {
       getAddressById(components, BuildingComponentID)
     );
 
-    
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
@@ -63,16 +59,16 @@ contract UpgradeSystem is PrimodiumSystem {
       "[UpgradeSystem] Cannot upgrade building that does not have max level or has reached max level"
     );
 
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingType, buildingLevelComponent.getValue(buildingEntity) + 1);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(
+      buildingType,
+      buildingLevelComponent.getValue(buildingEntity) + 1
+    );
     require(
       LibResearch.hasResearched(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
-    require(LibResourceCost.checkAndSpendRequiredResources(
-        world,
-        buildingIdLevel,
-        playerEntity
-      ),
+    require(
+      LibResourceCost.checkAndSpendRequiredResources(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
     uint256 newLevel = buildingLevelComponent.getValue(buildingEntity) + 1;
