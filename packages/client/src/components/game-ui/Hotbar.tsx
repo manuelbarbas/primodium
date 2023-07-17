@@ -3,9 +3,13 @@ import { KeybindActions } from "@game/constants";
 import { EntityID } from "@latticexyz/recs";
 import { useEffect, useRef, useState } from "react";
 import { useMud } from "src/context/MudContext";
-import { useGameStore } from "src/store/GameStore";
-import { BackgroundImage, BlockType, KeyImages } from "src/util/constants";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  BackgroundImage,
+  BlockIdToKey,
+  BlockType,
+  KeyImages,
+} from "src/util/constants";
+import { motion, useAnimation } from "framer-motion";
 import { Key } from "src/engine/lib/core/createInput";
 
 const config = [
@@ -15,7 +19,6 @@ const config = [
     buildings: [
       {
         blockType: BlockType.MainBase,
-        name: "Main Base",
         keybind: KeybindActions.Hotbar0,
       },
     ],
@@ -26,28 +29,19 @@ const config = [
     buildings: [
       {
         blockType: BlockType.IronMine,
-        name: "Iron Mine",
         keybind: KeybindActions.Hotbar0,
       },
       {
         blockType: BlockType.CopperMine,
-        name: "Copper Mine",
         keybind: KeybindActions.Hotbar1,
       },
       {
         blockType: BlockType.LithiumMine,
-        name: "Lithium Mine",
         keybind: KeybindActions.Hotbar2,
       },
       {
         blockType: BlockType.Conveyor,
-        name: "Conveyor",
         keybind: KeybindActions.Hotbar3,
-      },
-      {
-        blockType: BlockType.HardenedDrill,
-        name: "Miner",
-        keybind: KeybindActions.Hotbar4,
       },
     ],
   },
@@ -57,12 +51,10 @@ const config = [
     buildings: [
       {
         blockType: BlockType.StorageUnit,
-        name: "Storage Unit",
         keybind: KeybindActions.Hotbar0,
       },
       {
         blockType: BlockType.IronPlateFactory,
-        name: "Iron Plate Factory",
         keybind: KeybindActions.Hotbar1,
       },
     ],
@@ -73,7 +65,6 @@ const config = [
     buildings: [
       {
         blockType: BlockType.Conveyor,
-        name: "Conveyor",
         keybind: KeybindActions.Hotbar0,
       },
     ],
@@ -87,17 +78,14 @@ if (import.meta.env.VITE_DEV === "true") {
     buildings: [
       {
         blockType: BlockType.DebugIronMine,
-        name: "Debug Iron Mine",
         keybind: KeybindActions.Hotbar0,
       },
       {
         blockType: BlockType.DebugIronPlateFactory,
-        name: "Debug Plate Factory",
         keybind: KeybindActions.Hotbar1,
       },
       {
         blockType: BlockType.DebugStorageBuilding,
-        name: "Debug Storage Building",
         keybind: KeybindActions.Hotbar2,
       },
     ],
@@ -106,9 +94,8 @@ if (import.meta.env.VITE_DEV === "true") {
 
 export const Hotbar = () => {
   const network = useMud();
-  const isReady = useGameStore((state) => state.isReady);
+  const gameReady = primodium.hooks.useGameReady(network);
   const keybinds = primodium.hooks.useKeybinds();
-  const [shouldAnimate, setShouldAnimate] = useState(false);
   const [activeBar, setActiveBar] = useState(0);
   const activeBarRef = useRef(0);
 
@@ -121,16 +108,12 @@ export const Hotbar = () => {
   const nextKeyImage = KeyImages.get(nextKey);
 
   useEffect(() => {
-    if (!isReady) return;
+    if (!gameReady) return;
 
     const hotkeyListener = (index: number) => {
-      const wrappedIndex = wrap(
-        index,
-        config[activeBarRef.current].buildings.length
-      );
+      if (index > config[activeBarRef.current].buildings.length - 1) return;
 
-      const building =
-        config[activeBarRef.current].buildings[wrappedIndex].blockType;
+      const building = config[activeBarRef.current].buildings[index].blockType;
 
       const selectedBuilding = primodium.components
         .selectedBuilding(network)
@@ -143,155 +126,166 @@ export const Hotbar = () => {
 
       primodium.components
         .selectedBuilding(network)
-        .set(config[activeBarRef.current].buildings[wrappedIndex].blockType);
+        .set(config[activeBarRef.current].buildings[index].blockType);
     };
 
-    const hotkey1 = primodium.input.addListener(KeybindActions.Hotbar0, () =>
-      hotkeyListener(0)
-    );
-    const hotkey2 = primodium.input.addListener(KeybindActions.Hotbar1, () =>
-      hotkeyListener(1)
-    );
-    const hotkey3 = primodium.input.addListener(KeybindActions.Hotbar2, () =>
-      hotkeyListener(2)
-    );
-    const hotkey4 = primodium.input.addListener(KeybindActions.Hotbar3, () =>
-      hotkeyListener(3)
-    );
-    const hotkey5 = primodium.input.addListener(KeybindActions.Hotbar4, () =>
-      hotkeyListener(4)
-    );
+    let hotkeys: { dispose: () => void }[] = [];
+    for (let i = 0; i < 10; i++) {
+      const hotkey = primodium.input.addListener(
+        KeybindActions[`Hotbar${i}` as keyof typeof KeybindActions],
+        () => hotkeyListener(i)
+      );
 
-    return () => {
-      hotkey1.dispose();
-      hotkey2.dispose();
-      hotkey3.dispose();
-      hotkey4.dispose();
-      hotkey5.dispose();
-    };
-  }, [isReady]);
-
-  useEffect(() => {
-    if (!isReady) return;
+      hotkeys.push(hotkey);
+    }
 
     const nextHotbar = primodium.input.addListener(
       KeybindActions.NextHotbar,
-      () => setActiveBar(wrap(activeBarRef.current + 1, config.length))
+      () => {
+        setActiveBar(wrap(activeBarRef.current + 1, config.length));
+        primodium.components.selectedBuilding(network).remove();
+      }
     );
 
     const prevHotbar = primodium.input.addListener(
       KeybindActions.PrevHotbar,
-      () => setActiveBar(wrap(activeBarRef.current - 1, config.length))
+      () => {
+        setActiveBar(wrap(activeBarRef.current - 1, config.length));
+        primodium.components.selectedBuilding(network).remove();
+      }
     );
 
     return () => {
+      hotkeys.forEach((hotkey) => hotkey.dispose());
       nextHotbar.dispose();
       prevHotbar.dispose();
     };
-  }, [isReady]);
-
-  useEffect(() => {
-    primodium.components.selectedBuilding(network).remove();
-
-    setShouldAnimate(true);
-    const timer = setTimeout(() => setShouldAnimate(false), 10); // Reset after animation duration
-
-    return () => clearTimeout(timer); // Clean up timer on unmount
-  }, [activeBar]);
+  }, [gameReady, keybinds]);
 
   return (
-    <AnimatePresence>
-      <div className=" z-[1000] viewport-container fixed bottom-0 right-1/2 translate-x-1/2 flex justify-center text-white drop-shadow-xl font-mono select-none">
-        <div className="flex flex-col items-center">
+    <div>
+      {
+        <div className=" z-[1000] viewport-container fixed bottom-0 left-1/2 -translate-x-1/2 flex justify-center text-white drop-shadow-xl font-mono select-none">
           <div
-            className="relative flex flex-col items-center mb-2 cursor-pointer"
-            onClick={() =>
-              setActiveBar(wrap(activeBarRef.current + 1, config.length))
-            }
+            style={{
+              filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
+              transform: "perspective(500px) rotateX(-10deg)",
+            }}
           >
-            <img
-              src={config[activeBar].icon}
-              className={`relative w-5 h-5 pixel-images z-20 shadow-2xl drop-shadow-2xl ${
-                shouldAnimate
-                  ? "scale-0"
-                  : "scale-150 transition-all duration-300"
-              }`}
-            />
-
-            <div className="relative px-2">
-              <p className="relative font-bold px-2 z-30 shadow-2xl">
-                {config[activeBar].name}
-              </p>
-              <span className="absolute inset-0 bg-gray-900 z-10 ring-2 ring-gray-900/50"></span>
-            </div>
-          </div>
-          <motion.div layout="position" className="flex items-center space-x-2">
-            {prevKeyImage && (
-              <div
-                className="relative cursor-pointer"
-                onClick={() =>
-                  setActiveBar(wrap(activeBarRef.current - 1, config.length))
-                }
-              >
-                <img
-                  src="/img/buttons/chevron.png"
-                  className="pixel-images scale-x-[-1] w-8"
-                />
-                <img
-                  src={prevKeyImage}
-                  className="absolute w-8 h-8 pixel-images"
-                />
-              </div>
-            )}
             <motion.div
-              layout="position"
-              transition={{
-                layout: { duration: 0.3 },
-              }}
-              className="relative bg-gray-900/80 border-4 border-t-slate-300 border-x-slate-400 border-b-slate-500 p-2 ring-4 ring-gray-900/80"
+              initial={{ opacity: 0, scale: 0, y: 200 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0, y: 200 }}
+              className="flex flex-col items-center"
             >
-              <div className={`flex space-x-3 p-1`}>
-                {config[activeBar].buildings.map((tile, index) => {
-                  return (
-                    <Hotbar.Item
-                      key={index}
-                      blockType={tile.blockType}
-                      name={tile.name}
-                      keybind={tile.keybind}
+              <Hotbar.Label
+                icon={config[activeBar].icon}
+                name={config[activeBar].name}
+              />
+              <motion.div className="flex items-center space-x-2">
+                {prevKeyImage && (
+                  <div
+                    className="relative cursor-pointer crt scale-x-[-1] "
+                    onClick={() =>
+                      setActiveBar(
+                        wrap(activeBarRef.current - 1, config.length)
+                      )
+                    }
+                  >
+                    <img
+                      src="/img/buttons/chevron.png"
+                      className="pixel-images w-8 border border-cyan-400 "
                     />
-                  );
-                })}
-              </div>
-            </motion.div>
-            {nextKeyImage && (
-              <div
-                className="relative cursor-pointer"
+                    <img
+                      src={prevKeyImage}
+                      className="absolute w-8 h-8 pixel-images scale-x-[-1] "
+                    />
+                  </div>
+                )}
+                <div
+                  className={`flex space-x-3 relative bg-slate-900/90 border-2 p-3 border-cyan-600 crt`}
+                >
+                  {config[activeBar].buildings.map((tile, index) => {
+                    return (
+                      <Hotbar.Item
+                        key={index}
+                        blockType={tile.blockType}
+                        keybind={tile.keybind}
+                      />
+                    );
+                  })}
+                </div>
+                {nextKeyImage && (
+                  <div
+                    className="relative cursor-pointer crt"
+                    onClick={() =>
+                      setActiveBar(
+                        wrap(activeBarRef.current + 1, config.length)
+                      )
+                    }
+                  >
+                    <img
+                      src="/img/buttons/chevron.png"
+                      className="pixel-images w-8 border border-cyan-600"
+                    />
+                    <img
+                      src={nextKeyImage}
+                      className="absolute w-8 h-8 pixel-images"
+                    />
+                  </div>
+                )}
+              </motion.div>
+
+              <Hotbar.Pagination
+                index={activeBar}
+                className="mt-2"
                 onClick={() =>
                   setActiveBar(wrap(activeBarRef.current + 1, config.length))
                 }
-              >
-                <img
-                  src="/img/buttons/chevron.png"
-                  className="pixel-images w-8"
-                />
-                <img
-                  src={nextKeyImage}
-                  className="absolute w-8 h-8 pixel-images"
-                />
-              </div>
-            )}
-          </motion.div>
-
-          <Hotbar.Pagination
-            index={activeBar}
-            className="mt-2"
-            onClick={() =>
-              setActiveBar(wrap(activeBarRef.current + 1, config.length))
-            }
-          />
+              />
+            </motion.div>
+          </div>
         </div>
+      }
+    </div>
+  );
+};
+
+Hotbar.Label = ({
+  icon,
+  name,
+  onClick,
+}: {
+  icon: string;
+  name: string;
+  onClick?: () => void;
+}) => {
+  const controls = useAnimation();
+
+  useEffect(() => {
+    async function animateImage() {
+      await controls.start({ scale: 2, transition: { duration: 0.2 } });
+      controls.start({ scale: 1.5, transition: { duration: 0.2 } });
+    }
+    animateImage();
+  }, [icon]);
+
+  return (
+    <div
+      className="relative flex flex-col items-center mb-2 cursor-pointer"
+      onClick={onClick}
+    >
+      <motion.img
+        animate={controls}
+        src={icon}
+        className={`relative w-5 h-5 pixel-images z-20`}
+      />
+
+      <div className="relative px-2 border border-cyan-600">
+        <p className="relative font-bold px-2 z-30 shadow-2xl">{name}</p>
+        <span className="absolute inset-0 bg-slate-900/90 z-10crt"></span>
       </div>
-    </AnimatePresence>
+    </div>
   );
 };
 
@@ -306,17 +300,17 @@ Hotbar.Pagination = ({
 }) => {
   return (
     <div
-      className={`flex h-full space-x-2 hover:bg-gray-900/50 transition-all cursor-pointer p-2 ${className}`}
+      className={`flex h-full space-x-2 hover:bg-gray-900/50 cursor-pointer p-2 crt ${className}`}
       onClick={onClick}
     >
       {config.map((_, i) => {
         return (
           <div
             key={i}
-            className={`w-2 h-2 transition-all duration-500 shadow-inner  ${
+            className={`w-2 h-2 transition-transform  ${
               i === index
-                ? "scale-125 bg-gray-200 ring-1 ring-gray-900"
-                : "bg-gray-900 scale-100"
+                ? "scale-125 bg-cyan-600 border border-cyan-400"
+                : "bg-slate-900/90 scale-100"
             }`}
           />
         );
@@ -327,11 +321,9 @@ Hotbar.Pagination = ({
 
 Hotbar.Item = ({
   blockType,
-  name,
   keybind,
 }: {
   blockType: EntityID;
-  name: string;
   keybind: KeybindActions;
 }) => {
   const network = useMud();
@@ -343,7 +335,6 @@ Hotbar.Item = ({
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -351,7 +342,11 @@ Hotbar.Item = ({
         opacity: { duration: 0.5 },
       }}
     >
-      <div className="relative flex flex-col text-sm items-center cursor-pointer">
+      <div
+        className={`relative flex flex-col text-sm items-center cursor-pointer crt ${
+          selectedBuilding === blockType ? "scale-110" : ""
+        }`}
+      >
         <img
           src={BackgroundImage.get(blockType)}
           onClick={() => {
@@ -362,9 +357,9 @@ Hotbar.Item = ({
 
             primodium.components.selectedBuilding(network).set(blockType);
           }}
-          className={`w-16 h-16 pixel-images ring-2 ring-gray-600 ${
+          className={`w-16 h-16 pixel-images border border-cyan-700 ${
             selectedBuilding === blockType
-              ? " border-4 border-yellow-500 border-b-yellow-700 border-t-yellow-300 scale-110 transistion-all duration-100"
+              ? " ring-4 ring-amber-400 transistion-all duration-100"
               : ""
           }`}
         />
@@ -377,14 +372,16 @@ Hotbar.Item = ({
             }}
             className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-1"
           >
-            {name}
+            {BlockIdToKey[selectedBuilding]
+              .replace(/([A-Z]+)/g, " $1")
+              .replace(/([A-Z][a-z])/g, " $1")}
           </motion.p>
         )}
         {keyImage && (
           <img
             src={keyImage}
-            className={`absolute -top-3 -left-3 w-8 h-8 pixel-images ${
-              selectedBuilding === blockType ? "opacity-50" : ""
+            className={`absolute -top-2 -left-2 w-8 h-8 pixel-images ${
+              selectedBuilding === blockType ? "opacity-30" : ""
             }`}
           />
         )}

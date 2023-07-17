@@ -161,6 +161,10 @@ export function defineOffChainComponents(world: World) {
       metadata: {},
       id: "BlockNumber",
     }),
+    GameReady: defineBoolComponent(world, {
+      metadata: {},
+      id: "GameStatus",
+    }),
     DoubleCounter: defineNumberComponent(world, {
       metadata: {},
       id: "DoubleCounter",

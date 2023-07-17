@@ -27,6 +27,25 @@ let perlin: Perlin;
   perlin = await createPerlin();
 })();
 
+export const gameReady = (network: Network) => {
+  const { singletonIndex, offChainComponents } = network;
+
+  return {
+    set: (value: boolean) => {
+      setComponent(offChainComponents.GameReady, singletonIndex, {
+        value,
+      });
+    },
+    get: () => {
+      return getComponentValue(offChainComponents.GameReady, singletonIndex)
+        ?.value;
+    },
+    remove: () => {
+      return removeComponent(offChainComponents.GameReady, singletonIndex);
+    },
+  };
+};
+
 export const selectedTile = (network: Network) => {
   const { singletonIndex, offChainComponents } = network;
 

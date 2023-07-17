@@ -8,9 +8,9 @@ const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
   assetPackUrl: Assets.Pack,
   camera: {
-    minZoom: 2,
-    maxZoom: 5,
-    defaultZoom: 3,
+    minZoom: Math.max(1, window.devicePixelRatio),
+    maxZoom: window.devicePixelRatio * 5,
+    defaultZoom: window.devicePixelRatio * 3,
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },

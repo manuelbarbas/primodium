@@ -7,7 +7,6 @@ import { Tour } from "src/components/tour/Tour";
 import { useTourStore } from "src/store/TourStore";
 import { EntityID } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
-import { useGameStore } from "src/store/GameStore";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -16,10 +15,7 @@ export const Game = () => {
   const network = useMud();
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
-  const [isReady, setIsReady] = useGameStore((state) => [
-    state.isReady,
-    state.setIsReady,
-  ]);
+  const gameReady = primodium.hooks.useGameReady(network);
   const [completedTutorial, checkpoint] = useTourStore((state) => [
     state.completedTutorial,
     state.checkpoint,
@@ -40,6 +36,7 @@ export const Game = () => {
     (async () => {
       try {
         if (!network) return;
+
         await primodium.init(
           address,
           network,
@@ -52,21 +49,19 @@ export const Game = () => {
           window.innerWidth * window.devicePixelRatio,
           window.innerHeight * window.devicePixelRatio
         );
-
-        setIsReady(true);
       } catch (e) {
         console.log(e);
         setError(true);
       }
     })();
-  }, [network]);
+  }, []);
 
   useEffect(() => {
-    if (isReady && mainBaseCoord) {
+    if (gameReady && mainBaseCoord) {
       primodium.camera.pan(mainBaseCoord, 0);
-      primodium.components.selectedTile(network).set(mainBaseCoord);
+      // primodium.components.selectedTile(network).set(mainBaseCoord);
     }
-  }, [mainBaseCoord, isReady]);
+  }, [mainBaseCoord, gameReady]);
 
   if (error) {
     return <div>Phaser Engine Game Error. Refer to console.</div>;
@@ -77,7 +72,7 @@ export const Game = () => {
 
   return (
     <div>
-      {!isReady && (
+      {!gameReady && (
         <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4">Primodium</h1>
@@ -87,10 +82,7 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div
-        id="game-container"
-        className={`${isReady ? "opacity-100" : "opacity-0"}`}
-      >
+      <div id="game-container w-full h-full">
         {!playerInitialized && !completedTutorial && <Tour />}
         <div id="phaser-container" className="absolute cursor-pointer" />
         <GameUI />

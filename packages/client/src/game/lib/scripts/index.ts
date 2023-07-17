@@ -18,10 +18,11 @@ import {
 import { runSystems } from "../systems";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
 import { isDown } from "src/game/api/input";
-import { pan } from "src/game/api/camera";
+import { pan, updateWorldView } from "src/game/api/camera";
 
 export const init = async (address: string, network: Network) => {
   const { world } = network;
+
   const game = await engine.createGame(gameConfig);
   const scene = await game.sceneManager.addScene(
     Scenes.Main,
@@ -54,17 +55,11 @@ export const init = async (address: string, network: Network) => {
     }
 
     const selectedBuilding = components.selectedBuilding(network).get();
-
-    // scene.camera.phaserCamera.shake(
-    //   200,
-    //   0.001 / scene.camera.phaserCamera.zoom,
-    //   true
-    // );
+    components.selectedTile(network).set(gameCoord);
 
     //handle web3 mutations
     switch (selectedBuilding) {
       case undefined:
-        components.selectedTile(network).set(gameCoord);
         break;
       case BlockType.DemolishBuilding:
         components.selectedBuilding(network).remove();
@@ -100,7 +95,9 @@ export const init = async (address: string, network: Network) => {
         //if both origin and target are set, don't do anything
         break;
       default:
-        components.selectedBuilding(network).remove();
+        if (!isDown(KeybindActions.Modifier))
+          components.selectedBuilding(network).remove();
+
         buildBuilding(
           gameCoord,
           selectedBuilding as EntityID,
@@ -111,7 +108,7 @@ export const init = async (address: string, network: Network) => {
     }
   });
 
-  scene.input.pointermove$.pipe().subscribe((event) => {
+  const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.pointer.worldX, y: event.pointer.worldY },
       scene.tilemap.tileWidth,
@@ -149,6 +146,26 @@ export const init = async (address: string, network: Network) => {
       }
     }
   );
+
+  const doubleClickSub = scene.input.doubleClick$.subscribe((event) => {
+    const { x, y } = pixelCoordToTileCoord(
+      { x: event.worldX, y: event.worldY },
+      scene.tilemap.tileWidth,
+      scene.tilemap.tileHeight
+    );
+
+    const gameCoord = { x, y: -y } as Coord;
+
+    //set to default zoomTo and pan to mouse position
+    scene.camera.phaserCamera.zoomTo(
+      scene.config.camera.defaultZoom,
+      1000,
+      undefined,
+      undefined,
+      () => updateWorldView()
+    );
+    pan(gameCoord);
+  });
 
   //accumalate sub-pixel movement during a gametick and add to next game tick.
   let accumulatedX = 0;
@@ -254,6 +271,9 @@ export const init = async (address: string, network: Network) => {
 
   world.registerDisposer(() => {
     chunkManager.dispose();
+    pointerMoveSub.unsubscribe();
+    doubleClickSub.unsubscribe();
+    scene.input.phaserInput.removeListener("wheel");
     game.dispose();
   });
 };

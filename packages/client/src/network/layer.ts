@@ -102,11 +102,13 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     value: (await network.providers.get().ws?.getBlockNumber()) ?? 0,
   });
 
-  network.blockNumber$.subscribe((blockNumber) => {
+  const blockListener = network.blockNumber$.subscribe((blockNumber) => {
     setComponent(offChainComponents.BlockNumber, singletonIndex, {
       value: blockNumber,
     });
   });
+
+  world.registerDisposer(() => blockListener.unsubscribe());
 
   return context;
 }

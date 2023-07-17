@@ -9,7 +9,7 @@ import {
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { useEntityQuery } from "@latticexyz/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { primodium } from "@game/api";
 import { useMud } from "src/context/MudContext";
 import { getTopLayerKeyPair } from "src/util/tile";
@@ -26,8 +26,8 @@ export const TileInfo = () => {
   const { components, singletonIndex } = network;
   const selectedTile = primodium.hooks.useSelectedTile(network);
   const [initialized, setInitialized] = useState(false);
+  const [terrainPair, setTerrainPair] = useState<DisplayKeyPair | null>(null);
   const perlinRef = useRef(null as null | Perlin);
-  const terrainPairRef = useRef<DisplayKeyPair | null>(null);
 
   const tilesAtPosition = useEntityQuery(
     [
@@ -57,10 +57,9 @@ export const TileInfo = () => {
     const perlin = perlinRef.current;
     const terrainPair = getTopLayerKeyPair(selectedTile, perlin);
 
-    terrainPairRef.current = terrainPair;
+    setTerrainPair(terrainPair);
   }, [initialized, selectedTile]);
 
-  const terrainPair = terrainPairRef.current;
   const entityIndex = tilesAtPosition[0] as EntityIndex | undefined;
   const tile = getComponentValue(components.Tile, entityIndex ?? singletonIndex)
     ?.value as unknown as EntityID | undefined;
@@ -70,37 +69,44 @@ export const TileInfo = () => {
   )?.value as unknown as number | undefined;
 
   return (
-    <AnimatePresence>
+    <div>
       {selectedTile && (
         <div className=" z-[1000] viewport-container fixed top-2 right-1/2 translate-x-1/2 text-white drop-shadow-xl font-mono select-none">
-          <motion.div
-            className="flex flex-col items-center space-y-2"
-            initial={{ opacity: 0, scale: 0, y: -200 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0, y: -200 }}
+          <div
+            style={{
+              transform: "perspective(500px) rotateX(10deg)",
+              filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
+            }}
           >
-            <TileInfo.Coord coord={selectedTile} />
-            {tile && (
-              <TileInfo.BuildingTile
-                buildingTile={tile}
-                buildingHealth={health}
-              />
-            )}
-            {terrainPair && !tile && (
-              <TileInfo.TerrainTile terrainPair={terrainPair} />
-            )}
-          </motion.div>
+            <motion.div
+              className="flex flex-col items-center space-y-2"
+              initial={{ opacity: 0, scale: 0, y: -200 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0, y: -200 }}
+            >
+              <TileInfo.Coord coord={selectedTile} />
+              {tile && (
+                <TileInfo.BuildingTile
+                  buildingTile={tile}
+                  buildingHealth={health}
+                />
+              )}
+              {terrainPair && !tile && (
+                <TileInfo.TerrainTile terrainPair={terrainPair} />
+              )}
+            </motion.div>
+          </div>
         </div>
       )}
-    </AnimatePresence>
+    </div>
   );
 };
 
 TileInfo.Coord = ({ coord }: { coord: Coord }) => {
   return (
-    <motion.div layout className="bg-gray-900 mx-1">
-      <p>{`(${coord.x}, ${coord.y})`}</p>
-    </motion.div>
+    <p className="flex items-center whitespace-nowrap px-1 mb-2 bg-gray-900 border-2 border-cyan-600 crt">
+      <b>{`(${coord.x}, ${coord.y})`}</b>
+    </p>
   );
 };
 
@@ -117,12 +123,12 @@ TileInfo.BuildingTile = ({
 
   return (
     <div className="flex flex-col items-center space-y-6">
-      <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-gray-800 w-fit">
+      <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-slate-900/90 w-fit crt">
         <img
           src={BackgroundImage.get(buildingTile)}
           className="w-16 h-16 pixel-images"
         />
-        <div className="absolute flex items-center bottom-0 left-1/2 -translate-x-1/2 w-20 h-2 ring-2 ring-gray-900">
+        <div className="absolute flex items-center bottom-0 left-1/2 -translate-x-1/2 w-20 h-2 ring-2 ring-slate-900/90 crt">
           <div
             className="h-full bg-green-500"
             style={{ width: `${percentHealth * 100}%` }}
@@ -132,7 +138,7 @@ TileInfo.BuildingTile = ({
             style={{ width: `${(1 - percentHealth) * 100}%` }}
           />
         </div>
-        <p className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-1">
+        <p className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 border border-cyan-600 px-1 crt">
           <b>
             {BlockIdToKey[buildingTile]
               .replace(/([A-Z]+)/g, " $1")
@@ -140,27 +146,24 @@ TileInfo.BuildingTile = ({
           </b>
         </p>
       </div>
-      <motion.div layout>
+      <div className="relative">
         <ImageButton
-          className="w-36 h-12 group text-blue-100"
+          className="w-36 h-12 text-green-100 border-2 border-cyan-600"
           image="/img/buttons/rectangle/blue/up.png"
           activeImage="/img/buttons/rectangle/blue/down.png"
         >
-          <p className="-translate-y-[2px] active:translate-y-0 font-bold leading-none">
+          <p className="-translate-y-[2px] active:translate-y-0 font-bold leading-none h-full flex justify-center items-center crt">
             Upgrade
           </p>
         </ImageButton>
-      </motion.div>
+      </div>
     </div>
   );
 };
 
 TileInfo.TerrainTile = ({ terrainPair }: { terrainPair: DisplayKeyPair }) => {
   return (
-    <motion.div
-      animate
-      className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-gray-800"
-    >
+    <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-gray-800 crt">
       <img
         src={BackgroundImage.get(terrainPair.terrain)}
         className="w-16 h-16 pixel-images"
@@ -171,13 +174,13 @@ TileInfo.TerrainTile = ({ terrainPair }: { terrainPair: DisplayKeyPair }) => {
           className="absolute top-0 w-16 h-16 pixel-images"
         />
       )}
-      <div className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-1">
+      <div className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 border border-cyan-600 px-1 crt">
         <p>
           {BlockIdToKey[terrainPair.resource ?? terrainPair.terrain]
             .replace(/([A-Z]+)/g, " $1")
             .replace(/([A-Z][a-z])/g, " $1")}
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 };
