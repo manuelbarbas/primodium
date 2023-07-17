@@ -280,24 +280,24 @@ export const ResearchTechnologyTree = [
       resources: [],
     },
   },
-  {
-    data: {
-      name: "Solar Panel 2",
-      id: BlockType.SolarPanel2Research,
-      description:
-        "allows you to upgrade Solar Panel building to level 2 increasing production",
-      resources: [],
-    },
-  },
-  {
-    data: {
-      name: "Solar Panel 3",
-      id: BlockType.SolarPanel2Research,
-      description:
-        "allows you to upgrade Solar Panel building to level 2 increasing production",
-      resources: [],
-    },
-  },
+  // {
+  //   data: {
+  //     name: "Solar Panel 2",
+  //     id: BlockType.SolarPanel2Research,
+  //     description:
+  //       "allows you to upgrade Solar Panel building to level 2 increasing production",
+  //     resources: [],
+  //   },
+  // },
+  // {
+  //   data: {
+  //     name: "Solar Panel 3",
+  //     id: BlockType.SolarPanel2Research,
+  //     description:
+  //       "allows you to upgrade Solar Panel building to level 2 increasing production",
+  //     resources: [],
+  //   },
+  // },
   {
     data: {
       name: "Housing Unit",
@@ -307,22 +307,22 @@ export const ResearchTechnologyTree = [
       resources: [],
     },
   },
-  {
-    data: {
-      name: "Housing Unit 2",
-      id: BlockType.HousingUnit2Research,
-      description:
-        "allows you to upgrade Housing Unit building to level 2 increasing production",
-      resources: [],
-    },
-  },
-  {
-    data: {
-      name: "Housing Unit 3",
-      id: BlockType.HousingUnit2Research,
-      description:
-        "allows you to upgrade Housing Unit building to level 2 increasing production",
-      resources: [],
-    },
-  },
+  // {
+  //   data: {
+  //     name: "Housing Unit 2",
+  //     id: BlockType.HousingUnit2Research,
+  //     description:
+  //       "allows you to upgrade Housing Unit building to level 2 increasing production",
+  //     resources: [],
+  //   },
+  // },
+  // {
+  //   data: {
+  //     name: "Housing Unit 3",
+  //     id: BlockType.HousingUnit2Research,
+  //     description:
+  //       "allows you to upgrade Housing Unit building to level 2 increasing production",
+  //     resources: [],
+  //   },
+  // },
 ];

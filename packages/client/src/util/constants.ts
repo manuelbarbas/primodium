@@ -90,6 +90,12 @@ export const BlockType = {
   LithiumMine: keccak256("block.LithiumMine") as EntityID,
   StorageUnit: keccak256("block.StorageUnit") as EntityID,
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
+  LithiumCopperOxideFactory: keccak256(
+    "block.LithiumCopperOxideFactory"
+  ) as EntityID,
+  AlloyFactory: keccak256("block.AlloyFactory") as EntityID,
+  SolarPanel: keccak256("block.SolarPanel") as EntityID,
+  HousingUnit: keccak256("block.HousingUnit") as EntityID,
 
   // Old Buildings
   BasicMiner: keccak256("block.BasicMiner") as EntityID,
