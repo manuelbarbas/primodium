@@ -1,4 +1,4 @@
-import { EntityID, EntityIndex, World, hasComponent } from "@latticexyz/recs";
+import { EntityID, World, hasComponent } from "@latticexyz/recs";
 import { NetworkComponents } from "@latticexyz/std-client";
 import { defineComponents } from "../network/components";
 export function canBeUpgraded(
@@ -7,19 +7,11 @@ export function canBeUpgraded(
   world: World,
   components: NetworkComponents<ReturnType<typeof defineComponents>>
 ): undefined | boolean {
-  console.log("reached can be upgraded");
-
-  if (
-    !hasComponent(
-      components.MaxLevel,
-      world.entityToIndex.get(buildingType) as EntityIndex
-    ) ||
-    !hasComponent(
-      components.BuildingLevel,
-      world.entityToIndex.get(buildingEntity) as EntityIndex
-    )
-  )
-    return false;
-  console.log("reached can be upgraded is true");
-  return true;
+  const buildingEntityId = world.entityToIndex.get(buildingEntity);
+  const buildingTypeId = world.entityToIndex.get(buildingType);
+  if (!buildingEntityId || !buildingTypeId) return false;
+  return (
+    hasComponent(components.MaxLevel, buildingTypeId) &&
+    hasComponent(components.BuildingLevel, buildingEntityId)
+  );
 }

@@ -1,12 +1,18 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, removeComponent, setComponent } from "@latticexyz/recs";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useMud } from "src/context/MudContext";
-import { useGameStore } from "src/store/GameStore";
-import { BackgroundImage, BlockType, KeyImages } from "src/util/constants";
-import { motion, AnimatePresence } from "framer-motion";
 import { Key } from "src/engine/lib/core/createInput";
+import { singletonIndex, world } from "src/network/world";
+import { useGameStore } from "src/store/GameStore";
+import {
+  Action,
+  BackgroundImage,
+  BlockType,
+  KeyImages,
+} from "src/util/constants";
 
 const config = [
   {
@@ -335,7 +341,10 @@ Hotbar.Item = ({
   keybind: KeybindActions;
 }) => {
   const network = useMud();
-  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
+  const selectedBuildingEntity = primodium.hooks.useSelectedBuilding();
+  const selectedBuilding = selectedBuildingEntity
+    ? world.entities[selectedBuildingEntity]
+    : undefined;
   const keybinds = primodium.hooks.useKeybinds();
 
   const key = keybinds[keybind]?.entries().next().value[0] as Key;
@@ -357,10 +366,21 @@ Hotbar.Item = ({
           onClick={() => {
             if (selectedBuilding === blockType) {
               primodium.components.selectedBuilding(network).remove();
+              removeComponent(
+                network.offChainComponents.SelectedAction,
+                singletonIndex
+              );
               return;
             }
 
             primodium.components.selectedBuilding(network).set(blockType);
+            setComponent(
+              network.offChainComponents.SelectedAction,
+              singletonIndex,
+              {
+                value: Action.PlaceBuilding,
+              }
+            );
           }}
           className={`w-16 h-16 pixel-images ring-2 ring-gray-600 ${
             selectedBuilding === blockType

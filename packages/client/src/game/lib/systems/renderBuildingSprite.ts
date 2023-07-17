@@ -76,7 +76,6 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
     world,
     SelectedBuilding,
     ({ value: [newValue, oldValue] }) => {
-      console.log("selected building changed", newValue);
       if (oldValue?.value) {
         const entityIndex = world.entityToIndex.get(oldValue.value);
         if (entityIndex) render({ entity: entityIndex });

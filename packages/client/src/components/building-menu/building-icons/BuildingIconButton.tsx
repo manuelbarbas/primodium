@@ -29,11 +29,7 @@ function BuildingIconButton({
 }) {
   const network = useMud();
   const { components, world, singletonIndex } = network;
-  const selectedBuilding = primodium.hooks.useSelectedBuilding();
-
-  const buildingType = selectedBuilding
-    ? getComponentValue(components.BuildingType, selectedBuilding)?.value
-    : undefined;
+  const selectedBuildingEntity = primodium.hooks.useSelectedBuilding();
 
   const { address } = useAccount();
 
@@ -65,8 +61,12 @@ function BuildingIconButton({
 
   const recipe = getRecipe(blockType, world, components);
 
+  const selectedBuilding = selectedBuildingEntity
+    ? world.entities[selectedBuildingEntity]
+    : undefined;
+
   const handleSelectBuilding = () => {
-    if (buildingType === blockType) {
+    if (selectedBuilding === blockType) {
       primodium.components.selectedBuilding(network).remove();
       removeComponent(
         network.offChainComponents.SelectedAction,
@@ -116,7 +116,7 @@ function BuildingIconButton({
         <img
           src={BackgroundImage.get(blockType)}
           className={`"w-16 h-16 pixel-images hover:brightness-75 ${
-            buildingType === blockType ? "border-4 border-yellow-300" : ""
+            selectedBuilding === blockType ? "border-4 border-yellow-300" : ""
           }`}
         />
         {buildingLocked && (

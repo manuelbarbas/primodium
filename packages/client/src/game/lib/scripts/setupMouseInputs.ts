@@ -9,7 +9,12 @@ import { offChainComponents, singletonIndex } from "src/network/world";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
-import { buildPath, demolishBuilding, demolishPath } from "src/util/web3";
+import {
+  buildBuilding,
+  buildPath,
+  demolishBuilding,
+  demolishPath,
+} from "src/util/web3";
 import { Network } from "../../../network/layer";
 import * as components from "../../api/components";
 
@@ -35,10 +40,6 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
       singletonIndex
     )?.value;
 
-    // update selected action
-    const removeSelectedAction = () =>
-      removeComponent(SelectedAction, singletonIndex);
-
     //handle web3 mutations
     switch (selectedAction) {
       case undefined:
@@ -61,8 +62,16 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
         return;
       case Action.SelectAttack:
         return;
+      case Action.PlaceBuilding:
+        const selectedBuilding = getComponentValue(
+          SelectedBuilding,
+          singletonIndex
+        )?.value;
+        if (!selectedBuilding) return;
+        components.selectedBuilding(network).remove();
+        buildBuilding(gameCoord, selectedBuilding, address, network);
     }
-    if (selectedAction) removeSelectedAction();
+    if (selectedAction) removeComponent(SelectedAction, singletonIndex);
 
     // update selected building
     const building = getBuildingAtCoord(gameCoord, network);
@@ -73,17 +82,6 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
       setComponent(SelectedBuilding, singletonIndex, { value: building });
       removeComponent(SelectedTile, singletonIndex);
     }
-
-    /* todo: if selectedBuilding is a building type, then build the building
-     ala:
-     components.selectedBuilding(network).remove;
-        buildBuilding(
-          gameCoord,
-          selectedBuilding as EntityID,
-          address,
-          network
-        );
-     */
   });
 
   scene.input.pointermove$.pipe().subscribe((event) => {

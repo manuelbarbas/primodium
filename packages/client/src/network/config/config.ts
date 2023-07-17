@@ -47,7 +47,6 @@ export const getNetworkLayerConfig = (
   const worldAddress = params.get("worldAddress");
   if (!worldAddress) throw new Error("No world address provided");
 
-  console.log("chain id:", params.get("chainId"));
   const rawChainId = params.get("chainId");
   const chainId = rawChainId ? Number(rawChainId) : chainConfig.chainId;
 
@@ -57,7 +56,7 @@ export const getNetworkLayerConfig = (
     syncInterval: DEV ? 5000 : 60_000,
   };
 
-  const networkConfig = {
+  return {
     clock,
     provider: {
       jsonRpcUrl: params.get("rpc") ?? chainConfig.jsonRpcUrl,
@@ -78,6 +77,4 @@ export const getNetworkLayerConfig = (
     defaultWalletAddress: address,
     faucetMinDripAmount: chainConfig.tempFaucetMinDripAmount,
   };
-  console.log("config: ", networkConfig);
-  return networkConfig;
 };
