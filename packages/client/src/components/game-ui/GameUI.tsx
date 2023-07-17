@@ -7,7 +7,7 @@ import NotificationBox from "../NotificationBox";
 import SideMenu from "../SideMenu";
 import ResourceBox from "../resource-box/ResourceBox";
 import TooltipBox from "../tooltip-box/TooltipBox";
-import { Hotbar } from "./Hotbar";
+import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
 
 function GameUI() {
