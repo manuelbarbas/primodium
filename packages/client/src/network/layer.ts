@@ -57,8 +57,11 @@ export async function createNetworkLayer(config: NetworkConfig) {
       : undefined;
 
     // initial drip
+    const minDripAmount = config.faucetMinDripAmount
+      ? config.faucetMinDripAmount.toString()
+      : "0";
     const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-      utils.parseEther("2")
+      utils.parseEther(minDripAmount)
     );
 
     if (playerIsBroke) {
