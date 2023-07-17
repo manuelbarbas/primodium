@@ -1,9 +1,10 @@
 import { SetupContractConfig } from "@latticexyz/std-client";
+import { Address } from "wagmi";
 import { Step } from "walktour";
 
 export type NetworkConfig = {
   config: SetupContractConfig;
-  defaultWalletAddress: string | undefined;
+  defaultWalletAddress: Address | undefined;
 };
 export type BlockTypeActionComponent = {
   action: () => void;

@@ -15,6 +15,7 @@ import * as components from "../../api/components";
 
 const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
   const { SelectedAction, SelectedBuilding, SelectedTile } = offChainComponents;
+
   scene.input.click$.subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
@@ -72,6 +73,17 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
       setComponent(SelectedBuilding, singletonIndex, { value: building });
       removeComponent(SelectedTile, singletonIndex);
     }
+
+    /* todo: if selectedBuilding is a building type, then build the building
+     ala:
+     components.selectedBuilding(network).remove;
+        buildBuilding(
+          gameCoord,
+          selectedBuilding as EntityID,
+          address,
+          network
+        );
+     */
   });
 
   scene.input.pointermove$.pipe().subscribe((event) => {

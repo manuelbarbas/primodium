@@ -82,11 +82,15 @@ export function defineComponents(world: World) {
       },
     }),
     // main base initialized
-    MainBaseInitialized: defineStringComponent(world, {
-      metadata: {
-        contractId: "component.MainBaseInitialized",
-      },
-    }),
+    MainBaseInitialized: defineComponent(
+      world,
+      { value: Type.Entity },
+      {
+        metadata: {
+          contractId: "component.MainBaseInitialized",
+        },
+      }
+    ),
     // Resource data stored in components
     RequiredResearchComponent: defineNumberComponent(world, {
       metadata: {

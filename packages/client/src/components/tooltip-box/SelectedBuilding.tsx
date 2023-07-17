@@ -3,6 +3,7 @@ import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
 import { useMud } from "src/context/MudContext";
 import { useAccount } from "src/hooks/useAccount";
+import { world } from "src/network/world";
 import { useGameStore } from "src/store/GameStore";
 import {
   BackgroundImage,
@@ -18,6 +19,7 @@ import {
   isMainBase,
 } from "src/util/resource";
 import { getTopLayerKeyPair } from "src/util/tile";
+import { canBeUpgraded } from "src/util/upgrade";
 import ClaimButton from "../action/ClaimButton";
 import ClaimCraftButton from "../action/ClaimCraftButton";
 import UpgradeButton from "../action/UpgradeButton";
@@ -35,6 +37,7 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
     ? "you"
     : owner.toString().slice(0, 8) + "...";
 
+  const buildingEntity = world.entities[building];
   const buildingType = useComponentValue(components.BuildingType, building, {
     value: BlockType.Node,
   })?.value as EntityID;
@@ -89,7 +92,7 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
         {name} <p className="italic text-xs">{ownerName}</p>
       </div>
     );
-
+  if (!buildingEntity) return null;
   return (
     <div className="grid grid-cols-1 gap-1.5 overflow-y-scroll scrollbar">
       <div className="flex flex-col">
@@ -157,13 +160,14 @@ const SelectedBuilding: React.FC<Props> = ({ building, minimized }) => {
                 coords={position}
               />
             )}
-            {
+            {canBeUpgraded(buildingEntity, buildingType, world, components) && (
               <UpgradeButton
                 id="upgrade-button"
+                buildingEntity={buildingEntity}
                 builtTile={buildingType}
                 coords={position}
               />
-            }
+            )}
           </>
         )}
         {transactionLoading ? (

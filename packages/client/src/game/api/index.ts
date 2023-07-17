@@ -1,4 +1,5 @@
 import { BlockType } from "src/util/constants";
+import { Address } from "wagmi";
 import { Network } from "../../network/layer";
 import { init as _init } from "../lib/scripts";
 import * as camera from "./camera";
@@ -9,7 +10,7 @@ import * as hooks from "./hooks";
 import * as input from "./input";
 
 const init = async (
-  address: string,
+  address: Address,
   network: Network,
   version: string = "v1"
 ) => {

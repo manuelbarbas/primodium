@@ -2,6 +2,8 @@ import { ExternalProvider } from "@ethersproject/providers";
 
 import { SetupContractConfig } from "@latticexyz/std-client";
 import { Wallet } from "ethers";
+import { isAddress } from "ethers/lib/utils.js";
+import { Address } from "wagmi";
 const params = new URLSearchParams(window.location.search);
 
 // The default production testnet is `skystrife`.
@@ -50,12 +52,14 @@ export const faucetUrl = tempFaucetUrl;
 const DEV = import.meta.env.VITE_DEV === "true";
 
 export const devConfig = () => {
-  let address = localStorage.getItem("address");
+  let address = localStorage.getItem("address") as Address;
+  if (address && !isAddress(address))
+    throw new Error("Provided address incorrectly formatted");
   let privateKey = localStorage.getItem("privateKey");
 
   if (!address || !privateKey) {
     const randomWallet = Wallet.createRandom();
-    address = randomWallet.address;
+    address = randomWallet.address as Address;
     privateKey = randomWallet.privateKey;
     localStorage.setItem("address", randomWallet.address);
     localStorage.setItem("privateKey", randomWallet.privateKey);
