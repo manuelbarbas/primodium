@@ -7,7 +7,6 @@ import { createPerlin } from "@latticexyz/noise";
 import { NetworkConfig } from "src/util/types";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
-import { faucetUrl } from "./config";
 import { syncPositionComponent } from "./syncPositionComponent";
 import {
   contractComponents,
@@ -18,10 +17,7 @@ import {
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
-export async function createNetworkLayer({
-  config,
-  defaultWalletAddress,
-}: NetworkConfig) {
+export async function createNetworkLayer(config: NetworkConfig) {
   // Components contain the application state.
   // If a contractId is provided, MUD syncs the state with the corresponding
   // component contract (in this case `CounterComponent.sol`)
@@ -56,7 +52,9 @@ export async function createNetworkLayer({
 
   if (!config.devMode) {
     // Faucet setup
-    const faucet = faucetUrl ? createFaucetService(faucetUrl) : undefined;
+    const faucet = config.faucetUrl
+      ? createFaucetService(config.faucetUrl)
+      : undefined;
 
     // initial drip
     const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
@@ -93,7 +91,7 @@ export async function createNetworkLayer({
     offChainComponents,
     singletonIndex,
     providers: network.providers,
-    defaultWalletAddress,
+    defaultWalletAddress: config.defaultWalletAddress,
     perlin,
   };
 

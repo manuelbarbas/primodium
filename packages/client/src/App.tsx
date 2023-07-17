@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Connector, WagmiConfig, useAccount as useWagmiAccount } from "wagmi";
-import { devConfig, getNetworkLayerConfig } from "./network/config";
+import {
+  Address,
+  Connector,
+  WagmiConfig,
+  useAccount as useWagmiAccount,
+} from "wagmi";
+import { getNetworkLayerConfig } from "./network/config/config";
 import { Network, createNetworkLayer } from "./network/layer";
 
 import AppLoadingState from "./AppLoadingState";
 import { MudProvider } from "./context/MudContext";
 import wagmiClient from "./network/wagmi";
-
-type Address = `0x${string}`;
 
 export default function App() {
   // Setup network layer
@@ -23,8 +26,7 @@ export default function App() {
   ) => {
     if (prevAddressRef.current && address === prevAddressRef.current) return;
     const provider = await activeConnector?.getProvider();
-    const networkLayerConfig =
-      provider === undefined ? devConfig() : getNetworkLayerConfig(provider);
+    const networkLayerConfig = getNetworkLayerConfig(provider);
     const network = await createNetworkLayer(networkLayerConfig);
     setNetworkLayer(network);
     prevAddressRef.current = address;

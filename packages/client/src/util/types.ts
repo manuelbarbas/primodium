@@ -2,10 +2,11 @@ import { SetupContractConfig } from "@latticexyz/std-client";
 import { Address } from "wagmi";
 import { Step } from "walktour";
 
-export type NetworkConfig = {
-  config: SetupContractConfig;
-  defaultWalletAddress: Address | undefined;
+export type NetworkConfig = SetupContractConfig & {
+  defaultWalletAddress?: Address;
+  faucetUrl?: string;
 };
+
 export type BlockTypeActionComponent = {
   action: () => void;
 };
