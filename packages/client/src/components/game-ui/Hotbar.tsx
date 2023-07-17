@@ -1,12 +1,18 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import { EntityID, removeComponent, setComponent } from "@latticexyz/recs";
+import {
+  EntityID,
+  getComponentValue,
+  removeComponent,
+  setComponent,
+} from "@latticexyz/recs";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
 import { singletonIndex, world } from "src/network/world";
 import { useGameStore } from "src/store/GameStore";
+import { calcDims, convertToCoords } from "src/util/building";
 import {
   Action,
   BackgroundImage,
@@ -332,7 +338,7 @@ Hotbar.Pagination = ({
 };
 
 Hotbar.Item = ({
-  blockType,
+  blockType: buildingType,
   name,
   keybind,
 }: {
@@ -341,6 +347,9 @@ Hotbar.Item = ({
   keybind: KeybindActions;
 }) => {
   const network = useMud();
+  const {
+    components: { RawBlueprint },
+  } = network;
   const selectedBuildingEntity = primodium.hooks.useSelectedBuilding();
   const selectedBuilding = selectedBuildingEntity
     ? world.entities[selectedBuildingEntity]
@@ -349,6 +358,14 @@ Hotbar.Item = ({
 
   const key = keybinds[keybind]?.entries().next().value[0] as Key;
   const keyImage = KeyImages.get(key);
+
+  const buildingTypeEntity = world.entityToIndex.get(buildingType);
+  if (!buildingTypeEntity) return null;
+  const blueprint = getComponentValue(RawBlueprint, buildingTypeEntity)?.value;
+
+  const dimensions = blueprint
+    ? calcDims(buildingTypeEntity, convertToCoords(blueprint))
+    : undefined;
 
   return (
     <motion.div
@@ -362,9 +379,9 @@ Hotbar.Item = ({
     >
       <div className="relative flex flex-col text-sm items-center cursor-pointer">
         <img
-          src={BackgroundImage.get(blockType)}
+          src={BackgroundImage.get(buildingType)}
           onClick={() => {
-            if (selectedBuilding === blockType) {
+            if (selectedBuilding === buildingType) {
               primodium.components.selectedBuilding(network).remove();
               removeComponent(
                 network.offChainComponents.SelectedAction,
@@ -373,7 +390,7 @@ Hotbar.Item = ({
               return;
             }
 
-            primodium.components.selectedBuilding(network).set(blockType);
+            primodium.components.selectedBuilding(network).set(buildingType);
             setComponent(
               network.offChainComponents.SelectedAction,
               singletonIndex,
@@ -383,12 +400,12 @@ Hotbar.Item = ({
             );
           }}
           className={`w-16 h-16 pixel-images ring-2 ring-gray-600 ${
-            selectedBuilding === blockType
+            selectedBuilding === buildingType
               ? " border-4 border-yellow-500 border-b-yellow-700 border-t-yellow-300 scale-110 transistion-all duration-100"
               : ""
           }`}
         />
-        {selectedBuilding === blockType && (
+        {selectedBuilding === buildingType && (
           <motion.p
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
@@ -404,9 +421,14 @@ Hotbar.Item = ({
           <img
             src={keyImage}
             className={`absolute -top-3 -left-3 w-8 h-8 pixel-images ${
-              selectedBuilding === blockType ? "opacity-50" : ""
+              selectedBuilding === buildingType ? "opacity-50" : ""
             }`}
           />
+        )}
+        {dimensions && (
+          <div className="absolute bottom-0 right-0 text-xs bg-black bg-opacity-50">
+            ({dimensions.width}, {dimensions.height})
+          </div>
         )}
       </div>
     </motion.div>

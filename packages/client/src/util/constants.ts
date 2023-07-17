@@ -307,6 +307,12 @@ export const BlockColors = new Map<EntityID, string>([
   // [BlockType.Silo, "#bebebe"],
 ]);
 
+// TODO switch this to an object with the below interface
+
+export interface BackgroundImages {
+  [x: EntityID]: string;
+}
+
 export const BackgroundImage = new Map<EntityID, string>([
   //landscape blocks
   [BlockType.Water, "/img/terrain/water.gif"],
@@ -337,7 +343,7 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.DebugStorageBuilding, "/img/building/node.gif"],
   // [BlockType.Miner, "/img/building/minerdrill.gif"],
   // [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
-  [BlockType.MainBase, "/img/building/mainbase.gif"],
+  [BlockType.MainBase, "/img/building/mainbase.png"],
   [BlockType.DebugNode, "/img/building/node.gif"],
   // [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
   // [BlockType.Silo, "/img/building/silo.png"],
