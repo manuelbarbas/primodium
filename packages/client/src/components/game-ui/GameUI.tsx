@@ -8,7 +8,7 @@ import SideMenu from "../SideMenu";
 import ResourceBox from "../resource-box/ResourceBox";
 import TooltipBox from "../tooltip-box/TooltipBox";
 import { Hotbar } from "./Hotbar";
-import { TileInfo } from "./TileInfo";
+import { TileInfo } from "./tile-info/TileInfo";
 
 function GameUI() {
   const [showUI, toggleShowUI, isReady] = useGameStore((state) => [
