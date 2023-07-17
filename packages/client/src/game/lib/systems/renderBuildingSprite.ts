@@ -1,8 +1,9 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
-  ComponentUpdate,
   EntityID,
+  EntityIndex,
   Has,
+  defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
   getComponentValue,
@@ -12,6 +13,7 @@ import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "src/engine/types";
 import { Network } from "src/network/layer";
+import { offChainComponents, singletonIndex } from "src/network/world";
 import { createBuilding } from "../factory/building";
 
 const MAX_SIZE = 2 ** 15 - 1;
@@ -20,19 +22,20 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
     world,
     components: { Position, BuildingType },
   } = network;
+  const { SelectedBuilding } = offChainComponents;
   const { tileHeight, tileWidth } = scene.tilemap;
 
-  const query = [Has(Position), Has(BuildingType)];
+  const render = ({ entity }: { entity: EntityIndex }) => {
+    const entityId = world.entities[entity];
+    const renderId = `${entity}_entitySprite`;
+    const tilePosition = getComponentValue(Position, entity);
 
-  const render = (update: ComponentUpdate) => {
-    const entityIndex = update.entity;
-
-    const renderId = `${entityIndex}_entitySprite`;
-    const tilePosition = getComponentValue(Position, entityIndex);
-
-    const buildingType = getComponentValue(BuildingType, entityIndex)?.value;
+    const buildingType = getComponentValue(BuildingType, entity)?.value;
 
     if (!buildingType || !tilePosition) return;
+
+    const selected =
+      getComponentValue(SelectedBuilding, singletonIndex)?.value == entityId;
 
     // don't render beyond coord map limitation
     if (
@@ -47,27 +50,41 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
       tileHeight
     );
 
-    if (!scene.objectPool.objects.has(renderId)) {
-      const buildingRenderEntity = scene.objectPool.get(renderId, "Sprite");
+    scene.objectPool.remove(renderId);
 
-      const buildingComponent = createBuilding({
+    const buildingRenderEntity = scene.objectPool.get(renderId, "Sprite");
+    buildingRenderEntity.setComponent(
+      createBuilding({
         renderId,
         x: pixelCoord.x,
         y: -pixelCoord.y,
         buildingType: buildingType as EntityID,
-      });
-
-      buildingRenderEntity.setComponent(buildingComponent);
-    }
+        selected,
+      })
+    );
   };
 
-  defineEnterSystem(world, query, render);
+  const positionQuery = [Has(Position), Has(BuildingType)];
+  defineEnterSystem(world, positionQuery, render);
 
-  // not needed for now
-  // defineUpdateSystem(world, query, render);
-
-  defineExitSystem(world, query, ({ entity }) => {
+  defineExitSystem(world, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;
     scene.objectPool.remove(renderId);
   });
+
+  defineComponentSystem(
+    world,
+    SelectedBuilding,
+    ({ value: [newValue, oldValue] }) => {
+      console.log("selected building changed", newValue);
+      if (oldValue?.value) {
+        const entityIndex = world.entityToIndex.get(oldValue.value);
+        if (entityIndex) render({ entity: entityIndex });
+      }
+      if (newValue?.value) {
+        const entityIndex = world.entityToIndex.get(newValue.value);
+        if (entityIndex) render({ entity: entityIndex });
+      }
+    }
+  );
 };
