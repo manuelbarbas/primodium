@@ -5,6 +5,7 @@ import {
   removeComponent,
   setComponent,
 } from "@latticexyz/recs";
+import { useMemo } from "react";
 import { useMud } from "../../../context/MudContext";
 import { useAccount } from "../../../hooks/useAccount";
 import {
@@ -28,39 +29,44 @@ function BuildingIconButton({
 }) {
   const network = useMud();
   const { components, world, singletonIndex } = network;
-  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
+  const selectedBuilding = primodium.hooks.useSelectedBuilding();
+
+  const buildingType = selectedBuilding
+    ? getComponentValue(components.BuildingType, selectedBuilding)?.value
+    : undefined;
 
   const { address } = useAccount();
 
-  // Check if building is unlocked per research or not
-  const isBuildingLocked = () => {
-    const researchRequirement = getBuildingResearchRequirement(
-      blockType,
-      world,
-      components
-    );
+  const researchRequirement = useMemo(() => {
+    return getBuildingResearchRequirement(blockType, world, components);
+  }, [blockType]);
 
-    if (!researchRequirement) {
-      return false;
-    }
-    const researchOwner = address
+  const researchOwner = useMemo(() => {
+    return address && researchRequirement
       ? world.entityToIndex.get(
           hashKeyEntityAndTrim(
-            researchRequirement,
+            researchRequirement as EntityID,
             address.toString().toLowerCase()
           ) as EntityID
         )!
       : singletonIndex;
-    const isResearched = getComponentValue(components.Research, researchOwner);
+  }, [researchRequirement]);
 
-    return !(isResearched && isResearched.value);
-  };
+  const isResearched = useMemo(() => {
+    return getComponentValue(components.Research, researchOwner);
+  }, [researchOwner]);
+
+  // Check if building is unlocked per research or not
+  const buildingLocked = useMemo(() => {
+    return (
+      researchRequirement != undefined && !(isResearched && isResearched.value)
+    );
+  }, [isResearched, researchRequirement]);
 
   const recipe = getRecipe(blockType, world, components);
-  const buildingLocked = isBuildingLocked();
 
   const handleSelectBuilding = () => {
-    if (selectedBuilding === blockType) {
+    if (buildingType === blockType) {
       primodium.components.selectedBuilding(network).remove();
       removeComponent(
         network.offChainComponents.SelectedAction,
@@ -110,7 +116,7 @@ function BuildingIconButton({
         <img
           src={BackgroundImage.get(blockType)}
           className={`"w-16 h-16 pixel-images hover:brightness-75 ${
-            selectedBuilding === blockType ? "border-4 border-yellow-300" : ""
+            buildingType === blockType ? "border-4 border-yellow-300" : ""
           }`}
         />
         {buildingLocked && (

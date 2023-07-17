@@ -35,17 +35,6 @@ function ResourceBox() {
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);
-  const mainBuildingEntity = "";
-  // const mainBuildingEntity = useComponentValue(
-  //   components.BuildingLevel,
-  //   address
-  //     ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
-  //     : singletonIndex
-  // , '').value as EntityID;
-  // const mainBuildingLevel = useComponentValue(
-  //   components.BuildingLevel,
-  //   world.entityToIndex.get(mainBuildingEntity)
-  // );
 
   const buildLimit = 0;
   // const buildLimit = useComponentValue(
@@ -66,7 +55,7 @@ function ResourceBox() {
   );
   if (transactionLoading) {
     return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-80 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
           <button
             id="minimize-resource-box"
@@ -87,7 +76,7 @@ function ResourceBox() {
     );
   } else if (!minimized) {
     return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
+      <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-80 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
         <div className="mt-4 ml-5 flex flex-col h-56">
           <button
             id="minimize-resource-box"
@@ -108,18 +97,20 @@ function ResourceBox() {
     );
   } else {
     return (
-      <div className="z-[1000] viewport-container fixed top-4 right-4 h-14 w-64 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
-        <div className="mt-4 ml-5 flex flex-col h-56">
-          <button
-            id="minimize-resource-box"
-            onClick={minimizeBox}
-            className="viewport-container fixed right-9"
-          >
-            <LinkIcon icon={<FaPlusSquare size="18" />} />
-          </button>
-          <p className="text-lg font-bold mb-3">
-            Inventory {playerBuildingCountNumber} / {buildLimitNumber}
-          </p>
+      <div className="pixel-corners-wrapper viewport-container fixed top-4 right-4 w-80">
+        <div className="z-[1000] flex flex-col bg-gray-700 text-white shadow-xl font-mono pixel-corners p-10">
+          <div className="flex">
+            <p className="text-lg font-bold">
+              Inventory {playerBuildingCountNumber} / {buildLimitNumber}
+            </p>
+            <button
+              id="minimize-resource-box"
+              onClick={minimizeBox}
+              className=""
+            >
+              <LinkIcon icon={<FaPlusSquare size="18" />} />
+            </button>
+          </div>
         </div>
       </div>
     );

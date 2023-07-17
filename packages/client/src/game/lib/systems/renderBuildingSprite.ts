@@ -14,6 +14,7 @@ import { Scene } from "src/engine/types";
 import { Network } from "src/network/layer";
 import { createBuilding } from "../factory/building";
 
+const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuildingSprite = (scene: Scene, network: Network) => {
   const {
     world,
@@ -31,7 +32,15 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
 
     const buildingType = getComponentValue(BuildingType, entityIndex)?.value;
 
-    if (!buildingType) return;
+    if (!buildingType || !tilePosition) return;
+
+    // don't render beyond coord map limitation
+    if (
+      Math.abs(tilePosition.x) > MAX_SIZE ||
+      Math.abs(tilePosition.y) > MAX_SIZE
+    )
+      return;
+
     const pixelCoord = tileCoordToPixelCoord(
       tilePosition as Coord,
       tileWidth,

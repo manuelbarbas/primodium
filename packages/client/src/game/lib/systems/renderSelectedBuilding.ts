@@ -2,6 +2,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   Has,
+  Not,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
@@ -10,12 +11,16 @@ import {
 import { Scene } from "src/engine/types";
 import { Network } from "src/network/layer";
 import { createSelectionTile } from "../factory/selectionTile";
+import { primodium } from "@game/api";
 
 export const renderSelectedTile = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
 
-  const query = [Has(offChainComponents.SelectedTile)];
+  const query = [
+    Has(offChainComponents.SelectedTile),
+    Not(offChainComponents.SelectedBuilding),
+  ];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
@@ -66,6 +71,8 @@ export const renderSelectedTile = (scene: Scene, network: Network) => {
   defineExitSystem(world, query, (update) => {
     const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
     scene.objectPool.remove(objGraphicsIndex);
+
+    primodium.components.selectedTile(network).remove();
 
     console.info(
       "[EXIT SYSTEM](renderSelectionTile) Selection tile has been removed"
