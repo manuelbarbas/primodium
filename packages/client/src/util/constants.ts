@@ -195,6 +195,36 @@ export const BlockType = {
   LithiumMine2Research: keccak256("research.LithiumMine2") as EntityID,
   LithiumMine3Research: keccak256("research.LithiumMine3") as EntityID,
 
+  AlloyFactoryResearch: keccak256("research.AlloyFactory") as EntityID,
+  AlloyFactory2Research: keccak256("research.AlloyFactory2") as EntityID,
+  AlloyFactory3Research: keccak256("research.AlloyFactory3") as EntityID,
+
+  LithiumCopperOxideFactoryResearch: keccak256(
+    "research.LithiumCopperOxideFactory"
+  ) as EntityID,
+  LithiumCopperOxideFactory2Research: keccak256(
+    "research.LithiumCopperOxideFactory2"
+  ) as EntityID,
+  LithiumCopperOxideFactory3Research: keccak256(
+    "research.LithiumCopperOxideFactory3"
+  ) as EntityID,
+
+  SpaceFuelFactoryResearch: keccak256("research.SpaceFuelFactory") as EntityID,
+  SpaceFuelFactory2Research: keccak256(
+    "research.SpaceFuelFactory2"
+  ) as EntityID,
+  SpaceFuelFactory3Research: keccak256(
+    "research.SpaceFuelFactory3"
+  ) as EntityID,
+
+  SolarPanelResearch: keccak256("research.SolarPanel") as EntityID,
+  SolarPanel2Research: keccak256("research.SolarPanel2") as EntityID,
+  SolarPanel3Research: keccak256("research.SolarPanel3") as EntityID,
+
+  HousingUnitResearch: keccak256("research.HousingUnit") as EntityID,
+  HousingUnit2Research: keccak256("research.HousingUnit2") as EntityID,
+  HousingUnit3Research: keccak256("research.HousingUnit3") as EntityID,
+
   BuildingKey: "building" as EntityID,
 
   // IronResearch: keccak256("research.Iron") as EntityID,

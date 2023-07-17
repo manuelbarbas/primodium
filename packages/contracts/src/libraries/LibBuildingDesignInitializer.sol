@@ -17,7 +17,8 @@ import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "comp
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
-
+import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 
 import { MainBaseID } from "../prototypes/Tiles.sol";
@@ -31,19 +32,8 @@ import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResou
 // Items
 import { ElectricityPassiveResourceID, BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, AlloyCraftedItemID, LithiumCopperOxideCraftedItemID, SpaceFuelCraftedItemID } from "../prototypes/Keys.sol";
 
-import { IronMine2ResearchID, IronMine3ResearchID, IronMine4ResearchID } from "../prototypes/Keys.sol";
-import { CopperMineResearchID, CopperMine2ResearchID, CopperMine3ResearchID } from "../prototypes/Keys.sol";
-import { LithiumMineResearchID, LithiumMine2ResearchID, LithiumMine3ResearchID } from "../prototypes/Keys.sol";
-import { StorageUnitResearchID, StorageUnit2ResearchID, StorageUnit3ResearchID } from "../prototypes/Keys.sol";
-import { IronPlateFactoryResearchID, IronPlateFactory2ResearchID, IronPlateFactory3ResearchID } from "../prototypes/Keys.sol";
-import { AlloyFactoryResearchID, AlloyFactory2ResearchID, AlloyFactory3ResearchID } from "../prototypes/Keys.sol";
-import { LithiumCopperOxideFactoryResearchID, LithiumCopperOxideFactory2ResearchID, LithiumCopperOxideFactory3ResearchID } from "../prototypes/Keys.sol";
-import { SpaceFuelFactoryResearchID, SpaceFuelFactory2ResearchID, SpaceFuelFactory3ResearchID } from "../prototypes/Keys.sol";
-import { SolarPanelResearchID, SolarPanel2ResearchID, SolarPanel3ResearchID } from "../prototypes/Keys.sol";
-
-import { IronMineID, CopperMineID, LithiumMineID } from "../prototypes/Tiles.sol";
-import { IronPlateFactoryID, AlloyFactoryID, LithiumCopperOxideFactoryID } from "../prototypes/Tiles.sol";
-import { StorageUnitID } from "../prototypes/Tiles.sol";
+import "../prototypes/Keys.sol";
+import "../prototypes/Tiles.sol";
 
 library LibBuildingDesignInitializer {
   function initIronMine(
@@ -369,16 +359,36 @@ library LibBuildingDesignInitializer {
   }
 
   //wip
-  function initAlloyFactory(
-    ItemComponent itemComponent,
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
-    FactoryProductionComponent factoryProductionComponent,
-    MaxLevelComponent maxLevelComponent,
-    RequiredResearchComponent requiredResearch,
-    RequiredResourcesComponent requiredResources
-  ) internal {
+  function initAlloyFactory(IWorld world) internal {
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
+    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
+      getAddressById(world.components(), RequiredResearchComponentID)
+    );
+    RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(world.components(), FactoryMineBuildingsComponentID)
+    );
+    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+      getAddressById(world.components(), FactoryProductionComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
+      getAddressById(world.components(), RequiredPassiveResourceComponentID)
+    );
+
     //AlloyFactoryID
     maxLevelComponent.set(AlloyFactoryID, 3);
+    uint256[] memory requiredPassiveResourceIDs = new uint256[](1);
+    requiredPassiveResourceIDs[0] = ElectricityPassiveResourceID;
+    uint256[] memory requiredPassiveResourceAmounts = new uint256[](1);
+    requiredPassiveResourceAmounts[0] = 2;
+
+    requiredPassiveResourceComponent.set(
+      AlloyFactoryID,
+      RequiredPassiveResourceData(requiredPassiveResourceIDs, requiredPassiveResourceAmounts)
+    );
 
     requiredResearch.set(AlloyFactoryID, AlloyFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
@@ -583,6 +593,33 @@ library LibBuildingDesignInitializer {
     );
   }
 
+  function initSolarPanel(IWorld world) internal {
+    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
+      getAddressById(world.components(), RequiredResearchComponentID)
+    );
+    RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
+      getAddressById(world.components(), PassiveResourceProductionComponentID)
+    );
+    //SolarPanelID
+
+    requiredResearch.set(SolarPanelID, SolarPanelResearchID);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      requiredResources,
+      itemComponent,
+      SolarPanelID,
+      IronPlateCraftedItemID,
+      1000
+    );
+    passiveResourceProductionComponent.set(
+      SolarPanelID,
+      PassiveResourceProductionData(ElectricityPassiveResourceID, 4)
+    );
+  }
+
   function initMainBase(
     ItemComponent itemComponent,
     StorageCapacityResourcesComponent storageCapacityResourcesComponent,
@@ -766,14 +803,7 @@ library LibBuildingDesignInitializer {
       requiredResources
     );
 
-    initAlloyFactory(
-      itemComponent,
-      factoryMineBuildingsComponent,
-      factoryProductionComponent,
-      maxLevelComponent,
-      requiredResearch,
-      requiredResources
-    );
+    initAlloyFactory(world);
     initLithiumCopperOxideFactory(
       itemComponent,
       factoryMineBuildingsComponent,

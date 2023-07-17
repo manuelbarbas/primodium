@@ -31,7 +31,7 @@ library LibBlueprintInitializer {
     LibBlueprint.createBlueprint(blueprintComponent, UraniniteMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, BolutiteMineID, coords);
 
-    LibBlueprint.createBlueprint(blueprintComponent, SolarPanelsID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, SolarPanelID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, HousingUnitID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, IronPlateFactoryID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, AlloyFactoryID, coords);
