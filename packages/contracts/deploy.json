@@ -101,6 +101,7 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
+        "BuildingTilesComponent",
         "BuildingLevelComponent",
         "BuildingLimitComponent",
 
