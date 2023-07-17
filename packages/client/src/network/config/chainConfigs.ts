@@ -5,6 +5,7 @@ type ChainConfig = {
   snapshotServiceUrl?: string;
   chainId: number;
   initialBlockNumber: number;
+  tempFaucetMinDripAmount?: number;
 };
 const lattice: ChainConfig = {
   // from lattice
@@ -14,6 +15,7 @@ const lattice: ChainConfig = {
   snapshotServiceUrl: "https://ecs-snapshot.testnet-mud-services.linfra.xyz",
   chainId: 4242,
   initialBlockNumber: 1443526,
+  tempFaucetMinDripAmount: 2,
 };
 
 const caldera: ChainConfig = {
@@ -24,6 +26,7 @@ const caldera: ChainConfig = {
   snapshotServiceUrl: "https://primodium-services.caldera.gg/ecs-snapshot",
   chainId: 12523,
   initialBlockNumber: 29367,
+  tempFaucetMinDripAmount: 0.001,
 };
 
 const skystrife: ChainConfig = {
@@ -34,6 +37,7 @@ const skystrife: ChainConfig = {
   snapshotServiceUrl: "https://ecs-snapshot.skystrife-mud-services.linfra.xyz",
   chainId: 4242,
   initialBlockNumber: 10139750,
+  tempFaucetMinDripAmount: 2,
 };
 
 const local: ChainConfig = {

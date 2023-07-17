@@ -5,6 +5,7 @@ import { Step } from "walktour";
 export type NetworkConfig = SetupContractConfig & {
   defaultWalletAddress?: Address;
   faucetUrl?: string;
+  faucetMinDripAmount?: number;
 };
 
 export type BlockTypeActionComponent = {

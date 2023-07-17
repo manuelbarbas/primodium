@@ -76,6 +76,7 @@ export const getNetworkLayerConfig = (
     faucetUrl: params.get("faucetUrl") || chainConfig.tempFaucetUrl,
     privateKey,
     defaultWalletAddress: address,
+    faucetMinDripAmount: chainConfig.tempFaucetMinDripAmount,
   };
   console.log("config: ", networkConfig);
   return networkConfig;
