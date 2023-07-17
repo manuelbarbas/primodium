@@ -92,6 +92,7 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
+        "BuildingTilesComponent",
         "BuildingLevelComponent",
         "BuildingLimitComponent",
         "StorageCapacityComponent",
