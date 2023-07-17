@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+
+import { IWorld } from "solecs/System.sol";
+import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { entityToAddress, addressToEntity } from "solecs/utils.sol";
 
@@ -9,12 +14,12 @@ import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
 
 library LibResourceCost {
-  function hasRequiredResources(
-    Uint256ArrayComponent requiredResourcesComponent,
-    Uint256Component itemComponent,
-    uint256 entity,
-    uint256 playerEntity
-  ) internal view returns (bool) {
+  function hasRequiredResources(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+
     if (!requiredResourcesComponent.has(entity)) return true;
 
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);

@@ -78,7 +78,7 @@ export function defineComponents(world: World) {
       },
     }),
     // main base initialized
-    MainBaseInitialized: defineCoordComponent(world, {
+    MainBaseInitialized: defineNumberComponent(world, {
       metadata: {
         contractId: "component.MainBaseInitialized",
       },
@@ -136,6 +136,13 @@ export function defineComponents(world: World) {
       defineNumberComponent(world, {
         metadata: {
           contractId: "component.Mine",
+        },
+      })
+    ),
+    BuildingLimit: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLimit",
         },
       })
     ),
