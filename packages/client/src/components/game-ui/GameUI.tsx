@@ -1,12 +1,12 @@
-import InfoBox from "../InfoBox";
-import ResourceBox from "../resource-box/ResourceBox";
-import SideMenu from "../SideMenu";
-import TooltipBox from "../TooltipBox";
-import NotificationBox from "../NotificationBox";
-import { useGameStore } from "../../store/GameStore";
-import { useEffect } from "react";
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
+import { useEffect } from "react";
+import { useGameStore } from "../../store/GameStore";
+import InfoBox from "../InfoBox";
+import NotificationBox from "../NotificationBox";
+import SideMenu from "../SideMenu";
+import ResourceBox from "../resource-box/ResourceBox";
+import TooltipBox from "../tooltip-box/TooltipBox";
 import { Hotbar } from "./Hotbar";
 import { TileInfo } from "./TileInfo";
 

@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { primodium } from "@game/api";
 import { Perlin, createPerlin } from "@latticexyz/noise";
+import { useEntityQuery } from "@latticexyz/react";
 import {
   EntityID,
   EntityIndex,
@@ -8,30 +9,29 @@ import {
   getComponentValue,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { useEntityQuery } from "@latticexyz/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { primodium } from "@game/api";
+import { useEffect, useRef, useState } from "react";
 import { useMud } from "src/context/MudContext";
-import { getTopLayerKeyPair } from "src/util/tile";
 import {
   BackgroundImage,
   BlockIdToKey,
   DisplayKeyPair,
 } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
+import { getTopLayerKeyPair } from "src/util/tile";
 import { ImageButton } from "../shared/ImageButton";
 
 export const TileInfo = () => {
   const network = useMud();
   const { components, singletonIndex } = network;
-  const selectedTile = primodium.hooks.useSelectedTile(network);
+  const selectedTile = primodium.hooks.useSelectedTile();
   const [initialized, setInitialized] = useState(false);
   const perlinRef = useRef(null as null | Perlin);
   const terrainPairRef = useRef<DisplayKeyPair | null>(null);
 
   const tilesAtPosition = useEntityQuery(
     [
-      Has(components.Tile),
+      Has(components.BuildingType),
       HasValue(components.Position, {
         x: selectedTile?.x ?? 0,
         y: selectedTile?.y ?? 0,
@@ -62,8 +62,10 @@ export const TileInfo = () => {
 
   const terrainPair = terrainPairRef.current;
   const entityIndex = tilesAtPosition[0] as EntityIndex | undefined;
-  const tile = getComponentValue(components.Tile, entityIndex ?? singletonIndex)
-    ?.value as unknown as EntityID | undefined;
+  const tile = getComponentValue(
+    components.BuildingType,
+    entityIndex ?? singletonIndex
+  )?.value as unknown as EntityID | undefined;
   const health = getComponentValue(
     components.Health,
     entityIndex ?? singletonIndex

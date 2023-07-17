@@ -6,9 +6,9 @@ import gameConfig from "../../config/gameConfig";
 import mainSceneConfig from "../../config/mainSceneConfig";
 import { Scenes } from "../../constants";
 import { runSystems } from "../systems";
-import setupMouseInputs from "./SetupMouseInputs";
 import { createChunkManager } from "./managers/chunkManager";
 import setupCamera from "./setupCamera";
+import setupMouseInputs from "./setupMouseInputs";
 
 export const init = async (address: Address, network: Network) => {
   const { world } = network;

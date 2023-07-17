@@ -16,6 +16,8 @@ const params = new URLSearchParams(window.location.search);
 const DEV = import.meta.env.VITE_DEV === "true";
 
 const chain = params.get("defaultChain");
+
+// TO UPDATE DEFAULT CHAIN, CHANGE THESE VALUES
 const defaultDevChain = chainConfigs["local"];
 const defaultProdChain = chainConfigs["skystrife"];
 const defaultChain = DEV ? defaultDevChain : defaultProdChain;
@@ -45,7 +47,9 @@ export const getNetworkLayerConfig = (
   const worldAddress = params.get("worldAddress");
   if (!worldAddress) throw new Error("No world address provided");
 
-  const chainId = Number(params.get("chainId")) ?? chainConfig.chainId;
+  console.log("chain id:", params.get("chainId"));
+  const rawChainId = params.get("chainId");
+  const chainId = rawChainId ? Number(rawChainId) : chainConfig.chainId;
 
   const clock = {
     period: 1000,
@@ -53,7 +57,7 @@ export const getNetworkLayerConfig = (
     syncInterval: DEV ? 5000 : 60_000,
   };
 
-  return {
+  const networkConfig = {
     clock,
     provider: {
       jsonRpcUrl: params.get("rpc") ?? chainConfig.jsonRpcUrl,
@@ -73,4 +77,6 @@ export const getNetworkLayerConfig = (
     privateKey,
     defaultWalletAddress: address,
   };
+  console.log("config: ", networkConfig);
+  return networkConfig;
 };
