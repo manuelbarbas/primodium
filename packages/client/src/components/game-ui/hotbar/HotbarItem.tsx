@@ -1,29 +1,20 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import {
-  EntityID,
-  getComponentValue,
-  removeComponent,
-  setComponent,
-} from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import React from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
-import { singletonIndex, world } from "src/network/world";
-import { calcDims, convertToCoords } from "src/util/building";
-import { Action, BackgroundImage, KeyImages } from "src/util/constants";
+import { world } from "src/network/world";
+import { BackgroundImage, BlockIdToKey, KeyImages } from "src/util/constants";
+
 const HotbarItem: React.FC<{
   blockType: EntityID;
-  name: string;
   keybind: KeybindActions;
-}> = ({ blockType: buildingType, name, keybind }) => {
+}> = ({ blockType, keybind }) => {
   const network = useMud();
-  const {
-    components: { RawBlueprint },
-  } = network;
   const selectedBuildingEntity = primodium.hooks.useSelectedBuilding();
-  const selectedBuilding = selectedBuildingEntity
+  const selectedBuilding = !!selectedBuildingEntity
     ? world.entities[selectedBuildingEntity]
     : undefined;
   const keybinds = primodium.hooks.useKeybinds();
@@ -31,17 +22,8 @@ const HotbarItem: React.FC<{
   const key = keybinds[keybind]?.entries().next().value[0] as Key;
   const keyImage = KeyImages.get(key);
 
-  const buildingTypeEntity = world.entityToIndex.get(buildingType);
-  if (!buildingTypeEntity) return null;
-  const blueprint = getComponentValue(RawBlueprint, buildingTypeEntity)?.value;
-
-  const dimensions = blueprint
-    ? calcDims(buildingTypeEntity, convertToCoords(blueprint))
-    : undefined;
-
   return (
     <motion.div
-      layout
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -49,35 +31,28 @@ const HotbarItem: React.FC<{
         opacity: { duration: 0.5 },
       }}
     >
-      <div className="relative flex flex-col text-sm items-center cursor-pointer">
+      <div
+        className={`relative flex flex-col text-sm items-center cursor-pointer crt ${
+          selectedBuilding === blockType ? "scale-110" : ""
+        }`}
+      >
         <img
-          src={BackgroundImage.get(buildingType)}
+          src={BackgroundImage.get(blockType)}
           onClick={() => {
-            if (selectedBuilding === buildingType) {
+            if (selectedBuilding === blockType) {
               primodium.components.selectedBuilding(network).remove();
-              removeComponent(
-                network.offChainComponents.SelectedAction,
-                singletonIndex
-              );
               return;
             }
 
-            primodium.components.selectedBuilding(network).set(buildingType);
-            setComponent(
-              network.offChainComponents.SelectedAction,
-              singletonIndex,
-              {
-                value: Action.PlaceBuilding,
-              }
-            );
+            primodium.components.selectedBuilding(network).set(blockType);
           }}
-          className={`w-16 h-16 pixel-images ring-2 ring-gray-600 ${
-            selectedBuilding === buildingType
-              ? " border-4 border-yellow-500 border-b-yellow-700 border-t-yellow-300 scale-110 transistion-all duration-100"
+          className={`w-16 h-16 pixel-images border border-cyan-700 ${
+            selectedBuilding === blockType
+              ? " ring-4 ring-amber-400 transistion-all duration-100"
               : ""
           }`}
         />
-        {selectedBuilding === buildingType && (
+        {selectedBuilding === blockType && (
           <motion.p
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
@@ -86,21 +61,18 @@ const HotbarItem: React.FC<{
             }}
             className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 px-1"
           >
-            {name}
+            {BlockIdToKey[selectedBuilding]
+              .replace(/([A-Z]+)/g, " $1")
+              .replace(/([A-Z][a-z])/g, " $1")}
           </motion.p>
         )}
         {keyImage && (
           <img
             src={keyImage}
-            className={`absolute -top-3 -left-3 w-8 h-8 pixel-images ${
-              selectedBuilding === buildingType ? "opacity-50" : ""
+            className={`absolute -top-2 -left-2 w-8 h-8 pixel-images ${
+              selectedBuilding === blockType ? "opacity-30" : ""
             }`}
           />
-        )}
-        {dimensions && (
-          <div className="absolute bottom-0 right-0 text-xs bg-black bg-opacity-50">
-            {dimensions.width}x{dimensions.height}
-          </div>
         )}
       </div>
     </motion.div>

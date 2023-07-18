@@ -10,7 +10,13 @@ export const TileInfo: React.FC = () => {
   return (
     <AnimatePresence>
       {(selectedTile || selectedBuilding) && (
-        <div className=" z-[1000] viewport-container fixed top-2 right-1/2 translate-x-1/2 text-white drop-shadow-xl font-mono select-none">
+        <div
+          style={{
+            transform: "perspective(500px) rotateX(10deg)",
+            filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
+          }}
+          className=" z-[1000] viewport-container fixed top-2 right-1/2 translate-x-1/2 text-white drop-shadow-xl font-mono select-none"
+        >
           <motion.div
             className="flex flex-col items-center space-y-2"
             initial={{ opacity: 0, scale: 0, y: -200 }}

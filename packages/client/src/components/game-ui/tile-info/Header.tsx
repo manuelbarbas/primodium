@@ -1,10 +1,8 @@
-import { motion } from "framer-motion";
-
 const Header = ({ content }: { content: string }) => {
   return (
-    <motion.div layout className="bg-gray-900 mx-1">
-      <p>{content}</p>
-    </motion.div>
+    <p className="flex items-center whitespace-nowrap px-1 mb-2 bg-gray-900 border-2 border-cyan-600 crt">
+      <b>{content}</b>
+    </p>
   );
 };
 

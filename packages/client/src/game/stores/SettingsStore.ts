@@ -53,6 +53,8 @@ const defaults: SettingsState = {
     [KeybindActions.Hotbar9]: new Set(["ZERO"]),
     [KeybindActions.NextHotbar]: new Set(["E"]),
     [KeybindActions.PrevHotbar]: new Set(["Q"]),
+    [KeybindActions.Inventory]: new Set(["I", "TAB"]),
+    [KeybindActions.Research]: new Set(["R"]),
   },
 };
 

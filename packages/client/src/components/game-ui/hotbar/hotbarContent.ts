@@ -8,7 +8,6 @@ const hotbarContent = [
     buildings: [
       {
         blockType: BlockType.MainBase,
-        name: "Main Base",
         keybind: KeybindActions.Hotbar0,
       },
     ],
@@ -19,28 +18,19 @@ const hotbarContent = [
     buildings: [
       {
         blockType: BlockType.IronMine,
-        name: "Iron Mine",
         keybind: KeybindActions.Hotbar0,
       },
       {
         blockType: BlockType.CopperMine,
-        name: "Copper Mine",
         keybind: KeybindActions.Hotbar1,
       },
       {
         blockType: BlockType.LithiumMine,
-        name: "Lithium Mine",
         keybind: KeybindActions.Hotbar2,
       },
       {
         blockType: BlockType.Conveyor,
-        name: "Conveyor",
         keybind: KeybindActions.Hotbar3,
-      },
-      {
-        blockType: BlockType.HardenedDrill,
-        name: "Miner",
-        keybind: KeybindActions.Hotbar4,
       },
     ],
   },
@@ -50,12 +40,10 @@ const hotbarContent = [
     buildings: [
       {
         blockType: BlockType.StorageUnit,
-        name: "Storage Unit",
         keybind: KeybindActions.Hotbar0,
       },
       {
         blockType: BlockType.IronPlateFactory,
-        name: "Iron Plate Factory",
         keybind: KeybindActions.Hotbar1,
       },
     ],
@@ -66,7 +54,6 @@ const hotbarContent = [
     buildings: [
       {
         blockType: BlockType.Conveyor,
-        name: "Conveyor",
         keybind: KeybindActions.Hotbar0,
       },
     ],
@@ -80,21 +67,17 @@ if (import.meta.env.VITE_DEV === "true") {
     buildings: [
       {
         blockType: BlockType.DebugIronMine,
-        name: "Debug Iron Mine",
         keybind: KeybindActions.Hotbar0,
       },
       {
         blockType: BlockType.DebugIronPlateFactory,
-        name: "Debug Plate Factory",
         keybind: KeybindActions.Hotbar1,
       },
       {
         blockType: BlockType.DebugStorageBuilding,
-        name: "Debug Storage Building",
         keybind: KeybindActions.Hotbar2,
       },
     ],
   });
 }
-
 export default hotbarContent;

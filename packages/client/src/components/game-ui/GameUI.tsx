@@ -4,21 +4,26 @@ import { useEffect } from "react";
 import { useGameStore } from "../../store/GameStore";
 import InfoBox from "../InfoBox";
 import NotificationBox from "../NotificationBox";
-import SideMenu from "../SideMenu";
-import ResourceBox from "../resource-box/ResourceBox";
-import TooltipBox from "../tooltip-box/TooltipBox";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { useMud } from "src/context/MudContext";
+
+import { Camera } from "./Camera";
+import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
 
 function GameUI() {
-  const [showUI, toggleShowUI, isReady] = useGameStore((state) => [
+  const [showUI, toggleShowUI] = useGameStore((state) => [
     state.showUI,
     state.toggleShowUI,
-    state.isReady,
   ]);
 
+  const network = useMud();
+  const gameReady = primodium.hooks.useGameReady(network);
+
   useEffect(() => {
-    if (!isReady) return;
+    if (!gameReady) return;
 
     const listener = primodium.input.addListener(
       KeybindActions.ToggleUI,
@@ -28,19 +33,33 @@ function GameUI() {
     return () => {
       listener.dispose();
     };
-  }, [isReady]);
+  }, [gameReady]);
 
   return (
-    <div className="screen-container">
-      <div className={`${showUI ? "" : "hidden pointer-events-none"}`}>
-        <Hotbar />
-        <TileInfo />
-        <InfoBox />
-        <NotificationBox />
-        <ResourceBox />
-        <TooltipBox />
-        <SideMenu />
-      </div>
+    <div>
+      {gameReady && (
+        <div className="screen-container">
+          {/* Vignette */}
+          <div className="fixed top-0 bottom-0 screen-container vignette pointer-events-none opacity-20 mix-blend-overlay" />
+          {/* <BrandingLabel /> */}
+          <Camera />
+          <AnimatePresence>
+            {showUI && (
+              <motion.div>
+                <Hotbar />
+                <TileInfo />
+                <InfoBox />
+                <NotificationBox />
+                {/* <ResourceBox /> */}
+                {/* <TooltipBox /> */}
+
+                {/* <SideMenu1 /> */}
+                <Inventory />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }

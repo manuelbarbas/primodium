@@ -7,7 +7,6 @@ import { Coord } from "@latticexyz/utils";
 type UpdateFunction = <T>(ctx?: T) => void;
 
 type GameState = {
-  isReady: boolean;
   selectedTile: Coord;
   hoveredTile: Coord;
   selectedPathTiles: { start: Coord | null; end: Coord | null };
@@ -40,7 +39,6 @@ type GameActions = {
   setShowUI: (show: boolean) => void;
   addUpdateFunction: (updateFunction: UpdateFunction) => void;
   removeUpdateFunction: (updateFunction: UpdateFunction) => void;
-  setIsReady: (isReady: boolean) => void;
   toggleShowUI: () => void;
 };
 
@@ -56,7 +54,6 @@ const defaults: GameState = {
   showSelectedAttackTiles: false,
   transactionLoading: false,
   showUI: true,
-  isReady: false,
   updateFunctions: [],
 };
 
@@ -104,7 +101,6 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
         (fn) => fn !== updateFunction
       ),
     })),
-  setIsReady: (isReady: boolean) => set({ isReady: isReady }),
   toggleShowUI: () => set((state) => ({ showUI: !state.showUI })),
 }));
 

@@ -39,6 +39,7 @@ const init = async (
   if (import.meta.env.VITE_DEV === "true") window.network = network;
 
   await _init(address, network);
+  components.gameReady(network).set(true);
 };
 
 export const api = { init, hooks, components, camera, debug, input, game };

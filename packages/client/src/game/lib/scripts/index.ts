@@ -12,6 +12,7 @@ import setupMouseInputs from "./setupMouseInputs";
 
 export const init = async (address: Address, network: Network) => {
   const { world } = network;
+
   const game = await engine.createGame(gameConfig);
   const scene = await game.sceneManager.addScene(
     Scenes.Main,
@@ -31,9 +32,9 @@ export const init = async (address: Address, network: Network) => {
   runSystems(scene, network);
 
   world.registerDisposer(() => {
-    mouseSubs.forEach((sub) => sub.unsubscribe()), chunkManager.dispose();
+    mouseSubs.forEach((sub) => sub.unsubscribe());
     scene.input.phaserInput.removeListener("wheel");
-
+    chunkManager.dispose();
     game.dispose();
   });
 };
