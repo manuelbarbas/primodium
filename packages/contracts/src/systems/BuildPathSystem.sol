@@ -97,7 +97,7 @@ contract BuildPathSystem is PrimodiumSystem {
       )
     ) {
       require(
-        TileComponent(getC(TileComponentID)).getValue(endBuilding) == MainBaseID,
+        endCoordBuildingId == MainBaseID,
         "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
       );
       IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(

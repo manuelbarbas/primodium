@@ -117,7 +117,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     if (FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(toBuildingEntity)) {
       LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
         world,
-        addressToEntity(msg.sender),
+        addressToEntity(playerAddress),
         factoryBuildingLevelEntity,
         true
       );
