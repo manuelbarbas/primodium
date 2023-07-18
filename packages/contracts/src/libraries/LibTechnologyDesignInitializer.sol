@@ -47,13 +47,13 @@ library LibTechnologyDesignInitializer {
 
     // Research CopperMine2ResearchID with 1000 IronResourceItemID
     researchComponent.set(CopperMine2ResearchID);
-    buildingLevelComponent.set(CopperMine2ResearchID, 4);
+    buildingLevelComponent.set(CopperMine2ResearchID, 3);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
       CopperMine2ResearchID,
       IronResourceItemID,
-      1000
+      1500
     );
 
     // Research CopperMine3ResearchID with 3000 IronResourceItemID
@@ -64,7 +64,7 @@ library LibTechnologyDesignInitializer {
       itemComponent,
       IronPlateCraftedItemID,
       IronResourceItemID,
-      3000
+      4000
     );
 
     // Research IronMine2ResearchID with 300 CopperResourceItemID
@@ -80,13 +80,13 @@ library LibTechnologyDesignInitializer {
 
     // Research IronMine2ResearchID with 300 CopperResourceItemID
     researchComponent.set(IronMine3ResearchID);
-    buildingLevelComponent.set(IronMine3ResearchID, 4);
+    buildingLevelComponent.set(IronMine3ResearchID, 3);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
       IronMine3ResearchID,
       CopperResourceItemID,
-      1000
+      3000
     );
 
     // Research IronPlateFactoryResearchID with 1200 IronResourceItemID and 1000 CopperResourceItemID
@@ -103,13 +103,15 @@ library LibTechnologyDesignInitializer {
     );
 
     researchComponent.set(IronPlateFactory2ResearchID);
-    buildingLevelComponent.set(IronPlateFactory2ResearchID, 5);
-    LibSetRequiredResources.set1RequiredResourceForEntity(
+    buildingLevelComponent.set(IronPlateFactory2ResearchID, 4);
+    LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       IronPlateFactory2ResearchID,
-      IronPlateCraftedItemID,
-      1200
+      IronResourceItemID,
+      3000,
+      CopperResourceItemID,
+      3000
     );
 
     researchComponent.set(IronPlateFactory3ResearchID);

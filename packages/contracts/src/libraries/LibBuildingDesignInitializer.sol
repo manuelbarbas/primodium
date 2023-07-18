@@ -10,7 +10,7 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { RequiredTileComponent, ID as TileComponentID } from "components/RequiredTileComponent.sol";
+import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
@@ -59,8 +59,8 @@ library LibBuildingDesignInitializer {
       requiredResources,
       itemComponent,
       IronMineID,
-      CopperResourceItemID,
-      300,
+      IronResourceItemID,
+      800,
       2
     );
 
@@ -73,7 +73,7 @@ library LibBuildingDesignInitializer {
       itemComponent,
       IronMineID,
       CopperResourceItemID,
-      1000,
+      1500,
       3
     );
   }
@@ -111,8 +111,8 @@ library LibBuildingDesignInitializer {
       requiredResources,
       itemComponent,
       CopperMineID,
-      IronPlateCraftedItemID,
-      300,
+      IronResourceItemID,
+      1500,
       2
     );
 
@@ -139,7 +139,7 @@ library LibBuildingDesignInitializer {
     RequiredResourcesComponent requiredResources
   ) internal {
     //LithiumMineID
-    requiredTileComponent.set(LithiumMineID, CopperResourceItemID);
+    requiredTileComponent.set(LithiumMineID, LithiumResourceItemID);
     requiredResearch.set(LithiumMineID, LithiumMineResearchID);
     maxLevelComponent.set(LithiumMineID, 3);
     //LithiumMineID Level 1
@@ -151,7 +151,7 @@ library LibBuildingDesignInitializer {
       itemComponent,
       LithiumMineID,
       IronResourceItemID,
-      500
+      1500
     );
 
     //LithiumMineID Level 2
@@ -620,6 +620,30 @@ library LibBuildingDesignInitializer {
     );
   }
 
+  function initHousingUnit(IWorld world) internal {
+    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
+      getAddressById(world.components(), RequiredResearchComponentID)
+    );
+    RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
+      getAddressById(world.components(), PassiveResourceProductionComponentID)
+    );
+    //HousingUnitID
+
+    requiredResearch.set(HousingUnitID, HousingUnitResearchID);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      requiredResources,
+      itemComponent,
+      HousingUnitID,
+      IronPlateCraftedItemID,
+      1000
+    );
+    passiveResourceProductionComponent.set(HousingUnitID, PassiveResourceProductionData(HousingPassiveResourceID, 20));
+  }
+
   function initMainBase(
     ItemComponent itemComponent,
     StorageCapacityResourcesComponent storageCapacityResourcesComponent,
@@ -734,7 +758,9 @@ library LibBuildingDesignInitializer {
       getAddressById(components, RequiredResourcesComponentID)
     );
 
-    RequiredTileComponent requiredTileComponent = RequiredTileComponent(getAddressById(components, TileComponentID));
+    RequiredTileComponent requiredTileComponent = RequiredTileComponent(
+      getAddressById(components, RequiredTileComponentID)
+    );
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
@@ -812,5 +838,9 @@ library LibBuildingDesignInitializer {
       requiredResearch,
       requiredResources
     );
+
+    initSolarPanel(world);
+
+    initHousingUnit(world);
   }
 }
