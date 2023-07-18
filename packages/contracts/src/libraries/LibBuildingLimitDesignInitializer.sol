@@ -26,9 +26,9 @@ library LibBuildingLimitDesignInitializer {
 
     buildingLimitComponent.set(uint256(1), 4);
     buildingLimitComponent.set(uint256(2), 7);
-    buildingLimitComponent.set(uint256(3), 9);
-    buildingLimitComponent.set(uint256(4), 12);
-    buildingLimitComponent.set(uint256(5), 15);
-    buildingLimitComponent.set(uint256(6), 18);
+    buildingLimitComponent.set(uint256(3), 11);
+    buildingLimitComponent.set(uint256(4), 15);
+    buildingLimitComponent.set(uint256(5), 19);
+    buildingLimitComponent.set(uint256(6), 24);
   }
 }
