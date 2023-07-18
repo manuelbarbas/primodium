@@ -16,7 +16,6 @@ import { ItemComponent, ID as ItemComponentID } from "../../components/ItemCompo
 import { MainBaseID } from "../../prototypes/Tiles.sol";
 import { DebugSimpleBuildingNoReqsID, DebugIronMineNoTileReqID } from "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
-import { LibBuilding } from "../../libraries/LibBuilding.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 import { BuildingKey } from "../../prototypes/Keys.sol";

@@ -1,15 +1,9 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
-import { useMud } from "src/context/MudContext";
+import { motion } from "framer-motion";
 
 export const InfoBox = () => {
-  const network = useMud();
-  const [minimized, setMinimized] = useState<boolean>(false);
+  const minimized = false;
   const mainBaseCoord = primodium.hooks.useMainBase();
-  const gameReady = primodium.hooks.useGameReady(network);
-  const keybinds = primodium.hooks.useKeybinds();
 
   return (
     <div className="flex fixed top-8 left-8 items-center font-mono text-white crt ">

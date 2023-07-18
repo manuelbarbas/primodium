@@ -1,22 +1,28 @@
 {
-    "MAIN": {
-      "files": [
-        {
-          "type": "image",
-          "key": "terrain-tileset",
-          "url": "/assets/tilesets/terrain.png"
-        },
-        {
-          "type": "image",
-          "key": "resource-tileset",
-          "url": "/assets/tilesets/resource.png"
-        },
-        {
-          "type": "atlas",
-          "key": "sprite-atlas",
-          "textureURL": "/assets/sprites/atlas.png",
-          "atlasURL": "/assets/sprites/atlas.json"
-        }
-      ]
-    }
+  "MAIN": {
+    "files": [
+      {
+        "type": "image",
+        "key": "terrain-tileset",
+        "url": "/assets/tilesets/terrain.png"
+      },
+      {
+        "type": "image",
+        "key": "resource-tileset",
+        "url": "/assets/tilesets/resource.png"
+      },
+      {
+        "type": "atlas",
+        "key": "sprite-atlas",
+        "textureURL": "/assets/sprites/atlas.png",
+        "atlasURL": "/assets/sprites/atlas.json"
+      },
+      {
+        "type": "atlas",
+        "key": "base-atlas",
+        "textureURL": "/assets/sprites/base.png",
+        "atlasURL": "/assets/sprites/base.json"
+      }
+    ]
   }
+}

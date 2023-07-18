@@ -1,15 +1,12 @@
-import { useCallback } from "react";
+import { primodium } from "@game/api";
 import { EntityID } from "@latticexyz/recs";
-import { useComponentValue } from "../../hooks/useComponentValue";
+import { useCallback, useMemo } from "react";
+import { decodeCoordEntity } from "src/util/encode";
+import { buildBuilding } from "src/util/web3";
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
-import { execute } from "../../network/actions";
-import { BigNumber } from "ethers";
+import { useComponentValue } from "../../hooks/useComponentValue";
 import { BlockType } from "../../util/constants";
-import { useGameStore } from "../../store/GameStore";
-import { useNotificationStore } from "../../store/NotificationStore";
-import { primodium } from "@game/api";
-
 export default function NavigateMainBaseButton() {
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
@@ -20,12 +17,16 @@ export default function NavigateMainBaseButton() {
     ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
     : singletonIndex;
 
-  // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
-  );
+  )?.value;
 
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(() => {
+    if (mainBaseEntity) return decodeCoordEntity(mainBaseEntity as EntityID);
+    return undefined;
+  }, [mainBaseEntity]);
   // Navigate to Main Base if it exists for this wallet
   const navigateMainBase = useCallback(() => {
     if (mainBaseCoord) {
@@ -36,36 +37,16 @@ export default function NavigateMainBaseButton() {
 
   // Otherwise build a main base
   const network = useMud();
-  const { systems, providers } = network;
 
-  const [setTransactionLoading] = useGameStore((state) => [
-    state.setTransactionLoading,
-  ]);
-  const [setNotification] = useNotificationStore((state) => [
-    state.setNotification,
-  ]);
-
-  const buildMainBase = useCallback(async () => {
-    setTransactionLoading(true);
+  const buildMainBase = async () => {
     const cameraCoord = primodium.camera.getPosition();
     const selectedTile = primodium.components.selectedTile(network).get();
 
     if (!selectedTile)
-      primodium.components.selectedTile(network).set(cameraCoord);
+      return primodium.components.selectedTile(network).set(cameraCoord);
 
-    await execute(
-      systems["system.Build"].executeTyped(
-        BigNumber.from(BlockType.MainBase),
-        selectedTile ?? cameraCoord,
-        {
-          gasLimit: 2_800_000,
-        }
-      ),
-      providers,
-      setNotification
-    );
-    setTransactionLoading(false);
-  }, [network]);
+    await buildBuilding(selectedTile, BlockType.MainBase, address, network);
+  };
 
   if (mainBaseCoord) {
     return (

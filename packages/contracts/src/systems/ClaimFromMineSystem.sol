@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { System, IWorld } from "solecs/System.sol";
+import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -30,10 +30,10 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibNewMine } from "../libraries/LibNewMine.sol";
 uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));
 
-contract ClaimFromMineSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
+contract ClaimFromMineSystem is PrimodiumSystem {
+  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function execute(bytes memory args) public returns (bytes memory) {
+  function execute(bytes memory args) public override returns (bytes memory) {
     // Components
     ClaimComponents memory c = ClaimComponents(
       TileComponent(getAddressById(components, TileComponentID)),
@@ -45,7 +45,7 @@ contract ClaimFromMineSystem is System {
     Coord memory coord = abi.decode(args, (Coord));
 
     // check if main base
-    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    uint256 entity = getBuildingFromCoord(coord);
     require(c.tileComponent.has(entity), "[ClaimFromMineSystem] Cannot claim from mines on an empty coordinate");
 
     // Check that the coordinates is owned by the msg.sender

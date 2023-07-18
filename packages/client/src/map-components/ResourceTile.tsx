@@ -1,13 +1,13 @@
-import { useMemo, memo } from "react";
+import { memo, useMemo } from "react";
 
-import { Has, HasValue, EntityID, getComponentValue } from "@latticexyz/recs";
 import { useEntityQuery } from "@latticexyz/react";
+import { EntityID, Has, HasValue, getComponentValue } from "@latticexyz/recs";
 import { useComponentValue } from "../hooks/useComponentValue";
 
 import { ImageOverlay } from "react-leaflet";
 
-import { BackgroundImage } from "../util/constants";
 import { useMud } from "../context/MudContext";
+import { BackgroundImage } from "../util/constants";
 import Path from "./Path";
 
 // tileKey prop is the default terrain beneath any building on top.
@@ -28,18 +28,22 @@ function ResourceTile({
 
   // Get tile information
   const tilesAtPosition = useEntityQuery(
-    [Has(components.Tile), HasValue(components.Position, { x: x, y: y })],
+    [
+      Has(components.BuildingType),
+      HasValue(components.Position, { x: x, y: y }),
+    ],
     { updateOnValueChange: true }
   );
 
   const tile = useComponentValue(
-    components.Tile,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  );
+    components.BuildingType,
+    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex,
+    { value: "" }
+  ).value;
 
   let buildingKey: EntityID | undefined;
   if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
-    buildingKey = tile.value as unknown as EntityID;
+    buildingKey = tile as EntityID;
   }
 
   const path = useComponentValue(
@@ -62,8 +66,8 @@ function ResourceTile({
       HasValue(components.Path, {
         value:
           tilesAtPosition.length > 0
-            ? (world.entities[tilesAtPosition[0]] as unknown as number)
-            : 0,
+            ? world.entities[tilesAtPosition[0]]
+            : undefined,
       }),
     ],
     { updateOnValueChange: true }

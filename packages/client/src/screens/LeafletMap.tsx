@@ -1,23 +1,24 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { createPerlin, Perlin } from "@latticexyz/noise";
 import { SingletonID } from "@latticexyz/network";
+import { createPerlin, Perlin } from "@latticexyz/noise";
 import { Coord } from "@latticexyz/utils";
 
-import { MapContainer, LayersControl } from "react-leaflet";
 import L from "leaflet";
+import { LayersControl, MapContainer } from "react-leaflet";
 
 import { getTopLayerKeyPair } from "../util/tile";
 
-import ResourceTileLayer from "../map-components/ResourceTileLayer";
-import { Tour } from "../components/tour/Tour";
-import TourHintLayer from "../map-components/TourHintLayer";
-import { useTourStore } from "../store/TourStore";
 import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
-import { useAccount } from "../hooks/useAccount";
+import { useMemo } from "react";
+import { Tour } from "../components/tour/Tour";
 import { useMud } from "../context/MudContext";
-
+import { useAccount } from "../hooks/useAccount";
+import ResourceTileLayer from "../map-components/ResourceTileLayer";
+import TourHintLayer from "../map-components/TourHintLayer";
+import { useTourStore } from "../store/TourStore";
+import { decodeCoordEntity } from "../util/encode";
 export default function LeafletMap() {
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
@@ -35,10 +36,17 @@ export default function LeafletMap() {
     : singletonIndex;
 
   // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
   );
+
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(() => {
+    if (mainBaseEntity)
+      return decodeCoordEntity(mainBaseEntity?.value as EntityID);
+    return undefined;
+  }, [mainBaseEntity]);
 
   useEffect(() => {
     createPerlin().then((perlin: Perlin) => {

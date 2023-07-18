@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { primodium } from "../game";
-import GameUI from "../components/game-ui/GameUI";
-import { useMud } from "../context/MudContext";
-import { useAccount } from "src/hooks/useAccount";
-import { Tour } from "src/components/tour/Tour";
-import { useTourStore } from "src/store/TourStore";
-import { EntityID } from "@latticexyz/recs";
 import { useComponentValue } from "@latticexyz/react";
+import { EntityID } from "@latticexyz/recs";
+import { useEffect, useMemo, useState } from "react";
+import GameUI from "src/components/game-ui/GameUI";
+import { Tour } from "src/components/tour/Tour";
+import { useAccount } from "src/hooks/useAccount";
+import { useTourStore } from "src/store/TourStore";
+import { decodeCoordEntity } from "src/util/encode";
+import { useMud } from "../context/MudContext";
+import { primodium } from "../game";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -15,7 +16,7 @@ export const Game = () => {
   const network = useMud();
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
-  const gameReady = primodium.hooks.useGameReady(network);
+  const gameReady = primodium.hooks.useGameReady();
   const [completedTutorial, checkpoint] = useTourStore((state) => [
     state.completedTutorial,
     state.checkpoint,
@@ -27,10 +28,17 @@ export const Game = () => {
     : singletonIndex;
 
   // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
   );
+
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(() => {
+    if (mainBaseEntity)
+      return decodeCoordEntity(mainBaseEntity?.value as EntityID);
+    return undefined;
+  }, [mainBaseEntity]);
 
   useEffect(() => {
     (async () => {

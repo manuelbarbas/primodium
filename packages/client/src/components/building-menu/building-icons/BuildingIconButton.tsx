@@ -1,12 +1,21 @@
-import { useCallback, useMemo } from "react";
 import { primodium } from "@game/api";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
+import {
+  EntityID,
+  getComponentValue,
+  removeComponent,
+  setComponent,
+} from "@latticexyz/recs";
+import { useMemo } from "react";
 import { useMud } from "../../../context/MudContext";
-import { BackgroundImage, ResourceImage } from "../../../util/constants";
-import { getRecipe } from "../../../util/resource";
-import { hashKeyEntityAndTrim } from "../../../util/encode";
 import { useAccount } from "../../../hooks/useAccount";
+import {
+  Action,
+  BackgroundImage,
+  ResourceImage,
+} from "../../../util/constants";
+import { hashKeyEntityAndTrim } from "../../../util/encode";
 import { getBuildingResearchRequirement } from "../../../util/research";
+import { getRecipe } from "../../../util/resource";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -20,7 +29,7 @@ function BuildingIconButton({
 }) {
   const network = useMud();
   const { components, world, singletonIndex } = network;
-  const selectedBuilding = primodium.hooks.useSelectedBuilding(network);
+  const selectedBuildingEntity = primodium.hooks.useSelectedBuilding();
 
   const { address } = useAccount();
 
@@ -50,24 +59,33 @@ function BuildingIconButton({
     );
   }, [isResearched, researchRequirement]);
 
-  const cannotBuildTile = useCallback(() => {}, []);
-
   const recipe = getRecipe(blockType, world, components);
+
+  const selectedBuilding = selectedBuildingEntity
+    ? world.entities[selectedBuildingEntity]
+    : undefined;
+
+  const handleSelectBuilding = () => {
+    if (selectedBuilding === blockType) {
+      primodium.components.selectedBuilding(network).remove();
+      removeComponent(
+        network.offChainComponents.SelectedAction,
+        singletonIndex
+      );
+    } else {
+      setComponent(network.offChainComponents.SelectedAction, singletonIndex, {
+        value: Action.PlaceBuilding,
+      });
+      primodium.components.selectedBuilding(network).set(blockType);
+    }
+  };
 
   return (
     <button
       id={id}
       className="w-16 h-16 text-sm group"
-      onClick={
-        buildingLocked
-          ? cannotBuildTile
-          : () => {
-              //set selected block, if clicked again deselect
-              selectedBuilding === blockType
-                ? primodium.components.selectedBuilding(network).remove()
-                : primodium.components.selectedBuilding(network).set(blockType);
-            }
-      }
+      disabled={buildingLocked}
+      onClick={handleSelectBuilding}
     >
       <div
         className={`building-tooltip group-hover:scale-100 ${

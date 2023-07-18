@@ -1,75 +1,42 @@
 import { useEffect, useRef, useState } from "react";
 
 import {
-  WagmiConfig,
-  createClient,
-  useAccount as useWagmiAccount,
+  Address,
   Connector,
+  WagmiConfig,
+  useAccount as useWagmiAccount,
 } from "wagmi";
-import { ExternalProvider } from "@ethersproject/providers";
-import { getDefaultProvider } from "ethers";
-import { devConfig, getNetworkLayerConfig } from "./network/config";
-import { createNetworkLayer } from "./network/layer";
+import { getNetworkLayerConfig } from "./network/config/config";
+import { Network, createNetworkLayer } from "./network/layer";
 
-import MudProvider from "./context/MudContext";
 import AppLoadingState from "./AppLoadingState";
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  provider: getDefaultProvider(),
-});
-
-const setupNetworkLayer = async (provider: ExternalProvider | undefined) => {
-  const networkLayerConfig =
-    provider === undefined ? devConfig() : getNetworkLayerConfig(provider);
-  const networkLayerReturn = await createNetworkLayer(
-    networkLayerConfig.config
-  );
-  return {
-    defaultWalletAddress: networkLayerConfig.defaultWalletAddress,
-    networkLayer: networkLayerReturn,
-  };
-};
+import { MudProvider } from "./context/MudContext";
+import wagmiClient from "./network/wagmi";
 
 export default function App() {
   // Setup network layer
   const { connector: activeConnector, address } = useWagmiAccount();
-  const prevAddressRef = useRef<string | undefined>("");
+  const prevAddressRef = useRef<Address | undefined>();
 
-  const [networkLayerParams, setNetworkLayerParams] =
-    useState<Awaited<ReturnType<typeof createNetworkLayer>>>();
-
-  // default wallet address that is provided by the browser if the user is not logged in
-  const defaultWalletAddressRef = useRef<string | undefined>(undefined);
+  const [networkLayer, setNetworkLayer] = useState<Network>();
 
   const setupNetworkLayerOnChange = async (
-    address: string | undefined,
+    address: Address | undefined,
     activeConnector: Connector | undefined
   ) => {
-    if (!address && prevAddressRef.current !== undefined) {
-      const networkLayerReturn = await setupNetworkLayer(undefined);
-      setNetworkLayerParams(networkLayerReturn.networkLayer);
-
-      defaultWalletAddressRef.current = networkLayerReturn.defaultWalletAddress;
-      prevAddressRef.current = undefined;
-    } else if (address && activeConnector) {
-      if (address !== prevAddressRef.current) {
-        const provider = await activeConnector.getProvider();
-        const networkLayerReturn = await setupNetworkLayer(provider);
-        setNetworkLayerParams(networkLayerReturn.networkLayer);
-
-        defaultWalletAddressRef.current =
-          networkLayerReturn.defaultWalletAddress;
-        prevAddressRef.current = address;
-      }
-    }
+    if (prevAddressRef.current && address === prevAddressRef.current) return;
+    const provider = await activeConnector?.getProvider();
+    const networkLayerConfig = getNetworkLayerConfig(provider);
+    const network = await createNetworkLayer(networkLayerConfig);
+    setNetworkLayer(network);
+    prevAddressRef.current = address;
   };
 
   useEffect(() => {
     setupNetworkLayerOnChange(address, activeConnector);
   }, [activeConnector, address]);
 
-  if (networkLayerParams === undefined) {
+  if (networkLayer === undefined) {
     return (
       <>
         <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
@@ -82,19 +49,11 @@ export default function App() {
     );
   } else {
     return (
-      <MudProvider
-        world={networkLayerParams.world}
-        systems={networkLayerParams.systems}
-        components={networkLayerParams.components}
-        offChainComponents={networkLayerParams.offChainComponents}
-        singletonIndex={networkLayerParams.singletonIndex}
-        defaultWalletAddress={defaultWalletAddressRef.current}
-        providers={networkLayerParams.providers}
-      >
-        <WagmiConfig client={wagmiClient}>
+      <WagmiConfig client={wagmiClient}>
+        <MudProvider {...networkLayer}>
           <AppLoadingState />
-        </WagmiConfig>
-      </MudProvider>
+        </MudProvider>
+      </WagmiConfig>
     );
   }
 }

@@ -1,11 +1,11 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import "forge-std/console.sol";
 
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
+import "../PrimodiumTest.t.sol";
 
 import { addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { Coord } from "std-contracts/components/CoordComponent.sol";
+
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "../../systems/DestroyPathSystem.sol";
@@ -232,13 +232,16 @@ contract Storage is MudTest {
     console.log("alice has ironCapacity of %s", ironCapacity);
 
     currBlockNum += ironCapacity;
+
     vm.roll(currBlockNum);
 
+    console.log("claiming ");
     claimSystem.executeTyped(coord);
     uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceKey), "Alice should have iron");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
+    console.log("building storage ");
     Coord memory storageBuildingCoord = Coord({ x: 1, y: 1 });
     buildSystem.executeTyped(DebugStorageBuildingID, storageBuildingCoord);
     uint256 newIronCapacity = LibStorage.getEntityStorageCapacityForResource(

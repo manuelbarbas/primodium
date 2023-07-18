@@ -1,7 +1,7 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
+
+import "../PrimodiumTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
@@ -27,29 +27,35 @@ import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 
-contract BuildPathSystemTest is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract BuildPathSystemTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
+
+  BuildSystem public buildSystem;
+  BuildPathSystem public buildPathSystem;
+
+  OwnedByComponent public ownedByComponent;
+  PathComponent public pathComponent;
+  TileComponent public tileComponent;
+
+  Coord public startCoord = Coord({ x: -5, y: 2 });
+  Coord public endCoord = Coord({ x: 0, y: 1 });
 
   function setUp() public override {
     super.setUp();
     vm.startPrank(deployer);
+    buildSystem = BuildSystem(system(BuildSystemID));
+    buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
 
+    ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
+    pathComponent = PathComponent(component(PathComponentID));
+    tileComponent = TileComponent(component(TileComponentID));
     vm.stopPrank();
   }
 
   function testFailBuildPathFromMainBaseToMine() public {
     vm.startPrank(alice);
 
-    Coord memory startCoord = Coord({ x: 0, y: 1 });
-    Coord memory endCoord = Coord({ x: -5, y: 2 });
-
     assertEq(LibTerrain.getTopLayerKey(startCoord), IronID, "test should try to build IronMineID on IronID tile");
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-
-    OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
-    PathComponent pathComponent = PathComponent(component(PathComponentID));
-    TileComponent tileComponent = TileComponent(component(TileComponentID));
 
     assertTrue(tileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
@@ -92,19 +98,10 @@ contract BuildPathSystemTest is MudTest {
     vm.stopPrank();
   }
 
-  function testBuildPath() public {
+  function testInit() public {
     vm.startPrank(alice);
 
-    Coord memory startCoord = Coord({ x: -5, y: 2 });
     assertEq(LibTerrain.getTopLayerKey(startCoord), IronID, "test should try to build IronMineID on IronID tile");
-    Coord memory endCoord = Coord({ x: 0, y: 1 });
-
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-
-    OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
-    PathComponent pathComponent = PathComponent(component(PathComponentID));
-    TileComponent tileComponent = TileComponent(component(TileComponentID));
 
     assertTrue(tileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
@@ -112,29 +109,35 @@ contract BuildPathSystemTest is MudTest {
       IronID,
       "IronMineID should have IronID as requireed tile type to build on"
     );
-    // Build two conveyor blocks
-    bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
-    console.log("built MainBaseID");
-    bytes memory startBlockEntity = buildSystem.executeTyped(DebugIronMineID, startCoord);
-    console.log("built IronMineID");
+  }
 
-    uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
-    uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
+  function testBuildConveyors() public returns (uint256 startBlockEntityID, uint256 endBlockEntityID) {
+    testInit();
+    // Build two conveyor blocks
+
+    console.log("building base");
+    bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
+    console.log("building iron mine");
+    bytes memory startBlockEntity = buildSystem.executeTyped(DebugIronMineID, startCoord);
+
+    startBlockEntityID = abi.decode(startBlockEntity, (uint256));
+    endBlockEntityID = abi.decode(endBlockEntity, (uint256));
 
     Coord memory startPosition = LibEncode.decodeCoordEntity(startBlockEntityID);
-    assertEq(startPosition.x, startCoord.x);
-    assertEq(startPosition.y, startCoord.y);
+    assertCoordEq(startPosition, startCoord);
 
     Coord memory endPosition = LibEncode.decodeCoordEntity(endBlockEntityID);
-    assertEq(endPosition.x, endCoord.x);
-    assertEq(endPosition.y, endCoord.y);
+    assertCoordEq(endPosition, endCoord);
 
     assertTrue(ownedByComponent.has(startBlockEntityID));
     assertEq(ownedByComponent.getValue(startBlockEntityID), addressToEntity(alice));
 
     assertTrue(ownedByComponent.has(endBlockEntityID));
     assertEq(ownedByComponent.getValue(endBlockEntityID), addressToEntity(alice));
+  }
 
+  function testBuildPath() public {
+    (uint256 startBlockEntityID, uint256 endBlockEntityID) = testBuildConveyors();
     // Build a path
     buildPathSystem.executeTyped(startCoord, endCoord);
     console.log("built path");
@@ -143,7 +146,5 @@ contract BuildPathSystemTest is MudTest {
       endBlockEntityID,
       "startBlockEntityID should have path to endBlockEntityID"
     );
-
-    vm.stopPrank();
   }
 }

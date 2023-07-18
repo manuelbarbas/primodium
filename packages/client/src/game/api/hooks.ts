@@ -1,63 +1,47 @@
-import { SingletonID } from "@latticexyz/network";
-import { Network } from "../../network/layer";
-import { useComponentValue } from "src/hooks/useComponentValue";
-import { Coord } from "@latticexyz/utils";
-import { useSettingsStore } from "../stores/SettingsStore";
-import { Scenes } from "@game/constants";
 import { engine } from "@engine/api";
-import { useEffect, useRef, useState } from "react";
+import { Scenes } from "@game/constants";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import { throttle } from "lodash";
-import { useAccount } from "src/hooks/useAccount";
+import { useEffect, useRef, useState } from "react";
 import { useMud } from "src/context/MudContext";
-import { EntityID } from "@latticexyz/recs";
+import { useAccount } from "src/hooks/useAccount";
+import { useComponentValue } from "src/hooks/useComponentValue";
+import { offChainComponents, singletonIndex, world } from "src/network/world";
+import { Network } from "../../network/layer";
+import { useSettingsStore } from "../stores/SettingsStore";
 
-export const useGameReady = (network: Network) => {
-  const { offChainComponents, singletonIndex } = network;
-
+export const useGameReady = () => {
   return useComponentValue(offChainComponents.GameReady, singletonIndex, {
     value: false,
   }).value;
 };
 
-export const useBlockNumber = (network: Network) => {
-  const { offChainComponents, singletonIndex } = network;
-
+export const useBlockNumber = () => {
   return useComponentValue(offChainComponents.BlockNumber, singletonIndex, {
     value: 0,
   }).value;
 };
 
-export const useSelectedTile = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
+export const useSelectedTile = () => {
   return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
 };
 
-export const useHoverTile = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
+export const useHoverTile = () => {
   return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
 };
 
-export const useSelectedBuilding = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
-  return useComponentValue(offChainComponents.SelectedBuilding, singletonIndex)
-    ?.value;
+export const useSelectedBuilding = () => {
+  const buildingEntity = useComponentValue(
+    offChainComponents.SelectedBuilding,
+    singletonIndex
+  )?.value;
+  if (!buildingEntity) return;
+  return world.entityToIndex.get(buildingEntity);
 };
 
-export const useStartSelectedPath = (network: Network) => {
-  const { offChainComponents, world } = network;
-
-  const singletonIndex = world.entityToIndex.get(SingletonID);
-
+export const useStartSelectedPath = () => {
   return useComponentValue(
     offChainComponents.StartSelectedPath,
     singletonIndex
@@ -97,12 +81,15 @@ export const useMainBase = () => {
     : singletonIndex;
 
   // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
+  const mainBase = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
-  );
+  )?.value;
 
-  return mainBaseCoord;
+  if (!mainBase) return;
+  const mainBaseEntity = world.entityToIndex.get(mainBase);
+  if (!mainBaseEntity) return;
+  return getComponentValue(components.Position, mainBaseEntity);
 };
 
 export const useKeybinds = () => {
@@ -111,10 +98,10 @@ export const useKeybinds = () => {
   return keybinds;
 };
 
-export const useCamera = (network: Network, targetScene = Scenes.Main) => {
+export const useCamera = (_: Network, targetScene = Scenes.Main) => {
   const [worldCoord, setWorldCoord] = useState<Coord>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0);
-  const gameStatus = useGameReady(network);
+  const gameStatus = useGameReady();
   const minZoom = useRef(1);
 
   useEffect(() => {

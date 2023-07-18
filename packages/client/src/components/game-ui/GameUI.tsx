@@ -1,23 +1,16 @@
-import { useEffect } from "react";
-
-import { AnimatePresence, motion } from "framer-motion";
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import { useMud } from "src/context/MudContext";
+import { useEffect } from "react";
 import { useGameStore } from "../../store/GameStore";
-
-import ResourceBox from "../resource-box/ResourceBox";
-import SideMenu1 from "../SideMenu";
-
-import TooltipBox from "../TooltipBox";
+import InfoBox from "../InfoBox";
 import NotificationBox from "../NotificationBox";
 
-import { Inventory } from "./Inventory";
-import { Hotbar } from "./Hotbar";
-import { TileInfo } from "./TileInfo";
-import { BrandingLabel } from "./BrandingLabel";
+import { AnimatePresence, motion } from "framer-motion";
+
 import { Camera } from "./Camera";
-import { InfoBox } from "./InfoBox";
+import { Inventory } from "./Inventory";
+import Hotbar from "./hotbar/Hotbar";
+import { TileInfo } from "./tile-info/TileInfo";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -25,8 +18,7 @@ function GameUI() {
     state.toggleShowUI,
   ]);
 
-  const network = useMud();
-  const gameReady = primodium.hooks.useGameReady(network);
+  const gameReady = primodium.hooks.useGameReady();
 
   useEffect(() => {
     if (!gameReady) return;

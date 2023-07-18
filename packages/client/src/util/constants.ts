@@ -2,6 +2,16 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "src/engine/lib/core/createInput";
 
+export enum Action {
+  DemolishBuilding,
+  DemolishPath,
+  SelectPath,
+  SelectBuilding,
+  Conveyor,
+  SelectAttack,
+  PlaceBuilding,
+}
+
 export const BlockKey = {
   //landscape blocks
   Water: "Water",
@@ -33,7 +43,11 @@ export const BlockKey = {
   Silo: "Silo",
 };
 
-export const BlockType = {
+export interface BlockTypeInterface {
+  [x: string]: EntityID;
+}
+
+export const BlockType: BlockTypeInterface = {
   // Landscape blocks
   Water: keccak256("block.Water") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,
@@ -72,17 +86,6 @@ export const BlockType = {
 
   // Dummy block for Conveyor between tiles
   Conveyor: keccak256("block.Conveyor") as EntityID,
-
-  // Dummy blocks for Demolish
-  DemolishBuilding: keccak256("demolish.Building") as EntityID,
-  DemolishPath: keccak256("demolish.Path") as EntityID,
-
-  // Dummy block for selecting tiles
-  SelectPath: keccak256("select.Path") as EntityID,
-  SelectAttack: keccak256("select.Attack") as EntityID,
-
-  //Dummy block for map markers
-  ArrowMarker: keccak256("marker.Arrow") as EntityID,
 
   // New Buildings
   IronMine: keccak256("block.IronMine") as EntityID,
@@ -257,12 +260,10 @@ export const BlockType = {
   // ) as EntityID,
 };
 
-export type BlockTypeKey = keyof typeof BlockType;
-
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
-  [key: EntityID]: BlockTypeKey;
+  [key: EntityID]: string;
 }>((acc, [key, id]) => {
-  acc[id] = key as BlockTypeKey;
+  acc[id] = key;
   return acc;
 }, {});
 
@@ -306,6 +307,12 @@ export const BlockColors = new Map<EntityID, string>([
   // [BlockType.Silo, "#bebebe"],
 ]);
 
+// TODO switch this to an object with the below interface
+
+export interface BackgroundImages {
+  [x: EntityID]: string;
+}
+
 export const BackgroundImage = new Map<EntityID, string>([
   //landscape blocks
   [BlockType.Water, "/img/terrain/water.gif"],
@@ -336,7 +343,7 @@ export const BackgroundImage = new Map<EntityID, string>([
   [BlockType.DebugStorageBuilding, "/img/building/node.gif"],
   // [BlockType.Miner, "/img/building/minerdrill.gif"],
   // [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
-  [BlockType.MainBase, "/img/building/mainbase.gif"],
+  [BlockType.MainBase, "/img/building/mainbase.png"],
   [BlockType.DebugNode, "/img/building/node.gif"],
   // [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
   // [BlockType.Silo, "/img/building/silo.png"],

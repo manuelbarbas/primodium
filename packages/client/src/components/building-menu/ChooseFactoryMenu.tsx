@@ -1,9 +1,10 @@
+import { removeComponent } from "@latticexyz/recs";
 import { useCallback } from "react";
-import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { useMud } from "src/context/MudContext";
+import { singletonIndex } from "src/network/world";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
-import { primodium } from "@game/api";
-import { useMud } from "src/context/MudContext";
+import BuildingIconButton from "./building-icons/BuildingIconButton";
 
 function ChooseFactoryMenu({
   title,
@@ -13,9 +14,12 @@ function ChooseFactoryMenu({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const network = useMud();
+  const {
+    offChainComponents: { SelectedAction },
+  } = network;
 
   const closeMenuHelper = useCallback(() => {
-    primodium.components.selectedBuilding(network).remove();
+    removeComponent(SelectedAction, singletonIndex);
     setMenuOpenIndex(-1);
   }, []);
 

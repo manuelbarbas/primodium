@@ -1,9 +1,13 @@
-import { World, defineComponent, Type } from "@latticexyz/recs";
-import { overridableComponent } from "@latticexyz/recs";
+import {
+  Type,
+  World,
+  defineComponent,
+  overridableComponent,
+} from "@latticexyz/recs";
 import {
   defineBoolComponent,
-  defineNumberComponent,
   defineCoordComponent,
+  defineNumberComponent,
   defineStringComponent,
 } from "@latticexyz/std-client";
 
@@ -21,22 +25,22 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    Tile: overridableComponent(
-      defineNumberComponent(world, {
+    BuildingType: overridableComponent(
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.Tile",
         },
       })
     ),
     Path: overridableComponent(
-      defineNumberComponent(world, {
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.Path",
         },
       })
     ),
     OwnedBy: overridableComponent(
-      defineNumberComponent(world, {
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.OwnedBy",
         },
@@ -78,11 +82,15 @@ export function defineComponents(world: World) {
       },
     }),
     // main base initialized
-    MainBaseInitialized: defineCoordComponent(world, {
-      metadata: {
-        contractId: "component.MainBaseInitialized",
-      },
-    }),
+    MainBaseInitialized: defineComponent(
+      world,
+      { value: Type.Entity },
+      {
+        metadata: {
+          contractId: "component.MainBaseInitialized",
+        },
+      }
+    ),
     // Resource data stored in components
     RequiredResearchComponent: defineNumberComponent(world, {
       metadata: {
@@ -146,6 +154,27 @@ export function defineComponents(world: World) {
         },
       })
     ),
+    BuildingTiles: defineComponent(
+      world,
+      { value: Type.EntityArray },
+      {
+        metadata: {
+          contractId: "component.BuildingTiles",
+        },
+      }
+    ),
+    RawBlueprint: defineComponent(
+      world,
+      {
+        value: Type.NumberArray,
+      },
+      {
+        metadata: {
+          contractId: "component.Blueprint",
+        },
+      }
+    ),
+
     UnclaimedResource: defineNumberComponent(world, {
       metadata: {
         contractId: "component.UnclaimedResource",
@@ -189,6 +218,8 @@ export function defineOffChainComponents(world: World) {
         id: "SelectedBuilding",
       }
     ),
+    SelectedAction: defineNumberComponent(world, { id: "SelectedAction" }),
+
     StartSelectedPath: defineCoordComponent(world, {
       metadata: {},
       id: "StartSelectedPath",

@@ -1,16 +1,17 @@
-import { useState, useCallback, ReactNode, useEffect } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
-import { IoHammerSharp, IoFlaskSharp } from "react-icons/io5";
-import { TbBulldozer, TbSword, TbScale } from "react-icons/tb";
+import { IoFlaskSharp, IoHammerSharp } from "react-icons/io5";
+import { TbBulldozer, TbScale, TbSword } from "react-icons/tb";
 
-import MarketModal from "./market-menu/MarketModal";
+import { useMud } from "src/context/MudContext";
+import AttackBox from "./attack-menu/AttackBox";
 import BuildingPage from "./building-menu/BuildingPage";
 import DemolishBuildingBox from "./demolish-menu/DemolishBuildingBox";
+import MarketModal from "./market-menu/MarketModal";
 import ResearchModal from "./research-menu/ResearchModal";
-import AttackBox from "./attack-menu/AttackBox";
-import { useMud } from "src/context/MudContext";
-import { primodium } from "@game/api";
 
+import { removeComponent } from "@latticexyz/recs";
+import { singletonIndex } from "src/network/world";
 import { useTourStore } from "../store/TourStore";
 
 function SideBarIcon({
@@ -30,7 +31,9 @@ function SideBarIcon({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
   children?: ReactNode;
 }) {
-  const network = useMud();
+  const {
+    offChainComponents: { SelectedAction },
+  } = useMud();
 
   const setMenuOpenIndexHelper = useCallback(() => {
     if (menuIndex !== menuOpenIndex) {
@@ -39,8 +42,7 @@ function SideBarIcon({
       setMenuOpenIndex(-1);
     }
 
-    // Remove selected building if menu is changed
-    primodium.components.selectedBuilding(network).remove();
+    removeComponent(SelectedAction, singletonIndex);
     // primodium.components.startSelectedPath(network).remove();
   }, [menuIndex, menuOpenIndex]);
 

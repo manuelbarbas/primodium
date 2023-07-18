@@ -1,24 +1,23 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { LayersControl, LayerGroup, useMap, useMapEvent } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
+import React, { useCallback, useEffect, useState } from "react";
+import { LayerGroup, LayersControl, useMap, useMapEvent } from "react-leaflet";
 
-import { BigNumber } from "ethers";
-import { randomBytes } from "ethers/lib/utils";
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
+import { BigNumber } from "ethers";
 
-import { BlockType, DisplayKeyPair } from "../util/constants";
-import { execute } from "../network/actions";
-import { useAccount } from "../hooks/useAccount";
 import { useMud } from "../context/MudContext";
+import { useAccount } from "../hooks/useAccount";
+import { execute } from "../network/actions";
 import { useGameStore } from "../store/GameStore";
+import { BlockType, DisplayKeyPair } from "../util/constants";
 
-import ResourceTile from "./ResourceTile";
-import SelectedTile from "./SelectedTile";
-import SelectedPath from "./SelectedPath";
-import HoverTile from "./HoverTile";
-import SelectedAttack from "./SelectedAttack";
 import { useNotificationStore } from "../store/NotificationStore";
+import HoverTile from "./HoverTile";
+import ResourceTile from "./ResourceTile";
+import SelectedAttack from "./SelectedAttack";
+import SelectedPath from "./SelectedPath";
+import SelectedTile from "./SelectedTile";
 
 const ResourceTileLayer = ({
   getTileKey,
@@ -100,21 +99,19 @@ const ResourceTileLayer = ({
   const addTileOverride = useCallback(
     (pos: Coord, blockType: EntityID) => {
       const tempPositionId = uuid();
-      const tempEntityIndex = BigNumber.from(
-        randomBytes(32)
-      ) as unknown as EntityIndex;
+      const tempEntityIndex = 12345676543 as EntityIndex;
 
       components.Position.addOverride(tempPositionId, {
         entity: tempEntityIndex,
         value: pos,
       });
-      components.Tile.addOverride(tempPositionId, {
+      components.BuildingType.addOverride(tempPositionId, {
         entity: tempEntityIndex,
-        value: { value: blockType as unknown as number },
+        value: { value: blockType },
       });
       components.OwnedBy.addOverride(tempPositionId, {
         entity: tempEntityIndex,
-        value: { value: address as unknown as number },
+        value: { value: address },
       });
       components.LastBuiltAt.addOverride(tempPositionId, {
         entity: tempEntityIndex,
@@ -133,7 +130,7 @@ const ResourceTileLayer = ({
   const removeTileOverride = useCallback(
     (tempPositionId: string) => {
       components.Position.removeOverride(tempPositionId);
-      components.Tile.removeOverride(tempPositionId);
+      components.BuildingType.removeOverride(tempPositionId);
       components.OwnedBy.removeOverride(tempPositionId);
       components.LastBuiltAt.removeOverride(tempPositionId);
       components.LastClaimedAt.removeOverride(tempPositionId);
