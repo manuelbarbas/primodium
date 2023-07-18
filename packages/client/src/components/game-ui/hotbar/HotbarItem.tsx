@@ -1,11 +1,12 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import React from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
 import { world } from "src/network/world";
+import { calcDims, convertToCoords } from "src/util/building";
 import { BackgroundImage, BlockIdToKey, KeyImages } from "src/util/constants";
 
 const HotbarItem: React.FC<{
@@ -21,6 +22,17 @@ const HotbarItem: React.FC<{
 
   const key = keybinds[keybind]?.entries().next().value[0] as Key;
   const keyImage = KeyImages.get(key);
+
+  const buildingTypeEntity = world.entityToIndex.get(blockType);
+  if (!buildingTypeEntity) return null;
+  const blueprint = getComponentValue(
+    network.components.RawBlueprint,
+    buildingTypeEntity
+  )?.value;
+
+  const dimensions = blueprint
+    ? calcDims(buildingTypeEntity, convertToCoords(blueprint))
+    : undefined;
 
   return (
     <motion.div
@@ -73,6 +85,11 @@ const HotbarItem: React.FC<{
               selectedBuilding === blockType ? "opacity-30" : ""
             }`}
           />
+        )}
+        {dimensions && (
+          <div className="absolute bottom-0 right-0 text-xs bg-black bg-opacity-50">
+            {dimensions.width}x{dimensions.height}
+          </div>
         )}
       </div>
     </motion.div>
