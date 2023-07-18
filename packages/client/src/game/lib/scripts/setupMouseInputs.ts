@@ -1,3 +1,4 @@
+import { KeybindActions } from "@game/constants";
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import {
   getComponentValue,
@@ -5,6 +6,8 @@ import {
   setComponent,
 } from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
+import { pan, updateWorldView } from "src/game/api/camera";
+import { isDown } from "src/game/api/input";
 import { offChainComponents, singletonIndex } from "src/network/world";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
@@ -19,6 +22,7 @@ import { Network } from "../../../network/layer";
 import * as components from "../../api/components";
 
 const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
+  const { maxZoom, minZoom, wheelSpeed } = scene.config.camera;
   const { SelectedAction, SelectedBuilding, SelectedTile } = offChainComponents;
 
   scene.input.click$.subscribe((event) => {
@@ -84,7 +88,7 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
     }
   });
 
-  scene.input.pointermove$.pipe().subscribe((event) => {
+  const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.pointer.worldX, y: event.pointer.worldY },
       scene.tilemap.tileWidth,
@@ -99,6 +103,50 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
 
     components.hoverTile(network).set(mouseCoord);
   });
+
+  scene.input.phaserInput.on(
+    "wheel",
+    ({ deltaY }: { deltaY: number; event: any }) => {
+      let scale = 0.02;
+
+      if (isDown(KeybindActions.Modifier)) scale /= 2;
+
+      if (deltaY < 0) {
+        const zoom = Math.min(
+          scene.camera.phaserCamera.zoom + wheelSpeed * scale,
+          maxZoom
+        );
+        scene.camera.setZoom(zoom);
+      } else if (deltaY > 0) {
+        const zoom = Math.max(
+          scene.camera.phaserCamera.zoom - wheelSpeed * scale,
+          minZoom
+        );
+        scene.camera.setZoom(zoom);
+      }
+    }
+  );
+
+  const doubleClickSub = scene.input.doubleClick$.subscribe((event) => {
+    const { x, y } = pixelCoordToTileCoord(
+      { x: event.worldX, y: event.worldY },
+      scene.tilemap.tileWidth,
+      scene.tilemap.tileHeight
+    );
+
+    const gameCoord = { x, y: -y } as Coord;
+
+    //set to default zoomTo and pan to mouse position
+    scene.camera.phaserCamera.zoomTo(
+      scene.config.camera.defaultZoom,
+      1000,
+      undefined,
+      undefined,
+      () => updateWorldView()
+    );
+    pan(gameCoord);
+  });
+  return [pointerMoveSub, doubleClickSub];
 };
 
 export default setupMouseInputs;

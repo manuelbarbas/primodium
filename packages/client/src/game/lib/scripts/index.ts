@@ -25,13 +25,15 @@ export const init = async (address: Address, network: Network) => {
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  setupMouseInputs(scene, network, address);
+  const mouseSubs = setupMouseInputs(scene, network, address);
   setupCamera(scene, network, address);
 
   runSystems(scene, network);
 
   world.registerDisposer(() => {
-    chunkManager.dispose();
+    mouseSubs.forEach((sub) => sub.unsubscribe()), chunkManager.dispose();
+    scene.input.phaserInput.removeListener("wheel");
+
     game.dispose();
   });
 };

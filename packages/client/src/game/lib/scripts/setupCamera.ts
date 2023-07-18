@@ -1,10 +1,8 @@
 import { KeybindActions } from "@game/constants";
-import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
 import { pan } from "src/game/api/camera";
 import { isDown } from "src/game/api/input";
 import { Network } from "src/network/layer";
-import { world } from "src/network/world";
 import { Address } from "wagmi";
 import * as components from "../../api/components";
 const SPEED = 750;
@@ -13,10 +11,14 @@ const SMOOTHNESS = 0.9;
 
 const setupCamera = (scene: Scene, network: Network, address: Address) => {
   const { maxZoom, minZoom } = scene.config.camera;
+
+  //accumalate sub-pixel movement during a gametick and add to next game tick.
   let accumulatedX = 0;
   let accumulatedY = 0;
   let targetX = 0;
   let targetY = 0;
+
+  let originDragPoint: Phaser.Math.Vector2 | undefined;
 
   const handleCameraMovement = (_: number, delta: number) => {
     const zoom = scene.camera.phaserCamera.zoom;
@@ -40,16 +42,9 @@ const setupCamera = (scene: Scene, network: Network, address: Address) => {
     }
 
     if (isDown(KeybindActions.Base)) {
-      const mainBaseEntity = components.mainBase(network).get(address)?.value;
-      if (!mainBaseEntity) return;
-      const mainBase = world.entityToIndex.get(mainBaseEntity);
-      if (!mainBase) return;
-      const position = getComponentValue(
-        network.components.Position,
-        mainBase as EntityIndex
-      );
+      const mainBaseCoord = components.mainBase(network).get(address);
 
-      if (position) pan(position);
+      if (mainBaseCoord) pan(mainBaseCoord);
     }
 
     // HANDLE CAMERA SCROLL MOVEMENT KEYS
@@ -59,7 +54,6 @@ const setupCamera = (scene: Scene, network: Network, address: Address) => {
     let scrollY = scene.camera.phaserCamera.scrollY;
     let moveX = 0;
     let moveY = 0;
-    let originDragPoint: Phaser.Math.Vector2 | undefined;
     if (isDown(KeybindActions.Up)) moveY--;
     if (isDown(KeybindActions.Down)) moveY++;
     if (isDown(KeybindActions.Left)) moveX--;
