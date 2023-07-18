@@ -7,6 +7,8 @@ import { IWorld } from "solecs/System.sol";
 //components
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
+
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
@@ -36,9 +38,12 @@ library LibBuilding {
   }
 
   function canBuildOnTile(IWorld world, uint256 buildingEntity, Coord memory coord) internal view returns (bool) {
-    TileComponent tileComponent = TileComponent(getAddressById(world.components(), TileComponentID));
+    RequiredTileComponent requiredTileComponent = RequiredTileComponent(
+      getAddressById(world.components(), RequiredTileComponentID)
+    );
     return
-      !tileComponent.has(buildingEntity) || tileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
+      !requiredTileComponent.has(buildingEntity) ||
+      requiredTileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
   }
 
   function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint256) {
