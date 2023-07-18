@@ -16,7 +16,7 @@ export const Game = () => {
   const network = useMud();
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
-  const gameReady = primodium.hooks.useGameReady(network);
+  const gameReady = primodium.hooks.useGameReady();
   const [completedTutorial, checkpoint] = useTourStore((state) => [
     state.completedTutorial,
     state.checkpoint,

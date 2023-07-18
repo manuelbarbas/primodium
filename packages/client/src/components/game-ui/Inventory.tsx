@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
-import { useMud } from "src/context/MudContext";
-import { BlockType, ResourceImage } from "src/util/constants";
 import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
+import { useMud } from "src/context/MudContext";
 import { useComponentValue } from "src/hooks/useComponentValue";
 import useResourceCount from "src/hooks/useResourceCount";
+import { BlockType, ResourceImage } from "src/util/constants";
 import { ImageButton } from "../shared/ImageButton";
 
 export const Inventory = () => {
-  const network = useMud();
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
-  const gameReady = primodium.hooks.useGameReady(network);
-  const keybinds = primodium.hooks.useKeybinds();
 
   return (
     <div className="flex fixed top-8 right-8 items-center font-mono text-white ">

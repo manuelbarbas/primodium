@@ -11,7 +11,7 @@ import wrap from "./wrap";
 
 const Hotbar: React.FC = () => {
   const network = useMud();
-  const gameReady = primodium.hooks.useGameReady(network);
+  const gameReady = primodium.hooks.useGameReady();
   const keybinds = primodium.hooks.useKeybinds();
   const [activeBar, setActiveBar] = useState(0);
   const activeBarRef = useRef(0);

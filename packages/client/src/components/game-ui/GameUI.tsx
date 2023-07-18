@@ -6,7 +6,6 @@ import InfoBox from "../InfoBox";
 import NotificationBox from "../NotificationBox";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useMud } from "src/context/MudContext";
 
 import { Camera } from "./Camera";
 import { Inventory } from "./Inventory";
@@ -19,8 +18,7 @@ function GameUI() {
     state.toggleShowUI,
   ]);
 
-  const network = useMud();
-  const gameReady = primodium.hooks.useGameReady(network);
+  const gameReady = primodium.hooks.useGameReady();
 
   useEffect(() => {
     if (!gameReady) return;
