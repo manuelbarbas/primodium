@@ -16,7 +16,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
-
+import { LibFactory } from "../libraries/LibFactory.sol";
 import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 
@@ -24,35 +24,6 @@ uint256 constant ID = uint256(keccak256("system.BuildPathFromFactoryToMainBase")
 
 contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
-
-  //call after upgrade has been done and level has been increased
-  function updateResourceProduction(uint256 playerEntity, uint256 factoryEntity) internal {
-    if (!FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(factoryEntity)) return;
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
-      buildingId,
-      BuildingLevelComponent(getC(BuildingLevelComponentID)).getValue(factoryEntity)
-    );
-    FactoryProductionData memory factoryProductionData = FactoryProductionComponent(getC(FactoryProductionComponentID))
-      .getValue(buildingLevelEntity);
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
-    LibResourceProduction.updateResourceProduction(
-      world,
-      playerResourceEntity,
-      LibMath.getSafeUint256Value(MineComponent(getC(MineComponentID)), playerResourceEntity) +
-        factoryProductionData.ResourceProductionRate
-    );
-  }
-
-  //checks if path from mine to factory can be built, if yes updates factory is functional status
-
-  function updateUnclaimedForResource(uint256 playerEntity, uint256 startBuilding) internal {
-    LibUnclaimedResource.updateUnclaimedForResource(
-      world,
-      playerEntity,
-      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startBuilding))
-    );
-  }
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (address playerAddress, uint256 fromBuildingEntity, uint256 toBuildingEntity) = abi.decode(
@@ -65,9 +36,22 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
       "BuildPathFromFactoryToMainBase: Only BuildPathSystem can call this function"
     );
 
-    updateUnclaimedForResource(addressToEntity(playerAddress), fromBuildingEntity);
+    if (FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(fromBuildingEntity)) {
+      uint256 playerEntity = addressToEntity(playerAddress);
 
-    updateResourceProduction(addressToEntity(playerAddress), fromBuildingEntity);
+      uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(fromBuildingEntity);
+      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+        buildingId,
+        BuildingLevelComponent(getC(BuildingLevelComponentID)).getValue(fromBuildingEntity)
+      );
+      FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
+        getC(FactoryProductionComponentID)
+      ).getValue(buildingLevelEntity);
+
+      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
+
+      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(world, playerEntity, buildingLevelEntity, true);
+    }
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);
     return abi.encode(fromBuildingEntity);

@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
@@ -50,7 +49,6 @@ contract BuildPathSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (Coord memory coordStart, Coord memory coordEnd) = abi.decode(args, (Coord, Coord));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
     require(
       !(coordStart.x == coordEnd.x && coordStart.y == coordEnd.y),
@@ -69,7 +67,7 @@ contract BuildPathSystem is PrimodiumSystem {
       !PathComponent(getC(PathComponentID)).has(startBuilding),
       "[BuildPathSystem] Cannot start more than one path from the same building"
     );
-
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     uint256 startCoordBuildingId = tileComponent.getValue(startBuilding);
     uint256 endCoordBuildingId = tileComponent.getValue(endBuilding);
     uint256 startCoordBuildingLevelEntity = LibEncode.hashKeyEntity(

@@ -99,7 +99,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     }
 
     //if factory was functional player resource production must be cecreased by the resource production of the factory
-    if (isFunctional)
+    if (isFunctional && PathComponent(getAddressById(components, PathComponentID)).has(factoryEntity))
       LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
         world,
         playerEntity,
@@ -115,11 +115,9 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     uint256 playerEntity,
     uint256 factoryEntity
   ) internal {
-    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
-      getAddressById(components, FactoryIsFunctionalComponentID)
-    );
     // if factory was non functional before path was destroyed, nothing to change
-    if (!factoryIsFunctionalComponent.has(factoryEntity)) return;
+    if (!FactoryIsFunctionalComponent(getAddressById(components, FactoryIsFunctionalComponentID)).has(factoryEntity))
+      return;
 
     // when path from factory to main base is destroyed, factory becomes non functional
     // and the resource production must be modified
@@ -143,7 +141,6 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
       playerResourceEntity,
       mineComponent.getValue(playerResourceEntity) - factoryProductionData.ResourceProductionRate
     );
-    factoryIsFunctionalComponent.remove(factoryEntity);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {

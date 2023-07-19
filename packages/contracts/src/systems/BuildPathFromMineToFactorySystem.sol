@@ -71,23 +71,6 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     return isMineConnected;
   }
 
-  function updateResourceProductionOnBuildPathFromMine(uint256 playerEntity, uint256 fromEntity) internal {
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(fromEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
-      buildingId,
-      BuildingLevelComponent(getC(BuildingLevelComponentID)).getValue(fromEntity)
-    );
-    MineComponent mineComponent = MineComponent(getC(MineComponentID));
-    uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromEntity));
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    require(mineComponent.has(buildingLevelEntity), "Mine level entity not found");
-    LibResourceProduction.updateResourceProduction(
-      world,
-      playerResourceEntity,
-      LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + mineComponent.getValue(buildingLevelEntity)
-    );
-  }
-
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), BuildPathSystemID),
@@ -114,10 +97,21 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
       canBuildPath(fromBuildingEntity, toBuildingEntity),
       "[BuildPathSystem] Cannot build path to a the target factory"
     );
-    if (FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(toBuildingEntity)) {
+    if (
+      FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(toBuildingEntity) &&
+      PathComponent(getC(PathComponentID)).has(toBuildingEntity)
+    ) {
+      uint256 playerEntity = addressToEntity(playerAddress);
+
+      FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
+        getC(FactoryProductionComponentID)
+      ).getValue(factoryBuildingLevelEntity);
+
+      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
+
       LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
         world,
-        addressToEntity(playerAddress),
+        playerEntity,
         factoryBuildingLevelEntity,
         true
       );
