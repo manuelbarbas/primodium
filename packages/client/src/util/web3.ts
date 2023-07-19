@@ -6,6 +6,7 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
+import { BlockType } from "./constants";
 
 // Component overrides
 export const addTileOverride = (
@@ -70,7 +71,7 @@ export const buildBuilding = async (
     console.log("building ", pos);
     await execute(
       systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
-        gasLimit: 3_500_000,
+        gasLimit: 5_000_000,
       }),
       providers,
       setNotification

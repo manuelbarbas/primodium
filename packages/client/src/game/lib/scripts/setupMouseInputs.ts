@@ -149,14 +149,10 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
     pan(gameCoord);
   });
 
-<<<<<<< HEAD
-  return [pointerMoveSub, doubleClickSub];
-=======
   world.registerDisposer(() => {
     pointerMoveSub.unsubscribe();
     doubleClickSub.unsubscribe();
   });
->>>>>>> origin/0xhank/drag-fix
 };
 
 export default setupMouseInputs;
