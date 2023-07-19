@@ -14,16 +14,16 @@ import {
   withValue,
 } from "@latticexyz/recs";
 
-import { offChainComponents, singletonIndex } from "src/network/world";
 import { Coord } from "@latticexyz/utils";
+import { offChainComponents, singletonIndex } from "src/network/world";
 import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
+import { Action } from "src/util/constants";
 import {
   getBuildingsOfTypeInRange,
   getEntityTileAtCoord,
   getTilesOfTypeInRange,
 } from "src/util/tile";
 import { Network } from "../../network/layer";
-import { Action } from "src/util/constants";
 
 let perlin: Perlin;
 (async () => {
@@ -152,7 +152,7 @@ export const selectedAttack = (network: Network) => {
   };
 
   const setOrigin = (coord: Coord) => {
-    const originEntityBuilding = getEntityTileAtCoord(coord, network);
+    const originEntityBuilding = getEntityTileAtCoord(coord);
 
     //if origin entity is not a weapon storage or empty, reset selection
     if (!originEntityBuilding || !isValidWeaponStorage(originEntityBuilding)) {
@@ -174,7 +174,7 @@ export const selectedAttack = (network: Network) => {
       return;
     }
 
-    const targetEntityBuilding = getEntityTileAtCoord(coord, network);
+    const targetEntityBuilding = getEntityTileAtCoord(coord);
 
     //check if target is valid
     if (!targetEntityBuilding) {
@@ -183,8 +183,7 @@ export const selectedAttack = (network: Network) => {
     }
 
     const originEntityBuilding = getEntityTileAtCoord(
-      selectedAttackTiles.origin,
-      network
+      selectedAttackTiles.origin
     );
 
     if (!originEntityBuilding) {
@@ -265,12 +264,7 @@ export const marker = (network: Network) => {
       perlin
     );
 
-    const buildings = getBuildingsOfTypeInRange(
-      origin,
-      tile,
-      range,
-      components
-    );
+    const buildings = getBuildingsOfTypeInRange(origin, tile, range);
 
     //handle terrain
     for (const tile of tiles) {

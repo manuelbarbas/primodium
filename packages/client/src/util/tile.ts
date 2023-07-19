@@ -6,10 +6,10 @@ import {
   getComponentValue,
   runQuery,
 } from "@latticexyz/recs";
-import { NetworkComponents } from "@latticexyz/std-client";
 import { Coord } from "@latticexyz/utils";
 import { Network } from "src/network/layer";
-import { defineComponents } from "../network/components";
+import { contractComponents } from "src/network/world";
+import components from "../network/components/chainComponents";
 import { BlockType, DisplayKeyPair } from "./constants";
 
 // TODO: randomize perlinSeed
@@ -147,8 +147,7 @@ export function getTilesOfTypeInRange(
 export function getBuildingsOfTypeInRange(
   origin: Coord,
   type: EntityID,
-  range: number,
-  components: NetworkComponents<ReturnType<typeof defineComponents>>
+  range: number
 ) {
   const tiles: Coord[] = [];
 
@@ -176,19 +175,17 @@ export function getBuildingsOfTypeInRange(
   return tiles;
 }
 
-export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
-  const { components } = network;
-
+export const getEntityTileAtCoord = (coord: Coord) => {
   const entities = runQuery([
-    HasValue(components.Position, coord),
-    Has(components.BuildingType),
+    HasValue(contractComponents.Position, coord),
+    Has(contractComponents.BuildingType),
   ]);
 
   if (!entities.size) return undefined;
 
   const tileEntityID = entities.values().next().value;
 
-  return getComponentValue(components.BuildingType, tileEntityID)
+  return getComponentValue(contractComponents.BuildingType, tileEntityID)
     ?.value as EntityID;
 };
 
