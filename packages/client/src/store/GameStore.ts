@@ -9,6 +9,7 @@ type UpdateFunction = <T>(ctx?: T) => void;
 type GameState = {
   selectedTile: Coord;
   hoveredTile: Coord;
+  crtEffect: boolean;
   selectedPathTiles: { start: Coord | null; end: Coord | null };
   selectedAttackTiles: { start: Coord | null; end: Coord | null };
   selectedBlock: EntityID | null;
@@ -40,6 +41,7 @@ type GameActions = {
   addUpdateFunction: (updateFunction: UpdateFunction) => void;
   removeUpdateFunction: (updateFunction: UpdateFunction) => void;
   toggleShowUI: () => void;
+  setCrtEffect: (crtEffect: boolean) => void;
 };
 
 const defaults: GameState = {
@@ -55,6 +57,7 @@ const defaults: GameState = {
   transactionLoading: false,
   showUI: true,
   updateFunctions: [],
+  crtEffect: false,
 };
 
 export const useGameStore = create<GameState & GameActions>()((set) => ({
@@ -102,6 +105,7 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
       ),
     })),
   toggleShowUI: () => set((state) => ({ showUI: !state.showUI })),
+  setCrtEffect: (crtEffect: boolean) => set({ crtEffect }),
 }));
 
 // store dev tools

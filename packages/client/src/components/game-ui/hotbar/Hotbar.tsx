@@ -6,12 +6,15 @@ import { useMud } from "src/context/MudContext";
 import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
 import HotbarPagination from "./HotbarPagination";
-import hotbarContent from "./hotbarContent";
+import { useHotbarContent } from "./useHotbarContent";
 import wrap from "./wrap";
 import { Action } from "src/util/constants";
+import { useGameStore } from "src/store/GameStore";
 
 const Hotbar: React.FC = () => {
+  const hotbarContent = useHotbarContent();
   const network = useMud();
+  const crtEffect = useGameStore((state) => state.crtEffect);
   const gameReady = primodium.hooks.useGameReady();
   const keybinds = primodium.hooks.useKeybinds();
   const [activeBar, setActiveBar] = useState(0);
@@ -76,21 +79,26 @@ const Hotbar: React.FC = () => {
       nextHotbar.dispose();
       prevHotbar.dispose();
     };
-  }, [gameReady, keybinds]);
+  }, [gameReady, keybinds, hotbarContent]);
 
   return (
     <div className=" z-[1000] viewport-container fixed bottom-0 left-1/2 -translate-x-1/2 flex justify-center text-white drop-shadow-xl font-mono select-none">
       <div
-        style={{
-          filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
-          transform: "perspective(500px) rotateX(-10deg)",
-        }}
+        style={
+          crtEffect
+            ? {
+                filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
+                transform: "perspective(500px) rotateX(-10deg)",
+                backfaceVisibility: "hidden",
+              }
+            : {}
+        }
       >
         <motion.div
           initial={{ opacity: 0, scale: 0, y: 200 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0, y: 200 }}
-          className="flex flex-col items-center"
+          className="flex flex-col items-center relative mb-8"
         >
           <HotbarLabel
             icon={hotbarContent[activeBar].icon}
@@ -100,13 +108,17 @@ const Hotbar: React.FC = () => {
             activeBar={activeBarRef.current}
             setActiveBar={setActiveBar}
           />
-          <HotbarPagination
-            index={activeBar}
-            className="mt-2"
-            onClick={() =>
-              setActiveBar(wrap(activeBarRef.current + 1, hotbarContent.length))
-            }
-          />
+          {hotbarContent.length > 1 && (
+            <HotbarPagination
+              index={activeBar}
+              className="absolute -bottom-36 left-1/2 -translate-x-1/2"
+              onClick={() =>
+                setActiveBar(
+                  wrap(activeBarRef.current + 1, hotbarContent.length)
+                )
+              }
+            />
+          )}
         </motion.div>
       </div>
     </div>

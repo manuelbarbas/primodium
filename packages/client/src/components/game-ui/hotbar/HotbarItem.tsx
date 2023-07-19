@@ -1,16 +1,11 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import {
-  EntityID,
-  getComponentValue,
-  removeComponent,
-  setComponent,
-} from "@latticexyz/recs";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import React from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
-import { singletonIndex, world } from "src/network/world";
+import { world } from "src/network/world";
 import { calcDims, convertToCoords } from "src/util/building";
 import {
   Action,

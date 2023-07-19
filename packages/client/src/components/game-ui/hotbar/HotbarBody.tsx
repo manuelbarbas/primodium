@@ -4,13 +4,14 @@ import { Key } from "@latticexyz/phaserx";
 import { motion } from "framer-motion";
 import { Action, KeyImages } from "src/util/constants";
 import HotbarItem from "./HotbarItem";
-import hotbarContent from "./hotbarContent";
 import wrap from "./wrap";
+import { useHotbarContent } from "./useHotbarContent";
 
 const HotbarBody: React.FC<{
   activeBar: number;
   setActiveBar: (activeBar: number) => void;
 }> = ({ activeBar, setActiveBar }) => {
+  const hotbarContent = useHotbarContent();
   const keybinds = primodium.hooks.useKeybinds();
   const prevKey = keybinds[KeybindActions.PrevHotbar]?.entries().next()
     .value[0] as Key;
@@ -21,7 +22,7 @@ const HotbarBody: React.FC<{
   const nextKeyImage = KeyImages.get(nextKey);
   return (
     <motion.div className="flex items-center space-x-2">
-      {prevKeyImage && (
+      {prevKeyImage && hotbarContent.length > 1 && (
         <div
           className="relative cursor-pointer crt scale-x-[-1] "
           onClick={() =>
@@ -52,7 +53,7 @@ const HotbarBody: React.FC<{
           );
         })}
       </div>
-      {nextKeyImage && (
+      {nextKeyImage && hotbarContent.length > 1 && (
         <div
           className="relative cursor-pointer crt"
           onClick={() =>

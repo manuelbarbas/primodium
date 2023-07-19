@@ -1,11 +1,13 @@
 import React from "react";
-import hotbarContent from "./hotbarContent";
+import { useHotbarContent } from "./useHotbarContent";
 
 const HotbarPagination: React.FC<{
   index: number;
   className?: string;
   onClick?: () => void;
 }> = ({ index, className, onClick }) => {
+  const hotbarContent = useHotbarContent();
+
   return (
     <div
       className={`flex h-full space-x-2 hover:bg-gray-900/50 transition-all cursor-pointer p-2 ${className}`}

@@ -3,6 +3,7 @@ import { useComponentValue } from "./useComponentValue";
 import { useMud } from "src/context/MudContext";
 import { useAccount } from "./useAccount";
 import { decodeCoordEntity } from "src/util/encode";
+import { useMemo } from "react";
 
 export const useMainBase = () => {
   const { world, singletonIndex, components } = useMud();
@@ -20,9 +21,9 @@ export const useMainBase = () => {
     resourceKey
   );
 
-  if (!mainBaseCoord) return;
-
-  const coord = decodeCoordEntity(mainBaseCoord.value);
+  const coord = useMemo(() => {
+    return mainBaseCoord ? decodeCoordEntity(mainBaseCoord.value) : undefined;
+  }, [mainBaseCoord?.value]);
 
   return coord;
 };

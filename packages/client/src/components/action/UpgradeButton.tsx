@@ -15,6 +15,7 @@ import { ResourceImage } from "../../util/constants";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
+
 export default function UpgradeButton({
   id,
   coords,

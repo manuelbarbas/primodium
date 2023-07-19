@@ -7,9 +7,11 @@ import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
 import { encodeCoordEntityAndTrim } from "src/util/encode";
 import { useMainBase } from "src/hooks/useMainBase";
+import { useGameStore } from "src/store/GameStore";
 
 export const InfoBox = () => {
   const { components, world, singletonIndex } = useMud();
+  const crtEffect = useGameStore((state) => state.crtEffect);
   const { address } = useAccount();
   const [minimized] = useState<boolean>(false);
   const mainBaseCoord = useMainBase();
@@ -50,7 +52,7 @@ export const InfoBox = () => {
         animate={{ opacity: 1, scale: 1, x: 0 }}
         exit={{ opacity: 0, scale: 0, x: -200 }}
       >
-        <div className="-skew-1-x -skew-y-1">
+        <div className={`${crtEffect ? "skew-x-1 skew-y-1" : ""}`}>
           {!minimized && (
             <motion.div
               initial={{ scaleY: 0 }}

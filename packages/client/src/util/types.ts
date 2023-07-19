@@ -1,6 +1,9 @@
+import { KeybindActions } from "@game/constants";
+import { EntityID } from "@latticexyz/recs";
 import { SetupContractConfig } from "@latticexyz/std-client";
 import { Address } from "wagmi";
 import { Step } from "walktour";
+import { Action } from "./constants";
 
 export type NetworkConfig = SetupContractConfig & {
   defaultWalletAddress?: Address;
@@ -18,3 +21,15 @@ export interface TourStep extends Step {
   narration?: JSX.Element;
   hideUI?: boolean;
 }
+
+export type HotbarItem = {
+  blockType: EntityID;
+  keybind: KeybindActions;
+  action?: Action;
+};
+
+export type Hotbar = {
+  name: string;
+  icon: string;
+  items: HotbarItem[];
+};

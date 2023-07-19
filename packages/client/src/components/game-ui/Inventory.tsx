@@ -7,9 +7,10 @@ import useResourceCount from "src/hooks/useResourceCount";
 import { useMainBase } from "src/hooks/useMainBase";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
+import { useGameStore } from "src/store/GameStore";
 
 export const Inventory = () => {
-  // const { components, world } = useMud();
+  const crtEffect = useGameStore((state) => state.crtEffect);
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
   const mainBaseCoord = useMainBase();
@@ -24,7 +25,7 @@ export const Inventory = () => {
         animate={{ opacity: 1, scale: 1, x: 0 }}
         exit={{ opacity: 0, scale: 0, x: 200 }}
       >
-        <div className="skew-x-1 skew-y-1">
+        <div className={`${crtEffect ? "skew-x-1 skew-y-1" : ""}`}>
           <motion.div layout="position" className="flex justify-center">
             <Inventory.Button
               name="Inventory"
@@ -281,7 +282,7 @@ Inventory.ResourceLabel = ({
             <img className="w-4 h-4 " src={resourceIcon}></img>
             <p>{name}</p>
           </div>
-          <p>{production}/B</p>
+          <p>{production}/BLOCK</p>
         </div>
         <div
           className={`flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt ${

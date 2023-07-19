@@ -2,8 +2,10 @@ import { primodium } from "@game/api";
 import { motion } from "framer-motion";
 import BuildingInfo from "./BuildingInfo";
 import TerrainInfo from "./TerrainInfo";
+import { useGameStore } from "src/store/GameStore";
 
 export const TileInfo: React.FC = () => {
+  const crtEffect = useGameStore((state) => state.crtEffect);
   const selectedTile = primodium.hooks.useSelectedTile();
   const selectedBuilding = primodium.hooks.useSelectedBuilding();
 
@@ -12,10 +14,14 @@ export const TileInfo: React.FC = () => {
       {(selectedTile || selectedBuilding) && (
         <div className=" z-[1000] viewport-container fixed top-2 right-1/2 translate-x-1/2 text-white drop-shadow-xl font-mono select-none">
           <div
-            style={{
-              transform: "perspective(500px) rotateX(10deg)",
-              filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
-            }}
+            style={
+              crtEffect
+                ? {
+                    transform: "perspective(500px) rotateX(10deg)",
+                    filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
+                  }
+                : {}
+            }
           >
             <motion.div
               className="flex flex-col items-center space-y-2"
