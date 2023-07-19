@@ -11,7 +11,6 @@ import {
   Action,
   BackgroundImage,
   BlockIdToKey,
-  BlockType,
   KeyImages,
 } from "src/util/constants";
 
@@ -22,9 +21,7 @@ const HotbarItem: React.FC<{
 }> = ({ blockType, keybind }) => {
   const network = useMud();
   const selectedBuilding = primodium.hooks.useSelectedBuilding();
-  // const selectedBuilding = !!selectedBuildingEntity
-  //   ? world.entities[selectedBuildingEntity]
-  //   : undefined;
+
   const keybinds = primodium.hooks.useKeybinds();
 
   const key = keybinds[keybind]?.entries().next().value[0] as Key;
