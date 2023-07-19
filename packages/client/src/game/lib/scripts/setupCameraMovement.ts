@@ -3,13 +3,18 @@ import { Scene } from "src/engine/types";
 import { pan } from "src/game/api/camera";
 import { isDown } from "src/game/api/input";
 import { Network } from "src/network/layer";
+import { world } from "src/network/world";
 import { Address } from "wagmi";
 import * as components from "../../api/components";
 const SPEED = 750;
 const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;
 
-const setupCamera = (scene: Scene, network: Network, address: Address) => {
+const setupCameraMovement = (
+  scene: Scene,
+  network: Network,
+  address: Address
+) => {
   const { maxZoom, minZoom } = scene.config.camera;
 
   //accumalate sub-pixel movement during a gametick and add to next game tick.
@@ -108,6 +113,10 @@ const setupCamera = (scene: Scene, network: Network, address: Address) => {
   };
 
   scene.scriptManager.add(handleCameraMovement);
+
+  world.registerDisposer(() => {
+    scene.scriptManager.remove(handleCameraMovement);
+  });
 };
 
-export default setupCamera;
+export default setupCameraMovement;

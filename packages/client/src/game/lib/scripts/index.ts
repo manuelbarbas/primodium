@@ -7,7 +7,7 @@ import mainSceneConfig from "../../config/mainSceneConfig";
 import { Scenes } from "../../constants";
 import { runSystems } from "../systems";
 import { createChunkManager } from "./managers/chunkManager";
-import setupCamera from "./setupCamera";
+import setupCameraMovement from "./setupCameraMovement";
 import setupMouseInputs from "./setupMouseInputs";
 
 export const init = async (address: Address, network: Network) => {
@@ -26,14 +26,12 @@ export const init = async (address: Address, network: Network) => {
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  const mouseSubs = setupMouseInputs(scene, network, address);
-  setupCamera(scene, network, address);
+  setupMouseInputs(scene, network, address);
+  setupCameraMovement(scene, network, address);
 
   runSystems(scene, network);
 
   world.registerDisposer(() => {
-    mouseSubs.forEach((sub) => sub.unsubscribe());
-    scene.input.phaserInput.removeListener("wheel");
     chunkManager.dispose();
     game.dispose();
   });
