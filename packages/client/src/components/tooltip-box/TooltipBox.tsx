@@ -6,6 +6,7 @@ import { primodium } from "@game/api";
 
 import SelectedBuilding from "./SelectedBuilding";
 import SelectedTile from "./SelectedTile";
+import { world } from "src/network/world";
 
 function TooltipBox() {
   const [minimized, setMinimize] = useState(true);
@@ -36,7 +37,10 @@ function TooltipBox() {
           <SelectedTile tile={selectedTile} minimized={minimized} />
         )}
         {selectedBuilding && (
-          <SelectedBuilding building={selectedBuilding} minimized={minimized} />
+          <SelectedBuilding
+            building={world.entityToIndex.get(selectedBuilding)!}
+            minimized={minimized}
+          />
         )}
       </div>
     </div>

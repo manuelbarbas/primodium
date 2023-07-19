@@ -1,5 +1,5 @@
 import { useComponentValue } from "@latticexyz/react";
-import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import React from "react";
 
 import { useMud } from "src/context/MudContext";
@@ -8,17 +8,21 @@ import { getBuildingMaxHealth } from "src/util/health";
 import { useAccount } from "wagmi";
 import Header from "./Header";
 import { GameButton } from "src/components/shared/GameButton";
+import UpgradeButton from "src/components/action/UpgradeButton";
+import { world } from "src/network/world";
+import { decodeCoordEntity } from "src/util/encode";
 
 const BuildingInfo: React.FC<{
-  building: EntityIndex;
+  building: EntityID;
 }> = ({ building }) => {
   const { components } = useMud();
   const { address } = useAccount();
-  const buildingType = useComponentValue(components.BuildingType, building)
+  const buildingIndex = world.entityToIndex.get(building)!;
+  const buildingType = useComponentValue(components.BuildingType, buildingIndex)
     ?.value as EntityID | undefined;
-  const health = useComponentValue(components.Health, building)?.value;
+  const health = useComponentValue(components.Health, buildingIndex)?.value;
 
-  const owner = useComponentValue(components.OwnedBy, building)?.value as
+  const owner = useComponentValue(components.OwnedBy, buildingIndex)?.value as
     | EntityID
     | undefined;
   if (!buildingType || !owner) return null;
@@ -27,6 +31,8 @@ const BuildingInfo: React.FC<{
   const percentHealth =
     (health ?? getBuildingMaxHealth(buildingType)) /
     getBuildingMaxHealth(buildingType);
+
+  const coord = decodeCoordEntity(building);
 
   return (
     <>
@@ -56,11 +62,17 @@ const BuildingInfo: React.FC<{
           </p>
         </div>
         <div className="relative">
-          <GameButton className="w-44 mt-2 bg-green-500">
+          <UpgradeButton
+            id="upgrade"
+            builtTile={buildingType}
+            buildingEntity={building}
+            coords={coord}
+          />
+          {/* <GameButton className="w-44 mt-2 bg-green-500">
             <div className="font-bold leading-none h-8 flex justify-center items-center crt">
               Upgrade
             </div>
-          </GameButton>
+          </GameButton> */}
         </div>
       </div>
     </>

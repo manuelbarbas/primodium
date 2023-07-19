@@ -3,6 +3,7 @@ import { KeybindActions } from "@game/constants";
 import { useEffect } from "react";
 import { useGameStore } from "../../store/GameStore";
 import { InfoBox } from "./InfoBox";
+import TooltipBox from "../tooltip-box/TooltipBox";
 import NotificationBox from "../NotificationBox";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -49,7 +50,7 @@ function GameUI() {
                 <InfoBox />
                 <NotificationBox />
                 {/* <ResourceBox /> */}
-                {/* <TooltipBox /> */}
+                <TooltipBox />
                 {/* <SideMenu1 /> */}
                 <Inventory />
               </motion.div>

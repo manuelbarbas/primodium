@@ -2,7 +2,6 @@ import { primodium } from "@game/api";
 import { motion } from "framer-motion";
 import BuildingInfo from "./BuildingInfo";
 import TerrainInfo from "./TerrainInfo";
-import { world } from "src/network/world";
 
 export const TileInfo: React.FC = () => {
   const selectedTile = primodium.hooks.useSelectedTile();
@@ -24,11 +23,7 @@ export const TileInfo: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0, y: -200 }}
             >
-              {selectedBuilding && (
-                <BuildingInfo
-                  building={world.entityToIndex.get(selectedBuilding)!}
-                />
-              )}
+              {selectedBuilding && <BuildingInfo building={selectedBuilding} />}
               {!selectedBuilding && selectedTile && (
                 <TerrainInfo coord={selectedTile} />
               )}
