@@ -7,12 +7,11 @@ import { BackgroundImage, BlockIdToKey } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
 import { useAccount } from "wagmi";
 import Header from "./Header";
-import { GameButton } from "src/components/shared/GameButton";
 import UpgradeButton from "src/components/action/UpgradeButton";
 import { world } from "src/network/world";
 import { decodeCoordEntity } from "src/util/encode";
 
-const BuildingInfo: React.FC<{
+export const BuildingInfo: React.FC<{
   building: EntityID;
 }> = ({ building }) => {
   const { components } = useMud();
@@ -25,9 +24,13 @@ const BuildingInfo: React.FC<{
   const owner = useComponentValue(components.OwnedBy, buildingIndex)?.value as
     | EntityID
     | undefined;
+
   if (!buildingType || !owner) return null;
+
   const ownerName =
-    owner == address ? "you" : owner.toString().slice(0, 8) + "...";
+    owner.toString() == address
+      ? "You"
+      : owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4);
   const percentHealth =
     (health ?? getBuildingMaxHealth(buildingType)) /
     getBuildingMaxHealth(buildingType);
@@ -68,15 +71,8 @@ const BuildingInfo: React.FC<{
             buildingEntity={building}
             coords={coord}
           />
-          {/* <GameButton className="w-44 mt-2 bg-green-500">
-            <div className="font-bold leading-none h-8 flex justify-center items-center crt">
-              Upgrade
-            </div>
-          </GameButton> */}
         </div>
       </div>
     </>
   );
 };
-
-export default BuildingInfo;

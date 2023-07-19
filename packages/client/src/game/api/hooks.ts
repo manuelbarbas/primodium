@@ -26,7 +26,7 @@ export const useSelectedTile = () => {
 };
 
 export const useHoverTile = () => {
-  return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
+  return useComponentValue(offChainComponents.HoverTile, singletonIndex);
 };
 
 export const useSelectedBuilding = () => {
@@ -65,6 +65,10 @@ export const useSelectedAttack = (network: Network) => {
       | Coord
       | undefined,
   };
+};
+
+export const useSelectedAction = () => {
+  return useComponentValue(offChainComponents.SelectedAction, singletonIndex);
 };
 
 export const useKeybinds = () => {

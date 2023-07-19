@@ -4,7 +4,7 @@ import { BackgroundImage, BlockIdToKey } from "src/util/constants";
 import { getTopLayerKeyPair } from "src/util/tile";
 import Header from "./Header";
 
-const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
+export const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
   const { perlin } = useMud();
   const terrainPair = getTopLayerKeyPair(coord, perlin);
 
@@ -34,5 +34,3 @@ const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
     </>
   );
 };
-
-export default TerrainInfo;

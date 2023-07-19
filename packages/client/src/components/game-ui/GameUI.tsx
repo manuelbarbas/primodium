@@ -10,6 +10,7 @@ import { Camera } from "./Camera";
 import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
+// import SideMenu from "../SideMenu";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -18,7 +19,6 @@ function GameUI() {
   ]);
 
   const gameReady = primodium.hooks.useGameReady();
-
   useEffect(() => {
     if (!gameReady) return;
 
@@ -49,7 +49,7 @@ function GameUI() {
                 {/* <NotificationBox /> */}
                 {/* <ResourceBox /> */}
                 {/* <TooltipBox /> */}
-                {/* <SideMenu1 /> */}
+                {/* <SideMenu /> */}
                 <Inventory />
               </motion.div>
             )}

@@ -1,17 +1,19 @@
 import { primodium } from "@game/api";
 import { motion } from "framer-motion";
-import BuildingInfo from "./BuildingInfo";
-import TerrainInfo from "./TerrainInfo";
+import { BuildingInfo } from "./BuildingInfo";
+import { TerrainInfo } from "./TerrainInfo";
 import { useGameStore } from "src/store/GameStore";
+import { BlueprintInfo } from "./BlueprintInfo";
 
 export const TileInfo: React.FC = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const selectedTile = primodium.hooks.useSelectedTile();
   const selectedBuilding = primodium.hooks.useSelectedBuilding();
+  const selectedAction = primodium.hooks.useSelectedAction();
 
   return (
     <div>
-      {(selectedTile || selectedBuilding) && (
+      {
         <div className=" z-[1000] viewport-container fixed top-2 right-1/2 translate-x-1/2 text-white drop-shadow-xl font-mono select-none">
           <div
             style={
@@ -29,14 +31,21 @@ export const TileInfo: React.FC = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0, y: -200 }}
             >
-              {selectedBuilding && <BuildingInfo building={selectedBuilding} />}
+              {selectedBuilding && !selectedAction && (
+                <BuildingInfo building={selectedBuilding} />
+              )}
+
+              {selectedBuilding && selectedAction && (
+                <BlueprintInfo buildingType={selectedBuilding} />
+              )}
+
               {!selectedBuilding && selectedTile && (
                 <TerrainInfo coord={selectedTile} />
               )}
             </motion.div>
           </div>
         </div>
-      )}
+      }
     </div>
   );
 };

@@ -57,7 +57,7 @@ export const Camera = () => {
       >
         <p className="flex items-center gap-2">
           <FaCircle className="animate-pulse" />
-          {`${blockNumber} BLOCK`}
+          {` BLOCK ${blockNumber}`}
         </p>
         {address && (
           <p className="flex items-center gap-2">

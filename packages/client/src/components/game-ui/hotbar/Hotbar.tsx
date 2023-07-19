@@ -98,7 +98,7 @@ const Hotbar: React.FC = () => {
           initial={{ opacity: 0, scale: 0, y: 200 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0, y: 200 }}
-          className="flex flex-col items-center relative mb-8"
+          className="flex flex-col items-center relative mb-10"
         >
           <HotbarLabel
             icon={hotbarContent[activeBar].icon}
@@ -111,7 +111,7 @@ const Hotbar: React.FC = () => {
           {hotbarContent.length > 1 && (
             <HotbarPagination
               index={activeBar}
-              className="absolute -bottom-36 left-1/2 -translate-x-1/2"
+              className="absolute -bottom-40 left-1/2 -translate-x-1/2"
               onClick={() =>
                 setActiveBar(
                   wrap(activeBarRef.current + 1, hotbarContent.length)
