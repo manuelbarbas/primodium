@@ -66,7 +66,7 @@ library LibBuildingDesignInitializer {
 
     //IronMineID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 3);
-    mineComponent.set(buildingIdLevel, 4);
+    mineComponent.set(buildingIdLevel, 10);
     requiredResearch.set(buildingIdLevel, IronMine3ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -74,6 +74,19 @@ library LibBuildingDesignInitializer {
       IronMineID,
       CopperResourceItemID,
       1500,
+      3
+    );
+    buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 4);
+    mineComponent.set(buildingIdLevel, 13);
+    requiredResearch.set(buildingIdLevel, IronMine4ResearchID);
+    LibSetRequiredResourcesUpgrade.set2RequiredResourcesForEntityUpgradeToLevel(
+      requiredResources,
+      itemComponent,
+      IronMineID,
+      CopperResourceItemID,
+      2500,
+      IronPlateCraftedItemID,
+      500,
       3
     );
   }
@@ -251,11 +264,11 @@ library LibBuildingDesignInitializer {
       storageCapacityComponent,
       buildingIdLevel,
       IronResourceItemID,
-      2000,
+      3000,
       CopperResourceItemID,
-      2000,
+      3000,
       IronPlateCraftedItemID,
-      1000,
+      2000,
       LithiumResourceItemID,
       1000
     );
@@ -662,7 +675,7 @@ library LibBuildingDesignInitializer {
       storageCapacityComponent,
       buildingIdLevel,
       IronResourceItemID,
-      600
+      1000
     );
 
     //MainBaseID Level 2
@@ -681,9 +694,9 @@ library LibBuildingDesignInitializer {
       storageCapacityComponent,
       buildingIdLevel,
       IronResourceItemID,
-      1000,
+      1500,
       CopperResourceItemID,
-      1000
+      1500
     );
 
     //MainBaseID Level 3
@@ -703,9 +716,9 @@ library LibBuildingDesignInitializer {
       storageCapacityComponent,
       buildingIdLevel,
       IronResourceItemID,
-      2000,
+      2500,
       CopperResourceItemID,
-      2000,
+      2500,
       IronPlateCraftedItemID,
       1000
     );
@@ -725,11 +738,11 @@ library LibBuildingDesignInitializer {
       storageCapacityComponent,
       buildingIdLevel,
       IronResourceItemID,
-      3000,
+      4000,
       CopperResourceItemID,
-      3000,
+      4000,
       IronPlateCraftedItemID,
-      1500,
+      2500,
       LithiumResourceItemID,
       1500
     );
@@ -746,6 +759,43 @@ library LibBuildingDesignInitializer {
       800
     );
     //storage increase
+    LibSetRequiredResources.set4RequiredResourcesForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      buildingIdLevel,
+      LithiumCopperOxideCraftedItemID,
+      2000,
+      AlloyCraftedItemID,
+      2000,
+      IronPlateCraftedItemID,
+      4000,
+      LithiumResourceItemID,
+      4000
+    );
+
+    //MainBaseID Level 6
+    buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 6);
+    LibSetRequiredResources.set1RequiredResourceForEntity(
+      requiredResources,
+      itemComponent,
+      buildingIdLevel,
+      AlloyCraftedItemID,
+      1000
+    );
+    //storage increase
+    LibSetRequiredResources.set4RequiredResourcesForEntity(
+      storageCapacityResourcesComponent,
+      storageCapacityComponent,
+      buildingIdLevel,
+      LithiumCopperOxideCraftedItemID,
+      2000,
+      AlloyCraftedItemID,
+      2000,
+      IronPlateCraftedItemID,
+      4000,
+      LithiumResourceItemID,
+      4000
+    );
   }
 
   function init(IWorld world) internal {

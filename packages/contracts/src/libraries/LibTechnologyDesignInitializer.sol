@@ -62,7 +62,7 @@ library LibTechnologyDesignInitializer {
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
-      IronPlateCraftedItemID,
+      CopperMine3ResearchID,
       IronResourceItemID,
       4000
     );
@@ -183,8 +183,8 @@ library LibTechnologyDesignInitializer {
       requiredResources,
       itemComponent,
       LithiumMine2ResearchID,
-      IronPlateCraftedItemID,
-      2000,
+      IronResourceItemID,
+      4000,
       CopperResourceItemID,
       4000
     );
@@ -197,7 +197,7 @@ library LibTechnologyDesignInitializer {
       itemComponent,
       LithiumMine3ResearchID,
       IronPlateCraftedItemID,
-      3000,
+      1500,
       CopperResourceItemID,
       8000
     );
