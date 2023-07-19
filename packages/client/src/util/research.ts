@@ -138,6 +138,15 @@ export const ResearchTechnologyTree = [
   },
   {
     data: {
+      name: "IronPlate Factory 4",
+      id: BlockType.IronPlateFactory4Research,
+      description:
+        "allows you to upgrade IronPlate Factory building to level 4 increasing production",
+      resources: [],
+    },
+  },
+  {
+    data: {
       name: "Lithium Mine",
       id: BlockType.LithiumMineResearch,
       description:
