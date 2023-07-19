@@ -50,7 +50,7 @@ To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`. For
 
 # Blueprints
 
-Each building has a blueprint which determines its size and shape when an instance of that building is created. In order to add a building to the world, you must initialize its blueprint as an array of coordinates (relative to the origin) in the `LibBlueprintInitializer` library. 
+Each building has a blueprint which determines its size and shape when an instance of that building is created. In order to add a building to the world, you must initialize its blueprint as an array of coordinates (relative to the origin) in the `LibBlueprintInitializer` library.
 
 When a building is created, its tiles are determined based on the prototype's blueprint. A building cannot be placed if its tile overlaps another building's tile.
 
@@ -134,6 +134,22 @@ When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent
   ItemComponent
   ResearchComponent
 ```
+
+`Passive Resources`
+
+- Passive resources are resources which are not produced but act as capacity to allow buildings which require them to be built. Example:
+- Solar Panel increases Electricity Capacity by 4 value
+- Alloy Factory requires and occupies 2 Electricity
+
+`RequiredPassiveResourceComponent`: for `LibHash(BuildingType, Level)` indicates what passive resources it requires and how much.
+`PassiveResourceProductionComponent`: for `LibHash(BuildingType, Level)` indicates what passive resource and how much of it the building produces.
+
+- The total amount of `PassiveResourceCapacity` the player has is stored in the `StorageCapacityComponent` for `LibHash(ResourceID, PlayerEntity)`
+- The total amount of used up `PassiveResourceCapacity` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
+
+- Passive resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.
+- The player not build a building that requires passive resources if they the total occuppied capacity for that resource will excceed the current capacity after build is complete.
+- The Player can not destroy a `BuildingType` that has `PassiveResourceProductionComponent` if the total capacity of that resource will be less than the total occuped capacity of that resource.
 
 # Building Positions
 
