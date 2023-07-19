@@ -10,9 +10,7 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
 
 import { LibResearch } from "libraries/LibResearch.sol";
 import { LibResourceCost } from "libraries/LibResourceCost.sol";
@@ -39,12 +37,7 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
 
     require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
@@ -59,12 +52,7 @@ contract ResearchSystem is System {
     );
 
     require(
-      LibResourceCost.checkAndSpendRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        researchItem,
-        addressToEntity(msg.sender)
-      ),
+      LibResourceCost.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Not enough resources to research"
     );
     researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));

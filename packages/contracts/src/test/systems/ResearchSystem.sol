@@ -26,7 +26,6 @@ import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
 import { MainBaseID, IronID, CopperID, LithiumID } from "../../prototypes/Tiles.sol";
-import { FastMinerResearchID, LithiumResearchID } from "../../prototypes/Keys.sol";
 
 import { DebugSimpleBuildingWithUpgradeResearchReqsID, DebugSimpleBuildingResearchReqsID, DebugSimpleTechnologyNoReqsID, DebugSimpleTechnologyResourceReqsID, DebugSimpleTechnologyResearchReqsID, DebugSimpleTechnologyMainBaseLevelReqsID } from "../../libraries/LibDebugInitializer.sol";
 

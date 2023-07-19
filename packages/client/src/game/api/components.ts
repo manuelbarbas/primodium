@@ -306,3 +306,24 @@ export const marker = (network: Network) => {
     removeAll,
   };
 };
+
+export const mainBase = (network: Network) => {
+  const { singletonIndex, components, world } = network;
+
+  return {
+    get: (address: string) => {
+      // resourceKey of the entity
+      const resourceKey = address
+        ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
+        : singletonIndex;
+
+      // fetch the main base of the user based on address
+      const mainBaseCoord = getComponentValue(
+        components.MainBaseInitialized,
+        resourceKey
+      );
+
+      return mainBaseCoord;
+    },
+  };
+};

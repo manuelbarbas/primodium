@@ -8,7 +8,7 @@ import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 // Items
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
+import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID } from "../prototypes/Keys.sol";
 
 uint256 constant ID = uint256(keccak256("system.DebugAcquireStorageForAllResources"));
 
@@ -16,7 +16,7 @@ contract DebugAcquireStorageForAllResourcesSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory args) public returns (bytes memory) {
-    uint256[25] memory allResourceIds = [
+    uint256[11] memory allResourceIds = [
       BolutiteResourceItemID,
       CopperResourceItemID,
       IridiumResourceItemID,
@@ -27,21 +27,7 @@ contract DebugAcquireStorageForAllResourcesSystem is System {
       TitaniumResourceItemID,
       TungstenResourceItemID,
       UraniniteResourceItemID,
-      IronPlateCraftedItemID,
-      BasicPowerSourceCraftedItemID,
-      KineticMissileCraftedItemID,
-      RefinedOsmiumCraftedItemID,
-      AdvancedPowerSourceCraftedItemID,
-      PenetratingWarheadCraftedItemID,
-      PenetratingMissileCraftedItemID,
-      TungstenRodsCraftedItemID,
-      IridiumCrystalCraftedItemID,
-      IridiumDrillbitCraftedItemID,
-      LaserPowerSourceCraftedItemID,
-      ThermobaricWarheadCraftedItemID,
-      ThermobaricMissileCraftedItemID,
-      KimberliteCrystalCatalystCraftedItemID,
-      BulletCraftedItemID
+      IronPlateCraftedItemID
     ];
 
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(

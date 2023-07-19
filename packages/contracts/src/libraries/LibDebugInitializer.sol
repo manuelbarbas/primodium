@@ -21,6 +21,8 @@ import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "comp
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
+import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
@@ -33,10 +35,9 @@ import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineReq
 import { IronID, CopperID } from "../prototypes/Tiles.sol";
 
 // Items
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
+import { ElectricityPassiveResourceID, BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID } from "../prototypes/Keys.sol";
 
 // Research
-import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBlueprint } from "../libraries/LibBlueprint.sol";
 
@@ -46,6 +47,10 @@ uint256 constant DebugSimpleBuildingResourceReqsID = uint256(keccak256("block.De
 uint256 constant DebugSimpleBuildingResearchReqsID = uint256(keccak256("block.DebugSimpleBuildingResearchReqs"));
 uint256 constant DebugSimpleBuildingBuildLimitReq = uint256(keccak256("block.DebugSimpleBuildingBuildLimitReq"));
 uint256 constant DebugSimpleBuildingTileReqID = uint256(keccak256("block.DebugSimpleBuildingTileReq"));
+
+uint256 constant DebugSimpleBuildingPassiveResourceRequirement = uint256(
+  keccak256("block.DebugSimpleBuildingPassiveResourceRequirement")
+);
 
 uint256 constant DebugSimpleBuildingWithUpgradeResourceReqsID = uint256(
   keccak256("block.DebugSimpleBuildingWithUpgradeResourceReqs")
@@ -63,6 +68,10 @@ uint256 constant DebugIronMineNoTileReqID = uint256(keccak256("block.DebugIronMi
 //factories
 uint256 constant DebugIronPlateFactoryNoMineReqID = uint256(keccak256("block.DebugIronPlateFactoryNoMineReq"));
 uint256 constant DebugIronPlateFactoryID = uint256(keccak256("block.DebugIronPlateFactory"));
+
+uint256 constant DebugPassiveResourceProductionBuilding = uint256(
+  keccak256("block.DebugPassiveResourceProductionBuilding")
+);
 
 //super buildings
 uint256 constant DebugSuperIronMineID = uint256(keccak256("block.DebugSuperIronMine"));
@@ -112,6 +121,9 @@ library LibDebugInitializer {
     LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyResearchReqsID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyMainBaseLevelReqsID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, DebugStorageBuildingID, coords);
+    
+    LibBlueprint.createBlueprint(blueprintComponent, DebugPassiveResourceProductionBuilding, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingPassiveResourceRequirement, coords);
 
     IUint256Component components = world.components();
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
@@ -127,14 +139,7 @@ library LibDebugInitializer {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
     //initialize simple buildings
-    initializeSimpleBuildings(
-      itemComponent,
-      requiredResearch,
-      requiredResourcesComponent,
-      ignoreBuildLimitComponent,
-      tileComponent,
-      maxLevelComponent
-    );
+    initializeSimpleBuildings(world);
 
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
 
@@ -154,14 +159,7 @@ library LibDebugInitializer {
       getAddressById(components, StorageCapacityResourcesComponentID)
     );
     //initialize factories
-    initializeFactories(
-      ignoreBuildLimitComponent,
-      factoryProductionComponent,
-      factoryMineBuildingsComponent,
-      maxLevelComponent,
-      storageCapacityResourcesComponent,
-      storageCapacityComponent
-    );
+    initializeFactories(world);
 
     BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
       getAddressById(components, BuildingComponentID)
@@ -184,14 +182,24 @@ library LibDebugInitializer {
     );
   }
 
-  function initializeSimpleBuildings(
-    ItemComponent itemComponent,
-    RequiredResearchComponent requiredResearch,
-    RequiredResourcesComponent requiredResourcesComponent,
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent,
-    TileComponent tileComponent,
-    MaxLevelComponent maxLevelComponent
-  ) internal {
+  function initializeSimpleBuildings(IWorld world) internal {
+    IUint256Component components = world.components();
+    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
+      getAddressById(components, RequiredResearchComponentID)
+    );
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(components, RequiredResourcesComponentID)
+    );
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      getAddressById(components, IgnoreBuildLimitComponentID)
+    );
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
+
+    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
+      getAddressById(components, RequiredPassiveResourceComponentID)
+    );
     // DebugSimpleBuildingNoReqsID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingNoReqsID);
 
@@ -278,6 +286,16 @@ library LibDebugInitializer {
       DebugSimpleTechnologyNoReqsID,
       2
     );
+
+    //DebugSimpleBuildingPassiveResourceRequirement
+    ignoreBuildLimitComponent.set(DebugSimpleBuildingPassiveResourceRequirement);
+    RequiredPassiveResourceData memory requiredPassiveResourceData = RequiredPassiveResourceData({
+      ResourceIDs: new uint256[](1),
+      RequiredAmounts: new uint256[](1)
+    });
+    requiredPassiveResourceData.ResourceIDs[0] = ElectricityPassiveResourceID;
+    requiredPassiveResourceData.RequiredAmounts[0] = 2;
+    requiredPassiveResourceComponent.set(DebugSimpleBuildingPassiveResourceRequirement, requiredPassiveResourceData);
   }
 
   function initializeMines(
@@ -347,14 +365,30 @@ library LibDebugInitializer {
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 3, 3);
   }
 
-  function initializeFactories(
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent,
-    FactoryProductionComponent factoryProductionComponent,
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
-    MaxLevelComponent maxLevelComponent,
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent
-  ) internal {
+  function initializeFactories(IWorld world) internal {
+    IUint256Component components = world.components();
+
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      getAddressById(components, IgnoreBuildLimitComponentID)
+    );
+
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
+    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+      getAddressById(components, FactoryProductionComponentID)
+    );
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(components, FactoryMineBuildingsComponentID)
+    );
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
+      getAddressById(components, StorageCapacityComponentID)
+    );
+    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
+      getAddressById(components, StorageCapacityResourcesComponentID)
+    );
+
+    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
+      getAddressById(components, PassiveResourceProductionComponentID)
+    );
     //DebugIronPlateFactoryNoMineReqID
     maxLevelComponent.set(DebugIronPlateFactoryNoMineReqID, 3);
     ignoreBuildLimitComponent.set(DebugIronPlateFactoryNoMineReqID);
@@ -446,6 +480,13 @@ library LibDebugInitializer {
       3,
       IronPlateCraftedItemID,
       3
+    );
+
+    //DebugPassiveResourceProductionBuilding
+    ignoreBuildLimitComponent.set(DebugPassiveResourceProductionBuilding);
+    passiveResourceProductionComponent.set(
+      DebugPassiveResourceProductionBuilding,
+      PassiveResourceProductionData(ElectricityPassiveResourceID, 10)
     );
   }
 

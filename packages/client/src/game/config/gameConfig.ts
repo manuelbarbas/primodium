@@ -1,7 +1,7 @@
 const RENDER_RESOLUTION = 1;
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   parent: "phaser-container",
   backgroundColor: "64748b",
   width: window.innerWidth * window.devicePixelRatio * RENDER_RESOLUTION,
@@ -9,6 +9,9 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.NONE,
     zoom: 1 / window.devicePixelRatio,
+  },
+  dom: {
+    createContainer: true,
   },
   autoFocus: true,
   desynchronized: true,

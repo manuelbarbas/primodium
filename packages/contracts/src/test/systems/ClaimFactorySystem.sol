@@ -19,7 +19,7 @@ import { ItemComponent, ID as ItemComponentID } from "../../components/ItemCompo
 import { MainBaseID } from "../../prototypes/Tiles.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
 
-import { IronResourceItemID, CopperResourceItemID, BulletCraftedItemID } from "../../prototypes/Keys.sol";
+import { IronResourceItemID, CopperResourceItemID } from "../../prototypes/Keys.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";

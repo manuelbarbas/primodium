@@ -69,7 +69,7 @@ function TooltipBox() {
   const selectedTile = primodium.hooks.useSelectedTile(network);
 
   const entity = encodeCoordEntityAndTrim(
-    selectedTile,
+    selectedTile ?? { x: 0, y: 0 },
     BlockType.BuildingKey
   ) as EntityID;
 
@@ -77,6 +77,7 @@ function TooltipBox() {
     components.Tile,
     world.entityToIndex.get(entity) as EntityIndex
   );
+
   const tileOwnedBy = useComponentValue(
     components.OwnedBy,
     world.entityToIndex.get(entity) as EntityIndex
@@ -88,9 +89,10 @@ function TooltipBox() {
   );
 
   const terrainTile = getTopLayerKeyHelper({
-    x: selectedTile.x,
-    y: selectedTile.y,
+    x: selectedTile?.x ?? 0,
+    y: selectedTile?.y ?? 0,
   });
+
   const builtTile = useMemo(() => {
     return (tile?.value as unknown as EntityID) ?? undefined;
   }, [tile]);
@@ -152,6 +154,8 @@ function TooltipBox() {
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);
+
+  if (!selectedTile) return <></>;
 
   if (!minimized) {
     return (

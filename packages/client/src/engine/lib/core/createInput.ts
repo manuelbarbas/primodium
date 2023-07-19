@@ -35,6 +35,7 @@ export type Key =
 
 export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const disposers = new Set<() => void>();
+  const phaserKeys = new Map<Key, Phaser.Input.Keyboard.Key>();
   const enabled = { current: true };
 
   inputPlugin.mouse?.disableContextMenu();
@@ -206,6 +207,9 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     // Store the cleartext key map
     codeToKey.set(keyObj.keyCode, key as Key);
 
+    //store the phaser key object
+    phaserKeys.set(key as Key, keyObj);
+
     keyObj.removeAllListeners();
     keyObj.emitOnRepeat = true;
     keyObj.on("down", (keyEvent: Phaser.Input.Keyboard.Key) =>
@@ -242,6 +246,9 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointerdown$,
     pointerup$,
     click$,
+    // phaserKeyboard,
+    phaserInput: inputPlugin,
+    phaserKeys,
     doubleClick$,
     rightClick$,
     drag$,
