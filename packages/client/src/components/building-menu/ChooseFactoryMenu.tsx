@@ -35,6 +35,18 @@ function ChooseFactoryMenu({
           label="Iron Plate Factory"
           blockType={BlockType.IronPlateFactory}
         />
+        <BuildingIconButton
+          label="Photovoltaic Cell Factory"
+          blockType={BlockType.LithiumCopperOxideFactory}
+        />
+        <BuildingIconButton
+          label="Alloy Factory"
+          blockType={BlockType.AlloyFactory}
+        />
+        <BuildingIconButton
+          label="Solar Panel"
+          blockType={BlockType.SolarPanel}
+        />
       </div>
       <button
         onClick={closeMenuHelper}

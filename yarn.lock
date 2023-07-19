@@ -906,6 +906,11 @@
   resolved "https://registry.yarnpkg.com/@jvitela/mustache-wax/-/mustache-wax-1.0.4.tgz#18c54e8dc9793e01515674beadf80bd1dfb1dd29"
   integrity sha512-cGugVYp0WO7w89KQlyyt2rQyCO5MbrKeqtIAkG8oBfOaiHoeGeKG7WYdBFHftvoZUuK4WFbWyn3hgFipdetC+Q==
 
+"@jvitela/mustache-wax@^1.0.1":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@jvitela/mustache-wax/-/mustache-wax-1.0.4.tgz#18c54e8dc9793e01515674beadf80bd1dfb1dd29"
+  integrity sha512-cGugVYp0WO7w89KQlyyt2rQyCO5MbrKeqtIAkG8oBfOaiHoeGeKG7WYdBFHftvoZUuK4WFbWyn3hgFipdetC+Q==
+
 "@latticexyz/cli@^1.43.0":
   version "1.43.0"
   resolved "https://registry.yarnpkg.com/@latticexyz/cli/-/cli-1.43.0.tgz#078fced49beac75a0bcdb84f825f63affefc0798"

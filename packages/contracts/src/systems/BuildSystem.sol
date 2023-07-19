@@ -2,40 +2,28 @@
 pragma solidity >=0.8.0;
 
 // external
-import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
 
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
-import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 
-// prototpyes
 import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
 
 // libraries
 import { Coord } from "../types.sol";
-import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
-
+import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
@@ -45,51 +33,6 @@ contract BuildSystem is PrimodiumSystem {
 
   function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
     return execute(abi.encode(buildingType, coord));
-  }
-
-  function updatePlayerStorage(uint256 buildingType) internal {
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getC(StorageCapacityResourcesComponentID)
-    );
-    uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
-    uint256 playerEntity = addressToEntity(msg.sender);
-    if (!storageCapacityResourcesComponent.has(buildingTypeLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingTypeLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i]
-      );
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        buildingTypeLevel,
-        storageResources[i]
-      );
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        storageCapacityResourcesComponent,
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i],
-        playerResourceStorageCapacity + storageCapacityIncrease
-      );
-    }
-  }
-
-  function setupFactory(uint256 factoryEntity) internal {
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getC(FactoryMineBuildingsComponentID)
-    );
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
-    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
-      return;
-    }
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
-      buildingLevelEntity
-    );
-    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -138,19 +81,21 @@ contract BuildSystem is PrimodiumSystem {
         mainBaseInitializedComponent.set(playerEntity, buildingEntity);
       }
     }
+    require(
+      LibPassiveResource.checkPassiveResourceRequirements(world, playerEntity, buildingType),
+      "[BuildSystem] You do not have the required passive resources"
+    );
 
-    // update building count if the built building counts towards the build limit
-    if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
-    }
+    //check resource requirements and if ok spend required resources
+    LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
+
     //set level of building to 1
     buildingLevelComponent.set(buildingEntity, 1);
     TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
-    updatePlayerStorage(buildingType);
-    setupFactory(buildingEntity);
+    IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);
+
     return abi.encode(buildingEntity);
   }
 

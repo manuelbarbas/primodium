@@ -65,6 +65,7 @@ export default function ResourceLabel({
         <p className="w-15 ml-1 my-auto text-sm">{storageCount}</p>
         <img className="w-4 h-4 ml-2 my-auto" src={resourceIcon}></img>
         <p className="w-25 ml-2 my-auto text-sm">{name}</p>
+
         <p className="w-10 ml-2 my-auto text-sm">{production}</p>
       </div>
     );

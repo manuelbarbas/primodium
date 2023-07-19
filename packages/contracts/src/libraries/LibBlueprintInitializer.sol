@@ -9,7 +9,7 @@ import { getAddressById } from "solecs/utils.sol";
 import { BlueprintComponent as Blueprint, ID as BlueprintID } from "components/BlueprintComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 
-import { LithiumMineID, IronMineID, CopperMineID, TitaniumMineID, IridiumMineID, OsmiumMineID, TungstenMineID, KimberliteMineID, UraniniteMineID, BolutiteMineID } from "../prototypes/Tiles.sol";
+import "../prototypes/Tiles.sol";
 
 library LibBlueprintInitializer {
   function init(IWorld world) internal {
@@ -58,5 +58,15 @@ library LibBlueprintInitializer {
     LibBlueprint.createBlueprint(blueprintComponent, KimberliteMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, UraniniteMineID, coords);
     LibBlueprint.createBlueprint(blueprintComponent, BolutiteMineID, coords);
+
+    LibBlueprint.createBlueprint(blueprintComponent, SolarPanelID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, HousingUnitID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, IronPlateFactoryID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, AlloyFactoryID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, LithiumCopperOxideFactoryID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, SpaceFuelFactoryID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, StorageUnitID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, TrainingFacilityID, coords);
+    LibBlueprint.createBlueprint(blueprintComponent, StarMapID, coords);
   }
 }

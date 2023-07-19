@@ -4,8 +4,13 @@ pragma solidity >=0.8.0;
 import "../PrimodiumTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
+
+import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
+import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
+
 import { BuildingTilesComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
+
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
 import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "../../systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
 import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from "../../systems/DebugRemoveBuildLimitSystem.sol";
@@ -20,11 +25,13 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
+import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "../../components/StorageCapacityComponent.sol";
+
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
+import { ElectricityPassiveResourceID } from "../../prototypes/Keys.sol";
+
 //debug buildings
 import "../../prototypes/Tiles.sol";
-
-//main buildings
-
 import "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 
@@ -56,6 +63,149 @@ contract BuildSystemTest is PrimodiumTest {
     tileComponent = TileComponent(component(TileComponentID));
 
     // init other
+  }
+
+  function testFailPassiveResourceRequirementNotMet() public {
+    vm.startPrank(alice);
+    
+    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
+    vm.stopPrank();
+  }
+
+  function testPassiveResourceRequirement() public {
+    vm.startPrank(alice);
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    
+    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    assertEq(
+      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      10,
+      "Electricity Storage should be 10"
+    );
+    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
+    assertEq(
+      itemComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      2,
+      "used up electricity should be 2"
+    );
+    vm.stopPrank();
+  }
+
+  function testPassiveResourceRequirementUpToMax() public {
+    vm.startPrank(alice);
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    
+    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    assertEq(
+      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      10,
+      "Electricity Storage should be 10"
+    );
+    int32 secondIncrement = 1;
+    for (uint256 i = 0; i < 5; i++) {
+      buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: secondIncrement, y: 0 }));
+      assertEq(
+        itemComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+        2 * (i + 1),
+        "used up electricity is incorrect"
+      );
+      secondIncrement++;
+    }
+
+    vm.stopPrank();
+  }
+
+  function testFailPassiveResourceRequirementMoreThenMax() public {
+    vm.startPrank(alice);
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    
+    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    assertEq(
+      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      10,
+      "Electricity Storage should be 10"
+    );
+    int32 secondIncrement = 1;
+    for (uint256 i = 0; i < 6; i++) {
+      buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: secondIncrement, y: 0 }));
+      secondIncrement++;
+    }
+
+    vm.stopPrank();
+  }
+
+  function testDestroyPassiveResourceProduction() public {
+    vm.startPrank(alice);
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    
+    DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
+    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    assertEq(
+      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      10,
+      "Electricity Storage should be 10"
+    );
+    destroySystem.executeTyped(Coord({ x: 0, y: 0 }));
+    assertEq(
+      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      0,
+      "Electricity Storage should be 0"
+    );
+    vm.stopPrank();
+  }
+
+  function testDestroyPassiveResourceRequirement() public {
+    vm.startPrank(alice);
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    
+
+    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    assertEq(
+      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      10,
+      "Electricity Storage should be 10"
+    );
+    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
+    assertEq(
+      itemComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      2,
+      "used up electricity should be 2"
+    );
+    DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
+    destroySystem.executeTyped(Coord({ x: 1, y: 0 }));
+
+    assertEq(
+      itemComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      0,
+      "used up electricity should be 2"
+    );
+
+    vm.stopPrank();
+  }
+
+  function testFailDestroyPassiveResourceProductionWhenRequirementsWouldFail() public {
+    vm.startPrank(alice);
+    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    
+    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    assertEq(
+      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      10,
+      "Electricity Storage should be 10"
+    );
+    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
+    assertEq(
+      itemComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      2,
+      "used up electricity should be 2"
+    );
+    DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
+    destroySystem.executeTyped(Coord({ x: 0, y: 0 }));
+    vm.stopPrank();
   }
 
   function testBuildMainBase() public {

@@ -61,27 +61,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
       "[ClaimFromMineSystem] Cannot claim from mines on a tile with zero health"
     );
 
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
-    );
-    UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
-      getAddressById(components, UnclaimedResourceComponentID)
-    );
-
-    LibNewMine.claimResourcesFromMines(
-      itemComponent, //writes to
-      c.lastClaimedAtComponent, //writes to
-      unclaimedResourceComponent, //writes to
-      mineComponent,
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
-      addressToEntity(msg.sender)
-    );
+    LibNewMine.claimResourcesFromMines(world, addressToEntity(msg.sender));
 
     return abi.encode(0);
   }

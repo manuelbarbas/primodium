@@ -29,7 +29,9 @@
     "FactoryMineBuildingsComponent",
     "FactoryProductionComponent",
     "MaxLevelComponent",
-    "RequiredTileComponent"
+    "RequiredTileComponent",
+    "RequiredPassiveResourceComponent",
+    "PassiveResourceProductionComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -74,11 +76,18 @@
         "MainBaseInitializedComponent",
         "BuildingLevelComponent",
         "MainBaseInitializedComponent",
-        "BuildingLimitComponent",
-        "BuildingTilesComponent",
+        "BuildingTilesComponent"
+      ]
+    },
+    {
+      "name": "PostBuildSystem",
+      "writeAccess": [
+        "ItemComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent",
-        "FactoryMineBuildingsComponent"
+        "FactoryMineBuildingsComponent",
+        "LastClaimedAtComponent",
+        "BuildingLimitComponent"
       ]
     },
     {
@@ -92,19 +101,34 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
+        "BuildingTilesComponent",
         "BuildingLevelComponent",
         "BuildingLimitComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent",
-        "ItemComponent",
         "BuildingTilesComponent"
       ]
     },
     {
+      "name": "PostDestroySystem",
+      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent", "ItemComponent"]
+    },
+    {
       "name": "BuildPathSystem",
+      "writeAccess": []
+    },
+    {
+      "name": "BuildPathFromFactoryToMainBaseSystem",
       "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
+        "PathComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
+        "FactoryProductionComponent"
+      ]
+    },
+    {
+      "name": "BuildPathFromMineToFactorySystem",
+      "writeAccess": [
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
@@ -113,6 +137,10 @@
         "FactoryMineBuildingsComponent",
         "FactoryProductionComponent"
       ]
+    },
+    {
+      "name": "BuildPathFromMineToMainBaseSystem",
+      "writeAccess": ["PathComponent", "LastClaimedAtComponent", "UnclaimedResourceComponent", "MineComponent"]
     },
     {
       "name": "DestroyPathSystem",
@@ -126,6 +154,18 @@
         "FactoryIsFunctionalComponent",
         "FactoryMineBuildingsComponent",
         "FactoryProductionComponent"
+      ]
+    },
+    {
+      "name": "PostDestroyPathSystem",
+      "writeAccess": [
+        "StorageCapacityComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineComponent",
+        "FactoryIsFunctionalComponent",
+        "FactoryProductionComponent",
+        "FactoryMineBuildingsComponent"
       ]
     },
     {
@@ -166,13 +206,25 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["BuildingLevelComponent", "ItemComponent"]
+      "writeAccess": [
+        "BuildingLevelComponent",
+        "ItemComponent",
+        "StorageCapacityComponent",
+        "StorageCapacityResourcesComponent"
+      ]
     },
     {
-      "name": "PostUpgradeSystem",
+      "name": "PostUpgradeMineSystem",
       "writeAccess": [
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineComponent",
+        "FactoryIsFunctionalComponent"
+      ]
+    },
+    {
+      "name": "PostUpgradeFactorySystem",
+      "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
@@ -180,18 +232,7 @@
         "FactoryProductionComponent"
       ]
     },
-    {
-      "name": "PostDestroyPathSystem",
-      "writeAccess": [
-        "StorageCapacityComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent",
-        "FactoryMineBuildingsComponent"
-      ]
-    },
+
     {
       "name": "DebugAcquireResourcesSystem",
       "writeAccess": ["ItemComponent"]

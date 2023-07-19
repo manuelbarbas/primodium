@@ -24,11 +24,11 @@ library LibBuildingLimitDesignInitializer {
 
     ignoreBuildLimitComponent.set(MainBaseID);
 
-    buildingLimitComponent.set(uint256(1), 2);
-    buildingLimitComponent.set(uint256(2), 4);
-    buildingLimitComponent.set(uint256(3), 7);
-    buildingLimitComponent.set(uint256(4), 10);
-    buildingLimitComponent.set(uint256(5), 12);
-    buildingLimitComponent.set(uint256(6), 14);
+    buildingLimitComponent.set(uint256(1), 4);
+    buildingLimitComponent.set(uint256(2), 7);
+    buildingLimitComponent.set(uint256(3), 11);
+    buildingLimitComponent.set(uint256(4), 15);
+    buildingLimitComponent.set(uint256(5), 24);
+    buildingLimitComponent.set(uint256(6), 32);
   }
 }

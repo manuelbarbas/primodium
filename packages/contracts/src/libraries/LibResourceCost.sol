@@ -36,12 +36,12 @@ library LibResourceCost {
     return true;
   }
 
-  function checkAndSpendRequiredResources(
-    Uint256ArrayComponent requiredResourcesComponent,
-    Uint256Component itemComponent,
-    uint256 entity,
-    uint256 playerEntity
-  ) internal returns (bool) {
+  function checkAndSpendRequiredResources(IWorld world, uint256 entity, uint256 playerEntity) internal returns (bool) {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+
     if (!requiredResourcesComponent.has(entity)) return true;
 
     uint256[] memory requiredResourceIds = requiredResourcesComponent.getValue(entity);
@@ -70,12 +70,11 @@ library LibResourceCost {
     return true;
   }
 
-  function spendRequiredResources(
-    Uint256ArrayComponent requiredResourcesComponent,
-    Uint256Component itemComponent,
-    uint256 entity,
-    uint256 playerEntity
-  ) internal {
+  function spendRequiredResources(IWorld world, uint256 entity, uint256 playerEntity) internal {
+    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
     if (!requiredResourcesComponent.has(entity)) return;
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.length; i++) {

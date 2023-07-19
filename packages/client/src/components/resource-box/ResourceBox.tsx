@@ -35,13 +35,22 @@ function ResourceBox() {
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);
+  const mainBuildingEntity = useComponentValue(
+    components.MainBaseInitialized,
+    address
+      ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
+      : singletonIndex
+  );
 
-  const buildLimit = 0;
-  // const buildLimit = useComponentValue(
-  //   components.BuildingLimit,
-  //   world.entityToIndex.get(mainBuildingLevel?.value as unknown as EntityID)
-  // , 0
-  // ).value;
+  const mainBuildingLevel = useComponentValue(
+    components.BuildingLevel,
+    world.entityToIndex.get(mainBuildingEntity?.value as unknown as EntityID)
+  );
+
+  const buildLimit = useComponentValue(
+    components.BuildingLimit,
+    world.entityToIndex.get(mainBuildingLevel?.value as unknown as EntityID)
+  );
 
   const playerBuildingCount = useComponentValue(
     components.BuildingLimit,
@@ -49,10 +58,11 @@ function ResourceBox() {
       ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
       : singletonIndex
   );
-  const buildLimitNumber = parseInt(buildLimit.toString() ?? "0");
+  const buildLimitNumber = parseInt(buildLimit?.toString() ?? "0");
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
   );
+
   if (transactionLoading) {
     return (
       <div className="z-[1000] viewport-container fixed top-4 right-4 h-64 w-80 flex flex-col bg-gray-700 text-white shadow-xl font-mono rounded">
