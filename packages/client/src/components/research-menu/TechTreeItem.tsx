@@ -16,8 +16,6 @@ import { useNotificationStore } from "../../store/NotificationStore";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { getBuildingResearchRequirement } from "../../util/research";
 import { useComponentValue } from "@latticexyz/react";
-import { encodeCoordEntityAndTrim } from "../../util/encode";
-import { BlockType } from "../../util/constants";
 function TechTreeItem({
   data,
   icon,
@@ -70,11 +68,12 @@ function TechTreeItem({
       address.toString().toLowerCase() as EntityID
     ) as EntityIndex
   );
-  
 
   const mainBaseLevel = useComponentValue(
     components.BuildingLevel,
-    world.entityToIndex.get(mainBaseEntity?.value as unknown as EntityID) as EntityIndex
+    world.entityToIndex.get(
+      mainBaseEntity?.value as unknown as EntityID
+    ) as EntityIndex
   );
 
   const requiredMainBaseLevel = useComponentValue(

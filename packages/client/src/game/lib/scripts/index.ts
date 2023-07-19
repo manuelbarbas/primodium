@@ -19,7 +19,7 @@ import { runSystems } from "../systems";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
 import { isDown } from "src/game/api/input";
 import { pan } from "src/game/api/camera";
-
+import { decodeCoordEntity } from "src/util/encode";
 export const init = async (address: string, network: Network) => {
   const { world } = network;
   const game = await engine.createGame(gameConfig);
@@ -185,7 +185,8 @@ export const init = async (address: string, network: Network) => {
     if (isDown(KeybindActions.Base)) {
       const mainBaseCoord = components.mainBase(network).get(address);
 
-      if (mainBaseCoord) pan(mainBaseCoord);
+      if (mainBaseCoord)
+        pan(decodeCoordEntity(mainBaseCoord?.value as unknown as EntityID));
     }
 
     // HANDLE CAMERA SCROLL MOVEMENT KEYS
