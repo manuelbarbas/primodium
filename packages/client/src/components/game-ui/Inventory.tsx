@@ -4,14 +4,21 @@ import { useMemo, useState } from "react";
 import { useMud } from "src/context/MudContext";
 import { useComponentValue } from "src/hooks/useComponentValue";
 import useResourceCount from "src/hooks/useResourceCount";
+import { useMainBase } from "src/hooks/useMainBase";
+import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
-import { ImageButton } from "../shared/ImageButton";
 
 export const Inventory = () => {
+  // const { components, world } = useMud();
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
+  const mainBaseCoord = useMainBase();
+
   return (
-    <div className="flex fixed top-8 right-8 items-center font-mono text-white ">
+    <div
+      style={{ filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))" }}
+      className="flex fixed top-8 right-8 items-center font-mono text-white "
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0, x: 200 }}
         animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -40,15 +47,10 @@ export const Inventory = () => {
 
           {menuIndex === 0 && (
             <div className="flex justify-center">
-              <ImageButton
-                className="w-24 h-12 text-cyan-100 text-sm border-2 border-cyan-600 mt-1"
-                image="/img/buttons/rectangle/blue/up.png"
-                activeImage="/img/buttons/rectangle/blue/down.png"
-              >
-                <p className="-translate-y-[2px] active:translate-y-0 font-bold leading-none h-full flex justify-center items-center crt">
-                  Claim
-                </p>
-              </ImageButton>
+              <ClaimButton
+                id="claim-button"
+                coords={mainBaseCoord ?? { x: 0, y: 0 }}
+              />
             </div>
           )}
         </div>
@@ -281,7 +283,13 @@ Inventory.ResourceLabel = ({
           </div>
           <p>{production}/B</p>
         </div>
-        <div className="flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt">
+        <div
+          className={`flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt ${
+            resourceCount + resourcesToClaim === storageCount
+              ? "animate-pulse"
+              : ""
+          }`}
+        >
           <div
             className="h-full bg-cyan-600"
             style={{ width: `${(resourceCount / storageCount) * 100}%` }}

@@ -1,12 +1,13 @@
 import { useComponentValue } from "@latticexyz/react";
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import React from "react";
-import { ImageButton } from "src/components/shared/ImageButton";
+
 import { useMud } from "src/context/MudContext";
 import { BackgroundImage, BlockIdToKey } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
 import { useAccount } from "wagmi";
 import Header from "./Header";
+import { GameButton } from "src/components/shared/GameButton";
 
 const BuildingInfo: React.FC<{
   building: EntityIndex;
@@ -55,15 +56,11 @@ const BuildingInfo: React.FC<{
           </p>
         </div>
         <div className="relative">
-          <ImageButton
-            className="w-36 h-12 text-green-100 border-2 border-cyan-600"
-            image="/img/buttons/rectangle/blue/up.png"
-            activeImage="/img/buttons/rectangle/blue/down.png"
-          >
-            <p className="-translate-y-[2px] active:translate-y-0 font-bold leading-none h-full flex justify-center items-center crt">
+          <GameButton className="w-44 mt-2 bg-green-500">
+            <div className="font-bold leading-none h-8 flex justify-center items-center crt">
               Upgrade
-            </p>
-          </ImageButton>
+            </div>
+          </GameButton>
         </div>
       </div>
     </>

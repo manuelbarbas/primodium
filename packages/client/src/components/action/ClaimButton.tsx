@@ -1,22 +1,19 @@
 import { useCallback, useMemo } from "react";
-import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
-import { useMud } from "../../context/MudContext";
-import { BlockType } from "../../util/constants";
+import { useMud } from "src/context/MudContext";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../Spinner";
 import { useNotificationStore } from "../../store/NotificationStore";
+import { GameButton } from "../shared/GameButton";
 
 export default function ClaimButton({
   id,
   coords: { x, y },
-  builtTile,
 }: {
-  id: string;
+  id?: string;
   coords: Coord;
-  builtTile: EntityID;
 }) {
   const { systems, providers } = useMud();
   const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
@@ -42,60 +39,17 @@ export default function ClaimButton({
       providers,
       setNotification
     );
-    await execute(
-      systems["system.ClaimFromFactory"].executeTyped(
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 29_000_000,
-        }
-      ),
-      providers,
-      setNotification
-    );
+
     setTransactionLoading(false);
   }, []);
 
-  const claimText = useMemo(() => {
-    if (builtTile === BlockType.MainBase) {
-      return "Claim to Inventory";
-    } else {
-      return "Claim to Storage";
-    }
-  }, [builtTile]);
-
-  const colorCode = useMemo(() => {
-    if (builtTile === BlockType.MainBase) {
-      return "bg-blue-600 hover:bg-blue-700";
-    } else {
-      return "bg-yellow-800 hover:bg-yellow-900";
-    }
-  }, [builtTile]);
-
-  if (transactionLoading) {
-    return (
-      <div className="absolute inset-x-4 bottom-4">
-        <button
-          id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full py-2`}
-        >
-          <Spinner />
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div className="absolute inset-x-4 bottom-4">
-        <button
-          id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
-          onClick={claimAction}
-        >
-          {claimText}
-        </button>
-      </div>
-    );
-  }
+  return (
+    <div className="relative">
+      <GameButton id={id} className="w-44 mt-2" onClick={claimAction}>
+        <div className="font-bold leading-none h-8 flex justify-center items-center crt">
+          {transactionLoading ? <Spinner /> : "Claim Resources"}
+        </div>
+      </GameButton>
+    </div>
+  );
 }

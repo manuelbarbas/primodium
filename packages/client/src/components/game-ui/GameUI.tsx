@@ -2,7 +2,7 @@ import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
 import { useEffect } from "react";
 import { useGameStore } from "../../store/GameStore";
-import InfoBox from "../InfoBox";
+import { InfoBox } from "./InfoBox";
 import NotificationBox from "../NotificationBox";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -38,7 +38,7 @@ function GameUI() {
       {gameReady && (
         <div className="screen-container">
           {/* Vignette */}
-          <div className="fixed top-0 bottom-0 screen-container vignette pointer-events-none opacity-20 mix-blend-overlay" />
+          <div className="fixed top-0 bottom-0 screen-container pointer-events-none vignette opacity-20 mix-blend-overlay" />
           {/* <BrandingLabel /> */}
           <Camera />
           <AnimatePresence>
@@ -50,7 +50,6 @@ function GameUI() {
                 <NotificationBox />
                 {/* <ResourceBox /> */}
                 {/* <TooltipBox /> */}
-
                 {/* <SideMenu1 /> */}
                 <Inventory />
               </motion.div>

@@ -164,7 +164,6 @@
   background-size: 100% 2px, 4px 100%;
   opacity: 0.5;
   pointer-events: none;
-  animation: flicker 3s infinite;
 }
 
 .crt {

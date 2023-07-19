@@ -77,6 +77,10 @@ if (import.meta.env.VITE_DEV === "true") {
         blockType: BlockType.DebugStorageBuilding,
         keybind: KeybindActions.Hotbar2,
       },
+      {
+        blockType: BlockType.DemolishBuilding,
+        keybind: KeybindActions.Hotbar3,
+      },
     ],
   });
 }
