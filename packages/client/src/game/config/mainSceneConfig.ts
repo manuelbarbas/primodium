@@ -10,10 +10,9 @@ const mainSceneConfig: SceneConfig = {
   camera: {
     minZoom: 2,
     maxZoom: 5,
-    defaultZoom: 5,
-    pinchSpeed: 0.1,
-    scrollSpeed: 1,
-    dragSpeed: 3,
+    defaultZoom: 3,
+    pinchSpeed: 0.01,
+    wheelSpeed: 3,
   },
   animations: animationConfig,
   cullingChunkSize: 64,

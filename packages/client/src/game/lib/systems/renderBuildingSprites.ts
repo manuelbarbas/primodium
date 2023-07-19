@@ -25,13 +25,18 @@ export const renderBuildingSprites = (scene: Scene, network: Network) => {
     const entityIndex = update.entity;
     const objIndex = entityIndex + objIndexSuffix;
 
-    const tilePosition = getComponentValue(components.Position, entityIndex);
+    const tileCoord = getComponentValue(components.Position, entityIndex);
 
     const tile = getComponentValue(components.Tile, entityIndex);
     const tileEntityId = tile?.value as unknown as EntityID;
 
+    if (!tileCoord) return;
+
+    // don't render beyond coord map limitation
+    if (Math.abs(tileCoord.x) > 32676 || Math.abs(tileCoord.y) > 32676) return;
+
     const pixelCoord = tileCoordToPixelCoord(
-      tilePosition as Coord,
+      tileCoord as Coord,
       tileWidth,
       tileHeight
     );

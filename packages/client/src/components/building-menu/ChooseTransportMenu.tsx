@@ -49,11 +49,6 @@ function ChooseTransportMenu({
       {selectedBuilding !== BlockType.Conveyor && !startSelectedPath && (
         <div className="grid grid-cols-4 h-40 gap-y-3 overflow-y-scroll scrollbar">
           <BuildingIconButton
-            id="node"
-            label="Node"
-            blockType={BlockType.Node}
-          />
-          <BuildingIconButton
             id="conveyor"
             label="Conveyor"
             blockType={BlockType.Conveyor}

@@ -9,26 +9,6 @@ library LibEncode {
     return uint256(keccak256(abi.encodePacked(key, entity)));
   }
 
-  function hashFromKey(uint256 key, uint256 key2) internal pure returns (uint256) {
-    return uint256(keccak256(abi.encodePacked(key, key2)));
-  }
-
-  function hashFromTwoKeys(uint256 key, uint256 key2, uint256 key3) internal pure returns (uint256) {
-    return uint256(keccak256(abi.encodePacked(key, key2, key3)));
-  }
-
-  function hashEqualToString(uint256 a, string memory b) internal pure returns (bool) {
-    return a == uint256(keccak256(abi.encodePacked(b)));
-  }
-
-  function hashEqual(uint256 a, uint256 b) internal pure returns (bool) {
-    return a == b;
-  }
-
-  function stringsEqual(string memory a, string memory b) internal pure returns (bool) {
-    return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
-  }
-
   function encodeCoordEntity(Coord memory coord, string memory key) internal pure returns (uint256) {
     return uint256(bytes32(bytes.concat(bytes4(uint32(coord.x)), bytes4(uint32(coord.y)), bytes24(bytes(key)))));
   }

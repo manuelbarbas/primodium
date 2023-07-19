@@ -7,10 +7,10 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID, BasicPowerSourceCraftedItemID, KineticMissileCraftedItemID, RefinedOsmiumCraftedItemID, AdvancedPowerSourceCraftedItemID, PenetratingWarheadCraftedItemID, PenetratingMissileCraftedItemID, TungstenRodsCraftedItemID, IridiumCrystalCraftedItemID, IridiumDrillbitCraftedItemID, LaserPowerSourceCraftedItemID, ThermobaricWarheadCraftedItemID, ThermobaricMissileCraftedItemID, KimberliteCrystalCatalystCraftedItemID, BulletCraftedItemID } from "../prototypes/Keys.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { CopperResearchID, LithiumResearchID, TitaniumResearchID, OsmiumResearchID, TungstenResearchID, IridiumResearchID, KimberliteResearchID, PlatingFactoryResearchID, BasicBatteryFactoryResearchID, KineticMissileFactoryResearchID, ProjectileLauncherResearchID, HardenedDrillResearchID, DenseMetalRefineryResearchID, AdvancedBatteryFactoryResearchID, HighTempFoundryResearchID, PrecisionMachineryFactoryResearchID, IridiumDrillbitFactoryResearchID, PrecisionPneumaticDrillResearchID, PenetratorFactoryResearchID, PenetratingMissileFactoryResearchID, MissileLaunchComplexResearchID, HighEnergyLaserFactoryResearchID, ThermobaricWarheadFactoryResearchID, ThermobaricMissileFactoryResearchID, KimberliteCatalystFactoryResearchID, FastMinerResearchID } from "../prototypes/Keys.sol";
 
 import { LibResearch } from "libraries/LibResearch.sol";
 import { LibResourceCost } from "libraries/LibResourceCost.sol";
@@ -21,52 +21,42 @@ uint256 constant ID = uint256(keccak256("system.Research"));
 contract ResearchSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
+  function checkMainBaseLevelRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
+      getAddressById(world.components(), BuildingLevelComponentID)
+    );
+    if (!buildingLevelComponent.has(entity)) return true;
+    uint256 mainBuildingLevel = LibBuilding.getBaseLevel(world, playerEntity);
+    return mainBuildingLevel >= buildingLevelComponent.getValue(entity);
+  }
+
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
-      getAddressById(components, LastResearchedAtComponentID)
-    );
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(components, RequiredResearchComponentID)
-    );
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    require(
-      requiredResourcesComponent.has(researchItem),
-      "[ResearchSystem] can not research a technology that does not have resource requirements"
-    );
+
+    require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
-      LibBuilding.checkMainBaseLevelRequirement(buildingComponent, addressToEntity(msg.sender), researchItem),
+      checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
 
     require(
-      LibResearch.checkResearchRequirements(
-        requiredResearchComponent,
-        researchComponent,
-        researchItem,
-        addressToEntity(msg.sender)
-      ),
+      LibResearch.hasResearched(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Research requirements not met"
     );
 
     require(
-      LibResourceCost.checkAndSpendRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        researchItem,
-        addressToEntity(msg.sender)
-      ),
+      LibResourceCost.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Not enough resources to research"
     );
     researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
-    LibResearch.setLastResearched(lastResearchedAtComponent, researchItem, addressToEntity(msg.sender));
+    LibResearch.setResearchTime(world, researchItem, addressToEntity(msg.sender));
     return abi.encode(true);
   }
 

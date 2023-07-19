@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState, memo } from "react";
 
 import { FaMinusSquare, FaPlusSquare } from "react-icons/fa";
 
-import { EntityID, Has, HasValue } from "@latticexyz/recs";
-import { useComponentValue, useEntityQuery } from "@latticexyz/react";
+import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { useComponentValue } from "@latticexyz/react";
 import { Coord } from "@latticexyz/utils";
 import { createPerlin, Perlin } from "@latticexyz/noise";
 import { BigNumber } from "ethers";
@@ -21,20 +21,24 @@ import {
   BlockIdToKey,
   BackgroundImage,
   ResourceImage,
+  BlockType,
 } from "../util/constants";
+
 import { primodium } from "@game/api";
 
 import { useGameStore } from "../store/GameStore";
 import { getBuildingMaxHealth } from "../util/health";
 import ClaimButton from "./action/ClaimButton";
+import UpgradeButton from "./action/UpgradeButton";
 import AllResourceLabels from "./resource-box/AllResourceLabels";
 import ResourceIconTooltip from "./shared/ResourceIconTooltip";
 import ClaimCraftButton from "./action/ClaimCraftButton";
-
+import { encodeCoordEntityAndTrim } from "src/util/encode";
+import { useMemo } from "react";
+import { canBeUpgraded } from "src/util/upgrade";
 function TooltipBox() {
   const network = useMud();
-  const { components, singletonIndex } = network;
-
+  const { world, components } = network;
   // Initialize Perlin to fetch the tile information
   const [initialized, setInitialized] = useState(false);
   const perlinRef = useRef(null as null | Perlin);
@@ -64,53 +68,37 @@ function TooltipBox() {
   // Get information on the selected tile
   const selectedTile = primodium.hooks.useSelectedTile(network);
 
-  const tilesAtPosition = useEntityQuery(
-    [
-      Has(components.Tile),
-      HasValue(components.Position, { x: selectedTile.x, y: selectedTile.y }),
-    ],
-    { updateOnValueChange: true }
-  );
+  const entity = encodeCoordEntityAndTrim(
+    selectedTile ?? { x: 0, y: 0 },
+    BlockType.BuildingKey
+  ) as EntityID;
 
   const tile = useComponentValue(
     components.Tile,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+    world.entityToIndex.get(entity) as EntityIndex
   );
 
   const tileOwnedBy = useComponentValue(
     components.OwnedBy,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+    world.entityToIndex.get(entity) as EntityIndex
   );
 
   const tileHealth = useComponentValue(
     components.Health,
-    tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+    world.entityToIndex.get(entity) as EntityIndex
   );
 
   const terrainTile = getTopLayerKeyHelper({
-    x: selectedTile.x,
-    y: selectedTile.y,
+    x: selectedTile?.x ?? 0,
+    y: selectedTile?.y ?? 0,
   });
 
-  let builtTile: EntityID | undefined;
-  let tileOwner: number | undefined;
-  if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile && tileOwnedBy) {
-    builtTile = tile.value as unknown as EntityID;
-    tileOwner = tileOwnedBy.value;
-  } else {
-    builtTile = undefined;
-    tileOwner = undefined;
-  }
-
-  // const tileLastBuiltAt = useComponentValue(
-  //   components.LastBuiltAt,
-  //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  // );
-
-  // const tileLastClaimedAt = useComponentValue(
-  //   components.LastClaimedAt,
-  //   tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
-  // );
+  const builtTile = useMemo(() => {
+    return (tile?.value as unknown as EntityID) ?? undefined;
+  }, [tile]);
+  const tileOwner = useMemo(() => {
+    return (tileOwnedBy?.value as unknown as EntityID) ?? undefined;
+  }, [tileOwnedBy]);
 
   // display actions
   const [minimized, setMinimize] = useState(true);
@@ -166,6 +154,8 @@ function TooltipBox() {
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);
+
+  if (!selectedTile) return <></>;
 
   if (!minimized) {
     return (
@@ -301,10 +291,23 @@ function TooltipBox() {
                     {transactionLoading ? (
                       <p>...</p>
                     ) : (
-                      <AllResourceLabels entityIndex={tilesAtPosition[0]} />
+                      <AllResourceLabels
+                        entityIndex={
+                          world.entityToIndex.get(entity) as EntityIndex
+                        }
+                      />
                     )}
                   </>
                 )}
+                {builtTile &&
+                  canBeUpgraded(entity, builtTile, world, components) && (
+                    <UpgradeButton
+                      id="upgrade-button"
+                      buildingEntity={entity}
+                      builtTile={builtTile}
+                      coords={selectedTile}
+                    />
+                  )}
               </div>
             </div>
           </div>

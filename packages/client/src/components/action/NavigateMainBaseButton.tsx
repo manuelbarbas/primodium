@@ -9,7 +9,8 @@ import { BlockType } from "../../util/constants";
 import { useGameStore } from "../../store/GameStore";
 import { useNotificationStore } from "../../store/NotificationStore";
 import { primodium } from "@game/api";
-
+import { decodeCoordEntity } from "src/util/encode";
+import { useMemo } from "react";
 export default function NavigateMainBaseButton() {
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
@@ -20,12 +21,17 @@ export default function NavigateMainBaseButton() {
     ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
     : singletonIndex;
 
-  // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
+  const mainBaseEntity = useComponentValue(
     components.MainBaseInitialized,
     resourceKey
   );
 
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(() => {
+    if (mainBaseEntity)
+      return decodeCoordEntity(mainBaseEntity?.value as unknown as EntityID);
+    return undefined;
+  }, [mainBaseEntity]);
   // Navigate to Main Base if it exists for this wallet
   const navigateMainBase = useCallback(() => {
     if (mainBaseCoord) {
@@ -58,7 +64,7 @@ export default function NavigateMainBaseButton() {
         BigNumber.from(BlockType.MainBase),
         selectedTile ?? cameraCoord,
         {
-          gasLimit: 1_500_000,
+          gasLimit: 2_800_000,
         }
       ),
       providers,

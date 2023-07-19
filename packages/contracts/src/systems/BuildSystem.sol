@@ -1,179 +1,113 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+
+// external
+import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
+
+// components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
-
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-// debug buildings
-import { PlatingFactoryID, MainBaseID, DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, DebugPlatingFactoryID, SiloID } from "../prototypes/Tiles.sol";
-
+import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
 
+// libraries
 import { Coord } from "../types.sol";
-import { LibMath } from "../libraries/LibMath.sol";
-import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
+import { LibResearch } from "../libraries/LibResearch.sol";
+import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
-contract BuildSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
+contract BuildSystem is PrimodiumSystem {
+  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function checkResearchRequirements(uint256 blockType) internal view returns (bool) {
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(components, RequiredResearchComponentID)
-    );
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    return
-      LibResearch.checkResearchRequirements(
-        requiredResearchComponent,
-        researchComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
+  function executeTyped(uint256 buildingType, Coord memory coord) public returns (bytes memory) {
+    return execute(abi.encode(buildingType, coord));
   }
 
-  function checkResourceRequirements(uint256 blockType) internal view returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return
-      LibResourceCost.hasRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
-  }
+  function execute(bytes memory args) public override returns (bytes memory) {
+    (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
 
-  function checkAndSpendResourceRequirements(uint256 blockType) internal returns (bool) {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
+    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    uint256 playerEntity = addressToEntity(msg.sender);
+    require(
+      !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
+      "[BuildSystem] Cannot build a building with tiles"
     );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    return
-      LibResourceCost.checkAndSpendRequiredResources(
-        requiredResourcesComponent,
-        itemComponent,
-        blockType,
-        addressToEntity(msg.sender)
-      );
-  }
-
-  function spendRequiredResources(uint256 blockType) internal {
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    LibResourceCost.spendRequiredResources(
-      requiredResourcesComponent,
-      itemComponent,
-      blockType,
-      addressToEntity(msg.sender)
-    );
-  }
-
-  function execute(bytes memory args) public returns (bytes memory) {
-    (uint256 blockType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    BuildingComponent buildingComponent = BuildingComponent(getAddressById(components, BuildingComponentID));
-    LastBuiltAtComponent lastBuiltAtComponent = LastBuiltAtComponent(
-      getAddressById(components, LastBuiltAtComponentID)
-    );
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
-      getAddressById(components, BuildingLimitComponentID)
-    );
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
-      getAddressById(components, IgnoreBuildLimitComponentID)
+    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
+    require(
+      LibResearch.hasResearched(world, buildingType, playerEntity),
+      "[BuildSystem] You have not researched the required technology"
     );
 
-    // Check there isn't another tile there
-    uint256 entity = LibEncode.encodeCoordEntity(coord, BuildingKey);
-    require(!tileComponent.has(entity), "[BuildSystem] Cannot build on a non-empty coordinate");
-
-    //check required research
-    require(checkResearchRequirements(blockType), "[BuildSystem] You have not researched the required Technology");
-
+    require(
+      LibResourceCost.hasRequiredResources(world, buildingType, playerEntity),
+      "[BuildSystem] You do not have the required resources"
+    );
     //check build limit
     require(
-      LibBuilding.checkBuildLimitConditionForBuildingId(
-        ignoreBuildLimitComponent,
-        buildingLimitComponent,
-        buildingComponent,
-        addressToEntity(msg.sender),
-        blockType
-      ),
-      "[BuildSystem] build limit reached. upgrade main base or destroy buildings"
+      LibBuilding.isBuildingLimitConditionMet(world, playerEntity, buildingType),
+      "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
-    // debug buildings are free:  DebugNodeID, MinerID, LithiumMinerID, BulletFactoryID, SiloID
+    int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
+    uint256[] memory tiles = new uint256[](blueprint.length / 2);
+    for (uint32 i = 0; i < blueprint.length; i += 2) {
+      Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
+      tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
+    }
+    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
+    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
-    if (
-      blockType == DebugNodeID ||
-      blockType == MinerID ||
-      blockType == LithiumMinerID ||
-      blockType == BulletFactoryID ||
-      blockType == DebugPlatingFactoryID ||
-      blockType == SiloID
-    ) {
-      // debug buildings, do nothing
-      if (!LibDebug.isDebug()) {
-        revert("[BuildSystem] Debug buildings are not allowed to be built");
-      }
-    } else if (blockType == MainBaseID) {
+    if (buildingType == MainBaseID) {
+      buildingLevelComponent.set(playerEntity, buildingEntity);
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-        getAddressById(components, MainBaseInitializedComponentID)
+        getC(MainBaseInitializedComponentID)
       );
 
-      if (mainBaseInitializedComponent.has(addressToEntity(msg.sender))) {
+      if (mainBaseInitializedComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
-        mainBaseInitializedComponent.set(addressToEntity(msg.sender), coord);
+        mainBaseInitializedComponent.set(playerEntity, buildingEntity);
       }
     }
+    require(
+      LibPassiveResource.checkPassiveResourceRequirements(world, playerEntity, buildingType),
+      "[BuildSystem] You do not have the required passive resources"
+    );
 
     //check resource requirements and if ok spend required resources
-    require(checkAndSpendResourceRequirements(blockType), "[BuildSystem] You do not have the required resources");
+    LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
 
-    //set MainBase id for player address for easy lookup
-    if (blockType == MainBaseID) {
-      buildingComponent.set(addressToEntity(msg.sender), entity);
-    }
-
-    // update building count if the built building counts towards the build limit
-    if (LibBuilding.doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, blockType)) {
-      buildingLimitComponent.set(
-        addressToEntity(msg.sender),
-        LibMath.getSafeUint256Value(buildingLimitComponent, addressToEntity(msg.sender)) + 1
-      );
-    }
     //set level of building to 1
-    buildingComponent.set(entity, 1);
+    buildingLevelComponent.set(buildingEntity, 1);
+    TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
+    OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
-    tileComponent.set(entity, blockType);
-    ownedByComponent.set(entity, addressToEntity(msg.sender));
-    lastBuiltAtComponent.set(entity, block.number);
+    IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);
 
-    return abi.encode(entity);
+    return abi.encode(buildingEntity);
   }
 
-  function executeTyped(uint256 blockType, Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(blockType, coord));
+  function placeBuildingTile(
+    uint256 buildingEntity,
+    Coord memory baseCoord,
+    Coord memory relativeCoord
+  ) private returns (uint256 tileEntity) {
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
+    Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
+    tileEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
+    require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
+    ownedByComponent.set(tileEntity, buildingEntity);
   }
 }

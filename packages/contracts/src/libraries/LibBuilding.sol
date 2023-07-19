@@ -1,82 +1,77 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
-import { MainBaseID, SiloID, BulletFactoryID, DebugPlatingFactoryID, MinerID } from "../prototypes/Tiles.sol";
+import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+import { IWorld } from "solecs/System.sol";
 
-import { BasicMinerID, PlatingFactoryID, BasicBatteryFactoryID, KineticMissileFactoryID, ProjectileLauncherID, HardenedDrillID, DenseMetalRefineryID, AdvancedBatteryFactoryID, HighTempFoundryID, PrecisionMachineryFactoryID, IridiumDrillbitFactoryID, PrecisionPneumaticDrillID, PenetratorFactoryID, PenetratingMissileFactoryID, MissileLaunchComplexID, HighEnergyLaserFactoryID, ThermobaricWarheadFactoryID, ThermobaricMissileFactoryID, KimberliteCatalystFactoryID } from "../prototypes/Tiles.sol";
+//components
+import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
+import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 
-import { LibDebug } from "libraries/LibDebug.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+
+import { MainBaseID } from "../prototypes/Tiles.sol";
+
+import { Coord } from "../types.sol";
 import { LibMath } from "libraries/LibMath.sol";
-
-import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
-import { entityToAddress } from "solecs/utils.sol";
+import { LibTerrain } from "./LibTerrain.sol";
 
 library LibBuilding {
-  function checkBuildLimitConditionForBuildingId(
-    BoolComponent ignoreBuildLimitComponent,
-    Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
+  function isBuildingLimitConditionMet(
+    IWorld world,
     uint256 playerEntity,
     uint256 buildingId
   ) internal view returns (bool) {
     return
-      !doesTileCountTowardsBuildingLimit(ignoreBuildLimitComponent, buildingId) ||
-      checkBuildingCountNotExceedBuildLimit(buildingLimitComponent, buildingComponent, playerEntity);
+      IgnoreBuildLimitComponent(getAddressById(world.components(), IgnoreBuildLimitComponentID)).has(buildingId) ||
+      isBuildingCountWithinLimit(world, playerEntity);
   }
 
-  function checkBuildingCountNotExceedBuildLimit(
-    Uint256Component buildingLimitComponent,
-    Uint256Component buildingComponent,
-    uint256 playerEntity
-  ) internal view returns (bool) {
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
-    uint256 buildCountLimit = getBuildCountLimit(buildingLimitComponent, mainBuildingLevel);
-    uint256 buildingCount = getNumberOfBuildingsForPlayer(buildingLimitComponent, playerEntity);
+  function isBuildingCountWithinLimit(IWorld world, uint256 playerEntity) internal view returns (bool) {
+    uint256 baseLevel = getBaseLevel(world, playerEntity);
+    uint256 buildCountLimit = getBuildingCountLimit(world, baseLevel);
+    uint256 buildingCount = getBuildingCount(world, playerEntity);
     return buildingCount < buildCountLimit;
   }
 
-  function checkMainBaseLevelRequirement(
-    Uint256Component buildingComponent,
-    uint256 playerEntity,
-    uint256 entity
-  ) internal view returns (bool) {
-    if (!buildingComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = getMainBuildingLevelforPlayer(buildingComponent, playerEntity);
-    return mainBuildingLevel >= buildingComponent.getValue(entity);
+  function canBuildOnTile(IWorld world, uint256 buildingEntity, Coord memory coord) internal view returns (bool) {
+    RequiredTileComponent requiredTileComponent = RequiredTileComponent(
+      getAddressById(world.components(), RequiredTileComponentID)
+    );
+    return
+      !requiredTileComponent.has(buildingEntity) ||
+      requiredTileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
   }
 
-  function getMainBuildingLevelforPlayer(
-    Uint256Component buildingComponent,
-    uint256 playerEntity
-  ) internal view returns (uint256) {
-    return buildingComponent.has(playerEntity) ? buildingComponent.getValue(playerEntity) : 0;
+  function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint256) {
+    MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
+      getAddressById(world.components(), MainBaseInitializedComponentID)
+    );
+
+    if (!mainBaseInitializedComponent.has(playerEntity)) return 0;
+    uint256 mainBase = mainBaseInitializedComponent.getValue(playerEntity);
+    return BuildingLevelComponent(getAddressById(world.components(), BuildingLevelComponentID)).getValue(mainBase);
   }
 
-  function getNumberOfBuildingsForPlayer(
-    Uint256Component buildingLimitComponent,
-    uint256 playerEntity
-  ) internal view returns (uint256) {
+  function getBuildingCount(IWorld world, uint256 playerEntity) internal view returns (uint256) {
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
+      getAddressById(world.components(), BuildingLimitComponentID)
+    );
     return LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity);
   }
 
-  function getBuildCountLimit(
-    Uint256Component buildingLimitComponent,
-    uint256 mainBuildingLevel
-  ) internal view returns (uint256) {
-    if (LibDebug.isDebug()) return 100;
-    else if (buildingLimitComponent.has(mainBuildingLevel)) return buildingLimitComponent.getValue(mainBuildingLevel);
-    else revert("Invalid Main Building Level");
+  function getBuildingCountLimit(IWorld world, uint256 baseLevel) internal view returns (uint256) {
+    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
+      getAddressById(world.components(), BuildingLimitComponentID)
+    );
+    if (buildingLimitComponent.has(baseLevel)) return buildingLimitComponent.getValue(baseLevel);
+    else revert("Invalid Base Level");
   }
 
   function isMainBase(uint256 tileId) internal pure returns (bool) {
     return tileId == MainBaseID;
-  }
-
-  function doesTileCountTowardsBuildingLimit(
-    BoolComponent ignoreBuildLimitComponent,
-    uint256 tileId
-  ) internal view returns (bool) {
-    return !ignoreBuildLimitComponent.has(tileId) || !ignoreBuildLimitComponent.getValue(tileId);
   }
 }

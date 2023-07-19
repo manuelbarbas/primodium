@@ -1,4 +1,4 @@
-import { Type, World, defineComponent } from "@latticexyz/recs";
+import { World, defineComponent, Type } from "@latticexyz/recs";
 import { overridableComponent } from "@latticexyz/recs";
 import {
   defineBoolComponent,
@@ -78,16 +78,89 @@ export function defineComponents(world: World) {
       },
     }),
     // main base initialized
-    MainBaseInitialized: defineCoordComponent(world, {
+    MainBaseInitialized: defineNumberComponent(world, {
       metadata: {
         contractId: "component.MainBaseInitialized",
       },
     }),
+    // Resource data stored in components
+    RequiredResearchComponent: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.RequiredResearch",
+      },
+    }),
+    RequiredResourcesComponent: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.RequiredResources",
+        },
+      }
+    ),
+    MaxLevel: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.MaxLevel",
+        },
+      })
+    ),
+    BuildingLevel: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLevel",
+        },
+      })
+    ),
+    StorageCapacity: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.StorageCapacity",
+        },
+      })
+    ),
+    StorageCapacityResources: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.StorageCapacityResources",
+        },
+      }
+    ),
+    Mine: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Mine",
+        },
+      })
+    ),
+    BuildingLimit: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLimit",
+        },
+      })
+    ),
+    UnclaimedResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.UnclaimedResource",
+      },
+    }),
+    // TODO: component data for crafting recipes
   };
 }
 
 export function defineOffChainComponents(world: World) {
   return {
+    BlockNumber: defineNumberComponent(world, {
+      metadata: {},
+      id: "BlockNumber",
+    }),
     DoubleCounter: defineNumberComponent(world, {
       metadata: {},
       id: "DoubleCounter",
