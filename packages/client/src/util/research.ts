@@ -103,7 +103,7 @@ export const ResearchTechnologyTree = [
   {
     data: {
       name: "Storage Unit 3",
-      id: BlockType.StorageUnit2Research,
+      id: BlockType.StorageUnit3Research,
       description:
         "allows you to upgrade Storage Unit building to level 2 increasing production",
       resources: [],
@@ -214,33 +214,6 @@ export const ResearchTechnologyTree = [
       id: BlockType.LithiumCopperOxideFactory3Research,
       description:
         "allows you to upgrade LithiumCopperOxide Factory building to level 3 increasing production",
-      resources: [],
-    },
-  },
-  {
-    data: {
-      name: "SpaceFuel Factory",
-      id: BlockType.SpaceFuelFactoryResearch,
-      description:
-        "allows you to build SpaceFuel Factory building which produces Iron Plates from Iron Ore. Requires 1 connected Iron Mine to function",
-      resources: [],
-    },
-  },
-  {
-    data: {
-      name: "SpaceFuel Factory 2",
-      id: BlockType.SpaceFuelFactory2Research,
-      description:
-        "allows you to upgrade SpaceFuel Factory building to level 2 increasing production",
-      resources: [],
-    },
-  },
-  {
-    data: {
-      name: "SpaceFuel Factory 3",
-      id: BlockType.SpaceFuelFactory3Research,
-      description:
-        "allows you to upgrade SpaceFuel Factory building to level 3 increasing production",
       resources: [],
     },
   },

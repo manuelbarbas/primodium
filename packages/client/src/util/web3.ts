@@ -73,7 +73,7 @@ export const buildBuilding = async (
     setTransactionLoading(true);
     await execute(
       systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
-        gasLimit: 2_500_000,
+        gasLimit: 3_500_000,
       }),
       providers,
       setNotification

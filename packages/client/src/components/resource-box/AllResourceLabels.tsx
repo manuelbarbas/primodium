@@ -134,6 +134,11 @@ export default function AllResourceLabels({
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
       />
+      <ResourceLabel
+        name={"Electricity"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.ElectricityPassiveResource}
+      />
     </>
   );
 }
