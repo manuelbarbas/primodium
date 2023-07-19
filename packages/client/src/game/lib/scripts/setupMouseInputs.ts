@@ -8,7 +8,7 @@ import {
 import { Scene } from "src/engine/types";
 import { pan, updateWorldView } from "src/game/api/camera";
 import { isDown } from "src/game/api/input";
-import { offChainComponents, singletonIndex } from "src/network/world";
+import { offChainComponents, singletonIndex, world } from "src/network/world";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
 import { inTutorial, validTutorialClick } from "src/util/tutorial";
@@ -149,7 +149,14 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
     pan(gameCoord);
   });
 
+<<<<<<< HEAD
   return [pointerMoveSub, doubleClickSub];
+=======
+  world.registerDisposer(() => {
+    pointerMoveSub.unsubscribe();
+    doubleClickSub.unsubscribe();
+  });
+>>>>>>> origin/0xhank/drag-fix
 };
 
 export default setupMouseInputs;

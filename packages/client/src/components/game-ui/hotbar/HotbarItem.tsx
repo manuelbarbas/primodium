@@ -1,11 +1,16 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
+import {
+  EntityID,
+  getComponentValue,
+  removeComponent,
+  setComponent,
+} from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import React from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
-import { world } from "src/network/world";
+import { singletonIndex, world } from "src/network/world";
 import { calcDims, convertToCoords } from "src/util/building";
 import {
   Action,
@@ -18,7 +23,7 @@ const HotbarItem: React.FC<{
   blockType: EntityID;
   keybind: KeybindActions;
   action: Action;
-}> = ({ blockType, keybind }) => {
+}> = ({ blockType, keybind, action }) => {
   const network = useMud();
   const selectedBuilding = primodium.hooks.useSelectedBuilding();
 
@@ -41,6 +46,18 @@ const HotbarItem: React.FC<{
       : undefined;
   }
 
+  const handleSelectBuilding = () => {
+    if (selectedBuilding === blockType) {
+      primodium.components.selectedBuilding(network).remove();
+      primodium.components.selectedAction().remove();
+      return;
+    }
+
+    console.log(blockType);
+    primodium.components.selectedBuilding(network).set(blockType);
+    primodium.components.selectedAction().set(action);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -57,17 +74,7 @@ const HotbarItem: React.FC<{
       >
         <img
           src={BackgroundImage.get(blockType)}
-          onClick={() => {
-            if (selectedBuilding === blockType) {
-              primodium.components.selectedBuilding(network).remove();
-              primodium.components.selectedAction().remove();
-              return;
-            }
-
-            console.log(blockType);
-            primodium.components.selectedBuilding(network).set(blockType);
-            primodium.components.selectedAction().set(Action.PlaceBuilding);
-          }}
+          onClick={handleSelectBuilding}
           className={`w-16 h-16 pixel-images border border-cyan-700 ${
             selectedBuilding === blockType
               ? " ring-4 ring-amber-400 transistion-all duration-100"
