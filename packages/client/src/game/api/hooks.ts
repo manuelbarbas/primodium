@@ -30,12 +30,12 @@ export const useHoverTile = () => {
 };
 
 export const useSelectedBuilding = () => {
-  const buildingEntity = useComponentValue(
+  const selectedBuilding = useComponentValue(
     offChainComponents.SelectedBuilding,
     singletonIndex
   )?.value;
-  if (!buildingEntity) return;
-  return world.entityToIndex.get(buildingEntity);
+
+  return selectedBuilding;
 };
 
 export const useStartSelectedPath = () => {

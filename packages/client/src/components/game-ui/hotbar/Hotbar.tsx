@@ -8,6 +8,7 @@ import HotbarLabel from "./HotbarLabel";
 import HotbarPagination from "./HotbarPagination";
 import hotbarContent from "./hotbarContent";
 import wrap from "./wrap";
+import { Action } from "src/util/constants";
 
 const Hotbar: React.FC = () => {
   const network = useMud();
@@ -22,11 +23,11 @@ const Hotbar: React.FC = () => {
     if (!gameReady) return;
 
     const hotkeyListener = (index: number) => {
-      if (index > hotbarContent[activeBarRef.current].buildings.length - 1)
-        return;
+      if (index > hotbarContent[activeBarRef.current].items.length - 1) return;
 
-      const building =
-        hotbarContent[activeBarRef.current].buildings[index].blockType;
+      const item = hotbarContent[activeBarRef.current].items[index];
+
+      const building = item.blockType;
 
       const selectedBuilding = primodium.components
         .selectedBuilding(network)
@@ -34,12 +35,14 @@ const Hotbar: React.FC = () => {
 
       if (selectedBuilding === building) {
         primodium.components.selectedBuilding(network).remove();
+        primodium.components.selectedAction().remove();
         return;
       }
 
+      primodium.components.selectedBuilding(network).set(building);
       primodium.components
-        .selectedBuilding(network)
-        .set(hotbarContent[activeBarRef.current].buildings[index].blockType);
+        .selectedAction()
+        .set(item.action ?? Action.PlaceBuilding);
     };
 
     let hotkeys: { dispose: () => void }[] = [];

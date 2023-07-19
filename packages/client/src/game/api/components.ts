@@ -13,6 +13,8 @@ import {
   updateComponent,
   withValue,
 } from "@latticexyz/recs";
+
+import { offChainComponents, singletonIndex } from "src/network/world";
 import { Coord } from "@latticexyz/utils";
 import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
 import {
@@ -21,6 +23,7 @@ import {
   getTilesOfTypeInRange,
 } from "src/util/tile";
 import { Network } from "../../network/layer";
+import { Action } from "src/util/constants";
 
 let perlin: Perlin;
 (async () => {
@@ -352,4 +355,23 @@ export const mainBase = (network: Network) => {
       );
     },
   };
+};
+
+export const selectedAction = () => {
+  const get = () => {
+    return getComponentValue(offChainComponents.SelectedAction, singletonIndex)
+      ?.value;
+  };
+
+  const set = (value: Action) => {
+    setComponent(offChainComponents.SelectedAction, singletonIndex, {
+      value,
+    });
+  };
+
+  const remove = () => {
+    return removeComponent(offChainComponents.SelectedAction, singletonIndex);
+  };
+
+  return { get, set, remove };
 };

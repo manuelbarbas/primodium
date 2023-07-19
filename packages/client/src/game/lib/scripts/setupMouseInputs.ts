@@ -50,10 +50,10 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
         break;
       case Action.DemolishBuilding:
         demolishBuilding(gameCoord, network);
-        return;
+        break;
       case Action.DemolishPath:
         demolishPath(gameCoord, network);
-        return;
+        break;
       case Action.Conveyor:
         const startCoord = components.startSelectedPath(network).get();
 
@@ -63,7 +63,7 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
         }
 
         buildPath(startCoord, gameCoord, network);
-        return;
+        break;
       case Action.SelectAttack:
         return;
       case Action.PlaceBuilding:
@@ -75,7 +75,9 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
         components.selectedBuilding(network).remove();
         buildBuilding(gameCoord, selectedBuilding, address, network);
     }
-    if (selectedAction) removeComponent(SelectedAction, singletonIndex);
+
+    if (selectedAction !== undefined)
+      removeComponent(SelectedAction, singletonIndex);
 
     // update selected building
     const building = getBuildingAtCoord(gameCoord, network);

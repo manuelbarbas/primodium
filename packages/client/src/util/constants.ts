@@ -43,11 +43,7 @@ export const BlockKey = {
   Silo: "Silo",
 };
 
-export interface BlockTypeInterface {
-  [x: string]: EntityID;
-}
-
-export const BlockType: BlockTypeInterface = {
+export const BlockType = {
   // Landscape blocks
   Water: keccak256("block.Water") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,
@@ -76,6 +72,8 @@ export const BlockType: BlockTypeInterface = {
   ) as EntityID,
   DebugIronPlateFactory: keccak256("block.DebugIronPlateFactory") as EntityID,
   DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
+  DebugDemolishBuilding: keccak256("block.DebugDemolishBuilding") as EntityID,
+  DebugDemolishPath: keccak256("block.DebugDemolishPath") as EntityID,
 
   MainBase: keccak256("block.MainBase") as EntityID,
   DebugNode: keccak256("block.DebugNode") as EntityID,

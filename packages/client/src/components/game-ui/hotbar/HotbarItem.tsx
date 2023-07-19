@@ -7,32 +7,42 @@ import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
 import { world } from "src/network/world";
 import { calcDims, convertToCoords } from "src/util/building";
-import { BackgroundImage, BlockIdToKey, KeyImages } from "src/util/constants";
+import {
+  Action,
+  BackgroundImage,
+  BlockIdToKey,
+  BlockType,
+  KeyImages,
+} from "src/util/constants";
 
 const HotbarItem: React.FC<{
   blockType: EntityID;
   keybind: KeybindActions;
+  action: Action;
 }> = ({ blockType, keybind }) => {
   const network = useMud();
-  const selectedBuildingEntity = primodium.hooks.useSelectedBuilding();
-  const selectedBuilding = !!selectedBuildingEntity
-    ? world.entities[selectedBuildingEntity]
-    : undefined;
+  const selectedBuilding = primodium.hooks.useSelectedBuilding();
+  // const selectedBuilding = !!selectedBuildingEntity
+  //   ? world.entities[selectedBuildingEntity]
+  //   : undefined;
   const keybinds = primodium.hooks.useKeybinds();
 
   const key = keybinds[keybind]?.entries().next().value[0] as Key;
   const keyImage = KeyImages.get(key);
 
+  let dimensions: { width: number; height: number } | undefined;
   const buildingTypeEntity = world.entityToIndex.get(blockType);
-  if (!buildingTypeEntity) return null;
-  const blueprint = getComponentValue(
-    network.components.RawBlueprint,
-    buildingTypeEntity
-  )?.value;
 
-  const dimensions = blueprint
-    ? calcDims(buildingTypeEntity, convertToCoords(blueprint))
-    : undefined;
+  if (buildingTypeEntity) {
+    const blueprint = getComponentValue(
+      network.components.RawBlueprint,
+      buildingTypeEntity
+    )?.value;
+
+    dimensions = blueprint
+      ? calcDims(buildingTypeEntity, convertToCoords(blueprint))
+      : undefined;
+  }
 
   return (
     <motion.div
@@ -53,10 +63,13 @@ const HotbarItem: React.FC<{
           onClick={() => {
             if (selectedBuilding === blockType) {
               primodium.components.selectedBuilding(network).remove();
+              primodium.components.selectedAction().remove();
               return;
             }
 
+            console.log(blockType);
             primodium.components.selectedBuilding(network).set(blockType);
+            primodium.components.selectedAction().set(Action.PlaceBuilding);
           }}
           className={`w-16 h-16 pixel-images border border-cyan-700 ${
             selectedBuilding === blockType

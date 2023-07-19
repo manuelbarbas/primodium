@@ -8,7 +8,6 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   height: window.innerHeight * window.devicePixelRatio * RENDER_RESOLUTION,
   scale: {
     mode: Phaser.Scale.NONE,
-    zoom: 1,
   },
   autoFocus: true,
   desynchronized: true,
