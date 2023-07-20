@@ -55,7 +55,7 @@ export const Inventory = () => {
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scale: 0 }}
-              className=" bg-gray-900 z-[999] w-72 border border-cyan-60 p-2 text-xs min-h-[5rem]"
+              className=" bg-gray-900 z-[999] w-72 border border-cyan-600 p-2 text-xs min-h-[5rem]"
             >
               <Inventory.AllResourceLabels />
             </motion.div>
