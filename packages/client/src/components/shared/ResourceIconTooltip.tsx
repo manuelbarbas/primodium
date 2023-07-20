@@ -30,7 +30,8 @@ export default function ResourceIconTooltip({
           {formatString(name)}
         </div>
         <div>
-          <img className="inline-block mr-1" src={image}></img>-{amount}
+          <img className="inline-block mr-1" src={image}></img>
+          {amount}
         </div>
       </div>
     );
@@ -42,7 +43,7 @@ export default function ResourceIconTooltip({
         {formatString(name)}
       </div>
       <div className="mr-2" key={resourceId}>
-        <img src={image} className="w-4 h-4 inline-block mr-1 pixel-images" />-
+        <img src={image} className="w-4 h-4 inline-block mr-1 pixel-images" />
         {amount}
       </div>
     </div>

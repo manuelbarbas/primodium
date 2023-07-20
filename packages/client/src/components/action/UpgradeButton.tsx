@@ -137,7 +137,7 @@ export default function UpgradeButton({
           {transactionLoading ? <Spinner /> : upgradeText}
         </div>
       </GameButton>
-      <div className="mt-2 flex justify-center items-center text-sm bg-slate-900/60 px-2 text-rose-600">
+      <div className="mt-2 flex justify-center items-center text-sm bg-slate-900/60 px-2">
         {recipe.map((resource) => {
           const resourceImage = ResourceImage.get(resource.id)!;
           const resourceName = BlockIdToKey[resource.id];
