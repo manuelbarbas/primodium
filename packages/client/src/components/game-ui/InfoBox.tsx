@@ -9,10 +9,10 @@ import { encodeCoordEntityAndTrim } from "src/util/encode";
 import { useMainBase } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
 import { GameButton } from "../shared/GameButton";
-import ResearchModal from "./research-menu/ResearchModal";
-import { IoFlaskSharp } from "react-icons/io5";
+import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
+import { SettingsMenu } from "./SettingsMenu";
 
 export const InfoBox = () => {
   const { components, world, singletonIndex } = useMud();
@@ -21,6 +21,7 @@ export const InfoBox = () => {
   const [minimized] = useState<boolean>(false);
   const mainBaseCoord = useMainBase();
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
+  const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
 
   const mainBaseLevel = useComponentValue(
     components.BuildingLevel,
@@ -109,18 +110,44 @@ export const InfoBox = () => {
                 </div>
               </motion.div>
             )}
-            <GameButton
-              id="research"
-              className="mt-2 ml-1 text-sm"
-              onClick={() => setShowResearchModal(true)}
-            >
-              <div className="flex m-1 items-center gap-2 px-1">
-                <IoFlaskSharp /> <p className="">Research</p>
+
+            <div className="flex gap-2">
+              <div className="relative">
+                <GameButton
+                  id="research"
+                  className="mt-2 ml-1 text-sm"
+                  onClick={() => setShowMenuModal(true)}
+                  color="bg-gray-700"
+                  depth={6}
+                >
+                  <div className="flex m-1 items-center gap-2 px-1 h-4">
+                    <IoSettings />
+                  </div>
+                </GameButton>
               </div>
-            </GameButton>
+              <div className="relative">
+                <GameButton
+                  id="research"
+                  className="mt-2 ml-1 text-sm"
+                  onClick={() => setShowResearchModal(true)}
+                  depth={6}
+                >
+                  <div className="flex m-1 items-center gap-2 px-1 h-4">
+                    <IoFlaskSharp /> <p className="">Research</p>
+                  </div>
+                </GameButton>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
+      <Modal
+        title="Menu"
+        show={showMenuModal}
+        onClose={() => setShowMenuModal(!showMenuModal)}
+      >
+        <SettingsMenu />
+      </Modal>
       <Modal
         title="Research"
         show={showResearchModal}

@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, children, title }) => {
         >
           <div
             ref={modalRef}
-            className="bg-slate-900/90 w-full max-w-6xl border-4 border-b-8 border-cyan-800 max-h-full shadow-2xl flex flex-col"
+            className="bg-slate-900/90 max-w-6xl border-4 border-b-8 border-cyan-600 max-h-full shadow-2xl flex flex-col"
           >
             <div className="bg-gray-800 flex justify-between items-center px-2 w-full text-sm">
               <div className="flex items-center text-pink-50">

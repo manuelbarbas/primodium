@@ -11,6 +11,7 @@ import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "../NotificationBox";
+import { BrandingLabel } from "./BrandingLabel";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -37,7 +38,7 @@ function GameUI() {
       {gameReady && (
         <div className="screen-container">
           <div className="fixed top-0 bottom-0 screen-container pointer-events-none vignette opacity-20 mix-blend-overlay" />
-          {/* <BrandingLabel /> */}
+          <BrandingLabel />
           <Camera />
           <AnimatePresence>
             {showUI && (
