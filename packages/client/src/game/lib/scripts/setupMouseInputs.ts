@@ -11,7 +11,6 @@ import { isDown } from "src/game/api/input";
 import { offChainComponents, singletonIndex, world } from "src/network/world";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
-import { inTutorial, validTutorialClick } from "src/util/tutorial";
 import {
   buildBuilding,
   buildPath,

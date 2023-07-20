@@ -101,10 +101,6 @@ export default function UpgradeButton({
     );
   }, [isResearched, researchRequirement]);
 
-  const colorCode = useMemo(() => {
-    return "bg-yellow-800 hover:bg-yellow-900";
-  }, []);
-
   const claimAction = async () => {
     setTransactionLoading(true);
     await execute(

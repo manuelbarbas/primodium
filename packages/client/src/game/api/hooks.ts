@@ -5,7 +5,7 @@ import { Coord } from "@latticexyz/utils";
 import { throttle } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useComponentValue } from "src/hooks/useComponentValue";
-import { offChainComponents, singletonIndex, world } from "src/network/world";
+import { offChainComponents, singletonIndex } from "src/network/world";
 import { Network } from "../../network/layer";
 import { useSettingsStore } from "../stores/SettingsStore";
 

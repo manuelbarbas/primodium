@@ -251,6 +251,8 @@ export const BlockType = {
 
   BuildingKey: "building" as EntityID,
 
+  ArrowMarker: keccak256("marker.Arrow") as EntityID,
+
   // IronResearch: keccak256("research.Iron") as EntityID,
 
   // CopperResearch: keccak256("block.Copper") as EntityID,

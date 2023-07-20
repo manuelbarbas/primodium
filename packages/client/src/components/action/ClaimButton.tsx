@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { Coord } from "@latticexyz/utils";
 
 import { useMud } from "src/context/MudContext";

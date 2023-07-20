@@ -6,7 +6,6 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { BlockType } from "./constants";
 
 // Component overrides
 export const addTileOverride = (
