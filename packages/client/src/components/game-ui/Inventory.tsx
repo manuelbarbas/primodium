@@ -307,7 +307,7 @@ Inventory.ResourceLabel = ({
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (storageCount >= 0) {
+  if (storageCount > 0) {
     return (
       <div className="mb-1">
         <div className="flex justify-between">
