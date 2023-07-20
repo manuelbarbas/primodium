@@ -153,7 +153,7 @@ export const ResearchTree: ResearchTreeType = [
         ],
       },
       {
-        name: "IronPlate Factory",
+        name: "Iron Plate Factory",
         id: BlockType.IronPlateFactoryResearch,
         description:
           "Allows you to build Copper Mine building which produces Copper Ore.",

@@ -30,10 +30,7 @@ export const GameButton = ({
       <div className="relative w-full h-full border-[3px] border-white/50">
         {children}
       </div>
-      <div
-        style={{ height: depth }}
-        className="w-full group-active:h-0 bg-black/20"
-      />
+      <div style={{ height: depth }} className="w-full bg-black/20" />
       <div className="absolute inset-0 group-active:bg-black/20" />
     </button>
   );

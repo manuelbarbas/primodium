@@ -1,4 +1,3 @@
-import { ResearchImage } from "src/util/constants";
 import { ResearchTree } from "../../../util/research";
 import { ResearchItem } from "./ResearchItem";
 
@@ -16,10 +15,7 @@ function ResearchPage() {
             </h1>
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pb-5">
               {data.map((item) => {
-                const resourceIcon = ResearchImage.get(item.id);
-                return (
-                  <ResearchItem key={item.id} data={item} icon={resourceIcon} />
-                );
+                return <ResearchItem key={item.id} data={item} />;
               })}
             </div>
           </div>

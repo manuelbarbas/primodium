@@ -36,7 +36,6 @@ function GameUI() {
     <div>
       {gameReady && (
         <div className="screen-container">
-          {/* Vignette */}
           <div className="fixed top-0 bottom-0 screen-container pointer-events-none vignette opacity-20 mix-blend-overlay" />
           {/* <BrandingLabel /> */}
           <Camera />

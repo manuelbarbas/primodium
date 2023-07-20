@@ -11,8 +11,8 @@ import { world } from "src/network/world";
 import { decodeCoordEntity } from "src/util/encode";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
-import Modal from "src/components/shared/Modal";
 import { demolishBuilding, demolishPath } from "src/util/web3";
+import PortalModal from "src/components/shared/PortalModal";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -97,7 +97,10 @@ export const BuildingInfo: React.FC<{
           </div>
         )}
       </div>
-      <Modal show={showDestroyModal} onClose={() => setShowDestroyModal(false)}>
+      <PortalModal
+        show={showDestroyModal}
+        onClose={() => setShowDestroyModal(false)}
+      >
         <div className="space-y-8">
           <h1>
             Demolish <b>{buildingName}</b> or <b>Path</b> at{" "}
@@ -133,7 +136,7 @@ export const BuildingInfo: React.FC<{
             </GameButton>
           </div>
         </div>
-      </Modal>
+      </PortalModal>
     </>
   );
 };
