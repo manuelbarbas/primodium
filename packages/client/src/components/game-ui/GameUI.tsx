@@ -10,7 +10,6 @@ import { Camera } from "./Camera";
 import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
-// import SideMenu from "../SideMenu";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [

@@ -28,7 +28,7 @@ function ResearchModal({
           className="z-[1000] viewport-container fixed inset-y-24 inset-x-24 flex flex-col bg-gray-700 text-white drop-shadow-xl font-mono rounded"
           onClick={stopPropagation}
         >
-          <div className="flex flex-col h-full relative">
+          <div className="flex flex-col h-full">
             <button
               onClick={hideModalHelper}
               className="absolute top-4 right-5"

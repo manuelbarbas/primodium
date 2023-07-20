@@ -8,7 +8,7 @@ import AttackBox from "./attack-menu/AttackBox";
 import BuildingPage from "./building-menu/BuildingPage";
 import DemolishBuildingBox from "./demolish-menu/DemolishBuildingBox";
 import MarketModal from "./market-menu/MarketModal";
-import ResearchModal from "./research-menu/ResearchModal";
+import ResearchModal from "./game-ui/research-menu/ResearchModal";
 
 import { removeComponent } from "@latticexyz/recs";
 import { singletonIndex } from "src/network/world";

@@ -45,8 +45,8 @@ export default function ClaimButton({
 
   return (
     <div className="relative">
-      <GameButton id={id} className="w-44 mt-2" onClick={claimAction}>
-        <div className="font-bold leading-none h-8 flex justify-center items-center crt">
+      <GameButton id={id} className="mt-2 text-sm" onClick={claimAction}>
+        <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2">
           {transactionLoading ? <Spinner /> : "Claim Resources"}
         </div>
       </GameButton>

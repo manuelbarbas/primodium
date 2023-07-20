@@ -119,7 +119,7 @@ export default function UpgradeButton({
 
   let upgradeText: string;
   if (isUpgradeLocked) {
-    upgradeText = "Technology Requirements Not Met";
+    upgradeText = "Research Not Met";
   } else if (!isLevelConditionMet) {
     upgradeText = "Max Level Reached";
   } else {
@@ -130,7 +130,7 @@ export default function UpgradeButton({
     <div className="flex flex-col items-center">
       <GameButton
         id={id}
-        className="w-44 mt-2 bg-green-500"
+        className="w-44 mt-2 bg-green-500 text-sm"
         onClick={claimAction}
       >
         <div className="font-bold leading-none h-8 flex justify-center items-center crt">
