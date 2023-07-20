@@ -33,6 +33,12 @@ export const Inventory = () => {
               active={menuIndex === 0}
               onClick={() => setMenuIndex(menuIndex === 0 ? null : 0)}
             />
+            <Inventory.Button
+              name="Utilities"
+              icon="/img/icons/utilitiesicon.png"
+              active={menuIndex === 1}
+              onClick={() => setMenuIndex(menuIndex === 1 ? null : 1)}
+            />
           </motion.div>
 
           {menuIndex === 0 && (
@@ -40,9 +46,20 @@ export const Inventory = () => {
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scale: 0 }}
-              className=" bg-gray-900 z-[999] w-72 border border-cyan-600 p-2 text-xs"
+              className=" bg-gray-900 z-[999] w-72 border border-cyan-60 p-2 text-xs min-h-[5rem]"
             >
               <Inventory.AllResourceLabels />
+            </motion.div>
+          )}
+
+          {menuIndex === 1 && (
+            <motion.div
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              exit={{ scale: 0 }}
+              className=" bg-gray-900 z-[999] w-72 border border-cyan-600 p-2 text-xs min-h-[5rem]"
+            >
+              <Inventory.AllPassiveResourceLabels />
             </motion.div>
           )}
 
@@ -216,6 +233,22 @@ Inventory.AllResourceLabels = ({
         name={"Kimberlite Catalyst"}
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
+      />
+    </>
+  );
+};
+
+Inventory.AllPassiveResourceLabels = ({
+  entityIndex,
+}: {
+  entityIndex?: EntityIndex;
+}) => {
+  return (
+    <>
+      <Inventory.ResourceLabel
+        name={"Electricity"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.ElectricityPassiveResource}
       />
     </>
   );
