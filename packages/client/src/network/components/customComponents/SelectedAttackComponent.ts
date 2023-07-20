@@ -1,15 +1,8 @@
-import {
-  Metadata,
-  Type,
-  World,
-  getComponentValue,
-  updateComponent,
-} from "@latticexyz/recs";
+import { Metadata, Type, World } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
 import { getEntityTileAtCoord } from "src/util/tile";
-import Component, { Options } from "../../Component";
-import { singletonIndex } from "../../world";
+import Component, { Options } from "./Component";
 
 class SelectedAttackComponent<M extends Metadata> extends Component<
   { origin: Type.OptionalString; target: Type.OptionalString },
@@ -23,8 +16,8 @@ class SelectedAttackComponent<M extends Metadata> extends Component<
     );
   }
 
-  public override get = () => {
-    const value = getComponentValue(this.component, singletonIndex);
+  public getCoords = () => {
+    const value = this.get();
 
     return {
       origin: (JSON.parse(value?.origin ?? "null") ?? undefined) as
@@ -46,13 +39,11 @@ class SelectedAttackComponent<M extends Metadata> extends Component<
       return;
     }
 
-    updateComponent(this.component, singletonIndex, {
-      origin: JSON.stringify(coord),
-    });
+    this.update({ origin: JSON.stringify(coord) });
   };
 
   public setTarget = (coord: Coord) => {
-    const selectedAttackTiles = this.get();
+    const selectedAttackTiles = this.getCoords();
 
     if (!selectedAttackTiles.origin) {
       console.log("origin is not set");
@@ -91,9 +82,7 @@ class SelectedAttackComponent<M extends Metadata> extends Component<
       return;
     }
 
-    updateComponent(this.component, singletonIndex, {
-      target: JSON.stringify(coord),
-    });
+    this.update({ target: JSON.stringify(coord) });
   };
 }
 

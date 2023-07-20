@@ -3,26 +3,47 @@ import Component, {
   BoolComponent,
   CoordComponent,
   NumberComponent,
-} from "../Component";
+} from "./customComponents/Component";
 import { world } from "../world";
 import MarkerTypeComponent from "./customComponents/MarkerComponent";
 import SelectedAttackComponent from "./customComponents/SelectedAttackComponent";
 
-const components = {
-  BlockNumber: new NumberComponent(world, { id: "BlockNumber" }),
-  GameReady: new BoolComponent(world, { id: "GameReady" }),
-  DoubleCounter: new NumberComponent(world, { id: "DoubleCounter" }),
-  SelectedTile: new CoordComponent(world, { id: "SelectedTile" }),
-  HoverTile: new CoordComponent(world, { id: "HoverTile" }),
-  SelectedBuilding: new Component(
-    world,
-    { value: Type.Entity },
-    { id: "SelectedBuilding" }
-  ),
-  SelectedAction: new NumberComponent(world, { id: "SelectedAction" }),
-  StartSelectedPath: new CoordComponent(world, { id: "StartSelectedPath" }),
-  SelectedAttack: new SelectedAttackComponent(world, { id: "SelectedAttack" }),
-  Marker: new MarkerTypeComponent(world, { id: "MarkerTypeComponent" }),
-};
+export const Position = new CoordComponent(world, { id: "Position" });
+export const BlockNumber = new NumberComponent(world, { id: "BlockNumber" });
+export const GameReady = new BoolComponent(world, { id: "GameReady" });
+export const DoubleCounter = new NumberComponent(world, {
+  id: "DoubleCounter",
+});
+export const SelectedTile = new CoordComponent(world, { id: "SelectedTile" });
+export const HoverTile = new CoordComponent(world, { id: "HoverTile" });
+export const SelectedBuilding = new Component(
+  world,
+  { value: Type.Entity },
+  { id: "SelectedBuilding" }
+);
+export const SelectedAction = new NumberComponent(world, {
+  id: "SelectedAction",
+});
+export const StartSelectedPath = new CoordComponent(world, {
+  id: "StartSelectedPath",
+});
+export const SelectedAttack = new SelectedAttackComponent(world, {
+  id: "SelectedAttack",
+});
+export const Marker = new MarkerTypeComponent(world, {
+  id: "MarkerTypeComponent",
+});
 
-export default components;
+export default {
+  Position,
+  BlockNumber,
+  GameReady,
+  DoubleCounter,
+  SelectedTile,
+  HoverTile,
+  SelectedBuilding,
+  SelectedAction,
+  StartSelectedPath,
+  SelectedAttack,
+  Marker,
+};
