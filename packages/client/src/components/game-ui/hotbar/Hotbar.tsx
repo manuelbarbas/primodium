@@ -63,6 +63,7 @@ const Hotbar: React.FC = () => {
       () => {
         setActiveBar(wrap(activeBarRef.current + 1, hotbarContent.length));
         primodium.components.selectedBuilding(network).remove();
+        primodium.components.selectedAction().remove();
       }
     );
 
@@ -71,13 +72,20 @@ const Hotbar: React.FC = () => {
       () => {
         setActiveBar(wrap(activeBarRef.current - 1, hotbarContent.length));
         primodium.components.selectedBuilding(network).remove();
+        primodium.components.selectedAction().remove();
       }
     );
+
+    const esc = primodium.input.addListener(KeybindActions.Esc, () => {
+      primodium.components.selectedBuilding(network).remove();
+      primodium.components.selectedAction().remove();
+    });
 
     return () => {
       hotkeys.forEach((hotkey) => hotkey.dispose());
       nextHotbar.dispose();
       prevHotbar.dispose();
+      esc.dispose();
     };
   }, [gameReady, keybinds, hotbarContent]);
 

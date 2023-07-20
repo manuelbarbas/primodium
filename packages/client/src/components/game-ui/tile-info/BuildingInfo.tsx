@@ -37,7 +37,7 @@ export const BuildingInfo: React.FC<{
     world.entityToIndex.get(building)
   )?.value;
 
-  const isOwner = owner ?? "" == address.toLowerCase();
+  const isOwner = owner ? owner === address.toLowerCase() : false;
 
   const ownerName =
     isOwner || !owner

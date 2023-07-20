@@ -88,6 +88,7 @@ export enum KeybindActions {
   Inventory,
   Mute,
   MainMenu,
+  Esc,
   Debug,
   DeleteBuilding,
   DeletePath,

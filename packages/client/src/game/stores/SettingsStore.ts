@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { merge } from "lodash";
+
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import Phaser from "phaser";
 import { transferListeners, removeListeners } from "../api/input";
 
 import { KeybindActions } from "@game/constants";
+// const VERSION = 0.6;
 
 type Key =
   | keyof typeof Phaser.Input.Keyboard.KeyCodes
@@ -53,6 +54,7 @@ const defaults: SettingsState = {
     [KeybindActions.Hotbar9]: new Set(["ZERO"]),
     [KeybindActions.NextHotbar]: new Set(["E"]),
     [KeybindActions.PrevHotbar]: new Set(["Q"]),
+    [KeybindActions.Esc]: new Set(["ESC"]),
     [KeybindActions.Inventory]: new Set(["I", "TAB"]),
     [KeybindActions.Research]: new Set(["R"]),
   },
@@ -140,11 +142,15 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         },
         removeItem: (name) => localStorage.removeItem(name),
       },
-      version: 0,
-      migrate: (persistedState) => {
-        const newState = merge(defaults, persistedState);
-        return newState as SettingsState & SettingsActions;
-      },
+      version: 0.6,
+      // migrate: (persistedStore: SettingsState & SettingsActions, version) => {
+      //   if (version === VERSION) return persistedStore;
+
+      //   const newState = { ...persistedStore, ...defaults } as SettingsState &
+      //     SettingsActions;
+
+      //   return newState;
+      // },
     }
   )
 );

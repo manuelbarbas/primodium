@@ -24,7 +24,7 @@ const HotbarBody: React.FC<{
     <motion.div className="flex items-center space-x-2">
       {prevKeyImage && hotbarContent.length > 1 && (
         <div
-          className="relative cursor-pointer crt scale-x-[-1] "
+          className="relative cursor-pointer crt scale-x-[-1] w-8"
           onClick={() =>
             setActiveBar(wrap(activeBar - 1, hotbarContent.length))
           }
@@ -55,7 +55,7 @@ const HotbarBody: React.FC<{
       </div>
       {nextKeyImage && hotbarContent.length > 1 && (
         <div
-          className="relative cursor-pointer crt"
+          className="relative cursor-pointer crt w-8"
           onClick={() =>
             setActiveBar(wrap(activeBar + 1, hotbarContent.length))
           }

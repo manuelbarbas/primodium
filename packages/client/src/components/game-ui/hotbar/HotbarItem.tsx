@@ -63,7 +63,7 @@ const HotbarItem: React.FC<{
       }}
     >
       <div
-        className={`relative flex flex-col text-sm items-center cursor-pointer crt ${
+        className={`relative flex flex-col text-sm items-center cursor-pointer crt w-16 ${
           selectedBuilding === blockType ? "scale-110" : ""
         }`}
       >
