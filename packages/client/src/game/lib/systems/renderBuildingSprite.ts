@@ -67,10 +67,11 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
     );
   };
 
-  const positionQuery = [Has(Position), Has(BuildingType), Has(BuildingLevel)];
+  const positionQuery = [Has(Position), Has(BuildingType)];
   defineEnterSystem(world, positionQuery, render);
 
-  defineUpdateSystem(world, positionQuery, render);
+  const updateQuery = [Has(Position), Has(BuildingType), Has(BuildingLevel)];
+  defineUpdateSystem(world, updateQuery, render);
 
   defineExitSystem(world, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;
