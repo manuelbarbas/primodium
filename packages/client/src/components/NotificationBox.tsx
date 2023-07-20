@@ -46,21 +46,19 @@ function NotificationBox() {
 
         return (
           <div
-            className="z-[1001] viewport-container fixed top-52 left-4 pb-4 pr-4 w-64 flex flex-col bg-gray-700 text-yellow-400 drop-shadow-xl font-mono rounded"
+            className="z-[20000] viewport-container fixed bottom-4 left-4 w-64 flex flex-col bg-slate-900/90 text-yellow-400 font-mono border border-cyan-600"
             style={{
               ...defaultStyle,
               ...transitionStyles[state],
             }}
             onClick={hideNotificationBoxHelper}
           >
-            <div className="mt-4 ml-5 flex flex-col">
-              <div className="flex flex-row">
+            <div className="flex flex-col">
+              <div className="flex flex-row border-b border-cyan-600 p-2 gap-2">
                 <LinkIcon icon={<AiFillWarning size="16" />} />
-                <p className="ml-2 inline-block align-middle font-bold">
-                  {title}
-                </p>
+                <p className="inline-block align-middle font-bold">{title}</p>
               </div>
-              <div className="mt-2 text-sm">{message}</div>
+              <div className="text-sm p-2">{message}</div>
             </div>
           </div>
         );

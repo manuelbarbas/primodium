@@ -10,6 +10,7 @@ import { Camera } from "./Camera";
 import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
+import NotificationBox from "../NotificationBox";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -45,7 +46,7 @@ function GameUI() {
                 <Hotbar />
                 <TileInfo />
                 <InfoBox />
-                {/* <NotificationBox /> */}
+                <NotificationBox />
                 {/* <ResourceBox /> */}
                 {/* <TooltipBox /> */}
                 {/* <SideMenu /> */}
