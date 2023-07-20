@@ -35,7 +35,7 @@ export const SettingsMenu = () => {
             className="text-lg w-44"
             depth={5}
             color="bg-gray-700"
-            active={false}
+            disable
           >
             <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2">
               Keybinds
@@ -48,7 +48,7 @@ export const SettingsMenu = () => {
             className="text-lg w-44"
             depth={5}
             color="bg-gray-700"
-            active={false}
+            disable
           >
             <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2">
               Audio

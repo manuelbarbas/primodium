@@ -193,14 +193,14 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
           <div className="my-4">
             {isResearched && (
               <div className="flex items-center w-full justify-center">
-                <GameButton className=" bg-slate-400 text-sm w-3/4">
+                <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
                   <p className="px-2 py-1"> Researched </p>
                 </GameButton>
               </div>
             )}
             {isLocked && (
               <div className="flex items-center w-full justify-center">
-                <GameButton className=" bg-slate-400 text-sm w-3/4">
+                <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
                   <p className="px-2 py-1">
                     Lvl.{" "}
                     {parseInt(requiredMainBaseLevel?.value.toString() ?? "0")}{" "}
