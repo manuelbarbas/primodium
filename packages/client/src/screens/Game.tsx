@@ -2,9 +2,9 @@ import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import { useEffect, useMemo, useState } from "react";
 import GameUI from "src/components/game-ui/GameUI";
-import { Tour } from "src/components/tour/Tour";
+// import { Tour } from "src/components/tour/Tour";
 import { useAccount } from "src/hooks/useAccount";
-import { useTourStore } from "src/store/TourStore";
+// import { useTourStore } from "src/store/TourStore";
 import { decodeCoordEntity } from "src/util/encode";
 import { useMud } from "../context/MudContext";
 import { primodium } from "../game";
@@ -17,10 +17,10 @@ export const Game = () => {
   const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
   const gameReady = primodium.hooks.useGameReady();
-  const [completedTutorial, checkpoint] = useTourStore((state) => [
-    state.completedTutorial,
-    state.checkpoint,
-  ]);
+  // const [completedTutorial, checkpoint] = useTourStore((state) => [
+  //   state.completedTutorial,
+  //   state.checkpoint,
+  // ]);
 
   // resourceKey of the entity
   const resourceKey = address
@@ -76,7 +76,7 @@ export const Game = () => {
   }
 
   //check if player has mainbase and checkpoint is null
-  const playerInitialized = mainBaseCoord && checkpoint === null;
+  // const playerInitialized = mainBaseCoord && checkpoint === null;
 
   return (
     <div>
@@ -91,7 +91,7 @@ export const Game = () => {
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div id="game-container w-full h-full">
-        {!playerInitialized && !completedTutorial && <Tour />}
+        {/* {!playerInitialized && !completedTutorial && <Tour />} */}
         <div id="phaser-container" className="absolute cursor-pointer" />
         <GameUI />
       </div>

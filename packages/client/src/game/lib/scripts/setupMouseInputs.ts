@@ -35,9 +35,9 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
     const gameCoord = { x, y: -y };
 
     //block invalid clicks in tutorial
-    if (inTutorial(address, network)) {
-      if (!validTutorialClick(gameCoord, network)) return;
-    }
+    // if (inTutorial(address, network)) {
+    //   if (!validTutorialClick(gameCoord, network)) return;
+    // }
 
     const selectedAction = getComponentValue(
       SelectedAction,
