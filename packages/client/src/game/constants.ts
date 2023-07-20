@@ -123,7 +123,24 @@ export enum SpriteKeys {
 }
 
 export enum AnimationKeys {
-  Mainbase = "mainbase",
+  Mainbase1 = "mainbase/level1",
+  Mainbase2 = "mainbase/level2",
+  Mainbase3 = "mainbase/level3",
+  Mainbase4 = "mainbase/level4",
+  Mainbase5 = "mainbase/level5",
+
+  IronMine1 = "ironmine/level1",
+  IronMine2 = "ironmine/level2",
+  IronMine3 = "ironmine/level3",
+
+  CopperMine1 = "coppermine/level1",
+  CopperMine2 = "coppermine/level2",
+  CopperMine3 = "coppermine/level3",
+
+  LithiumMine1 = "lithiummine/level1",
+  LithiumMine2 = "lithiummine/level2",
+  LithiumMine3 = "lithiummine/level3",
+
   Node = "node",
   AdvancedBatteryFactory = "advancedbatteryfactory",
   BasicBatteryFactory = "basicbatteryfactory",
