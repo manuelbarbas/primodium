@@ -98,7 +98,37 @@ export enum KeybindActions {
 }
 
 export enum SpriteKeys {
-  Mainbase = "bigbase.png",
+  Mainbase1 = "sprites/mainbase/level1/bigmainbase-level1-0.png",
+  Mainbase2 = "sprites/mainbase/level2/bigmainbase-level2-0.png",
+  Mainbase3 = "sprites/mainbase/level3/bigmainbase-level3-0.png",
+  Mainbase4 = "sprites/mainbase/level4/bigmainbase-level4-0.png",
+  Mainbase5 = "sprites/mainbase/level5/bigmainbase-level5-0.png",
+
+  IronMine1 = "sprites/ironmine/level1/iron-miner-0.png",
+  IronMine2 = "sprites/ironmine/level2/iron-miner-level2-0.png",
+  IronMine3 = "sprites/ironmine/level3/iron-miner-level3-0.png",
+
+  CopperMine1 = "sprites/coppermine/level1/copper-miner-0.png",
+  CopperMine2 = "sprites/coppermine/level2/copper-miner-level2-0.png",
+  CopperMine3 = "sprites/coppermine/level3/copper-miner-level3-0.png",
+
+  LithiumMine1 = "sprites/lithiummine/level1/lithium-miner-0.png",
+  LithiumMine2 = "sprites/lithiummine/level2/lithium-miner-level2-0.png",
+  LithiumMine3 = "sprites/lithiummine/level3/lithium-miner-level3-0.png",
+
+  StorageUnit1 = "sprites/storageunit/level1/storagefacility-level1-0.png",
+  StorageUnit2 = "ssprites/storageunit/level2/storagefacility-level2-0.png",
+
+  IronPlateFactory1 = "sprites/ironplatefactory/level1/platingfactory-level1-0.png",
+  IronPlateFactory2 = "sprites/ironplatefactory/level2/platingfactory-level2-0.png",
+
+  AlloyFactory1 = "sprites/alloyfactory/level1/alloyfactory-level1-0.png",
+
+  PropulsionFuelFactory = "sprites/propulsionfuelfactory/propulsionfuelfactory-0.png",
+
+  SolarPanel1 = "sprites/solarpanel/level1/solarpanel-level1-0.png",
+  SolarPanel2 = "sprites/solarpanel/level2/solarpanel-level2-0.png",
+
   Node = "sprites/node/node-0.png",
   BasicMiner = "sprites/minerdrill/minerdrill-0.png",
   Miner = "sprites/miner/miner.png",
@@ -123,12 +153,6 @@ export enum SpriteKeys {
 }
 
 export enum AnimationKeys {
-  Mainbase1 = "mainbase/level1",
-  Mainbase2 = "mainbase/level2",
-  Mainbase3 = "mainbase/level3",
-  Mainbase4 = "mainbase/level4",
-  Mainbase5 = "mainbase/level5",
-
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",
   IronMine3 = "ironmine/level3",
@@ -140,6 +164,14 @@ export enum AnimationKeys {
   LithiumMine1 = "lithiummine/level1",
   LithiumMine2 = "lithiummine/level2",
   LithiumMine3 = "lithiummine/level3",
+
+  StorageUnit1 = "storageunit/level1",
+  StorageUnit2 = "storageunit/level2",
+
+  IronPlateFactory1 = "ironplatefactory/level1",
+  IronPlateFactory2 = "ironplatefactory/level2",
+
+  AlloyFactory1 = "alloyfactory/level1",
 
   Node = "node",
   AdvancedBatteryFactory = "advancedbatteryfactory",
@@ -177,53 +209,93 @@ export const EntityIdtoTilesetId = {
 };
 
 export const EntityIDtoSpriteKey = {
-  [BlockType.MainBase]: SpriteKeys.Mainbase,
-  [BlockType.Node]: SpriteKeys.Node,
-  // [BlockType.BasicMiner]: SpriteKeys.BasicMiner,
-  [BlockType.IronMine]: SpriteKeys.BasicMiner,
-  [BlockType.CopperMine]: SpriteKeys.BasicMiner,
-  [BlockType.LithiumMine]: SpriteKeys.BasicMiner,
-  [BlockType.StorageUnit]: SpriteKeys.Node,
-  [BlockType.Miner]: SpriteKeys.Miner,
-  [BlockType.BasicBatteryFactory]: SpriteKeys.BasicBatteryFactory,
-  [BlockType.AdvancedBatteryFactory]: SpriteKeys.AdvancedBatteryFactory,
-  [BlockType.BulletFactory]: SpriteKeys.BulletFactory,
-  [BlockType.DenseMetalRefinery]: SpriteKeys.DenseMetalRefinery,
-  [BlockType.HardenedDrill]: SpriteKeys.HardenedDrill,
-  [BlockType.HighTempFoundry]: SpriteKeys.HighTempFoundry,
-  [BlockType.IridiumDrillbitFactory]: SpriteKeys.IridiumDrillBitFactory,
-  [BlockType.KimberliteCatalystFactory]: SpriteKeys.KimberliteCatalyst,
-  [BlockType.KineticMissileFactory]: SpriteKeys.KineticMissileFactory,
-  [BlockType.HighEnergyLaserFactory]: SpriteKeys.LaserFactory,
-  [BlockType.MissileLaunchComplex]: SpriteKeys.MissileLaunchComplex,
-  [BlockType.PlatingFactory]: SpriteKeys.PlatingFactory,
-  [BlockType.PrecisionMachineryFactory]: SpriteKeys.PrecisionMachineryFactory,
-  [BlockType.PrecisionPneumaticDrill]: SpriteKeys.PrecisionPneumaticDrill,
-  [BlockType.ProjectileLauncher]: SpriteKeys.ProjectileLauncher,
-  [BlockType.Silo]: SpriteKeys.Silo,
-  [BlockType.ThermobaricMissileFactory]: SpriteKeys.ThermobaricMissileFactory,
-  [BlockType.ThermobaricWarheadFactory]: SpriteKeys.ThermobaricWarheadFactory,
+  [BlockType.MainBase]: [
+    SpriteKeys.Mainbase1,
+    SpriteKeys.Mainbase2,
+    SpriteKeys.Mainbase3,
+    SpriteKeys.Mainbase4,
+    SpriteKeys.Mainbase5,
+  ],
+
+  [BlockType.IronMine]: [
+    SpriteKeys.IronMine1,
+    SpriteKeys.IronMine2,
+    SpriteKeys.IronMine3,
+  ],
+  [BlockType.CopperMine]: [
+    SpriteKeys.CopperMine1,
+    SpriteKeys.CopperMine2,
+    SpriteKeys.CopperMine3,
+  ],
+  [BlockType.LithiumMine]: [SpriteKeys.BasicMiner],
+  [BlockType.StorageUnit]: [SpriteKeys.Node],
+
+  [BlockType.StorageUnit]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2],
+  [BlockType.IronPlateFactory]: [
+    SpriteKeys.IronPlateFactory1,
+    SpriteKeys.IronPlateFactory2,
+  ],
+  [BlockType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
+  [BlockType.PropulsionFuelFactory]: [SpriteKeys.PropulsionFuelFactory],
+  [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
+  [BlockType.PropulsionFuelFactory]: [SpriteKeys.PropulsionFuelFactory],
+
+  [BlockType.Node]: [SpriteKeys.Node],
+
+  [BlockType.Miner]: [SpriteKeys.Miner],
+  [BlockType.BasicBatteryFactory]: [SpriteKeys.BasicBatteryFactory],
+  [BlockType.AdvancedBatteryFactory]: [SpriteKeys.AdvancedBatteryFactory],
+  [BlockType.BulletFactory]: [SpriteKeys.BulletFactory],
+  [BlockType.DenseMetalRefinery]: [SpriteKeys.DenseMetalRefinery],
+  [BlockType.HardenedDrill]: [SpriteKeys.HardenedDrill],
+  [BlockType.HighTempFoundry]: [SpriteKeys.HighTempFoundry],
+  [BlockType.IridiumDrillbitFactory]: [SpriteKeys.IridiumDrillBitFactory],
+  [BlockType.KimberliteCatalystFactory]: [SpriteKeys.KimberliteCatalyst],
+  [BlockType.KineticMissileFactory]: [SpriteKeys.KineticMissileFactory],
+  [BlockType.HighEnergyLaserFactory]: [SpriteKeys.LaserFactory],
+  [BlockType.MissileLaunchComplex]: [SpriteKeys.MissileLaunchComplex],
+  [BlockType.PlatingFactory]: [SpriteKeys.PlatingFactory],
+  [BlockType.PrecisionMachineryFactory]: [SpriteKeys.PrecisionMachineryFactory],
+  [BlockType.PrecisionPneumaticDrill]: [SpriteKeys.PrecisionPneumaticDrill],
+  [BlockType.ProjectileLauncher]: [SpriteKeys.ProjectileLauncher],
+  [BlockType.Silo]: [SpriteKeys.Silo],
+  [BlockType.ThermobaricMissileFactory]: [SpriteKeys.ThermobaricMissileFactory],
+  [BlockType.ThermobaricWarheadFactory]: [SpriteKeys.ThermobaricWarheadFactory],
 };
 
+// Array index corresponds to lvl
 export const EntityIDtoAnimationKey = {
-  [BlockType.Node]: AnimationKeys.Node,
-  [BlockType.IronMine]: AnimationKeys.BasicMiner,
-  [BlockType.CopperMine]: AnimationKeys.BasicMiner,
-  [BlockType.LithiumMine]: AnimationKeys.BasicMiner,
-  [BlockType.StorageUnit]: AnimationKeys.Node,
-  [BlockType.Miner]: AnimationKeys.BasicMiner,
-  [BlockType.BasicBatteryFactory]: AnimationKeys.BasicBatteryFactory,
-  [BlockType.AdvancedBatteryFactory]: AnimationKeys.AdvancedBatteryFactory,
-  [BlockType.BulletFactory]: AnimationKeys.BasicBatteryFactory,
-  [BlockType.DenseMetalRefinery]: AnimationKeys.DenseMetalRefinery,
-  [BlockType.HardenedDrill]: AnimationKeys.HardenedDrill,
-  [BlockType.HighTempFoundry]: AnimationKeys.Hightempfoundry,
-  [BlockType.IridiumDrillbitFactory]: AnimationKeys.IridiumDrillbitFactory,
-  [BlockType.KimberliteCatalystFactory]: AnimationKeys.KimberliteCatalyst,
-  [BlockType.HighEnergyLaserFactory]: AnimationKeys.LaserFactory,
-  [BlockType.MissileLaunchComplex]: AnimationKeys.MissileLaunchComplex,
-  [BlockType.IronPlateFactory]: AnimationKeys.PlatingFactory,
-  [BlockType.PrecisionMachineryFactory]:
+  [BlockType.Node]: [AnimationKeys.Node],
+  [BlockType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2],
+  [BlockType.CopperMine]: [
+    AnimationKeys.CopperMine1,
+    AnimationKeys.CopperMine2,
+  ],
+  [BlockType.LithiumMine]: [
+    AnimationKeys.LithiumMine1,
+    AnimationKeys.LithiumMine2,
+  ],
+  [BlockType.StorageUnit]: [undefined, AnimationKeys.StorageUnit2],
+  [BlockType.IronPlateFactory]: [
+    AnimationKeys.IronPlateFactory1,
+    AnimationKeys.IronPlateFactory2,
+  ],
+  [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
+
+  [BlockType.Miner]: [AnimationKeys.BasicMiner],
+  [BlockType.BasicBatteryFactory]: [AnimationKeys.BasicBatteryFactory],
+  [BlockType.AdvancedBatteryFactory]: [AnimationKeys.AdvancedBatteryFactory],
+  [BlockType.BulletFactory]: [AnimationKeys.BasicBatteryFactory],
+  [BlockType.DenseMetalRefinery]: [AnimationKeys.DenseMetalRefinery],
+  [BlockType.HardenedDrill]: [AnimationKeys.HardenedDrill],
+  [BlockType.HighTempFoundry]: [AnimationKeys.Hightempfoundry],
+  [BlockType.IridiumDrillbitFactory]: [AnimationKeys.IridiumDrillbitFactory],
+  [BlockType.KimberliteCatalystFactory]: [AnimationKeys.KimberliteCatalyst],
+  [BlockType.HighEnergyLaserFactory]: [AnimationKeys.LaserFactory],
+  [BlockType.MissileLaunchComplex]: [AnimationKeys.MissileLaunchComplex],
+  [BlockType.IronPlateFactory]: [AnimationKeys.PlatingFactory],
+  [BlockType.PrecisionMachineryFactory]: [
     AnimationKeys.PrecisionMachineryFactory,
-  [BlockType.PrecisionPneumaticDrill]: AnimationKeys.PrecisionPneumaticDrill,
+  ],
+  [BlockType.PrecisionPneumaticDrill]: [AnimationKeys.PrecisionPneumaticDrill],
 };

@@ -1,5 +1,4 @@
 import { EntityID } from "@latticexyz/recs";
-import { BlockType } from "src/util/constants";
 import { GameObjectComponent } from "../../../engine/types";
 import {
   Assets,
@@ -8,6 +7,7 @@ import {
   EntityIDtoSpriteKey,
   SpriteKeys,
 } from "../../constants";
+import { clampedIndex } from "src/util/common";
 
 export const createBuilding = ({
   renderId = "building",
@@ -15,11 +15,13 @@ export const createBuilding = ({
   y,
   buildingType,
   selected = false,
+  level = 1,
 }: {
   renderId?: string;
   x: number;
   y: number;
   buildingType: EntityID;
+  level?: number;
   selected?: boolean;
 }): GameObjectComponent<"Sprite"> => {
   return {
@@ -28,12 +30,11 @@ export const createBuilding = ({
       gameObject.setPosition(x, y);
 
       //set sprite
-      const atlas =
-        buildingType == BlockType.MainBase
-          ? Assets.BaseAtlas
-          : Assets.SpriteAtlas;
       const sprite = EntityIDtoSpriteKey[buildingType];
-      gameObject.setTexture(atlas, sprite ?? SpriteKeys.Node);
+      gameObject.setTexture(
+        Assets.SpriteAtlas,
+        sprite[level - 1] ?? SpriteKeys.Node
+      );
       gameObject.setDepth(DepthLayers.Building);
       if (selected) {
         gameObject.setTint(0xffff00);
@@ -41,8 +42,9 @@ export const createBuilding = ({
 
       //set animation if it exists
       const anim = EntityIDtoAnimationKey[buildingType];
-      if (anim) {
-        gameObject.play(anim);
+      const animIndex = clampedIndex(level - 1, anim?.length);
+      if (anim && anim[animIndex]) {
+        gameObject.play(anim[animIndex]!);
       }
     },
   };

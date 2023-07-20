@@ -6,6 +6,7 @@ import {
   defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
+  defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
 
@@ -20,7 +21,7 @@ const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuildingSprite = (scene: Scene, network: Network) => {
   const {
     world,
-    components: { Position, BuildingType },
+    components: { Position, BuildingType, BuildingLevel },
   } = network;
   const { SelectedBuilding } = offChainComponents;
   const { tileHeight, tileWidth } = scene.tilemap;
@@ -31,6 +32,7 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
     const tilePosition = getComponentValue(Position, entity);
 
     const buildingType = getComponentValue(BuildingType, entity)?.value;
+    const buildingLevel = getComponentValue(BuildingLevel, entity)?.value;
 
     if (!buildingType || !tilePosition) return;
 
@@ -60,12 +62,15 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
         y: -pixelCoord.y,
         buildingType: buildingType as EntityID,
         selected,
+        level: buildingLevel,
       })
     );
   };
 
-  const positionQuery = [Has(Position), Has(BuildingType)];
+  const positionQuery = [Has(Position), Has(BuildingType), Has(BuildingLevel)];
   defineEnterSystem(world, positionQuery, render);
+
+  defineUpdateSystem(world, positionQuery, render);
 
   defineExitSystem(world, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;
