@@ -8,12 +8,21 @@ import { useMainBase } from "src/hooks/useMainBase";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
+import { decodeCoordEntity } from "src/util/encode";
+import { singletonIndex, world } from "src/network/world";
 
 export const Inventory = () => {
+  const network = useMud();
   const crtEffect = useGameStore((state) => state.crtEffect);
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
-  const mainBaseCoord = useMainBase();
+  const mainBase = (useMainBase() ?? { value: "0" as EntityID }).value;
+  const mainBaseCoord = useMemo(() => {
+    return mainBase ? decodeCoordEntity(mainBase) : undefined;
+  }, [mainBase]);
+
+  const mainBaseEntity = world.entityToIndex.get(mainBase) ?? singletonIndex;
+  useComponentValue(network.components.BuildingLevel, mainBaseEntity);
 
   return (
     <div
