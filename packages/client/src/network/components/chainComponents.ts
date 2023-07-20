@@ -1,10 +1,9 @@
 import { Type } from "@latticexyz/recs";
 import Component, {
   BoolComponent,
-  CoordComponent,
   NumberComponent,
   StringComponent,
-} from "../Component";
+} from "./customComponents/Component";
 import { world } from "../world";
 
 const components = {
@@ -13,7 +12,7 @@ const components = {
     { value: Type.Number },
     { metadata: { contractId: "component.Counter" } }
   ),
-  Position: new CoordComponent(world, { overridable: true }),
+  // Position: new CoordComponent(world, { overridable: true }),
   BuildingType: new StringComponent(world, {
     metadata: { contractId: "component.Tile" },
     overridable: true,
@@ -99,6 +98,29 @@ const components = {
   UnclaimedResource: new NumberComponent(world, {
     metadata: { contractId: "component.UnclaimedResource" },
   }),
+  SystemsRegistry: new StringComponent(world, {
+    metadata: { contractId: "world.component.systems" },
+    id: "SystemsRegistry",
+  }),
+
+  ComponentsRegistry: new StringComponent(world, {
+    id: "ComponentsRegistry",
+    metadata: { contractId: "world.component.components" },
+  }),
+
+  // used by SyncWorker to notify client of sync progress
+  LoadingState: new Component(
+    world,
+    {
+      state: Type.Number,
+      msg: Type.String,
+      percentage: Type.Number,
+    },
+    {
+      id: "LoadingState",
+      metadata: { contractId: "component.LoadingState" },
+    }
+  ),
 };
 
 export default components;

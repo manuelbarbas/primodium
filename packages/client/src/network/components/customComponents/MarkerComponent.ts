@@ -10,12 +10,12 @@ import {
   runQuery,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Options, StringComponent } from "src/network/Component";
+import { Options, StringComponent } from "./Component";
 import {
   getBuildingsOfTypeInRange,
   getTilesOfTypeInRange,
 } from "src/util/tile";
-import components from "../chainComponents";
+import { Position } from "../clientComponents";
 
 class MarkerTypeComponent<M extends Metadata> extends StringComponent<M> {
   constructor(world: World, options?: Options<M>) {
@@ -43,29 +43,23 @@ class MarkerTypeComponent<M extends Metadata> extends StringComponent<M> {
 
     //handle terrain
     for (const tile of tiles) {
-      components.Position.set(addCoords(tile, offset), type);
+      Position.set(addCoords(tile, offset), type);
     }
 
     //handle buildings
     for (const building of buildings) {
-      components.Position.set(addCoords(building, offset), type);
+      Position.set(addCoords(building, offset), type);
     }
   };
 
   public getByCoord = (coord: Coord) => {
-    const entities = runQuery([
-      Has(this.component),
-      HasValue(components.Position, coord),
-    ]);
+    const entities = runQuery([Has(this.component), HasValue(Position, coord)]);
 
     return entities;
   };
 
   public removeAllAtCoord = (coord: Coord) => {
-    const entities = runQuery([
-      HasValue(components.Position, coord),
-      Has(this.component),
-    ]);
+    const entities = runQuery([HasValue(Position, coord), Has(this.component)]);
 
     const entityIndex = entities.values().next().value;
 

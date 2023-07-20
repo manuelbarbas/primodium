@@ -15,9 +15,10 @@ import {
   removeComponent,
   runQuery,
   setComponent,
+  updateComponent,
 } from "@latticexyz/recs";
 import { useComponentValue } from "src/hooks/useComponentValue";
-import { singletonIndex, world } from "./world";
+import { singletonIndex, world } from "../../world";
 
 export interface Options<M extends Metadata> {
   id?: string;
@@ -73,24 +74,32 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
     setComponent(this.component, entity, value);
   }
 
-  public get = (entityID?: EntityID) => {
+  public get(): ComponentValue<S> | undefined;
+  public get(entityID: EntityID): ComponentValue<S> | undefined;
+  public get(
+    entityID: EntityID,
+    defaultValue?: ComponentValue<S>
+  ): ComponentValue<S>;
+
+  public get(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
-    return getComponentValue(this.component, entity)?.value;
-  };
+    const value = getComponentValue(this.component, entity)?.value;
+    return value ?? defaultValue;
+  }
 
   public getAll = () => {
     const entities = runQuery([Has(this.component)]);
-    [...entities].map((entity) => world.entities[entity]);
+    return [...entities].map((entity) => world.entities[entity]);
   };
 
   public getAllWith = (value: Partial<ComponentValue<S>>) => {
     const entities = runQuery([HasValue(this.component, value)]);
-    [...entities].map((entity) => world.entities[entity]);
+    return [...entities].map((entity) => world.entities[entity]);
   };
 
   public getAllWithout = (value: Partial<ComponentValue<S>>) => {
     const entities = runQuery([NotValue(this.component, value)]);
-    [...entities].map((entity) => world.entities[entity]);
+    return [...entities].map((entity) => world.entities[entity]);
   };
 
   public remove = (entityID?: EntityID) => {
@@ -103,10 +112,23 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
     entities.forEach((entity) => removeComponent(this.component, entity));
   };
 
-  public use = (entityID?: EntityID) => {
+  public use(): ComponentValue<S> | undefined;
+  public use(entityID: EntityID): ComponentValue<S> | undefined;
+  public use(
+    entityID: EntityID,
+    defaultValue?: ComponentValue<S>
+  ): ComponentValue<S>;
+
+  public use(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
-    return useComponentValue(this.component, entity);
-  };
+    const value = useComponentValue(this.component, entity);
+    return value ?? defaultValue;
+  }
+
+  public update(value: Partial<ComponentValue<S, T>>, entityID?: EntityID) {
+    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    updateComponent(this.component, entity, value);
+  }
 }
 
 export default Component;
