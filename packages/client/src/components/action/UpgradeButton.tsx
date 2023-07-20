@@ -130,8 +130,12 @@ export default function UpgradeButton({
     <div className="flex flex-col items-center">
       <GameButton
         id={id}
-        className="w-44 mt-2 bg-green-500 text-sm"
+        className="w-44 mt-2 text-sm"
         onClick={claimAction}
+        color={
+          isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
+        }
+        disable={isUpgradeLocked || !isLevelConditionMet}
       >
         <div className="font-bold leading-none h-8 flex justify-center items-center crt">
           {transactionLoading ? <Spinner /> : upgradeText}
