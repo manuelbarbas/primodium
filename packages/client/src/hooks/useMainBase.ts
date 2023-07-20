@@ -1,9 +1,18 @@
 import { EntityID } from "@latticexyz/recs";
-import { useComponentValue } from "./useComponentValue";
-import { useMud } from "src/context/MudContext";
-import { useAccount } from "./useAccount";
-import { decodeCoordEntity } from "src/util/encode";
 import { useMemo } from "react";
+import { useMud } from "src/context/MudContext";
+import { decodeCoordEntity } from "src/util/encode";
+import { useAccount } from "./useAccount";
+import { useComponentValue } from "./useComponentValue";
+
+export const useMainBaseCoord = () => {
+  const mainBase = useMainBase();
+  const coord = useMemo(() => {
+    return mainBase ? decodeCoordEntity(mainBase.value) : undefined;
+  }, [mainBase?.value]);
+
+  return coord;
+};
 
 export const useMainBase = () => {
   const { world, singletonIndex, components } = useMud();
@@ -16,14 +25,5 @@ export const useMainBase = () => {
     : singletonIndex;
 
   // fetch the main base of the user based on address
-  const mainBaseCoord = useComponentValue(
-    components.MainBaseInitialized,
-    resourceKey
-  );
-
-  const coord = useMemo(() => {
-    return mainBaseCoord ? decodeCoordEntity(mainBaseCoord.value) : undefined;
-  }, [mainBaseCoord?.value]);
-
-  return coord;
+  return useComponentValue(components.MainBaseInitialized, resourceKey);
 };

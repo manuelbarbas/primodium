@@ -6,7 +6,7 @@ import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
 import { encodeCoordEntityAndTrim } from "src/util/encode";
-import { useMainBase } from "src/hooks/useMainBase";
+import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
 import { GameButton } from "../shared/GameButton";
 import { IoFlaskSharp, IoSettings } from "react-icons/io5";
@@ -19,7 +19,7 @@ export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const { address } = useAccount();
   const [minimized] = useState<boolean>(false);
-  const mainBaseCoord = useMainBase();
+  const mainBaseCoord = useMainBaseCoord();
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
 

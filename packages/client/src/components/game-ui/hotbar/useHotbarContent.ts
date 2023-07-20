@@ -1,6 +1,6 @@
 import { KeybindActions } from "@game/constants";
 import { useEffect, useState } from "react";
-import { useMainBase } from "src/hooks/useMainBase";
+import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { Action, BlockType } from "src/util/constants";
 import { Hotbar } from "src/util/types";
 
@@ -77,7 +77,7 @@ const debugHotbar: Hotbar = {
 };
 
 export const useHotbarContent = () => {
-  const mainBase = useMainBase();
+  const mainBase = useMainBaseCoord();
   const [hotbarContent, setHotbarContent] = useState<Hotbar[]>([
     mainBase ? buildingHotbar : mainBaseHotbar,
   ]);
