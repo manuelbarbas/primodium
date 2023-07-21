@@ -1,25 +1,29 @@
-import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
 import { useEffect } from "react";
-import { useGameStore } from "../../store/GameStore";
-import { InfoBox } from "./InfoBox";
-
+import { isMobile } from "react-device-detect";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { primodium } from "@game/api";
+import { KeybindActions } from "@game/constants";
+
+import { useGameStore } from "../../store/GameStore";
+import { InfoBox } from "./InfoBox";
 import { Camera } from "./Camera";
 import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "../NotificationBox";
 import { BrandingLabel } from "./BrandingLabel";
+import { AiOutlineRotateRight } from "react-icons/ai";
+import { useOrientation } from "src/hooks/useOrientation";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
     state.showUI,
     state.toggleShowUI,
   ]);
-
+  const { isPortrait } = useOrientation();
   const gameReady = primodium.hooks.useGameReady();
+
   useEffect(() => {
     if (!gameReady) return;
 
@@ -37,6 +41,12 @@ function GameUI() {
     <div>
       {gameReady && (
         <div className="screen-container">
+          {isMobile && isPortrait && (
+            <div className="fixed flex-col top-0 bottom-0 screen-container pointer-events-none bg-gray-700 z-[10000] flex items-center justify-center font-mono font-bold text-white text-lg space-y-4">
+              <AiOutlineRotateRight size="64" />
+              <p> Please play in landscape </p>
+            </div>
+          )}
           <div className="fixed top-0 bottom-0 screen-container pointer-events-none vignette opacity-20 mix-blend-overlay" />
           <BrandingLabel />
           <Camera />
