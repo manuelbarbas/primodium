@@ -1,7 +1,5 @@
-import { removeComponent } from "@latticexyz/recs";
-import { useMud } from "src/context/MudContext";
-import { singletonIndex } from "src/network/world";
 import BuildingContentBox from "./BuildingBox";
+import { SelectedAction } from "src/network/components/clientComponents";
 
 function ChooseWeaponryMenu({
   title,
@@ -10,10 +8,8 @@ function ChooseWeaponryMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const network = useMud();
-
   const closeMenuHelper = () => {
-    removeComponent(network.offChainComponents.SelectedAction, singletonIndex);
+    SelectedAction.remove();
     setMenuOpenIndex(-1);
   };
 

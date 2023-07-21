@@ -2,8 +2,6 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { IoFlaskSharp, IoHammerSharp } from "react-icons/io5";
 import { TbBulldozer, TbScale, TbSword } from "react-icons/tb";
-
-import { useMud } from "src/context/MudContext";
 import AttackBox from "./attack-menu/AttackBox";
 import BuildingPage from "./building-menu/BuildingPage";
 import DemolishBuildingBox from "./demolish-menu/DemolishBuildingBox";
@@ -13,6 +11,7 @@ import ResearchModal from "./research-menu/ResearchModal";
 import { removeComponent } from "@latticexyz/recs";
 import { singletonIndex } from "src/network/world";
 import { useTourStore } from "../store/TourStore";
+import { SelectedAction } from "src/network/components/clientComponents";
 
 function SideBarIcon({
   id,
@@ -31,10 +30,6 @@ function SideBarIcon({
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
   children?: ReactNode;
 }) {
-  const {
-    offChainComponents: { SelectedAction },
-  } = useMud();
-
   const setMenuOpenIndexHelper = useCallback(() => {
     if (menuIndex !== menuOpenIndex) {
       setMenuOpenIndex(menuIndex);

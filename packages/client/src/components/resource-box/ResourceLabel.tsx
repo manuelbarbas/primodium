@@ -1,9 +1,16 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import useResourceCount from "../../hooks/useResourceCount";
 import { ResourceImage } from "../../util/constants";
-import { useMud } from "../../context/MudContext";
 import { useMemo } from "react";
-import { useComponentValue } from "@latticexyz/react";
+import { BlockNumber } from "src/network/components/clientComponents";
+import {
+  Item,
+  LastClaimedAt,
+  Mine,
+  StorageCapacity,
+  UnclaimedResource,
+} from "src/network/components/chainComponents";
+import { SingletonID } from "@latticexyz/network";
 export default function ResourceLabel({
   name,
   resourceId,
@@ -13,43 +20,33 @@ export default function ResourceLabel({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) {
-  const { components, offChainComponents, singletonIndex } = useMud();
+  const blockNumber = BlockNumber.use(SingletonID, { value: 0 }).value;
 
-  const blockNumber = useComponentValue(
-    offChainComponents.BlockNumber,
-    singletonIndex
-  );
-
-  const resourceCount = useResourceCount(
-    components.Item,
-    resourceId,
-    entityIndex
-  );
+  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
   const storageCount = useResourceCount(
-    components.StorageCapacity,
+    StorageCapacity,
     resourceId,
     entityIndex
   );
 
-  const production = useResourceCount(components.Mine, resourceId, entityIndex);
+  const production = useResourceCount(Mine, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
-    components.LastClaimedAt,
+    LastClaimedAt,
     resourceId,
     entityIndex
   );
 
   const unclaimedResource = useResourceCount(
-    components.UnclaimedResource,
+    UnclaimedResource,
     resourceId,
     entityIndex
   );
 
   const resourcesToClaim = useMemo(() => {
     const toClaim =
-      unclaimedResource +
-      ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
+      unclaimedResource + (blockNumber - lastClaimedAt) * production;
     if (toClaim > storageCount - resourceCount)
       return storageCount - resourceCount;
     return toClaim;

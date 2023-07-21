@@ -4,79 +4,34 @@ import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { throttle } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { useComponentValue } from "src/hooks/useComponentValue";
-import { offChainComponents, singletonIndex, world } from "src/network/world";
 import { Network } from "../../network/layer";
 import { useSettingsStore } from "../stores/SettingsStore";
+import {
+  GameReady,
+  SelectedAttack,
+} from "src/network/components/clientComponents";
+import { SingletonID } from "@latticexyz/network";
 
-export const useGameReady = () => {
-  return useComponentValue(offChainComponents.GameReady, singletonIndex, {
-    value: false,
-  }).value;
+export const useSelectedAttack = () => {
+  const selectedAttack = SelectedAttack.use(SingletonID, {
+    origin: undefined,
+    target: undefined,
+  });
+  const origin = selectedAttack.origin
+    ? (JSON.parse(selectedAttack.origin) as Coord)
+    : undefined;
+  const target = selectedAttack.target
+    ? (JSON.parse(selectedAttack.target) as Coord)
+    : undefined;
+  return { origin, target };
 };
 
-export const useBlockNumber = () => {
-  return useComponentValue(offChainComponents.BlockNumber, singletonIndex, {
-    value: 0,
-  }).value;
-};
-
-export const useSelectedTile = () => {
-  return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
-};
-
-export const useHoverTile = () => {
-  return useComponentValue(offChainComponents.SelectedTile, singletonIndex);
-};
-
-export const useSelectedBuilding = () => {
-  const selectedBuilding = useComponentValue(
-    offChainComponents.SelectedBuilding,
-    singletonIndex
-  )?.value;
-
-  return selectedBuilding;
-};
-
-export const useStartSelectedPath = () => {
-  return useComponentValue(
-    offChainComponents.StartSelectedPath,
-    singletonIndex
-  );
-};
-
-export const useSelectedAttack = (network: Network) => {
-  const { offChainComponents, singletonIndex } = network;
-
-  const selectedAttack = useComponentValue(
-    offChainComponents.SelectedAttack,
-    singletonIndex,
-    {
-      origin: undefined,
-      target: undefined,
-    }
-  );
-
-  return {
-    origin: (JSON.parse(selectedAttack?.origin ?? "null") ?? undefined) as
-      | Coord
-      | undefined,
-    target: (JSON.parse(selectedAttack?.target ?? "null") ?? undefined) as
-      | Coord
-      | undefined,
-  };
-};
-
-export const useKeybinds = () => {
-  const keybinds = useSettingsStore((state) => state.keybinds);
-
-  return keybinds;
-};
+export const useKeybinds = () => useSettingsStore((state) => state.keybinds);
 
 export const useCamera = (_: Network, targetScene = Scenes.Main) => {
   const [worldCoord, setWorldCoord] = useState<Coord>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0);
-  const gameStatus = useGameReady();
+  const gameStatus = GameReady.use();
   const minZoom = useRef(1);
 
   useEffect(() => {

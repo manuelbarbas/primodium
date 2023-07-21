@@ -1,11 +1,10 @@
-import { primodium } from "@game/api";
-import { useComponentValue } from "@latticexyz/react";
-import { removeComponent } from "@latticexyz/recs";
-import { useMud } from "src/context/MudContext";
-import { singletonIndex } from "src/network/world";
 import { Action, BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
+import {
+  SelectedAction,
+  StartSelectedPath,
+} from "src/network/components/clientComponents";
 
 function ChooseTransportMenu({
   title,
@@ -14,21 +13,16 @@ function ChooseTransportMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const network = useMud();
-  const selectedAction = useComponentValue(
-    network.offChainComponents.SelectedAction,
-    singletonIndex
-  )?.value;
-  const startSelectedPath = primodium.hooks.useStartSelectedPath(network);
+  const selectedAction = SelectedAction.use()?.value;
+  const startSelectedPath = StartSelectedPath.use();
 
   const closeMenuHelper = () => {
     setMenuOpenIndex(-1);
-    removeComponent(network.offChainComponents.SelectedAction, singletonIndex);
+    SelectedAction.remove();
   };
 
   const clearPath = () => {
-    removeComponent(network.offChainComponents.SelectedAction, singletonIndex);
-    //system will clean up relavant components data
+    SelectedAction.remove();
   };
 
   return (

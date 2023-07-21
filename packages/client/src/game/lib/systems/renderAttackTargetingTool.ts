@@ -1,35 +1,34 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
-  Has,
-  HasValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  getComponentValue,
 } from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
-import * as components from "src/game/api/components";
 import { Network } from "src/network/layer";
 import { Action } from "src/util/constants";
 import { createAttackPath } from "../factory/attackPath";
 import { createSelectionTile } from "../factory/selectionTile";
+import {
+  HoverTile,
+  SelectedAction,
+  SelectedAttack,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
 export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
-  const { world, offChainComponents } = network;
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_attackTargeting";
 
   const query = [
-    Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedAction, {
-      value: Action.SelectAttack,
-    }),
+    HoverTile.has(),
+    SelectedAction.hasValue({ value: Action.SelectAttack }),
   ];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
-    const attackSelection = components.selectedAttack(network).get();
+    const attackSelection = SelectedAttack.get();
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
 
     // Avoid updating on optimistic overrides
@@ -43,11 +42,7 @@ export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
     //we don't need to do anything if both are set
     if (attackSelection.origin && attackSelection.target) return;
 
-    const tileCoord = getComponentValue(
-      offChainComponents.HoverTile,
-      entityIndex
-    );
-
+    const tileCoord = HoverTile.get(world.entities[entityIndex]);
     if (!tileCoord) return;
 
     const pixelHoverCoord = tileCoordToPixelCoord(
@@ -109,7 +104,7 @@ export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
   defineExitSystem(world, query, (update) => {
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
     scene.objectPool.remove(objGraphicsIndex);
-    components.selectedAttack(network).remove();
+    SelectedAttack.remove();
 
     console.info(
       "[EXIT SYSTEM](renderAttackTargetingTool) Attack targeting tool has been removed"

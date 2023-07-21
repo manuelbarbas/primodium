@@ -1,9 +1,7 @@
-import { removeComponent } from "@latticexyz/recs";
-import { useMud } from "src/context/MudContext";
-import { singletonIndex } from "src/network/world";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { SelectedAction } from "src/network/components/clientComponents";
 
 function ChooseMinerMenu({
   title,
@@ -12,10 +10,8 @@ function ChooseMinerMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const network = useMud();
-
   const closeMenuHelper = () => {
-    removeComponent(network.offChainComponents.SelectedAction, singletonIndex);
+    SelectedAction.remove();
     setMenuOpenIndex(-1);
   };
 

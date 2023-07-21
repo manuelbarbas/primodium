@@ -1,10 +1,8 @@
-import { removeComponent } from "@latticexyz/recs";
 import { useCallback } from "react";
-import { useMud } from "src/context/MudContext";
-import { singletonIndex } from "src/network/world";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { SelectedAction } from "src/network/components/clientComponents";
 
 function ChooseFactoryMenu({
   title,
@@ -13,13 +11,8 @@ function ChooseFactoryMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const network = useMud();
-  const {
-    offChainComponents: { SelectedAction },
-  } = network;
-
   const closeMenuHelper = useCallback(() => {
-    removeComponent(SelectedAction, singletonIndex);
+    SelectedAction.remove();
     setMenuOpenIndex(-1);
   }, []);
 

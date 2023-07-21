@@ -2,18 +2,20 @@ import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { useMud } from "src/context/MudContext";
-import { useComponentValue } from "src/hooks/useComponentValue";
 import useResourceCount from "src/hooks/useResourceCount";
-import { useMainBase } from "src/hooks/useMainBase";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
+import { BlockNumber, Position } from "src/network/components/clientComponents";
+import { MainBase } from "src/network/components/chainComponents";
 
 export const Inventory = () => {
   // const { components, world } = useMud();
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
-  const mainBaseCoord = useMainBase();
+  const mainBase = MainBase.use()?.value || ("-1" as EntityID);
+  const mainBaseCoord = Position.use(mainBase);
 
+  if (mainBase == "-1") return null;
   return (
     <div
       style={{ filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))" }}
@@ -229,12 +231,9 @@ Inventory.ResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const { components, offChainComponents, singletonIndex } = useMud();
+  const { components, singletonIndex } = useMud();
 
-  const blockNumber = useComponentValue(
-    offChainComponents.BlockNumber,
-    singletonIndex
-  );
+  const blockNumber = BlockNumber.get();
 
   const resourceCount = useResourceCount(
     components.Item,

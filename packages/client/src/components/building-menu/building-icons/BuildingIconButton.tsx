@@ -1,10 +1,4 @@
-import { primodium } from "@game/api";
-import {
-  EntityID,
-  getComponentValue,
-  removeComponent,
-  setComponent,
-} from "@latticexyz/recs";
+import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { useMud } from "../../../context/MudContext";
 import { useAccount } from "../../../hooks/useAccount";
@@ -16,6 +10,10 @@ import {
 import { hashKeyEntityAndTrim } from "../../../util/encode";
 import { getBuildingResearchRequirement } from "../../../util/research";
 import { getRecipe } from "../../../util/resource";
+import {
+  SelectedAction,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
 
 // Builds a specific blockType
 function BuildingIconButton({
@@ -29,7 +27,8 @@ function BuildingIconButton({
 }) {
   const network = useMud();
   const { components, world, singletonIndex } = network;
-  const selectedBuildingEntity = primodium.hooks.useSelectedBuilding();
+
+  const selectedBuilding = SelectedBuilding.use()?.value;
 
   const { address } = useAccount();
 
@@ -61,22 +60,13 @@ function BuildingIconButton({
 
   const recipe = getRecipe(blockType, world, components);
 
-  const selectedBuilding = selectedBuildingEntity
-    ? world.entities[selectedBuildingEntity]
-    : undefined;
-
   const handleSelectBuilding = () => {
     if (selectedBuilding === blockType) {
-      primodium.components.selectedBuilding(network).remove();
-      removeComponent(
-        network.offChainComponents.SelectedAction,
-        singletonIndex
-      );
+      SelectedBuilding.remove();
+      SelectedAction.remove();
     } else {
-      setComponent(network.offChainComponents.SelectedAction, singletonIndex, {
-        value: Action.PlaceBuilding,
-      });
-      primodium.components.selectedBuilding(network).set(blockType);
+      SelectedAction.set({ value: Action.PlaceBuilding });
+      SelectedBuilding.remove();
     }
   };
 

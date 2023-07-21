@@ -2,31 +2,26 @@ import { primodium } from "@game/api";
 import { removeComponent, setComponent } from "@latticexyz/recs";
 import { useCallback, useEffect } from "react";
 import { singletonIndex } from "src/network/world";
-import { useMud } from "../../context/MudContext";
 import { Action } from "../../util/constants";
 import BuildingContentBox from "../building-menu/BuildingBox";
 import ChooseMunitions from "./ChooseMunitions";
+import {
+  SelectedAction,
+  SelectedAttack,
+} from "src/network/components/clientComponents";
 
 function AttackBox() {
-  const network = useMud();
-
-  const {
-    offChainComponents: { SelectedAction },
-  } = network;
-  const selectedAttackTiles = primodium.hooks.useSelectedAttack(network);
+  const selectedAttackTiles = SelectedAttack.use();
 
   useEffect(() => {
     // show selected path tiles on mount
-
-    setComponent(SelectedAction, singletonIndex, {
-      value: Action.SelectAttack,
-    });
+    SelectedAction.set({ value: Action.SelectAttack });
   }, []);
 
-  const clearPath = useCallback(() => {
-    primodium.components.selectedAttack(network).remove();
-    removeComponent(SelectedAction, singletonIndex);
-  }, [network]);
+  const clearPath = () => {
+    SelectedAttack.remove();
+    SelectedAction.remove();
+  };
 
   return (
     <BuildingContentBox>

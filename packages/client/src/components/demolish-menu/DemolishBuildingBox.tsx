@@ -1,33 +1,18 @@
-import { useComponentValue } from "@latticexyz/react";
-import { removeComponent, setComponent } from "@latticexyz/recs";
-import { useMud } from "src/context/MudContext";
-import { singletonIndex } from "src/network/world";
 import { Action } from "../../util/constants";
+import { SelectedAction } from "src/network/components/clientComponents";
 
 function DemolishBuildingBox() {
-  const {
-    offChainComponents: { SelectedAction },
-  } = useMud();
-
-  const selectedAction = useComponentValue(
-    SelectedAction,
-    singletonIndex
-  )?.value;
-
+  const selectedAction = SelectedAction.use()?.value;
   const destroyPath = () => {
-    setComponent(SelectedAction, singletonIndex, {
-      value: Action.DemolishPath,
-    });
+    SelectedAction.set({ value: Action.DemolishPath });
   };
 
   const destroyTile = () => {
-    setComponent(SelectedAction, singletonIndex, {
-      value: Action.DemolishBuilding,
-    });
+    SelectedAction.set({ value: Action.DemolishBuilding });
   };
 
   const resetSetSelectedBlock = () => {
-    removeComponent(SelectedAction, singletonIndex);
+    SelectedAction.remove();
   };
 
   if (selectedAction === Action.DemolishPath) {

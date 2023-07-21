@@ -1,10 +1,7 @@
-import { removeComponent } from "@latticexyz/recs";
-import { useCallback } from "react";
-import { useMud } from "src/context/MudContext";
-import { singletonIndex } from "src/network/world";
 import { BlockType } from "../../util/constants";
 import BuildingContentBox from "./BuildingBox";
 import BuildingIconButton from "./building-icons/BuildingIconButton";
+import { SelectedAction } from "src/network/components/clientComponents";
 
 function ChooseDebugMenu({
   title,
@@ -13,12 +10,10 @@ function ChooseDebugMenu({
   title: string;
   setMenuOpenIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const network = useMud();
-
-  const closeMenuHelper = useCallback(() => {
-    removeComponent(network.offChainComponents.SelectedAction, singletonIndex);
+  const closeMenuHelper = () => {
+    SelectedAction.remove();
     setMenuOpenIndex(-1);
-  }, []);
+  };
 
   return (
     <BuildingContentBox>
