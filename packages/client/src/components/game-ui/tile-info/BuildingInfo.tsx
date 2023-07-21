@@ -13,6 +13,7 @@ import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
 import { demolishBuilding, demolishPath } from "src/util/web3";
 import PortalModal from "src/components/shared/PortalModal";
+import { toRomanNumeral } from "src/util/common";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -30,6 +31,11 @@ export const BuildingInfo: React.FC<{
   const owner = useComponentValue(components.OwnedBy, buildingIndex)?.value as
     | EntityID
     | undefined;
+
+  const currLevel = useComponentValue(
+    components.BuildingLevel,
+    world.entityToIndex.get(building)
+  )?.value;
 
   if (!buildingType || !owner) return null;
 
@@ -70,7 +76,9 @@ export const BuildingInfo: React.FC<{
             />
           </div>
           <p className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 border border-cyan-600 px-1 crt">
-            <b>{buildingName}</b>
+            <b>
+              {buildingName} {toRomanNumeral(currLevel ?? 1)}
+            </b>
           </p>
         </div>
         {isOwner && (
