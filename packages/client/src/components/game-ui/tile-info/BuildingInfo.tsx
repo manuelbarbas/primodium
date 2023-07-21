@@ -3,7 +3,7 @@ import { EntityID } from "@latticexyz/recs";
 import React, { useMemo, useState } from "react";
 
 import { useMud } from "src/context/MudContext";
-import { BackgroundImage, BlockIdToKey } from "src/util/constants";
+import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
 import Header from "./Header";
 import UpgradeButton from "src/components/action/UpgradeButton";
@@ -37,24 +37,26 @@ export const BuildingInfo: React.FC<{
     world.entityToIndex.get(building)
   )?.value;
 
-  if (!buildingType || !owner) return null;
+  const isOwner = owner ?? "" == address.toLowerCase();
 
-  const isOwner = owner == address.toLowerCase();
-
-  const ownerName = isOwner
-    ? "You"
-    : owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4);
+  const ownerName =
+    isOwner || !owner
+      ? "You"
+      : owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4);
   const percentHealth =
-    (health ?? getBuildingMaxHealth(buildingType)) /
-    getBuildingMaxHealth(buildingType);
+    (health ?? getBuildingMaxHealth(buildingType ?? BlockType.Air)) /
+    getBuildingMaxHealth(buildingType ?? BlockType.Air);
 
   const coord = decodeCoordEntity(building);
 
   const buildingName = useMemo(() => {
+    if (!buildingType) return undefined;
     return BlockIdToKey[buildingType]
       .replace(/([A-Z]+)/g, " $1")
       .replace(/([A-Z][a-z])/g, " $1");
   }, [buildingType]);
+
+  if (!buildingName) return null;
 
   return (
     <>
@@ -62,7 +64,7 @@ export const BuildingInfo: React.FC<{
       <div className="flex flex-col items-center space-y-6">
         <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-slate-900/90 w-fit crt">
           <img
-            src={BackgroundImage.get(buildingType)}
+            src={BackgroundImage.get(buildingType ?? BlockType.Air)}
             className="w-16 h-16 pixel-images"
           />
           <div className="absolute flex items-center bottom-0 left-1/2 -translate-x-1/2 w-20 h-2 ring-2 ring-slate-900/90 crt">
@@ -85,7 +87,7 @@ export const BuildingInfo: React.FC<{
           <div className="relative">
             <UpgradeButton
               id="upgrade"
-              builtTile={buildingType}
+              builtTile={buildingType ?? BlockType.Air}
               buildingEntity={building}
               coords={coord}
             />
