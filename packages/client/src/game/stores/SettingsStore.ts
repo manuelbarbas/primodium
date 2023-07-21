@@ -6,7 +6,8 @@ import Phaser from "phaser";
 import { transferListeners, removeListeners } from "../api/input";
 
 import { KeybindActions } from "@game/constants";
-// const VERSION = 0.6;
+
+const VERSION = 1;
 
 type Key =
   | keyof typeof Phaser.Input.Keyboard.KeyCodes
@@ -97,7 +98,9 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         getItem: (key) => {
           const str = localStorage.getItem(key);
           const result: SettingsState["keybinds"] = {};
-          const keybinds = JSON.parse(str!).state.keybinds as Partial<{
+          const parsed = JSON.parse(str!);
+          const version: number = parsed.version;
+          const keybinds = parsed.state.keybinds as Partial<{
             [key in KeybindActions]: Key[];
           }>;
 
@@ -109,6 +112,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
           }
 
           return {
+            version,
             state: {
               ...JSON.parse(str!).state,
               keybinds: result,
@@ -120,6 +124,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
             [key in KeybindActions]: Key[];
           }> = {};
           const keybinds = value.state.keybinds as Keybinds;
+          const version = value.version;
 
           for (const _action in keybinds) {
             let action = parseInt(_action) as KeybindActions;
@@ -132,6 +137,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
           }
 
           const str = JSON.stringify({
+            version,
             state: {
               ...value.state,
               keybinds: result,
@@ -142,15 +148,13 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         },
         removeItem: (name) => localStorage.removeItem(name),
       },
-      version: 0.6,
-      // migrate: (persistedStore: SettingsState & SettingsActions, version) => {
-      //   if (version === VERSION) return persistedStore;
+      version: VERSION,
+      migrate: (persistedStore: any, version) => {
+        if (version === VERSION) return persistedStore;
 
-      //   const newState = { ...persistedStore, ...defaults } as SettingsState &
-      //     SettingsActions;
-
-      //   return newState;
-      // },
+        return { ...persistedStore!, ...defaults } as SettingsState &
+          SettingsActions;
+      },
     }
   )
 );
