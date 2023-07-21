@@ -262,9 +262,21 @@ Inventory.AllPassiveResourceLabels = ({
 }: {
   entityIndex?: EntityIndex;
 }) => {
+  const { components } = useMud();
+  const storageCapacity = useResourceCount(
+    components.StorageCapacity,
+    BlockType.ElectricityPassiveResource,
+    entityIndex
+  );
+  if (!storageCapacity)
+    return (
+      <div className="flex justify-center items-center text-lg">
+        No Utilities
+      </div>
+    );
   return (
     <>
-      <Inventory.ResourceLabel
+      <Inventory.PassiveResourceLabel
         name={"Electricity"}
         entityIndex={entityIndex}
         resourceId={BlockType.ElectricityPassiveResource}
@@ -295,7 +307,7 @@ Inventory.ResourceLabel = ({
     entityIndex
   );
 
-  const storageCapacity = useResourceCount(
+  let storageCapacity = useResourceCount(
     components.StorageCapacity,
     resourceId,
     entityIndex
@@ -326,6 +338,14 @@ Inventory.ResourceLabel = ({
 
   const resourceIcon = ResourceImage.get(resourceId);
 
+  if (resourceId == BlockType.ElectricityPassiveResource) {
+    storageCapacity = 1000;
+    console.log("resourceCount: ", resourceCount);
+    console.log("storageCapacity: ", storageCapacity);
+    console.log("production: ", production);
+    console.log("lastClaimedAt: ", lastClaimedAt);
+    console.log("unclaimedResource: ", unclaimedResource);
+  }
   if (storageCapacity > 0) {
     return (
       <div className="mb-1">
@@ -367,6 +387,107 @@ Inventory.ResourceLabel = ({
             {resourceCount}{" "}
             <span className="opacity-50">(+{resourcesToClaim})</span>
           </p>
+          <b>{storageCapacity}</b>
+        </div>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
+};
+
+Inventory.PassiveResourceLabel = ({
+  name,
+  resourceId,
+  entityIndex,
+}: {
+  name: string;
+  resourceId: EntityID;
+  entityIndex?: EntityIndex;
+}) => {
+  const { components, offChainComponents, singletonIndex } = useMud();
+
+  const blockNumber = useComponentValue(
+    offChainComponents.BlockNumber,
+    singletonIndex
+  );
+
+  const resourceCount = useResourceCount(
+    components.Item,
+    resourceId,
+    entityIndex
+  );
+
+  let storageCapacity = useResourceCount(
+    components.StorageCapacity,
+    resourceId,
+    entityIndex
+  );
+
+  const production = useResourceCount(components.Mine, resourceId, entityIndex);
+
+  const lastClaimedAt = useResourceCount(
+    components.LastClaimedAt,
+    resourceId,
+    entityIndex
+  );
+
+  const unclaimedResource = useResourceCount(
+    components.UnclaimedResource,
+    resourceId,
+    entityIndex
+  );
+
+  const resourcesToClaim = useMemo(() => {
+    const toClaim =
+      unclaimedResource +
+      ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
+    if (toClaim > storageCapacity - resourceCount)
+      return storageCapacity - resourceCount;
+    return toClaim;
+  }, [unclaimedResource, lastClaimedAt, blockNumber]);
+
+  const resourceIcon = ResourceImage.get(resourceId);
+
+  if (resourceId == BlockType.ElectricityPassiveResource) {
+    storageCapacity = 1000;
+    console.log("resourceCount: ", resourceCount);
+    console.log("storageCapacity: ", storageCapacity);
+    console.log("production: ", production);
+    console.log("lastClaimedAt: ", lastClaimedAt);
+    console.log("unclaimedResource: ", unclaimedResource);
+  }
+  if (storageCapacity > 0) {
+    return (
+      <div className="mb-1">
+        <div className="flex justify-between">
+          <div className="flex gap-1">
+            <img className="w-4 h-4 " src={resourceIcon}></img>
+            <p>{name}</p>
+          </div>
+        </div>
+        <div>
+          <div
+            className="h-full bg-cyan-600"
+            style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
+          />
+          <div
+            className="h-full bg-cyan-800"
+            style={{ width: `${(resourcesToClaim / storageCapacity) * 100}%` }}
+          />
+          <div
+            className="h-full bg-gray-900"
+            style={{
+              width: `${
+                ((storageCapacity - resourceCount - resourcesToClaim) /
+                  storageCapacity) *
+                100
+              }%`,
+            }}
+          />
+        </div>
+        <div className="flex justify-between">
+          <p>{resourceCount}</p>
           <b>{storageCapacity}</b>
         </div>
       </div>
