@@ -11,6 +11,7 @@ import {
   World,
   defineComponent,
   getComponentValue,
+  hasComponent,
   overridableComponent,
   removeComponent,
   runQuery,
@@ -130,12 +131,9 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
     updateComponent(this.component, entity, value);
   }
 
-  public has() {
-    return Has(this.component);
-  }
-
-  public hasValue(value: Partial<ComponentValue<S>>) {
-    return HasValue(this.component, value);
+  public has(entityID?: EntityID) {
+    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    return hasComponent(this.component, entity);
   }
 }
 

@@ -1,18 +1,14 @@
 import { SingletonID } from "@latticexyz/network";
-import { useComponentValue } from "@latticexyz/react";
 import { useMud } from "../context/MudContext";
 import { execute } from "../network/actions";
+import { Counter } from "src/network/components/chainComponents";
+import { DoubleCounter } from "src/network/components/clientComponents";
 
 export default function Increment() {
-  const { components, systems, singletonIndex, offChainComponents, providers } =
-    useMud();
+  const { systems, providers } = useMud();
 
-  const counter = useComponentValue(components.Counter, singletonIndex);
-  const doubleCounter = useComponentValue(
-    offChainComponents.DoubleCounter,
-    singletonIndex
-  );
-
+  const counter = Counter.use();
+  const doubleCounter = DoubleCounter.use();
   return (
     <>
       <div>

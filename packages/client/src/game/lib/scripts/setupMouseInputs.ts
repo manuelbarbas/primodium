@@ -1,14 +1,8 @@
 import { KeybindActions } from "@game/constants";
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import {
-  getComponentValue,
-  removeComponent,
-  setComponent,
-} from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
 import { pan, updateWorldView } from "src/game/api/camera";
 import { isDown } from "src/game/api/input";
-import { offChainComponents, singletonIndex, world } from "src/network/world";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
 import {
@@ -18,11 +12,17 @@ import {
   demolishPath,
 } from "src/util/web3";
 import { Network } from "../../../network/layer";
-import * as components from "../../api/components";
+import {
+  HoverTile,
+  SelectedAction,
+  SelectedBuilding,
+  SelectedTile,
+  StartSelectedPath,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
 const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
   const { maxZoom, minZoom, wheelSpeed } = scene.config.camera;
-  const { SelectedAction, SelectedBuilding, SelectedTile } = offChainComponents;
 
   scene.input.click$.subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
@@ -38,10 +38,7 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
     //   if (!validTutorialClick(gameCoord, network)) return;
     // }
 
-    const selectedAction = getComponentValue(
-      SelectedAction,
-      singletonIndex
-    )?.value;
+    const selectedAction = SelectedAction.get()?.value;
 
     //handle web3 mutations
     switch (selectedAction) {
@@ -54,10 +51,10 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
         demolishPath(gameCoord, network);
         break;
       case Action.Conveyor:
-        const startCoord = components.startSelectedPath(network).get();
+        const startCoord = StartSelectedPath.get();
 
         if (!startCoord) {
-          components.startSelectedPath(network).set(gameCoord);
+          StartSelectedPath.set(gameCoord);
           return;
         }
 
@@ -66,26 +63,22 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
       case Action.SelectAttack:
         return;
       case Action.PlaceBuilding:
-        const selectedBuilding = getComponentValue(
-          SelectedBuilding,
-          singletonIndex
-        )?.value;
+        const selectedBuilding = SelectedBuilding.get()?.value;
         if (!selectedBuilding) return;
-        components.selectedBuilding(network).remove();
+        SelectedBuilding.remove();
         buildBuilding(gameCoord, selectedBuilding, address, network);
     }
 
-    if (selectedAction !== undefined)
-      removeComponent(SelectedAction, singletonIndex);
+    if (selectedAction !== undefined) SelectedAction.remove();
 
     // update selected building
     const building = getBuildingAtCoord(gameCoord, network);
     if (!building) {
-      removeComponent(SelectedBuilding, singletonIndex);
-      setComponent(SelectedTile, singletonIndex, gameCoord);
+      SelectedBuilding.remove();
+      SelectedTile.set(gameCoord);
     } else {
-      setComponent(SelectedBuilding, singletonIndex, { value: building });
-      removeComponent(SelectedTile, singletonIndex);
+      SelectedBuilding.set({ value: building });
+      SelectedTile.remove();
     }
   });
 
@@ -99,10 +92,10 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
     const mouseCoord = { x, y: -y } as Coord;
 
     //set hover tile if it is different
-    const currentHoverTile = components.hoverTile(network).get();
+    const currentHoverTile = HoverTile.get();
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
-    components.hoverTile(network).set(mouseCoord);
+    HoverTile.set(mouseCoord);
   });
 
   scene.input.phaserInput.on(

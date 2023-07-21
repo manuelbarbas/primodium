@@ -3,20 +3,18 @@ import {
   Has,
   defineEnterSystem,
   defineExitSystem,
-  getComponentValue,
-  hasComponent,
 } from "@latticexyz/recs";
-import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { createArrowMarker } from "../factory/arrowMarker";
+import { Marker, Position } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
-export const renderMapMarkers = (scene: Scene, network: Network) => {
-  const { world, components, offChainComponents } = network;
+export const renderMapMarkers = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_mapMarker";
 
-  const query = [Has(offChainComponents.Marker), Has(components.Position)];
+  const query = [Has(Marker), Has(Position)];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
@@ -30,14 +28,14 @@ export const renderMapMarkers = (scene: Scene, network: Network) => {
       return;
     }
 
-    if (!hasComponent(offChainComponents.Marker, entityIndex)) {
+    if (!Marker.has(world.entities[entityIndex])) {
       if (scene.objectPool.objects.has(objGraphicsIndex)) {
         scene.objectPool.remove(objGraphicsIndex);
       }
       return;
     }
 
-    const tileCoord = getComponentValue(components.Position, entityIndex);
+    const tileCoord = Position.get(world.entities[entityIndex]);
 
     if (!tileCoord) return;
 

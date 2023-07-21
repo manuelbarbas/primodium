@@ -1,12 +1,13 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
+  Has,
+  HasValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
 } from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
-import { Network } from "src/network/layer";
 import { Action } from "src/util/constants";
 import { createAttackPath } from "../factory/attackPath";
 import { createSelectionTile } from "../factory/selectionTile";
@@ -17,18 +18,18 @@ import {
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 
-export const renderAttackTargetingTool = (scene: Scene, network: Network) => {
+export const renderAttackTargetingTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_attackTargeting";
 
   const query = [
-    HoverTile.has(),
-    SelectedAction.hasValue({ value: Action.SelectAttack }),
+    Has(HoverTile),
+    HasValue(SelectedAction, { value: Action.SelectAttack }),
   ];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
-    const attackSelection = SelectedAttack.get();
+    const attackSelection = SelectedAttack.getCoords();
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
 
     // Avoid updating on optimistic overrides
