@@ -295,7 +295,7 @@ Inventory.ResourceLabel = ({
     entityIndex
   );
 
-  const storageCount = useResourceCount(
+  const storageCapacity = useResourceCount(
     components.StorageCapacity,
     resourceId,
     entityIndex
@@ -319,14 +319,14 @@ Inventory.ResourceLabel = ({
     const toClaim =
       unclaimedResource +
       ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
-    if (toClaim > storageCount - resourceCount)
-      return storageCount - resourceCount;
+    if (toClaim > storageCapacity - resourceCount)
+      return storageCapacity - resourceCount;
     return toClaim;
   }, [unclaimedResource, lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (storageCount > 0) {
+  if (storageCapacity > 0) {
     return (
       <div className="mb-1">
         <div className="flex justify-between">
@@ -338,25 +338,25 @@ Inventory.ResourceLabel = ({
         </div>
         <div
           className={`flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt ${
-            resourceCount + resourcesToClaim === storageCount
+            resourceCount + resourcesToClaim === storageCapacity
               ? "animate-pulse"
               : ""
           }`}
         >
           <div
             className="h-full bg-cyan-600"
-            style={{ width: `${(resourceCount / storageCount) * 100}%` }}
+            style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
           />
           <div
             className="h-full bg-cyan-800"
-            style={{ width: `${(resourcesToClaim / storageCount) * 100}%` }}
+            style={{ width: `${(resourcesToClaim / storageCapacity) * 100}%` }}
           />
           <div
             className="h-full bg-gray-900"
             style={{
               width: `${
-                ((storageCount - resourceCount - resourcesToClaim) /
-                  storageCount) *
+                ((storageCapacity - resourceCount - resourcesToClaim) /
+                  storageCapacity) *
                 100
               }%`,
             }}
@@ -367,7 +367,7 @@ Inventory.ResourceLabel = ({
             {resourceCount}{" "}
             <span className="opacity-50">(+{resourcesToClaim})</span>
           </p>
-          <b>{storageCount}</b>
+          <b>{storageCapacity}</b>
         </div>
       </div>
     );
