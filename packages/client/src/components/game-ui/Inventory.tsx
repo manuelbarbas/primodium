@@ -16,12 +16,14 @@ export const Inventory = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
-  const mainBase = (useMainBase() ?? { value: "0" as EntityID }).value;
+  const mainBase = useMainBase()?.value;
   const mainBaseCoord = useMemo(() => {
     return mainBase ? decodeCoordEntity(mainBase) : undefined;
   }, [mainBase]);
 
-  const mainBaseEntity = world.entityToIndex.get(mainBase) ?? singletonIndex;
+  const mainBaseEntity = mainBase
+    ? world.entityToIndex.get(mainBase)
+    : singletonIndex;
   const buildingLevel = useComponentValue(
     network.components.BuildingLevel,
     mainBaseEntity
@@ -83,10 +85,9 @@ export const Inventory = () => {
 
           {menuIndex === 0 && (
             <div className="flex justify-center">
-              <ClaimButton
-                id="claim-button"
-                coords={mainBaseCoord ?? { x: 0, y: 0 }}
-              />
+              {mainBaseCoord !== undefined && (
+                <ClaimButton id="claim-button" coords={mainBaseCoord} />
+              )}
             </div>
           )}
         </div>
