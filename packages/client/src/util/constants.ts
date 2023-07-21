@@ -92,9 +92,7 @@ export const BlockType = {
   SulfurMine: keccak256("block.SulfurMine") as EntityID,
   StorageUnit: keccak256("block.StorageUnit") as EntityID,
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
-  LithiumCopperOxideFactory: keccak256(
-    "block.LithiumCopperOxideFactory"
-  ) as EntityID,
+  PhotovoltaicCell: keccak256("block.LithiumCopperOxideFactory") as EntityID,
   SpaceFuelFactory: keccak256("block.SpaceFuelFactory") as EntityID,
   DroneFactory: keccak256("block.DroneFactory") as EntityID,
   PropulsionFuelFactory: keccak256("block.PropulsionFuelFactory") as EntityID,
@@ -223,13 +221,13 @@ export const BlockType = {
   AlloyFactory2Research: keccak256("research.AlloyFactory2") as EntityID,
   AlloyFactory3Research: keccak256("research.AlloyFactory3") as EntityID,
 
-  LithiumCopperOxideFactoryResearch: keccak256(
+  PhotovoltaicCellResearch: keccak256(
     "research.LithiumCopperOxideFactory"
   ) as EntityID,
-  LithiumCopperOxideFactory2Research: keccak256(
+  PhotovoltaicCell2Research: keccak256(
     "research.LithiumCopperOxideFactory2"
   ) as EntityID,
-  LithiumCopperOxideFactory3Research: keccak256(
+  PhotovoltaicCell3Research: keccak256(
     "research.LithiumCopperOxideFactory3"
   ) as EntityID,
 
@@ -418,11 +416,15 @@ export const BackgroundImage = new Map<EntityID, string>([
     BlockType.AlloyFactory,
     "/img/building/alloyfactory/alloyfactory-level1.gif",
   ],
-  [BlockType.LithiumCopperOxideFactory, "/img/building/newplatingfactory.gif"],
+  [
+    BlockType.PhotovoltaicCell,
+    "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
+  ],
   [BlockType.SolarPanel, "/img/building/solarpanels/solarpanel-level1.png"],
   [BlockType.HousingUnit, "/img/building/newplatingfactory.gif"],
   [BlockType.PropulsionFuelFactory, "/img/building/propulsionfuelfactory.gif"],
   [BlockType.SpaceFuelFactory, "/img/building/newplatingfactory.gif"],
+  // [BlockType.StarMap]
 
   //actual buildings
   // [BlockType.BasicMiner, "/img/building/minerdrill.gif"],
@@ -544,7 +546,7 @@ export const ResearchImage = new Map<EntityID, string>([
 
   [
     BlockType.AlloyFactoryResearch,
-    "/img/building/alloyfactory/allowfactory-level1.gif",
+    "/img/building/alloyfactory/alloyfactory-level1.gif",
   ],
   [
     BlockType.AlloyFactory2Research,
@@ -556,25 +558,33 @@ export const ResearchImage = new Map<EntityID, string>([
   ],
 
   [
-    BlockType.LithiumCopperOxideFactoryResearch,
-    "/img/building/newplatingfactory.gif",
+    BlockType.PhotovoltaicCellResearch,
+    "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
   ],
   [
-    BlockType.LithiumCopperOxideFactory2Research,
-    "/img/building/newplatingfactory.gif",
+    BlockType.PhotovoltaicCell2Research,
+    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
   ],
   [
-    BlockType.LithiumCopperOxideFactory3Research,
-    "/img/building/newplatingfactory.gif",
+    BlockType.PhotovoltaicCell3Research,
+    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
   ],
 
-  [BlockType.SpaceFuelFactoryResearch, "/img/building/newplatingfactory.gif"],
-  [BlockType.SpaceFuelFactory2Research, "/img/building/newplatingfactory.gif"],
-  [BlockType.SpaceFuelFactory3Research, "/img/building/newplatingfactory.gif"],
+  [BlockType.SpaceFuelFactoryResearch, "/img/building/spacefuel.gif"],
+  [BlockType.SpaceFuelFactory2Research, "/img/building/spacefuel.gif"],
+  [BlockType.SpaceFuelFactory3Research, "/img/building/spacefuel.gif"],
 
   [
     BlockType.SolarPanelResearch,
     "/img/building/solarpanels/solarpanel-level1.png",
+  ],
+  [
+    BlockType.SolarPanel2Research,
+    "/img/building/solarpanels/solarpanel-level2.png",
+  ],
+  [
+    BlockType.SolarPanel2Research,
+    "/img/building/solarpanels/solarpanel-level2.png",
   ],
 
   [BlockType.HousingUnitResearch, "/img/building/newplatingfactory.gif"],
