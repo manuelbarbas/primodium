@@ -27,7 +27,7 @@ export const init = async (address: Address, network: Network) => {
   scene.camera.phaserCamera.fadeIn(1000);
 
   setupMouseInputs(scene, network, address);
-  setupCameraMovement(scene, network, address);
+  setupCameraMovement(scene, address);
 
   runSystems(scene, network);
 

@@ -3,9 +3,9 @@ import {
   EntityID,
   Has,
   HasValue,
-  Component as MUDComponent,
   Metadata,
   NotValue,
+  OverridableComponent,
   Schema,
   Type,
   World,
@@ -29,15 +29,19 @@ export interface Options<M extends Metadata> {
 }
 
 class Component<S extends Schema, M extends Metadata, T = undefined> {
-  public component: MUDComponent<S, M>;
+  public component: OverridableComponent<S, M>;
   constructor(world: World, schema: S, options?: Options<M>) {
-    if (options?.overridable) {
-      this.component = defineComponent(world, schema, options);
-    } else {
-      this.component = overridableComponent(
-        defineComponent(world, schema, options)
-      );
-    }
+    this.component = overridableComponent(
+      defineComponent(world, schema, options)
+    );
+  }
+
+  public get addOverride() {
+    return this.component.addOverride;
+  }
+
+  public get removeOverride() {
+    return this.component.removeOverride;
   }
 
   public get update$() {

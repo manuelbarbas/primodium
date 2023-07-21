@@ -21,11 +21,11 @@ export const debug = (network: Network) => {
   };
 
   const acquireStorageForAllResources = async () => {
-    await debugAcquireStorageForAllResources(network);
+    await debugAcquireStorageForAllResources;
   };
 
   const removeBuildLimit = async () => {
-    await debugRemoveBuildLimit(network);
+    await debugRemoveBuildLimit;
   };
 
   const removeUpgradeRequirements = async (buildingId: EntityID) => {

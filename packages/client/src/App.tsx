@@ -28,7 +28,7 @@ export default function App() {
     const provider = await activeConnector?.getProvider();
     const networkLayerConfig = getNetworkLayerConfig(provider);
     const network = await createNetworkLayer(networkLayerConfig);
-    setNetworkLayer(network);
+    setNetworkLayer;
     prevAddressRef.current = address;
   };
 

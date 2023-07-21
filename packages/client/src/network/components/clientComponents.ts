@@ -8,8 +8,13 @@ import { world } from "../world";
 import MarkerTypeComponent from "./customComponents/MarkerComponent";
 import SelectedAttackComponent from "./customComponents/SelectedAttackComponent";
 
-export const Position = new CoordComponent(world, { id: "Position" });
-export const BlockNumber = new NumberComponent(world, { id: "BlockNumber" });
+export const Position = new CoordComponent(world, {
+  id: "Position",
+  overridable: true,
+});
+export const BlockNumber = new NumberComponent(world, {
+  id: "BlockNumber",
+});
 export const GameReady = new BoolComponent(world, { id: "GameReady" });
 export const DoubleCounter = new NumberComponent(world, {
   id: "DoubleCounter",

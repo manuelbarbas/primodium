@@ -4,7 +4,6 @@ import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { throttle } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { Network } from "../../network/layer";
 import { useSettingsStore } from "../stores/SettingsStore";
 import {
   GameReady,
@@ -28,7 +27,7 @@ export const useSelectedAttack = () => {
 
 export const useKeybinds = () => useSettingsStore((state) => state.keybinds);
 
-export const useCamera = (_: Network, targetScene = Scenes.Main) => {
+export const useCamera = (targetScene = Scenes.Main) => {
   const [worldCoord, setWorldCoord] = useState<Coord>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0);
   const gameStatus = GameReady.use();

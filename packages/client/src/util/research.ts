@@ -40,9 +40,7 @@ export const ResearchDefaultUnlocked = new Set<EntityID>([
 ]);
 
 export function getBuildingResearchRequirement(
-  buildingId: EntityID,
-  world: World,
-  components: NetworkComponents<ReturnType<typeof defineComponents>>
+  buildingId: EntityID
 ): EntityID | null {
   const requiredResearch = getComponentValue(
     components.RequiredResearchComponent,

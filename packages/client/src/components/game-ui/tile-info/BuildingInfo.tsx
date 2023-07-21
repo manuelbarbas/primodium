@@ -1,4 +1,3 @@
-import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import React, { useMemo, useState } from "react";
 
@@ -7,29 +6,27 @@ import { BackgroundImage, BlockIdToKey } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
 import Header from "./Header";
 import UpgradeButton from "src/components/action/UpgradeButton";
-import { world } from "src/network/world";
 import { decodeCoordEntity } from "src/util/encode";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
 import { demolishBuilding, demolishPath } from "src/util/web3";
 import PortalModal from "src/components/shared/PortalModal";
+import {
+  BuildingType,
+  Health,
+  OwnedBy,
+} from "src/network/components/chainComponents";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
 }> = ({ building }) => {
   const network = useMud();
-  const { components } = network;
   const { address } = useAccount();
   const [showDestroyModal, setShowDestroyModal] = useState(false);
 
-  const buildingIndex = world.entityToIndex.get(building)!;
-  const buildingType = useComponentValue(components.BuildingType, buildingIndex)
-    ?.value as EntityID | undefined;
-  const health = useComponentValue(components.Health, buildingIndex)?.value;
-
-  const owner = useComponentValue(components.OwnedBy, buildingIndex)?.value as
-    | EntityID
-    | undefined;
+  const buildingType = BuildingType.use(building)?.value;
+  const health = Health.use(building)?.value;
+  const owner = OwnedBy.use(building)?.value;
 
   if (!buildingType || !owner) return null;
 
@@ -38,9 +35,8 @@ export const BuildingInfo: React.FC<{
   const ownerName = isOwner
     ? "You"
     : owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4);
-  const percentHealth =
-    (health ?? getBuildingMaxHealth(buildingType)) /
-    getBuildingMaxHealth(buildingType);
+  const maxHealth = getBuildingMaxHealth(buildingType);
+  const percentHealth = health ?? maxHealth / maxHealth;
 
   const coord = decodeCoordEntity(building);
 

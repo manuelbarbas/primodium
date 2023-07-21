@@ -29,9 +29,7 @@ export const inTutorial = (address: string, network: Network) => {
 
 export const validTutorialClick = (pos: Coord, network: Network) => {
   //get coords of arrow markers
-  const markers = primodium.components
-    .marker(network)
-    .getOfType(BlockType.ArrowMarker);
+  const markers = primodium.components.marker.getOfType(BlockType.ArrowMarker);
 
   for (const marker of markers) {
     const markerPos = getComponentValue(network.components.Position, marker);

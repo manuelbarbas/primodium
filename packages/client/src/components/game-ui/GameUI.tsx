@@ -12,6 +12,7 @@ import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "../NotificationBox";
 import { BrandingLabel } from "./BrandingLabel";
+import { GameReady } from "src/network/components/clientComponents";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -19,7 +20,7 @@ function GameUI() {
     state.toggleShowUI,
   ]);
 
-  const gameReady = primodium.hooks.useGameReady();
+  const gameReady = GameReady.use();
   useEffect(() => {
     if (!gameReady) return;
 

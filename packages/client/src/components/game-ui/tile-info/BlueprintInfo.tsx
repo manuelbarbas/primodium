@@ -7,19 +7,18 @@ import {
   ResourceImage,
 } from "src/util/constants";
 import Header from "./Header";
-import { primodium } from "@game/api";
-import { contractComponents, world } from "src/network/world";
 import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { HoverTile } from "src/network/components/clientComponents";
 
 export const BlueprintInfo: React.FC<{
   buildingType: EntityID;
 }> = ({ buildingType }) => {
-  const hoverTile = primodium.hooks.useHoverTile();
+  const hoverTile = HoverTile.use();
 
   const recipe = useMemo(() => {
-    return getRecipe(buildingType, world, contractComponents);
-  }, [buildingType, world, contractComponents]);
+    return getRecipe(buildingType);
+  }, [buildingType]);
 
   return (
     <>

@@ -43,14 +43,14 @@ const HotbarItem: React.FC<{
 
   const handleSelectBuilding = () => {
     if (selectedBuilding === blockType) {
-      primodium.components.selectedBuilding(network).remove();
-      primodium.components.selectedAction().remove();
+      selectedBuilding.remove();
+      selectedAction().remove();
       return;
     }
 
     console.log(blockType);
-    primodium.components.selectedBuilding(network).set(blockType);
-    primodium.components.selectedAction().set(action);
+    selectedBuilding.set(blockType);
+    selectedAction().set(action);
   };
 
   return (

@@ -2,7 +2,6 @@ import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { useMud } from "src/context/MudContext";
 import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
 import HotbarPagination from "./HotbarPagination";
@@ -10,12 +9,16 @@ import { useHotbarContent } from "./useHotbarContent";
 import wrap from "./wrap";
 import { Action } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
+import {
+  GameReady,
+  SelectedAction,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
 
 const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
-  const network = useMud();
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const gameReady = primodium.hooks.useGameReady();
+  const gameReady = GameReady.use();
   const keybinds = primodium.hooks.useKeybinds();
   const [activeBar, setActiveBar] = useState(0);
   const activeBarRef = useRef(0);
@@ -32,20 +35,18 @@ const Hotbar: React.FC = () => {
 
       const building = item.blockType;
 
-      const selectedBuilding = primodium.components
-        .selectedBuilding(network)
-        .get();
+      const selectedBuilding = SelectedBuilding.get()?.value;
 
       if (selectedBuilding === building) {
-        primodium.components.selectedBuilding(network).remove();
-        primodium.components.selectedAction().remove();
+        SelectedBuilding.remove();
+        SelectedAction.remove();
         return;
       }
 
-      primodium.components.selectedBuilding(network).set(building);
-      primodium.components
-        .selectedAction()
-        .set(item.action ?? Action.PlaceBuilding);
+      SelectedBuilding.set({ value: building });
+
+      const action = item.action ?? Action.PlaceBuilding;
+      SelectedAction.set({ value: action });
     };
 
     let hotkeys: { dispose: () => void }[] = [];
@@ -62,8 +63,8 @@ const Hotbar: React.FC = () => {
       KeybindActions.NextHotbar,
       () => {
         setActiveBar(wrap(activeBarRef.current + 1, hotbarContent.length));
-        primodium.components.selectedBuilding(network).remove();
-        primodium.components.selectedAction().remove();
+        SelectedBuilding.remove();
+        SelectedAction.remove();
       }
     );
 
@@ -71,14 +72,14 @@ const Hotbar: React.FC = () => {
       KeybindActions.PrevHotbar,
       () => {
         setActiveBar(wrap(activeBarRef.current - 1, hotbarContent.length));
-        primodium.components.selectedBuilding(network).remove();
-        primodium.components.selectedAction().remove();
+        SelectedBuilding.remove();
+        SelectedAction.remove();
       }
     );
 
     const esc = primodium.input.addListener(KeybindActions.Esc, () => {
-      primodium.components.selectedBuilding(network).remove();
-      primodium.components.selectedAction().remove();
+      SelectedBuilding.remove();
+      SelectedAction.remove();
     });
 
     return () => {

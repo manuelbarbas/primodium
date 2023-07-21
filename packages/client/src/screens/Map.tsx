@@ -1,41 +1,14 @@
-import { Perlin, createPerlin } from "@latticexyz/noise";
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { FixedSizeGrid as Grid } from "react-window";
 
 import { useMud } from "../context/MudContext";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BlockColors } from "../util/constants";
-import { getTopLayerKey } from "../util/tile";
+import { getTopLayerKey } from "src/util/tile";
 
 export default function Map() {
-  const { components, singletonIndex } = useMud();
-  const [initialized, setInitialized] = useState(false);
-  const perlinRef = useRef(null as null | Perlin);
-
-  useEffect(() => {
-    createPerlin().then((perlin: Perlin) => {
-      perlinRef.current = perlin;
-      setInitialized(true);
-    });
-  }, []);
-
-  const getTopLayerKeyHelper = useCallback(
-    (coord: Coord) => {
-      if (!initialized || perlinRef.current === null) {
-        return "#ffffff";
-      }
-      if (perlinRef.current !== null) {
-        const perlin = perlinRef.current;
-        return getTopLayerKey(coord, perlin);
-      } else {
-        return "#ffffff";
-      }
-    },
-    [initialized]
-  );
+  const { perlin, components, singletonIndex } = useMud();
 
   // React Window
   const { height, width } = useWindowDimensions();
@@ -74,10 +47,13 @@ export default function Map() {
     if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
       topLayerKey = tile.value;
     } else {
-      topLayerKey = getTopLayerKeyHelper({
-        x: plotX,
-        y: plotY,
-      });
+      topLayerKey = getTopLayerKey(
+        {
+          x: plotX,
+          y: plotY,
+        },
+        perlin
+      );
     }
 
     const defaultStyle = {
@@ -103,12 +79,5 @@ export default function Map() {
     </Grid>
   );
 
-  if (!initialized) {
-    return <p>Initializing...</p>;
-  }
-  return (
-    <>
-      <TileMap />
-    </>
-  );
+  return <TileMap />;
 }

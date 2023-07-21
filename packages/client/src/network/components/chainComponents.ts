@@ -12,10 +12,14 @@ export const Counter = new Component(
   { metadata: { contractId: "component.Counter" } }
 );
 
-export const BuildingType = new StringComponent(world, {
-  metadata: { contractId: "component.Tile" },
-  overridable: true,
-});
+export const BuildingType = new Component(
+  world,
+  { value: Type.Entity },
+  {
+    metadata: { contractId: "component.Tile" },
+    overridable: true,
+  }
+);
 
 export const Path = new StringComponent(world, {
   metadata: { contractId: "component.Path", overridable: true },

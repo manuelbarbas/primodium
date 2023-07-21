@@ -153,6 +153,25 @@ export const attackBuilding = async (
   setTransactionLoading(false);
 };
 
+export const researchBuilding = async (
+  researchId: EntityID,
+  network: Network
+) => {
+  const { providers, systems } = network;
+  const setTransactionLoading = useGameStore.getState().setTransactionLoading;
+  const setNotification = useNotificationStore.getState().setNotification;
+
+  setTransactionLoading(true);
+  await execute(
+    systems["system.Research"].executeTyped(BigNumber.from(researchId), {
+      gasLimit: 1_000_000,
+    }),
+    providers,
+    setNotification
+  );
+  setTransactionLoading(false);
+};
+
 export const debugAcquireResources = async (
   resourceId: EntityID,
   amount: number,

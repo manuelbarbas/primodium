@@ -9,6 +9,7 @@ import Arrow from "./Arrow";
 import { hashKeyEntityAndTrim } from "../../util/encode";
 
 import { Network } from "src/network/layer";
+import { Marker } from "src/network/components/clientComponents";
 
 const isQueryString = (selector: string) => {
   try {
@@ -238,28 +239,13 @@ export default function buildTourSteps(ctx: Network, address: string) {
       ),
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
-        primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+        Marker.setWithCoord(spawn, BlockType.ArrowMarker);
         addCanvasListener(tour!);
 
         return <></>;
       },
     }),
-    // // ROUTE TO RESOURCE BOX
-    // ...buildRoute({
-    //   route: ["#minimize-resource-box"],
-    //   arrowDirection: "up",
-    //   narration: [
-    //     <p>
-    //       Looks like you are getting the hang of it. I’ve given you <b>200</b>{" "}
-    //       iron to get you started.
-    //       <br />
-    //       <br />
-    //       To see it, open the Inventory tab. This is where all of your resources
-    //       will be stored.
-    //     </p>,
-    //   ],
-    //   orientation: [CardinalOrientation.SOUTH],
-    // }),
+
     // CHECKPOINT 2: CLAIMED STARTER PACK
     buildStep({
       name: "claim starter pack",
@@ -308,9 +294,14 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.Iron, BlockType.ArrowMarker, spawn, 10, 2);
+        Marker.target(
+          ctx.perlin,
+          BlockType.Iron,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -340,12 +331,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.BasicMiner, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.BasicMiner,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         //we set spawn in previous step
@@ -373,12 +370,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.MainBase, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.MainBase,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -413,12 +416,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.BasicMiner, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.BasicMiner,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -441,12 +450,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.MainBase, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.MainBase,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -459,7 +474,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+        Marker.setWithCoord(spawn, BlockType.ArrowMarker);
         addCanvasListener(tour!);
 
         return <></>;

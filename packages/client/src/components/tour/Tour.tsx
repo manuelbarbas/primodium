@@ -61,7 +61,7 @@ export const Tour = () => {
     }
 
     setShowUI(!currentStep.hideUI);
-    primodium.components.marker(mudCtx).removeAll();
+    marker(mudCtx).removeAll();
   }, [currentStep]);
 
   //steps needs to be defined for initialStepIndex to work
@@ -89,7 +89,7 @@ export const Tour = () => {
         disablePrev
         movingTarget
         validateNextOnTargetClick={async () => {
-          const selectedTile = primodium.components.selectedTile(mudCtx).get();
+          const selectedTile = selectedTile(mudCtx).get();
 
           if (!selectedTile) return false;
 

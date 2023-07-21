@@ -199,11 +199,7 @@ export const CraftRecipe = new Map<EntityID, ResourceCostData[]>([
 
 // building a building requires resources
 // fetch directly from component data
-export function getRecipe(
-  entityId: EntityID,
-  world: World,
-  components: typeof contractComponents
-): ResourceCostData["resources"] {
+export function getRecipe(entityId: EntityID): ResourceCostData["resources"] {
   const requiredResources = getComponentValue(
     components.RequiredResourcesComponent,
     world.entityToIndex.get(entityId)!

@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useMud } from "src/context/MudContext";
-import { useComponentValue } from "src/hooks/useComponentValue";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
@@ -13,9 +11,13 @@ import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
 import { SettingsMenu } from "./SettingsMenu";
+import {
+  BuildingLevel,
+  BuildingLimit,
+} from "src/network/components/chainComponents";
+import { SingletonID } from "@latticexyz/network";
 
 export const InfoBox = () => {
-  const { components, world, singletonIndex } = useMud();
   const crtEffect = useGameStore((state) => state.crtEffect);
   const { address } = useAccount();
   const [minimized] = useState<boolean>(false);
@@ -23,27 +25,18 @@ export const InfoBox = () => {
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
 
-  const mainBaseLevel = useComponentValue(
-    components.BuildingLevel,
-    world.entityToIndex.get(
-      encodeCoordEntityAndTrim(
-        { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
-        BlockType.BuildingKey
-      )
-    )
+  const coordEntity = encodeCoordEntityAndTrim(
+    { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
+    BlockType.BuildingKey
   );
+  const mainBaseLevel = BuildingLevel.use(coordEntity, { value: 0 }).value;
 
-  const buildLimit = useComponentValue(
-    components.BuildingLimit,
-    world.entityToIndex.get(mainBaseLevel?.value as unknown as EntityID)
-  );
+  const buildLimit = BuildingLimit.use(mainBaseLevel as unknown as EntityID);
+  const playerEntity = address
+    ? (address.toString().toLowerCase() as EntityID)
+    : SingletonID;
 
-  const playerBuildingCount = useComponentValue(
-    components.BuildingLimit,
-    address
-      ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)
-      : singletonIndex
-  );
+  const playerBuildingCount = BuildingLimit.use(playerEntity);
   const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
