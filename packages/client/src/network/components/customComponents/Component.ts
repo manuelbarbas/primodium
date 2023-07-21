@@ -129,6 +129,14 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
     updateComponent(this.component, entity, value);
   }
+
+  public has() {
+    return Has(this.component);
+  }
+
+  public hasValue(value: Partial<ComponentValue<S>>) {
+    return HasValue(this.component, value);
+  }
 }
 
 export default Component;

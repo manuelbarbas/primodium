@@ -1,29 +1,28 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { useMud } from "src/context/MudContext";
-import { useComponentValue } from "src/hooks/useComponentValue";
 import useResourceCount from "src/hooks/useResourceCount";
-import { useMainBase } from "src/hooks/useMainBase";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
-import { decodeCoordEntity } from "src/util/encode";
-import { singletonIndex, world } from "src/network/world";
+import { BlockNumber, Position } from "src/network/components/clientComponents";
+import {
+  Item,
+  LastClaimedAt,
+  MainBase,
+  Mine,
+  StorageCapacity,
+  UnclaimedResource,
+} from "src/network/components/chainComponents";
 
 export const Inventory = () => {
-  const network = useMud();
   const crtEffect = useGameStore((state) => state.crtEffect);
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
-  const mainBase = (useMainBase() ?? { value: "0" as EntityID }).value;
-  const mainBaseCoord = useMemo(() => {
-    return mainBase ? decodeCoordEntity(mainBase) : undefined;
-  }, [mainBase]);
+  const mainBase = MainBase.use()?.value || ("-1" as EntityID);
+  const mainBaseCoord = Position.use(mainBase);
 
-  const mainBaseEntity = world.entityToIndex.get(mainBase) ?? singletonIndex;
-  useComponentValue(network.components.BuildingLevel, mainBaseEntity);
-
+  if (mainBase == "-1") return null;
   return (
     <div
       style={{ filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))" }}
@@ -272,35 +271,26 @@ Inventory.ResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const { components, offChainComponents, singletonIndex } = useMud();
+  const blockNumber = BlockNumber.get();
 
-  const blockNumber = useComponentValue(
-    offChainComponents.BlockNumber,
-    singletonIndex
-  );
-
-  const resourceCount = useResourceCount(
-    components.Item,
-    resourceId,
-    entityIndex
-  );
+  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
   const storageCount = useResourceCount(
-    components.StorageCapacity,
+    StorageCapacity,
     resourceId,
     entityIndex
   );
 
-  const production = useResourceCount(components.Mine, resourceId, entityIndex);
+  const production = useResourceCount(Mine, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
-    components.LastClaimedAt,
+    LastClaimedAt,
     resourceId,
     entityIndex
   );
 
   const unclaimedResource = useResourceCount(
-    components.UnclaimedResource,
+    UnclaimedResource,
     resourceId,
     entityIndex
   );
