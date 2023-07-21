@@ -665,7 +665,7 @@ library LibBuildingDesignInitializer {
     RequiredResourcesComponent requiredResources
   ) internal {
     //MainBaseID
-    maxLevelComponent.set(MainBaseID, 5);
+    maxLevelComponent.set(MainBaseID, 6);
 
     //MainBaseID
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 1);

@@ -119,12 +119,12 @@ export const ResearchTree: ResearchTreeType = [
             description:
               "Allows you to upgrade Copper Mine building to level 2",
           },
-          {
-            id: BlockType.LithiumMine3Research,
-            subtitle: "Level 3",
-            description:
-              "Allows you to upgrade Copper Mine building to level 3",
-          },
+          // {
+          //   id: BlockType.LithiumMine3Research,
+          //   subtitle: "Level 3",
+          //   description:
+          //     "Allows you to upgrade Copper Mine building to level 3",
+          // },
         ],
       },
       {
@@ -192,16 +192,16 @@ export const ResearchTree: ResearchTreeType = [
             subtitle: "Level 1",
             description: "Allows you to build Alloy Factory building.",
           },
-          {
-            id: BlockType.AlloyFactory2Research,
-            subtitle: "Level 2",
-            description: "Allows you to upgrade Alloy Factory building.",
-          },
-          {
-            id: BlockType.AlloyFactory3Research,
-            subtitle: "Level 3",
-            description: "Allows you to upgrade Alloy Factory building.",
-          },
+          // {
+          //   id: BlockType.AlloyFactory2Research,
+          //   subtitle: "Level 2",
+          //   description: "Allows you to upgrade Alloy Factory building.",
+          // },
+          // {
+          //   id: BlockType.AlloyFactory3Research,
+          //   subtitle: "Level 3",
+          //   description: "Allows you to upgrade Alloy Factory building.",
+          // },
         ],
       },
       {
@@ -215,40 +215,40 @@ export const ResearchTree: ResearchTreeType = [
             description:
               "Allows you to build LithiumCopperOxide Factory building.",
           },
-          {
-            id: BlockType.LithiumCopperOxideFactory2Research,
-            subtitle: "Level 2",
-            description: "Allows you to upgrade LithiumCopperOxide Factory.",
-          },
-          {
-            id: BlockType.LithiumCopperOxideFactory3Research,
-            subtitle: "Level 3",
-            description: "Allows you to upgrade LithiumCopperOxide Factory.",
-          },
+          // {
+          //   id: BlockType.LithiumCopperOxideFactory2Research,
+          //   subtitle: "Level 2",
+          //   description: "Allows you to upgrade LithiumCopperOxide Factory.",
+          // },
+          // {
+          //   id: BlockType.LithiumCopperOxideFactory3Research,
+          //   subtitle: "Level 3",
+          //   description: "Allows you to upgrade LithiumCopperOxide Factory.",
+          // },
         ],
       },
-      {
-        name: "SpaceFuel Factory",
-        id: BlockType.SpaceFuelFactoryResearch,
-        description: "Allows you to build SpaceFuel Factory building.",
-        levels: [
-          {
-            id: BlockType.SpaceFuelFactoryResearch,
-            subtitle: "Level 1",
-            description: "Allows you to build SpaceFuel Factory building.",
-          },
-          {
-            id: BlockType.SpaceFuelFactory2Research,
-            subtitle: "Level 2",
-            description: "Allows you to upgrade SpaceFuel Factory building.",
-          },
-          {
-            id: BlockType.SpaceFuelFactory3Research,
-            subtitle: "Level 3",
-            description: "Allows you to upgrade SpaceFuel Factory building.",
-          },
-        ],
-      },
+      // {
+      //   name: "SpaceFuel Factory",
+      //   id: BlockType.SpaceFuelFactoryResearch,
+      //   description: "Allows you to build SpaceFuel Factory building.",
+      //   levels: [
+      //     {
+      //       id: BlockType.SpaceFuelFactoryResearch,
+      //       subtitle: "Level 1",
+      //       description: "Allows you to build SpaceFuel Factory building.",
+      //     },
+      //     {
+      //       id: BlockType.SpaceFuelFactory2Research,
+      //       subtitle: "Level 2",
+      //       description: "Allows you to upgrade SpaceFuel Factory building.",
+      //     },
+      //     {
+      //       id: BlockType.SpaceFuelFactory3Research,
+      //       subtitle: "Level 3",
+      //       description: "Allows you to upgrade SpaceFuel Factory building.",
+      //     },
+      //   ],
+      // },
       {
         name: "Solar Panel",
         id: BlockType.SolarPanelResearch,
@@ -271,28 +271,28 @@ export const ResearchTree: ResearchTreeType = [
           },
         ],
       },
-      {
-        name: "Housing Unit",
-        id: BlockType.HousingUnitResearch,
-        description: "Allows you to build Housing Unit building.",
-        levels: [
-          {
-            id: BlockType.HousingUnitResearch,
-            subtitle: "Level 1",
-            description: "Allows you to build Housing Unit building.",
-          },
-          {
-            id: BlockType.HousingUnit2Research,
-            subtitle: "Level 2",
-            description: "Allows you to upgrade Housing Unit building.",
-          },
-          {
-            id: BlockType.HousingUnit3Research,
-            subtitle: "Level 3",
-            description: "Allows you to upgrade Housing Unit building.",
-          },
-        ],
-      },
+      // {
+      //   name: "Housing Unit",
+      //   id: BlockType.HousingUnitResearch,
+      //   description: "Allows you to build Housing Unit building.",
+      //   levels: [
+      //     {
+      //       id: BlockType.HousingUnitResearch,
+      //       subtitle: "Level 1",
+      //       description: "Allows you to build Housing Unit building.",
+      //     },
+      //     {
+      //       id: BlockType.HousingUnit2Research,
+      //       subtitle: "Level 2",
+      //       description: "Allows you to upgrade Housing Unit building.",
+      //     },
+      //     {
+      //       id: BlockType.HousingUnit3Research,
+      //       subtitle: "Level 3",
+      //       description: "Allows you to upgrade Housing Unit building.",
+      //     },
+      //   ],
+      // },
     ],
   },
   // {
