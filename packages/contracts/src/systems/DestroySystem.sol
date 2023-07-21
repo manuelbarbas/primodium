@@ -83,6 +83,7 @@ contract DestroySystem is PrimodiumSystem {
     for (uint i = 0; i < buildingTiles.length; i++) {
       clearBuildingTile(ownedByComponent, buildingTiles[i]);
     }
+    buildingTilesComponent.remove(buildingEntity);
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
       IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(

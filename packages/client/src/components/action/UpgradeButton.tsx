@@ -14,6 +14,8 @@ import { getRecipe } from "../../util/resource";
 import { ResourceImage } from "../../util/constants";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
+import { GameButton } from "../shared/GameButton";
+
 export default function UpgradeButton({
   id,
   coords,
@@ -62,17 +64,17 @@ export default function UpgradeButton({
     return getRecipe(buildingTypeLevel, world, components);
   }, [buildingTypeLevel]);
 
-  const upgradeText = useMemo(() => {
-    return "Upgrade Building to Level " + upgradedLevel.toString();
-  }, [upgradedLevel]);
+  // const upgradeText = useMemo(() => {
+  //   return "Upgrade Building to Level " + upgradedLevel.toString();
+  // }, [upgradedLevel]);
 
-  const maxLevelReachedText = useMemo(() => {
-    return "Max Level Reached";
-  }, []);
+  // const maxLevelReachedText = useMemo(() => {
+  //   return "Max Level Reached";
+  // }, []);
 
-  const technologyRequirementsNotMetText = useMemo(() => {
-    return "Technology Requirements Not Met";
-  }, []);
+  // const technologyRequirementsNotMetText = useMemo(() => {
+  //   return "Technology Requirements Not Met";
+  // }, []);
 
   const researchRequirement = useMemo(() => {
     return getBuildingResearchRequirement(buildingTypeLevel, world, components);
@@ -99,10 +101,6 @@ export default function UpgradeButton({
     );
   }, [isResearched, researchRequirement]);
 
-  const colorCode = useMemo(() => {
-    return "bg-yellow-800 hover:bg-yellow-900";
-  }, []);
-
   const claimAction = async () => {
     setTransactionLoading(true);
     await execute(
@@ -115,65 +113,45 @@ export default function UpgradeButton({
     setTransactionLoading(false);
   };
 
-  if (transactionLoading) {
-    return (
-      <div className="absolute inset-x-3 bottom-3">
-        <button
-          id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
-        >
-          <Spinner />
-        </button>
-      </div>
-    );
-  } else if (isUpgradeLocked) {
-    return (
-      <div className="absolute inset-x-3 bottom-3">
-        <button
-          id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
-        >
-          {technologyRequirementsNotMetText}
-        </button>
-      </div>
-    );
+  let upgradeText: string;
+  if (isUpgradeLocked) {
+    upgradeText = "Research Not Met";
   } else if (!isLevelConditionMet) {
-    return (
-      <div className="absolute inset-x-3 bottom-3">
-        <button
-          id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
-        >
-          {maxLevelReachedText}
-        </button>
-      </div>
-    );
+    upgradeText = "Max Level Reached";
   } else {
-    return (
-      <div className="absolute inset-x-4 bottom-">
-        <button
-          id={id}
-          className={`h-10 ${colorCode} text-sm rounded font-bold w-full`}
-          onClick={claimAction}
-        >
-          {upgradeText}
-        </button>
-        <div className="mt-2 flex justify-center items-center text-sm">
-          {recipe.map((resource) => {
-            const resourceImage = ResourceImage.get(resource.id)!;
-            const resourceName = BlockIdToKey[resource.id];
-            return (
-              <ResourceIconTooltip
-                key={resource.id}
-                image={resourceImage}
-                resourceId={resource.id}
-                name={resourceName}
-                amount={resource.amount}
-              />
-            );
-          })}
-        </div>
-      </div>
-    );
+    upgradeText = "Upgrade Building to Level " + upgradedLevel.toString();
   }
+
+  return (
+    <div className="flex flex-col items-center">
+      <GameButton
+        id={id}
+        className="w-44 mt-2 text-sm"
+        onClick={claimAction}
+        color={
+          isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
+        }
+        disable={isUpgradeLocked || !isLevelConditionMet}
+      >
+        <div className="font-bold leading-none h-8 flex justify-center items-center crt">
+          {transactionLoading ? <Spinner /> : upgradeText}
+        </div>
+      </GameButton>
+      <div className="mt-2 flex justify-center items-center text-sm bg-slate-900/60 px-2">
+        {recipe.map((resource) => {
+          const resourceImage = ResourceImage.get(resource.id)!;
+          const resourceName = BlockIdToKey[resource.id];
+          return (
+            <ResourceIconTooltip
+              key={resource.id}
+              image={resourceImage}
+              resourceId={resource.id}
+              name={resourceName}
+              amount={resource.amount}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
 }

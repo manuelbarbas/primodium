@@ -1,31 +1,53 @@
+import { Perlin, createPerlin } from "@latticexyz/noise";
+import { addCoords } from "@latticexyz/phaserx";
 import {
   EntityID,
-  createEntity,
-  withValue,
   Has,
   HasValue,
+  createEntity,
   getComponentValue,
   getEntitiesWithValue,
   removeComponent,
   runQuery,
   setComponent,
   updateComponent,
+  withValue,
 } from "@latticexyz/recs";
+
+import { offChainComponents, singletonIndex } from "src/network/world";
 import { Coord } from "@latticexyz/utils";
-import { Network } from "../../network/layer";
+import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
 import {
   getBuildingsOfTypeInRange,
   getEntityTileAtCoord,
   getTilesOfTypeInRange,
 } from "src/util/tile";
-import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
-import { Perlin, createPerlin } from "@latticexyz/noise";
-import { addCoords } from "@latticexyz/phaserx";
+import { Network } from "../../network/layer";
+import { Action } from "src/util/constants";
 
 let perlin: Perlin;
 (async () => {
   perlin = await createPerlin();
 })();
+
+export const gameReady = (network: Network) => {
+  const { singletonIndex, offChainComponents } = network;
+
+  return {
+    set: (value: boolean) => {
+      setComponent(offChainComponents.GameReady, singletonIndex, {
+        value,
+      });
+    },
+    get: () => {
+      return getComponentValue(offChainComponents.GameReady, singletonIndex)
+        ?.value;
+    },
+    remove: () => {
+      return removeComponent(offChainComponents.GameReady, singletonIndex);
+    },
+  };
+};
 
 export const selectedTile = (network: Network) => {
   const { singletonIndex, offChainComponents } = network;
@@ -310,6 +332,7 @@ export const marker = (network: Network) => {
 export const mainBase = (network: Network) => {
   const { singletonIndex, components, world } = network;
 
+  const dummyCoord = { x: 0, y: 0 };
   return {
     get: (address: string) => {
       // resourceKey of the entity
@@ -318,12 +341,37 @@ export const mainBase = (network: Network) => {
         : singletonIndex;
 
       // fetch the main base of the user based on address
-      const mainBaseCoord = getComponentValue(
+      const mainBase = getComponentValue(
         components.MainBaseInitialized,
         resourceKey
-      );
+      )?.value;
+      if (!mainBase) return dummyCoord;
 
-      return mainBaseCoord;
+      const mainBaseEntity = world.entityToIndex.get(mainBase);
+
+      if (!mainBaseEntity) return dummyCoord;
+      return (
+        getComponentValue(components.Position, mainBaseEntity) ?? dummyCoord
+      );
     },
   };
+};
+
+export const selectedAction = () => {
+  const get = () => {
+    return getComponentValue(offChainComponents.SelectedAction, singletonIndex)
+      ?.value;
+  };
+
+  const set = (value: Action) => {
+    setComponent(offChainComponents.SelectedAction, singletonIndex, {
+      value,
+    });
+  };
+
+  const remove = () => {
+    return removeComponent(offChainComponents.SelectedAction, singletonIndex);
+  };
+
+  return { get, set, remove };
 };

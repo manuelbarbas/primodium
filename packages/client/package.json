@@ -73,6 +73,6 @@
     "threads": "^1.7.0",
     "wagmi": "^0.10.10",
     "walktour": "^5.2.0",
-    "zustand": "^4.3.8"
+    "zustand": "^4.3.9"
   }
 }

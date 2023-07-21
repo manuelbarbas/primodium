@@ -98,6 +98,10 @@ export function createCamera(
     ignore,
     dispose: () => {
       pinchSub.unsubscribe();
+      dragStream$.unsubscribe();
+      pinchStream$.unsubscribe();
+      wheelStream$.unsubscribe();
+      zoom$.unsubscribe();
       gesture.destroy();
       phaserCamera.scene.scale.removeListener("resize", onResize);
     },

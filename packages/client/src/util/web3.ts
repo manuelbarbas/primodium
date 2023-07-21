@@ -1,12 +1,11 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
-import { randomBytes } from "ethers/lib/utils";
 
+import { execute } from "src/network/actions";
+import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { Network } from "src/network/layer";
-import { execute } from "src/network/actions";
 
 // Component overrides
 export const addTileOverride = (
@@ -17,21 +16,18 @@ export const addTileOverride = (
 ) => {
   const { components, providers } = network;
   const tempPositionId = uuid();
-  const tempEntityIndex = BigNumber.from(
-    randomBytes(32)
-  ) as unknown as EntityIndex;
-
+  const tempEntityIndex = 34567543456 as EntityIndex;
   components.Position.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: pos,
   });
-  components.Tile.addOverride(tempPositionId, {
+  components.BuildingType.addOverride(tempPositionId, {
     entity: tempEntityIndex,
-    value: { value: blockType as unknown as number },
+    value: { value: blockType },
   });
   components.OwnedBy.addOverride(tempPositionId, {
     entity: tempEntityIndex,
-    value: { value: address as unknown as number },
+    value: { value: address },
   });
   components.LastBuiltAt.addOverride(tempPositionId, {
     entity: tempEntityIndex,
@@ -52,7 +48,7 @@ export const removeTileOverride = (
   const { components } = network;
 
   components.Position.removeOverride(tempPositionId);
-  components.Tile.removeOverride(tempPositionId);
+  components.BuildingType.removeOverride(tempPositionId);
   components.OwnedBy.removeOverride(tempPositionId);
   components.LastBuiltAt.removeOverride(tempPositionId);
   components.LastClaimedAt.removeOverride(tempPositionId);
@@ -71,9 +67,10 @@ export const buildBuilding = async (
 
   try {
     setTransactionLoading(true);
+    console.log("building ", pos);
     await execute(
       systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
-        gasLimit: 3_500_000,
+        gasLimit: 5_000_000,
       }),
       providers,
       setNotification
@@ -91,6 +88,7 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
+  console.log("building path", start, end);
   await execute(
     systems["system.BuildPath"].executeTyped(start, end, {
       gasLimit: 1_500_000,
@@ -102,6 +100,7 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
 };
 
 export const demolishBuilding = async (pos: Coord, network: Network) => {
+  console.log("demolishing", pos);
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;

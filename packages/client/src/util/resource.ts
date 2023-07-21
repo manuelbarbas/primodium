@@ -1,8 +1,7 @@
 import { EntityID, World, getComponentValue } from "@latticexyz/recs";
 import { BlockType } from "./constants";
-import { defineComponents } from "../network/components";
-import { NetworkComponents } from "@latticexyz/std-client";
 import { hashKeyEntityAndTrim } from "./encode";
+import { contractComponents } from "src/network/world";
 
 export type ResourceCostData = {
   name: string;
@@ -203,7 +202,7 @@ export const CraftRecipe = new Map<EntityID, ResourceCostData[]>([
 export function getRecipe(
   entityId: EntityID,
   world: World,
-  components: NetworkComponents<ReturnType<typeof defineComponents>>
+  components: typeof contractComponents
 ): ResourceCostData["resources"] {
   const requiredResources = getComponentValue(
     components.RequiredResourcesComponent,

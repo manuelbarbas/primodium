@@ -1,6 +1,4 @@
 import { Perlin } from "@latticexyz/noise";
-import { Coord } from "@latticexyz/utils";
-import { BlockType, DisplayKeyPair } from "./constants";
 import {
   EntityID,
   Has,
@@ -9,8 +7,10 @@ import {
   runQuery,
 } from "@latticexyz/recs";
 import { NetworkComponents } from "@latticexyz/std-client";
-import { defineComponents } from "../network/components";
+import { Coord } from "@latticexyz/utils";
 import { Network } from "src/network/layer";
+import { defineComponents } from "../network/components";
+import { BlockType, DisplayKeyPair } from "./constants";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -159,15 +159,15 @@ export function getBuildingsOfTypeInRange(
       //get entity at coord
       const entities = runQuery([
         HasValue(components.Position, currentCoord),
-        Has(components.Tile),
+        Has(components.BuildingType),
       ]);
 
       const comp = getComponentValue(
-        components.Tile,
+        components.BuildingType,
         entities.values().next().value
       );
 
-      if (type === (comp?.value as unknown as EntityID)) {
+      if (type === (comp?.value as EntityID)) {
         tiles.push(currentCoord);
       }
     }
@@ -181,13 +181,24 @@ export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
 
   const entities = runQuery([
     HasValue(components.Position, coord),
-    Has(components.Tile),
+    Has(components.BuildingType),
   ]);
 
   if (!entities.size) return undefined;
 
   const tileEntityID = entities.values().next().value;
 
-  return getComponentValue(components.Tile, tileEntityID)
-    ?.value as unknown as EntityID;
+  return getComponentValue(components.BuildingType, tileEntityID)
+    ?.value as EntityID;
+};
+
+export const getBuildingAtCoord = (coord: Coord, network: Network) => {
+  const { components } = network;
+
+  const entities = runQuery([HasValue(components.Position, coord)]);
+
+  if (entities.size === 0) return undefined;
+  const tileEntity = [...entities][0];
+
+  return getComponentValue(components.OwnedBy, tileEntity)?.value as EntityID;
 };

@@ -1,3 +1,4 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   Has,
@@ -7,10 +8,9 @@ import {
   defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
-import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
-import { BlockType } from "src/util/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Network } from "src/network/layer";
+import { Action } from "src/util/constants";
 import { createSelectionTile } from "../factory/selectionTile";
 
 export const renderDemolishBuildingTool = (scene: Scene, network: Network) => {
@@ -20,8 +20,8 @@ export const renderDemolishBuildingTool = (scene: Scene, network: Network) => {
 
   const query = [
     Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.DemolishBuilding,
+    HasValue(offChainComponents.SelectedAction, {
+      value: Action.DemolishBuilding,
     }),
   ];
 

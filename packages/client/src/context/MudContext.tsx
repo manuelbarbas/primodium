@@ -1,68 +1,22 @@
-import { createContext, ReactNode, useContext } from "react";
-import { TxQueue } from "@latticexyz/network";
-import { EntityIndex, World } from "@latticexyz/recs";
-import { NetworkComponents } from "@latticexyz/std-client";
-import { IComputedValue } from "mobx";
-import { WebSocketProvider } from "@ethersproject/providers";
+import { ReactNode, createContext, useContext } from "react";
 
-import { SystemTypes } from "../../../contracts/types/SystemTypes";
-import {
-  defineComponents,
-  defineOffChainComponents,
-} from "../network/components";
+import { Network } from "src/network/layer";
 
-interface MudContextInterface {
-  world: World;
-  systems: TxQueue<SystemTypes>;
-  components: NetworkComponents<ReturnType<typeof defineComponents>>;
-  offChainComponents: ReturnType<typeof defineOffChainComponents>;
-  singletonIndex: EntityIndex;
-  defaultWalletAddress: string | undefined;
-  providers: IComputedValue<{
-    json: any;
-    ws: WebSocketProvider | undefined;
-  }>;
-}
+export const MudContext = createContext<Network | null>(null);
 
-// mud context type is interface and reactnode children
-type MudContextType = MudContextInterface & { children: ReactNode };
-
-export const MudContext = createContext<MudContextInterface | null>(null);
-
-const MudProvider = ({
-  world,
-  systems,
-  components,
-  offChainComponents,
-  singletonIndex,
-  defaultWalletAddress,
-  providers,
-  children,
-}: MudContextType) => {
-  return (
-    <MudContext.Provider
-      value={{
-        world,
-        systems,
-        components,
-        offChainComponents,
-        singletonIndex,
-        defaultWalletAddress,
-        providers: providers,
-      }}
-    >
-      {children}
-    </MudContext.Provider>
-  );
+type Props = Network & {
+  children: ReactNode;
 };
 
-export default MudProvider;
+export const MudProvider = ({ children, ...value }: Props) => {
+  const currentValue = useContext(MudContext);
+  if (currentValue) throw new Error("MudProvider can only be used once");
 
-export function useMud() {
-  const mudData = useContext(MudContext);
-  if (!mudData) {
-    throw new Error("Cannot use MudProvider without providing initial values");
-  } else {
-    return mudData;
-  }
-}
+  return <MudContext.Provider value={value}>{children}</MudContext.Provider>;
+};
+
+export const useMud = () => {
+  const value = useContext(MudContext);
+  if (!value) throw new Error("Must be used within a MUDProvider");
+  return value;
+};

@@ -1,24 +1,27 @@
-import InfoBox from "../InfoBox";
-import ResourceBox from "../resource-box/ResourceBox";
-import SideMenu from "../SideMenu";
-import TooltipBox from "../TooltipBox";
-import NotificationBox from "../NotificationBox";
-import { useGameStore } from "../../store/GameStore";
-import { useEffect } from "react";
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
-import { Hotbar } from "./Hotbar";
-import { TileInfo } from "./TileInfo";
+import { useEffect } from "react";
+import { useGameStore } from "../../store/GameStore";
+import { InfoBox } from "./InfoBox";
+
+import { AnimatePresence, motion } from "framer-motion";
+
+import { Camera } from "./Camera";
+import { Inventory } from "./Inventory";
+import Hotbar from "./hotbar/Hotbar";
+import { TileInfo } from "./tile-info/TileInfo";
+import NotificationBox from "../NotificationBox";
+import { BrandingLabel } from "./BrandingLabel";
 
 function GameUI() {
-  const [showUI, toggleShowUI, isReady] = useGameStore((state) => [
+  const [showUI, toggleShowUI] = useGameStore((state) => [
     state.showUI,
     state.toggleShowUI,
-    state.isReady,
   ]);
 
+  const gameReady = primodium.hooks.useGameReady();
   useEffect(() => {
-    if (!isReady) return;
+    if (!gameReady) return;
 
     const listener = primodium.input.addListener(
       KeybindActions.ToggleUI,
@@ -28,19 +31,31 @@ function GameUI() {
     return () => {
       listener.dispose();
     };
-  }, [isReady]);
+  }, [gameReady]);
 
   return (
-    <div className="screen-container">
-      <div className={`${showUI ? "" : "hidden pointer-events-none"}`}>
-        <Hotbar />
-        <TileInfo />
-        <InfoBox />
-        <NotificationBox />
-        <ResourceBox />
-        <TooltipBox />
-        <SideMenu />
-      </div>
+    <div>
+      {gameReady && (
+        <div className="screen-container">
+          <div className="fixed top-0 bottom-0 screen-container pointer-events-none vignette opacity-20 mix-blend-overlay" />
+          <BrandingLabel />
+          <Camera />
+          <AnimatePresence>
+            {showUI && (
+              <motion.div>
+                <Hotbar />
+                <TileInfo />
+                <InfoBox />
+                <NotificationBox />
+                {/* <ResourceBox /> */}
+                {/* <TooltipBox /> */}
+                {/* <SideMenu /> */}
+                <Inventory />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }

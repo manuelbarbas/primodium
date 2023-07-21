@@ -7,8 +7,10 @@ import { Coord } from "@latticexyz/utils";
 import { Buffer } from "buffer";
 
 // use this when you want to pass the entity to world.getEntityIndex
-export function encodeCoordEntityAndTrim(coord: Coord, key: string): string {
-  return BigNumber.from(encodeCoordEntity(coord, key)).toHexString();
+export function encodeCoordEntityAndTrim(coord: Coord, key: string): EntityID {
+  return BigNumber.from(
+    encodeCoordEntity(coord, key)
+  ).toHexString() as unknown as EntityID;
 }
 
 // Identical to encodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
