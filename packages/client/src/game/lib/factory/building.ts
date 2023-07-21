@@ -33,7 +33,7 @@ export const createBuilding = ({
       const sprite = EntityIDtoSpriteKey[buildingType];
       gameObject.setTexture(
         Assets.SpriteAtlas,
-        sprite[level - 1] ?? SpriteKeys.Node
+        sprite ? sprite[level - 1] : SpriteKeys.Node
       );
       gameObject.setDepth(DepthLayers.Building);
       if (selected) {

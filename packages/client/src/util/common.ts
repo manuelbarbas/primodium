@@ -1,3 +1,6 @@
+import { EntityID } from "@latticexyz/recs";
+import { BlockIdToKey } from "./constants";
+
 export function hasCommonElement(setA: Set<any>, setB: Set<any>) {
   for (let element of setA) {
     if (setB.has(element)) {
@@ -16,6 +19,10 @@ export function clampedIndex(index: number, length: number) {
   }
   return index;
 }
+
+export const wrap = (index: number, length: number) => {
+  return ((index % length) + length) % length;
+};
 
 export function toRomanNumeral(number: number) {
   const romanNumerals = [
@@ -45,3 +52,11 @@ export function toRomanNumeral(number: number) {
 
   return result;
 }
+
+export const getBlockTypeName = (blockType: EntityID | undefined) => {
+  if (blockType === undefined) return "";
+
+  return BlockIdToKey[blockType]
+    .replace(/([A-Z]+)/g, "$1")
+    .replace(/([A-Z][a-z])/g, " $1");
+};

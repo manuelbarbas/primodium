@@ -1,6 +1,6 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMud } from "src/context/MudContext";
 import { useComponentValue } from "src/hooks/useComponentValue";
 import useResourceCount from "src/hooks/useResourceCount";
@@ -22,7 +22,16 @@ export const Inventory = () => {
   }, [mainBase]);
 
   const mainBaseEntity = world.entityToIndex.get(mainBase) ?? singletonIndex;
-  useComponentValue(network.components.BuildingLevel, mainBaseEntity);
+  const buildingLevel = useComponentValue(
+    network.components.BuildingLevel,
+    mainBaseEntity
+  );
+
+  useEffect(() => {
+    if (buildingLevel === undefined) return;
+
+    setMenuIndex(0);
+  }, [buildingLevel]);
 
   return (
     <div
