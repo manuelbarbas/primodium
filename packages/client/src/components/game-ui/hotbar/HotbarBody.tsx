@@ -6,7 +6,6 @@ import { Action, KeyImages } from "src/util/constants";
 import HotbarItem from "./HotbarItem";
 import { useHotbarContent } from "./useHotbarContent";
 import { wrap } from "src/util/common";
-import { IndexProvider } from "./IndexProvider";
 
 const HotbarBody: React.FC<{
   activeBar: number;
@@ -43,18 +42,16 @@ const HotbarBody: React.FC<{
       <div
         className={`flex space-x-3 relative bg-slate-900/90 border-2 p-3 border-cyan-600 crt`}
       >
-        <IndexProvider>
-          {hotbarContent[activeBar].items.map((item, index) => {
-            return (
-              <HotbarItem
-                key={index}
-                index={index.toString()}
-                blockType={item.blockType}
-                action={item.action ?? Action.PlaceBuilding}
-              />
-            );
-          })}
-        </IndexProvider>
+        {hotbarContent[activeBar].items.map((item, index) => {
+          return (
+            <HotbarItem
+              key={index}
+              index={index}
+              blockType={item.blockType}
+              action={item.action ?? Action.PlaceBuilding}
+            />
+          );
+        })}
       </div>
       {nextKeyImage && hotbarContent.length > 1 && (
         <div

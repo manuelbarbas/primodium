@@ -4,7 +4,7 @@ import { useComponentValue } from "@latticexyz/react";
 import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { SingletonID } from "@latticexyz/network";
 import { motion } from "framer-motion";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
 import { useAccount } from "src/hooks/useAccount";
@@ -13,18 +13,16 @@ import { calcDims, convertToCoords } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { Action, BackgroundImage, KeyImages } from "src/util/constants";
 import { hashKeyEntityAndTrim } from "src/util/encode";
-import { IndexContext } from "./IndexProvider";
 
 const HotbarItem: React.FC<{
   blockType: EntityID;
   action: Action;
-  index: string;
+  index: number;
 }> = ({ blockType, action, index }) => {
   const network = useMud();
   const { RequiredResearchComponent, Research } = contractComponents;
   const { address } = useAccount();
   const selectedBuilding = primodium.hooks.useSelectedBuilding();
-  const { indices, registerChild, updateIndices } = useContext(IndexContext)!;
   const [isResearched, setIsResearched] = useState(false);
 
   const keybinds = primodium.hooks.useKeybinds();
@@ -56,13 +54,13 @@ const HotbarItem: React.FC<{
   }, [researched, requiredResearch]);
 
   const keybindAction = useMemo(() => {
-    if (!keybinds || !indices) return;
+    if (!keybinds) return;
 
     if (!KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions])
       return;
 
     return KeybindActions[`Hotbar${index}` as keyof typeof KeybindActions];
-  }, [keybinds, indices]);
+  }, [keybinds]);
 
   const keyImage = useMemo(() => {
     if (!keybinds || !keybindAction) return;
@@ -97,20 +95,6 @@ const HotbarItem: React.FC<{
     isResearched,
     keybindAction,
   ]);
-
-  useEffect(() => {
-    if (!isResearched) {
-      updateIndices(index);
-      return;
-    }
-
-    registerChild(index);
-    console.log("registering", getBlockTypeName(blockType), indices);
-    return () => {
-      console.log("unregistering", getBlockTypeName(blockType));
-      updateIndices(index);
-    };
-  }, [isResearched, blockType]);
 
   if (buildingTypeEntity) {
     const blueprint = getComponentValue(
