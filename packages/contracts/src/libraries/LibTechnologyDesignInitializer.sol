@@ -119,6 +119,17 @@ library LibTechnologyDesignInitializer {
       CopperResourceItemID,
       1000
     );
+    // researchComponent.set(IronPlateFactory3ResearchID);
+    // buildingLevelComponent.set(IronPlateFactory3ResearchID, 5);
+    // LibSetRequiredResources.set2RequiredResourcesForEntity(
+    //   requiredResources,
+    //   itemComponent,
+    //   IronPlateFactory3ResearchID,
+    //   IronPlateCraftedItemID,
+    //   1200,
+    //   CopperResourceItemID,
+    //   1000
+    // );
 
     // researchComponent.set(IronPlateFactory4ResearchID);
     // buildingLevelComponent.set(IronPlateFactory4ResearchID, 6);
@@ -231,6 +242,7 @@ library LibTechnologyDesignInitializer {
     //   IronPlateCraftedItemID,
     //   10000
     // );
+
     // Research AlloyFactory3ResearchID with 3000 IronPlateCraftedItemID and 2000 LithiumResourceItemID
     // researchComponent.set(AlloyFactory3ResearchID);
     // buildingLevelComponent.set(AlloyFactory3ResearchID, 7);
@@ -254,8 +266,8 @@ library LibTechnologyDesignInitializer {
       CopperResourceItemID,
       5000
     );
-    // Research LithiumCopperOxideFactory2ResearchID with 10000 IronPlateCraftedItemID and 10000 CopperReosurceItemID
-    // researchComponent.set(LithiumCopperOxideFactory2ResearchID);
+
+    // Research LithiumCopperOxideFactory2ResearchID with 10000 IronPlateCraftedItemID and 10000 CopperReosurceItemID    // researchComponent.set(LithiumCopperOxideFactory2ResearchID);
     // buildingLevelComponent.set(LithiumCopperOxideFactory2ResearchID, 6);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
