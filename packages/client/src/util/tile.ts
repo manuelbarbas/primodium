@@ -1,16 +1,11 @@
 import { Perlin } from "@latticexyz/noise";
-import {
-  EntityID,
-  Has,
-  HasValue,
-  getComponentValue,
-  runQuery,
-} from "@latticexyz/recs";
+import { EntityID, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Network } from "src/network/layer";
-import { contractComponents } from "src/network/world";
-import components from "../network/components/chainComponents";
 import { BlockType, DisplayKeyPair } from "./constants";
+import { Position } from "src/network/components/clientComponents";
+import { BuildingType, OwnedBy } from "src/network/components/chainComponents";
+import { world } from "src/network/world";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -157,16 +152,15 @@ export function getBuildingsOfTypeInRange(
 
       //get entity at coord
       const entities = runQuery([
-        HasValue(components.Position, currentCoord),
-        Has(components.BuildingType),
+        HasValue(Position, currentCoord),
+        Has(BuildingType),
       ]);
 
-      const comp = getComponentValue(
-        components.BuildingType,
+      const buildingType = BuildingType.get(
         entities.values().next().value
-      );
+      )?.value;
 
-      if (type === (comp?.value as EntityID)) {
+      if (type === buildingType) {
         tiles.push(currentCoord);
       }
     }
@@ -176,17 +170,13 @@ export function getBuildingsOfTypeInRange(
 }
 
 export const getEntityTileAtCoord = (coord: Coord) => {
-  const entities = runQuery([
-    HasValue(contractComponents.Position, coord),
-    Has(contractComponents.BuildingType),
-  ]);
+  const entities = runQuery([HasValue(Position, coord), Has(BuildingType)]);
 
   if (!entities.size) return undefined;
 
   const tileEntityID = entities.values().next().value;
 
-  return getComponentValue(contractComponents.BuildingType, tileEntityID)
-    ?.value as EntityID;
+  return BuildingType.get(tileEntityID)?.value;
 };
 
 export const getBuildingAtCoord = (coord: Coord, network: Network) => {
@@ -197,5 +187,5 @@ export const getBuildingAtCoord = (coord: Coord, network: Network) => {
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];
 
-  return getComponentValue(components.OwnedBy, tileEntity)?.value as EntityID;
+  return OwnedBy.get(world.entities[tileEntity])?.value;
 };

@@ -5,6 +5,10 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
+import {
+  SelectedAction,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { calcDims, convertToCoords } from "src/util/building";
 import {
@@ -20,7 +24,7 @@ const HotbarItem: React.FC<{
   action: Action;
 }> = ({ blockType, keybind, action }) => {
   const network = useMud();
-  const selectedBuilding = primodium.hooks.useSelectedBuilding();
+  const selectedBuilding = SelectedBuilding.use()?.value;
 
   const keybinds = primodium.hooks.useKeybinds();
 
@@ -43,14 +47,14 @@ const HotbarItem: React.FC<{
 
   const handleSelectBuilding = () => {
     if (selectedBuilding === blockType) {
-      selectedBuilding.remove();
-      selectedAction().remove();
+      SelectedBuilding.remove();
+      SelectedAction.remove();
       return;
     }
 
     console.log(blockType);
-    selectedBuilding.set(blockType);
-    selectedAction().set(action);
+    SelectedBuilding.set({ value: blockType });
+    SelectedAction.set({ value: action });
   };
 
   return (

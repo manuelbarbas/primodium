@@ -1,6 +1,7 @@
 import {
   ComponentValue,
   EntityID,
+  EntityIndex,
   Has,
   HasValue,
   Metadata,
@@ -68,7 +69,7 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
 
   private getEntity(entityID: EntityID) {
     const entity = world.entityToIndex.get(entityID);
-    if (!entity) throw new Error(`${this.component.id}: no entity registered`);
+    if (entity == undefined) return;
     return entity;
   }
 
@@ -76,6 +77,8 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
   public set(value: ComponentValue<S, T>, entityID?: EntityID) {
     // This is the (entityID, value) overload
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    if (entity == undefined)
+      throw new Error(`set ${this.component.id}: no entity registered`);
     setComponent(this.component, entity, value);
   }
 
@@ -88,6 +91,7 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
 
   public get(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    if (!entity) return defaultValue;
     const value = getComponentValue(this.component, entity)?.value;
     return value ?? defaultValue;
   }
@@ -109,6 +113,7 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
 
   public remove = (entityID?: EntityID) => {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    if (!entity) return;
     return removeComponent(this.component, entity);
   };
 
@@ -125,18 +130,22 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
   ): ComponentValue<S>;
 
   public use(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
-    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    const rawEntity = entityID ? this.getEntity(entityID) : singletonIndex;
+    const entity = rawEntity ?? (-1 as EntityIndex);
     const value = useComponentValue(this.component, entity);
     return value ?? defaultValue;
   }
 
   public update(value: Partial<ComponentValue<S, T>>, entityID?: EntityID) {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    if (entity == undefined)
+      throw new Error(`[update ${this.component.id}] no entity registered`);
     updateComponent(this.component, entity, value);
   }
 
   public has(entityID?: EntityID) {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+    if (!entity) return false;
     return hasComponent(this.component, entity);
   }
 }

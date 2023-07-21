@@ -1,7 +1,10 @@
-import { EntityID, World, getComponentValue } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "./constants";
 import { hashKeyEntityAndTrim } from "./encode";
-import { contractComponents } from "src/network/world";
+import {
+  Item,
+  RequiredResourcesComponent,
+} from "src/network/components/chainComponents";
 
 export type ResourceCostData = {
   name: string;
@@ -200,20 +203,16 @@ export const CraftRecipe = new Map<EntityID, ResourceCostData[]>([
 // building a building requires resources
 // fetch directly from component data
 export function getRecipe(entityId: EntityID): ResourceCostData["resources"] {
-  const requiredResources = getComponentValue(
-    components.RequiredResourcesComponent,
-    world.entityToIndex.get(entityId)!
-  );
+  const requiredResources = RequiredResourcesComponent.get(entityId)?.value;
 
-  if (!requiredResources || requiredResources.value.length == 0) return [];
-  return requiredResources!.value.map((resourceId: EntityID) => {
+  if (!requiredResources) return [];
+  return requiredResources.map((resourceId: EntityID) => {
     // remove leading zeros due to mudv1 hashing behavior
-    const resourceCost = getComponentValue(
-      components.Item,
-      world.entityToIndex.get(
-        hashKeyEntityAndTrim(resourceId, entityId) as EntityID
-      )!
-    );
+    const resourceEntity = hashKeyEntityAndTrim(
+      resourceId,
+      entityId
+    ) as EntityID;
+    const resourceCost = Item.get(resourceEntity);
 
     return {
       id: resourceId,
