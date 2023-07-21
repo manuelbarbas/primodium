@@ -13,6 +13,7 @@ import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
 import { SettingsMenu } from "./SettingsMenu";
+import { primodium } from "@game/api";
 
 export const InfoBox = () => {
   const { components, world, singletonIndex } = useMud();
@@ -87,7 +88,7 @@ export const InfoBox = () => {
                       Buildings: {playerBuildingCountNumber}/
                       <b>{buildLimitNumber}</b>
                     </p>
-                    <div className="flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt">
+                    <div className="flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-700/50 crt mt-1 ">
                       <div
                         className="h-full bg-cyan-600"
                         style={{
@@ -107,6 +108,19 @@ export const InfoBox = () => {
                       />
                     </div>
                   </div>
+                  {mainBaseCoord !== undefined && (
+                    <div className="flex justify-center w-full">
+                      <button
+                        id="goto-mainbase"
+                        className="mt-3 text-sm border border-cyan-600 active:bg-cyan-600 outline-none"
+                        onClick={() => primodium.camera.pan(mainBaseCoord)}
+                      >
+                        <div className="flex m-1 items-center gap-2 px-1 h-4">
+                          Go to Mainbase
+                        </div>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
