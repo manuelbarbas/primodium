@@ -25,6 +25,7 @@ import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
 import { researchBuilding } from "src/util/web3";
 import { useMud } from "src/context/MudContext";
+import { useComponentValue } from "src/hooks/useComponentValue";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {
@@ -76,11 +77,14 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     const playerEntity = address.toString().toLowerCase() as EntityID;
 
     //TODO: make main base a hook and only render this component when main base isnt undefined
-    const mainBaseEntity =
-      MainBase.use(playerEntity)?.value ?? ("-1" as EntityID);
+    const mainBaseEntity = useComponentValue(MainBase, playerEntity, {
+      value: "-1" as EntityID,
+    }).value;
 
-    const mainBaseLevel = BuildingLevel.use(mainBaseEntity, { value: 0 }).value;
-    const requiredMainBaseLevel = BuildingLevel.use(researchId, {
+    const mainBaseLevel = useComponentValue(BuildingLevel, mainBaseEntity, {
+      value: 0,
+    }).value;
+    const requiredMainBaseLevel = useComponentValue(BuildingLevel, researchId, {
       value: 0,
     }).value;
 

@@ -10,9 +10,10 @@ import {
   SelectedAttack,
 } from "src/network/components/clientComponents";
 import { SingletonID } from "@latticexyz/network";
+import { useComponentValue } from "src/hooks/useComponentValue";
 
 export const useSelectedAttack = () => {
-  const selectedAttack = SelectedAttack.use(SingletonID, {
+  const selectedAttack = useComponentValue(SelectedAttack, SingletonID, {
     origin: undefined,
     target: undefined,
   });
@@ -30,7 +31,7 @@ export const useKeybinds = () => useSettingsStore((state) => state.keybinds);
 export const useCamera = (targetScene = Scenes.Main) => {
   const [worldCoord, setWorldCoord] = useState<Coord>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0);
-  const gameStatus = GameReady.use();
+  const gameStatus = useComponentValue(GameReady);
   const minZoom = useRef(1);
 
   useEffect(() => {

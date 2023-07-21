@@ -10,11 +10,12 @@ import Header from "./Header";
 import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { HoverTile } from "src/network/components/clientComponents";
+import { useComponentValue } from "src/hooks/useComponentValue";
 
 export const BlueprintInfo: React.FC<{
   buildingType: EntityID;
 }> = ({ buildingType }) => {
-  const hoverTile = HoverTile.use();
+  const hoverTile = useComponentValue(HoverTile);
 
   const recipe = useMemo(() => {
     return getRecipe(buildingType);

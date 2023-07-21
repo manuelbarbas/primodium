@@ -6,20 +6,17 @@ import Increment from "./screens/Increment";
 import Map from "./screens/Map";
 import { Game } from "./screens/Game";
 import { LoadingState } from "./network/components/chainComponents";
-import { useComponentValue } from "@latticexyz/react";
-import { singletonIndex } from "./network/world";
+import { useComponentValue } from "./hooks/useComponentValue";
 
 export default function AppLoadingState() {
   // setup loading component, after setting up the network layer and syncing the block state (per emojimon)
   // Loading state component needs to be below the mud context
 
-  const loadingState = useComponentValue(LoadingState, singletonIndex);
-  if (!loadingState) return <>rip</>;
-  // const loadingState = LoadingState.use(SingletonID, {
-  //   state: SyncState.CONNECTING,
-  //   msg: "Connecting",
-  //   percentage: 0,
-  // });
+  const loadingState = useComponentValue(LoadingState, SingletonID, {
+    state: SyncState.CONNECTING,
+    msg: "Connecting",
+    percentage: 0,
+  });
 
   if (loadingState.state !== SyncState.LIVE) {
     return (

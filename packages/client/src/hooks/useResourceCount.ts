@@ -7,6 +7,7 @@ import { hashKeyEntityAndTrim } from "../util/encode";
 import { NumberComponent } from "src/network/components/customComponents/Component";
 import { SingletonID } from "@latticexyz/network";
 import { world } from "src/network/world";
+import { useComponentValue } from "./useComponentValue";
 
 export default function useResourceCount(
   resourceComponent: NumberComponent<{}>,
@@ -30,7 +31,7 @@ export default function useResourceCount(
     }
   }, [resourceId, entityIndex, address]);
 
-  const resource = resourceComponent.use(resourceKey);
+  const resource = useComponentValue(resourceComponent, resourceKey);
 
   if (resource) {
     return parseInt(resource.value.toString());

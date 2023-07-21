@@ -1,7 +1,6 @@
 import {
   ComponentValue,
   EntityID,
-  EntityIndex,
   Has,
   HasValue,
   Metadata,
@@ -19,7 +18,6 @@ import {
   setComponent,
   updateComponent,
 } from "@latticexyz/recs";
-import { useComponentValue } from "src/hooks/useComponentValue";
 import { singletonIndex, world } from "../../world";
 
 export interface Options<M extends Metadata> {
@@ -29,7 +27,11 @@ export interface Options<M extends Metadata> {
   overridable?: boolean;
 }
 
-class Component<S extends Schema, M extends Metadata, T = undefined> {
+class Component<
+  S extends Schema,
+  M extends Metadata = Metadata,
+  T = undefined
+> {
   public component: OverridableComponent<S, M>;
   constructor(world: World, schema: S, options?: Options<M>) {
     this.component = overridableComponent(
@@ -78,7 +80,9 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
     // This is the (entityID, value) overload
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;
     if (entity == undefined)
-      throw new Error(`set ${this.component.id}: no entity registered`);
+      throw new Error(
+        `[set ${entityID} for ${this.component.id}] no entity registered`
+      );
     setComponent(this.component, entity, value);
   }
 
@@ -121,20 +125,6 @@ class Component<S extends Schema, M extends Metadata, T = undefined> {
     const entities = runQuery([Has(this.component)]);
     entities.forEach((entity) => removeComponent(this.component, entity));
   };
-
-  public use(): ComponentValue<S> | undefined;
-  public use(entityID: EntityID): ComponentValue<S> | undefined;
-  public use(
-    entityID: EntityID,
-    defaultValue?: ComponentValue<S>
-  ): ComponentValue<S>;
-
-  public use(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
-    const rawEntity = entityID ? this.getEntity(entityID) : singletonIndex;
-    const entity = rawEntity ?? (-1 as EntityIndex);
-    const value = useComponentValue(this.component, entity);
-    return value ?? defaultValue;
-  }
 
   public update(value: Partial<ComponentValue<S, T>>, entityID?: EntityID) {
     const entity = entityID ? this.getEntity(entityID) : singletonIndex;

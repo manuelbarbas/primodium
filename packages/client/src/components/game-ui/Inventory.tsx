@@ -5,24 +5,22 @@ import useResourceCount from "src/hooks/useResourceCount";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
-import { BlockNumber, Position } from "src/network/components/clientComponents";
+import { BlockNumber } from "src/network/components/clientComponents";
 import {
   Item,
   LastClaimedAt,
-  MainBase,
   Mine,
   StorageCapacity,
   UnclaimedResource,
 } from "src/network/components/chainComponents";
+import { useMainBaseCoord } from "src/hooks/useMainBase";
 
 export const Inventory = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
-  const mainBase = MainBase.use()?.value || ("-1" as EntityID);
-  const mainBaseCoord = Position.use(mainBase);
+  const mainBaseCoord = useMainBaseCoord();
 
-  if (mainBase == "-1") return null;
   return (
     <div
       style={{ filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))" }}

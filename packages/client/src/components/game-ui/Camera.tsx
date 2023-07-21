@@ -1,6 +1,7 @@
 import { primodium } from "@game/api";
 import { FaCircle } from "react-icons/fa";
 import { useAccount } from "src/hooks/useAccount";
+import { useComponentValue } from "src/hooks/useComponentValue";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 
@@ -8,7 +9,8 @@ export const Camera = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const { address } = useAccount();
   const { worldCoord, normalizedZoom } = primodium.hooks.useCamera();
-  const blockNumber = BlockNumber.use();
+
+  const blockNumber = useComponentValue(BlockNumber);
 
   return (
     <div

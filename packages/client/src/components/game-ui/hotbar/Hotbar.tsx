@@ -14,11 +14,12 @@ import {
   SelectedAction,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
+import { useComponentValue } from "src/hooks/useComponentValue";
 
 const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const gameReady = GameReady.use();
+  const gameReady = useComponentValue(GameReady);
   const keybinds = primodium.hooks.useKeybinds();
   const [activeBar, setActiveBar] = useState(0);
   const activeBarRef = useRef(0);

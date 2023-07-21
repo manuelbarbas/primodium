@@ -8,12 +8,13 @@ import {
   SelectedBuilding,
   SelectedTile,
 } from "src/network/components/clientComponents";
+import { useComponentValue } from "src/hooks/useComponentValue";
 
 export const TileInfo: React.FC = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const selectedTile = SelectedTile.use();
-  const selectedBuilding = SelectedBuilding.use()?.value;
-  const selectedAction = SelectedAction.use()?.value;
+  const selectedTile = useComponentValue(SelectedTile);
+  const selectedBuilding = useComponentValue(SelectedBuilding)?.value;
+  const selectedAction = useComponentValue(SelectedAction)?.value;
 
   return (
     <div>

@@ -3,12 +3,13 @@ import { useMud } from "../context/MudContext";
 import { execute } from "../network/actions";
 import { Counter } from "src/network/components/chainComponents";
 import { DoubleCounter } from "src/network/components/clientComponents";
+import { useComponentValue } from "src/hooks/useComponentValue";
 
 export default function Increment() {
   const { systems, providers } = useMud();
 
-  const counter = Counter.use();
-  const doubleCounter = DoubleCounter.use();
+  const counter = useComponentValue(Counter);
+  const doubleCounter = useComponentValue(DoubleCounter);
   return (
     <>
       <div>

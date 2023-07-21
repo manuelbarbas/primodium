@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { useMud } from "src/context/MudContext";
 import { Key } from "src/engine/lib/core/createInput";
+import { useComponentValue } from "src/hooks/useComponentValue";
 import {
   SelectedAction,
   SelectedBuilding,
@@ -24,7 +25,7 @@ const HotbarItem: React.FC<{
   action: Action;
 }> = ({ blockType, keybind, action }) => {
   const network = useMud();
-  const selectedBuilding = SelectedBuilding.use()?.value;
+  const selectedBuilding = useComponentValue(SelectedBuilding)?.value;
 
   const keybinds = primodium.hooks.useKeybinds();
 

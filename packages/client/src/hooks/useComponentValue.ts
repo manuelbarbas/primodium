@@ -3,7 +3,7 @@ import {
   Component,
   ComponentValue,
   defineQuery,
-  EntityIndex,
+  EntityID,
   getComponentValue,
   Has,
   isComponentUpdate,
@@ -11,29 +11,40 @@ import {
   Schema,
 } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
+import { singletonIndex, world } from "src/network/world";
 
 export function useComponentValue<S extends Schema>(
   component: Component<S, Metadata, undefined>,
-  entity: EntityIndex | undefined,
+  entityID: EntityID,
   defaultValue: ComponentValue<S>
 ): ComponentValue<S>;
 
 export function useComponentValue<S extends Schema>(
   component: Component<S, Metadata, undefined>,
-  entity: EntityIndex | undefined
+  entityID?: EntityID
 ): ComponentValue<S> | undefined;
 
 export function useComponentValue<S extends Schema>(
   component: Component<S, Metadata, undefined>,
-  entity: EntityIndex | undefined,
+  entityID?: EntityID,
   defaultValue?: ComponentValue<S>
 ) {
-  const [value, setValue] = useState(
-    entity != null ? getComponentValue(component, entity) : undefined
-  );
+  const [value, setValue] = useState(() => {
+    const entity = entityID
+      ? world.entityToIndex.get(entityID)
+      : singletonIndex;
+    return entity != null ? getComponentValue(component, entity) : undefined;
+  });
 
   useEffect(() => {
+    console.log("component updated", component.id);
+  }, [component]);
+  useEffect(() => {
     // component or entity changed, update state to latest value
+
+    const entity = entityID
+      ? world.entityToIndex.get(entityID)
+      : singletonIndex;
     setValue(entity != null ? getComponentValue(component, entity) : undefined);
     if (entity == null) return;
     // fix: if pre-populated with state, useComponentValue doesn’t update when there’s a component that has been removed.
@@ -45,7 +56,7 @@ export function useComponentValue<S extends Schema>(
       }
     });
     return () => subscription.unsubscribe();
-  }, [component, entity]);
+  }, [component, entityID]);
 
   return value ?? defaultValue;
 }
