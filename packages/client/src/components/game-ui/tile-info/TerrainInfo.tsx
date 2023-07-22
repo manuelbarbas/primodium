@@ -14,12 +14,20 @@ export const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
 
       <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-gray-800 crt">
         <img
-          src={BackgroundImage.get(terrainPair.terrain)}
+          src={
+            BackgroundImage.get(terrainPair.terrain) !== undefined
+              ? BackgroundImage.get(terrainPair.terrain)![0]
+              : undefined
+          }
           className="w-16 h-16 pixel-images"
         />
         {terrainPair.resource && (
           <img
-            src={BackgroundImage.get(terrainPair.resource)}
+            src={
+              BackgroundImage.get(terrainPair.resource) !== undefined
+                ? BackgroundImage.get(terrainPair.resource)![0]
+                : undefined
+            }
             className="absolute top-0 w-16 h-16 pixel-images"
           />
         )}

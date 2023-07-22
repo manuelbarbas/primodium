@@ -136,7 +136,11 @@ const HotbarItem: React.FC<{
         }`}
       >
         <img
-          src={BackgroundImage.get(blockType)}
+          src={
+            BackgroundImage.get(blockType) !== undefined
+              ? BackgroundImage.get(blockType)![0]
+              : undefined
+          }
           onClick={handleSelectBuilding}
           className={`w-16 h-16 pixel-images border border-cyan-700
           ${
