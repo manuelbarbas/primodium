@@ -498,14 +498,22 @@ library LibBuildingDesignInitializer {
     // );
   }
 
-  function initLithiumCopperOxideFactory(
-    ItemComponent itemComponent,
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
-    FactoryProductionComponent factoryProductionComponent,
-    MaxLevelComponent maxLevelComponent,
-    RequiredResearchComponent requiredResearch,
-    RequiredResourcesComponent requiredResources
-  ) internal {
+  function initLithiumCopperOxideFactory(IWorld world) internal {
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
+    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
+      getAddressById(world.components(), RequiredResearchComponentID)
+    );
+    RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
+      getAddressById(world.components(), RequiredResourcesComponentID)
+    );
+    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
+      getAddressById(world.components(), FactoryMineBuildingsComponentID)
+    );
+    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
+      getAddressById(world.components(), FactoryProductionComponentID)
+    );
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+
     //LithiumCopperOxideFactoryID
     maxLevelComponent.set(LithiumCopperOxideFactoryID, 1);
 
@@ -519,8 +527,6 @@ library LibBuildingDesignInitializer {
       CopperResourceItemID,
       1500
     );
-    //LithiumCopperOxideFactoryID Level 1
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1);
     //required Mines
     LibSetFactoryMineRequirements.setFactory2MineRequirement(
       factoryMineBuildingsComponent,
@@ -624,8 +630,8 @@ library LibBuildingDesignInitializer {
       requiredResources,
       itemComponent,
       SolarPanelID,
-      IronPlateCraftedItemID,
-      1000
+      LithiumCopperOxideCraftedItemID,
+      500
     );
     passiveResourceProductionComponent.set(
       SolarPanelID,
@@ -879,14 +885,7 @@ library LibBuildingDesignInitializer {
     );
 
     initAlloyFactory(world);
-    initLithiumCopperOxideFactory(
-      itemComponent,
-      factoryMineBuildingsComponent,
-      factoryProductionComponent,
-      maxLevelComponent,
-      requiredResearch,
-      requiredResources
-    );
+    initLithiumCopperOxideFactory(world);
 
     initSolarPanel(world);
 
