@@ -493,7 +493,7 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.IronMine3Research, "/img/building/ironmine/iron-miner-level3.png"],
   [BlockType.IronMine4Research, "/img/building/ironmine/iron-miner-level3.png"],
 
-  [BlockType.CopperMineResearch, "/img/resource/copper_resource.png"],
+  [BlockType.CopperMineResearch, "/img/building/coppermine/copper-miner.gif"],
   [
     BlockType.CopperMine2Research,
     "/img/building/coppermine/copper-miner-level2.gif",
