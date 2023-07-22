@@ -56,16 +56,15 @@ export const BuildingInfo: React.FC<{
       .replace(/([A-Z][a-z])/g, " $1");
   }, [buildingType]);
 
-  if (!buildingName || !buildingType) return null;
-
-  const imageIndex = parseInt(currLevel ? currLevel.toString() : "0");
-
-  const imageURI =
-    BackgroundImage.get(buildingType)![
+  const imageURI = useMemo(() => {
+    if (!buildingType) return undefined;
+    const imageIndex = parseInt(currLevel ? currLevel.toString() : "0");
+    return BackgroundImage.get(buildingType)![
       clampedIndex(imageIndex - 1, BackgroundImage.get(buildingType)!.length)
     ];
+  }, [buildingType, currLevel]);
 
-  console.log(imageIndex, imageURI);
+  if (!buildingName || !buildingType) return null;
 
   return (
     <>
