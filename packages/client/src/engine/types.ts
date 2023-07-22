@@ -15,7 +15,6 @@ export type CameraConfig = {
   wheelSpeed: number;
   minZoom: number;
   maxZoom: number;
-  dragSpeed: number;
   defaultZoom: number;
 };
 
@@ -33,14 +32,7 @@ export type TilesetConfig = {
 export interface SceneConfig {
   key: string;
   assetPackUrl: string;
-  camera: {
-    minZoom: number;
-    maxZoom: number;
-    pinchSpeed: number;
-    scrollSpeed: number;
-    defaultZoom: number;
-    dragSpeed: number;
-  };
+  camera: CameraConfig;
   animations?: Animation<any>[];
   cullingChunkSize: number;
   tilemap: {

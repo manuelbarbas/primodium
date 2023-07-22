@@ -1,9 +1,13 @@
-import { Type, World, defineComponent } from "@latticexyz/recs";
-import { overridableComponent } from "@latticexyz/recs";
+import {
+  Type,
+  World,
+  defineComponent,
+  overridableComponent,
+} from "@latticexyz/recs";
 import {
   defineBoolComponent,
-  defineNumberComponent,
   defineCoordComponent,
+  defineNumberComponent,
   defineStringComponent,
 } from "@latticexyz/std-client";
 
@@ -21,22 +25,22 @@ export function defineComponents(world: World) {
         },
       })
     ),
-    Tile: overridableComponent(
-      defineNumberComponent(world, {
+    BuildingType: overridableComponent(
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.Tile",
         },
       })
     ),
     Path: overridableComponent(
-      defineNumberComponent(world, {
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.Path",
         },
       })
     ),
     OwnedBy: overridableComponent(
-      defineNumberComponent(world, {
+      defineStringComponent(world, {
         metadata: {
           contractId: "component.OwnedBy",
         },
@@ -78,16 +82,118 @@ export function defineComponents(world: World) {
       },
     }),
     // main base initialized
-    MainBaseInitialized: defineCoordComponent(world, {
+    MainBaseInitialized: defineComponent(
+      world,
+      { value: Type.Entity },
+      {
+        metadata: {
+          contractId: "component.MainBaseInitialized",
+        },
+      }
+    ),
+    // Resource data stored in components
+    RequiredResearchComponent: defineNumberComponent(world, {
       metadata: {
-        contractId: "component.MainBaseInitialized",
+        contractId: "component.RequiredResearch",
       },
     }),
+    RequiredResourcesComponent: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.RequiredResources",
+        },
+      }
+    ),
+    MaxLevel: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.MaxLevel",
+        },
+      })
+    ),
+    BuildingLevel: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLevel",
+        },
+      })
+    ),
+    StorageCapacity: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.StorageCapacity",
+        },
+      })
+    ),
+    StorageCapacityResources: defineComponent(
+      world,
+      {
+        value: Type.EntityArray,
+      },
+      {
+        metadata: {
+          contractId: "component.StorageCapacityResources",
+        },
+      }
+    ),
+    Mine: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.Mine",
+        },
+      })
+    ),
+    BuildingLimit: overridableComponent(
+      defineNumberComponent(world, {
+        metadata: {
+          contractId: "component.BuildingLimit",
+        },
+      })
+    ),
+    BuildingTiles: defineComponent(
+      world,
+      { value: Type.EntityArray },
+      {
+        metadata: {
+          contractId: "component.BuildingTiles",
+        },
+      }
+    ),
+    RawBlueprint: defineComponent(
+      world,
+      {
+        value: Type.NumberArray,
+      },
+      {
+        metadata: {
+          contractId: "component.Blueprint",
+        },
+      }
+    ),
+
+    UnclaimedResource: defineNumberComponent(world, {
+      metadata: {
+        contractId: "component.UnclaimedResource",
+      },
+    }),
+    // TODO: component data for crafting recipes
   };
 }
 
 export function defineOffChainComponents(world: World) {
   return {
+    BlockNumber: defineNumberComponent(world, {
+      metadata: {},
+      id: "BlockNumber",
+    }),
+    GameReady: defineBoolComponent(world, {
+      metadata: {},
+      id: "GameStatus",
+    }),
     DoubleCounter: defineNumberComponent(world, {
       metadata: {},
       id: "DoubleCounter",
@@ -112,6 +218,8 @@ export function defineOffChainComponents(world: World) {
         id: "SelectedBuilding",
       }
     ),
+    SelectedAction: defineNumberComponent(world, { id: "SelectedAction" }),
+
     StartSelectedPath: defineCoordComponent(world, {
       metadata: {},
       id: "StartSelectedPath",

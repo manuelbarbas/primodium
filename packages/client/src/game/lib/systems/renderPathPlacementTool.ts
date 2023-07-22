@@ -1,3 +1,4 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
   Has,
@@ -7,13 +8,12 @@ import {
   defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
-import { Network } from "src/network/layer";
 import { Scene } from "src/engine/types";
-import { BlockType } from "src/util/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { createSelectionTile } from "../factory/selectionTile";
 import * as components from "src/game/api/components";
+import { Network } from "src/network/layer";
+import { Action } from "src/util/constants";
 import { createPath } from "../factory/path";
+import { createSelectionTile } from "../factory/selectionTile";
 
 export const renderPathPlacementTool = (scene: Scene, network: Network) => {
   const { world, offChainComponents } = network;
@@ -22,8 +22,8 @@ export const renderPathPlacementTool = (scene: Scene, network: Network) => {
 
   const query = [
     Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedBuilding, {
-      value: BlockType.Conveyor,
+    HasValue(offChainComponents.SelectedAction, {
+      value: Action.Conveyor,
     }),
   ];
 

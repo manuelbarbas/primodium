@@ -1,7 +1,7 @@
-import { useAccount as useWagmiAccount } from "wagmi";
+import { Address, useAccount as useWagmiAccount } from "wagmi";
 import { useMud } from "../context/MudContext";
 
-export function useAccount() {
+export function useAccount(): { address: Address } {
   const { address } = useWagmiAccount();
   const { defaultWalletAddress } = useMud();
 

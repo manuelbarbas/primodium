@@ -1,27 +1,54 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { System, IWorld } from "solecs/System.sol";
-import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+
+import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { DebugNodeID, NodeID } from "../prototypes/Tiles.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { MainBaseID } from "../prototypes/Tiles.sol";
 
 import { Coord } from "../types.sol";
 
+import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
+import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
+import { LibTerrain } from "../libraries/LibTerrain.sol";
+import { LibFactory } from "../libraries/LibFactory.sol";
+import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+
+import { ID as BuildPathFromFactoryToMainBaseSystemID } from "./BuildPathFromFactoryToMainBaseSystem.sol";
+import { ID as BuildPathFromMineToMainBaseSystemID } from "./BuildPathFromMineToMainBaseSystem.sol";
+import { ID as BuildPathFromMineToFactorySystemID } from "./BuildPathFromMineToFactorySystem.sol";
+
+import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.BuildPath"));
 
-contract BuildPathSystem is System {
-  constructor(IWorld _world, address _components) System(_world, _components) {}
+contract BuildPathSystem is PrimodiumSystem {
+  constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function execute(bytes memory args) public returns (bytes memory) {
-    (Coord memory coordStart, Coord memory coordEnd) = abi.decode(args, (Coord, Coord));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+  function updateUnclaimedForResource(uint256 playerEntity, uint256 startBuilding) internal {
+    LibUnclaimedResource.updateUnclaimedForResource(
+      world,
+      playerEntity,
+      LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startBuilding))
+    );
+  }
+
+  function checkOwnership(uint256 fromEntity, uint256 toEntity) internal view returns (bool) {
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
+    return
+      ownedByComponent.getValue(fromEntity) == addressToEntity(msg.sender) &&
+      ownedByComponent.getValue(toEntity) == addressToEntity(msg.sender);
+  }
+
+  function execute(bytes memory args) public override returns (bytes memory) {
+    (Coord memory coordStart, Coord memory coordEnd) = abi.decode(args, (Coord, Coord));
 
     require(
       !(coordStart.x == coordEnd.x && coordStart.y == coordEnd.y),
@@ -29,45 +56,56 @@ contract BuildPathSystem is System {
     );
 
     // Check that the coordinates exist tiles
-    uint256 startCoordEntity = LibEncode.encodeCoordEntity(coordStart, BuildingKey);
-    require(tileComponent.has(startCoordEntity), "[BuildPathSystem] Cannot start path at an empty coordinate");
-    uint256 endCoordEntity = LibEncode.encodeCoordEntity(coordEnd, BuildingKey);
-    require(tileComponent.has(endCoordEntity), "[BuildPathSystem] Cannot end path at an empty coordinate");
-
-    // Check that the coordinates are both conveyor tiles
-    uint256 tileEntityAtStartCoord = tileComponent.getValue(startCoordEntity);
-    require(
-      tileEntityAtStartCoord == DebugNodeID || tileEntityAtStartCoord == NodeID,
-      "[BuildPathSystem] Cannot start path at a non-supported tile (Conveyor, Node)"
-    );
-    uint256 tileEntityAtEndCoord = tileComponent.getValue(endCoordEntity);
-    require(
-      tileEntityAtEndCoord == DebugNodeID || tileEntityAtEndCoord == NodeID,
-      "[BuildPathSystem] Cannot end path at a non-supported tile (Conveyor, Node)"
-    );
+    uint256 startBuilding = getBuildingFromCoord(coordStart);
+    uint256 endBuilding = getBuildingFromCoord(coordEnd);
 
     // Check that the coordinates are both owned by the msg.sender
-    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(startCoordEntity);
-    require(
-      ownedEntityAtStartCoord == addressToEntity(msg.sender),
-      "[BuildPathSystem] Cannot start path at a tile you do not own"
-    );
-    uint256 ownedEntityAtEndCoord = ownedByComponent.getValue(endCoordEntity);
-    require(
-      ownedEntityAtEndCoord == addressToEntity(msg.sender),
-      "[BuildPathSystem] Cannot end path at a tile you do not own"
-    );
+    require(checkOwnership(startBuilding, endBuilding), "[BuildPathSystem] Cannot build path on unowned tiles");
 
     // Check that a path doesn't already start there (each tile can only be the start of one path)
     require(
-      !pathComponent.has(startCoordEntity),
-      "[BuildPathSystem] Cannot start more than one path from the same tile"
+      !PathComponent(getC(PathComponentID)).has(startBuilding),
+      "[BuildPathSystem] Cannot start more than one path from the same building"
+    );
+    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    uint256 startCoordBuildingId = tileComponent.getValue(startBuilding);
+    uint256 endCoordBuildingId = tileComponent.getValue(endBuilding);
+    uint256 startCoordBuildingLevelEntity = LibEncode.hashKeyEntity(
+      startCoordBuildingId,
+      BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(startBuilding)
     );
 
-    // Add key
-    pathComponent.set(startCoordEntity, endCoordEntity);
+    if (MineComponent(getAddressById(components, MineComponentID)).has(startCoordBuildingLevelEntity)) {
+      if (endCoordBuildingId == MainBaseID) {
+        IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromMineToMainBaseSystemID)).executeTyped(
+          msg.sender,
+          startBuilding,
+          endBuilding
+        );
+      } else {
+        IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromMineToFactorySystemID)).executeTyped(
+          msg.sender,
+          startBuilding,
+          endBuilding
+        );
+      }
+    } else if (
+      FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)).has(
+        startCoordBuildingLevelEntity
+      )
+    ) {
+      require(
+        endCoordBuildingId == MainBaseID,
+        "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
+      );
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(
+        msg.sender,
+        startBuilding,
+        endBuilding
+      );
+    }
 
-    return abi.encode(startCoordEntity);
+    return abi.encode(startBuilding);
   }
 
   function executeTyped(Coord memory coordStart, Coord memory coordEnd) public returns (bytes memory) {

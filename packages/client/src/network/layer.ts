@@ -1,32 +1,26 @@
-import { SetupContractConfig, setupMUDNetwork } from "@latticexyz/std-client";
-import {
-  createWorld,
-  defineComponentSystem,
-  setComponent,
-} from "@latticexyz/recs";
 import { createFaucetService } from "@latticexyz/network";
-import { SingletonID } from "@latticexyz/network";
-import { BigNumber, utils } from "ethers";
+import { defineComponentSystem, setComponent } from "@latticexyz/recs";
+import { setupMUDNetwork } from "@latticexyz/std-client";
+import { utils } from "ethers";
 
-import { SystemTypes } from "../../../contracts/types/SystemTypes";
+import { createPerlin } from "@latticexyz/noise";
+import { NetworkConfig } from "src/util/types";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
-import { defineComponents, defineOffChainComponents } from "./components";
-import { faucetUrl, faucetMinDripAmount } from "./config";
+import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import { syncPositionComponent } from "./syncPositionComponent";
+import {
+  contractComponents,
+  offChainComponents,
+  singletonIndex,
+  world,
+} from "./world";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
-export async function createNetworkLayer(config: SetupContractConfig) {
-  // The world contains references to all entities, all components and disposers.
-  const world = createWorld();
-  const singletonIndex = world.registerEntity({ id: SingletonID });
-
+export async function createNetworkLayer(config: NetworkConfig) {
   // Components contain the application state.
   // If a contractId is provided, MUD syncs the state with the corresponding
   // component contract (in this case `CounterComponent.sol`)
-
-  const contractComponents = defineComponents(world);
-  const offChainComponents = defineOffChainComponents(world);
 
   const { startSync, systems, components, network, gasPriceInput$ } =
     await setupMUDNetwork<typeof contractComponents, SystemTypes>(
@@ -56,37 +50,42 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     });
   });
 
-  // Faucet setup
-  const faucet = faucetUrl ? createFaucetService(faucetUrl) : undefined;
+  if (!config.devMode) {
+    // Faucet setup
+    const faucet = config.faucetUrl
+      ? createFaucetService(config.faucetUrl)
+      : undefined;
 
-  // initial drip
-  const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-    utils.parseEther(faucetMinDripAmount)
-  );
-  if (playerIsBroke) {
-    console.info("[Dev Faucet] Dripping funds to player");
-    const address = network.connectedAddress.get();
-    address && (await faucet?.dripDev({ address }));
-  }
-
-  // interval drip
-  const intervalId2 = setInterval(async () => {
-    const playerBalance: BigNumber =
-      (await network.signer.get()?.getBalance()) || BigNumber.from("0");
-    console.info("[Dev Faucet] Player balance: " + playerBalance.toString());
-
-    const playerIsBroke = playerBalance?.lte(
-      utils.parseEther(faucetMinDripAmount)
+    // initial drip
+    const minDripAmount = config.faucetMinDripAmount
+      ? config.faucetMinDripAmount.toString()
+      : "0";
+    const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
+      utils.parseEther(minDripAmount)
     );
+
     if (playerIsBroke) {
       console.info("[Dev Faucet] Dripping funds to player");
       const address = network.connectedAddress.get();
       address && (await faucet?.dripDev({ address }));
-    } else {
-      console.info("[Dev Faucet] Player has enough funds");
     }
-  }, 20000);
-  world.registerDisposer(() => clearInterval(intervalId2));
+
+    // interval drip
+    const intervalId2 = setInterval(async () => {
+      const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
+        utils.parseEther("2")
+      );
+      if (playerIsBroke) {
+        console.info("[Dev Faucet] Dripping funds to player");
+        const address = network.connectedAddress.get();
+        address && (await faucet?.dripDev({ address }));
+      } else {
+        console.info("[Dev Faucet] Player has enough funds");
+      }
+    }, 20000);
+    world.registerDisposer(() => clearInterval(intervalId2));
+  }
+  const perlin = await createPerlin();
 
   const context = {
     world,
@@ -95,10 +94,24 @@ export async function createNetworkLayer(config: SetupContractConfig) {
     offChainComponents,
     singletonIndex,
     providers: network.providers,
+    defaultWalletAddress: config.defaultWalletAddress,
+    perlin,
   };
 
   startSync();
   syncPositionComponent(context);
+
+  setComponent(offChainComponents.BlockNumber, singletonIndex, {
+    value: (await network.providers.get().ws?.getBlockNumber()) ?? 0,
+  });
+
+  const blockListener = network.blockNumber$.subscribe((blockNumber) => {
+    setComponent(offChainComponents.BlockNumber, singletonIndex, {
+      value: blockNumber,
+    });
+  });
+
+  world.registerDisposer(() => blockListener.unsubscribe());
 
   return context;
 }

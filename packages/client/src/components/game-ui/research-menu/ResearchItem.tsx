@@ -1,0 +1,230 @@
+import { useCallback, useMemo, useState } from "react";
+import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { BigNumber } from "ethers";
+
+import { useMud } from "../../../context/MudContext";
+import { getRecipe } from "../../../util/resource";
+
+import {
+  BlockIdToKey,
+  ResearchImage,
+  ResourceImage,
+} from "../../../util/constants";
+import { useAccount } from "../../../hooks/useAccount";
+import { execute } from "../../../network/actions";
+import { hashKeyEntityAndTrim } from "../../../util/encode";
+
+import { useGameStore } from "../../../store/GameStore";
+import Spinner from "../../Spinner";
+import { useNotificationStore } from "../../../store/NotificationStore";
+import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
+import {
+  getBuildingResearchRequirement,
+  ResearchItemType,
+} from "../../../util/research";
+import { useComponentValue } from "@latticexyz/react";
+import { GameButton } from "src/components/shared/GameButton";
+import React from "react";
+
+export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
+  ({ data }) => {
+    // fetch whether research is completed
+    const { components, world, singletonIndex, systems, providers } = useMud();
+    const { address } = useAccount();
+    const { name, levels, description } = data;
+
+    //we assume the order of this loop will never change. TODO: pull out into component since this is a nono
+    const levelsResearched = levels.map(({ id }) => {
+      const isResearched = useComponentValue(
+        components.Research,
+        world.entityToIndex.get(
+          hashKeyEntityAndTrim(id, address.toString().toLowerCase()) as EntityID
+        )
+      );
+
+      return isResearched?.value ?? false;
+    });
+
+    let currentLevel =
+      levelsResearched.filter(Boolean).length >= levels.length
+        ? levels.length
+        : levelsResearched.filter(Boolean).length;
+
+    const isResearched = currentLevel === levels.length;
+
+    const researchId =
+      levels[isResearched ? currentLevel - 1 : currentLevel].id;
+    const subtitle =
+      levels[isResearched ? currentLevel - 1 : currentLevel].subtitle;
+
+    const researchRequirement = useMemo(() => {
+      return getBuildingResearchRequirement(researchId, world, components);
+    }, [researchId]);
+
+    const researchOwner = useMemo(() => {
+      return address != null && researchRequirement != null
+        ? world.entityToIndex.get(
+            hashKeyEntityAndTrim(
+              researchRequirement as EntityID,
+              address.toString().toLowerCase()
+            ) as EntityID
+          )!
+        : singletonIndex;
+    }, [researchRequirement, address]);
+
+    const isResearchRequirementsMet = useMemo(() => {
+      return (
+        getComponentValue(components.Research, researchOwner)?.value ?? false
+      );
+    }, [researchOwner]);
+
+    const mainBaseEntity = useComponentValue(
+      components.MainBaseInitialized,
+      world.entityToIndex.get(
+        address.toString().toLowerCase() as EntityID
+      ) as EntityIndex
+    );
+
+    const mainBaseLevel = useComponentValue(
+      components.BuildingLevel,
+      world.entityToIndex.get(
+        mainBaseEntity?.value as unknown as EntityID
+      ) as EntityIndex
+    );
+
+    const requiredMainBaseLevel = useComponentValue(
+      components.BuildingLevel,
+      world.entityToIndex.get(researchId) as EntityIndex
+    );
+
+    const isMainBaseLevelRequirementsMet = useMemo(() => {
+      return (mainBaseLevel?.value ?? 0) >= (requiredMainBaseLevel?.value ?? 0);
+    }, [mainBaseLevel, requiredMainBaseLevel]);
+
+    // Check if building can be researched
+    const isLocked = useMemo(() => {
+      return (
+        (researchRequirement != null && !isResearchRequirementsMet) ||
+        !isMainBaseLevelRequirementsMet
+      );
+    }, [
+      isResearchRequirementsMet,
+      researchRequirement,
+      isMainBaseLevelRequirementsMet,
+    ]);
+
+    const [_, setTransactionLoading] = useGameStore((state) => [
+      state.transactionLoading,
+      state.setTransactionLoading,
+    ]);
+
+    const [setNotification] = useNotificationStore((state) => [
+      state.setNotification,
+    ]);
+
+    // New state so not every other research item button shows loading when only current research button is clicked.
+    const [userClickedLoading, setUserClickedLoading] = useState(false);
+
+    const research = useCallback(async () => {
+      setUserClickedLoading(true);
+      setTransactionLoading(true);
+      await execute(
+        systems["system.Research"].executeTyped(BigNumber.from(researchId), {
+          gasLimit: 1_000_000,
+        }),
+        providers,
+        setNotification
+      );
+      setTransactionLoading(false);
+      setUserClickedLoading(false);
+    }, []);
+
+    const recipe = getRecipe(researchId, world, components);
+
+    return (
+      <div className="relative min-w-64 border border-cyan-600 mb-3 mr-3 bg-slate-900">
+        <div className="flex flex-col justify-between h-full">
+          <div>
+            <div className="flex flex-col w-full border-b border-cyan-600 pb-4">
+              <div className="absolute top-0 right-0">
+                {levelsResearched.map((isResearched, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={`m-1 w-2 h-2 ${
+                        isResearched ? "bg-green-600" : "bg-slate-500"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+              <div className="mt-4 w-16 h-16 mx-auto">
+                <img
+                  src={ResearchImage.get(researchId)}
+                  className="w-16 h-16 mx-auto pixel-images "
+                ></img>
+              </div>
+              <div className="mt-4 text-center font-bold">{name}</div>
+              <div className="mt-1 text-center text-md font-bold text-slate-100/50">
+                {subtitle}
+              </div>
+              <div className="mt-2 flex justify-center items-center text-sm">
+                {recipe.map((resource) => {
+                  const resourceImage = ResourceImage.get(resource.id)!;
+                  const resourceName = BlockIdToKey[resource.id];
+                  return (
+                    <ResourceIconTooltip
+                      key={resource.id}
+                      image={resourceImage}
+                      resourceId={resource.id}
+                      name={resourceName}
+                      amount={resource.amount}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="text-xs text-center bg-slate-900 py-4 px-1 italic ">
+              {description}
+            </div>
+          </div>
+
+          <div className="my-4">
+            {isResearched && (
+              <div className="flex items-center w-full justify-center">
+                <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+                  <p className="px-2 py-1"> Researched </p>
+                </GameButton>
+              </div>
+            )}
+            {isLocked && (
+              <div className="flex items-center w-full justify-center">
+                <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+                  <p className="px-2 py-1">
+                    Lvl.{" "}
+                    {parseInt(requiredMainBaseLevel?.value.toString() ?? "0")}{" "}
+                    Base Required
+                  </p>
+                </GameButton>
+              </div>
+            )}
+            {!isLocked && !isResearched && (
+              <div className="flex items-center w-full justify-center">
+                <GameButton
+                  id={`${name}-research`}
+                  onClick={research}
+                  className=" bg-cyan-600 text-sm w-3/4"
+                >
+                  <div className="px-2 py-1">
+                    {userClickedLoading ? <Spinner /> : "Research"}
+                  </div>
+                </GameButton>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+);

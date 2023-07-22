@@ -3,6 +3,26 @@
 @tailwind utilities;
 
 @layer utilities {
+  body {
+    cursor: url("/img/cursors/normal.png"), auto !important;
+  }
+
+  canvas {
+    cursor: url("/img/cursors/pointer.png") 12 0, auto;
+  }
+
+  canvas:active {
+    cursor: url("/img/cursors/pointerdown.png") 12 0, auto;
+  }
+
+  button {
+    cursor: url("/img/cursors/pointer.png") 12 0, auto;
+  }
+
+  button:active {
+    cursor: url("/img/cursors/pointerdown.png") 12 0, auto;
+  }
+
   .scrollbar::-webkit-scrollbar {
     width: 20px;
     height: 20px;
@@ -61,13 +81,9 @@
   }
 
   .pixel-images {
-    image-rendering: optimizeSpeed; /* Older versions of FF */
-    image-rendering: -moz-crisp-edges; /* FF 6.0+ */
-    image-rendering: -webkit-optimize-contrast; /* Webkit (non standard naming) */
-    image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
-    image-rendering: crisp-edges; /* Possible future browsers. */
-    -ms-interpolation-mode: nearest-neighbor; /* IE (non standard naming) */
     image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   /* .react-flow__connection-path {
     @apply bg-white z-[1000] viewport-container text-white
@@ -81,9 +97,167 @@
   #walktour-tooltip-container[tabindex] {
     @apply focus:outline-none;
   }
+
+  .vignette {
+    background: rgb(0, 0, 0);
+    background: -moz-radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 80%,
+      rgba(0, 0, 0, 0.7945772058823529) 86%,
+      rgba(0, 0, 0, 0.9654455532212886) 91%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    background: -webkit-radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 80%,
+      rgba(0, 0, 0, 0.7945772058823529) 86%,
+      rgba(0, 0, 0, 0.9654455532212886) 91%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    background: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 80%,
+      rgba(0, 0, 0, 0.7945772058823529) 86%,
+      rgba(0, 0, 0, 0.9654455532212886) 91%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+  }
 }
 
 /* remove leaflet layer selection control */
 .leaflet-bottom {
   display: none;
+}
+
+/* .crt::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.2);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.crt::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+    linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.08),
+      rgba(0, 255, 0, 0.08),
+      rgba(0, 0, 255, 0.08)
+    );
+  background-size: 100% 2px, 4px 100%;
+  opacity: 0.5;
+  pointer-events: none;
+} */
+
+.crt {
+  position: relative;
+}
+
+/* .scanline {
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(255, 255, 255, 0.05) 10%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  position: absolute;
+  pointer-events: none;
+  animation: scanline 10s linear infinite;
+} */
+
+@keyframes flicker {
+  0% {
+    opacity: 0.57861;
+  }
+  5% {
+    opacity: 0.64769;
+  }
+  10% {
+    opacity: 0.73604;
+  }
+  15% {
+    opacity: 0.90626;
+  }
+  20% {
+    opacity: 0.68128;
+  }
+  25% {
+    opacity: 0.83891;
+  }
+  30% {
+    opacity: 0.65583;
+  }
+  35% {
+    opacity: 0.67807;
+  }
+  40% {
+    opacity: 0.66559;
+  }
+  45% {
+    opacity: 0.84693;
+  }
+  50% {
+    opacity: 0.96019;
+  }
+  55% {
+    opacity: 0.58594;
+  }
+  60% {
+    opacity: 0.60313;
+  }
+  65% {
+    opacity: 0.71988;
+  }
+  70% {
+    opacity: 0.53455;
+  }
+  75% {
+    opacity: 0.67288;
+  }
+  80% {
+    opacity: 0.71428;
+  }
+  85% {
+    opacity: 0.70419;
+  }
+  90% {
+    opacity: 0.7003;
+  }
+  95% {
+    opacity: 0.66108;
+  }
+  100% {
+    opacity: 0.54387;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    bottom: 100%;
+  }
+  80% {
+    bottom: 100%;
+  }
+  100% {
+    bottom: -20%;
+  }
 }

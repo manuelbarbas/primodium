@@ -4,10 +4,8 @@ import { SyncState } from "@latticexyz/network";
 import { useComponentValue } from "@latticexyz/react";
 import { useMud } from "./context/MudContext";
 
-import Home from "./screens/Home";
 import Increment from "./screens/Increment";
 import Map from "./screens/Map";
-import LeafletMapDebug from "./screens/LeafletMapDebug";
 import { Game } from "./screens/Game";
 
 export default function AppLoadingState() {
@@ -43,10 +41,8 @@ export default function AppLoadingState() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Game />} />
-          <Route path="/old" element={<Home />} />
           <Route path="/increment" element={<Increment />} />
           <Route path="/map" element={<Map />} />
-          <Route path="/leaflet" element={<LeafletMapDebug />} />
         </Routes>
       </BrowserRouter>
     );

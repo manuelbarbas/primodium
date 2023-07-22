@@ -36,10 +36,6 @@ export type CoordStructOutput = [number, number] & { x: number; y: number };
 
 export interface ClaimFromFactorySystemInterface extends utils.Interface {
   functions: {
-    "claimAdjacentBuildings((int32,int32),uint256,uint256)": FunctionFragment;
-    "claimAdjacentNodeTiles((int32,int32),uint256,uint256)": FunctionFragment;
-    "claimBuilding((int32,int32),uint256,uint256)": FunctionFragment;
-    "claimNodeTile((int32,int32),uint256,uint256)": FunctionFragment;
     "execute(bytes)": FunctionFragment;
     "executeTyped((int32,int32))": FunctionFragment;
     "owner()": FunctionFragment;
@@ -48,48 +44,12 @@ export interface ClaimFromFactorySystemInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "claimAdjacentBuildings"
-      | "claimAdjacentNodeTiles"
-      | "claimBuilding"
-      | "claimNodeTile"
       | "execute"
       | "executeTyped"
       | "owner"
       | "transferOwnership"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "claimAdjacentBuildings",
-    values: [
-      CoordStruct,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimAdjacentNodeTiles",
-    values: [
-      CoordStruct,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimBuilding",
-    values: [
-      CoordStruct,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimNodeTile",
-    values: [
-      CoordStruct,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
   encodeFunctionData(
     functionFragment: "execute",
     values: [PromiseOrValue<BytesLike>]
@@ -104,22 +64,6 @@ export interface ClaimFromFactorySystemInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "claimAdjacentBuildings",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimAdjacentNodeTiles",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimBuilding",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimNodeTile",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "executeTyped",
@@ -177,43 +121,15 @@ export interface ClaimFromFactorySystem extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    claimAdjacentBuildings(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    claimAdjacentNodeTiles(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    claimBuilding(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    claimNodeTile(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     execute(
       args: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     executeTyped(
       coord: CoordStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -223,43 +139,12 @@ export interface ClaimFromFactorySystem extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  claimAdjacentBuildings(
-    coord: CoordStruct,
-    originEntity: PromiseOrValue<BigNumberish>,
-    destination: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  claimAdjacentNodeTiles(
-    coord: CoordStruct,
-    originEntity: PromiseOrValue<BigNumberish>,
-    destination: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  claimBuilding(
-    coord: CoordStruct,
-    originEntity: PromiseOrValue<BigNumberish>,
-    destination: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  claimNodeTile(
-    coord: CoordStruct,
-    originEntity: PromiseOrValue<BigNumberish>,
-    destination: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   execute(
     args: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  executeTyped(
-    coord: CoordStruct,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  executeTyped(coord: CoordStruct, overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -269,34 +154,6 @@ export interface ClaimFromFactorySystem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    claimAdjacentBuildings(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    claimAdjacentNodeTiles(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    claimBuilding(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    claimNodeTile(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     execute(
       args: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -327,42 +184,14 @@ export interface ClaimFromFactorySystem extends BaseContract {
   };
 
   estimateGas: {
-    claimAdjacentBuildings(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    claimAdjacentNodeTiles(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    claimBuilding(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    claimNodeTile(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     execute(
       args: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     executeTyped(
       coord: CoordStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -374,42 +203,14 @@ export interface ClaimFromFactorySystem extends BaseContract {
   };
 
   populateTransaction: {
-    claimAdjacentBuildings(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    claimAdjacentNodeTiles(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    claimBuilding(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    claimNodeTile(
-      coord: CoordStruct,
-      originEntity: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     execute(
       args: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     executeTyped(
       coord: CoordStruct,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;

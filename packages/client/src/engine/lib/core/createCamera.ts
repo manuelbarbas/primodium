@@ -1,13 +1,5 @@
 import { Gesture } from "@use-gesture/vanilla";
-import {
-  BehaviorSubject,
-  filter,
-  map,
-  sampleTime,
-  scan,
-  Subject,
-  throttleTime,
-} from "rxjs";
+import { BehaviorSubject, map, scan, Subject, throttleTime } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   Coord,
@@ -43,10 +35,6 @@ export function createCamera(
     {}
   );
 
-  // function getNearestLevel(currentZoom: number): number {
-  //   return Math.pow(2, Math.floor(Math.log(currentZoom * 2) / Math.log(2))) / 2;
-  // }
-
   const onResize = () => {
     requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
   };
@@ -80,42 +68,6 @@ export function createCamera(
       setZoom(zoom);
     });
 
-  const wheelSub = wheelStream$
-    .pipe(
-      filter((state) => !state.pinching),
-      sampleTime(10),
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      map((state) => state.delta.map((x) => x * options.wheelSpeed)), // Compute wheel speed
-      map((movement) => movement.map((m: number) => m / phaserCamera.zoom)), // Adjust for current zoom value
-      map((movement) => [
-        phaserCamera.scrollX + movement[0],
-        phaserCamera.scrollY + movement[1],
-      ]) // Compute new pinch
-    )
-    .subscribe(([x, y]) => {
-      phaserCamera.setScroll(x, y);
-      worldView$.next(phaserCamera.worldView);
-    });
-
-  const dragSub = dragStream$
-    .pipe(
-      filter((state) => !state.pinching || !state.wheeling),
-      sampleTime(10),
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      map((state) => state.delta.map((x) => x * options.dragSpeed)), // Compute wheel speed
-      map((movement) => movement.map((m: number) => m / phaserCamera.zoom)),
-      map((movement) => [
-        phaserCamera.scrollX - movement[0],
-        phaserCamera.scrollY - movement[1],
-      ])
-    )
-    .subscribe(([x, y]) => {
-      phaserCamera.setScroll(x, y);
-      worldView$.next(phaserCamera.worldView);
-    });
-
   function ignore(objectPool: ObjectPool, ignore: boolean) {
     objectPool.ignoreCamera(phaserCamera.id, ignore);
   }
@@ -146,8 +98,10 @@ export function createCamera(
     ignore,
     dispose: () => {
       pinchSub.unsubscribe();
-      wheelSub.unsubscribe();
-      dragSub.unsubscribe();
+      dragStream$.unsubscribe();
+      pinchStream$.unsubscribe();
+      wheelStream$.unsubscribe();
+      zoom$.unsubscribe();
       gesture.destroy();
       phaserCamera.scene.scale.removeListener("resize", onResize);
     },

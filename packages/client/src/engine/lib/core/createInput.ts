@@ -35,6 +35,7 @@ export type Key =
 
 export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const disposers = new Set<() => void>();
+  const phaserKeys = new Map<Key, Phaser.Input.Keyboard.Key>();
   const enabled = { current: true };
 
   inputPlugin.mouse?.disableContextMenu();
@@ -107,8 +108,8 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     filter(() => enabled.current),
     map(() => Date.now()), // Get current timestamp
     bufferCount(2, 1), // Store the last two timestamps
-    filter(([prev, now]) => now - prev < 500), // Filter clicks with more than 500ms distance
-    throttleTime(500), // A third click within 500ms is not counted as another double click
+    filter(([prev, now]) => now - prev < 250), // Filter clicks with more than 500ms distance
+    throttleTime(250), // A third click within 500ms is not counted as another double click
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
@@ -206,6 +207,9 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     // Store the cleartext key map
     codeToKey.set(keyObj.keyCode, key as Key);
 
+    //store the phaser key object
+    phaserKeys.set(key as Key, keyObj);
+
     keyObj.removeAllListeners();
     keyObj.emitOnRepeat = true;
     keyObj.on("down", (keyEvent: Phaser.Input.Keyboard.Key) =>
@@ -242,6 +246,9 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointerdown$,
     pointerup$,
     click$,
+    // phaserKeyboard,
+    phaserInput: inputPlugin,
+    phaserKeys,
     doubleClick$,
     rightClick$,
     drag$,

@@ -7,29 +7,44 @@ import {
   EntityIDtoSpriteKey,
   SpriteKeys,
 } from "../../constants";
+import { clampedIndex } from "src/util/common";
 
-export const createBuilding = (options: {
-  id?: string;
+export const createBuilding = ({
+  renderId = "building",
+  x,
+  y,
+  buildingType,
+  selected = false,
+  level = 1,
+}: {
+  renderId?: string;
   x: number;
   y: number;
-  tile: EntityID;
+  buildingType: EntityID;
+  level?: number;
+  selected?: boolean;
 }): GameObjectComponent<"Sprite"> => {
-  const { id = "building", x, y, tile } = options;
-
   return {
-    id,
+    id: renderId,
     once: (gameObject) => {
       gameObject.setPosition(x, y);
 
       //set sprite
-      const sprite = EntityIDtoSpriteKey[tile];
-      gameObject.setTexture(Assets.SpriteAtlas, sprite ?? SpriteKeys.Node);
+      const sprite = EntityIDtoSpriteKey[buildingType];
+      gameObject.setTexture(
+        Assets.SpriteAtlas,
+        sprite ? sprite[level - 1] : SpriteKeys.Node
+      );
       gameObject.setDepth(DepthLayers.Building);
+      if (selected) {
+        gameObject.setTint(0xffff00);
+      }
 
       //set animation if it exists
-      const anim = EntityIDtoAnimationKey[tile];
-      if (anim) {
-        gameObject.play(anim);
+      const anim = EntityIDtoAnimationKey[buildingType];
+      const animIndex = clampedIndex(level - 1, anim?.length);
+      if (anim && anim[animIndex]) {
+        gameObject.play(anim[animIndex]!);
       }
     },
   };
