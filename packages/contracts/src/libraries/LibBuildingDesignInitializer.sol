@@ -176,7 +176,7 @@ library LibBuildingDesignInitializer {
       itemComponent,
       LithiumMineID,
       IronPlateCraftedItemID,
-      300,
+      700,
       2
     );
 
