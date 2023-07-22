@@ -20,8 +20,8 @@ const lattice: ChainConfig = {
 
 const caldera: ChainConfig = {
   // from caldera
-  jsonRpcUrl: "https://primodium-bedrock.calderachain.xyz/http",
-  wsRpcUrl: "wss://primodium-bedrock.calderachain.xyz/ws",
+  jsonRpcUrl: "https://primodium-bedrock.calderachain.xyz/replica-http",
+  wsRpcUrl: "wss://primodium-bedrock.calderachain.xyz/replica-ws",
   tempFaucetUrl: "https://primodium-services.caldera.gg/faucet",
   snapshotServiceUrl: "https://primodium-services.caldera.gg/ecs-snapshot",
   chainId: 12523,
