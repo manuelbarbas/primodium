@@ -86,7 +86,7 @@ export const animationConfig: Animation<any>[] = [
     assetKey: "sprite-atlas",
     frameRate: 4,
     startFrame: 0,
-    endFrame: 17,
+    endFrame: 14,
     repeat: -1,
     prefix: "sprites/pvcfactory/level2/pvcfactory-level2-",
     suffix: ".png",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useMud } from "src/context/MudContext";
 import { useComponentValue } from "src/hooks/useComponentValue";
@@ -23,6 +23,7 @@ export const InfoBox = () => {
   const mainBaseCoord = useMainBaseCoord();
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
+  const [notify, setNotify] = useState<boolean>(false);
 
   const mainBaseLevel = useComponentValue(
     components.BuildingLevel,
@@ -49,6 +50,16 @@ export const InfoBox = () => {
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
   );
+
+  useEffect(() => {
+    if (mainBaseLevel === undefined) return;
+
+    if (mainBaseLevel.value === undefined || mainBaseLevel.value <= 1) return;
+
+    if (notify) return;
+
+    setNotify(true);
+  }, [mainBaseLevel]);
 
   return (
     <div>
@@ -143,13 +154,19 @@ export const InfoBox = () => {
                 <GameButton
                   id="research"
                   className="mt-2 ml-1 text-sm"
-                  onClick={() => setShowResearchModal(true)}
+                  onClick={() => {
+                    setShowResearchModal(true);
+                    setNotify(false);
+                  }}
                   depth={6}
                 >
                   <div className="flex m-1 items-center gap-2 px-1 h-4">
                     <IoFlaskSharp /> <p className="">Research</p>
                   </div>
                 </GameButton>
+                {notify && (
+                  <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse" />
+                )}
               </div>
             </div>
           </div>
