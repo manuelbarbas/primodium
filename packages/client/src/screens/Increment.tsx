@@ -92,7 +92,7 @@ const ImageGrid: React.FC = () => {
             <p>{getBlockTypeName(name)}</p>
             <img
               key={index}
-              src={uri}
+              src={uri[0]}
               alt={`Image ${getBlockTypeName(name)}`}
               className="w-40 h-40 object-cover shadow-md"
             />
