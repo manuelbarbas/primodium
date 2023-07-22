@@ -45,10 +45,6 @@ const buildingHotbar: Hotbar = {
       keybind: KeybindActions.Hotbar5,
     },
     {
-      blockType: BlockType.IronPlateFactory,
-      keybind: KeybindActions.Hotbar5,
-    },
-    {
       blockType: BlockType.AlloyFactory,
       keybind: KeybindActions.Hotbar6,
     },
