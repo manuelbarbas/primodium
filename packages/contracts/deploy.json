@@ -264,6 +264,10 @@
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",
       "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent"]
+    },
+    {
+      "name": "ComponentDevSystem",
+      "writeAccess": ["*"]
     }
   ]
 }

@@ -17,12 +17,14 @@ export function defineComponents(world: World) {
       metadata: {
         contractId: "component.Counter",
       },
+      id: "Counter",
     }),
     Position: overridableComponent(
       defineCoordComponent(world, {
         metadata: {
           contractId: "component.Position",
         },
+        id: "Position",
       })
     ),
     BuildingType: overridableComponent(
@@ -30,6 +32,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.Tile",
         },
+        id: "BuildingType",
       })
     ),
     Path: overridableComponent(
@@ -37,6 +40,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.Path",
         },
+        id: "Path",
       })
     ),
     OwnedBy: overridableComponent(
@@ -44,6 +48,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.OwnedBy",
         },
+        id: "OwnedBy",
       })
     ),
     LastBuiltAt: overridableComponent(
@@ -51,6 +56,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.LastBuiltAt",
         },
+        id: "LastBuiltAt",
       })
     ),
     LastClaimedAt: overridableComponent(
@@ -58,28 +64,33 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.LastClaimedAt",
         },
+        id: "LastClaimedAt",
       })
     ),
     Health: defineNumberComponent(world, {
       metadata: {
         contractId: "component.Health",
       },
+      id: "Health",
     }),
     Item: defineNumberComponent(world, {
       metadata: {
         contractId: "component.Item",
       },
+      id: "Item",
     }),
     Research: defineBoolComponent(world, {
       metadata: {
         contractId: "component.Research",
       },
+      id: "Research",
     }),
     // starter pack initialized
     StarterPackInitialized: defineBoolComponent(world, {
       metadata: {
         contractId: "component.StarterPackInitialized",
       },
+      id: "StarterPackInitialized",
     }),
     // main base initialized
     MainBaseInitialized: defineComponent(
@@ -89,6 +100,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.MainBaseInitialized",
         },
+        id: "MainBaseInitialized",
       }
     ),
     // Resource data stored in components
@@ -96,6 +108,7 @@ export function defineComponents(world: World) {
       metadata: {
         contractId: "component.RequiredResearch",
       },
+      id: "RequiredResearchComponent",
     }),
     RequiredResourcesComponent: defineComponent(
       world,
@@ -113,6 +126,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.MaxLevel",
         },
+        id: "MaxLevel",
       })
     ),
     BuildingLevel: overridableComponent(
@@ -120,6 +134,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.BuildingLevel",
         },
+        id: "BuildingLevel",
       })
     ),
     StorageCapacity: overridableComponent(
@@ -127,6 +142,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.StorageCapacity",
         },
+        id: "StorageCapacity",
       })
     ),
     StorageCapacityResources: defineComponent(
@@ -138,6 +154,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.StorageCapacityResources",
         },
+        id: "StorageCapacityResources",
       }
     ),
     Mine: overridableComponent(
@@ -145,6 +162,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.Mine",
         },
+        id: "Mine",
       })
     ),
     BuildingLimit: overridableComponent(
@@ -152,6 +170,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.BuildingLimit",
         },
+        id: "BuildingLimit",
       })
     ),
     BuildingTiles: defineComponent(
@@ -161,6 +180,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.BuildingTiles",
         },
+        id: "BuildingTiles",
       }
     ),
     RawBlueprint: defineComponent(
@@ -172,6 +192,7 @@ export function defineComponents(world: World) {
         metadata: {
           contractId: "component.Blueprint",
         },
+        id: "RawBlueprint",
       }
     ),
 
@@ -179,6 +200,7 @@ export function defineComponents(world: World) {
       metadata: {
         contractId: "component.UnclaimedResource",
       },
+      id: "UnclaimedResources",
     }),
     // TODO: component data for crafting recipes
   };
@@ -230,12 +252,12 @@ export function defineOffChainComponents(world: World) {
         origin: Type.OptionalString,
         target: Type.OptionalString,
       },
-      { metadata: {}, id: "SelectedAttackComponent" }
+      { metadata: {}, id: "SelectedAttack" }
     ),
     // Market types are added to render custom map ui elements like waypoints, arrows, etc
     Marker: defineStringComponent(world, {
       metadata: {},
-      id: "MarkerComponent",
+      id: "Marker",
     }),
   };
 }
