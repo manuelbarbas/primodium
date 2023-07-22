@@ -349,7 +349,6 @@ Inventory.ResourceLabel = ({
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceId == BlockType.ElectricityPassiveResource) {
-    storageCapacity = 1000;
     console.log("resourceCount: ", resourceCount);
     console.log("storageCapacity: ", storageCapacity);
     console.log("production: ", production);
