@@ -253,6 +253,16 @@ Inventory.AllResourceLabels = ({
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
       />
+      <Inventory.ResourceLabel
+        name={"Alloy"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.AlloyCraftedItem}
+      />
+      <Inventory.ResourceLabel
+        name={"Photovoltaic Cell"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.LithiumCopperOxideCraftedItem}
+      />
     </>
   );
 };
@@ -339,7 +349,6 @@ Inventory.ResourceLabel = ({
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceId == BlockType.ElectricityPassiveResource) {
-    storageCapacity = 1000;
     console.log("resourceCount: ", resourceCount);
     console.log("storageCapacity: ", storageCapacity);
     console.log("production: ", production);
@@ -455,7 +464,6 @@ Inventory.PassiveResourceLabel = ({
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceId == BlockType.ElectricityPassiveResource) {
-    storageCapacity = 1000;
     console.log("resourceCount: ", resourceCount);
     console.log("storageCapacity: ", storageCapacity);
     console.log("production: ", production);
