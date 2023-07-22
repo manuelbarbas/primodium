@@ -27,7 +27,11 @@ export const BlueprintInfo: React.FC<{
       <div className="flex flex-col items-center space-y-6">
         <div className="relative border-4 border-dashed border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-slate-900/90 w-fit crt">
           <img
-            src={BackgroundImage.get(buildingType)![0]}
+            src={
+              BackgroundImage.get(buildingType) !== undefined
+                ? BackgroundImage.get(buildingType)![0]
+                : undefined
+            }
             className="w-16 h-16 pixel-images"
           />
           <p className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 border border-cyan-600 px-1 crt">

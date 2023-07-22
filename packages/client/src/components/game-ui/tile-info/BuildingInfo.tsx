@@ -58,7 +58,11 @@ export const BuildingInfo: React.FC<{
 
   const imageURI = useMemo(() => {
     if (!buildingType) return undefined;
+
+    if (!BackgroundImage.has(buildingType)) return undefined;
+
     const imageIndex = parseInt(currLevel ? currLevel.toString() : "1") - 1;
+
     return BackgroundImage.get(buildingType)![
       clampedIndex(imageIndex, BackgroundImage.get(buildingType)!.length)
     ];
