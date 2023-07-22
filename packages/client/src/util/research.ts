@@ -209,7 +209,7 @@ export const ResearchTree: ResearchTreeType = [
         name: "Photovoltaic Cell Factory",
         id: BlockType.PhotovoltaicCellResearch,
         description:
-          "Allows you to build Photovoltaic Cell Factory building which produces Photovoltaic Cell from Copper Ore and Lithium Ore",
+          "Allows you to build Photovoltaic Cell Factory building which produces Photovoltaic Cell from Copper Ore and Lithium Ore.",
         levels: [
           {
             id: BlockType.PhotovoltaicCellResearch,

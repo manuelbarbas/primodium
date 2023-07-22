@@ -106,7 +106,7 @@ export const animationConfig: Animation<any>[] = [
     assetKey: "sprite-atlas",
     frameRate: 4,
     startFrame: 0,
-    endFrame: 7,
+    endFrame: 39,
     repeat: -1,
     prefix: "sprites/ironplatefactory/level2/platingfactory-level2-",
     suffix: ".png",

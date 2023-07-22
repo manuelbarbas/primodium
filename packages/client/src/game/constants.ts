@@ -118,7 +118,7 @@ export enum SpriteKeys {
   LithiumMine3 = "sprites/lithiummine/level3/lithium-miner-level3-0.png",
 
   StorageUnit1 = "sprites/storageunit/level1/storagefacility-level1-0.png",
-  StorageUnit2 = "ssprites/storageunit/level2/storagefacility-level2-0.png",
+  StorageUnit2 = "sprites/storageunit/level2/storagefacility-level2-0.png",
 
   IronPlateFactory1 = "sprites/ironplatefactory/level1/platingfactory-level1-0.png",
   IronPlateFactory2 = "sprites/ironplatefactory/level2/platingfactory-level2-0.png",
@@ -243,7 +243,7 @@ export const EntityIDtoSpriteKey = {
     SpriteKeys.IronPlateFactory2,
   ],
   [BlockType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
-  [BlockType.PhotovoltaicCell]: [
+  [BlockType.PhotovoltaicCellFactory]: [
     SpriteKeys.PhotovoltaicCellFactory1,
     SpriteKeys.PhotovoltaicCellFactory2,
   ],
@@ -292,7 +292,7 @@ export const EntityIDtoAnimationKey = {
     AnimationKeys.IronPlateFactory2,
   ],
   [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
-  [BlockType.PhotovoltaicCell]: [
+  [BlockType.PhotovoltaicCellFactory]: [
     AnimationKeys.PhotovoltaicCellFactory1,
     AnimationKeys.PhotovoltaicCellFactory2,
   ],

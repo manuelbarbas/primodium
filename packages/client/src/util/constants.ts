@@ -92,7 +92,9 @@ export const BlockType = {
   SulfurMine: keccak256("block.SulfurMine") as EntityID,
   StorageUnit: keccak256("block.StorageUnit") as EntityID,
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
-  PhotovoltaicCell: keccak256("block.LithiumCopperOxideFactory") as EntityID,
+  PhotovoltaicCellFactory: keccak256(
+    "block.LithiumCopperOxideFactory"
+  ) as EntityID,
   SpaceFuelFactory: keccak256("block.SpaceFuelFactory") as EntityID,
   DroneFactory: keccak256("block.DroneFactory") as EntityID,
   PropulsionFuelFactory: keccak256("block.PropulsionFuelFactory") as EntityID,
@@ -417,7 +419,7 @@ export const BackgroundImage = new Map<EntityID, string>([
     "/img/building/alloyfactory/alloyfactory-level1.gif",
   ],
   [
-    BlockType.PhotovoltaicCell,
+    BlockType.PhotovoltaicCellFactory,
     "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
   ],
   [BlockType.SolarPanel, "/img/building/solarpanels/solarpanel-level1.png"],
