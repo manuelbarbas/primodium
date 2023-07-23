@@ -74,7 +74,7 @@ export async function createNetworkLayer(config: NetworkConfig) {
     // interval drip
     const intervalId2 = setInterval(async () => {
       const playerIsBroke = (await network.signer.get()?.getBalance())?.lte(
-        utils.parseEther("2")
+        utils.parseEther(minDripAmount)
       );
       if (playerIsBroke) {
         console.info("[Dev Faucet] Dripping funds to player");

@@ -253,6 +253,16 @@ Inventory.AllResourceLabels = ({
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
       />
+      <Inventory.ResourceLabel
+        name={"Alloy"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.AlloyCraftedItem}
+      />
+      <Inventory.ResourceLabel
+        name={"Photovoltaic Cell"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.LithiumCopperOxideCraftedItem}
+      />
     </>
   );
 };
@@ -339,7 +349,6 @@ Inventory.ResourceLabel = ({
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceId == BlockType.ElectricityPassiveResource) {
-    storageCapacity = 1000;
     console.log("resourceCount: ", resourceCount);
     console.log("storageCapacity: ", storageCapacity);
     console.log("production: ", production);
@@ -354,7 +363,7 @@ Inventory.ResourceLabel = ({
             <img className="w-4 h-4 " src={resourceIcon}></img>
             <p>{name}</p>
           </div>
-          <p>{production}/BLOCK</p>
+          <p>{production ? `${production}/BLOCK` : "-"}</p>
         </div>
         <div
           className={`flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt ${
@@ -367,9 +376,12 @@ Inventory.ResourceLabel = ({
             className="h-full bg-cyan-600"
             style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
           />
+
           <div
             className="h-full bg-cyan-800"
-            style={{ width: `${(resourcesToClaim / storageCapacity) * 100}%` }}
+            style={{
+              width: `${(resourcesToClaim / storageCapacity) * 100}%`,
+            }}
           />
           <div
             className="h-full bg-gray-900"
@@ -385,7 +397,9 @@ Inventory.ResourceLabel = ({
         <div className="flex justify-between">
           <p>
             {resourceCount}{" "}
-            <span className="opacity-50">(+{resourcesToClaim})</span>
+            {resourcesToClaim > 0 && (
+              <span className="opacity-50">(+{resourcesToClaim})</span>
+            )}
           </p>
           <b>{storageCapacity}</b>
         </div>
@@ -450,7 +464,6 @@ Inventory.PassiveResourceLabel = ({
   const resourceIcon = ResourceImage.get(resourceId);
 
   if (resourceId == BlockType.ElectricityPassiveResource) {
-    storageCapacity = 1000;
     console.log("resourceCount: ", resourceCount);
     console.log("storageCapacity: ", storageCapacity);
     console.log("production: ", production);

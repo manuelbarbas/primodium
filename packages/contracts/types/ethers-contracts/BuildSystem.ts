@@ -127,7 +127,7 @@ export interface BuildSystem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     executeTyped(
-      blockType: PromiseOrValue<BigNumberish>,
+      buildingType: PromiseOrValue<BigNumberish>,
       coord: CoordStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -146,7 +146,7 @@ export interface BuildSystem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   executeTyped(
-    blockType: PromiseOrValue<BigNumberish>,
+    buildingType: PromiseOrValue<BigNumberish>,
     coord: CoordStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -165,7 +165,7 @@ export interface BuildSystem extends BaseContract {
     ): Promise<string>;
 
     executeTyped(
-      blockType: PromiseOrValue<BigNumberish>,
+      buildingType: PromiseOrValue<BigNumberish>,
       coord: CoordStruct,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -196,7 +196,7 @@ export interface BuildSystem extends BaseContract {
     ): Promise<BigNumber>;
 
     executeTyped(
-      blockType: PromiseOrValue<BigNumberish>,
+      buildingType: PromiseOrValue<BigNumberish>,
       coord: CoordStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -216,7 +216,7 @@ export interface BuildSystem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     executeTyped(
-      blockType: PromiseOrValue<BigNumberish>,
+      buildingType: PromiseOrValue<BigNumberish>,
       coord: CoordStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

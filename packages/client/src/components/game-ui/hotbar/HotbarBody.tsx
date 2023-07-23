@@ -2,6 +2,7 @@ import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
 import { Key } from "@latticexyz/phaserx";
 import { motion } from "framer-motion";
+import { isMobile } from "react-device-detect";
 import { Action, KeyImages } from "src/util/constants";
 import HotbarItem from "./HotbarItem";
 import { useHotbarContent } from "./useHotbarContent";
@@ -33,10 +34,12 @@ const HotbarBody: React.FC<{
             src="/img/buttons/chevron.png"
             className="pixel-images w-8 border border-cyan-400 "
           />
-          <img
-            src={prevKeyImage}
-            className="absolute w-8 h-8 pixel-images scale-x-[-1] "
-          />
+          {!isMobile && (
+            <img
+              src={prevKeyImage}
+              className="absolute w-8 h-8 pixel-images scale-x-[-1] "
+            />
+          )}
         </div>
       )}
       <div
@@ -64,7 +67,9 @@ const HotbarBody: React.FC<{
             src="/img/buttons/chevron.png"
             className="pixel-images w-8 border border-cyan-600"
           />
-          <img src={nextKeyImage} className="absolute w-8 h-8 pixel-images" />
+          {!isMobile && (
+            <img src={nextKeyImage} className="absolute w-8 h-8 pixel-images" />
+          )}
         </div>
       )}
     </motion.div>

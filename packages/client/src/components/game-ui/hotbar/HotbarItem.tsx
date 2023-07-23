@@ -1,5 +1,6 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
+import { isMobile } from "react-device-detect";
 import { useComponentValue } from "@latticexyz/react";
 import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { SingletonID } from "@latticexyz/network";
@@ -135,7 +136,11 @@ const HotbarItem: React.FC<{
         }`}
       >
         <img
-          src={BackgroundImage.get(blockType)}
+          src={
+            BackgroundImage.get(blockType) !== undefined
+              ? BackgroundImage.get(blockType)![0]
+              : undefined
+          }
           onClick={handleSelectBuilding}
           className={`w-16 h-16 pixel-images border border-cyan-700
           ${
@@ -157,7 +162,7 @@ const HotbarItem: React.FC<{
             {getBlockTypeName(selectedBuilding)}
           </motion.p>
         )}
-        {keyImage && (
+        {keyImage && !isMobile && (
           <img
             src={keyImage}
             className={`absolute -top-2 -left-2 w-8 h-8 pixel-images ${

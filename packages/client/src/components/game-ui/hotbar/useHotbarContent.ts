@@ -44,6 +44,18 @@ const buildingHotbar: Hotbar = {
       blockType: BlockType.IronPlateFactory,
       keybind: KeybindActions.Hotbar5,
     },
+    {
+      blockType: BlockType.AlloyFactory,
+      keybind: KeybindActions.Hotbar6,
+    },
+    {
+      blockType: BlockType.PhotovoltaicCellFactory,
+      keybind: KeybindActions.Hotbar7,
+    },
+    {
+      blockType: BlockType.SolarPanel,
+      keybind: KeybindActions.Hotbar8,
+    },
   ],
 };
 

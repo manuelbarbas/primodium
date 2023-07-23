@@ -118,7 +118,7 @@ export enum SpriteKeys {
   LithiumMine3 = "sprites/lithiummine/level3/lithium-miner-level3-0.png",
 
   StorageUnit1 = "sprites/storageunit/level1/storagefacility-level1-0.png",
-  StorageUnit2 = "ssprites/storageunit/level2/storagefacility-level2-0.png",
+  StorageUnit2 = "sprites/storageunit/level2/storagefacility-level2-0.png",
 
   IronPlateFactory1 = "sprites/ironplatefactory/level1/platingfactory-level1-0.png",
   IronPlateFactory2 = "sprites/ironplatefactory/level2/platingfactory-level2-0.png",
@@ -129,6 +129,9 @@ export enum SpriteKeys {
 
   SolarPanel1 = "sprites/solarpanel/level1/solarpanel-level1-0.png",
   SolarPanel2 = "sprites/solarpanel/level2/solarpanel-level2-0.png",
+
+  PhotovoltaicCellFactory1 = "sprites/pvcfactory/level1/pvcfactory-level1-0.png",
+  PhotovoltaicCellFactory2 = "sprites/pvcfactory/level2/pvcfactory-level2-0.png",
 
   Node = "sprites/node/node-0.png",
   BasicMiner = "sprites/minerdrill/minerdrill-0.png",
@@ -173,6 +176,9 @@ export enum AnimationKeys {
   IronPlateFactory2 = "ironplatefactory/level2",
 
   AlloyFactory1 = "alloyfactory/level1",
+
+  PhotovoltaicCellFactory1 = "pvcfactory/level1",
+  PhotovoltaicCellFactory2 = "pvcfactory/level2",
 
   Node = "node",
   AdvancedBatteryFactory = "advancedbatteryfactory",
@@ -237,6 +243,10 @@ export const EntityIDtoSpriteKey = {
     SpriteKeys.IronPlateFactory2,
   ],
   [BlockType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
+  [BlockType.PhotovoltaicCellFactory]: [
+    SpriteKeys.PhotovoltaicCellFactory1,
+    SpriteKeys.PhotovoltaicCellFactory2,
+  ],
   [BlockType.PropulsionFuelFactory]: [SpriteKeys.PropulsionFuelFactory],
   [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
   [BlockType.PropulsionFuelFactory]: [SpriteKeys.PropulsionFuelFactory],
@@ -282,7 +292,10 @@ export const EntityIDtoAnimationKey = {
     AnimationKeys.IronPlateFactory2,
   ],
   [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
-
+  [BlockType.PhotovoltaicCellFactory]: [
+    AnimationKeys.PhotovoltaicCellFactory1,
+    AnimationKeys.PhotovoltaicCellFactory2,
+  ],
   [BlockType.Miner]: [AnimationKeys.BasicMiner],
   [BlockType.BasicBatteryFactory]: [AnimationKeys.BasicBatteryFactory],
   [BlockType.AdvancedBatteryFactory]: [AnimationKeys.AdvancedBatteryFactory],

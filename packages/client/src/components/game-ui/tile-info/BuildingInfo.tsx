@@ -13,7 +13,7 @@ import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
 import { demolishBuilding, demolishPath } from "src/util/web3";
 import PortalModal from "src/components/shared/PortalModal";
-import { toRomanNumeral } from "src/util/common";
+import { clampedIndex, toRomanNumeral } from "src/util/common";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -56,17 +56,26 @@ export const BuildingInfo: React.FC<{
       .replace(/([A-Z][a-z])/g, " $1");
   }, [buildingType]);
 
-  if (!buildingName) return null;
+  const imageURI = useMemo(() => {
+    if (!buildingType) return undefined;
+
+    if (!BackgroundImage.has(buildingType)) return undefined;
+
+    const imageIndex = parseInt(currLevel ? currLevel.toString() : "1") - 1;
+
+    return BackgroundImage.get(buildingType)![
+      clampedIndex(imageIndex, BackgroundImage.get(buildingType)!.length)
+    ];
+  }, [buildingType, currLevel]);
+
+  if (!buildingName || !buildingType) return null;
 
   return (
     <>
       <Header content={`${ownerName}`} />
       <div className="flex flex-col items-center space-y-6">
         <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-slate-900/90 w-fit crt">
-          <img
-            src={BackgroundImage.get(buildingType ?? BlockType.Air)}
-            className="w-16 h-16 pixel-images"
-          />
+          <img src={imageURI} className="w-16 h-16 pixel-images" />
           <div className="absolute flex items-center bottom-0 left-1/2 -translate-x-1/2 w-20 h-2 ring-2 ring-slate-900/90 crt">
             <div
               className="h-full bg-green-500"

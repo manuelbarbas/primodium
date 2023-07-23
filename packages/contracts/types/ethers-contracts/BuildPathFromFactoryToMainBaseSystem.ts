@@ -27,10 +27,11 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface PostUpgradeSystemInterface extends utils.Interface {
+export interface BuildPathFromFactoryToMainBaseSystemInterface
+  extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
-    "executeTyped(address,uint256)": FunctionFragment;
+    "executeTyped(address,uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -49,7 +50,11 @@ export interface PostUpgradeSystemInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "executeTyped",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -87,12 +92,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface PostUpgradeSystem extends BaseContract {
+export interface BuildPathFromFactoryToMainBaseSystem extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: PostUpgradeSystemInterface;
+  interface: BuildPathFromFactoryToMainBaseSystemInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -121,7 +126,8 @@ export interface PostUpgradeSystem extends BaseContract {
 
     executeTyped(
       playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      fromBuildingEntity: PromiseOrValue<BigNumberish>,
+      toBuildingEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -140,7 +146,8 @@ export interface PostUpgradeSystem extends BaseContract {
 
   executeTyped(
     playerAddress: PromiseOrValue<string>,
-    buildingEntity: PromiseOrValue<BigNumberish>,
+    fromBuildingEntity: PromiseOrValue<BigNumberish>,
+    toBuildingEntity: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -159,7 +166,8 @@ export interface PostUpgradeSystem extends BaseContract {
 
     executeTyped(
       playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      fromBuildingEntity: PromiseOrValue<BigNumberish>,
+      toBuildingEntity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -190,7 +198,8 @@ export interface PostUpgradeSystem extends BaseContract {
 
     executeTyped(
       playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      fromBuildingEntity: PromiseOrValue<BigNumberish>,
+      toBuildingEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -210,7 +219,8 @@ export interface PostUpgradeSystem extends BaseContract {
 
     executeTyped(
       playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      fromBuildingEntity: PromiseOrValue<BigNumberish>,
+      toBuildingEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
