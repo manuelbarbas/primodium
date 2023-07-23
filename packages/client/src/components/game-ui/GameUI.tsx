@@ -13,7 +13,6 @@ import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "../NotificationBox";
 import { BrandingLabel } from "./BrandingLabel";
 import { GameReady } from "src/network/components/clientComponents";
-import { useComponentValue } from "src/hooks/useComponentValue";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -21,7 +20,7 @@ function GameUI() {
     state.toggleShowUI,
   ]);
 
-  const gameReady = useComponentValue(GameReady);
+  const gameReady = GameReady.use();
   useEffect(() => {
     if (!gameReady) return;
 

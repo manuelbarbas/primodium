@@ -10,7 +10,6 @@ import { primodium } from "../game";
 import { GameReady } from "src/network/components/clientComponents";
 import { MainBase } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
-import { useComponentValue } from "src/hooks/useComponentValue";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -18,7 +17,7 @@ export const Game = () => {
   const [error, setError] = useState(false);
   const network = useMud();
   const { address } = useAccount();
-  const gameReady = useComponentValue(GameReady, SingletonID)?.value;
+  const gameReady = GameReady.use()?.value;
   console.log("game ready:", gameReady);
 
   // resourceKey of the entity
@@ -27,7 +26,7 @@ export const Game = () => {
     : SingletonID;
 
   // fetch the main base of the user based on address
-  const mainBase = useComponentValue(MainBase, resourceKey)?.value;
+  const mainBase = MainBase.use(resourceKey)?.value;
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(
     () => (mainBase ? decodeCoordEntity(mainBase) : undefined),

@@ -1,7 +1,9 @@
 import {
   Component,
+  ComponentUpdate,
   ComponentValue,
   EntityID,
+  EntityIndex,
   Has,
   HasValue,
   Metadata,
@@ -11,6 +13,7 @@ import {
   Type,
   World,
   defineComponent,
+  defineQuery,
   getComponentValue,
   hasComponent,
   overridableComponent,
@@ -20,6 +23,7 @@ import {
   updateComponent,
 } from "@latticexyz/recs";
 import { singletonIndex } from "../../world";
+import { useEffect, useMemo, useState } from "react";
 
 type OverridableType<
   Overridable extends boolean,
@@ -31,7 +35,7 @@ type OverridableType<
   : Component<S, M, T>;
 
 export interface Options<Overridable extends boolean, M extends Metadata> {
-  id?: string;
+  id: string;
   metadata?: M;
   indexed?: boolean;
   overridable?: Overridable;
@@ -62,21 +66,21 @@ function newComponent<
       throw new Error(
         `[set ${entityID} for ${component.id}] no entity registered`
       );
-    console.log(`setting ${entity} for ${component.id} to `, value);
     setComponent(component, entity, value);
   }
 
   function get(): ComponentValue<S> | undefined;
-  function get(entityID: EntityID): ComponentValue<S> | undefined;
+  function get(entityID: EntityID | undefined): ComponentValue<S> | undefined;
   function get(
-    entityID: EntityID,
+    entityID: EntityID | undefined,
     defaultValue?: ComponentValue<S>
   ): ComponentValue<S>;
 
   function get(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
     const entity = entityID ? getEntity(entityID) : singletonIndex;
-    if (!entity) return defaultValue;
-    const value = getComponentValue(component, entity)?.value;
+    if (entity == undefined) return defaultValue;
+    const value = getComponentValue(component, entity);
+    console.log("value:", value);
     return value ?? defaultValue;
   }
 
@@ -118,8 +122,49 @@ function newComponent<
     if (!entity) return false;
     return hasComponent(component, entity);
   }
-  return {
+  function isComponentUpdate<S extends Schema>(
+    update: ComponentUpdate,
+    component: Component<S>
+  ): update is ComponentUpdate<S> {
+    return update.component.id === component.id;
+  }
+
+  function use(entityID?: EntityID | undefined): ComponentValue<S> | undefined;
+  function use(
+    entityID: EntityID | undefined,
+    defaultValue?: ComponentValue<S>
+  ): ComponentValue<S>;
+
+  function use(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
+    const rawEntity = useMemo(() => {
+      return entityID ? getEntity(entityID) : singletonIndex;
+    }, [world.entities]);
+    const entity = rawEntity !== undefined ? rawEntity : (-1 as EntityIndex);
+    const [value, setValue] = useState(
+      entity != null ? getComponentValue(component, entity) : undefined
+    );
+    useEffect(() => {
+      // component or entity changed, update state to latest value
+      setValue(
+        entity != null ? getComponentValue(component, entity) : undefined
+      );
+      if (entity == null) return;
+      // fix: if pre-populated with state, useComponentValue doesn’t update when there’s a component that has been removed.
+      const queryResult = defineQuery([Has(component)], { runOnInit: true });
+      const subscription = queryResult.update$.subscribe((update) => {
+        if (isComponentUpdate(update, component) && update.entity === entity) {
+          const [nextValue] = update.value;
+          setValue(nextValue);
+        }
+      });
+      return () => subscription.unsubscribe();
+    }, [component, entity]);
+    return value ?? defaultValue;
+  }
+
+  const context = {
     ...component,
+    component,
     get,
     set,
     getAll,
@@ -129,11 +174,14 @@ function newComponent<
     clear,
     update,
     has,
+    use,
   };
+  return context;
 }
 
 export default newComponent;
 
+export type NewNumberComponent = ReturnType<typeof newNumberComponent>;
 export function newNumberComponent<
   Overridable extends boolean,
   M extends Metadata

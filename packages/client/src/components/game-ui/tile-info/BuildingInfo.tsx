@@ -16,7 +16,6 @@ import {
   Health,
   OwnedBy,
 } from "src/network/components/chainComponents";
-import { useComponentValue } from "src/hooks/useComponentValue";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -25,9 +24,9 @@ export const BuildingInfo: React.FC<{
   const { address } = useAccount();
   const [showDestroyModal, setShowDestroyModal] = useState(false);
 
-  const buildingType = useComponentValue(BuildingType, building)?.value;
-  const health = useComponentValue(Health, building)?.value;
-  const owner = useComponentValue(OwnedBy, building)?.value;
+  const buildingType = BuildingType.use(building)?.value;
+  const health = Health.use(building)?.value;
+  const owner = OwnedBy.use(building)?.value;
 
   if (!buildingType || !owner) return null;
 

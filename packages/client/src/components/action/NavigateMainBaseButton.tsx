@@ -9,7 +9,7 @@ import { BlockType } from "../../util/constants";
 import { MainBase } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
 import { SelectedTile } from "src/network/components/clientComponents";
-import { useComponentValue } from "src/hooks/useComponentValue";
+
 export default function NavigateMainBaseButton() {
   const { address } = useAccount();
 
@@ -19,7 +19,7 @@ export default function NavigateMainBaseButton() {
     ? (address.toString().toLowerCase() as EntityID)
     : SingletonID;
 
-  const mainBaseEntity = useComponentValue(MainBase, resourceKey)?.value;
+  const mainBaseEntity = MainBase.use(resourceKey)?.value;
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(() => {
     if (mainBaseEntity) return decodeCoordEntity(mainBaseEntity);

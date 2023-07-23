@@ -5,33 +5,14 @@ import { Coord } from "@latticexyz/utils";
 import { throttle } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useSettingsStore } from "../stores/SettingsStore";
-import {
-  GameReady,
-  SelectedAttack,
-} from "src/network/components/clientComponents";
-import { SingletonID } from "@latticexyz/network";
-import { useComponentValue } from "src/hooks/useComponentValue";
-
-export const useSelectedAttack = () => {
-  const selectedAttack = useComponentValue(SelectedAttack, SingletonID, {
-    origin: undefined,
-    target: undefined,
-  });
-  const origin = selectedAttack.origin
-    ? (JSON.parse(selectedAttack.origin) as Coord)
-    : undefined;
-  const target = selectedAttack.target
-    ? (JSON.parse(selectedAttack.target) as Coord)
-    : undefined;
-  return { origin, target };
-};
+import { GameReady } from "src/network/components/clientComponents";
 
 export const useKeybinds = () => useSettingsStore((state) => state.keybinds);
 
 export const useCamera = (targetScene = Scenes.Main) => {
   const [worldCoord, setWorldCoord] = useState<Coord>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0);
-  const gameStatus = useComponentValue(GameReady);
+  const gameStatus = GameReady.use();
   const minZoom = useRef(1);
 
   useEffect(() => {

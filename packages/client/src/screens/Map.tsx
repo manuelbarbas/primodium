@@ -1,4 +1,4 @@
-import { useComponentValue, useEntityQuery } from "@latticexyz/react";
+import { useEntityQuery } from "@latticexyz/react";
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { FixedSizeGrid as Grid } from "react-window";
 
@@ -6,9 +6,12 @@ import { useMud } from "../context/MudContext";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BlockColors } from "../util/constants";
 import { getTopLayerKey } from "src/util/tile";
+import { BuildingType } from "src/network/components/chainComponents";
+import { world } from "src/network/world";
+import { Position } from "src/network/components/clientComponents";
 
 export default function Map() {
-  const { perlin, components, singletonIndex } = useMud();
+  const { perlin } = useMud();
 
   // React Window
   const { height, width } = useWindowDimensions();
@@ -31,16 +34,14 @@ export default function Map() {
     const plotY = displayIndexToTileIndex(rowIndex) * -1;
 
     const tilesAtPosition = useEntityQuery(
-      [
-        Has(components.BuildingType),
-        HasValue(components.Position, { x: plotX, y: plotY }),
-      ],
+      [Has(BuildingType), HasValue(Position, { x: plotX, y: plotY })],
       { updateOnValueChange: true }
     );
 
-    const tile = useComponentValue(
-      components.BuildingType,
-      tilesAtPosition.length > 0 ? tilesAtPosition[0] : singletonIndex
+    const tile = BuildingType.use(
+      tilesAtPosition.length > 0
+        ? world.entities[tilesAtPosition[0]]
+        : undefined
     );
 
     let topLayerKey;

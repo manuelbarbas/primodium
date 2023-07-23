@@ -16,7 +16,6 @@ import {
   BuildingLimit,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
-import { useComponentValue } from "src/hooks/useComponentValue";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -30,19 +29,16 @@ export const InfoBox = () => {
     { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
     BlockType.BuildingKey
   );
-  const mainBaseLevel = useComponentValue(BuildingLevel, coordEntity, {
+  const mainBaseLevel = BuildingLevel.use(coordEntity, {
     value: 0,
   }).value;
 
-  const buildLimit = useComponentValue(
-    BuildingLimit,
-    mainBaseLevel as unknown as EntityID
-  );
+  const buildLimit = BuildingLimit.use(mainBaseLevel as unknown as EntityID);
   const playerEntity = address
     ? (address.toString().toLowerCase() as EntityID)
     : SingletonID;
 
-  const playerBuildingCount = useComponentValue(BuildingLimit, playerEntity);
+  const playerBuildingCount = BuildingLimit.use(playerEntity);
   const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"

@@ -20,7 +20,6 @@ import {
   Research,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
-import { useComponentValue } from "src/hooks/useComponentValue";
 
 export default function UpgradeButton({
   id,
@@ -43,8 +42,8 @@ export default function UpgradeButton({
     state.setNotification,
   ]);
 
-  const currLevel = useComponentValue(BuildingLevel, buildingEntity);
-  const maxLevel = useComponentValue(MaxLevel, builtTile);
+  const currLevel = BuildingLevel.use(buildingEntity);
+  const maxLevel = MaxLevel.use(builtTile);
   const upgradedLevel = useMemo(() => {
     return parseInt(currLevel?.value.toString() ?? "0") + 1;
   }, [currLevel]);

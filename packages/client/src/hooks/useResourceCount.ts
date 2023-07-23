@@ -4,13 +4,12 @@ import { EntityID, EntityIndex } from "@latticexyz/recs";
 
 import { useAccount } from "../hooks/useAccount";
 import { hashKeyEntityAndTrim } from "../util/encode";
-import { NumberComponent } from "src/network/components/customComponents/Component";
 import { SingletonID } from "@latticexyz/network";
 import { world } from "src/network/world";
-import { useComponentValue } from "./useComponentValue";
+import { NewNumberComponent } from "src/network/components/customComponents/Component";
 
 export default function useResourceCount(
-  resourceComponent: NumberComponent<{}>,
+  resourceComponent: NewNumberComponent,
   resourceId: EntityID,
   entityIndex?: EntityIndex
 ) {
@@ -31,7 +30,7 @@ export default function useResourceCount(
     }
   }, [resourceId, entityIndex, address]);
 
-  const resource = useComponentValue(resourceComponent, resourceKey);
+  const resource = resourceComponent.use(resourceKey);
 
   if (resource) {
     return parseInt(resource.value.toString());
