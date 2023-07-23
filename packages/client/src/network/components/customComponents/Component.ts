@@ -58,9 +58,7 @@ function newComponent<
     return entity;
   }
 
-  // Actual method implementation:
   function set(value: ComponentValue<S, T>, entityID?: EntityID) {
-    // is the (entityID, value) overload
     const entity = entityID ? getEntity(entityID) : singletonIndex;
     if (entity == undefined)
       throw new Error(
@@ -135,9 +133,8 @@ function newComponent<
   ): ComponentValue<S>;
 
   function use(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
-    const rawEntity = useMemo(() => {
-      return entityID ? getEntity(entityID) : singletonIndex;
-    }, [world.entities]);
+    const rawEntity = entityID ? getEntity(entityID) : singletonIndex;
+
     const entity = rawEntity !== undefined ? rawEntity : (-1 as EntityIndex);
     const [value, setValue] = useState(
       entity != null ? getComponentValue(component, entity) : undefined
