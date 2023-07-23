@@ -1,13 +1,10 @@
-import { EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
 type Dimensions = { width: number; height: number };
-export const blueprintCache = new Map<EntityIndex, Dimensions>();
+export const blueprintCache = new Map<EntityID, Dimensions>();
 
-export function calcDims(
-  entity: EntityIndex,
-  coordinates: Coord[]
-): Dimensions {
+export function calcDims(entity: EntityID, coordinates: Coord[]): Dimensions {
   if (blueprintCache.has(entity)) return blueprintCache.get(entity)!;
   let minX = coordinates[0].x;
   let maxX = coordinates[0].x;

@@ -22,6 +22,9 @@ export const Game = () => {
 
   // fetch the main base of the user based on address
   const mainBase = MainBase.use(address)?.value;
+  if (mainBase) {
+    MainBase.set({ value: mainBase }, undefined);
+  }
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(
     () => (mainBase ? decodeCoordEntity(mainBase) : undefined),
