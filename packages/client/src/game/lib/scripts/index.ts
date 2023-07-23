@@ -1,5 +1,4 @@
 // PRIMODIUM ENTRY POINT
-import { Address } from "wagmi";
 import { engine } from "../../../engine";
 import { Network } from "../../../network/layer";
 import gameConfig from "../../config/gameConfig";
@@ -30,7 +29,7 @@ export const init = async (player: EntityID, network: Network) => {
   setupMouseInputs(scene, network, player);
   setupCameraMovement(scene, player);
 
-  runSystems(scene, network);
+  runSystems(scene);
 
   world.registerDisposer(() => {
     chunkManager.dispose();

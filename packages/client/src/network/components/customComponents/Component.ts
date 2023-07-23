@@ -23,7 +23,7 @@ import {
   updateComponent,
 } from "@latticexyz/recs";
 import { singletonIndex } from "../../world";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type OverridableType<
   Overridable extends boolean,

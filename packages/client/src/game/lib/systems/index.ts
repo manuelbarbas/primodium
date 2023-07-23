@@ -1,7 +1,6 @@
 import { Scene } from "src/engine/types";
-import { Network } from "src/network/layer";
 import { renderAttackTargetingTool } from "./renderAttackTargetingTool";
-import { renderBuildngPaths } from "./renderBuildingPaths";
+import { renderBuildingPaths } from "./renderBuildingPaths";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
 import { renderBuildingSprite } from "./renderBuildingSprite";
 import { renderDemolishBuildingTool } from "./renderDemolishBuildingTool";
@@ -11,18 +10,18 @@ import { renderMapMarkers } from "./renderMapMarkers";
 import { renderPathPlacementTool } from "./renderPathPlacementTool";
 import { renderSelectedTile } from "./renderSelectedTile";
 
-export const runSystems = (scene: Scene, network: Network) => {
+export const runSystems = (scene: Scene) => {
   //Render world entity's sprites and paths
-  renderBuildingSprite(scene, network);
-  renderBuildngPaths(scene, network);
+  renderBuildingSprite(scene);
+  renderBuildingPaths(scene);
 
   // Render map utility elements, placement indicators, etc
-  renderSelectedTile(scene, network);
-  renderHoverTile(scene, network);
-  renderBuildingPlacementTool(scene, network);
-  renderPathPlacementTool(scene, network);
-  renderAttackTargetingTool(scene, network);
-  renderDemolishBuildingTool(scene, network);
-  renderDemolishPathTool(scene, network);
-  renderMapMarkers(scene, network);
+  renderSelectedTile(scene);
+  renderHoverTile(scene);
+  renderBuildingPlacementTool(scene);
+  renderPathPlacementTool(scene);
+  renderAttackTargetingTool(scene);
+  renderDemolishBuildingTool(scene);
+  renderDemolishPathTool(scene);
+  renderMapMarkers(scene);
 };

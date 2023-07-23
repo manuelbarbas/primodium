@@ -9,16 +9,17 @@ import { Coord } from "@latticexyz/utils";
 
 import { createPath } from "../factory/path";
 import { Scene } from "src/engine/types";
-import { Network } from "src/network/layer";
+import { world } from "src/network/world";
+import { Path } from "src/network/components/chainComponents";
+import { Position } from "src/network/components/clientComponents";
 
-export const renderBuildngPaths = (scene: Scene, network: Network) => {
-  const { world, components } = network;
+export const renderBuildingPaths = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_path";
 
   defineComponentSystem(
     world,
-    components.Path,
+    Path,
     (update) => {
       const entityIndex = update.entity;
       const objIndex = entityIndex + objSuffix;
@@ -30,17 +31,14 @@ export const renderBuildngPaths = (scene: Scene, network: Network) => {
         return;
       }
 
-      if (!hasComponent(components.Path, entityIndex)) {
+      if (!hasComponent(Path, entityIndex)) {
         if (scene.objectPool.objects.has(objIndex)) {
           scene.objectPool.remove(objIndex);
         }
         return;
       }
 
-      const startCoord = getComponentValue(
-        components.Position,
-        entityIndex
-      ) as Coord;
+      const startCoord = getComponentValue(Position, entityIndex) as Coord;
 
       const endEntityId = update.value[0]?.value.toString() as EntityID;
 
@@ -48,7 +46,7 @@ export const renderBuildngPaths = (scene: Scene, network: Network) => {
       if (!endEntityId) return;
 
       const endCoord = getComponentValue(
-        components.Position,
+        Position,
         world.entityToIndex.get(endEntityId)!
       ) as Coord;
 
