@@ -1,4 +1,4 @@
-import { defineComponentSystem, setComponent } from "@latticexyz/recs";
+import { defineComponentSystem } from "@latticexyz/recs";
 import { decodeCoordEntity } from "../util/encode";
 import { Network } from "./layer";
 
@@ -15,6 +15,6 @@ export function syncPositionComponent(network: Network) {
       return;
     }
     const coord = decodeCoordEntity(world.entities[entity]);
-    setComponent(Position, entity, coord);
+    Position.set(coord, world.entities[entity]);
   });
 }

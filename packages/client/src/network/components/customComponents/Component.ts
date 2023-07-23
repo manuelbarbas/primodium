@@ -80,7 +80,6 @@ function newComponent<
     const entity = entityID ? getEntity(entityID) : singletonIndex;
     if (entity == undefined) return defaultValue;
     const value = getComponentValue(component, entity);
-    console.log("value:", value);
     return value ?? defaultValue;
   }
 
@@ -101,8 +100,8 @@ function newComponent<
 
   function remove(entityID?: EntityID) {
     const entity = entityID ? getEntity(entityID) : singletonIndex;
-    if (!entity) return;
-    return removeComponent(component, entity);
+    if (entity == undefined) return;
+    removeComponent(component, entity);
   }
 
   function clear() {
@@ -119,7 +118,7 @@ function newComponent<
 
   function has(entityID?: EntityID) {
     const entity = entityID ? getEntity(entityID) : singletonIndex;
-    if (!entity) return false;
+    if (entity == undefined) return false;
     return hasComponent(component, entity);
   }
   function isComponentUpdate<S extends Schema>(
@@ -164,7 +163,7 @@ function newComponent<
 
   const context = {
     ...component,
-    component,
+    override: component,
     get,
     set,
     getAll,

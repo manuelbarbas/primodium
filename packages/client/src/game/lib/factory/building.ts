@@ -8,6 +8,7 @@ import {
   SpriteKeys,
 } from "../../constants";
 import { clampedIndex } from "src/util/common";
+import { BlockIdToKey, BlockKey } from "src/util/constants";
 
 export const createBuilding = ({
   renderId = "building",
@@ -27,12 +28,22 @@ export const createBuilding = ({
   return {
     id: renderId,
     once: (gameObject) => {
-      gameObject.setPosition(x, y);
-
       //set sprite
       const sprite = EntityIDtoSpriteKey[buildingType];
+      if (!sprite) return;
+
+      gameObject.setPosition(x, y);
+      // TODO getting issues here if level is passed in as 0.
+      // Would be nice to set this to sprite[level] instead.
+      if (!level) level = 1;
+      console.log(
+        "sprite for :",
+        BlockIdToKey[buildingType],
+        sprite[level - 1]
+      );
       gameObject.setTexture(
         Assets.SpriteAtlas,
+        // can we make it clearer what this line does?
         sprite[level - 1] ?? SpriteKeys.Node
       );
       gameObject.setDepth(DepthLayers.Building);

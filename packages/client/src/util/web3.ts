@@ -23,23 +23,25 @@ export const addTileOverride = (
   const tempPositionId = uuid();
   const blockNumber = BlockNumber.get(undefined, { value: 0 }).value;
   const tempEntityIndex = 34567543456 as EntityIndex;
-  Position.addOverride(tempPositionId, {
+
+  // this make me sad but is necessary because they are using tricky proxy logic i need to read up on
+  Position.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: pos,
   });
-  BuildingType.addOverride(tempPositionId, {
+  BuildingType.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockType },
   });
-  OwnedBy.addOverride(tempPositionId, {
+  OwnedBy.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: player },
   });
-  LastBuiltAt.addOverride(tempPositionId, {
+  LastBuiltAt.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockNumber },
   });
-  LastClaimedAt.addOverride(tempPositionId, {
+  LastClaimedAt.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockNumber },
   });
@@ -48,11 +50,11 @@ export const addTileOverride = (
 };
 
 export const removeTileOverride = (tempPositionId: string) => {
-  Position.removeOverride(tempPositionId);
-  BuildingType.removeOverride(tempPositionId);
-  OwnedBy.removeOverride(tempPositionId);
-  LastBuiltAt.removeOverride(tempPositionId);
-  LastClaimedAt.removeOverride(tempPositionId);
+  Position.override.removeOverride(tempPositionId);
+  BuildingType.override.removeOverride(tempPositionId);
+  OwnedBy.override.removeOverride(tempPositionId);
+  LastBuiltAt.override.removeOverride(tempPositionId);
+  LastClaimedAt.override.removeOverride(tempPositionId);
 };
 
 export const buildBuilding = async (
