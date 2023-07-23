@@ -1,4 +1,4 @@
-# Primodium MUD
+# Primodium v0.6.1
 
 Initialize with `yarn`. Afterwards, in separate terminal sessions, run the following commands in order:
 
