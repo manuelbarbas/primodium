@@ -8,7 +8,6 @@ import {
   SpriteKeys,
 } from "../../constants";
 import { clampedIndex } from "src/util/common";
-import { BlockIdToKey, BlockKey } from "src/util/constants";
 
 export const createBuilding = ({
   renderId = "building",
@@ -36,11 +35,7 @@ export const createBuilding = ({
       // TODO getting issues here if level is passed in as 0.
       // Would be nice to set this to sprite[level] instead.
       if (!level) level = 1;
-      console.log(
-        "sprite for :",
-        BlockIdToKey[buildingType],
-        sprite[level - 1]
-      );
+
       gameObject.setTexture(
         Assets.SpriteAtlas,
         sprite ? sprite[level - 1] : SpriteKeys.Node

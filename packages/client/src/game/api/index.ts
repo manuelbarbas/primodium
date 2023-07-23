@@ -39,9 +39,7 @@ const init = async (
   // @ts-ignore
   if (import.meta.env.VITE_DEV === "true") window.network = network;
 
-  console.log("initializing game");
   await _init(player, network);
-  console.log("game initialized");
   GameReady.set({ value: true });
 };
 

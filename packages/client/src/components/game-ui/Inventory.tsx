@@ -250,16 +250,6 @@ Inventory.AllResourceLabels = ({
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
       />
-      <Inventory.ResourceLabel
-        name={"Alloy"}
-        entityIndex={entityIndex}
-        resourceId={BlockType.AlloyCraftedItem}
-      />
-      <Inventory.ResourceLabel
-        name={"Photovoltaic Cell"}
-        entityIndex={entityIndex}
-        resourceId={BlockType.LithiumCopperOxideCraftedItem}
-      />
     </>
   );
 };

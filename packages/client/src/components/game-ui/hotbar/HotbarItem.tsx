@@ -106,7 +106,6 @@ const HotbarItem: React.FC<{
       return;
     }
 
-    console.log(blockType);
     SelectedBuilding.set({ value: blockType });
     SelectedAction.set({ value: action });
   };

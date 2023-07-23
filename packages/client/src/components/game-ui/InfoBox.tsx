@@ -15,7 +15,6 @@ import {
   BuildingLevel,
   BuildingLimit,
 } from "src/network/components/chainComponents";
-import { SingletonID } from "@latticexyz/network";
 import { primodium } from "@game/api";
 
 export const InfoBox = () => {
@@ -36,11 +35,8 @@ export const InfoBox = () => {
   }).value;
 
   const buildLimit = BuildingLimit.use(mainBaseLevel as unknown as EntityID);
-  const playerEntity = address
-    ? (address.toString().toLowerCase() as EntityID)
-    : SingletonID;
 
-  const playerBuildingCount = BuildingLimit.use(playerEntity);
+  const playerBuildingCount = BuildingLimit.use(address);
   const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"

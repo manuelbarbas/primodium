@@ -1,5 +1,4 @@
 import { primodium } from "@game/api";
-import { EntityID } from "@latticexyz/recs";
 import { useCallback, useMemo } from "react";
 import { decodeCoordEntity } from "src/util/encode";
 import { buildBuilding } from "src/util/web3";
@@ -7,17 +6,13 @@ import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
 import { BlockType } from "../../util/constants";
 import { MainBase } from "src/network/components/chainComponents";
-import { SingletonID } from "@latticexyz/network";
 import { SelectedTile } from "src/network/components/clientComponents";
 
 export default function NavigateMainBaseButton() {
-  const { address } = useAccount();
+  const { address: player } = useAccount();
 
   // if provide an entityId, use as owner
   // else try to use wallet, otherwise use default index
-  const player = address
-    ? (address.toString().toLowerCase() as EntityID)
-    : SingletonID;
 
   const mainBaseEntity = MainBase.use(player)?.value;
   // fetch the main base of the user based on address

@@ -36,10 +36,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     //we assume the order of this loop will never change. TODO: pull out into component since this is a nono
     useObservableValue(Research.update$);
     const levelsResearched = levels.map(({ id }) => {
-      const entity = hashKeyEntityAndTrim(
-        id,
-        address.toString().toLowerCase()
-      ) as EntityID;
+      const entity = hashKeyEntityAndTrim(id, address);
       const isResearched = Research.get(entity);
       return isResearched?.value ?? false;
     });
@@ -62,10 +59,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
 
     const researchOwner = useMemo(() => {
       if (address == null || researchRequirement == null) return SingletonID;
-      return hashKeyEntityAndTrim(
-        researchRequirement as EntityID,
-        address.toString().toLowerCase()
-      ) as EntityID;
+      return hashKeyEntityAndTrim(researchRequirement as EntityID, address);
     }, [researchRequirement, address]);
 
     const isResearchRequirementsMet = useMemo(
@@ -73,10 +67,8 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       [researchOwner]
     );
 
-    const playerEntity = address.toString().toLowerCase() as EntityID;
-
     //TODO: make main base a hook and only render this component when main base isnt undefined
-    const mainBaseEntity = MainBase.use(playerEntity, {
+    const mainBaseEntity = MainBase.use(address, {
       value: "-1" as EntityID,
     }).value;
 

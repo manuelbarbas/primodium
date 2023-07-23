@@ -18,6 +18,7 @@ export const renderMapMarkers = (scene: Scene) => {
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
+    const entity = world.entities[update.entity];
     const objGraphicsIndex = update.entity + objIndexSuffix;
 
     // Avoid updating on optimistic overrides
@@ -28,14 +29,14 @@ export const renderMapMarkers = (scene: Scene) => {
       return;
     }
 
-    if (!Marker.has(world.entities[entityIndex])) {
+    if (!Marker.has(entity)) {
       if (scene.objectPool.objects.has(objGraphicsIndex)) {
         scene.objectPool.remove(objGraphicsIndex);
       }
       return;
     }
 
-    const tileCoord = Position.get(world.entities[entityIndex]);
+    const tileCoord = Position.get(entity);
 
     if (!tileCoord) return;
 

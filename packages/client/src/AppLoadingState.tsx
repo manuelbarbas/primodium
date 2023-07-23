@@ -17,16 +17,6 @@ export default function AppLoadingState() {
     percentage: 0,
   });
 
-  // useEffect(() => {
-  //   console.log("loading state changed in applaoding");
-  // }, [LoadingState]);
-
-  // const loadingState = useComponentValue(LoadingState, singletonIndex, {
-  //   state: SyncState.CONNECTING,
-  //   msg: "Connecting",
-  //   percentage: 0,
-  // });
-
   if (loadingState.state !== SyncState.LIVE) {
     return (
       <>
