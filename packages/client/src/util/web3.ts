@@ -3,6 +3,13 @@ import { Coord, uuid } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
 
 import { execute } from "src/network/actions";
+import {
+  BuildingType,
+  LastBuiltAt,
+  LastClaimedAt,
+  OwnedBy,
+} from "src/network/components/chainComponents";
+import { BlockNumber, Position } from "src/network/components/clientComponents";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
@@ -11,57 +18,51 @@ import { useNotificationStore } from "src/store/NotificationStore";
 export const addTileOverride = (
   pos: Coord,
   blockType: EntityID,
-  address: string,
-  network: Network
+  player: EntityID
 ) => {
-  const { components, providers } = network;
   const tempPositionId = uuid();
+  const blockNumber = BlockNumber.get(undefined, { value: 0 }).value;
   const tempEntityIndex = 34567543456 as EntityIndex;
-  components.Position.addOverride(tempPositionId, {
+  Position.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: pos,
   });
-  components.BuildingType.addOverride(tempPositionId, {
+  BuildingType.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockType },
   });
-  components.OwnedBy.addOverride(tempPositionId, {
+  OwnedBy.addOverride(tempPositionId, {
     entity: tempEntityIndex,
-    value: { value: address },
+    value: { value: player },
   });
-  components.LastBuiltAt.addOverride(tempPositionId, {
+  LastBuiltAt.addOverride(tempPositionId, {
     entity: tempEntityIndex,
-    value: { value: providers.get().ws?.blockNumber || 0 },
+    value: { value: blockNumber },
   });
-  components.LastClaimedAt.addOverride(tempPositionId, {
+  LastClaimedAt.addOverride(tempPositionId, {
     entity: tempEntityIndex,
-    value: { value: providers.get().ws?.blockNumber || 0 },
+    value: { value: blockNumber },
   });
 
   return { tempPositionId, tempEntityIndex };
 };
 
-export const removeTileOverride = (
-  tempPositionId: string,
-  network: Network
-) => {
-  const { components } = network;
-
-  components.Position.removeOverride(tempPositionId);
-  components.BuildingType.removeOverride(tempPositionId);
-  components.OwnedBy.removeOverride(tempPositionId);
-  components.LastBuiltAt.removeOverride(tempPositionId);
-  components.LastClaimedAt.removeOverride(tempPositionId);
+export const removeTileOverride = (tempPositionId: string) => {
+  Position.removeOverride(tempPositionId);
+  BuildingType.removeOverride(tempPositionId);
+  OwnedBy.removeOverride(tempPositionId);
+  LastBuiltAt.removeOverride(tempPositionId);
+  LastClaimedAt.removeOverride(tempPositionId);
 };
 
 export const buildBuilding = async (
   pos: Coord,
   blockType: EntityID,
-  address: string,
+  address: EntityID,
   network: Network
 ) => {
   const { providers, systems } = network;
-  const { tempPositionId } = addTileOverride(pos, blockType, address, network);
+  const { tempPositionId } = addTileOverride(pos, blockType, address);
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
 
@@ -76,7 +77,7 @@ export const buildBuilding = async (
       setNotification
     );
   } finally {
-    removeTileOverride(tempPositionId, network);
+    removeTileOverride(tempPositionId);
   }
 
   setTransactionLoading(false);

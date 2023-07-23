@@ -9,8 +9,9 @@ import { runSystems } from "../systems";
 import { createChunkManager } from "./managers/chunkManager";
 import setupCameraMovement from "./setupCameraMovement";
 import setupMouseInputs from "./setupMouseInputs";
+import { EntityID } from "@latticexyz/recs";
 
-export const init = async (address: Address, network: Network) => {
+export const init = async (player: EntityID, network: Network) => {
   const { world } = network;
 
   const game = await engine.createGame(gameConfig);
@@ -26,8 +27,8 @@ export const init = async (address: Address, network: Network) => {
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  setupMouseInputs(scene, network, address);
-  setupCameraMovement(scene, address);
+  setupMouseInputs(scene, network, player);
+  setupCameraMovement(scene, player);
 
   runSystems(scene, network);
 

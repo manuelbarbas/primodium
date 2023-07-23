@@ -1,25 +1,17 @@
-import { primodium } from "@game/api";
 import { Coord } from "@latticexyz/utils";
 import { coordEq } from "@latticexyz/phaserx";
 
-import { Network } from "src/network/layer";
 import { BlockType } from "./constants";
 import { useTourStore } from "src/store/TourStore";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
+import { MainBase } from "src/network/components/chainComponents";
+import { Marker, Position } from "src/network/components/clientComponents";
 
-export const inTutorial = (address: string, network: Network) => {
+export const inTutorial = (address: EntityID) => {
   const completedTutorial = useTourStore.getState().completedTutorial;
   const checkpoint = useTourStore.getState().checkpoint;
-  const { components, world, singletonIndex } = network;
 
-  const resourceKey = address
-    ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
-    : singletonIndex;
-
-  const mainBase = getComponentValue(
-    components.MainBaseInitialized,
-    resourceKey
-  );
+  const mainBase = MainBase.get(address);
 
   //check if player has mainbase and checkpoint is null
   const playerInitialized = mainBase && checkpoint === null;
@@ -27,12 +19,12 @@ export const inTutorial = (address: string, network: Network) => {
   return !playerInitialized && !completedTutorial;
 };
 
-export const validTutorialClick = (pos: Coord, network: Network) => {
+export const validTutorialClick = (pos: Coord) => {
   //get coords of arrow markers
-  const markers = primodium.components.marker.getOfType(BlockType.ArrowMarker);
+  const markers = Marker.getAllWith({ value: BlockType.ArrowMarker });
 
   for (const marker of markers) {
-    const markerPos = getComponentValue(network.components.Position, marker);
+    const markerPos = Position.get(marker);
     if (coordEq(markerPos, pos)) {
       return true;
     }

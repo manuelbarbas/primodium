@@ -85,8 +85,8 @@ export function hashKeyEntity(
 export function hashKeyEntityAndTrim(
   key: EntityID,
   entity: EntityID | string
-): string {
-  return BigNumber.from(hashKeyEntity(key, entity)).toHexString();
+): EntityID {
+  return BigNumber.from(hashKeyEntity(key, entity)).toHexString() as EntityID;
 }
 
 export function padTo64Bytes(hex: string): string {

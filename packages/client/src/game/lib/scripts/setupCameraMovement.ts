@@ -6,12 +6,11 @@ import { isDown } from "src/game/api/input";
 import { MainBase } from "src/network/components/chainComponents";
 import { Position } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { Address } from "wagmi";
 const SPEED = 750;
 const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;
 
-const setupCameraMovement = (scene: Scene, address: Address) => {
+const setupCameraMovement = (scene: Scene, player: EntityID) => {
   const { maxZoom, minZoom } = scene.config.camera;
 
   //accumalate sub-pixel movement during a gametick and add to next game tick.
@@ -44,7 +43,7 @@ const setupCameraMovement = (scene: Scene, address: Address) => {
     }
 
     if (isDown(KeybindActions.Base)) {
-      const mainBase = MainBase.get(address.toLowerCase() as EntityID)?.value;
+      const mainBase = MainBase.get(player)?.value;
       if (!mainBase) return;
       const mainBaseCoord = Position.get(mainBase);
 

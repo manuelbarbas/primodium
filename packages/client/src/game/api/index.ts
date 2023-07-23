@@ -8,9 +8,10 @@ import * as game from "./game";
 import * as hooks from "./hooks";
 import * as input from "./input";
 import { GameReady } from "src/network/components/clientComponents";
+import { EntityID } from "@latticexyz/recs";
 
 const init = async (
-  address: Address,
+  player: EntityID,
   network: Network,
   version: string = "v1"
 ) => {
@@ -39,7 +40,7 @@ const init = async (
   if (import.meta.env.VITE_DEV === "true") window.network = network;
 
   console.log("initializing game");
-  await _init(address, network);
+  await _init(player, network);
   console.log("game initialized");
   GameReady.set({ value: true });
 };

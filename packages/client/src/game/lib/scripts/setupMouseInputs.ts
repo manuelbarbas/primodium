@@ -20,8 +20,9 @@ import {
   StartSelectedPath,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+import { EntityID } from "@latticexyz/recs";
 
-const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
+const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
   const { maxZoom, minZoom, wheelSpeed } = scene.config.camera;
 
   scene.input.click$.subscribe((event) => {
@@ -66,7 +67,7 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
         const selectedBuilding = SelectedBuilding.get()?.value;
         if (!selectedBuilding) return;
         SelectedBuilding.remove();
-        buildBuilding(gameCoord, selectedBuilding, address, network);
+        buildBuilding(gameCoord, selectedBuilding, player, network);
     }
 
     if (selectedAction !== undefined) SelectedAction.remove();

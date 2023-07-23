@@ -15,11 +15,11 @@ export default function NavigateMainBaseButton() {
 
   // if provide an entityId, use as owner
   // else try to use wallet, otherwise use default index
-  const resourceKey = address
+  const player = address
     ? (address.toString().toLowerCase() as EntityID)
     : SingletonID;
 
-  const mainBaseEntity = MainBase.use(resourceKey)?.value;
+  const mainBaseEntity = MainBase.use(player)?.value;
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(() => {
     if (mainBaseEntity) return decodeCoordEntity(mainBaseEntity);
@@ -42,7 +42,7 @@ export default function NavigateMainBaseButton() {
 
     if (!selectedTile) return SelectedTile.set(cameraCoord);
 
-    await buildBuilding(selectedTile, BlockType.MainBase, address, network);
+    await buildBuilding(selectedTile, BlockType.MainBase, player, network);
   };
 
   if (mainBaseCoord) {
