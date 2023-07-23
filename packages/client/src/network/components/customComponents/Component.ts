@@ -1,4 +1,5 @@
 import {
+  Component,
   ComponentValue,
   EntityID,
   Has,
@@ -18,162 +19,145 @@ import {
   setComponent,
   updateComponent,
 } from "@latticexyz/recs";
-import { singletonIndex, world } from "../../world";
+import { singletonIndex } from "../../world";
 
-export interface Options<M extends Metadata> {
-  id?: string;
-  metadata?: M;
-  indexed?: boolean;
-  overridable?: boolean;
-}
-
-class Component<
+type OverridableType<
+  Overridable extends boolean,
   S extends Schema,
   M extends Metadata = Metadata,
   T = undefined
-> {
-  public component: OverridableComponent<S, M>;
-  constructor(world: World, schema: S, options?: Options<M>) {
-    this.component = overridableComponent(
-      defineComponent(world, schema, options)
-    );
-  }
+> = Overridable extends true
+  ? OverridableComponent<S, M, T>
+  : Component<S, M, T>;
 
-  public get addOverride() {
-    return this.component.addOverride;
-  }
+export interface Options<Overridable extends boolean, M extends Metadata> {
+  id?: string;
+  metadata?: M;
+  indexed?: boolean;
+  overridable?: Overridable;
+}
 
-  public get removeOverride() {
-    return this.component.removeOverride;
-  }
+function newComponent<
+  Overridable extends boolean,
+  S extends Schema,
+  M extends Metadata = Metadata,
+  T = undefined
+>(world: World, schema: S, options?: Options<Overridable, M>) {
+  const rawComponent = defineComponent(world, schema, options);
+  const component: OverridableType<Overridable, S, M> = options?.overridable
+    ? overridableComponent(rawComponent)
+    : (rawComponent as OverridableType<Overridable, S, M>);
 
-  public get update$() {
-    return this.component.update$;
-  }
-  public get id() {
-    return this.component.id;
-  }
-  public get metadata() {
-    return this.component.metadata;
-  }
-  public get entities() {
-    return this.component.entities;
-  }
-  public get schema() {
-    return this.component.schema;
-  }
-  public get values() {
-    return this.component.values;
-  }
-  public get world() {
-    return this.component.world;
-  }
-
-  private getEntity(entityID: EntityID) {
+  function getEntity(entityID: EntityID) {
     const entity = world.entityToIndex.get(entityID);
     if (entity == undefined) return;
     return entity;
   }
 
   // Actual method implementation:
-  public set(value: ComponentValue<S, T>, entityID?: EntityID) {
-    // This is the (entityID, value) overload
-    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+  function set(value: ComponentValue<S, T>, entityID?: EntityID) {
+    // is the (entityID, value) overload
+    const entity = entityID ? getEntity(entityID) : singletonIndex;
     if (entity == undefined)
       throw new Error(
-        `[set ${entityID} for ${this.component.id}] no entity registered`
+        `[set ${entityID} for ${component.id}] no entity registered`
       );
-    setComponent(this.component, entity, value);
+    console.log(`setting ${entity} for ${component.id} to `, value);
+    setComponent(component, entity, value);
   }
 
-  public get(): ComponentValue<S> | undefined;
-  public get(entityID: EntityID): ComponentValue<S> | undefined;
-  public get(
+  function get(): ComponentValue<S> | undefined;
+  function get(entityID: EntityID): ComponentValue<S> | undefined;
+  function get(
     entityID: EntityID,
     defaultValue?: ComponentValue<S>
   ): ComponentValue<S>;
 
-  public get(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
-    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+  function get(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
+    const entity = entityID ? getEntity(entityID) : singletonIndex;
     if (!entity) return defaultValue;
-    const value = getComponentValue(this.component, entity)?.value;
+    const value = getComponentValue(component, entity)?.value;
     return value ?? defaultValue;
   }
 
-  public getAll = () => {
-    const entities = runQuery([Has(this.component)]);
+  function getAll() {
+    const entities = runQuery([Has(component)]);
     return [...entities].map((entity) => world.entities[entity]);
-  };
+  }
 
-  public getAllWith = (value: Partial<ComponentValue<S>>) => {
-    const entities = runQuery([HasValue(this.component, value)]);
+  function getAllWith(value: Partial<ComponentValue<S>>) {
+    const entities = runQuery([HasValue(component, value)]);
     return [...entities].map((entity) => world.entities[entity]);
-  };
+  }
 
-  public getAllWithout = (value: Partial<ComponentValue<S>>) => {
-    const entities = runQuery([NotValue(this.component, value)]);
+  function getAllWithout(value: Partial<ComponentValue<S>>) {
+    const entities = runQuery([NotValue(component, value)]);
     return [...entities].map((entity) => world.entities[entity]);
-  };
+  }
 
-  public remove = (entityID?: EntityID) => {
-    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+  function remove(entityID?: EntityID) {
+    const entity = entityID ? getEntity(entityID) : singletonIndex;
     if (!entity) return;
-    return removeComponent(this.component, entity);
-  };
+    return removeComponent(component, entity);
+  }
 
-  public clear = () => {
-    const entities = runQuery([Has(this.component)]);
-    entities.forEach((entity) => removeComponent(this.component, entity));
-  };
+  function clear() {
+    const entities = runQuery([Has(component)]);
+    entities.forEach((entity) => removeComponent(component, entity));
+  }
 
-  public update(value: Partial<ComponentValue<S, T>>, entityID?: EntityID) {
-    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+  function update(value: Partial<ComponentValue<S, T>>, entityID?: EntityID) {
+    const entity = entityID ? getEntity(entityID) : singletonIndex;
     if (entity == undefined)
-      throw new Error(`[update ${this.component.id}] no entity registered`);
-    updateComponent(this.component, entity, value);
+      throw new Error(`[update ${component.id}] no entity registered`);
+    updateComponent(component, entity, value);
   }
 
-  public has(entityID?: EntityID) {
-    const entity = entityID ? this.getEntity(entityID) : singletonIndex;
+  function has(entityID?: EntityID) {
+    const entity = entityID ? getEntity(entityID) : singletonIndex;
     if (!entity) return false;
-    return hasComponent(this.component, entity);
+    return hasComponent(component, entity);
   }
+  return {
+    ...component,
+    get,
+    set,
+    getAll,
+    getAllWith,
+    getAllWithout,
+    remove,
+    clear,
+    update,
+    has,
+  };
 }
 
-export default Component;
+export default newComponent;
 
-export class NumberComponent<M extends Metadata> extends Component<
-  { value: Type.Number },
-  M
-> {
-  constructor(world: World, options?: Options<M>) {
-    super(world, { value: Type.Number }, options);
-  }
+export function newNumberComponent<
+  Overridable extends boolean,
+  M extends Metadata
+>(world: World, options?: Options<Overridable, M>) {
+  return newComponent(world, { value: Type.Number }, options);
 }
 
-export class StringComponent<M extends Metadata> extends Component<
-  { value: Type.String },
-  M
-> {
-  constructor(world: World, options?: Options<M>) {
-    super(world, { value: Type.String }, options);
-  }
+export function newStringComponent<
+  Overridable extends boolean,
+  M extends Metadata
+>(world: World, options?: Options<Overridable, M>) {
+  return newComponent(world, { value: Type.String }, options);
 }
 
-export class CoordComponent<M extends Metadata> extends Component<
-  { x: Type.Number; y: Type.Number },
-  M
-> {
-  constructor(world: World, options?: Options<M>) {
-    super(world, { x: Type.Number, y: Type.Number }, options);
-  }
+export function newCoordComponent<
+  Overridable extends boolean,
+  M extends Metadata
+>(world: World, options?: Options<Overridable, M>) {
+  return newComponent(world, { x: Type.Number, y: Type.Number }, options);
 }
 
-export class BoolComponent<M extends Metadata> extends Component<
-  { value: Type.Boolean },
-  M
-> {
-  constructor(world: World, options?: Options<M>) {
-    super(world, { value: Type.Boolean }, options);
-  }
+export function newBoolComponent<
+  Overridable extends boolean,
+  M extends Metadata
+>(world: World, options?: Options<Overridable, M>) {
+  return newComponent(world, { value: Type.Boolean }, options);
 }

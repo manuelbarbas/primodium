@@ -1,18 +1,18 @@
 import { Type } from "@latticexyz/recs";
-import Component, {
-  BoolComponent,
-  NumberComponent,
-  StringComponent,
-} from "./customComponents/Component";
 import { world } from "../world";
+import newComponent, {
+  newBoolComponent,
+  newNumberComponent,
+  newStringComponent,
+} from "./customComponents/Component";
 
-export const Counter = new Component(
+export const Counter = newComponent(
   world,
   { value: Type.Number },
   { metadata: { contractId: "component.Counter" } }
 );
 
-export const BuildingType = new Component(
+export const BuildingType = newComponent(
   world,
   { value: Type.Entity },
   {
@@ -21,115 +21,115 @@ export const BuildingType = new Component(
   }
 );
 
-export const Path = new StringComponent(world, {
+export const Path = newStringComponent(world, {
   metadata: { contractId: "component.Path", overridable: true },
 });
 
-export const OwnedBy = new StringComponent(world, {
+export const OwnedBy = newStringComponent(world, {
   metadata: { contractId: "component.OwnedBy" },
   overridable: true,
 });
 
-export const LastBuiltAt = new NumberComponent(world, {
+export const LastBuiltAt = newNumberComponent(world, {
   metadata: { contractId: "component.LastBuiltAt" },
   overridable: true,
 });
 
-export const LastClaimedAt = new NumberComponent(world, {
+export const LastClaimedAt = newNumberComponent(world, {
   metadata: { contractId: "component.LastClaimedAt" },
   overridable: true,
 });
 
-export const Health = new NumberComponent(world, {
+export const Health = newNumberComponent(world, {
   metadata: { contractId: "component.Health" },
 });
 
-export const Item = new NumberComponent(world, {
+export const Item = newNumberComponent(world, {
   metadata: { contractId: "component.Item" },
 });
 
-export const Research = new BoolComponent(world, {
+export const Research = newBoolComponent(world, {
   metadata: { contractId: "component.Research" },
 });
 
-export const StarterPackInitialized = new BoolComponent(world, {
+export const StarterPackInitialized = newBoolComponent(world, {
   metadata: { contractId: "component.StarterPackInitialized" },
 });
 
-export const MainBase = new Component(
+export const MainBase = newComponent(
   world,
   { value: Type.Entity },
   { metadata: { contractId: "component.MainBaseInitialized" } }
 );
 
-export const RequiredResearchComponent = new NumberComponent(world, {
+export const RequiredResearchComponent = newNumberComponent(world, {
   metadata: { contractId: "component.RequiredResearch" },
 });
 
-export const RequiredResourcesComponent = new Component(
+export const RequiredResourcesComponent = newComponent(
   world,
   { value: Type.EntityArray },
   { metadata: { contractId: "component.RequiredResourcesComponent" } }
 );
 
-export const MaxLevel = new NumberComponent(world, {
+export const MaxLevel = newNumberComponent(world, {
   metadata: { contractId: "component.MaxLevel" },
   overridable: true,
 });
 
-export const BuildingLevel = new NumberComponent(world, {
+export const BuildingLevel = newNumberComponent(world, {
   metadata: { contractId: "component.BuildingLevel" },
   overridable: true,
 });
 
-export const StorageCapacity = new NumberComponent(world, {
+export const StorageCapacity = newNumberComponent(world, {
   metadata: { contractId: "component.StorageCapacity" },
   overridable: true,
 });
 
-export const StorageCapacityResources = new Component(
+export const StorageCapacityResources = newComponent(
   world,
   { value: Type.EntityArray },
   { metadata: { contractId: "component.StorageCapacityResources" } }
 );
 
-export const Mine = new NumberComponent(world, {
+export const Mine = newNumberComponent(world, {
   metadata: { contractId: "component.Mine" },
   overridable: true,
 });
 
-export const BuildingLimit = new NumberComponent(world, {
+export const BuildingLimit = newNumberComponent(world, {
   metadata: { contractId: "component.BuildingLimit" },
   overridable: true,
 });
 
-export const BuildingTiles = new Component(
+export const BuildingTiles = newComponent(
   world,
   { value: Type.EntityArray },
   { metadata: { contractId: "component.BuildingTiles" } }
 );
 
-export const RawBlueprint = new Component(
+export const RawBlueprint = newComponent(
   world,
   { value: Type.NumberArray },
   { metadata: { contractId: "component.Blueprint" } }
 );
 
-export const UnclaimedResource = new NumberComponent(world, {
+export const UnclaimedResource = newNumberComponent(world, {
   metadata: { contractId: "component.UnclaimedResource" },
 });
 
-export const SystemsRegistry = new StringComponent(world, {
+export const SystemsRegistry = newStringComponent(world, {
   metadata: { contractId: "world.component.systems" },
   id: "SystemsRegistry",
 });
 
-export const ComponentsRegistry = new StringComponent(world, {
+export const ComponentsRegistry = newStringComponent(world, {
   id: "ComponentsRegistry",
   metadata: { contractId: "world.component.components" },
 });
 
-export const LoadingState = new Component(
+export const LoadingState = newComponent(
   world,
   {
     state: Type.Number,

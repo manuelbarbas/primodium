@@ -2,22 +2,21 @@ import { Metadata, Type, World } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { getAttackRadius, isValidWeaponStorage } from "src/util/attack";
 import { getEntityTileAtCoord } from "src/util/tile";
-import Component, { Options } from "./Component";
+import { Options } from "./Component";
+import newComponent from "./Component";
 
-class SelectedAttackComponent<M extends Metadata> extends Component<
-  { origin: Type.OptionalString; target: Type.OptionalString },
-  M
-> {
-  constructor(world: World, options?: Options<M>) {
-    super(
-      world,
-      { origin: Type.OptionalString, target: Type.OptionalString },
-      options
-    );
-  }
+function newSelectedAttackComponent<
+  Overridable extends boolean,
+  M extends Metadata
+>(world: World, options?: Options<Overridable, M>) {
+  const component = newComponent(
+    world,
+    { origin: Type.OptionalString, target: Type.OptionalString },
+    options
+  );
 
-  public getCoords = () => {
-    const value = this.get();
+  const getCoords = () => {
+    const value = component.get();
 
     return {
       origin: (JSON.parse(value?.origin ?? "null") ?? undefined) as
@@ -29,21 +28,21 @@ class SelectedAttackComponent<M extends Metadata> extends Component<
     };
   };
 
-  public setOrigin = (coord: Coord) => {
+  const setOrigin = (coord: Coord) => {
     const originEntityBuilding = getEntityTileAtCoord(coord);
 
     //if origin entity is not a weapon storage or empty, reset selection
     if (!originEntityBuilding || !isValidWeaponStorage(originEntityBuilding)) {
       console.warn("Origin is not valid");
-      this.remove();
+      component.remove();
       return;
     }
 
-    this.update({ origin: JSON.stringify(coord) });
+    component.update({ origin: JSON.stringify(coord) });
   };
 
-  public setTarget = (coord: Coord) => {
-    const selectedAttackTiles = this.getCoords();
+  const setTarget = (coord: Coord) => {
+    const selectedAttackTiles = getCoords();
 
     if (!selectedAttackTiles.origin) {
       console.log("origin is not set");
@@ -82,8 +81,9 @@ class SelectedAttackComponent<M extends Metadata> extends Component<
       return;
     }
 
-    this.update({ target: JSON.stringify(coord) });
+    component.update({ target: JSON.stringify(coord) });
   };
+  return { ...component, getCoords, setOrigin, setTarget };
 }
 
-export default SelectedAttackComponent;
+export default newSelectedAttackComponent;

@@ -13,19 +13,19 @@ import {
   withValue,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Options, StringComponent } from "./Component";
+import { Options, newStringComponent } from "./Component";
 import {
   getBuildingsOfTypeInRange,
   getTilesOfTypeInRange,
 } from "src/util/tile";
 import { Marker, Position } from "../clientComponents";
-import { world } from "src/network/world";
 
-class MarkerTypeComponent<M extends Metadata> extends StringComponent<M> {
-  constructor(world: World, options?: Options<M>) {
-    super(world, options);
-  }
-  public setWithCoord = (coord: Coord, type: EntityID) => {
+function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
+  world: World,
+  options?: Options<Overridable, M>
+) {
+  const component = newStringComponent(world, options);
+  const setWithCoord = (coord: Coord, type: EntityID) => {
     const entities = getEntitiesWithValue(Position, coord);
 
     //check if there is an entity with given coord, if not create one and add position
@@ -39,13 +39,13 @@ class MarkerTypeComponent<M extends Metadata> extends StringComponent<M> {
       return entity;
     } else {
       const entity = entities.values().next().value;
-      this.set({ value: type }, entity);
+      component.set({ value: type }, entity);
 
       return entity;
     }
   };
 
-  public target = async (
+  const target = async (
     perlin: Perlin,
     tile: EntityID,
     type: EntityID,
@@ -75,19 +75,21 @@ class MarkerTypeComponent<M extends Metadata> extends StringComponent<M> {
     }
   };
 
-  public getByCoord = (coord: Coord) => {
-    const entities = runQuery([Has(this.component), HasValue(Position, coord)]);
+  const getByCoord = (coord: Coord) => {
+    const entities = runQuery([Has(component), HasValue(Position, coord)]);
 
     return entities;
   };
 
-  public removeAllAtCoord = (coord: Coord) => {
-    const entities = runQuery([HasValue(Position, coord), Has(this.component)]);
+  const removeAllAtCoord = (coord: Coord) => {
+    const entities = runQuery([HasValue(Position, coord), Has(component)]);
 
     const entityIndex = entities.values().next().value;
 
-    removeComponent(this.component, entityIndex);
+    removeComponent(component, entityIndex);
   };
+
+  return { ...component, setWithCoord, target, getByCoord, removeAllAtCoord };
 }
 
-export default MarkerTypeComponent;
+export default newMarkerComponent;

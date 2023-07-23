@@ -1,41 +1,41 @@
 import { Type } from "@latticexyz/recs";
-import Component, {
-  BoolComponent,
-  CoordComponent,
-  NumberComponent,
+import newComponent, {
+  newBoolComponent,
+  newCoordComponent,
+  newNumberComponent,
 } from "./customComponents/Component";
+import newSelectedAttackComponent from "./customComponents/SelectedAttackComponent";
+import newMarkerComponent from "./customComponents/MarkerComponent";
 import { world } from "../world";
-import MarkerTypeComponent from "./customComponents/MarkerComponent";
-import SelectedAttackComponent from "./customComponents/SelectedAttackComponent";
 
-export const Position = new CoordComponent(world, {
+export const Position = newCoordComponent(world, {
   id: "Position",
   overridable: true,
 });
-export const BlockNumber = new NumberComponent(world, {
+export const BlockNumber = newNumberComponent(world, {
   id: "BlockNumber",
 });
-export const GameReady = new BoolComponent(world, { id: "GameReady" });
-export const DoubleCounter = new NumberComponent(world, {
+export const GameReady = newBoolComponent(world, { id: "GameReady" });
+export const DoubleCounter = newNumberComponent(world, {
   id: "DoubleCounter",
 });
-export const SelectedTile = new CoordComponent(world, { id: "SelectedTile" });
-export const HoverTile = new CoordComponent(world, { id: "HoverTile" });
-export const SelectedBuilding = new Component(
+export const SelectedTile = newCoordComponent(world, { id: "SelectedTile" });
+export const HoverTile = newCoordComponent(world, { id: "HoverTile" });
+export const SelectedBuilding = newComponent(
   world,
   { value: Type.Entity },
   { id: "SelectedBuilding" }
 );
-export const SelectedAction = new NumberComponent(world, {
+export const SelectedAction = newNumberComponent(world, {
   id: "SelectedAction",
 });
-export const StartSelectedPath = new CoordComponent(world, {
+export const StartSelectedPath = newCoordComponent(world, {
   id: "StartSelectedPath",
 });
-export const SelectedAttack = new SelectedAttackComponent(world, {
+export const SelectedAttack = newSelectedAttackComponent(world, {
   id: "SelectedAttack",
 });
-export const Marker = new MarkerTypeComponent(world, {
+export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
 });
 
