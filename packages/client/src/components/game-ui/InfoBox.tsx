@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
@@ -16,6 +16,7 @@ import {
   BuildingLimit,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
+import { primodium } from "@game/api";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -24,6 +25,7 @@ export const InfoBox = () => {
   const mainBaseCoord = useMainBaseCoord();
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
+  const [notify, setNotify] = useState<boolean>(false);
 
   const coordEntity = encodeCoordEntityAndTrim(
     { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
@@ -43,6 +45,16 @@ export const InfoBox = () => {
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
   );
+
+  useEffect(() => {
+    if (mainBaseLevel === undefined) return;
+
+    if (mainBaseLevel === undefined || mainBaseLevel <= 1) return;
+
+    if (notify) return;
+
+    setNotify(true);
+  }, [mainBaseLevel]);
 
   return (
     <div>
@@ -82,7 +94,7 @@ export const InfoBox = () => {
                       Buildings: {playerBuildingCountNumber}/
                       <b>{buildLimitNumber}</b>
                     </p>
-                    <div className="flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt">
+                    <div className="flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-700/50 crt mt-1 ">
                       <div
                         className="h-full bg-cyan-600"
                         style={{
@@ -102,6 +114,19 @@ export const InfoBox = () => {
                       />
                     </div>
                   </div>
+                  {mainBaseCoord !== undefined && (
+                    <div className="flex justify-center w-full">
+                      <button
+                        id="goto-mainbase"
+                        className="mt-3 text-sm border border-cyan-600 active:bg-cyan-600 outline-none"
+                        onClick={() => primodium.camera.pan(mainBaseCoord)}
+                      >
+                        <div className="flex m-1 items-center gap-2 px-1 h-4">
+                          Go to Mainbase
+                        </div>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -124,13 +149,19 @@ export const InfoBox = () => {
                 <GameButton
                   id="research"
                   className="mt-2 ml-1 text-sm"
-                  onClick={() => setShowResearchModal(true)}
+                  onClick={() => {
+                    setShowResearchModal(true);
+                    setNotify(false);
+                  }}
                   depth={6}
                 >
                   <div className="flex m-1 items-center gap-2 px-1 h-4">
                     <IoFlaskSharp /> <p className="">Research</p>
                   </div>
                 </GameButton>
+                {notify && (
+                  <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse" />
+                )}
               </div>
             </div>
           </div>

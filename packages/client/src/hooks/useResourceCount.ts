@@ -1,12 +1,9 @@
-import { useMemo } from "react";
-
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 
 import { useAccount } from "../hooks/useAccount";
 import { hashKeyEntityAndTrim } from "../util/encode";
-import { SingletonID } from "@latticexyz/network";
-import { world } from "src/network/world";
 import { NewNumberComponent } from "src/network/components/customComponents/Component";
+import { world } from "src/network/world";
 
 export default function useResourceCount(
   resourceComponent: NewNumberComponent,
@@ -17,18 +14,20 @@ export default function useResourceCount(
 
   // if provide an entityId, use as owner
   // else try to use wallet, otherwise use default index
-  const resourceKey = useMemo(() => {
-    if (entityIndex && world.entities.length > entityIndex) {
-      return hashKeyEntityAndTrim(
-        resourceId,
-        world.entities[entityIndex]
-      ) as EntityID;
-    } else if (address) {
-      return hashKeyEntityAndTrim(resourceId, address) as EntityID;
-    } else {
-      return SingletonID;
-    }
-  }, [resourceId, entityIndex, address]);
+  let resourceKey: EntityID | undefined = undefined;
+  if (entityIndex && world.entities.length > entityIndex) {
+    const encodedEntityId = hashKeyEntityAndTrim(
+      resourceId,
+      world.entities[entityIndex]
+    ) as EntityID;
+    resourceKey = encodedEntityId;
+  } else if (address) {
+    const encodedEntityId = hashKeyEntityAndTrim(
+      resourceId,
+      address
+    ) as EntityID;
+    resourceKey = encodedEntityId.toString().toLowerCase() as EntityID;
+  }
 
   const resource = resourceComponent.use(resourceKey);
 

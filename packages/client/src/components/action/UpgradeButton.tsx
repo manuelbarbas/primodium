@@ -89,7 +89,7 @@ export default function UpgradeButton({
     setTransactionLoading(true);
     await execute(
       systems["system.Upgrade"].executeTyped(coords, {
-        gasLimit: 30_000_000,
+        gasLimit: 29_000_000,
       }),
       providers,
       setNotification

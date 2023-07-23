@@ -43,8 +43,7 @@ export const createBuilding = ({
       );
       gameObject.setTexture(
         Assets.SpriteAtlas,
-        // can we make it clearer what this line does?
-        sprite[level - 1] ?? SpriteKeys.Node
+        sprite ? sprite[level - 1] : SpriteKeys.Node
       );
       gameObject.setDepth(DepthLayers.Building);
       if (selected) {

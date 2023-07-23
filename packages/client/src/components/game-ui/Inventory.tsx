@@ -1,14 +1,17 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useMud } from "src/context/MudContext";
 import useResourceCount from "src/hooks/useResourceCount";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
 import { BlockNumber } from "src/network/components/clientComponents";
 import {
+  BuildingLevel,
   Item,
   LastClaimedAt,
+  MainBase,
   Mine,
   StorageCapacity,
   UnclaimedResource,
@@ -20,6 +23,14 @@ export const Inventory = () => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
   const mainBaseCoord = useMainBaseCoord();
+  const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
+
+  const buildingLevel = BuildingLevel.use(mainBase);
+  useEffect(() => {
+    if (buildingLevel === undefined) return;
+
+    setMenuIndex(0);
+  }, [buildingLevel]);
 
   return (
     <div
@@ -71,10 +82,9 @@ export const Inventory = () => {
 
           {menuIndex === 0 && (
             <div className="flex justify-center">
-              <ClaimButton
-                id="claim-button"
-                coords={mainBaseCoord ?? { x: 0, y: 0 }}
-              />
+              {mainBaseCoord !== undefined && (
+                <ClaimButton id="claim-button" coords={mainBaseCoord} />
+              )}
             </div>
           )}
         </div>
@@ -240,6 +250,16 @@ Inventory.AllResourceLabels = ({
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
       />
+      <Inventory.ResourceLabel
+        name={"Alloy"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.AlloyCraftedItem}
+      />
+      <Inventory.ResourceLabel
+        name={"Photovoltaic Cell"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.LithiumCopperOxideCraftedItem}
+      />
     </>
   );
 };
@@ -249,9 +269,21 @@ Inventory.AllPassiveResourceLabels = ({
 }: {
   entityIndex?: EntityIndex;
 }) => {
+  const { components } = useMud();
+  const storageCapacity = useResourceCount(
+    components.StorageCapacity,
+    BlockType.ElectricityPassiveResource,
+    entityIndex
+  );
+  if (!storageCapacity)
+    return (
+      <div className="flex justify-center items-center text-lg">
+        No Utilities
+      </div>
+    );
   return (
     <>
-      <Inventory.ResourceLabel
+      <Inventory.PassiveResourceLabel
         name={"Electricity"}
         entityIndex={entityIndex}
         resourceId={BlockType.ElectricityPassiveResource}
@@ -273,7 +305,7 @@ Inventory.ResourceLabel = ({
 
   const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
-  const storageCount = useResourceCount(
+  const storageCapacity = useResourceCount(
     StorageCapacity,
     resourceId,
     entityIndex
@@ -297,14 +329,21 @@ Inventory.ResourceLabel = ({
     const toClaim =
       unclaimedResource +
       ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
-    if (toClaim > storageCount - resourceCount)
-      return storageCount - resourceCount;
+    if (toClaim > storageCapacity - resourceCount)
+      return storageCapacity - resourceCount;
     return toClaim;
   }, [unclaimedResource, lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (storageCount > 0) {
+  if (resourceId == BlockType.ElectricityPassiveResource) {
+    console.log("resourceCount: ", resourceCount);
+    console.log("storageCapacity: ", storageCapacity);
+    console.log("production: ", production);
+    console.log("lastClaimedAt: ", lastClaimedAt);
+    console.log("unclaimedResource: ", unclaimedResource);
+  }
+  if (storageCapacity > 0) {
     return (
       <div className="mb-1">
         <div className="flex justify-between">
@@ -312,29 +351,32 @@ Inventory.ResourceLabel = ({
             <img className="w-4 h-4 " src={resourceIcon}></img>
             <p>{name}</p>
           </div>
-          <p>{production}/BLOCK</p>
+          <p>{production ? `${production}/BLOCK` : "-"}</p>
         </div>
         <div
           className={`flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt ${
-            resourceCount + resourcesToClaim === storageCount
+            resourceCount + resourcesToClaim === storageCapacity
               ? "animate-pulse"
               : ""
           }`}
         >
           <div
             className="h-full bg-cyan-600"
-            style={{ width: `${(resourceCount / storageCount) * 100}%` }}
+            style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
           />
+
           <div
             className="h-full bg-cyan-800"
-            style={{ width: `${(resourcesToClaim / storageCount) * 100}%` }}
+            style={{
+              width: `${(resourcesToClaim / storageCapacity) * 100}%`,
+            }}
           />
           <div
             className="h-full bg-gray-900"
             style={{
               width: `${
-                ((storageCount - resourceCount - resourcesToClaim) /
-                  storageCount) *
+                ((storageCapacity - resourceCount - resourcesToClaim) /
+                  storageCapacity) *
                 100
               }%`,
             }}
@@ -343,9 +385,102 @@ Inventory.ResourceLabel = ({
         <div className="flex justify-between">
           <p>
             {resourceCount}{" "}
-            <span className="opacity-50">(+{resourcesToClaim})</span>
+            {resourcesToClaim > 0 && (
+              <span className="opacity-50">(+{resourcesToClaim})</span>
+            )}
           </p>
-          <b>{storageCount}</b>
+          <b>{storageCapacity}</b>
+        </div>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
+};
+
+Inventory.PassiveResourceLabel = ({
+  name,
+  resourceId,
+  entityIndex,
+}: {
+  name: string;
+  resourceId: EntityID;
+  entityIndex?: EntityIndex;
+}) => {
+  const blockNumber = BlockNumber.get();
+
+  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
+
+  const storageCapacity = useResourceCount(
+    StorageCapacity,
+    resourceId,
+    entityIndex
+  );
+
+  const production = useResourceCount(Mine, resourceId, entityIndex);
+
+  const lastClaimedAt = useResourceCount(
+    LastClaimedAt,
+    resourceId,
+    entityIndex
+  );
+
+  const unclaimedResource = useResourceCount(
+    UnclaimedResource,
+    resourceId,
+    entityIndex
+  );
+
+  const resourcesToClaim = useMemo(() => {
+    const toClaim =
+      unclaimedResource +
+      ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
+    if (toClaim > storageCapacity - resourceCount)
+      return storageCapacity - resourceCount;
+    return toClaim;
+  }, [unclaimedResource, lastClaimedAt, blockNumber]);
+
+  const resourceIcon = ResourceImage.get(resourceId);
+
+  if (resourceId == BlockType.ElectricityPassiveResource) {
+    console.log("resourceCount: ", resourceCount);
+    console.log("storageCapacity: ", storageCapacity);
+    console.log("production: ", production);
+    console.log("lastClaimedAt: ", lastClaimedAt);
+    console.log("unclaimedResource: ", unclaimedResource);
+  }
+  if (storageCapacity > 0) {
+    return (
+      <div className="mb-1">
+        <div className="flex justify-between">
+          <div className="flex gap-1">
+            <img className="w-4 h-4 " src={resourceIcon}></img>
+            <p>{name}</p>
+          </div>
+        </div>
+        <div>
+          <div
+            className="h-full bg-cyan-600"
+            style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
+          />
+          <div
+            className="h-full bg-cyan-800"
+            style={{ width: `${(resourcesToClaim / storageCapacity) * 100}%` }}
+          />
+          <div
+            className="h-full bg-gray-900"
+            style={{
+              width: `${
+                ((storageCapacity - resourceCount - resourcesToClaim) /
+                  storageCapacity) *
+                100
+              }%`,
+            }}
+          />
+        </div>
+        <div className="flex justify-between">
+          <p>{resourceCount}</p>
+          <b>{storageCapacity}</b>
         </div>
       </div>
     );

@@ -92,7 +92,7 @@ export const BlockType = {
   SulfurMine: keccak256("block.SulfurMine") as EntityID,
   StorageUnit: keccak256("block.StorageUnit") as EntityID,
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
-  LithiumCopperOxideFactory: keccak256(
+  PhotovoltaicCellFactory: keccak256(
     "block.LithiumCopperOxideFactory"
   ) as EntityID,
   SpaceFuelFactory: keccak256("block.SpaceFuelFactory") as EntityID,
@@ -223,13 +223,13 @@ export const BlockType = {
   AlloyFactory2Research: keccak256("research.AlloyFactory2") as EntityID,
   AlloyFactory3Research: keccak256("research.AlloyFactory3") as EntityID,
 
-  LithiumCopperOxideFactoryResearch: keccak256(
+  PhotovoltaicCellResearch: keccak256(
     "research.LithiumCopperOxideFactory"
   ) as EntityID,
-  LithiumCopperOxideFactory2Research: keccak256(
+  PhotovoltaicCell2Research: keccak256(
     "research.LithiumCopperOxideFactory2"
   ) as EntityID,
-  LithiumCopperOxideFactory3Research: keccak256(
+  PhotovoltaicCell3Research: keccak256(
     "research.LithiumCopperOxideFactory3"
   ) as EntityID,
 
@@ -366,108 +366,120 @@ export interface BackgroundImages {
   [x: EntityID]: string;
 }
 
-export const BackgroundImage = new Map<EntityID, string>([
+export const BackgroundImage = new Map<EntityID, string[]>([
   //landscape blocks
-  [BlockType.Water, "/img/terrain/water.gif"],
-  [BlockType.Sandstone, "/img/terrain/sandstone.png"],
-  [BlockType.Biofilm, "/img/terrain/biofilm.png"],
-  [BlockType.Alluvium, "/img/terrain/alluvium.png"],
-  [BlockType.Regolith, "/img/terrain/regolith.png"],
-  [BlockType.Bedrock, "/img/terrain/bedrock.png"],
-  [BlockType.Air, "/img/terrain/air.png"],
+  [BlockType.Water, ["/img/terrain/water.gif"]],
+  [BlockType.Sandstone, ["/img/terrain/sandstone.png"]],
+  [BlockType.Biofilm, ["/img/terrain/biofilm.png"]],
+  [BlockType.Alluvium, ["/img/terrain/alluvium.png"]],
+  [BlockType.Regolith, ["/img/terrain/regolith.png"]],
+  [BlockType.Bedrock, ["/img/terrain/bedrock.png"]],
+  [BlockType.Air, ["/img/terrain/air.png"]],
 
   //metal ores
-  [BlockType.Lithium, "/img/resource/lithium_ore_layer.png"],
-  [BlockType.Iron, "/img/resource/iron_ore_layer.png"],
-  [BlockType.Copper, "/img/resource/copper_ore_layer.png"],
-  [BlockType.Titanium, "/img/resource/titanium_ore_layer.png"],
-  [BlockType.Iridium, "/img/resource/iridium_ore_layer.png"],
-  [BlockType.Osmium, "/img/resource/osmium_ore_layer.png"],
-  [BlockType.Tungsten, "/img/resource/tungsten_ore_layer.png"],
+  [BlockType.Lithium, ["/img/resource/lithium_ore_layer.png"]],
+  [BlockType.Iron, ["/img/resource/iron_ore_layer.png"]],
+  [BlockType.Copper, ["/img/resource/copper_ore_layer.png"]],
+  [BlockType.Titanium, ["/img/resource/titanium_ore_layer.png"]],
+  [BlockType.Iridium, ["/img/resource/iridium_ore_layer.png"]],
+  [BlockType.Osmium, ["/img/resource/osmium_ore_layer.png"]],
+  [BlockType.Tungsten, ["/img/resource/tungsten_ore_layer.png"]],
 
   //mineral ores
-  [BlockType.Kimberlite, "/img/resource/kimberlite_ore_layer.png"],
-  [BlockType.Uraninite, "/img/resource/uraninite_ore_layer.png"],
-  [BlockType.Bolutite, "/img/resource/bolutite_ore_layer.png"],
+  [BlockType.Kimberlite, ["/img/resource/kimberlite_ore_layer.png"]],
+  [BlockType.Uraninite, ["/img/resource/uraninite_ore_layer.png"]],
+  [BlockType.Bolutite, ["/img/resource/bolutite_ore_layer.png"]],
 
   // debug buildings
-  [BlockType.DebugIronMine, "/img/building/minerdrill.gif"],
-  [BlockType.DebugIronPlateFactory, "/img/building/newplatingfactory.gif"],
-  [BlockType.DebugStorageBuilding, "/img/building/node.gif"],
-  // [BlockType.Miner, "/img/building/minerdrill.gif"],
-  // [BlockType.LithiumMiner, "/img/building/minerdrill.png"],
-  [BlockType.MainBase, "/img/building/mainbase.png"],
-  [BlockType.DebugNode, "/img/building/node.gif"],
-  // [BlockType.BulletFactory, "/img/building/bulletfactory.png"],
-  // [BlockType.Silo, "/img/building/silo.png"],
+  [BlockType.DebugIronMine, ["/img/building/minerdrill.gif"]],
+  [BlockType.DebugIronPlateFactory, ["/img/building/newplatingfactory.gif"]],
+  [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
+  [
+    BlockType.MainBase,
+    [
+      "/img/building/mainbase/mainbase.png",
+      "/img/building/mainbase/mainbase-level2.png",
+      "/img/building/mainbase/mainbase-level3.png",
+      "/img/building/mainbase/mainbase-level4.png",
+      "/img/building/mainbase/mainbase-level5.png",
+    ],
+  ],
+  [BlockType.DebugNode, ["/img/building/node.gif"]],
 
   // dummy buildings
-  [BlockType.Conveyor, "/img/building/conveyor.gif"],
+  [BlockType.Conveyor, ["/img/building/conveyor.gif"]],
 
   //new buildings
-  [BlockType.CopperMine, "/img/building/coppermine/copper-miner.gif"],
-  [BlockType.IronMine, "/img/building/ironmine/iron-miner.gif"],
-  [BlockType.LithiumMine, "/img/building/lithiummine/lithium-miner.gif"],
-  [BlockType.SulfurMine, "/img/building/sulfurmine/sulfur-miner.gif"],
-  [BlockType.StorageUnit, "/img/building/storageunit/storageunit-level1.png"],
+  [
+    BlockType.CopperMine,
+    [
+      "/img/building/coppermine/copper-miner.gif",
+      "/img/building/coppermine/copper-miner-level2.gif",
+      "/img/building/coppermine/copper-miner-level-3.png",
+    ],
+  ],
+  [
+    BlockType.IronMine,
+    [
+      "/img/building/ironmine/iron-miner.gif",
+      "/img/building/ironmine/iron-miner-level2.gif",
+      "/img/building/ironmine/iron-miner-level-3.png",
+    ],
+  ],
+  [
+    BlockType.LithiumMine,
+    [
+      "/img/building/lithiummine/lithium-miner.gif",
+      "/img/building/lithiummine/lithium-miner-level2.gif",
+      "/img/building/lithiummine/lithium-miner-level-3.png",
+    ],
+  ],
+  [
+    BlockType.SulfurMine,
+    [
+      "/img/building/sulfurmine/sulfur-miner.gif",
+      "/img/building/sulfurmine/sulfur-miner-level2.gif",
+      "/img/building/sulfurmine/sulfur-miner-level-3.png",
+    ],
+  ],
+  [
+    BlockType.StorageUnit,
+    [
+      "/img/building/storageunit/storageunit-level1.png",
+      "/img/building/storageunit/storageunit-level2.gif",
+    ],
+  ],
   [
     BlockType.IronPlateFactory,
-    "/img/building/ironplatingfactory/ironplatingfactory-level1.gif",
+    [
+      "/img/building/ironplatingfactory/ironplatingfactory-level1.gif",
+      "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
+    ],
   ],
   [
     BlockType.AlloyFactory,
-    "/img/building/alloyfactory/alloyfactory-level1.gif",
+    ["/img/building/alloyfactory/alloyfactory-level1.gif"],
   ],
-  [BlockType.LithiumCopperOxideFactory, "/img/building/newplatingfactory.gif"],
-  [BlockType.SolarPanel, "/img/building/solarpanels/solarpanel-level1.png"],
-  [BlockType.HousingUnit, "/img/building/newplatingfactory.gif"],
-  [BlockType.PropulsionFuelFactory, "/img/building/propulsionfuelfactory.gif"],
-  [BlockType.SpaceFuelFactory, "/img/building/newplatingfactory.gif"],
-
-  //actual buildings
-  // [BlockType.BasicMiner, "/img/building/minerdrill.gif"],
-  // [BlockType.Node, "/img/building/node.gif"],
-  // [BlockType.PlatingFactory, "/img/building/newplatingfactory.gif"],
-  // [BlockType.BasicBatteryFactory, "/img/building/newbasicbatteryfactory.gif"],
-  // [BlockType.KineticMissileFactory, "/img/building/kineticmissilefactory.png"],
-  // [BlockType.ProjectileLauncher, "/img/building/projectilelauncher.png"],
-  // [BlockType.HardenedDrill, "/img/building/hardeneddrill.gif"],
-  // [BlockType.DenseMetalRefinery, "/img/building/densemetalrefinery.gif"],
-  // [
-  //   BlockType.AdvancedBatteryFactory,
-  //   "/img/building/advancedbatteryfactory.gif",
-  // ],
-  // [BlockType.HighTempFoundry, "/img/building/hightempfoundry.gif"],
-  // [
-  //   BlockType.PrecisionMachineryFactory,
-  //   "/img/building/precisionmachineryfactory.gif",
-  // ],
-  // [
-  //   BlockType.IridiumDrillbitFactory,
-  //   "/img/building/iridiumdrillbitfactory.gif",
-  // ],
-  // [
-  //   BlockType.PrecisionPneumaticDrill,
-  //   "/img/building/precisionpneumaticdrill.gif",
-  // ],
-  // [BlockType.PenetratorFactory, "/img/building/penetratorfactory.png"],
-  // [
-  //   BlockType.PenetratingMissileFactory,
-  //   "/img/building/penetratingmissilefactory.png",
-  // ],
-  // [BlockType.MissileLaunchComplex, "/img/building/missilelaunchcomplex.gif"],
-  // [BlockType.HighEnergyLaserFactory, "/img/building/laserfactory.gif"],
-  // [
-  //   BlockType.ThermobaricWarheadFactory,
-  //   "/img/building/thermobaricwarheadfactory.png",
-  // ],
-  // [
-  //   BlockType.ThermobaricMissileFactory,
-  //   "/img/building/thermobaricmissilefactory.png",
-  // ],
-  // [BlockType.KimberliteCatalystFactory, "/img/building/kimberlitecatalyst.gif"],
-
-  // TODO: crafted items
+  [
+    BlockType.PhotovoltaicCellFactory,
+    [
+      "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
+      "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
+    ],
+  ],
+  [
+    BlockType.SolarPanel,
+    [
+      "/img/building/solarpanels/solarpanel-level1.png",
+      "/img/building/solarpanels/solarpanel-level2.png",
+    ],
+  ],
+  [BlockType.HousingUnit, ["/img/building/newplatingfactory.gif"]],
+  [
+    BlockType.PropulsionFuelFactory,
+    ["/img/building/propulsionfuelfactory.gif"],
+  ],
+  [BlockType.SpaceFuelFactory, ["/img/building/newplatingfactory.gif"]],
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
@@ -489,7 +501,7 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.IronMine3Research, "/img/building/ironmine/iron-miner-level3.png"],
   [BlockType.IronMine4Research, "/img/building/ironmine/iron-miner-level3.png"],
 
-  [BlockType.CopperMineResearch, "/img/resource/copper_resource.png"],
+  [BlockType.CopperMineResearch, "/img/building/coppermine/copper-miner.gif"],
   [
     BlockType.CopperMine2Research,
     "/img/building/coppermine/copper-miner-level2.gif",
@@ -544,7 +556,7 @@ export const ResearchImage = new Map<EntityID, string>([
 
   [
     BlockType.AlloyFactoryResearch,
-    "/img/building/alloyfactory/allowfactory-level1.gif",
+    "/img/building/alloyfactory/alloyfactory-level1.gif",
   ],
   [
     BlockType.AlloyFactory2Research,
@@ -556,25 +568,33 @@ export const ResearchImage = new Map<EntityID, string>([
   ],
 
   [
-    BlockType.LithiumCopperOxideFactoryResearch,
-    "/img/building/newplatingfactory.gif",
+    BlockType.PhotovoltaicCellResearch,
+    "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
   ],
   [
-    BlockType.LithiumCopperOxideFactory2Research,
-    "/img/building/newplatingfactory.gif",
+    BlockType.PhotovoltaicCell2Research,
+    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
   ],
   [
-    BlockType.LithiumCopperOxideFactory3Research,
-    "/img/building/newplatingfactory.gif",
+    BlockType.PhotovoltaicCell3Research,
+    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
   ],
 
-  [BlockType.SpaceFuelFactoryResearch, "/img/building/newplatingfactory.gif"],
-  [BlockType.SpaceFuelFactory2Research, "/img/building/newplatingfactory.gif"],
-  [BlockType.SpaceFuelFactory3Research, "/img/building/newplatingfactory.gif"],
+  [BlockType.SpaceFuelFactoryResearch, "/img/building/spacefuel.gif"],
+  [BlockType.SpaceFuelFactory2Research, "/img/building/spacefuel.gif"],
+  [BlockType.SpaceFuelFactory3Research, "/img/building/spacefuel.gif"],
 
   [
     BlockType.SolarPanelResearch,
     "/img/building/solarpanels/solarpanel-level1.png",
+  ],
+  [
+    BlockType.SolarPanel2Research,
+    "/img/building/solarpanels/solarpanel-level2.png",
+  ],
+  [
+    BlockType.SolarPanel2Research,
+    "/img/building/solarpanels/solarpanel-level2.png",
   ],
 
   [BlockType.HousingUnitResearch, "/img/building/newplatingfactory.gif"],

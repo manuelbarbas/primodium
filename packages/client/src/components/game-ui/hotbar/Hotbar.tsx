@@ -6,19 +6,16 @@ import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
 import HotbarPagination from "./HotbarPagination";
 import { useHotbarContent } from "./useHotbarContent";
-import wrap from "./wrap";
-import { Action } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
 import {
-  GameReady,
   SelectedAction,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
+import { wrap } from "src/util/common";
 
 const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const gameReady = GameReady.use();
   const keybinds = primodium.hooks.useKeybinds();
   const [activeBar, setActiveBar] = useState(0);
   const activeBarRef = useRef(0);
@@ -26,39 +23,6 @@ const Hotbar: React.FC = () => {
   activeBarRef.current = activeBar;
 
   useEffect(() => {
-    if (!gameReady) return;
-
-    const hotkeyListener = (index: number) => {
-      if (index > hotbarContent[activeBarRef.current].items.length - 1) return;
-
-      const item = hotbarContent[activeBarRef.current].items[index];
-
-      const building = item.blockType;
-
-      const selectedBuilding = SelectedBuilding.get()?.value;
-
-      if (selectedBuilding === building) {
-        SelectedBuilding.remove();
-        SelectedAction.remove();
-        return;
-      }
-
-      SelectedBuilding.set({ value: building });
-
-      const action = item.action ?? Action.PlaceBuilding;
-      SelectedAction.set({ value: action });
-    };
-
-    let hotkeys: { dispose: () => void }[] = [];
-    for (let i = 0; i < 10; i++) {
-      const hotkey = primodium.input.addListener(
-        KeybindActions[`Hotbar${i}` as keyof typeof KeybindActions],
-        () => hotkeyListener(i)
-      );
-
-      hotkeys.push(hotkey);
-    }
-
     const nextHotbar = primodium.input.addListener(
       KeybindActions.NextHotbar,
       () => {
@@ -83,12 +47,12 @@ const Hotbar: React.FC = () => {
     });
 
     return () => {
-      hotkeys.forEach((hotkey) => hotkey.dispose());
+      // hotkeys.forEach((hotkey) => hotkey.dispose());
       nextHotbar.dispose();
       prevHotbar.dispose();
       esc.dispose();
     };
-  }, [gameReady, keybinds, hotbarContent]);
+  }, [keybinds, hotbarContent]);
 
   return (
     <div className=" z-[1000] viewport-container fixed bottom-0 left-1/2 -translate-x-1/2 flex justify-center text-white drop-shadow-xl font-mono select-none">
