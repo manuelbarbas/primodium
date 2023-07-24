@@ -12,7 +12,6 @@ import { Coord } from "@latticexyz/utils";
 import { Network } from "src/network/layer";
 import { defineComponents } from "../network/components";
 import { BlockType, DisplayKeyPair } from "./constants";
-import { world } from "src/network/world";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
