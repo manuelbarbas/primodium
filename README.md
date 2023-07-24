@@ -27,7 +27,7 @@ mud test
 For production deployment, Primodium is currently live on the 0xPARC/Lattice testnet. Set the `isDebug()` function to return false, then deploy the contracts with the following command in the `packages/contracts` directory.
 
 ```
-npx mud deploy --chainSpec chainSpecSkyStrife.json --deployerPrivateKey <testnet key>
+npx mud deploy --chainSpec chainSpecCaldera.json --deployerPrivateKey <testnet key> --config ./deploy-live.json
 ```
 
 The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world address>` with the rpc settings to the 0xPARC/Lattice testnet.
