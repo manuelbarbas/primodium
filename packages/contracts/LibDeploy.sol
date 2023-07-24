@@ -29,11 +29,13 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
-import { BuildingComponent, ID as BuildingComponentID } from "components/BuildingComponent.sol";
+import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
+import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
@@ -42,6 +44,10 @@ import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } fr
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
+import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
+import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
+import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
@@ -49,26 +55,36 @@ import { StarterPackSystem, ID as StarterPackSystemID } from "systems/StarterPac
 import { AttackSystem, ID as AttackSystemID } from "systems/AttackSystem.sol";
 import { IncrementSystem, ID as IncrementSystemID } from "systems/IncrementSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
+import { PostBuildSystem, ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "systems/DestroySystem.sol";
+import { PostDestroySystem, ID as PostDestroySystemID } from "systems/PostDestroySystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "systems/BuildPathSystem.sol";
+import { BuildPathFromFactoryToMainBaseSystem, ID as BuildPathFromFactoryToMainBaseSystemID } from "systems/BuildPathFromFactoryToMainBaseSystem.sol";
+import { BuildPathFromMineToFactorySystem, ID as BuildPathFromMineToFactorySystemID } from "systems/BuildPathFromMineToFactorySystem.sol";
+import { BuildPathFromMineToMainBaseSystem, ID as BuildPathFromMineToMainBaseSystemID } from "systems/BuildPathFromMineToMainBaseSystem.sol";
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "systems/DestroyPathSystem.sol";
+import { PostDestroyPathSystem, ID as PostDestroyPathSystemID } from "systems/PostDestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
 import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "systems/ClaimFromFactorySystem.sol";
 import { CraftSystem, ID as CraftSystemID } from "systems/CraftSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "systems/UpgradeSystem.sol";
-import { PostUpgradeSystem, ID as PostUpgradeSystemID } from "systems/PostUpgradeSystem.sol";
+import { PostUpgradeMineSystem, ID as PostUpgradeMineSystemID } from "systems/PostUpgradeMineSystem.sol";
+import { PostUpgradeFactorySystem, ID as PostUpgradeFactorySystemID } from "systems/PostUpgradeFactorySystem.sol";
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "systems/DebugAcquireResourcesSystem.sol";
 import { DebugAcquireResourcesBasedOnRequirementSystem, ID as DebugAcquireResourcesBasedOnRequirementSystemID } from "systems/DebugAcquireResourcesBasedOnRequirementSystem.sol";
 import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
 import { DebugRemoveBuildingRequirementsSystem, ID as DebugRemoveBuildingRequirementsSystemID } from "systems/DebugRemoveBuildingRequirementsSystem.sol";
 import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "systems/DebugRemoveUpgradeRequirementsSystem.sol";
 import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from "systems/DebugRemoveBuildLimitSystem.sol";
+import { BlueprintSystem, ID as BlueprintSystemID } from "systems/BlueprintSystem.sol";
 import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "systems/DebugAcquireStorageForAllResourcesSystem.sol";
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "systems/ComponentDevSystem.sol";
 
 // Initializer libraries (requires 'libraries=...' remapping in project's remappings.txt)
 import { LibBuildingDesignInitializer } from "libraries/LibBuildingDesignInitializer.sol";
 import { LibBuildingLimitDesignInitializer } from "libraries/LibBuildingLimitDesignInitializer.sol";
 import { LibTechnologyDesignInitializer } from "libraries/LibTechnologyDesignInitializer.sol";
+import { LibBlueprintInitializer } from "libraries/LibBlueprintInitializer.sol";
 import { LibDebugInitializer } from "libraries/LibDebugInitializer.sol";
 
 struct DeployResult {
@@ -148,8 +164,8 @@ library LibDeploy {
       comp = new StarterPackInitializedComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying BuildingComponent");
-      comp = new BuildingComponent(address(result.world));
+      console.log("Deploying BuildingLevelComponent");
+      comp = new BuildingLevelComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying RequiredResearchComponent");
@@ -166,6 +182,14 @@ library LibDeploy {
 
       console.log("Deploying IgnoreBuildLimitComponent");
       comp = new IgnoreBuildLimitComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying BuildingTilesComponent");
+      comp = new BuildingTilesComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying BlueprintComponent");
+      comp = new BlueprintComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying StorageCapacityComponent");
@@ -199,6 +223,22 @@ library LibDeploy {
       console.log("Deploying MaxLevelComponent");
       comp = new MaxLevelComponent(address(result.world));
       console.log(address(comp));
+
+      console.log("Deploying RequiredTileComponent");
+      comp = new RequiredTileComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying RequiredPassiveResourceComponent");
+      comp = new RequiredPassiveResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying PassiveResourceProductionComponent");
+      comp = new PassiveResourceProductionComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying IsDebugComponent");
+      comp = new IsDebugComponent(address(result.world));
+      console.log(address(comp));
     } 
     
     // Deploy systems 
@@ -212,6 +252,7 @@ library LibDeploy {
       LibBuildingDesignInitializer.init(result.world);
       LibBuildingLimitDesignInitializer.init(result.world);
       LibTechnologyDesignInitializer.init(result.world);
+      LibBlueprintInitializer.init(result.world);
       LibDebugInitializer.init(result.world);
     }
   }
@@ -278,11 +319,20 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
-    authorizeWriter(components, BuildingComponentID, address(system));
+    authorizeWriter(components, BuildingLevelComponentID, address(system));
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
-    authorizeWriter(components, BuildingLimitComponentID, address(system));
+    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying PostBuildSystem");
+    system = new PostBuildSystem(world, address(components));
+    world.registerSystem(address(system), PostBuildSystemID);
+    authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, StorageCapacityComponentID, address(system));
+    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, BuildingLimitComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DestroySystem");
@@ -295,17 +345,39 @@ library LibDeploy {
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
-    authorizeWriter(components, BuildingComponentID, address(system));
+    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    authorizeWriter(components, BuildingLevelComponentID, address(system));
     authorizeWriter(components, BuildingLimitComponentID, address(system));
+    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying PostDestroySystem");
+    system = new PostDestroySystem(world, address(components));
+    world.registerSystem(address(system), PostDestroySystemID);
     authorizeWriter(components, StorageCapacityComponentID, address(system));
+    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathSystem");
     system = new BuildPathSystem(world, address(components));
     world.registerSystem(address(system), BuildPathSystemID);
-    authorizeWriter(components, TileComponentID, address(system));
-    authorizeWriter(components, OwnedByComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying BuildPathFromFactoryToMainBaseSystem");
+    system = new BuildPathFromFactoryToMainBaseSystem(world, address(components));
+    world.registerSystem(address(system), BuildPathFromFactoryToMainBaseSystemID);
+    authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, UnclaimedResourceComponentID, address(system));
+    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying BuildPathFromMineToFactorySystem");
+    system = new BuildPathFromMineToFactorySystem(world, address(components));
+    world.registerSystem(address(system), BuildPathFromMineToFactorySystemID);
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
@@ -313,6 +385,15 @@ library LibDeploy {
     authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying BuildPathFromMineToMainBaseSystem");
+    system = new BuildPathFromMineToMainBaseSystem(world, address(components));
+    world.registerSystem(address(system), BuildPathFromMineToMainBaseSystemID);
+    authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, UnclaimedResourceComponentID, address(system));
+    authorizeWriter(components, MineComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DestroyPathSystem");
@@ -327,6 +408,18 @@ library LibDeploy {
     authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying PostDestroyPathSystem");
+    system = new PostDestroyPathSystem(world, address(components));
+    world.registerSystem(address(system), PostDestroyPathSystemID);
+    authorizeWriter(components, StorageCapacityComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, UnclaimedResourceComponentID, address(system));
+    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying ClaimFromMineSystem");
@@ -366,20 +459,29 @@ library LibDeploy {
     console.log("Deploying UpgradeSystem");
     system = new UpgradeSystem(world, address(components));
     world.registerSystem(address(system), UpgradeSystemID);
-    authorizeWriter(components, BuildingComponentID, address(system));
+    authorizeWriter(components, BuildingLevelComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
+    authorizeWriter(components, StorageCapacityComponentID, address(system));
+    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
     console.log(address(system));
 
-    console.log("Deploying PostUpgradeSystem");
-    system = new PostUpgradeSystem(world, address(components));
-    world.registerSystem(address(system), PostUpgradeSystemID);
-    authorizeWriter(components, StorageCapacityComponentID, address(system));
+    console.log("Deploying PostUpgradeMineSystem");
+    system = new PostUpgradeMineSystem(world, address(components));
+    world.registerSystem(address(system), PostUpgradeMineSystemID);
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, UnclaimedResourceComponentID, address(system));
+    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying PostUpgradeFactorySystem");
+    system = new PostUpgradeFactorySystem(world, address(components));
+    world.registerSystem(address(system), PostUpgradeFactorySystemID);
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
-    authorizeWriter(components, LastClaimedAtComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DebugAcquireResourcesSystem");
@@ -420,11 +522,54 @@ library LibDeploy {
     authorizeWriter(components, IgnoreBuildLimitComponentID, address(system));
     console.log(address(system));
 
+    console.log("Deploying BlueprintSystem");
+    system = new BlueprintSystem(world, address(components));
+    world.registerSystem(address(system), BlueprintSystemID);
+    authorizeWriter(components, BlueprintComponentID, address(system));
+    console.log(address(system));
+
     console.log("Deploying DebugAcquireStorageForAllResourcesSystem");
     system = new DebugAcquireStorageForAllResourcesSystem(world, address(components));
     world.registerSystem(address(system), DebugAcquireStorageForAllResourcesSystemID);
     authorizeWriter(components, StorageCapacityComponentID, address(system));
     authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying ComponentDevSystem");
+    system = new ComponentDevSystem(world, address(components));
+    world.registerSystem(address(system), ComponentDevSystemID);
+    authorizeWriter(components, CounterComponentID, address(system));
+    authorizeWriter(components, GameConfigComponentID, address(system));
+    authorizeWriter(components, TileComponentID, address(system));
+    authorizeWriter(components, OwnedByComponentID, address(system));
+    authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, LastBuiltAtComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, LastResearchedAtComponentID, address(system));
+    authorizeWriter(components, HealthComponentID, address(system));
+    authorizeWriter(components, ItemComponentID, address(system));
+    authorizeWriter(components, ResearchComponentID, address(system));
+    authorizeWriter(components, MainBaseInitializedComponentID, address(system));
+    authorizeWriter(components, StarterPackInitializedComponentID, address(system));
+    authorizeWriter(components, BuildingLevelComponentID, address(system));
+    authorizeWriter(components, RequiredResearchComponentID, address(system));
+    authorizeWriter(components, RequiredResourcesComponentID, address(system));
+    authorizeWriter(components, BuildingLimitComponentID, address(system));
+    authorizeWriter(components, IgnoreBuildLimitComponentID, address(system));
+    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    authorizeWriter(components, BlueprintComponentID, address(system));
+    authorizeWriter(components, StorageCapacityComponentID, address(system));
+    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
+    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, UnclaimedResourceComponentID, address(system));
+    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
+    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, MaxLevelComponentID, address(system));
+    authorizeWriter(components, RequiredTileComponentID, address(system));
+    authorizeWriter(components, RequiredPassiveResourceComponentID, address(system));
+    authorizeWriter(components, PassiveResourceProductionComponentID, address(system));
+    authorizeWriter(components, IsDebugComponentID, address(system));
     console.log(address(system));
   }
 }

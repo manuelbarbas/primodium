@@ -16,6 +16,7 @@ export { BuildingLimitComponent__factory } from "./BuildingLimitComponent__facto
 export { BuildingTilesComponent__factory } from "./BuildingTilesComponent__factory";
 export { ClaimFromFactorySystem__factory } from "./ClaimFromFactorySystem__factory";
 export { ClaimFromMineSystem__factory } from "./ClaimFromMineSystem__factory";
+export { ComponentDevSystem__factory } from "./ComponentDevSystem__factory";
 export { CoordComponent__factory } from "./CoordComponent__factory";
 export { CounterComponent__factory } from "./CounterComponent__factory";
 export { CraftSystem__factory } from "./CraftSystem__factory";
@@ -71,7 +72,6 @@ export { System__factory } from "./System__factory";
 export { SystemStorage__factory } from "./SystemStorage__factory";
 export { TileComponent__factory } from "./TileComponent__factory";
 export { Uint256ArrayComponent__factory } from "./Uint256ArrayComponent__factory";
-export { Uint256Component__factory } from "./Uint256Component__factory";
 export { Uint32Component__factory } from "./Uint32Component__factory";
 export { UnclaimedResourceComponent__factory } from "./UnclaimedResourceComponent__factory";
 export { UpgradeSystem__factory } from "./UpgradeSystem__factory";
