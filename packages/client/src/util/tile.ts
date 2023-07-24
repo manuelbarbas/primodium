@@ -3,6 +3,7 @@ import {
   EntityID,
   Has,
   HasValue,
+  Not,
   getComponentValue,
   runQuery,
 } from "@latticexyz/recs";
@@ -195,7 +196,10 @@ export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
 export const getBuildingAtCoord = (coord: Coord, network: Network) => {
   const { components } = network;
 
-  const entities = runQuery([HasValue(components.Position, coord)]);
+  const entities = runQuery([
+    HasValue(components.Position, coord),
+    Not(components.BuildingType),
+  ]);
 
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];
