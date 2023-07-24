@@ -13,7 +13,7 @@ contract DebugIgnoreBuildLimitForBuildingSystem is System {
 
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 buildingId = abi.decode(args, (uint256));
-    if (!LibDebug.isDebug(world)) {
+    if (!LibDebug.isDebug()) {
       revert("Not in debug mode");
     }
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(

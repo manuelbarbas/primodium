@@ -31,8 +31,7 @@
     "MaxLevelComponent",
     "RequiredTileComponent",
     "RequiredPassiveResourceComponent",
-    "PassiveResourceProductionComponent",
-    "IsDebugComponent"
+    "PassiveResourceProductionComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",

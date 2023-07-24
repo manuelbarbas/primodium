@@ -12,7 +12,7 @@ contract DebugRemoveUpgradeRequirementsSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory args) public returns (bytes memory) {
-    if (!LibDebug.isDebug(world)) {
+    if (!LibDebug.isDebug()) {
       revert("Not in debug mode");
     }
     uint256 buildingId = abi.decode(args, (uint256));
@@ -25,7 +25,7 @@ contract DebugRemoveUpgradeRequirementsSystem is System {
     uint256 buildingId,
     uint256 level
   ) public returns (bytes memory) {
-    if (!LibDebug.isDebug(world)) {
+    if (!LibDebug.isDebug()) {
       revert("Not in debug mode");
     }
 
