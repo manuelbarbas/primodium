@@ -180,6 +180,11 @@ export function defineComponents(world: World) {
         contractId: "component.UnclaimedResource",
       },
     }),
+    IsDebug: defineBoolComponent(world, {
+      metadata: {
+        contractId: "component.IsDebug",
+      },
+    }),
     // TODO: component data for crafting recipes
   };
 }
