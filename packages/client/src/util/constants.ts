@@ -70,7 +70,15 @@ export const BlockType = {
   DebugIronMineNoTileReqID: keccak256(
     "block.DebugIronMineNoTileReq"
   ) as EntityID,
+  DebugCopperMine: keccak256("block.DebugCopperMine") as EntityID,
+  DebugLithiumMine: keccak256("block.DebugLithiumMine") as EntityID,
+
   DebugIronPlateFactory: keccak256("block.DebugIronPlateFactory") as EntityID,
+  DebugAlloyFactory: keccak256("block.DebugAlloyFactory") as EntityID,
+  DebugLithiumCopperOxideFactory: keccak256(
+    "block.DebugLithiumCopperOxideFactory"
+  ) as EntityID,
+  DebugSolarPanel: keccak256("block.DebugSolarPanel") as EntityID,
   DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
   DebugDemolishBuilding: keccak256("block.DebugDemolishBuilding") as EntityID,
   DebugDemolishPath: keccak256("block.DebugDemolishPath") as EntityID,
@@ -392,8 +400,17 @@ export const BackgroundImage = new Map<EntityID, string[]>([
 
   // debug buildings
   [BlockType.DebugIronMine, ["/img/building/minerdrill.gif"]],
+  [BlockType.DebugCopperMine, ["/img/building/minerdrill.gif"]],
+  [BlockType.DebugLithiumMine, ["/img/building/minerdrill.gif"]],
   [BlockType.DebugIronPlateFactory, ["/img/building/newplatingfactory.gif"]],
+  [BlockType.DebugAlloyFactory, ["/img/building/newplatingfactory.gif"]],
+  [
+    BlockType.DebugLithiumCopperOxideFactory,
+    ["/img/building/newplatingfactory.gif"],
+  ],
   [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
+  [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
+
   [
     BlockType.MainBase,
     [
