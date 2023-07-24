@@ -168,21 +168,28 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
               <div className="mt-1 text-center text-md font-bold text-slate-100/50">
                 {subtitle}
               </div>
-              <div className="mt-2 flex justify-center items-center text-sm">
-                {recipe.map((resource) => {
-                  const resourceImage = ResourceImage.get(resource.id)!;
-                  const resourceName = BlockIdToKey[resource.id];
-                  return (
-                    <ResourceIconTooltip
-                      key={resource.id}
-                      image={resourceImage}
-                      resourceId={resource.id}
-                      name={resourceName}
-                      amount={resource.amount}
-                    />
-                  );
-                })}
-              </div>
+              {!isResearched && (
+                <div className="mt-2 flex justify-center items-center text-sm">
+                  {recipe.map((resource) => {
+                    const resourceImage = ResourceImage.get(resource.id)!;
+                    const resourceName = BlockIdToKey[resource.id];
+                    return (
+                      <ResourceIconTooltip
+                        key={resource.id}
+                        image={resourceImage}
+                        resourceId={resource.id}
+                        name={resourceName}
+                        amount={resource.amount}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+              {isResearched && (
+                <div className="mt-2 flex justify-center items-center text-sm">
+                  Max Level
+                </div>
+              )}
             </div>
 
             <div className="text-xs text-center bg-slate-900 py-4 px-1 italic ">
