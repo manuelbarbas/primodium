@@ -11,7 +11,7 @@ export const upgrade = async (coord: Coord, network: Network) => {
   setTransactionLoading(true);
   await execute(
     systems["system.Upgrade"].executeTyped(coord, {
-      gasLimit: 29_000_000,
+      gasLimit: 5_000_000,
     }),
     providers,
     setNotification
