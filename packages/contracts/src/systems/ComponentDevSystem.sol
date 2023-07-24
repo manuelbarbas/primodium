@@ -15,7 +15,7 @@ contract ComponentDevSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory arguments) public returns (bytes memory) {
-    require(LibDebug.isDebug(), "[ComponentDevSystem]: not debug mode");
+    require(LibDebug.isDebug(world), "[ComponentDevSystem]: not debug mode");
     (uint256 componentId, uint256 entity, bytes memory value) = abi.decode(arguments, (uint256, uint256, bytes));
     IComponent c = IComponent(getAddressById(components, componentId));
     if (value.length == 0) {
