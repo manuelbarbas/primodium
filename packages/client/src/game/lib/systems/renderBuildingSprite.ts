@@ -62,7 +62,7 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
         y: -pixelCoord.y,
         buildingType: buildingType as EntityID,
         selected,
-        level: buildingLevel,
+        level: parseInt(buildingLevel ? buildingLevel.toString() : "1"),
       })
     );
   };

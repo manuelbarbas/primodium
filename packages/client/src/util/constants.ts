@@ -433,7 +433,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/coppermine/copper-miner.gif",
       "/img/building/coppermine/copper-miner-level2.gif",
-      "/img/building/coppermine/copper-miner-level-3.png",
+      "/img/building/coppermine/copper-miner-level3.png",
     ],
   ],
   [
@@ -441,7 +441,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/ironmine/iron-miner.gif",
       "/img/building/ironmine/iron-miner-level2.gif",
-      "/img/building/ironmine/iron-miner-level-3.png",
+      "/img/building/ironmine/iron-miner-level3.png",
     ],
   ],
   [
@@ -449,7 +449,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/lithiummine/lithium-miner.gif",
       "/img/building/lithiummine/lithium-miner-level2.gif",
-      "/img/building/lithiummine/lithium-miner-level-3.png",
+      "/img/building/lithiummine/lithium-miner-level3.png",
     ],
   ],
   [
@@ -457,7 +457,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/sulfurmine/sulfur-miner.gif",
       "/img/building/sulfurmine/sulfur-miner-level2.gif",
-      "/img/building/sulfurmine/sulfur-miner-level-3.png",
+      "/img/building/sulfurmine/sulfur-miner-level3.png",
     ],
   ],
   [
