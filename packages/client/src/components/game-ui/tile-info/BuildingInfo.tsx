@@ -37,12 +37,13 @@ export const BuildingInfo: React.FC<{
     world.entityToIndex.get(building)
   )?.value;
 
-  const isOwner = owner ?? "" == address.toLowerCase();
+  const isOwner = owner === address.toLowerCase();
 
-  const ownerName =
-    isOwner || !owner
-      ? "You"
-      : owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4);
+  const ownerName = isOwner
+    ? "You"
+    : owner
+    ? owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4)
+    : "Unknown";
   const percentHealth =
     (health ?? getBuildingMaxHealth(buildingType ?? BlockType.Air)) /
     getBuildingMaxHealth(buildingType ?? BlockType.Air);

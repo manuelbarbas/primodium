@@ -3,6 +3,7 @@ import {
   EntityID,
   Has,
   HasValue,
+  Not,
   getComponentValue,
   runQuery,
 } from "@latticexyz/recs";
@@ -11,6 +12,7 @@ import { Coord } from "@latticexyz/utils";
 import { Network } from "src/network/layer";
 import { defineComponents } from "../network/components";
 import { BlockType, DisplayKeyPair } from "./constants";
+import { world } from "src/network/world";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -195,7 +197,10 @@ export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
 export const getBuildingAtCoord = (coord: Coord, network: Network) => {
   const { components } = network;
 
-  const entities = runQuery([HasValue(components.Position, coord)]);
+  const entities = runQuery([
+    HasValue(components.Position, coord),
+    Not(components.BuildingType),
+  ]);
 
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];

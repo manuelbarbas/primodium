@@ -37,7 +37,7 @@ export const renderBuildingSprite = (scene: Scene, network: Network) => {
     if (!buildingType || !tilePosition) return;
 
     const selected =
-      getComponentValue(SelectedBuilding, singletonIndex)?.value == entityId;
+      getComponentValue(SelectedBuilding, singletonIndex)?.value === entityId;
 
     // don't render beyond coord map limitation
     if (
