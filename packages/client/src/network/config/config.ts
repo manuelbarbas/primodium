@@ -76,5 +76,6 @@ export const getNetworkLayerConfig = (
     privateKey,
     defaultWalletAddress: address,
     faucetMinDripAmount: chainConfig.tempFaucetMinDripAmount,
+    encoders: DEV,
   };
 };
