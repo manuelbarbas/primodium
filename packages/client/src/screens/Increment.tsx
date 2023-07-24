@@ -1,7 +1,6 @@
 import { SingletonID } from "@latticexyz/network";
 import { useComponentValue } from "@latticexyz/react";
 import { useMud } from "../context/MudContext";
-import { execute } from "../network/actions";
 import { useMemo, useState } from "react";
 import {
   BackgroundImage,
@@ -9,10 +8,11 @@ import {
   ResourceImage,
 } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
+import { increment } from "src/util/web3";
 
 export default function Increment() {
-  const { components, systems, singletonIndex, offChainComponents, providers } =
-    useMud();
+  const network = useMud();
+  const { components, singletonIndex, offChainComponents } = network;
 
   const counter = useComponentValue(components.Counter, singletonIndex);
   const doubleCounter = useComponentValue(
@@ -31,10 +31,7 @@ export default function Increment() {
         type="button"
         onClick={(event) => {
           event.preventDefault();
-          execute(
-            systems["system.Increment"].executeTyped(SingletonID),
-            providers
-          );
+          increment(SingletonID, network);
         }}
       >
         Increment

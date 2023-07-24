@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
-import { BigNumber } from "ethers";
 
 import { useMud } from "../../../context/MudContext";
 import { getRecipe } from "../../../util/resource";
@@ -11,12 +10,9 @@ import {
   ResourceImage,
 } from "../../../util/constants";
 import { useAccount } from "../../../hooks/useAccount";
-import { execute } from "../../../network/actions";
 import { hashKeyEntityAndTrim } from "../../../util/encode";
 
-import { useGameStore } from "../../../store/GameStore";
 import Spinner from "../../Spinner";
-import { useNotificationStore } from "../../../store/NotificationStore";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import {
   getBuildingResearchRequirement,
@@ -25,11 +21,13 @@ import {
 import { useComponentValue } from "@latticexyz/react";
 import { GameButton } from "src/components/shared/GameButton";
 import React from "react";
+import { research } from "src/util/web3";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {
     // fetch whether research is completed
-    const { components, world, singletonIndex, systems, providers } = useMud();
+    const network = useMud();
+    const { components, world, singletonIndex } = network;
     const { address } = useAccount();
     const { name, levels, description } = data;
 
@@ -112,30 +110,13 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       researchRequirement,
       isMainBaseLevelRequirementsMet,
     ]);
-
-    const [_, setTransactionLoading] = useGameStore((state) => [
-      state.transactionLoading,
-      state.setTransactionLoading,
-    ]);
-
-    const [setNotification] = useNotificationStore((state) => [
-      state.setNotification,
-    ]);
-
     // New state so not every other research item button shows loading when only current research button is clicked.
     const [userClickedLoading, setUserClickedLoading] = useState(false);
 
-    const research = useCallback(async () => {
+    const executeResearch = useCallback(async () => {
       setUserClickedLoading(true);
-      setTransactionLoading(true);
-      await execute(
-        systems["system.Research"].executeTyped(BigNumber.from(researchId), {
-          gasLimit: 1_000_000,
-        }),
-        providers,
-        setNotification
-      );
-      setTransactionLoading(false);
+      await research(researchId, network);
+
       setUserClickedLoading(false);
     }, []);
 
@@ -213,7 +194,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
               <div className="flex items-center w-full justify-center">
                 <GameButton
                   id={`${name}-research`}
-                  onClick={research}
+                  onClick={executeResearch}
                   className=" bg-cyan-600 text-sm w-3/4"
                 >
                   <div className="px-2 py-1">
