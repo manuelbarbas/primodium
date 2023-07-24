@@ -40,11 +40,11 @@ function setupDevSystems(
     }
     const encoders = await encodersPromise;
     const contractHash = keccak256(component.metadata.contractId);
-    console.log(encoders);
     const data = encoders[contractHash](newValue);
     const entityId = world.entities[entity];
     console.log(
-      `Sent transaction to edit networked Component ${component.id} for Entity ${entityId}`
+      `Sent transaction to edit networked Component ${component.id} for Entity ${entityId} to value `,
+      newValue
     );
     await systems["system.ComponentDev"].executeTyped(
       contractHash,
