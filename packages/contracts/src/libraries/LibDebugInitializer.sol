@@ -23,6 +23,7 @@ import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } 
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
+import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
@@ -99,7 +100,7 @@ uint256 constant DebugStorageBuildingID = uint256(keccak256("block.DebugStorageB
 library LibDebugInitializer {
   function init(IWorld world) internal {
     //should only work if debug is enabled
-    if (!LibDebug.isDebug()) return;
+    IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(IsDebugComponentID);
 
     BlueprintComponent blueprintComponent = BlueprintComponent(
       getAddressById(world.components(), BlueprintComponentID)

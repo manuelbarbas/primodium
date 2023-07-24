@@ -14,7 +14,7 @@ contract DebugAcquireResourcesSystem is System {
 
   function execute(bytes memory args) public returns (bytes memory) {
     (uint256 resourceId, uint256 amount) = abi.decode(args, (uint256, uint256));
-    if (!LibDebug.isDebug()) {
+    if (!LibDebug.isDebug(world)) {
       revert("Not in debug mode");
     }
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
