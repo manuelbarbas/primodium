@@ -42,11 +42,6 @@
     background: #4b5563;
   }
 
-  .leaflet-container {
-    width: 100vw;
-    height: 100vh;
-  }
-
   #phaser-container > canvas {
     touch-action: none;
     @apply h-full w-full;
@@ -126,11 +121,6 @@
     );
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
   }
-}
-
-/* remove leaflet layer selection control */
-.leaflet-bottom {
-  display: none;
 }
 
 .crt {
