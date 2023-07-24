@@ -80,6 +80,7 @@ const setupMouseInputs = (scene: Scene, network: Network, address: string) => {
 
     // update selected building
     const building = getBuildingAtCoord(gameCoord, network);
+
     if (!building) {
       removeComponent(SelectedBuilding, singletonIndex);
       setComponent(SelectedTile, singletonIndex, gameCoord);

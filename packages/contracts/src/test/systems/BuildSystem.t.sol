@@ -67,7 +67,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testFailPassiveResourceRequirementNotMet() public {
     vm.startPrank(alice);
-    
+
     buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
     vm.stopPrank();
   }
@@ -76,7 +76,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    
+
     buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
@@ -96,7 +96,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    
+
     buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
@@ -120,7 +120,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailPassiveResourceRequirementMoreThenMax() public {
     vm.startPrank(alice);
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
-    
+
     buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
@@ -139,7 +139,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testDestroyPassiveResourceProduction() public {
     vm.startPrank(alice);
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
-    
+
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
     buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
@@ -160,7 +160,6 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    
 
     buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
@@ -190,7 +189,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    
+
     buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
@@ -374,7 +373,7 @@ contract BuildSystemTest is PrimodiumTest {
     Coord memory coord1 = Coord({ x: -1, y: -1 });
     buildSystem.executeTyped(MainBaseID, coord1);
 
-    coord1 = Coord({ x: -1, y: -2 });
+    coord1 = Coord({ x: 1, y: 2 });
     buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord1);
 
     int32 secondIncrement = 0;

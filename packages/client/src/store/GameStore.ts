@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { EntityID } from "@latticexyz/recs";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { Coord } from "@latticexyz/utils";
-// import { GameStatus } from "../game/constants";
 
 type UpdateFunction = <T>(ctx?: T) => void;
 

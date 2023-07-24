@@ -63,17 +63,17 @@ export const ResearchTree: ResearchTreeType = [
         name: "Iron Mine",
         id: BlockType.IronMine2Research,
         description:
-          "Allows you to build Iron Mine building which produces Copper Ore.",
+          "Unlocks iron mine — allows you to start producing iron ore.",
         levels: [
           {
             id: BlockType.IronMine2Research,
             subtitle: "Level 2",
-            description: "Allows you to upgrade Iron Mine building to level 2.",
+            description: "Unlocks iron mine level 2, mines ores faster.",
           },
           {
             id: BlockType.IronMine3Research,
             subtitle: "Level 3",
-            description: "Allows you to upgrade Iron Mine building to level 3",
+            description: "Unlocks iron mine level 3, mines ores faster.",
           },
         ],
       },
@@ -81,24 +81,23 @@ export const ResearchTree: ResearchTreeType = [
         name: "Copper Mine",
         id: BlockType.CopperMineResearch,
         description:
-          "Allows you to build Copper Mine building which produces Copper Ore.",
+          "Unlocks copper mine — allows you to start producing copper ore.",
         levels: [
           {
             id: BlockType.CopperMineResearch,
             subtitle: "Level 1",
-            description: "Allows you to build Copper Mines",
+            description:
+              "Unlocks copper mine — allows you to start producing copper ore.",
           },
           {
             id: BlockType.CopperMine2Research,
             subtitle: "Level 2",
-            description:
-              "Allows you to upgrade Copper Mine building to level 2",
+            description: "Unlocks copper mine level 2, mines ores faster.",
           },
           {
             id: BlockType.CopperMine3Research,
             subtitle: "Level 3",
-            description:
-              "Allows you to upgrade Copper Mine building to level 3",
+            description: "Unlocks copper mine level 3, mines ores faster.",
           },
         ],
       },
@@ -106,18 +105,18 @@ export const ResearchTree: ResearchTreeType = [
         name: "Lithium Mine",
         id: BlockType.LithiumMineResearch,
         description:
-          "Allows you to build Lithium Mine building which produces Copper Ore.",
+          "Unlocks lithium mine — allows you to start producing lithium ore.",
         levels: [
           {
             id: BlockType.LithiumMineResearch,
             subtitle: "Level 1",
-            description: "Allows you to build Lithium Mines",
+            description:
+              "Unlocks lithium mine — allows you to start producing lithium ore.",
           },
           {
             id: BlockType.LithiumMine2Research,
             subtitle: "Level 2",
-            description:
-              "Allows you to upgrade Lithium Mine building to level 2",
+            description: "Unlocks lithium mine level 2, mines ores faster.",
           },
           // {
           //   id: BlockType.LithiumMine3Research,
@@ -131,24 +130,25 @@ export const ResearchTree: ResearchTreeType = [
         name: "Storage Unit",
         id: BlockType.StorageUnitResearch,
         description:
-          "Allows you to build Storage Unit building which produces Copper Ore.",
+          "Expands your storage limit. Does not need a connection to the main base.",
         levels: [
           {
             id: BlockType.StorageUnitResearch,
             subtitle: "Level 1",
-            description: "Allows you to build Storage Unit",
+            description:
+              "Expands your storage limit. Does not need a connection to the main base.",
           },
           {
             id: BlockType.StorageUnit2Research,
             subtitle: "Level 2",
             description:
-              "Allows you to upgrade Storage Unit building to level 2",
+              "Expands your storage limit even more. Allows storage expansion for more advanced material.",
           },
           {
             id: BlockType.StorageUnit3Research,
             subtitle: "Level 3",
             description:
-              "Allows you to upgrade Storage Unit building to level 3",
+              "Expands your storage limit even more. Allows storage expansion for more advanced material.",
           },
         ],
       },
@@ -156,18 +156,19 @@ export const ResearchTree: ResearchTreeType = [
         name: "Iron Plate Factory",
         id: BlockType.IronPlateFactoryResearch,
         description:
-          "Allows you to build Iron Plate Factory building which produces Iron Plate from Iron Ore.",
+          "Produces iron plates automatically after being connected to an iron mine source.",
         levels: [
           {
             id: BlockType.IronPlateFactoryResearch,
             subtitle: "Level 1",
-            description: "Allows you to build Iron Plate Factory",
+            description:
+              "Produces iron plates automatically after being connected to an iron mine source.",
           },
           {
             id: BlockType.IronPlateFactory2Research,
             subtitle: "Level 2",
             description:
-              "Allows you to upgrade Iron Plate Factory building to level 2",
+              "Produces iron plates faster. Requires a level 2 iron mine connected to it to function.",
           },
           // {
           //   id: BlockType.IronPlateFactory3Research,
@@ -186,12 +187,13 @@ export const ResearchTree: ResearchTreeType = [
         name: "Alloy Factory",
         id: BlockType.AlloyFactoryResearch,
         description:
-          "Allows you to build Alloy Factory building which produces Alloy from Copper Ore and Irone Ore.",
+          "Produces alloy automatically after being connected to an iron mine and a copper mine source. Requires electricity generated from solar panels to function.",
         levels: [
           {
             id: BlockType.AlloyFactoryResearch,
             subtitle: "Level 1",
-            description: "Allows you to build Alloy Factory building.",
+            description:
+              "Produces alloy automatically after being connected to an iron mine and a copper mine source. Requires electricity generated from solar panels to function.",
           },
           // {
           //   id: BlockType.AlloyFactory2Research,
@@ -209,13 +211,13 @@ export const ResearchTree: ResearchTreeType = [
         name: "Photovoltaic Cell Factory",
         id: BlockType.PhotovoltaicCellResearch,
         description:
-          "Allows you to build Photovoltaic Cell Factory building which produces Photovoltaic Cell from Copper Ore and Lithium Ore.",
+          "Produces photovoltaic cells automatically after being connected to a lithium mine and a copper mine source.",
         levels: [
           {
             id: BlockType.PhotovoltaicCellResearch,
             subtitle: "Level 1",
             description:
-              "Allows you to build Photovoltaic Cell Factory building.",
+              "Produces photovoltaic cells automatically after being connected to a lithium mine and a copper mine source.",
           },
           // {
           //   id: BlockType.LithiumCopperOxideFactory2Research,
@@ -254,12 +256,14 @@ export const ResearchTree: ResearchTreeType = [
       {
         name: "Solar Panel",
         id: BlockType.SolarPanelResearch,
-        description: "Allows you to build Solar Panel building.",
+        description:
+          "Unlocks solar panels. Solar panels create electricity, which is used in advanced buildings.",
         levels: [
           {
             id: BlockType.SolarPanelResearch,
             subtitle: "Level 1",
-            description: "Allows you to build Solar Panel building.",
+            description:
+              "Unlocks solar panels. Solar panels create electricity, which is used in advanced buildings.",
           },
           // {
           //   id: BlockType.SolarPanel2Research,

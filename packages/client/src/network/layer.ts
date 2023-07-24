@@ -14,6 +14,7 @@ import {
   singletonIndex,
   world,
 } from "./world";
+import setupDevSystems from "./setupDevSystems";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
@@ -22,7 +23,7 @@ export async function createNetworkLayer(config: NetworkConfig) {
   // If a contractId is provided, MUD syncs the state with the corresponding
   // component contract (in this case `CounterComponent.sol`)
 
-  const { startSync, systems, components, network, gasPriceInput$ } =
+  const { startSync, systems, encoders, components, network, gasPriceInput$ } =
     await setupMUDNetwork<typeof contractComponents, SystemTypes>(
       config,
       world,
@@ -82,7 +83,7 @@ export async function createNetworkLayer(config: NetworkConfig) {
       } else {
         console.info("[Dev Faucet] Player has enough funds");
       }
-    }, 20000);
+    }, 2000);
     world.registerDisposer(() => clearInterval(intervalId2));
   }
   const perlin = await createPerlin();
@@ -96,6 +97,13 @@ export async function createNetworkLayer(config: NetworkConfig) {
     providers: network.providers,
     defaultWalletAddress: config.defaultWalletAddress,
     perlin,
+    dev: setupDevSystems(
+      world,
+      encoders as Promise<
+        Record<string, (value: { [key: string]: unknown }) => string>
+      >,
+      systems
+    ),
   };
 
   startSync();
