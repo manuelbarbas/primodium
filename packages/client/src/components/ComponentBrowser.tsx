@@ -22,20 +22,18 @@ export const ComponentBrowser = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="z-10 fixed bottom-0 right-0 w-96 h-full text-xs">
       {isVisible && (
-        <div className="fixed bottom-0 right-0 w-1/4 h-full text-sm">
-          <ECSBrowser
-            world={world}
-            layers={{ react: layer }}
-            devHighlightComponent={dev.DevHighlightComponent}
-            hoverHighlightComponent={dev.HoverHighlightComponent}
-            setContractComponentValue={dev.setContractComponentValue}
-          />
-        </div>
+        <ECSBrowser
+          world={world}
+          layers={{ react: layer }}
+          devHighlightComponent={dev.DevHighlightComponent}
+          hoverHighlightComponent={dev.HoverHighlightComponent}
+          setContractComponentValue={dev.setContractComponentValue}
+        />
       )}
       <button
-        className="absolute bottom-0 right-0 bg-blue-500 text-white text-xs px-2 py-1 rounded"
+        className="fixed bottom-0 right-0 bg-blue-500 text-white text-xs px-2 py-1 rounded"
         onClick={() => setIsVisible(!isVisible)}
       >
         {isVisible ? "Hide" : "Show"} Browser
