@@ -159,15 +159,12 @@ export enum SpriteKeys {
 export enum AnimationKeys {
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",
-  IronMine3 = "ironmine/level3",
 
   CopperMine1 = "coppermine/level1",
   CopperMine2 = "coppermine/level2",
-  CopperMine3 = "coppermine/level3",
 
   LithiumMine1 = "lithiummine/level1",
   LithiumMine2 = "lithiummine/level2",
-  LithiumMine3 = "lithiummine/level3",
 
   StorageUnit1 = "storageunit/level1",
   StorageUnit2 = "storageunit/level2",
@@ -307,7 +304,6 @@ export const EntityIDtoAnimationKey = {
   [BlockType.KimberliteCatalystFactory]: [AnimationKeys.KimberliteCatalyst],
   [BlockType.HighEnergyLaserFactory]: [AnimationKeys.LaserFactory],
   [BlockType.MissileLaunchComplex]: [AnimationKeys.MissileLaunchComplex],
-  [BlockType.IronPlateFactory]: [AnimationKeys.PlatingFactory],
   [BlockType.PrecisionMachineryFactory]: [
     AnimationKeys.PrecisionMachineryFactory,
   ],
