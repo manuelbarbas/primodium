@@ -1,4 +1,4 @@
-# Primodium MUD
+# Primodium v0.6.1
 
 Initialize with `yarn`. Afterwards, in separate terminal sessions, run the following commands in order:
 
@@ -24,13 +24,13 @@ Deploy the contracts on the local environment using the commands in the previous
 mud test
 ```
 
-For production deployment, Primodium is currently live on the 0xPARC/Lattice testnet. Set the `isDebug()` function to return false, then deploy the contracts with the following command in the `packages/contracts` directory.
+For production deployment, Primodium is currently live on the Caldera testnet. Set the `isDebug()` function to return false, then deploy the contracts with the following command in the `packages/contracts` directory.
 
 ```
-npx mud deploy --chainSpec chainSpecSkyStrife.json --deployerPrivateKey <testnet key>
+mud deploy-contracts --rpc https://primodium-bedrock.calderachain.xyz/replica-http --deployerPrivateKey <testnet key> --config ./deploy-live.json
 ```
 
-The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world address>` with the rpc settings to the 0xPARC/Lattice testnet.
+The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world address>` with the rpc settings to the Caldera testnet.
 
 # Debug Systems
 

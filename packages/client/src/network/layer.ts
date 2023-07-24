@@ -83,7 +83,7 @@ export async function createNetworkLayer(config: NetworkConfig) {
       } else {
         console.info("[Dev Faucet] Player has enough funds");
       }
-    }, 20000);
+    }, 2000);
     world.registerDisposer(() => clearInterval(intervalId2));
   }
   const perlin = await createPerlin();

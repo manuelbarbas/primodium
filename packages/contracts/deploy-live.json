@@ -38,8 +38,7 @@
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibTechnologyDesignInitializer",
-    "LibBlueprintInitializer",
-    "LibDebugInitializer"
+    "LibBlueprintInitializer"
   ],
   "systems": [
     {
@@ -265,10 +264,6 @@
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",
       "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent"]
-    },
-    {
-      "name": "ComponentDevSystem",
-      "writeAccess": ["*"]
     }
   ]
 }

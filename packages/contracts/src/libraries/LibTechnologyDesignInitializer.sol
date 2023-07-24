@@ -176,8 +176,8 @@ library LibTechnologyDesignInitializer {
       requiredResources,
       itemComponent,
       StorageUnit3ResearchID,
-      IronPlateCraftedItemID,
-      2000,
+      IronResourceItemID,
+      4000,
       CopperResourceItemID,
       4000
     );
@@ -327,14 +327,16 @@ library LibTechnologyDesignInitializer {
     // Research SolarPanelResearchID with 1000 AlloyCraftedItemID
     researchComponent.set(SolarPanelResearchID);
     buildingLevelComponent.set(SolarPanelResearchID, 5);
-    LibSetRequiredResources.set2RequiredResourcesForEntity(
+    LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
       SolarPanelResearchID,
       IronResourceItemID,
       2500,
       CopperResourceItemID,
-      2500
+      2500,
+      LithiumResourceItemID,
+      1500
     );
     // // Research SolarPanelResearchID with 3000 AlloyCraftedItemID
     // researchComponent.set(SolarPanel2ResearchID);
