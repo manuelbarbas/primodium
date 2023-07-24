@@ -38,8 +38,7 @@
     "LibBuildingDesignInitializer",
     "LibBuildingLimitDesignInitializer",
     "LibTechnologyDesignInitializer",
-    "LibBlueprintInitializer",
-    "LibDebugInitializer"
+    "LibBlueprintInitializer"
   ],
   "systems": [
     {
