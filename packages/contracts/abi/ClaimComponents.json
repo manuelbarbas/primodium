@@ -10,10 +10,10 @@
   },
   "ast": {
     "absolutePath": "src/prototypes/ClaimComponents.sol",
-    "id": 34651,
+    "id": 35010,
     "exportedSymbols": {
       "ClaimComponents": [
-        34650
+        35009
       ],
       "HealthComponent": [
         21933
@@ -22,31 +22,31 @@
         21920
       ],
       "LastClaimedAtComponent": [
-        22029
+        22053
       ],
       "LastClaimedAtComponentID": [
-        22016
+        22040
       ],
       "OwnedByComponent": [
-        22149
+        22173
       ],
       "OwnedByComponentID": [
-        22136
+        22160
       ],
       "TileComponent": [
-        22677
+        22701
       ],
       "TileComponentID": [
-        22664
+        22688
       ]
     },
     "nodeType": "SourceUnit",
-    "src": "32:621:148",
+    "src": "32:621:149",
     "nodes": [
       {
-        "id": 34625,
+        "id": 34984,
         "nodeType": "PragmaDirective",
-        "src": "32:24:148",
+        "src": "32:24:149",
         "nodes": [],
         "literals": [
           "solidity",
@@ -56,36 +56,36 @@
         ]
       },
       {
-        "id": 34628,
+        "id": 34987,
         "nodeType": "ImportDirective",
-        "src": "58:84:148",
+        "src": "58:84:149",
         "nodes": [],
         "absolutePath": "src/components/TileComponent.sol",
         "file": "components/TileComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 34651,
-        "sourceUnit": 22678,
+        "scope": 35010,
+        "sourceUnit": 22702,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 34626,
+              "id": 34985,
               "name": "TileComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22677,
-              "src": "67:13:148",
+              "referencedDeclaration": 22701,
+              "src": "67:13:149",
               "typeDescriptions": {}
             },
             "nameLocation": "-1:-1:-1"
           },
           {
             "foreign": {
-              "id": 34627,
+              "id": 34986,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22664,
-              "src": "82:2:148",
+              "referencedDeclaration": 22688,
+              "src": "82:2:149",
               "typeDescriptions": {}
             },
             "local": "TileComponentID",
@@ -95,36 +95,36 @@
         "unitAlias": ""
       },
       {
-        "id": 34631,
+        "id": 34990,
         "nodeType": "ImportDirective",
-        "src": "143:93:148",
+        "src": "143:93:149",
         "nodes": [],
         "absolutePath": "src/components/OwnedByComponent.sol",
         "file": "components/OwnedByComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 34651,
-        "sourceUnit": 22150,
+        "scope": 35010,
+        "sourceUnit": 22174,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 34629,
+              "id": 34988,
               "name": "OwnedByComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22149,
-              "src": "152:16:148",
+              "referencedDeclaration": 22173,
+              "src": "152:16:149",
               "typeDescriptions": {}
             },
             "nameLocation": "-1:-1:-1"
           },
           {
             "foreign": {
-              "id": 34630,
+              "id": 34989,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22136,
-              "src": "170:2:148",
+              "referencedDeclaration": 22160,
+              "src": "170:2:149",
               "typeDescriptions": {}
             },
             "local": "OwnedByComponentID",
@@ -134,36 +134,36 @@
         "unitAlias": ""
       },
       {
-        "id": 34634,
+        "id": 34993,
         "nodeType": "ImportDirective",
-        "src": "237:111:148",
+        "src": "237:111:149",
         "nodes": [],
         "absolutePath": "src/components/LastClaimedAtComponent.sol",
         "file": "components/LastClaimedAtComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 34651,
-        "sourceUnit": 22030,
+        "scope": 35010,
+        "sourceUnit": 22054,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 34632,
+              "id": 34991,
               "name": "LastClaimedAtComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22029,
-              "src": "246:22:148",
+              "referencedDeclaration": 22053,
+              "src": "246:22:149",
               "typeDescriptions": {}
             },
             "nameLocation": "-1:-1:-1"
           },
           {
             "foreign": {
-              "id": 34633,
+              "id": 34992,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 22016,
-              "src": "270:2:148",
+              "referencedDeclaration": 22040,
+              "src": "270:2:149",
               "typeDescriptions": {}
             },
             "local": "LastClaimedAtComponentID",
@@ -173,36 +173,36 @@
         "unitAlias": ""
       },
       {
-        "id": 34637,
+        "id": 34996,
         "nodeType": "ImportDirective",
-        "src": "349:90:148",
+        "src": "349:90:149",
         "nodes": [],
         "absolutePath": "src/components/HealthComponent.sol",
         "file": "components/HealthComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 34651,
+        "scope": 35010,
         "sourceUnit": 21934,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 34635,
+              "id": 34994,
               "name": "HealthComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
               "referencedDeclaration": 21933,
-              "src": "358:15:148",
+              "src": "358:15:149",
               "typeDescriptions": {}
             },
             "nameLocation": "-1:-1:-1"
           },
           {
             "foreign": {
-              "id": 34636,
+              "id": 34995,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
               "referencedDeclaration": 21920,
-              "src": "375:2:148",
+              "src": "375:2:149",
               "typeDescriptions": {}
             },
             "local": "HealthComponentID",
@@ -212,44 +212,44 @@
         "unitAlias": ""
       },
       {
-        "id": 34650,
+        "id": 35009,
         "nodeType": "StructDefinition",
-        "src": "474:178:148",
+        "src": "474:178:149",
         "nodes": [],
         "canonicalName": "ClaimComponents",
         "members": [
           {
             "constant": false,
-            "id": 34640,
+            "id": 34999,
             "mutability": "mutable",
             "name": "tileComponent",
-            "nameLocation": "515:13:148",
+            "nameLocation": "515:13:149",
             "nodeType": "VariableDeclaration",
-            "scope": 34650,
-            "src": "501:27:148",
+            "scope": 35009,
+            "src": "501:27:149",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_TileComponent_$22677",
+              "typeIdentifier": "t_contract$_TileComponent_$22701",
               "typeString": "contract TileComponent"
             },
             "typeName": {
-              "id": 34639,
+              "id": 34998,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 34638,
+                "id": 34997,
                 "name": "TileComponent",
                 "nameLocations": [
-                  "501:13:148"
+                  "501:13:149"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22677,
-                "src": "501:13:148"
+                "referencedDeclaration": 22701,
+                "src": "501:13:149"
               },
-              "referencedDeclaration": 22677,
-              "src": "501:13:148",
+              "referencedDeclaration": 22701,
+              "src": "501:13:149",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_TileComponent_$22677",
+                "typeIdentifier": "t_contract$_TileComponent_$22701",
                 "typeString": "contract TileComponent"
               }
             },
@@ -257,36 +257,36 @@
           },
           {
             "constant": false,
-            "id": 34643,
+            "id": 35002,
             "mutability": "mutable",
             "name": "ownedByComponent",
-            "nameLocation": "549:16:148",
+            "nameLocation": "549:16:149",
             "nodeType": "VariableDeclaration",
-            "scope": 34650,
-            "src": "532:33:148",
+            "scope": 35009,
+            "src": "532:33:149",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_OwnedByComponent_$22149",
+              "typeIdentifier": "t_contract$_OwnedByComponent_$22173",
               "typeString": "contract OwnedByComponent"
             },
             "typeName": {
-              "id": 34642,
+              "id": 35001,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 34641,
+                "id": 35000,
                 "name": "OwnedByComponent",
                 "nameLocations": [
-                  "532:16:148"
+                  "532:16:149"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22149,
-                "src": "532:16:148"
+                "referencedDeclaration": 22173,
+                "src": "532:16:149"
               },
-              "referencedDeclaration": 22149,
-              "src": "532:16:148",
+              "referencedDeclaration": 22173,
+              "src": "532:16:149",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_OwnedByComponent_$22149",
+                "typeIdentifier": "t_contract$_OwnedByComponent_$22173",
                 "typeString": "contract OwnedByComponent"
               }
             },
@@ -294,36 +294,36 @@
           },
           {
             "constant": false,
-            "id": 34646,
+            "id": 35005,
             "mutability": "mutable",
             "name": "lastClaimedAtComponent",
-            "nameLocation": "592:22:148",
+            "nameLocation": "592:22:149",
             "nodeType": "VariableDeclaration",
-            "scope": 34650,
-            "src": "569:45:148",
+            "scope": 35009,
+            "src": "569:45:149",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_LastClaimedAtComponent_$22029",
+              "typeIdentifier": "t_contract$_LastClaimedAtComponent_$22053",
               "typeString": "contract LastClaimedAtComponent"
             },
             "typeName": {
-              "id": 34645,
+              "id": 35004,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 34644,
+                "id": 35003,
                 "name": "LastClaimedAtComponent",
                 "nameLocations": [
-                  "569:22:148"
+                  "569:22:149"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 22029,
-                "src": "569:22:148"
+                "referencedDeclaration": 22053,
+                "src": "569:22:149"
               },
-              "referencedDeclaration": 22029,
-              "src": "569:22:148",
+              "referencedDeclaration": 22053,
+              "src": "569:22:149",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_LastClaimedAtComponent_$22029",
+                "typeIdentifier": "t_contract$_LastClaimedAtComponent_$22053",
                 "typeString": "contract LastClaimedAtComponent"
               }
             },
@@ -331,13 +331,13 @@
           },
           {
             "constant": false,
-            "id": 34649,
+            "id": 35008,
             "mutability": "mutable",
             "name": "healthComponent",
-            "nameLocation": "634:15:148",
+            "nameLocation": "634:15:149",
             "nodeType": "VariableDeclaration",
-            "scope": 34650,
-            "src": "618:31:148",
+            "scope": 35009,
+            "src": "618:31:149",
             "stateVariable": false,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -345,20 +345,20 @@
               "typeString": "contract HealthComponent"
             },
             "typeName": {
-              "id": 34648,
+              "id": 35007,
               "nodeType": "UserDefinedTypeName",
               "pathNode": {
-                "id": 34647,
+                "id": 35006,
                 "name": "HealthComponent",
                 "nameLocations": [
-                  "618:15:148"
+                  "618:15:149"
                 ],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 21933,
-                "src": "618:15:148"
+                "src": "618:15:149"
               },
               "referencedDeclaration": 21933,
-              "src": "618:15:148",
+              "src": "618:15:149",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_HealthComponent_$21933",
                 "typeString": "contract HealthComponent"
@@ -368,12 +368,12 @@
           }
         ],
         "name": "ClaimComponents",
-        "nameLocation": "481:15:148",
-        "scope": 34651,
+        "nameLocation": "481:15:149",
+        "scope": 35010,
         "visibility": "public"
       }
     ],
     "license": "MIT"
   },
-  "id": 148
+  "id": 149
 }
