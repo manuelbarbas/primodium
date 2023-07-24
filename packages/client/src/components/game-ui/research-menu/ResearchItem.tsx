@@ -130,7 +130,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       setTransactionLoading(true);
       await execute(
         systems["system.Research"].executeTyped(BigNumber.from(researchId), {
-          gasLimit: 1_000_000,
+          gasLimit: 1_500_000,
         }),
         providers,
         setNotification
