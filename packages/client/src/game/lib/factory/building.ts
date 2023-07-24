@@ -28,14 +28,10 @@ export const createBuilding = ({
     id: renderId,
     once: (gameObject) => {
       //set sprite
-      const sprite = EntityIDtoSpriteKey[buildingType];
-      if (!sprite) return;
-
       gameObject.setPosition(x, y);
-      // TODO getting issues here if level is passed in as 0.
-      // Would be nice to set this to sprite[level] instead.
-      if (!level) level = 1;
 
+      //set sprite
+      const sprite = EntityIDtoSpriteKey[buildingType];
       gameObject.setTexture(
         Assets.SpriteAtlas,
         sprite ? sprite[level - 1] : SpriteKeys.Node

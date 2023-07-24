@@ -291,7 +291,7 @@ Inventory.ResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const blockNumber = BlockNumber.get();
+  const blockNumber = BlockNumber.use(undefined, { value: 0 })?.value;
 
   const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
@@ -317,8 +317,7 @@ Inventory.ResourceLabel = ({
 
   const resourcesToClaim = useMemo(() => {
     const toClaim =
-      unclaimedResource +
-      ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
+      unclaimedResource + (blockNumber - lastClaimedAt) * production;
     if (toClaim > storageCapacity - resourceCount)
       return storageCapacity - resourceCount;
     return toClaim;
@@ -326,13 +325,6 @@ Inventory.ResourceLabel = ({
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (resourceId == BlockType.ElectricityPassiveResource) {
-    console.log("resourceCount: ", resourceCount);
-    console.log("storageCapacity: ", storageCapacity);
-    console.log("production: ", production);
-    console.log("lastClaimedAt: ", lastClaimedAt);
-    console.log("unclaimedResource: ", unclaimedResource);
-  }
   if (storageCapacity > 0) {
     return (
       <div className="mb-1">
@@ -432,13 +424,6 @@ Inventory.PassiveResourceLabel = ({
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (resourceId == BlockType.ElectricityPassiveResource) {
-    console.log("resourceCount: ", resourceCount);
-    console.log("storageCapacity: ", storageCapacity);
-    console.log("production: ", production);
-    console.log("lastClaimedAt: ", lastClaimedAt);
-    console.log("unclaimedResource: ", unclaimedResource);
-  }
   if (storageCapacity > 0) {
     return (
       <div className="mb-1">

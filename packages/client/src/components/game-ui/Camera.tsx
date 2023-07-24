@@ -9,7 +9,7 @@ export const Camera = () => {
   const { address } = useAccount();
   const { worldCoord, normalizedZoom } = primodium.hooks.useCamera();
 
-  const blockNumber = BlockNumber.use();
+  const blockNumber = BlockNumber.use()?.value;
 
   return (
     <div
@@ -55,10 +55,12 @@ export const Camera = () => {
           crtEffect ? "-skew-x-2 -skew-y-2" : ""
         }`}
       >
-        <p className="flex items-center gap-2">
-          <FaCircle className="animate-pulse" />
-          {` BLOCK ${blockNumber}`}
-        </p>
+        {blockNumber != undefined && (
+          <p className="flex items-center gap-2">
+            <FaCircle className="animate-pulse" />
+            {` BLOCK ${blockNumber}`}
+          </p>
+        )}
         {address && (
           <p className="flex items-center gap-2">
             {address.slice(0, 5)}...{address.slice(-4)}
