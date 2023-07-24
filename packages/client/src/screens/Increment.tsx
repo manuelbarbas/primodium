@@ -1,6 +1,6 @@
 import { SingletonID } from "@latticexyz/network";
 import { useComponentValue } from "@latticexyz/react";
-import { useMud } from "../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { execute } from "../network/actions";
 import { useMemo, useState } from "react";
 import {

@@ -1,9 +1,9 @@
 import { EntityID } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useMud } from "src/context/MudContext";
 import { decodeCoordEntity } from "src/util/encode";
 import { useAccount } from "./useAccount";
 import { useComponentValue } from "./useComponentValue";
+import { useMud } from "./useMud";
 
 export const useMainBaseCoord = () => {
   const mainBase = useMainBase();

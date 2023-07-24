@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { useComponentValue } from "src/hooks/useComponentValue";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";

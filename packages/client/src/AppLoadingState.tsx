@@ -2,11 +2,11 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import { SyncState } from "@latticexyz/network";
 import { useComponentValue } from "@latticexyz/react";
-import { useMud } from "./context/MudContext";
 
 import Increment from "./screens/Increment";
 import Map from "./screens/Map";
 import { Game } from "./screens/Game";
+import { useMud } from "./hooks/useMud";
 
 export default function AppLoadingState() {
   // setup loading component, after setting up the network layer and syncing the block state (per emojimon)

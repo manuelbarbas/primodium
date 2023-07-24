@@ -2,7 +2,7 @@ import { useComponentValue } from "./useComponentValue";
 import { Component, EntityID, EntityIndex, Type } from "@latticexyz/recs";
 
 import { useAccount } from "../hooks/useAccount";
-import { useMud } from "../context/MudContext";
+import { useMud } from "./useMud";
 import { hashKeyEntityAndTrim } from "../util/encode";
 
 export default function useResourceCount(

@@ -11,7 +11,7 @@ import { Camera } from "./Camera";
 import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
-import NotificationBox from "../NotificationBox";
+import NotificationBox from "./NotificationBox";
 import { BrandingLabel } from "./BrandingLabel";
 import { AiOutlineRotateRight } from "react-icons/ai";
 import { useOrientation } from "src/hooks/useOrientation";
@@ -57,9 +57,6 @@ function GameUI() {
                 <TileInfo />
                 <InfoBox />
                 <NotificationBox />
-                {/* <ResourceBox /> */}
-                {/* <TooltipBox /> */}
-                {/* <SideMenu /> */}
                 <Inventory />
               </motion.div>
             )}

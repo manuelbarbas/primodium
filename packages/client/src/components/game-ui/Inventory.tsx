@@ -1,7 +1,7 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { useComponentValue } from "src/hooks/useComponentValue";
 import useResourceCount from "src/hooks/useResourceCount";
 import { useMainBase } from "src/hooks/useMainBase";

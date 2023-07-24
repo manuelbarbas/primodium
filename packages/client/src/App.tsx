@@ -10,7 +10,7 @@ import { getNetworkLayerConfig } from "./network/config/config";
 import { Network, createNetworkLayer } from "./network/layer";
 
 import AppLoadingState from "./AppLoadingState";
-import { MudProvider } from "./context/MudContext";
+import { MudProvider } from "./hooks/providers/MudProvider";
 import wagmiClient from "./network/wagmi";
 
 export default function App() {

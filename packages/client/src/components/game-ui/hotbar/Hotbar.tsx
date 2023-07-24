@@ -2,7 +2,7 @@ import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
 import HotbarPagination from "./HotbarPagination";

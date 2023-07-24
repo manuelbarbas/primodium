@@ -1,5 +1,5 @@
 import { Address, useAccount as useWagmiAccount } from "wagmi";
-import { useMud } from "../context/MudContext";
+import { useMud } from "./useMud";
 
 export function useAccount(): { address: Address } {
   const { address } = useWagmiAccount();

@@ -6,7 +6,7 @@ import { EntityID, getComponentValue } from "@latticexyz/recs";
 import { SingletonID } from "@latticexyz/network";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useState } from "react";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { Key } from "src/engine/lib/core/createInput";
 import { useAccount } from "src/hooks/useAccount";
 import { singletonIndex, contractComponents, world } from "src/network/world";

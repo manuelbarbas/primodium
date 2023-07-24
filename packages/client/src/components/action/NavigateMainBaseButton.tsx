@@ -3,7 +3,7 @@ import { EntityID } from "@latticexyz/recs";
 import { useCallback, useMemo } from "react";
 import { decodeCoordEntity } from "src/util/encode";
 import { buildBuilding } from "src/util/web3";
-import { useMud } from "../../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { useAccount } from "../../hooks/useAccount";
 import { useComponentValue } from "../../hooks/useComponentValue";
 import { BlockType } from "../../util/constants";

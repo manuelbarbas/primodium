@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { BigNumber } from "ethers";
 
-import { useMud } from "../../../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { getRecipe } from "../../../util/resource";
 
 import {
@@ -15,7 +15,7 @@ import { execute } from "../../../network/actions";
 import { hashKeyEntityAndTrim } from "../../../util/encode";
 
 import { useGameStore } from "../../../store/GameStore";
-import Spinner from "../../Spinner";
+import Spinner from "../../shared/Spinner";
 import { useNotificationStore } from "../../../store/NotificationStore";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import {

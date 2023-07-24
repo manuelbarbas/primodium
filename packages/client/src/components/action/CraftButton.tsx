@@ -2,10 +2,10 @@ import { useCallback } from "react";
 
 import { Coord } from "@latticexyz/utils";
 
-import { useMud } from "../../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
-import Spinner from "../Spinner";
+import Spinner from "../shared/Spinner";
 import { useNotificationStore } from "../../store/NotificationStore";
 
 export default function CraftButton({ coords: { x, y } }: { coords: Coord }) {

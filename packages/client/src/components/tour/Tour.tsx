@@ -6,7 +6,7 @@ import buildTourSteps from "./Steps";
 import NarrationBox from "./NarrationBox";
 import { useTourStore } from "../../store/TourStore";
 import { useGameStore } from "../../store/GameStore";
-import { useMud } from "../../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { TourStep } from "../../util/types";
 import { useAccount } from "../../hooks/useAccount";
 import { validTutorialClick } from "src/util/tutorial";

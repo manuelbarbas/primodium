@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import { Coord } from "@latticexyz/utils";
 
-import { useMud } from "src/context/MudContext";
 import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
-import Spinner from "../Spinner";
+import Spinner from "../shared/Spinner";
 import { useNotificationStore } from "../../store/NotificationStore";
 import { GameButton } from "../shared/GameButton";
+import { useMud } from "src/hooks/useMud";
 
 export default function ClaimButton({
   id,

@@ -1,6 +1,6 @@
 import { primodium } from "@game/api";
 import { FaCircle } from "react-icons/fa";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { useAccount } from "src/hooks/useAccount";
 import { useGameStore } from "src/store/GameStore";
 

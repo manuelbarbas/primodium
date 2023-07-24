@@ -5,7 +5,7 @@ import { Coord } from "@latticexyz/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FixedSizeGrid as Grid } from "react-window";
 
-import { useMud } from "../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BlockColors } from "../util/constants";
 import { getTopLayerKey } from "../util/tile";
