@@ -1,15 +1,19 @@
-import { primodium } from "@game/api";
 import { motion } from "framer-motion";
 import { BuildingInfo } from "./BuildingInfo";
 import { TerrainInfo } from "./TerrainInfo";
 import { useGameStore } from "src/store/GameStore";
 import { BlueprintInfo } from "./BlueprintInfo";
+import {
+  SelectedAction,
+  SelectedBuilding,
+  SelectedTile,
+} from "src/network/components/clientComponents";
 
 export const TileInfo: React.FC = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const selectedTile = primodium.hooks.useSelectedTile();
-  const selectedBuilding = primodium.hooks.useSelectedBuilding();
-  const selectedAction = primodium.hooks.useSelectedAction();
+  const selectedTile = SelectedTile.use();
+  const selectedBuilding = SelectedBuilding.use()?.value;
+  const selectedAction = SelectedAction.use()?.value;
 
   return (
     <div>

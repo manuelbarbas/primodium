@@ -1,26 +1,22 @@
-import {
-  EntityID,
-  defineComponentSystem,
-  getComponentValue,
-  hasComponent,
-} from "@latticexyz/recs";
+import { EntityID, defineComponentSystem } from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
 
 import { createPath } from "../factory/path";
 import { Scene } from "src/engine/types";
-import { Network } from "src/network/layer";
+import { world } from "src/network/world";
+import { Path } from "src/network/components/chainComponents";
+import { Position } from "src/network/components/clientComponents";
 
-export const renderBuildngPaths = (scene: Scene, network: Network) => {
-  const { world, components } = network;
+export const renderBuildingPaths = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_path";
 
   defineComponentSystem(
     world,
-    components.Path,
+    Path,
     (update) => {
       const entityIndex = update.entity;
+      const entity = world.entities[entityIndex];
       const objIndex = entityIndex + objSuffix;
       // Avoid updating on optimistic overrides
       if (
@@ -30,27 +26,21 @@ export const renderBuildngPaths = (scene: Scene, network: Network) => {
         return;
       }
 
-      if (!hasComponent(components.Path, entityIndex)) {
+      if (!Path.has(entity)) {
         if (scene.objectPool.objects.has(objIndex)) {
           scene.objectPool.remove(objIndex);
         }
         return;
       }
 
-      const startCoord = getComponentValue(
-        components.Position,
-        entityIndex
-      ) as Coord;
+      const startCoord = Position.get(entity);
 
       const endEntityId = update.value[0]?.value.toString() as EntityID;
 
       //if path has no end tile, don't draw it
       if (!endEntityId) return;
 
-      const endCoord = getComponentValue(
-        components.Position,
-        world.entityToIndex.get(endEntityId)!
-      ) as Coord;
+      const endCoord = Position.get(endEntityId);
 
       //if endCoord or startCoord are not defined, don't draw path
       if (!endCoord || !startCoord) return;

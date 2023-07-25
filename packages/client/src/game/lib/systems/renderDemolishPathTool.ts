@@ -6,21 +6,23 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  getComponentValue,
 } from "@latticexyz/recs";
 import { Scene } from "src/engine/types";
-import { Network } from "src/network/layer";
 import { Action } from "src/util/constants";
 import { createSelectionTile } from "../factory/selectionTile";
+import {
+  HoverTile,
+  SelectedAction,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
-export const renderDemolishPathTool = (scene: Scene, network: Network) => {
-  const { world, offChainComponents } = network;
+export const renderDemolishPathTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_demolishPath";
 
   const query = [
-    Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedAction, {
+    Has(HoverTile),
+    HasValue(SelectedAction, {
       value: Action.DemolishPath,
     }),
   ];
@@ -37,10 +39,7 @@ export const renderDemolishPathTool = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = getComponentValue(
-      offChainComponents.HoverTile,
-      entityIndex
-    );
+    const tileCoord = HoverTile.get(world.entities[entityIndex]);
 
     if (!tileCoord) return;
 
