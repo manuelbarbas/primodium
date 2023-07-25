@@ -34,10 +34,15 @@ export const BuildingInfo: React.FC<{
 
   const currLevel = BuildingLevel.use(building)?.value;
 
-  const isOwner = owner ?? "" == address.toLowerCase();
+  const isOwner = owner === address.toLowerCase();
 
   const maxHealth = getBuildingMaxHealth(buildingType);
   const percentHealth = health ?? maxHealth / maxHealth;
+  const ownerName = isOwner
+    ? "You"
+    : owner
+    ? owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4)
+    : "Unknown";
   const coord = decodeCoordEntity(building);
 
   const buildingName = useMemo(() => {
@@ -60,9 +65,6 @@ export const BuildingInfo: React.FC<{
   }, [buildingType, currLevel]);
 
   if (!buildingName || !buildingType || owner == undefined) return null;
-  const ownerName = isOwner
-    ? "You"
-    : owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4);
   return (
     <>
       <Header content={`${ownerName}`} />

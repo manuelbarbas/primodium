@@ -31,7 +31,8 @@
     "MaxLevelComponent",
     "RequiredTileComponent",
     "RequiredPassiveResourceComponent",
-    "PassiveResourceProductionComponent"
+    "PassiveResourceProductionComponent",
+    "IsDebugComponent"
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
@@ -264,6 +265,10 @@
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",
       "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent"]
+    },
+    {
+      "name": "ComponentDevSystem",
+      "writeAccess": ["*"]
     }
   ]
 }

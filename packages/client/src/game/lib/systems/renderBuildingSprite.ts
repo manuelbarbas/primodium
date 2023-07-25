@@ -36,7 +36,7 @@ export const renderBuildingSprite = (scene: Scene) => {
 
     if (!buildingType || !tilePosition) return;
 
-    const selected = SelectedBuilding.get()?.value == entityId;
+    const selected = SelectedBuilding.get()?.value === entityId;
 
     // don't render beyond coord map limitation
     if (
@@ -61,7 +61,7 @@ export const renderBuildingSprite = (scene: Scene) => {
         y: -pixelCoord.y,
         buildingType: buildingType as EntityID,
         selected,
-        level: buildingLevel,
+        level: parseInt(buildingLevel ? buildingLevel.toString() : "1"),
       })
     );
   };

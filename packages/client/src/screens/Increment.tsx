@@ -3,7 +3,7 @@ import { useMud } from "../context/MudContext";
 import { execute } from "../network/actions";
 import { Counter } from "src/network/components/chainComponents";
 import { DoubleCounter } from "src/network/components/clientComponents";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   BackgroundImage,
   ResearchImage,
@@ -84,7 +84,7 @@ const ImageGrid: React.FC = () => {
       </div>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {images.map(([name, uri], index) => (
-          <>
+          <Fragment key={`${activeTab}-${index}`}>
             <p>{getBlockTypeName(name)}</p>
             <img
               key={index}
@@ -92,7 +92,7 @@ const ImageGrid: React.FC = () => {
               alt={`Image ${getBlockTypeName(name)}`}
               className="w-40 h-40 object-cover shadow-md"
             />
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

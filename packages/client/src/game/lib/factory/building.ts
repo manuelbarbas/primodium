@@ -31,22 +31,28 @@ export const createBuilding = ({
       gameObject.setPosition(x, y);
 
       //set sprite
-      const sprite = EntityIDtoSpriteKey[buildingType];
-      gameObject.setTexture(
-        Assets.SpriteAtlas,
-        sprite ? sprite[level - 1] : SpriteKeys.Node
-      );
+      const sprites = EntityIDtoSpriteKey[buildingType];
+
+      const spriteKey = sprites
+        ? sprites[clampedIndex(level - 1, sprites.length)]
+        : SpriteKeys.Node;
+
+      gameObject.setTexture(Assets.SpriteAtlas, spriteKey);
+
       gameObject.setDepth(DepthLayers.Building);
       if (selected) {
         gameObject.setTint(0xffff00);
       }
 
-      //set animation if it exists
-      const anim = EntityIDtoAnimationKey[buildingType];
-      const animIndex = clampedIndex(level - 1, anim?.length);
-      if (anim && anim[animIndex]) {
-        gameObject.play(anim[animIndex]!);
-      }
+      // set animation if it exists
+      const animations = EntityIDtoAnimationKey[buildingType];
+
+      const anim =
+        animations && animations.length >= level
+          ? animations[level - 1]
+          : undefined;
+
+      if (anim) gameObject.play(anim);
     },
   };
 };

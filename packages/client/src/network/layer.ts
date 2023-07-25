@@ -9,8 +9,9 @@ import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import { syncPositionComponent } from "./syncPositionComponent";
 import { singletonIndex, world } from "./world";
-import chainComponents from "./components/chainComponents";
-import components from "./components";
+import chainComponents, { Counter } from "./components/chainComponents";
+import { BlockNumber, DoubleCounter } from "./components/clientComponents";
+import setupDevSystems from "./setupDevSystems";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
@@ -19,10 +20,13 @@ export async function createNetworkLayer(config: NetworkConfig) {
   // If a contractId is provided, MUD syncs the state with the corresponding
   // component contract (in this case `CounterComponent.sol`)
 
-  const { startSync, systems, network, gasPriceInput$ } = await setupMUDNetwork<
-    typeof chainComponents,
-    SystemTypes
-  >(config, world, chainComponents, SystemAbis);
+  const { startSync, systems, encoders, components, network, gasPriceInput$ } =
+    await setupMUDNetwork<typeof chainComponents, SystemTypes>(
+      config,
+      world,
+      chainComponents,
+      SystemAbis
+    );
 
   const intervalId = setInterval(async () => {
     const gasPrice = Math.ceil(
@@ -38,11 +42,13 @@ export async function createNetworkLayer(config: NetworkConfig) {
 
   world.registerDisposer(() => clearInterval(intervalId));
 
-  defineComponentSystem(world, components.Counter, (update) => {
+  // TODO: move this functionality into runSystems()
+  defineComponentSystem(world, Counter, (update) => {
     const value = update?.value[0]?.value ?? 0;
-    components.DoubleCounter.set({ value: value * 2 });
+    DoubleCounter.set({ value: value * 2 });
   });
 
+  // TODO: create a createFaucet helper function
   if (!config.devMode) {
     // Faucet setup
     const faucet = config.faucetUrl
@@ -75,7 +81,7 @@ export async function createNetworkLayer(config: NetworkConfig) {
       } else {
         console.info("[Dev Faucet] Player has enough funds");
       }
-    }, 20000);
+    }, 2000);
     world.registerDisposer(() => clearInterval(intervalId2));
   }
   const perlin = await createPerlin();
@@ -88,16 +94,24 @@ export async function createNetworkLayer(config: NetworkConfig) {
     providers: network.providers,
     defaultWalletAddress: config.defaultWalletAddress,
     perlin,
+    dev: setupDevSystems(
+      world,
+      encoders as Promise<
+        Record<string, (value: { [key: string]: unknown }) => string>
+      >,
+      systems
+    ),
   };
 
   startSync();
   syncPositionComponent(context);
 
+  // TODO: move this functionality into runSystems()
   const blockNumber = (await network.providers.get().ws?.getBlockNumber()) ?? 0;
-  components.BlockNumber.set({ value: blockNumber });
+  BlockNumber.set({ value: blockNumber });
 
   const blockListener = network.blockNumber$.subscribe((blockNumber) => {
-    components.BlockNumber.set({ value: blockNumber });
+    BlockNumber.set({ value: blockNumber });
   });
 
   world.registerDisposer(() => blockListener.unsubscribe());

@@ -86,19 +86,19 @@ contract ClaimSystemTest is MudTest {
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
     );
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 10, "Alice should have 10 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
 
     vm.roll(20);
     claimSystem.executeTyped(mainBaseCoord);
 
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 40, "Alice should have 40 IronPlates");
     assertTrue(
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
     );
     vm.roll(30);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 30, "Alice should have 30 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 60, "Alice should have 30 IronPlates");
     assertTrue(
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
@@ -151,7 +151,7 @@ contract ClaimSystemTest is MudTest {
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
     );
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 10, "Alice should have 10 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
     assertEq(
       unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
       0,
@@ -162,15 +162,15 @@ contract ClaimSystemTest is MudTest {
     upgradeSystem.executeTyped(platingFactoryCoord);
     assertEq(
       unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
-      10,
-      "Alice should have 10 unclaimed IronPlates"
+      20,
+      "Alice should have 20 unclaimed IronPlates"
     );
     console.log("upgraded factory");
     vm.roll(50);
     claimSystem.executeTyped(mainBaseCoord);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed after factory upgrade");
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 40, "Alice should have 40 IronPlates");
     assertTrue(
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
@@ -180,7 +180,7 @@ contract ClaimSystemTest is MudTest {
     vm.roll(100);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed after upgraded mine");
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 120, "Alice should have 120 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 240, "Alice should have 240 IronPlates");
     assertTrue(
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
@@ -238,14 +238,14 @@ contract ClaimSystemTest is MudTest {
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
     );
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 10, "Alice should have 10 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
 
     vm.roll(20);
     destroyPathSystem.executeTyped(coord);
 
     vm.roll(100);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 40, "Alice should have 40 IronPlates");
     assertTrue(
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
@@ -303,14 +303,14 @@ contract ClaimSystemTest is MudTest {
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
     );
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 10, "Alice should have 10 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
 
     vm.roll(20);
     destroyPathSystem.executeTyped(platingFactoryCoord);
 
     vm.roll(100);
     claimSystem.executeTyped(mainBaseCoord);
-    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 40, "Alice should have 40 IronPlates");
     assertTrue(
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
@@ -508,7 +508,7 @@ contract ClaimSystemTest is MudTest {
     uint256 hashedAliceCopperKey = LibEncode.hashKeyEntity(CopperID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceIronKey), "Alice should have iron");
     assertTrue(itemComponent.has(hashedAliceCopperKey), "Alice should have copper");
-    assertEq(itemComponent.getValue(hashedAliceCopperKey), 20, "Alice should have 20 copper");
+    assertEq(itemComponent.getValue(hashedAliceCopperKey), 60, "Alice should have 60 copper");
     assertEq(itemComponent.getValue(hashedAliceIronKey), 20, "Alice should have 20 iron");
 
     vm.stopPrank();

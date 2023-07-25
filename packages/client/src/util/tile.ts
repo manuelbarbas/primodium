@@ -1,7 +1,6 @@
 import { Perlin } from "@latticexyz/noise";
-import { EntityID, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { EntityID, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Network } from "src/network/layer";
 import { BlockType, DisplayKeyPair } from "./constants";
 import { Position } from "src/network/components/clientComponents";
 import { BuildingType, OwnedBy } from "src/network/components/chainComponents";
@@ -179,10 +178,8 @@ export const getEntityTileAtCoord = (coord: Coord) => {
   return BuildingType.get(tileEntityID)?.value;
 };
 
-export const getBuildingAtCoord = (coord: Coord, network: Network) => {
-  const { components } = network;
-
-  const entities = runQuery([HasValue(components.Position, coord)]);
+export const getBuildingAtCoord = (coord: Coord) => {
+  const entities = runQuery([HasValue(Position, coord), Not(BuildingType)]);
 
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];

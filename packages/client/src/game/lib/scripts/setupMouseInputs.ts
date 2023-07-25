@@ -73,7 +73,8 @@ const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
     if (selectedAction !== undefined) SelectedAction.remove();
 
     // update selected building
-    const building = getBuildingAtCoord(gameCoord, network);
+    const building = getBuildingAtCoord(gameCoord);
+
     if (!building) {
       SelectedBuilding.remove();
       SelectedTile.set(gameCoord);

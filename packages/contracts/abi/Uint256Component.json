@@ -10,16 +10,16 @@
   },
   "ast": {
     "absolutePath": "../../node_modules/@latticexyz/std-contracts/src/components/Uint256Component.sol",
-    "id": 1889,
+    "id": 1959,
     "exportedSymbols": {
       "Component": [
         262
       ],
       "IUint256Component": [
-        1134
+        1204
       ],
       "LibTypes": [
-        53050
+        53604
       ],
       "Uint256Component": [
         1105
@@ -29,7 +29,7 @@
     "src": "32:74:28",
     "nodes": [
       {
-        "id": 1887,
+        "id": 1957,
         "nodeType": "PragmaDirective",
         "src": "32:24:28",
         "nodes": [],
@@ -41,14 +41,14 @@
         ]
       },
       {
-        "id": 1888,
+        "id": 1958,
         "nodeType": "ImportDirective",
         "src": "57:48:28",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/solecs/src/components/Uint256Component.sol",
         "file": "solecs/components/Uint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 1889,
+        "scope": 1959,
         "sourceUnit": 1106,
         "symbolAliases": [],
         "unitAlias": ""
