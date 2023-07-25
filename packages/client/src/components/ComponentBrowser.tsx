@@ -1,20 +1,13 @@
 import { Browser as ECSBrowser } from "@latticexyz/ecs-browser";
-import { Component, Layer } from "@latticexyz/recs";
+import { Layer } from "@latticexyz/recs";
 import { useState } from "react";
 import { useMud } from "src/context/MudContext";
-import {
-  contractComponents,
-  offChainComponents,
-  world,
-} from "src/network/world";
+import components from "src/network/components";
+import { world } from "src/network/world";
 
 export const ComponentBrowser = () => {
   const { dev } = useMud();
   const [isVisible, setIsVisible] = useState(false);
-  const components: { [x: string]: Component } = {
-    ...offChainComponents,
-    ...contractComponents,
-  };
 
   const layer: Layer = {
     world,

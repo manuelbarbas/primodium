@@ -1,5 +1,6 @@
-import { EntityID, EntityIndex, getEntitiesWithValue } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { Position } from "src/network/components/clientComponents";
 import { Network } from "src/network/layer";
 import {
   debugAcquireResources,
@@ -41,12 +42,11 @@ export const debug = (network: Network) => {
   };
 
   const getEntityIdAtCoord = (coord: Coord) => {
-    const { components, world } = network;
-    const entity = getEntitiesWithValue(components.Position, coord);
+    const entities = Position.getAllWith(coord);
 
-    const entityIndex = entity.values().next().value as EntityIndex;
+    if (entities.length == 0) return;
 
-    return world.entities[entityIndex];
+    return entities[0];
   };
 
   return {

@@ -1,13 +1,10 @@
 import { defineComponentSystem } from "@latticexyz/recs";
 import { decodeCoordEntity } from "../util/encode";
-import { Network } from "./layer";
+import { world } from "./world";
+import { OwnedBy } from "./components/chainComponents";
+import { Position } from "./components/clientComponents";
 
-export function syncPositionComponent(network: Network) {
-  const {
-    world,
-    components: { Position, OwnedBy },
-  } = network;
-
+export function syncPositionComponent() {
   // set positions for building tiles only
   defineComponentSystem(world, OwnedBy, ({ entity }) => {
     // Avoid updating on optimistic overrides

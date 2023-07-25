@@ -104,7 +104,9 @@ export async function createNetworkLayer(config: NetworkConfig) {
   };
 
   startSync();
-  syncPositionComponent(context);
+
+  // TODO: move this functionality into syncComponents helper
+  syncPositionComponent();
 
   // TODO: move this functionality into runSystems()
   const blockNumber = (await network.providers.get().ws?.getBlockNumber()) ?? 0;
