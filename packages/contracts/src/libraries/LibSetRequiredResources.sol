@@ -1,8 +1,10 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { addressToEntity } from "solecs/utils.sol";
+import { Uint32Component } from "std-contracts/components/Uint32Component.sol";
 
 import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -10,10 +12,10 @@ import { LibEncode } from "./LibEncode.sol";
 library LibSetRequiredResources {
   function set1RequiredResourceForEntity(
     Uint256ArrayComponent requiredResourcesComponent,
-    Uint256Component itemComponent,
+    Uint32Component itemComponent,
     uint256 entity,
     uint256 resourceId1,
-    uint256 resourceCost1
+    uint32 resourceCost1
   ) internal {
     uint256[] memory resourceIds = new uint256[](1);
     resourceIds[0] = resourceId1;
@@ -23,12 +25,12 @@ library LibSetRequiredResources {
 
   function set2RequiredResourcesForEntity(
     Uint256ArrayComponent requiredResourcesComponent,
-    Uint256Component itemComponent,
+    Uint32Component itemComponent,
     uint256 entity,
     uint256 resourceId1,
-    uint256 resourceCost1,
+    uint32 resourceCost1,
     uint256 resourceId2,
-    uint256 resourceCost2
+    uint32 resourceCost2
   ) internal {
     uint256[] memory resourceIds = new uint256[](2);
     resourceIds[0] = resourceId1;
@@ -40,14 +42,14 @@ library LibSetRequiredResources {
 
   function set3RequiredResourcesForEntity(
     Uint256ArrayComponent requiredResourcesComponent,
-    Uint256Component itemComponent,
+    Uint32Component itemComponent,
     uint256 entity,
     uint256 resourceId1,
-    uint256 resourceCost1,
+    uint32 resourceCost1,
     uint256 resourceId2,
-    uint256 resourceCost2,
+    uint32 resourceCost2,
     uint256 resourceId3,
-    uint256 resourceCost3
+    uint32 resourceCost3
   ) internal {
     uint256[] memory resourceIds = new uint256[](3);
     resourceIds[0] = resourceId1;
@@ -61,16 +63,16 @@ library LibSetRequiredResources {
 
   function set4RequiredResourcesForEntity(
     Uint256ArrayComponent requiredResourcesComponent,
-    Uint256Component itemComponent,
+    Uint32Component itemComponent,
     uint256 entity,
     uint256 resourceId1,
-    uint256 resourceCost1,
+    uint32 resourceCost1,
     uint256 resourceId2,
-    uint256 resourceCost2,
+    uint32 resourceCost2,
     uint256 resourceId3,
-    uint256 resourceCost3,
+    uint32 resourceCost3,
     uint256 resourceId4,
-    uint256 resourceCost4
+    uint32 resourceCost4
   ) internal {
     uint256[] memory resourceIds = new uint256[](4);
     resourceIds[0] = resourceId1;

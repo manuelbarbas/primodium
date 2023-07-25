@@ -9,7 +9,7 @@ import { LibMath } from "./LibMath.sol";
 library LibResourceProduction {
   //checks all required conditions for a factory to be functional and updates factory is functional status
 
-  function updateResourceProduction(IWorld world, uint256 entity, uint256 newResourceProductionRate) internal {
+  function updateResourceProduction(IWorld world, uint256 entity, uint32 newResourceProductionRate) internal {
     MineComponent mineComponent = MineComponent(world.getComponent(MineComponentID));
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)

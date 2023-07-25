@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
 import { IWorld } from "solecs/interfaces/IWorld.sol";
@@ -13,7 +14,7 @@ library LibStorageUpdate {
     StorageCapacityComponent storageCapacityComponent,
     uint256 entity,
     uint256 resourceId,
-    uint256 newStorageCapacity
+    uint32 newStorageCapacity
   ) internal {
     uint256 resourceEntity = LibEncode.hashKeyEntity(resourceId, entity);
     if (!storageCapacityComponent.has(resourceEntity)) {

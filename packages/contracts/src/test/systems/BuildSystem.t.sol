@@ -297,7 +297,7 @@ contract BuildSystemTest is PrimodiumTest {
     uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(DebugSimpleBuildingResourceReqsID);
     assertEq(resourceRequirements.length, 1, "DebugSimpleBuildingResourceReqs should have 1 resource requirement");
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint256 resourceCost = LibMath.getSafeUint256Value(
+      uint32 resourceCost = LibMath.getSafeUint32Value(
         itemComponent,
         LibEncode.hashKeyEntity(resourceRequirements[i], DebugSimpleBuildingResourceReqsID)
       );

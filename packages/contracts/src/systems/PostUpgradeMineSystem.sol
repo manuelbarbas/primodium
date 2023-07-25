@@ -130,7 +130,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     (address playerAddress, uint256 entity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
 
-    uint256 newLevel = BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(entity);
+    uint32 newLevel = BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(entity);
 
     uint256 buildingId = TileComponent(getAddressById(components, TileComponentID)).getValue(entity);
 

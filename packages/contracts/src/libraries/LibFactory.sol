@@ -25,9 +25,9 @@ library LibFactory {
       factoryBuildingLevelEntity
     );
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
-    uint256 newResourceProductionRate = isFunctional
-      ? LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate
-      : LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) - factoryProductionData.ResourceProductionRate;
+    uint32 newResourceProductionRate = isFunctional
+      ? LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate
+      : LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) - factoryProductionData.ResourceProductionRate;
     LibResourceProduction.updateResourceProduction(world, playerResourceEntity, newResourceProductionRate);
   }
 }

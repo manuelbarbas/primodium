@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
@@ -26,8 +27,8 @@ contract DebugAcquireResourcesBasedOnRequirementSystem is System {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceRequirements[i], addressToEntity(msg.sender));
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) +
-          LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceRequirements[i], entity))
+        LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) +
+          LibMath.getSafeUint32Value(itemComponent, LibEncode.hashKeyEntity(resourceRequirements[i], entity))
       );
     }
 

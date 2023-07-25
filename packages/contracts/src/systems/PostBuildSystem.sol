@@ -37,12 +37,12 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     if (!storageCapacityResourcesComponent.has(buildingTypeLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         playerEntity,
         storageResources[i]
       );
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         buildingTypeLevel,
         storageResources[i]
