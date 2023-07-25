@@ -46,7 +46,7 @@ library LibBuilding {
       requiredTileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
   }
 
-  function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint256) {
+  function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint32) {
     MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
       getAddressById(world.components(), MainBaseInitializedComponentID)
     );
