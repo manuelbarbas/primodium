@@ -12,7 +12,7 @@ import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/Blueprin
 import { BlueprintComponent, ID as BlueprintComponentID } from "../../components/BlueprintComponent.sol";
 
 //buildings
-import "../../prototypes/Tiles.sol";
+import "../../prototypes.sol";
 
 contract BlueprintSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}

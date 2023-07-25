@@ -10,7 +10,7 @@ import { ItemComponent, ID as ItemComponentID } from "../../components/ItemCompo
 import { Coord } from "../../types.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 
-import { IronResourceItemID } from "../../prototypes/Keys.sol";
+import { IronResourceItemID } from "../../prototypes.sol";
 
 contract BuildSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}

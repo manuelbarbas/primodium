@@ -13,7 +13,7 @@ import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "componen
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
-import { MainBaseID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 import { LibMath } from "libraries/LibMath.sol";

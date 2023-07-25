@@ -14,9 +14,9 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 //debug buildings
-import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes.sol";
 
 //main buildings
 import { DebugIronMineID } from "../../libraries/LibDebugInitializer.sol";

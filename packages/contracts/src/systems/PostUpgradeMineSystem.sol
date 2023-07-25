@@ -11,7 +11,7 @@ import { FactoryProductionComponent, ID as FactoryProductionComponentID, Factory
 import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
-import { MainBaseID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";

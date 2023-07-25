@@ -13,9 +13,9 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { BuildingKey } from "../prototypes.sol";
 
-import { MainBaseID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";

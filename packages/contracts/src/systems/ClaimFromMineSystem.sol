@@ -18,7 +18,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { BuildingKey } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 
