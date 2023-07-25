@@ -1,11 +1,13 @@
 import { KeybindActions } from "@game/constants";
-import { Scene } from "src/engine/types";
+// import { Scene } from "src/engine/types";
 import { pan } from "src/game/api/camera";
+import { Scene } from "engine/types";
 import { isDown } from "src/game/api/input";
 import { Network } from "src/network/layer";
 import { world } from "src/network/world";
 import { Address } from "wagmi";
 import * as components from "../../api/components";
+
 const SPEED = 750;
 const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;

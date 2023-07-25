@@ -7,7 +7,7 @@ import {
   defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { Network } from "src/network/layer";
 import { createSelectionTile } from "../factory/selectionTile";
 

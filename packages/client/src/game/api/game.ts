@@ -1,4 +1,4 @@
-import { engine } from "@engine/api";
+import engine from "engine";
 
 export const setResolution = (width: number, height: number) => {
   const { phaserGame, sceneManager } = engine.getGame()!;

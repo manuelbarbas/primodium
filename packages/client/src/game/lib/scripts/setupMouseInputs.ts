@@ -5,7 +5,7 @@ import {
   removeComponent,
   setComponent,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { pan, updateWorldView } from "src/game/api/camera";
 import { isDown } from "src/game/api/input";
 import { offChainComponents, singletonIndex, world } from "src/network/world";

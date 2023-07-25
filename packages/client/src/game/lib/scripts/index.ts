@@ -1,6 +1,6 @@
 // PRIMODIUM ENTRY POINT
 import { Address } from "wagmi";
-import { engine } from "../../../engine";
+import engine from "engine";
 import { Network } from "../../../network/layer";
 import gameConfig from "../../config/gameConfig";
 import mainSceneConfig from "../../config/mainSceneConfig";

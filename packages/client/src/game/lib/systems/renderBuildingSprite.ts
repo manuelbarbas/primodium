@@ -12,7 +12,7 @@ import {
 
 import { Coord } from "@latticexyz/utils";
 
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { Network } from "src/network/layer";
 import { offChainComponents, singletonIndex } from "src/network/world";
 import { createBuilding } from "../factory/building";

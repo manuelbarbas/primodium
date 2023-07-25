@@ -1,4 +1,4 @@
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { Network } from "src/network/layer";
 import { renderAttackTargetingTool } from "./renderAttackTargetingTool";
 import { renderBuildngPaths } from "./renderBuildingPaths";

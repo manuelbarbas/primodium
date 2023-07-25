@@ -8,7 +8,7 @@ import {
   defineUpdateSystem,
   getComponentValue,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import * as components from "src/game/api/components";
 import { Network } from "src/network/layer";
 import { Action } from "src/util/constants";

@@ -7,7 +7,7 @@ import {
   hasComponent,
 } from "@latticexyz/recs";
 import { Network } from "src/network/layer";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { createArrowMarker } from "../factory/arrowMarker";
 

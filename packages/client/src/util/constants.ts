@@ -1,6 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
-import { Key } from "src/engine/lib/core/createInput";
+import { Key } from "engine/types";
 
 export enum Action {
   DemolishBuilding,

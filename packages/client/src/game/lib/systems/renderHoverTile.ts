@@ -10,7 +10,7 @@ import {
   defineUpdateSystem,
   setComponent,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { Network } from "src/network/layer";
 import { hoverTile } from "../../api/components";
 import { createHoverTile } from "../factory/createHoverTile";

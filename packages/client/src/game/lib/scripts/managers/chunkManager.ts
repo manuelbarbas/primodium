@@ -5,7 +5,7 @@ import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
 import { EntityIdtoTilesetId, Tilekeys } from "../../../constants";
 import { interval } from "rxjs";
-import { Scene } from "../../../../engine/types";
+import { Scene } from "engine/types";
 
 const chunkCache = new CoordMap<boolean>();
 const perlin = createPerlin();

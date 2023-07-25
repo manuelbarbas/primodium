@@ -18,6 +18,7 @@ import { observable, reaction, runInAction } from "mobx";
 
 import Phaser from "phaser";
 import { filterNullish } from "@latticexyz/utils";
+import { Key } from "../../types";
 
 type Area = {
   originX: number;
@@ -27,11 +28,6 @@ type Area = {
   prevY: number;
   prevX: number;
 };
-
-export type Key =
-  | keyof typeof Phaser.Input.Keyboard.KeyCodes
-  | "POINTER_LEFT"
-  | "POINTER_RIGHT";
 
 export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const disposers = new Set<() => void>();

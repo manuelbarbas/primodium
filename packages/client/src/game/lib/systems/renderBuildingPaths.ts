@@ -8,7 +8,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 
 import { createPath } from "../factory/path";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { Network } from "src/network/layer";
 
 export const renderBuildngPaths = (scene: Scene, network: Network) => {
