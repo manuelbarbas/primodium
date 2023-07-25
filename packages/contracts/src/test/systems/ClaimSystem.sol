@@ -19,7 +19,6 @@ import { ItemComponent, ID as ItemComponentID } from "../../components/ItemCompo
 import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
-// import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes.sol";
 
 import { MainBaseID } from "../../prototypes.sol";
 import { DebugCopperMineID, DebugIronMineID, DebugIronPlateFactoryID } from "../../libraries/LibDebugInitializer.sol";
