@@ -1,7 +1,6 @@
 {
   "components": [
     "CounterComponent",
-    "GameConfigComponent",
     "TileComponent",
     "OwnedByComponent",
     "PathComponent",
