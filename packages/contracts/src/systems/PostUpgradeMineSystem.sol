@@ -43,7 +43,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     );
     //if is not functional check if it can be made functional
 
-    // first check if any conncected mines are not at the required level if so do nothing
+    // first check if any connected mines are not at the required level if so do nothing
     uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
     uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(factoryEntity);
     for (uint256 i = 0; i < connectedMineEntities.length; i++) {
@@ -83,41 +83,36 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingLevelComponentID)
+    uint32 buildingLevel = BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(
+      mineEntity
     );
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    uint256 tile = TileComponent(getAddressById(components, TileComponentID)).getValue(mineEntity);
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
       mineComponent.getValue(playerResourceEntity) +
-        mineComponent.getValue(
-          LibEncode.hashKeyEntity(tileComponent.getValue(mineEntity), buildingLevelComponent.getValue(mineEntity))
-        ) -
-        mineComponent.getValue(
-          LibEncode.hashKeyEntity(tileComponent.getValue(mineEntity), buildingLevelComponent.getValue(mineEntity) - 1)
-        )
+        mineComponent.getValue(LibEncode.hashKeyEntity(tile, buildingLevel)) -
+        mineComponent.getValue(LibEncode.hashKeyEntity(tile, buildingLevel - 1))
     );
   }
 
   function handleMineUpgrade(uint256 playerEntity, uint256 mineEntity) internal {
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     //check if upgraded mine is connected to anything if not nothing to do
-    if (pathComponent.has(mineEntity)) {
-      //check to see if its connected to MainBase
-      if (
-        TileComponent(getAddressById(components, TileComponentID)).getValue(pathComponent.getValue(mineEntity)) ==
-        MainBaseID
-      ) {
-        uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
-        //if connected to MainBase update unclaimed resources up to this point
-        LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
-        //and update resource production
-        uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-        updateResourceProduction(playerResourceEntity, mineEntity);
-      } else {
-        handleMineUpgradeConnectedToFactory(playerEntity, mineEntity);
-      }
+    if (!pathComponent.has(mineEntity)) return;
+    //check to see if its connected to MainBase
+    if (
+      TileComponent(getAddressById(components, TileComponentID)).getValue(pathComponent.getValue(mineEntity)) ==
+      MainBaseID
+    ) {
+      uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
+      //if connected to MainBase update unclaimed resources up to this point
+      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+      //and update resource production
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+      updateResourceProduction(playerResourceEntity, mineEntity);
+    } else {
+      handleMineUpgradeConnectedToFactory(playerEntity, mineEntity);
     }
   }
 
