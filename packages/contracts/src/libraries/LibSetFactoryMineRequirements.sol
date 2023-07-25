@@ -10,15 +10,15 @@ library LibSetFactoryMineRequirements {
   function setFactory1MineRequirement(
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
     uint256 factoryBuildingId,
-    uint256 level,
+    uint32 level,
     uint256 mineBuildingId1,
-    uint256 numMineBuilding1
+    uint32 numMineBuilding1
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
     FactoryMineBuildingsData memory factoryMineBuildingsData;
     factoryMineBuildingsData.MineBuildingIDs = new uint256[](1);
     factoryMineBuildingsData.MineBuildingIDs[0] = mineBuildingId1;
-    factoryMineBuildingsData.MineBuildingCount = new uint256[](1);
+    factoryMineBuildingsData.MineBuildingCount = new uint32[](1);
     factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
 
     factoryMineBuildingsComponent.set(buildingIdLevel, factoryMineBuildingsData);
@@ -27,18 +27,18 @@ library LibSetFactoryMineRequirements {
   function setFactory2MineRequirement(
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
     uint256 factoryBuildingId,
-    uint256 level,
+    uint32 level,
     uint256 mineBuildingId1,
-    uint256 numMineBuilding1,
+    uint32 numMineBuilding1,
     uint256 mineBuildingId2,
-    uint256 numMineBuilding2
+    uint32 numMineBuilding2
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
     FactoryMineBuildingsData memory factoryMineBuildingsData;
     factoryMineBuildingsData.MineBuildingIDs = new uint256[](2);
     factoryMineBuildingsData.MineBuildingIDs[0] = mineBuildingId1;
     factoryMineBuildingsData.MineBuildingIDs[1] = mineBuildingId2;
-    factoryMineBuildingsData.MineBuildingCount = new uint256[](2);
+    factoryMineBuildingsData.MineBuildingCount = new uint32[](2);
     factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
     factoryMineBuildingsData.MineBuildingCount[1] = numMineBuilding2;
 
@@ -48,13 +48,13 @@ library LibSetFactoryMineRequirements {
   function setFactory3MineRequirement(
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
     uint256 factoryBuildingId,
-    uint256 level,
+    uint32 level,
     uint256 mineBuildingId1,
-    uint256 numMineBuilding1,
+    uint32 numMineBuilding1,
     uint256 mineBuildingId2,
-    uint256 numMineBuilding2,
+    uint32 numMineBuilding2,
     uint256 mineBuildingId3,
-    uint256 numMineBuilding3
+    uint32 numMineBuilding3
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
     FactoryMineBuildingsData memory factoryMineBuildingsData;
@@ -62,7 +62,7 @@ library LibSetFactoryMineRequirements {
     factoryMineBuildingsData.MineBuildingIDs[0] = mineBuildingId1;
     factoryMineBuildingsData.MineBuildingIDs[1] = mineBuildingId2;
     factoryMineBuildingsData.MineBuildingIDs[2] = mineBuildingId3;
-    factoryMineBuildingsData.MineBuildingCount = new uint256[](3);
+    factoryMineBuildingsData.MineBuildingCount = new uint32[](3);
     factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
     factoryMineBuildingsData.MineBuildingCount[1] = numMineBuilding2;
     factoryMineBuildingsData.MineBuildingCount[2] = numMineBuilding3;
@@ -73,15 +73,15 @@ library LibSetFactoryMineRequirements {
   function setFactory3MineRequirement(
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
     uint256 factoryBuildingId,
-    uint256 level,
+    uint32 level,
     uint256 mineBuildingId1,
-    uint256 numMineBuilding1,
+    uint32 numMineBuilding1,
     uint256 mineBuildingId2,
-    uint256 numMineBuilding2,
+    uint32 numMineBuilding2,
     uint256 mineBuildingId3,
-    uint256 numMineBuilding3,
+    uint32 numMineBuilding3,
     uint256 mineBuildingId4,
-    uint256 numMineBuilding4
+    uint32 numMineBuilding4
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
     FactoryMineBuildingsData memory factoryMineBuildingsData;
@@ -90,7 +90,7 @@ library LibSetFactoryMineRequirements {
     factoryMineBuildingsData.MineBuildingIDs[1] = mineBuildingId2;
     factoryMineBuildingsData.MineBuildingIDs[2] = mineBuildingId3;
     factoryMineBuildingsData.MineBuildingIDs[3] = mineBuildingId4;
-    factoryMineBuildingsData.MineBuildingCount = new uint256[](4);
+    factoryMineBuildingsData.MineBuildingCount = new uint32[](4);
     factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
     factoryMineBuildingsData.MineBuildingCount[1] = numMineBuilding2;
     factoryMineBuildingsData.MineBuildingCount[2] = numMineBuilding3;
