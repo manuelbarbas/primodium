@@ -1,11 +1,9 @@
 import { KeybindActions } from "@game/constants";
-import { getComponentValue } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
-import { useMud } from "src/context/MudContext";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { Action, BlockType } from "src/util/constants";
 import { Hotbar } from "src/util/types";
-import { singletonIndex, world } from "src/network/world";
+import { IsDebug } from "src/network/components/chainComponents";
 
 const mainBaseHotbar: Hotbar = {
   name: "Main Base",
@@ -116,18 +114,12 @@ export const useHotbarContent = () => {
   const [hotbarContent, setHotbarContent] = useState<Hotbar[]>([
     mainBase ? buildingHotbar : mainBaseHotbar,
   ]);
-  const network = useMud();
 
   useEffect(() => {
     setHotbarContent(
       [
         mainBase ? buildingHotbar : mainBaseHotbar,
-        getComponentValue(
-          network.components.IsDebug,
-          world.entityToIndex.get(BlockType.IsDebug) ?? singletonIndex
-        )
-          ? debugHotbar
-          : undefined,
+        IsDebug.get(BlockType.IsDebug) ? debugHotbar : undefined,
       ].filter(Boolean) as Hotbar[]
     );
   }, [mainBase]);

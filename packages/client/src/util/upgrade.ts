@@ -1,16 +1,11 @@
-import { EntityID, World, hasComponent } from "@latticexyz/recs";
-import { PrimodiumComponents } from "src/network/components";
+import { EntityID } from "@latticexyz/recs";
+import {
+  BuildingLevel,
+  MaxLevel,
+} from "src/network/components/chainComponents";
 export function canBeUpgraded(
   buildingEntity: EntityID,
-  buildingType: EntityID,
-  world: World,
-  components: PrimodiumComponents
+  buildingType: EntityID
 ): undefined | boolean {
-  const buildingEntityId = world.entityToIndex.get(buildingEntity);
-  const buildingTypeId = world.entityToIndex.get(buildingType);
-  if (!buildingEntityId || !buildingTypeId) return false;
-  return (
-    hasComponent(components.MaxLevel, buildingTypeId) &&
-    hasComponent(components.BuildingLevel, buildingEntityId)
-  );
+  return MaxLevel.has(buildingType) && BuildingLevel.has(buildingEntity);
 }

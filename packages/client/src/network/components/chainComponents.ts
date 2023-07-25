@@ -24,8 +24,6 @@ export const BuildingType = newComponent(
   }
 );
 
-// ... [Continue with the rest of the components in the same manner]
-
 export const RawBlueprint = newComponent(
   world,
   { value: Type.NumberArray },
@@ -178,6 +176,10 @@ export const LastClaimedAt = newNumberComponent(world, {
   overridable: true,
 });
 
+export const IsDebug = newBoolComponent(world, {
+  id: "IsDebug",
+  metadata: { contractId: `${commonIdPrefix}IsDebug` },
+});
 export default {
   Counter,
   BuildingType,
