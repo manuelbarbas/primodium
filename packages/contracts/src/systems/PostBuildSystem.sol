@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
@@ -88,7 +89,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     // update building count if the built building counts towards the build limit
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
       BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
+      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint32Value(buildingLimitComponent, playerEntity) + 1);
     }
 
     updatePlayerStorage(buildingType, playerEntity);
