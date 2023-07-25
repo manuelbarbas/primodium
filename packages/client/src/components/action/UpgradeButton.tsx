@@ -1,5 +1,4 @@
-import { useComponentValue } from "src/hooks/useComponentValue";
-import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { hashKeyEntityAndTrim } from "src/util/encode";
 import { useMud } from "../../context/MudContext";
@@ -14,6 +13,12 @@ import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
 import { upgrade } from "src/util/web3";
+import {
+  BuildingLevel,
+  MaxLevel,
+  Research,
+} from "src/network/components/chainComponents";
+import { SingletonID } from "@latticexyz/network";
 
 export default function UpgradeButton({
   id,
@@ -27,20 +32,13 @@ export default function UpgradeButton({
   buildingEntity: EntityID;
 }) {
   const network = useMud();
-  const { components, world, singletonIndex } = network;
   const { address } = useAccount();
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
   ]);
 
-  const currLevel = useComponentValue(
-    components.BuildingLevel,
-    world.entityToIndex.get(buildingEntity) as EntityIndex
-  );
-  const maxLevel = useComponentValue(
-    components.MaxLevel,
-    world.entityToIndex.get(builtTile) as EntityIndex
-  );
+  const currLevel = BuildingLevel.use(buildingEntity);
+  const maxLevel = MaxLevel.use(builtTile);
   const upgradedLevel = useMemo(() => {
     return parseInt(currLevel?.value.toString() ?? "0") + 1;
   }, [currLevel]);
@@ -57,26 +55,23 @@ export default function UpgradeButton({
   }, [currLevel, builtTile]);
 
   const recipe = useMemo(() => {
-    return getRecipe(buildingTypeLevel, world, components);
+    return getRecipe(buildingTypeLevel);
   }, [buildingTypeLevel]);
 
   const researchRequirement = useMemo(() => {
-    return getBuildingResearchRequirement(buildingTypeLevel, world, components);
+    return getBuildingResearchRequirement(buildingTypeLevel);
   }, [buildingTypeLevel]);
 
   const researchOwner = useMemo(() => {
-    return address && researchRequirement
-      ? world.entityToIndex.get(
-          hashKeyEntityAndTrim(
-            researchRequirement,
-            address.toString().toLowerCase()
-          ) as EntityID
-        )!
-      : singletonIndex;
+    if (!address || !researchRequirement) return SingletonID;
+    return hashKeyEntityAndTrim(
+      researchRequirement,
+      address.toString().toLowerCase()
+    ) as EntityID;
   }, [researchRequirement]);
 
   const isResearched = useMemo(() => {
-    return getComponentValue(components.Research, researchOwner);
+    return Research.get(researchOwner);
   }, [researchOwner]);
 
   const isUpgradeLocked = useMemo(() => {

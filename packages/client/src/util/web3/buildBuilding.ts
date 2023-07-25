@@ -10,11 +10,11 @@ import { useNotificationStore } from "src/store/NotificationStore";
 export const buildBuilding = async (
   pos: Coord,
   blockType: EntityID,
-  address: string,
+  address: EntityID,
   network: Network
 ) => {
   const { providers, systems } = network;
-  const { tempPositionId } = addTileOverride(pos, blockType, address, network);
+  const { tempPositionId } = addTileOverride(pos, blockType, address);
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
 
@@ -29,7 +29,7 @@ export const buildBuilding = async (
       setNotification
     );
   } finally {
-    removeTileOverride(tempPositionId, network);
+    removeTileOverride(tempPositionId);
   }
 
   setTransactionLoading(false);

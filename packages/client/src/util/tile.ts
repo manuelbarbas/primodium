@@ -1,16 +1,10 @@
 import { Perlin } from "@latticexyz/noise";
-import {
-  EntityID,
-  Has,
-  HasValue,
-  getComponentValue,
-  runQuery,
-} from "@latticexyz/recs";
-import { NetworkComponents } from "@latticexyz/std-client";
+import { EntityID, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Network } from "src/network/layer";
-import { defineComponents } from "../network/components";
 import { BlockType, DisplayKeyPair } from "./constants";
+import { Position } from "src/network/components/clientComponents";
+import { BuildingType, OwnedBy } from "src/network/components/chainComponents";
+import { world } from "src/network/world";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -147,8 +141,7 @@ export function getTilesOfTypeInRange(
 export function getBuildingsOfTypeInRange(
   origin: Coord,
   type: EntityID,
-  range: number,
-  components: NetworkComponents<ReturnType<typeof defineComponents>>
+  range: number
 ) {
   const tiles: Coord[] = [];
 
@@ -158,16 +151,15 @@ export function getBuildingsOfTypeInRange(
 
       //get entity at coord
       const entities = runQuery([
-        HasValue(components.Position, currentCoord),
-        Has(components.BuildingType),
+        HasValue(Position, currentCoord),
+        Has(BuildingType),
       ]);
 
-      const comp = getComponentValue(
-        components.BuildingType,
+      const buildingType = BuildingType.get(
         entities.values().next().value
-      );
+      )?.value;
 
-      if (type === (comp?.value as EntityID)) {
+      if (type === buildingType) {
         tiles.push(currentCoord);
       }
     }
@@ -176,29 +168,21 @@ export function getBuildingsOfTypeInRange(
   return tiles;
 }
 
-export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
-  const { components } = network;
-
-  const entities = runQuery([
-    HasValue(components.Position, coord),
-    Has(components.BuildingType),
-  ]);
+export const getEntityTileAtCoord = (coord: Coord) => {
+  const entities = runQuery([HasValue(Position, coord), Has(BuildingType)]);
 
   if (!entities.size) return undefined;
 
   const tileEntityID = entities.values().next().value;
 
-  return getComponentValue(components.BuildingType, tileEntityID)
-    ?.value as EntityID;
+  return BuildingType.get(tileEntityID)?.value;
 };
 
-export const getBuildingAtCoord = (coord: Coord, network: Network) => {
-  const { components } = network;
-
-  const entities = runQuery([HasValue(components.Position, coord)]);
+export const getBuildingAtCoord = (coord: Coord) => {
+  const entities = runQuery([HasValue(Position, coord), Not(BuildingType)]);
 
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];
 
-  return getComponentValue(components.OwnedBy, tileEntity)?.value as EntityID;
+  return OwnedBy.get(world.entities[tileEntity])?.value;
 };

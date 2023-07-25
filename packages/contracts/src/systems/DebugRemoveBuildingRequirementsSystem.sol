@@ -12,7 +12,7 @@ contract DebugRemoveBuildingRequirementsSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory args) public returns (bytes memory) {
-    if (!LibDebug.isDebug()) {
+    if (!LibDebug.isDebug(world)) {
       revert("Not in debug mode");
     }
     uint256 buildingId = abi.decode(args, (uint256));

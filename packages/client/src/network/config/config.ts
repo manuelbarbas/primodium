@@ -6,7 +6,7 @@ import { Address } from "wagmi";
 import { chainConfigs } from "./chainConfigs";
 const params = new URLSearchParams(window.location.search);
 
-// The default production testnet is `skystrife`.
+// The default production testnet is `caldera`.
 // All valid options are `lattice`, `caldera`, and `skystrife`.
 
 // If VITE_DEV is true:
@@ -19,7 +19,7 @@ const chain = params.get("defaultChain");
 
 // TO UPDATE DEFAULT CHAIN, CHANGE THESE VALUES
 const defaultDevChain = chainConfigs["local"];
-const defaultProdChain = chainConfigs["skystrife"];
+const defaultProdChain = chainConfigs["caldera"];
 const defaultChain = DEV ? defaultDevChain : defaultProdChain;
 
 const chainConfig = chain ? chainConfigs[chain] : defaultChain;
@@ -76,5 +76,6 @@ export const getNetworkLayerConfig = (
     privateKey,
     defaultWalletAddress: address,
     faucetMinDripAmount: chainConfig.tempFaucetMinDripAmount,
+    encoders: DEV,
   };
 };

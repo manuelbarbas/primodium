@@ -1,17 +1,11 @@
-import { EntityID, World, hasComponent } from "@latticexyz/recs";
-import { NetworkComponents } from "@latticexyz/std-client";
-import { defineComponents } from "../network/components";
+import { EntityID } from "@latticexyz/recs";
+import {
+  BuildingLevel,
+  MaxLevel,
+} from "src/network/components/chainComponents";
 export function canBeUpgraded(
   buildingEntity: EntityID,
-  buildingType: EntityID,
-  world: World,
-  components: NetworkComponents<ReturnType<typeof defineComponents>>
+  buildingType: EntityID
 ): undefined | boolean {
-  const buildingEntityId = world.entityToIndex.get(buildingEntity);
-  const buildingTypeId = world.entityToIndex.get(buildingType);
-  if (!buildingEntityId || !buildingTypeId) return false;
-  return (
-    hasComponent(components.MaxLevel, buildingTypeId) &&
-    hasComponent(components.BuildingLevel, buildingEntityId)
-  );
+  return MaxLevel.has(buildingType) && BuildingLevel.has(buildingEntity);
 }

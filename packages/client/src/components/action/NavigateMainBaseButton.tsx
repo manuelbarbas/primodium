@@ -1,37 +1,30 @@
 import { primodium } from "@game/api";
-import { EntityID } from "@latticexyz/recs";
 import { useCallback, useMemo } from "react";
 import { decodeCoordEntity } from "src/util/encode";
 import { buildBuilding } from "src/util/web3";
 import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
-import { useComponentValue } from "../../hooks/useComponentValue";
 import { BlockType } from "../../util/constants";
+import { MainBase } from "src/network/components/chainComponents";
+import { SelectedTile } from "src/network/components/clientComponents";
+
 export default function NavigateMainBaseButton() {
-  const { world, components, singletonIndex } = useMud();
-  const { address } = useAccount();
+  const { address: player } = useAccount();
 
   // if provide an entityId, use as owner
   // else try to use wallet, otherwise use default index
-  const resourceKey = address
-    ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
-    : singletonIndex;
 
-  const mainBaseEntity = useComponentValue(
-    components.MainBaseInitialized,
-    resourceKey
-  )?.value;
-
+  const mainBaseEntity = MainBase.use(player)?.value;
   // fetch the main base of the user based on address
   const mainBaseCoord = useMemo(() => {
-    if (mainBaseEntity) return decodeCoordEntity(mainBaseEntity as EntityID);
+    if (mainBaseEntity) return decodeCoordEntity(mainBaseEntity);
     return undefined;
   }, [mainBaseEntity]);
   // Navigate to Main Base if it exists for this wallet
   const navigateMainBase = useCallback(() => {
     if (mainBaseCoord) {
       primodium.camera.pan(mainBaseCoord);
-      primodium.components.selectedTile(network).set(mainBaseCoord);
+      SelectedTile.set(mainBaseCoord);
     }
   }, [mainBaseCoord]);
 
@@ -40,12 +33,11 @@ export default function NavigateMainBaseButton() {
 
   const buildMainBase = async () => {
     const cameraCoord = primodium.camera.getPosition();
-    const selectedTile = primodium.components.selectedTile(network).get();
+    const selectedTile = SelectedTile.get();
 
-    if (!selectedTile)
-      return primodium.components.selectedTile(network).set(cameraCoord);
+    if (!selectedTile) return SelectedTile.set(cameraCoord);
 
-    await buildBuilding(selectedTile, BlockType.MainBase, address, network);
+    await buildBuilding(selectedTile, BlockType.MainBase, player, network);
   };
 
   if (mainBaseCoord) {
