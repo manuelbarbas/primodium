@@ -20,15 +20,13 @@ library LibStorageUpdate {
     if (!storageCapacityComponent.has(resourceEntity)) {
       uint256[] memory storageResourceIds;
       if (storageCapacityResourcesComponent.has(entity)) {
-        {
-          storageResourceIds = storageCapacityResourcesComponent.getValue(entity);
-          uint256[] memory updatedResourceIds = new uint256[](storageResourceIds.length + 1);
-          for (uint256 i = 0; i < storageResourceIds.length; i++) {
-            updatedResourceIds[i] = storageResourceIds[i];
-          }
-          updatedResourceIds[storageResourceIds.length] = resourceId;
-          storageCapacityResourcesComponent.set(entity, updatedResourceIds);
+        storageResourceIds = storageCapacityResourcesComponent.getValue(entity);
+        uint256[] memory updatedResourceIds = new uint256[](storageResourceIds.length + 1);
+        for (uint256 i = 0; i < storageResourceIds.length; i++) {
+          updatedResourceIds[i] = storageResourceIds[i];
         }
+        updatedResourceIds[storageResourceIds.length] = resourceId;
+        storageCapacityResourcesComponent.set(entity, updatedResourceIds);
       } else {
         storageResourceIds = new uint256[](1);
         storageResourceIds[0] = resourceId;

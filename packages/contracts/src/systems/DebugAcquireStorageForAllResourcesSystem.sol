@@ -12,7 +12,7 @@ import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, Ir
 
 uint256 constant ID = uint256(keccak256("system.DebugAcquireStorageForAllResources"));
 
-uint32 constant MAX_UINT32 = 4_294_967_295;
+uint32 constant BIGNUM = 1_294_967_295;
 
 contract DebugAcquireStorageForAllResourcesSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
@@ -42,7 +42,7 @@ contract DebugAcquireStorageForAllResourcesSystem is System {
     uint256[] memory storageCapacity = new uint256[](allResourceIds.length);
 
     for (uint256 i = 0; i < allResourceIds.length; i++) {
-      storageCapacityComponent.set(LibEncode.hashKeyEntity(allResourceIds[i], addressToEntity(msg.sender)), MAX_UINT32);
+      storageCapacityComponent.set(LibEncode.hashKeyEntity(allResourceIds[i], addressToEntity(msg.sender)), BIGNUM);
       storageCapacity[i] = allResourceIds[i];
     }
     storageCapacityResourcesComponent.set(addressToEntity(msg.sender), storageCapacity);
