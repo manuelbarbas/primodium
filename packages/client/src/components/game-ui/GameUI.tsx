@@ -13,6 +13,7 @@ import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "./NotificationBox";
 import { BrandingLabel } from "./BrandingLabel";
+import { GameReady } from "src/network/components/clientComponents";
 import { AiOutlineRotateRight } from "react-icons/ai";
 import { useOrientation } from "src/hooks/useOrientation";
 
@@ -21,8 +22,9 @@ function GameUI() {
     state.showUI,
     state.toggleShowUI,
   ]);
+
+  const gameReady = GameReady.use();
   const { isPortrait } = useOrientation();
-  const gameReady = primodium.hooks.useGameReady();
 
   useEffect(() => {
     if (!gameReady) return;

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Walktour } from "walktour";
-import { primodium } from "@game/api";
 
 import buildTourSteps from "./Steps";
 import NarrationBox from "./NarrationBox";
@@ -10,6 +9,7 @@ import { useMud } from "src/hooks/useMud";
 import { TourStep } from "../../util/types";
 import { useAccount } from "../../hooks/useAccount";
 import { validTutorialClick } from "src/util/tutorial";
+import { Marker, SelectedTile } from "src/network/components/clientComponents";
 
 export const Tour = () => {
   const mudCtx = useMud();
@@ -61,7 +61,7 @@ export const Tour = () => {
     }
 
     setShowUI(!currentStep.hideUI);
-    primodium.components.marker(mudCtx).removeAll();
+    Marker.clear();
   }, [currentStep]);
 
   //steps needs to be defined for initialStepIndex to work
@@ -89,11 +89,11 @@ export const Tour = () => {
         disablePrev
         movingTarget
         validateNextOnTargetClick={async () => {
-          const selectedTile = primodium.components.selectedTile(mudCtx).get();
+          const selectedTile = SelectedTile.get();
 
           if (!selectedTile) return false;
 
-          return validTutorialClick(selectedTile, mudCtx);
+          return validTutorialClick(selectedTile);
         }}
         customCloseFunc={(tourLogic) => {
           setCheckpoint(null);

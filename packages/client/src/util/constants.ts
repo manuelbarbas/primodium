@@ -44,6 +44,7 @@ export const BlockKey = {
 };
 
 export const BlockType = {
+  IsDebug: keccak256("component.IsDebug") as EntityID,
   // Landscape blocks
   Water: keccak256("block.Water") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,
@@ -70,7 +71,15 @@ export const BlockType = {
   DebugIronMineNoTileReqID: keccak256(
     "block.DebugIronMineNoTileReq"
   ) as EntityID,
+  DebugCopperMine: keccak256("block.DebugCopperMine") as EntityID,
+  DebugLithiumMine: keccak256("block.DebugLithiumMine") as EntityID,
+
   DebugIronPlateFactory: keccak256("block.DebugIronPlateFactory") as EntityID,
+  DebugAlloyFactory: keccak256("block.DebugAlloyFactory") as EntityID,
+  DebugLithiumCopperOxideFactory: keccak256(
+    "block.DebugLithiumCopperOxideFactory"
+  ) as EntityID,
+  DebugSolarPanel: keccak256("block.DebugSolarPanel") as EntityID,
   DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
   DebugDemolishBuilding: keccak256("block.DebugDemolishBuilding") as EntityID,
   DebugDemolishPath: keccak256("block.DebugDemolishPath") as EntityID,
@@ -383,8 +392,17 @@ export const BackgroundImage = new Map<EntityID, string[]>([
 
   // debug buildings
   [BlockType.DebugIronMine, ["/img/building/minerdrill.gif"]],
+  [BlockType.DebugCopperMine, ["/img/building/minerdrill.gif"]],
+  [BlockType.DebugLithiumMine, ["/img/building/minerdrill.gif"]],
   [BlockType.DebugIronPlateFactory, ["/img/building/newplatingfactory.gif"]],
+  [BlockType.DebugAlloyFactory, ["/img/building/newplatingfactory.gif"]],
+  [
+    BlockType.DebugLithiumCopperOxideFactory,
+    ["/img/building/newplatingfactory.gif"],
+  ],
   [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
+  [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
+
   [
     BlockType.MainBase,
     [
@@ -406,7 +424,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/coppermine/copper-miner.gif",
       "/img/building/coppermine/copper-miner-level2.gif",
-      "/img/building/coppermine/copper-miner-level-3.png",
+      "/img/building/coppermine/copper-miner-level3.png",
     ],
   ],
   [
@@ -414,7 +432,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/ironmine/iron-miner.gif",
       "/img/building/ironmine/iron-miner-level2.gif",
-      "/img/building/ironmine/iron-miner-level-3.png",
+      "/img/building/ironmine/iron-miner-level3.png",
     ],
   ],
   [
@@ -422,7 +440,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/lithiummine/lithium-miner.gif",
       "/img/building/lithiummine/lithium-miner-level2.gif",
-      "/img/building/lithiummine/lithium-miner-level-3.png",
+      "/img/building/lithiummine/lithium-miner-level3.png",
     ],
   ],
   [
@@ -430,7 +448,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/sulfurmine/sulfur-miner.gif",
       "/img/building/sulfurmine/sulfur-miner-level2.gif",
-      "/img/building/sulfurmine/sulfur-miner-level-3.png",
+      "/img/building/sulfurmine/sulfur-miner-level3.png",
     ],
   ],
   [

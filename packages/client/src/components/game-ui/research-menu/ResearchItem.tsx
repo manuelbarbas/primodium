@@ -1,47 +1,43 @@
 import { useCallback, useMemo, useState } from "react";
-import { EntityID, EntityIndex, getComponentValue } from "@latticexyz/recs";
-import { BigNumber } from "ethers";
-
-import { useMud } from "src/hooks/useMud";
+import { EntityID } from "@latticexyz/recs";
 import { getRecipe } from "../../../util/resource";
-
 import {
   BlockIdToKey,
   ResearchImage,
   ResourceImage,
 } from "../../../util/constants";
 import { useAccount } from "../../../hooks/useAccount";
-import { execute } from "../../../network/actions";
 import { hashKeyEntityAndTrim } from "../../../util/encode";
-
-import { useGameStore } from "../../../store/GameStore";
-import Spinner from "../../shared/Spinner";
-import { useNotificationStore } from "../../../store/NotificationStore";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import {
   getBuildingResearchRequirement,
   ResearchItemType,
 } from "../../../util/research";
-import { useComponentValue } from "@latticexyz/react";
 import { GameButton } from "src/components/shared/GameButton";
 import React from "react";
+import {
+  BuildingLevel,
+  MainBase,
+  Research,
+} from "src/network/components/chainComponents";
+import { useObservableValue } from "@latticexyz/react";
+import { SingletonID } from "@latticexyz/network";
+import { researchBuilding } from "src/util/web3";
+import { useMud } from "src/hooks";
+import Spinner from "src/components/shared/Spinner";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {
     // fetch whether research is completed
-    const { components, world, singletonIndex, systems, providers } = useMud();
+    const network = useMud();
     const { address } = useAccount();
     const { name, levels, description } = data;
 
     //we assume the order of this loop will never change. TODO: pull out into component since this is a nono
+    useObservableValue(Research.update$);
     const levelsResearched = levels.map(({ id }) => {
-      const isResearched = useComponentValue(
-        components.Research,
-        world.entityToIndex.get(
-          hashKeyEntityAndTrim(id, address.toString().toLowerCase()) as EntityID
-        )
-      );
-
+      const entity = hashKeyEntityAndTrim(id, address);
+      const isResearched = Research.get(entity);
       return isResearched?.value ?? false;
     });
 
@@ -58,47 +54,33 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       levels[isResearched ? currentLevel - 1 : currentLevel].subtitle;
 
     const researchRequirement = useMemo(() => {
-      return getBuildingResearchRequirement(researchId, world, components);
+      return getBuildingResearchRequirement(researchId);
     }, [researchId]);
 
     const researchOwner = useMemo(() => {
-      return address != null && researchRequirement != null
-        ? world.entityToIndex.get(
-            hashKeyEntityAndTrim(
-              researchRequirement as EntityID,
-              address.toString().toLowerCase()
-            ) as EntityID
-          )!
-        : singletonIndex;
+      if (address == null || researchRequirement == null) return SingletonID;
+      return hashKeyEntityAndTrim(researchRequirement as EntityID, address);
     }, [researchRequirement, address]);
 
-    const isResearchRequirementsMet = useMemo(() => {
-      return (
-        getComponentValue(components.Research, researchOwner)?.value ?? false
-      );
-    }, [researchOwner]);
-
-    const mainBaseEntity = useComponentValue(
-      components.MainBaseInitialized,
-      world.entityToIndex.get(
-        address.toString().toLowerCase() as EntityID
-      ) as EntityIndex
+    const isResearchRequirementsMet = useMemo(
+      () => Research.get(researchOwner)?.value ?? false,
+      [researchOwner]
     );
 
-    const mainBaseLevel = useComponentValue(
-      components.BuildingLevel,
-      world.entityToIndex.get(
-        mainBaseEntity?.value as unknown as EntityID
-      ) as EntityIndex
-    );
+    //TODO: make main base a hook and only render this component when main base isnt undefined
+    const mainBaseEntity = MainBase.use(address, {
+      value: "-1" as EntityID,
+    }).value;
 
-    const requiredMainBaseLevel = useComponentValue(
-      components.BuildingLevel,
-      world.entityToIndex.get(researchId) as EntityIndex
-    );
+    const mainBaseLevel = BuildingLevel.use(mainBaseEntity, {
+      value: 0,
+    }).value;
+    const requiredMainBaseLevel = BuildingLevel.use(researchId, {
+      value: 0,
+    }).value;
 
     const isMainBaseLevelRequirementsMet = useMemo(() => {
-      return (mainBaseLevel?.value ?? 0) >= (requiredMainBaseLevel?.value ?? 0);
+      return mainBaseLevel >= requiredMainBaseLevel;
     }, [mainBaseLevel, requiredMainBaseLevel]);
 
     // Check if building can be researched
@@ -113,33 +95,16 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       isMainBaseLevelRequirementsMet,
     ]);
 
-    const [_, setTransactionLoading] = useGameStore((state) => [
-      state.transactionLoading,
-      state.setTransactionLoading,
-    ]);
-
-    const [setNotification] = useNotificationStore((state) => [
-      state.setNotification,
-    ]);
-
     // New state so not every other research item button shows loading when only current research button is clicked.
     const [userClickedLoading, setUserClickedLoading] = useState(false);
 
     const research = useCallback(async () => {
       setUserClickedLoading(true);
-      setTransactionLoading(true);
-      await execute(
-        systems["system.Research"].executeTyped(BigNumber.from(researchId), {
-          gasLimit: 1_000_000,
-        }),
-        providers,
-        setNotification
-      );
-      setTransactionLoading(false);
+      await researchBuilding(researchId, network);
       setUserClickedLoading(false);
     }, []);
 
-    const recipe = getRecipe(researchId, world, components);
+    const recipe = getRecipe(researchId);
 
     return (
       <div className="relative min-w-64 border border-cyan-600 mb-3 mr-3 bg-slate-900">
@@ -168,21 +133,28 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
               <div className="mt-1 text-center text-md font-bold text-slate-100/50">
                 {subtitle}
               </div>
-              <div className="mt-2 flex justify-center items-center text-sm">
-                {recipe.map((resource) => {
-                  const resourceImage = ResourceImage.get(resource.id)!;
-                  const resourceName = BlockIdToKey[resource.id];
-                  return (
-                    <ResourceIconTooltip
-                      key={resource.id}
-                      image={resourceImage}
-                      resourceId={resource.id}
-                      name={resourceName}
-                      amount={resource.amount}
-                    />
-                  );
-                })}
-              </div>
+              {!isResearched && (
+                <div className="mt-2 flex justify-center items-center text-sm">
+                  {recipe.map((resource) => {
+                    const resourceImage = ResourceImage.get(resource.id)!;
+                    const resourceName = BlockIdToKey[resource.id];
+                    return (
+                      <ResourceIconTooltip
+                        key={resource.id}
+                        image={resourceImage}
+                        resourceId={resource.id}
+                        name={resourceName}
+                        amount={resource.amount}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+              {isResearched && (
+                <div className="mt-2 flex justify-center items-center text-sm">
+                  Max Level
+                </div>
+              )}
             </div>
 
             <div className="text-xs text-center bg-slate-900 py-4 px-1 italic ">
@@ -202,9 +174,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
               <div className="flex items-center w-full justify-center">
                 <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
                   <p className="px-2 py-1">
-                    Lvl.{" "}
-                    {parseInt(requiredMainBaseLevel?.value.toString() ?? "0")}{" "}
-                    Base Required
+                    Lvl. {requiredMainBaseLevel} Base Required
                   </p>
                 </GameButton>
               </div>

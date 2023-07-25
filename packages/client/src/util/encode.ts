@@ -83,10 +83,10 @@ export function hashKeyEntity(
 // Remove leading zeros due to mudv1 hashing behavior
 // if there are leading zeroes, the key in world.entityToIndex will be trimmed
 export function hashKeyEntityAndTrim(
-  key: EntityID,
+  key: EntityID | number,
   entity: EntityID | string
-): string {
-  return BigNumber.from(hashKeyEntity(key, entity)).toHexString();
+): EntityID {
+  return BigNumber.from(hashKeyEntity(key, entity)).toHexString() as EntityID;
 }
 
 export function padTo64Bytes(hex: string): string {

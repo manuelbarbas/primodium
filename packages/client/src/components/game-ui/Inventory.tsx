@@ -1,34 +1,31 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { useMud } from "src/hooks/useMud";
-import { useComponentValue } from "src/hooks/useComponentValue";
 import useResourceCount from "src/hooks/useResourceCount";
-import { useMainBase } from "src/hooks/useMainBase";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
-import { decodeCoordEntity } from "src/util/encode";
-import { singletonIndex, world } from "src/network/world";
+import { BlockNumber } from "src/network/components/clientComponents";
+import {
+  BuildingLevel,
+  Item,
+  LastClaimedAt,
+  MainBase,
+  Mine,
+  StorageCapacity,
+  UnclaimedResource,
+} from "src/network/components/chainComponents";
+import { useMainBaseCoord } from "src/hooks/useMainBase";
+import { useMud } from "src/hooks";
 
 export const Inventory = () => {
-  const network = useMud();
   const crtEffect = useGameStore((state) => state.crtEffect);
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
 
-  const mainBase = useMainBase()?.value;
-  const mainBaseCoord = useMemo(() => {
-    return mainBase ? decodeCoordEntity(mainBase) : undefined;
-  }, [mainBase]);
+  const mainBaseCoord = useMainBaseCoord();
+  const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
 
-  const mainBaseEntity = mainBase
-    ? world.entityToIndex.get(mainBase)
-    : singletonIndex;
-  const buildingLevel = useComponentValue(
-    network.components.BuildingLevel,
-    mainBaseEntity
-  );
-
+  const buildingLevel = BuildingLevel.use(mainBase);
   useEffect(() => {
     if (buildingLevel === undefined) return;
 
@@ -304,43 +301,33 @@ Inventory.ResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const { components, offChainComponents, singletonIndex } = useMud();
+  const blockNumber = BlockNumber.use(undefined, { value: 0 })?.value;
 
-  const blockNumber = useComponentValue(
-    offChainComponents.BlockNumber,
-    singletonIndex
-  );
+  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
-  const resourceCount = useResourceCount(
-    components.Item,
+  const storageCapacity = useResourceCount(
+    StorageCapacity,
     resourceId,
     entityIndex
   );
 
-  let storageCapacity = useResourceCount(
-    components.StorageCapacity,
-    resourceId,
-    entityIndex
-  );
-
-  const production = useResourceCount(components.Mine, resourceId, entityIndex);
+  const production = useResourceCount(Mine, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
-    components.LastClaimedAt,
+    LastClaimedAt,
     resourceId,
     entityIndex
   );
 
   const unclaimedResource = useResourceCount(
-    components.UnclaimedResource,
+    UnclaimedResource,
     resourceId,
     entityIndex
   );
 
   const resourcesToClaim = useMemo(() => {
     const toClaim =
-      unclaimedResource +
-      ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
+      unclaimedResource + (blockNumber - lastClaimedAt) * production;
     if (toClaim > storageCapacity - resourceCount)
       return storageCapacity - resourceCount;
     return toClaim;
@@ -348,13 +335,6 @@ Inventory.ResourceLabel = ({
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (resourceId == BlockType.ElectricityPassiveResource) {
-    console.log("resourceCount: ", resourceCount);
-    console.log("storageCapacity: ", storageCapacity);
-    console.log("production: ", production);
-    console.log("lastClaimedAt: ", lastClaimedAt);
-    console.log("unclaimedResource: ", unclaimedResource);
-  }
   if (storageCapacity > 0) {
     return (
       <div className="mb-1">
@@ -419,35 +399,26 @@ Inventory.PassiveResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const { components, offChainComponents, singletonIndex } = useMud();
+  const blockNumber = BlockNumber.get();
 
-  const blockNumber = useComponentValue(
-    offChainComponents.BlockNumber,
-    singletonIndex
-  );
+  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
-  const resourceCount = useResourceCount(
-    components.Item,
+  const storageCapacity = useResourceCount(
+    StorageCapacity,
     resourceId,
     entityIndex
   );
 
-  let storageCapacity = useResourceCount(
-    components.StorageCapacity,
-    resourceId,
-    entityIndex
-  );
-
-  const production = useResourceCount(components.Mine, resourceId, entityIndex);
+  const production = useResourceCount(Mine, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
-    components.LastClaimedAt,
+    LastClaimedAt,
     resourceId,
     entityIndex
   );
 
   const unclaimedResource = useResourceCount(
-    components.UnclaimedResource,
+    UnclaimedResource,
     resourceId,
     entityIndex
   );
@@ -463,13 +434,6 @@ Inventory.PassiveResourceLabel = ({
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (resourceId == BlockType.ElectricityPassiveResource) {
-    console.log("resourceCount: ", resourceCount);
-    console.log("storageCapacity: ", storageCapacity);
-    console.log("production: ", production);
-    console.log("lastClaimedAt: ", lastClaimedAt);
-    console.log("unclaimedResource: ", unclaimedResource);
-  }
   if (storageCapacity > 0) {
     return (
       <div className="mb-1">

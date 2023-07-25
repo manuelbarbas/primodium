@@ -1,25 +1,21 @@
 import { SingletonID } from "@latticexyz/network";
-import { useComponentValue } from "@latticexyz/react";
-import { useMud } from "src/hooks/useMud";
 import { execute } from "../network/actions";
-import { useMemo, useState } from "react";
+import { Counter } from "src/network/components/chainComponents";
+import { DoubleCounter } from "src/network/components/clientComponents";
+import { Fragment, useMemo, useState } from "react";
 import {
   BackgroundImage,
   ResearchImage,
   ResourceImage,
 } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
+import { useMud } from "src/hooks";
 
 export default function Increment() {
-  const { components, systems, singletonIndex, offChainComponents, providers } =
-    useMud();
+  const { systems, providers } = useMud();
 
-  const counter = useComponentValue(components.Counter, singletonIndex);
-  const doubleCounter = useComponentValue(
-    offChainComponents.DoubleCounter,
-    singletonIndex
-  );
-
+  const counter = Counter.use();
+  const doubleCounter = DoubleCounter.use();
   return (
     <div className="flex flex-col text-white">
       <div className="h-20">
@@ -88,7 +84,7 @@ const ImageGrid: React.FC = () => {
       </div>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {images.map(([name, uri], index) => (
-          <>
+          <Fragment key={`${activeTab}-${index}`}>
             <p>{getBlockTypeName(name)}</p>
             <img
               key={index}
@@ -96,7 +92,7 @@ const ImageGrid: React.FC = () => {
               alt={`Image ${getBlockTypeName(name)}`}
               className="w-40 h-40 object-cover shadow-md"
             />
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

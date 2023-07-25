@@ -8,6 +8,7 @@ import BuildPathSystem from "../abi/BuildPathSystem.json";
 import BuildSystem from "../abi/BuildSystem.json";
 import ClaimFromFactorySystem from "../abi/ClaimFromFactorySystem.json";
 import ClaimFromMineSystem from "../abi/ClaimFromMineSystem.json";
+import ComponentDevSystem from "../abi/ComponentDevSystem.json";
 import CraftSystem from "../abi/CraftSystem.json";
 import DebugAcquireResourcesBasedOnRequirementSystem from "../abi/DebugAcquireResourcesBasedOnRequirementSystem.json";
 import DebugAcquireResourcesSystem from "../abi/DebugAcquireResourcesSystem.json";
@@ -38,6 +39,7 @@ export const SystemAbis = {
   "system.Build": BuildSystem.abi,
   "system.ClaimFromFactory": ClaimFromFactorySystem.abi,
   "system.ClaimFromMine": ClaimFromMineSystem.abi,
+  "system.ComponentDev": ComponentDevSystem.abi,
   "system.Craft": CraftSystem.abi,
   "system.DebugAcquireResourcesBasedOnRequirement": DebugAcquireResourcesBasedOnRequirementSystem.abi,
   "system.DebugAcquireResources": DebugAcquireResourcesSystem.abi,

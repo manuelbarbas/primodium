@@ -1,15 +1,15 @@
 import { primodium } from "@game/api";
 import { FaCircle } from "react-icons/fa";
-import { useMud } from "src/hooks/useMud";
 import { useAccount } from "src/hooks/useAccount";
+import { BlockNumber } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 
 export const Camera = () => {
-  const network = useMud();
   const crtEffect = useGameStore((state) => state.crtEffect);
   const { address } = useAccount();
-  const { worldCoord, normalizedZoom } = primodium.hooks.useCamera(network);
-  const blockNumber = primodium.hooks.useBlockNumber();
+  const { worldCoord, normalizedZoom } = primodium.hooks.useCamera();
+
+  const blockNumber = BlockNumber.use()?.value;
 
   return (
     <div
@@ -55,10 +55,12 @@ export const Camera = () => {
           crtEffect ? "-skew-x-2 -skew-y-2" : ""
         }`}
       >
-        <p className="flex items-center gap-2">
-          <FaCircle className="animate-pulse" />
-          {` BLOCK ${blockNumber}`}
-        </p>
+        {blockNumber != undefined && (
+          <p className="flex items-center gap-2">
+            <FaCircle className="animate-pulse" />
+            {` BLOCK ${blockNumber}`}
+          </p>
+        )}
         {address && (
           <p className="flex items-center gap-2">
             {address.slice(0, 5)}...{address.slice(-4)}

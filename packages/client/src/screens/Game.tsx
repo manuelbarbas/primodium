@@ -1,5 +1,3 @@
-import { useComponentValue } from "@latticexyz/react";
-import { EntityID } from "@latticexyz/recs";
 import { useEffect, useMemo, useState } from "react";
 import GameUI from "src/components/game-ui/GameUI";
 // import { Tour } from "src/components/tour/Tour";
@@ -8,37 +6,30 @@ import { useAccount } from "src/hooks/useAccount";
 import { decodeCoordEntity } from "src/util/encode";
 import { useMud } from "src/hooks/useMud";
 import { primodium } from "../game";
+import { GameReady } from "src/network/components/clientComponents";
+import { MainBase } from "src/network/components/chainComponents";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
   const [error, setError] = useState(false);
   const network = useMud();
-  const { world, components, singletonIndex } = useMud();
   const { address } = useAccount();
-  const gameReady = primodium.hooks.useGameReady();
-  // const [completedTutorial, checkpoint] = useTourStore((state) => [
-  //   state.completedTutorial,
-  //   state.checkpoint,
-  // ]);
+  const gameReady = GameReady.use()?.value;
+  console.log("game ready:", gameReady);
 
   // resourceKey of the entity
-  const resourceKey = address
-    ? world.entityToIndex.get(address.toString().toLowerCase() as EntityID)!
-    : singletonIndex;
 
   // fetch the main base of the user based on address
-  const mainBaseEntity = useComponentValue(
-    components.MainBaseInitialized,
-    resourceKey
+  const mainBase = MainBase.use(address)?.value;
+  if (mainBase) {
+    MainBase.set({ value: mainBase }, undefined);
+  }
+  // fetch the main base of the user based on address
+  const mainBaseCoord = useMemo(
+    () => (mainBase ? decodeCoordEntity(mainBase) : undefined),
+    [mainBase]
   );
-
-  // fetch the main base of the user based on address
-  const mainBaseCoord = useMemo(() => {
-    if (mainBaseEntity)
-      return decodeCoordEntity(mainBaseEntity?.value as EntityID);
-    return undefined;
-  }, [mainBaseEntity]);
 
   useEffect(() => {
     (async () => {
@@ -67,7 +58,7 @@ export const Game = () => {
   useEffect(() => {
     if (gameReady && mainBaseCoord) {
       primodium.camera.pan(mainBaseCoord, 0);
-      // primodium.components.selectedTile(network).set(mainBaseCoord);
+      // selectedTile.set(mainBaseCoord);
     }
   }, [mainBaseCoord, gameReady]);
 

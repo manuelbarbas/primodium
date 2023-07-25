@@ -1,5 +1,5 @@
 import { CardinalOrientation, Step, WalktourLogic } from "walktour";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { primodium } from "@game/api";
 
 import { SimpleCardinal, TourStep } from "../../util/types";
@@ -9,6 +9,8 @@ import Arrow from "./Arrow";
 import { hashKeyEntityAndTrim } from "../../util/encode";
 
 import { Network } from "src/network/layer";
+import { Item } from "src/network/components/chainComponents";
+import { Marker } from "src/network/components/clientComponents";
 
 const isQueryString = (selector: string) => {
   try {
@@ -167,9 +169,7 @@ const buildStep = (step: {
   return _step;
 };
 
-export default function buildTourSteps(ctx: Network, address: string) {
-  const { components, world } = ctx;
-
+export default function buildTourSteps(ctx: Network, player: EntityID) {
   return [
     // CHECKPOINT 0: START
     buildStep({
@@ -238,28 +238,13 @@ export default function buildTourSteps(ctx: Network, address: string) {
       ),
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
-        primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+        Marker.setWithCoord(spawn, BlockType.ArrowMarker);
         addCanvasListener(tour!);
 
         return <></>;
       },
     }),
-    // // ROUTE TO RESOURCE BOX
-    // ...buildRoute({
-    //   route: ["#minimize-resource-box"],
-    //   arrowDirection: "up",
-    //   narration: [
-    //     <p>
-    //       Looks like you are getting the hang of it. I’ve given you <b>200</b>{" "}
-    //       iron to get you started.
-    //       <br />
-    //       <br />
-    //       To see it, open the Inventory tab. This is where all of your resources
-    //       will be stored.
-    //     </p>,
-    //   ],
-    //   orientation: [CardinalOrientation.SOUTH],
-    // }),
+
     // CHECKPOINT 2: CLAIMED STARTER PACK
     buildStep({
       name: "claim starter pack",
@@ -308,9 +293,14 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.Iron, BlockType.ArrowMarker, spawn, 10, 2);
+        Marker.target(
+          ctx.perlin,
+          BlockType.Iron,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -340,12 +330,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.BasicMiner, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.BasicMiner,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         //we set spawn in previous step
@@ -373,12 +369,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.MainBase, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.MainBase,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -413,12 +415,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.BasicMiner, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.BasicMiner,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -441,12 +449,18 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components
-          .marker(ctx)
-          .target(BlockType.MainBase, BlockType.ArrowMarker, spawn, 10, 2, {
+        Marker.target(
+          ctx.perlin,
+          BlockType.MainBase,
+          BlockType.ArrowMarker,
+          spawn,
+          10,
+          2,
+          {
             x: 1,
             y: 0,
-          });
+          }
+        );
         addCanvasListener(tour!);
 
         return <></>;
@@ -459,7 +473,7 @@ export default function buildTourSteps(ctx: Network, address: string) {
       customTooltipRenderer: (tour) => {
         const spawn = useTourStore.getState().spawn;
 
-        primodium.components.marker(ctx).set(spawn, BlockType.ArrowMarker);
+        Marker.setWithCoord(spawn, BlockType.ArrowMarker);
         addCanvasListener(tour!);
 
         return <></>;
@@ -495,21 +509,13 @@ export default function buildTourSteps(ctx: Network, address: string) {
       validate: async () => {
         // Check if user has enough iron without using hooks
 
-        const addressIronEntityIndex = world.entityToIndex.get(
-          hashKeyEntityAndTrim(
-            BlockType.Iron,
-            address.toString().toLowerCase()
-          ) as EntityID
-        );
+        const ironEntity = hashKeyEntityAndTrim(BlockType.Iron, player);
 
-        if (!addressIronEntityIndex) {
+        if (!ironEntity) {
           return false;
         }
 
-        const addressIronValue = getComponentValue(
-          components.Item,
-          addressIronEntityIndex
-        );
+        const addressIronValue = Item.get(ironEntity);
 
         if (addressIronValue && addressIronValue.value >= 30) {
           return true;

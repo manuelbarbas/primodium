@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { Action, BlockType } from "src/util/constants";
 import { Hotbar } from "src/util/types";
+import { IsDebug } from "src/network/components/chainComponents";
 
 const mainBaseHotbar: Hotbar = {
   name: "Main Base",
@@ -68,21 +69,41 @@ const debugHotbar: Hotbar = {
       keybind: KeybindActions.Hotbar0,
     },
     {
-      blockType: BlockType.DebugIronPlateFactory,
+      blockType: BlockType.DebugCopperMine,
       keybind: KeybindActions.Hotbar1,
     },
     {
-      blockType: BlockType.DebugStorageBuilding,
+      blockType: BlockType.DebugLithiumMine,
       keybind: KeybindActions.Hotbar2,
     },
     {
-      blockType: BlockType.DebugDemolishBuilding,
+      blockType: BlockType.DebugIronPlateFactory,
       keybind: KeybindActions.Hotbar3,
+    },
+    {
+      blockType: BlockType.DebugStorageBuilding,
+      keybind: KeybindActions.Hotbar4,
+    },
+    {
+      blockType: BlockType.DebugSolarPanel,
+      keybind: KeybindActions.Hotbar5,
+    },
+    {
+      blockType: BlockType.DebugLithiumCopperOxideFactory,
+      keybind: KeybindActions.Hotbar6,
+    },
+    {
+      blockType: BlockType.DebugAlloyFactory,
+      keybind: KeybindActions.Hotbar7,
+    },
+    {
+      blockType: BlockType.DebugDemolishBuilding,
+      keybind: KeybindActions.Hotbar8,
       action: Action.DemolishBuilding,
     },
     {
       blockType: BlockType.DebugDemolishPath,
-      keybind: KeybindActions.Hotbar4,
+      keybind: KeybindActions.Hotbar9,
       action: Action.DemolishPath,
     },
   ],
@@ -98,7 +119,7 @@ export const useHotbarContent = () => {
     setHotbarContent(
       [
         mainBase ? buildingHotbar : mainBaseHotbar,
-        import.meta.env.VITE_DEV === "true" ? debugHotbar : undefined,
+        IsDebug.get(BlockType.IsDebug) ? debugHotbar : undefined,
       ].filter(Boolean) as Hotbar[]
     );
   }, [mainBase]);

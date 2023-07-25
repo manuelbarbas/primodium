@@ -33,7 +33,7 @@ export default function ClaimButton({
           y: y,
         },
         {
-          gasLimit: 29_000_000,
+          gasLimit: 5_000_000,
         }
       ),
       providers,

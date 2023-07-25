@@ -1,4 +1,3 @@
-import { useComponentValue } from "@latticexyz/react";
 import { EntityID } from "@latticexyz/recs";
 import React, { useMemo, useState } from "react";
 
@@ -7,46 +6,43 @@ import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
 import Header from "./Header";
 import UpgradeButton from "src/components/action/UpgradeButton";
-import { world } from "src/network/world";
 import { decodeCoordEntity } from "src/util/encode";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
 import { demolishBuilding, demolishPath } from "src/util/web3";
 import PortalModal from "src/components/shared/PortalModal";
+import {
+  BuildingLevel,
+  BuildingType,
+  Health,
+  OwnedBy,
+} from "src/network/components/chainComponents";
 import { clampedIndex, toRomanNumeral } from "src/util/common";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
 }> = ({ building }) => {
   const network = useMud();
-  const { components } = network;
   const { address } = useAccount();
   const [showDestroyModal, setShowDestroyModal] = useState(false);
 
-  const buildingIndex = world.entityToIndex.get(building)!;
-  const buildingType = useComponentValue(components.BuildingType, buildingIndex)
-    ?.value as EntityID | undefined;
-  const health = useComponentValue(components.Health, buildingIndex)?.value;
+  const buildingType = BuildingType.use(building, {
+    value: "-1" as EntityID,
+  })?.value;
+  const health = Health.use(building)?.value;
+  const owner = OwnedBy.use(building)?.value;
 
-  const owner = useComponentValue(components.OwnedBy, buildingIndex)?.value as
-    | EntityID
-    | undefined;
+  const currLevel = BuildingLevel.use(building)?.value;
 
-  const currLevel = useComponentValue(
-    components.BuildingLevel,
-    world.entityToIndex.get(building)
-  )?.value;
+  const isOwner = owner === address.toLowerCase();
 
-  const isOwner = owner ?? "" == address.toLowerCase();
-
-  const ownerName =
-    isOwner || !owner
-      ? "You"
-      : owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4);
-  const percentHealth =
-    (health ?? getBuildingMaxHealth(buildingType ?? BlockType.Air)) /
-    getBuildingMaxHealth(buildingType ?? BlockType.Air);
-
+  const maxHealth = getBuildingMaxHealth(buildingType);
+  const percentHealth = health ?? maxHealth / maxHealth;
+  const ownerName = isOwner
+    ? "You"
+    : owner
+    ? owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4)
+    : "Unknown";
   const coord = decodeCoordEntity(building);
 
   const buildingName = useMemo(() => {
@@ -68,8 +64,7 @@ export const BuildingInfo: React.FC<{
     ];
   }, [buildingType, currLevel]);
 
-  if (!buildingName || !buildingType) return null;
-
+  if (!buildingName || !buildingType || owner == undefined) return null;
   return (
     <>
       <Header content={`${ownerName}`} />

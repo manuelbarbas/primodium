@@ -16,6 +16,7 @@ export { BuildingLimitComponent__factory } from "./BuildingLimitComponent__facto
 export { BuildingTilesComponent__factory } from "./BuildingTilesComponent__factory";
 export { ClaimFromFactorySystem__factory } from "./ClaimFromFactorySystem__factory";
 export { ClaimFromMineSystem__factory } from "./ClaimFromMineSystem__factory";
+export { ComponentDevSystem__factory } from "./ComponentDevSystem__factory";
 export { CoordComponent__factory } from "./CoordComponent__factory";
 export { CounterComponent__factory } from "./CounterComponent__factory";
 export { CraftSystem__factory } from "./CraftSystem__factory";
@@ -38,6 +39,7 @@ export { IUint256Component__factory } from "./IUint256Component__factory";
 export { IWorld__factory } from "./IWorld__factory";
 export { IgnoreBuildLimitComponent__factory } from "./IgnoreBuildLimitComponent__factory";
 export { IncrementSystem__factory } from "./IncrementSystem__factory";
+export { IsDebugComponent__factory } from "./IsDebugComponent__factory";
 export { ItemComponent__factory } from "./ItemComponent__factory";
 export { LastBuiltAtComponent__factory } from "./LastBuiltAtComponent__factory";
 export { LastClaimedAtComponent__factory } from "./LastClaimedAtComponent__factory";
