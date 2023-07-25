@@ -7,7 +7,7 @@ import {
   EntityIDtoSpriteKey,
   SpriteKeys,
 } from "../../constants";
-import { clampedIndex } from "src/util/common";
+import { safeIndex } from "src/util/array";
 
 export const createBuilding = ({
   renderId = "building",
@@ -34,7 +34,7 @@ export const createBuilding = ({
       const sprites = EntityIDtoSpriteKey[buildingType];
 
       const spriteKey = sprites
-        ? sprites[clampedIndex(level - 1, sprites.length)]
+        ? safeIndex(level - 1, sprites)
         : SpriteKeys.Node;
 
       gameObject.setTexture(Assets.SpriteAtlas, spriteKey);

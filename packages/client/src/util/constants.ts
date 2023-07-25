@@ -12,37 +12,6 @@ export enum Action {
   PlaceBuilding,
 }
 
-export const BlockKey = {
-  //landscape blocks
-  Water: "Water",
-  Sandstone: "Sandstone",
-  Biofilm: "Biofilm",
-  Alluvium: "Alluvium",
-  Regolith: "Regolith",
-  Bedrock: "Bedrock",
-  Air: "Air",
-
-  //metal ores
-  Lithium: "Lithium",
-  Iron: "Iron",
-  Copper: "Copper",
-  Titanium: "Titanium",
-  Iridium: "Iridium",
-  Osmium: "Osmium",
-  Tungsten: "Tungsten",
-
-  //mineral ores
-  Kimberlite: "Kimberlite",
-  Uraninite: "Uraninite",
-  Bolutite: "Bolutite",
-
-  // placeable blocks
-  MainBase: "MainBase",
-  Miner: "Miner",
-
-  Silo: "Silo",
-};
-
 export const BlockType = {
   IsDebug: keccak256("component.IsDebug") as EntityID,
   // Landscape blocks
@@ -189,18 +158,6 @@ export const BlockType = {
     "item.KimberliteCrystalCatalystCrafted"
   ) as EntityID,
 
-  // debug
-  // BulletFactoryResearch: keccak256(
-  //   "research.BulletFactoryResearch"
-  // ) as EntityID,
-  // SiloResearch: keccak256("research.SiloResearch") as EntityID,
-
-  // Research components
-  // MainBaseResearch: keccak256("research.MainBase") as EntityID,
-  // BasicMinerResearch: keccak256("research.BasicMiner") as EntityID,
-  // ConveyorResearch: keccak256("research.Conveyor") as EntityID,
-  // NodeResearch: keccak256("research.Node") as EntityID,
-
   IronMine2Research: keccak256("research.IronMine2") as EntityID,
   IronMine3Research: keccak256("research.IronMine3") as EntityID,
   IronMine4Research: keccak256("research.IronMine4") as EntityID,
@@ -261,65 +218,6 @@ export const BlockType = {
   BuildingKey: "building" as EntityID,
 
   ArrowMarker: keccak256("marker.Arrow") as EntityID,
-
-  // IronResearch: keccak256("research.Iron") as EntityID,
-
-  // CopperResearch: keccak256("block.Copper") as EntityID,
-  // LithiumResearch: keccak256("block.Lithium") as EntityID,
-  // TitaniumResearch: keccak256("block.Titanium") as EntityID,
-  // OsmiumResearch: keccak256("block.Osmium") as EntityID,
-  // TungstenResearch: keccak256("block.Tungsten") as EntityID,
-  // IridiumResearch: keccak256("block.Iridium") as EntityID,
-  // KimberliteResearch: keccak256("block.Kimberlite") as EntityID,
-
-  // PlatingFactoryResearch: keccak256("research.PlatingFactory") as EntityID,
-  // BasicBatteryFactoryResearch: keccak256(
-  //   "research.BasicBatteryFactory"
-  // ) as EntityID,
-  // KineticMissileFactoryResearch: keccak256(
-  //   "research.KineticMissileFactory"
-  // ) as EntityID,
-  // ProjectileLauncherResearch: keccak256(
-  //   "research.ProjectileLauncher"
-  // ) as EntityID,
-  // HardenedDrillResearch: keccak256("research.HardenedDrill") as EntityID,
-  // DenseMetalRefineryResearch: keccak256(
-  //   "research.DenseMetalRefinery"
-  // ) as EntityID,
-  // AdvancedBatteryFactoryResearch: keccak256(
-  //   "research.AdvancedBatteryFactory"
-  // ) as EntityID,
-  // HighTempFoundryResearch: keccak256("research.HighTempFoundry") as EntityID,
-  // PrecisionMachineryFactoryResearch: keccak256(
-  //   "research.PrecisionMachineryFactory"
-  // ) as EntityID,
-  // IridiumDrillbitFactoryResearch: keccak256(
-  //   "research.IridiumDrillbitFactory"
-  // ) as EntityID,
-  // PrecisionPneumaticDrillResearch: keccak256(
-  //   "research.PrecisionPneumaticDrill"
-  // ) as EntityID,
-  // PenetratorFactoryResearch: keccak256(
-  //   "research.PenetratorFactory"
-  // ) as EntityID,
-  // PenetratingMissileFactoryResearch: keccak256(
-  //   "research.PenetratingMissileFactory"
-  // ) as EntityID,
-  // MissileLaunchComplexResearch: keccak256(
-  //   "research.MissileLaunchComplex"
-  // ) as EntityID,
-  // HighEnergyLaserFactoryResearch: keccak256(
-  //   "research.HighEnergyLaserFactory"
-  // ) as EntityID,
-  // ThermobaricWarheadFactoryResearch: keccak256(
-  //   "research.ThermobaricWarheadFactory"
-  // ) as EntityID,
-  // ThermobaricMissileFactoryResearch: keccak256(
-  //   "research.ThermobaricMissileFactory"
-  // ) as EntityID,
-  // KimberliteCatalystFactoryResearch: keccak256(
-  //   "research.KimberliteCatalystFactory"
-  // ) as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -359,12 +257,6 @@ export const BlockColors = new Map<EntityID, string>([
   [BlockType.MainBase, "#8676c0"],
   [BlockType.Conveyor, "#ffcd00"],
 ]);
-
-// TODO switch this to an object with the below interface
-
-export interface BackgroundImages {
-  [x: EntityID]: string;
-}
 
 export const BackgroundImage = new Map<EntityID, string[]>([
   //landscape blocks
