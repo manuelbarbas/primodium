@@ -11,7 +11,7 @@
     "ItemComponent",
     "HasResearchedComponent",
     "MainBaseComponent",
-    "StarterPackInitializedComponent",
+    "StarterPackClaimedComponent",
     "LevelComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
@@ -46,7 +46,7 @@
     },
     {
       "name": "StarterPackSystem",
-      "writeAccess": ["ItemComponent", "StarterPackInitializedComponent"]
+      "writeAccess": ["ItemComponent", "StarterPackClaimedComponent"]
     },
     {
       "name": "AttackSystem",
@@ -65,7 +65,6 @@
         "LastClaimedAtComponent",
         "ItemComponent",
 
-        "MainBaseComponent",
         "LevelComponent",
         "MainBaseComponent",
         "ChildrenComponent"

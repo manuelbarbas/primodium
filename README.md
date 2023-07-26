@@ -173,11 +173,11 @@ When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent
 
 # Game Mechanic Components
 
-`MainBaseComponent` stores the coordinates of the user's base, where the map is panned to by default. New users are provided 200 free iron in the tutorial, the status of which is recorded by the boolean `StarterPackInitializedComponent`.
+`MainBaseComponent` stores the coordinates of the user's base, where the map is panned to by default. New users are provided 200 free iron in the tutorial, the status of which is recorded by the boolean `StarterPackClaimedComponent`.
 
 ```
   MainBaseComponent
-  StarterPackInitializedComponent
+  StarterPackClaimedComponent
 ```
 
 # Item listing

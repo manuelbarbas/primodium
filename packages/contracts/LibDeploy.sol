@@ -28,7 +28,7 @@ import { HealthComponent, ID as HealthComponentID } from "components/HealthCompo
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
-import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
+import { StarterPackClaimedComponent, ID as StarterPackClaimedComponentID } from "components/StarterPackClaimedComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
@@ -160,8 +160,8 @@ library LibDeploy {
       comp = new MainBaseComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying StarterPackInitializedComponent");
-      comp = new StarterPackInitializedComponent(address(result.world));
+      console.log("Deploying StarterPackClaimedComponent");
+      comp = new StarterPackClaimedComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying LevelComponent");
@@ -283,7 +283,7 @@ library LibDeploy {
     system = new StarterPackSystem(world, address(components));
     world.registerSystem(address(system), StarterPackSystemID);
     authorizeWriter(components, ItemComponentID, address(system));
-    authorizeWriter(components, StarterPackInitializedComponentID, address(system));
+    authorizeWriter(components, StarterPackClaimedComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying AttackSystem");
@@ -543,7 +543,7 @@ library LibDeploy {
     authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, HasResearchedComponentID, address(system));
     authorizeWriter(components, MainBaseComponentID, address(system));
-    authorizeWriter(components, StarterPackInitializedComponentID, address(system));
+    authorizeWriter(components, StarterPackClaimedComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
     authorizeWriter(components, RequiredResearchComponentID, address(system));
     authorizeWriter(components, RequiredResourcesComponentID, address(system));
