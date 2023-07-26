@@ -10,7 +10,6 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
@@ -121,7 +120,6 @@ contract DestroySystem is PrimodiumSystem {
     buildingLevelComponent.remove(buildingEntity);
     tileComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
-    LastBuiltAtComponent(getC(LastBuiltAtComponentID)).remove(buildingEntity);
     LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
     buildingTilesComponent.remove(buildingEntity);
     return abi.encode(buildingEntity);

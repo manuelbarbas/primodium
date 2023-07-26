@@ -5,7 +5,6 @@ import { BigNumber } from "ethers";
 import { execute } from "src/network/actions";
 import {
   BuildingType,
-  LastBuiltAt,
   LastClaimedAt,
   OwnedBy,
 } from "src/network/components/chainComponents";
@@ -37,10 +36,6 @@ export const addTileOverride = (
     entity: tempEntityIndex,
     value: { value: player },
   });
-  LastBuiltAt.override.addOverride(tempPositionId, {
-    entity: tempEntityIndex,
-    value: { value: blockNumber },
-  });
   LastClaimedAt.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockNumber },
@@ -53,7 +48,6 @@ export const removeTileOverride = (tempPositionId: string) => {
   Position.override.removeOverride(tempPositionId);
   BuildingType.override.removeOverride(tempPositionId);
   OwnedBy.override.removeOverride(tempPositionId);
-  LastBuiltAt.override.removeOverride(tempPositionId);
   LastClaimedAt.override.removeOverride(tempPositionId);
 };
 

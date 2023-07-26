@@ -5,7 +5,7 @@
     "TileComponent",
     "OwnedByComponent",
     "PathComponent",
-    "LastBuiltAtComponent",
+
     "LastClaimedAtComponent",
     "LastResearchedAtComponent",
     "HealthComponent",
@@ -51,14 +51,7 @@
     },
     {
       "name": "AttackSystem",
-      "writeAccess": [
-        "HealthComponent",
-        "ItemComponent",
-        "TileComponent",
-        "OwnedByComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["HealthComponent", "ItemComponent", "TileComponent", "OwnedByComponent", "LastClaimedAtComponent"]
     },
     {
       "name": "IncrementSystem",
@@ -69,7 +62,7 @@
       "writeAccess": [
         "TileComponent",
         "OwnedByComponent",
-        "LastBuiltAtComponent",
+
         "LastClaimedAtComponent",
         "ItemComponent",
 
@@ -95,7 +88,7 @@
       "writeAccess": [
         "TileComponent",
         "OwnedByComponent",
-        "LastBuiltAtComponent",
+
         "LastClaimedAtComponent",
         "HealthComponent",
         "PathComponent",
@@ -174,7 +167,7 @@
         "TileComponent",
         "OwnedByComponent",
         "PathComponent",
-        "LastBuiltAtComponent",
+
         "LastClaimedAtComponent",
         "ItemComponent",
         "UnclaimedResourceComponent"
@@ -182,27 +175,11 @@
     },
     {
       "name": "ClaimFromFactorySystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent",
-
-        "ItemComponent"
-      ]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent", "LastClaimedAtComponent", "ItemComponent"]
     },
     {
       "name": "CraftSystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent",
-
-        "ItemComponent"
-      ]
+      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent", "LastClaimedAtComponent", "ItemComponent"]
     },
     {
       "name": "UpgradeSystem",

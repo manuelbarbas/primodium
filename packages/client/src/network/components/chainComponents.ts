@@ -164,12 +164,6 @@ export const OwnedBy = newComponent(
   }
 );
 
-export const LastBuiltAt = newNumberComponent(world, {
-  id: "LastBuiltAt",
-  metadata: { contractId: `${commonIdPrefix}LastBuiltAt` },
-  overridable: true,
-});
-
 export const LastClaimedAt = newNumberComponent(world, {
   id: "LastClaimedAt",
   metadata: { contractId: `${commonIdPrefix}LastClaimedAt` },
@@ -185,7 +179,6 @@ export default {
   BuildingType,
   Path,
   OwnedBy,
-  LastBuiltAt,
   LastClaimedAt,
   Health,
   Item,

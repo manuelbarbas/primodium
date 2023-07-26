@@ -15,7 +15,6 @@ import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "componen
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
 import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
@@ -37,7 +36,6 @@ contract DestroySystemTest is PrimodiumTest {
   BuildingLevelComponent public buildingLevelComponent;
   BuildingLimitComponent public buildingLimitComponent;
   TileComponent public tileComponent;
-  LastBuiltAtComponent public lastBuiltAtComponent;
   MainBaseInitializedComponent public mainBaseInitializedComponent;
 
   function setUp() public override {
@@ -54,7 +52,6 @@ contract DestroySystemTest is PrimodiumTest {
     buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
     buildingLevelComponent = BuildingLevelComponent(component(BuildingLevelComponentID));
     tileComponent = TileComponent(component(TileComponentID));
-    lastBuiltAtComponent = LastBuiltAtComponent(component(LastBuiltAtComponentID));
     mainBaseInitializedComponent = MainBaseInitializedComponent(component(MainBaseInitializedComponentID));
     buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
 
@@ -86,7 +83,6 @@ contract DestroySystemTest is PrimodiumTest {
 
     assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");
     assertFalse(tileComponent.has(buildingEntity), "has tile");
-    assertFalse(lastBuiltAtComponent.has(buildingEntity), "has lastbuild");
     assertFalse(buildingLevelComponent.has(buildingEntity), "has level");
     assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1, "wrong limit");
   }

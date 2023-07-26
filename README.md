@@ -165,7 +165,6 @@ When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent
   TileComponent
   OwnedByComponent
   PathComponent
-  LastBuiltAtComponent
   LastClaimedAtComponent
   LastResearchedAtComponent
   HealthComponent
