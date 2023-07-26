@@ -16,7 +16,6 @@ import {
   defineQuery,
   getComponentValue,
   hasComponent,
-  overridableComponent,
   removeComponent,
   runQuery,
   setComponent,
@@ -24,12 +23,16 @@ import {
 } from "@latticexyz/recs";
 import { singletonIndex } from "../../world";
 import { useEffect, useState } from "react";
+import { overridableComponent } from "./overridableComponent";
+type OverridableType<
+  Overridable extends boolean,
+  S extends Schema,
+  M extends Metadata = Metadata,
+  T = undefined
+> = Overridable extends true
+  ? OverridableComponent<S, M, T>
+  : Component<S, M, T>;
 
-const dummyOverride = (component: string | undefined) => {
-  throw new Error(
-    `${component ?? "Component"}: cannot override non-overridable component`
-  );
-};
 export interface Options<Overridable extends boolean, M extends Metadata> {
   id: string;
   metadata?: M;
@@ -43,14 +46,10 @@ function newComponent<
   M extends Metadata = Metadata,
   T = undefined
 >(world: World, schema: S, options?: Options<Overridable, M>) {
-  const rawComponent = {
-    ...defineComponent(world, schema, options),
-    addOverride: () => dummyOverride(options?.id),
-    removeOverride: () => dummyOverride(options?.id),
-  };
-  const component: OverridableComponent<S, M> = options?.overridable
+  const rawComponent = defineComponent(world, schema, options);
+  const component: OverridableType<Overridable, S, M> = options?.overridable
     ? overridableComponent(rawComponent)
-    : rawComponent;
+    : (rawComponent as OverridableType<Overridable, S, M>);
 
   function getEntity(entityID: EntityID) {
     const entity = world.entityToIndex.get(entityID);
@@ -158,15 +157,8 @@ function newComponent<
     return value ?? defaultValue;
   }
 
-  const overrides = {
-    addOverride: component.addOverride,
-    removeOverride: component.removeOverride,
-  };
-
   const context = {
     ...component,
-    ...overrides,
-    override: component,
     get,
     set,
     getAll,

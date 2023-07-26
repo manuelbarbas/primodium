@@ -1,4 +1,4 @@
-import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import {
   BuildingType,
@@ -7,6 +7,7 @@ import {
   OwnedBy,
 } from "src/network/components/chainComponents";
 import { BlockNumber, Position } from "src/network/components/clientComponents";
+import { singletonIndex } from "src/network/world";
 
 // Component overrides
 export const addTileOverride = (
@@ -15,25 +16,25 @@ export const addTileOverride = (
   player: EntityID
 ) => {
   const tempPositionId = uuid();
-  const tempEntityIndex = 34567543456 as EntityIndex;
+  const tempEntityIndex = singletonIndex;
   const blockNumber = BlockNumber.get(undefined, { value: 0 });
-  Position.override.addOverride(tempPositionId, {
+  Position.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: pos,
   });
-  BuildingType.override.addOverride(tempPositionId, {
+  BuildingType.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockType },
   });
-  OwnedBy.override.addOverride(tempPositionId, {
+  OwnedBy.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: player },
   });
-  LastBuiltAt.override.addOverride(tempPositionId, {
+  LastBuiltAt.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: blockNumber,
   });
-  LastClaimedAt.override.addOverride(tempPositionId, {
+  LastClaimedAt.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: blockNumber,
   });
@@ -42,9 +43,8 @@ export const addTileOverride = (
 };
 
 export const removeTileOverride = (tempPositionId: string) => {
-  Position.override.removeOverride(tempPositionId);
-  BuildingType.override.removeOverride(tempPositionId);
-  OwnedBy.override.removeOverride(tempPositionId);
-  LastBuiltAt.override.removeOverride(tempPositionId);
-  LastClaimedAt.override.removeOverride(tempPositionId);
+  Position.removeOverride(tempPositionId);
+  BuildingType.removeOverride(tempPositionId);
+  LastBuiltAt.removeOverride(tempPositionId);
+  LastClaimedAt.removeOverride(tempPositionId);
 };
