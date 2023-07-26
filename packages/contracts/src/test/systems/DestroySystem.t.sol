@@ -15,7 +15,7 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
 import { Coord } from "../../types.sol";
@@ -36,7 +36,7 @@ contract DestroySystemTest is PrimodiumTest {
   LevelComponent public levelComponent;
   MaxBuildingsComponent public maxBuildingsComponent;
   TileComponent public tileComponent;
-  MainBaseInitializedComponent public mainBaseInitializedComponent;
+  MainBaseComponent public mainBaseComponent;
 
   function setUp() public override {
     super.setUp();
@@ -52,7 +52,7 @@ contract DestroySystemTest is PrimodiumTest {
     childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     levelComponent = LevelComponent(component(LevelComponentID));
     tileComponent = TileComponent(component(TileComponentID));
-    mainBaseInitializedComponent = MainBaseInitializedComponent(component(MainBaseInitializedComponentID));
+    mainBaseComponent = MainBaseComponent(component(MainBaseComponentID));
     maxBuildingsComponent = MaxBuildingsComponent(component(MaxBuildingsComponentID));
 
     // init other

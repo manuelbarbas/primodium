@@ -82,7 +82,7 @@ export const MainBase = newComponent(
   { value: Type.Entity },
   {
     id: "MainBase",
-    metadata: { contractId: `${commonIdPrefix}MainBaseInitialized` },
+    metadata: { contractId: `${commonIdPrefix}MainBase` },
   }
 );
 

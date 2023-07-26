@@ -11,7 +11,7 @@ import { RequiredTileComponent, ID as RequiredTileComponentID } from "components
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
 
@@ -47,12 +47,12 @@ library LibBuilding {
   }
 
   function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint32) {
-    MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-      getAddressById(world.components(), MainBaseInitializedComponentID)
+    MainBaseComponent mainBaseComponent = MainBaseComponent(
+      getAddressById(world.components(), MainBaseComponentID)
     );
 
-    if (!mainBaseInitializedComponent.has(playerEntity)) return 0;
-    uint256 mainBase = mainBaseInitializedComponent.getValue(playerEntity);
+    if (!mainBaseComponent.has(playerEntity)) return 0;
+    uint256 mainBase = mainBaseComponent.getValue(playerEntity);
     return LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(mainBase);
   }
 

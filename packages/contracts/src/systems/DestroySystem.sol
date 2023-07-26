@@ -11,7 +11,7 @@ import { LevelComponent, ID as BuildingComponentID } from "components/LevelCompo
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 
 // types
@@ -103,10 +103,10 @@ contract DestroySystem is PrimodiumSystem {
 
     // for main base tile, remove main base initialized.
     if (buildingType == MainBaseID) {
-      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-        getC(MainBaseInitializedComponentID)
+      MainBaseComponent mainBaseComponent = MainBaseComponent(
+        getC(MainBaseComponentID)
       );
-      mainBaseInitializedComponent.remove(playerEntity);
+      mainBaseComponent.remove(playerEntity);
     }
 
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {

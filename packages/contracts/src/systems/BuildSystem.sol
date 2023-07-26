@@ -13,7 +13,7 @@ import { BlueprintComponent, ID as BlueprintComponentID } from "components/Bluep
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 
 import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 
@@ -66,16 +66,16 @@ contract BuildSystem is PrimodiumSystem {
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
     ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
-    //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
+    //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
-      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-        getC(MainBaseInitializedComponentID)
+      MainBaseComponent mainBaseComponent = MainBaseComponent(
+        getC(MainBaseComponentID)
       );
 
-      if (mainBaseInitializedComponent.has(playerEntity)) {
+      if (mainBaseComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
-        mainBaseInitializedComponent.set(playerEntity, buildingEntity);
+        mainBaseComponent.set(playerEntity, buildingEntity);
       }
     }
     require(

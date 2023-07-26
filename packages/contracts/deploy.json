@@ -10,7 +10,7 @@
 
     "ItemComponent",
     "ResearchComponent",
-    "MainBaseInitializedComponent",
+    "MainBaseComponent",
     "StarterPackInitializedComponent",
     "LevelComponent",
     "RequiredResearchComponent",
@@ -65,9 +65,8 @@
         "LastClaimedAtComponent",
         "ItemComponent",
 
-        "MainBaseInitializedComponent",
         "LevelComponent",
-        "MainBaseInitializedComponent",
+        "MainBaseComponent",
         "ChildrenComponent"
       ]
     },
@@ -92,7 +91,7 @@
         "HealthComponent",
         "PathComponent",
 
-        "MainBaseInitializedComponent",
+        "MainBaseComponent",
         "ChildrenComponent",
         "LevelComponent",
         "MaxBuildingsComponent",
