@@ -1,6 +1,6 @@
 import { SingletonID } from "@latticexyz/network";
 import { useMud } from "../context/MudContext";
-import { Counter } from "src/network/components/chainComponents";
+import { Counter, IsDebug } from "src/network/components/chainComponents";
 import { DoubleCounter } from "src/network/components/clientComponents";
 import { Fragment, useMemo, useState } from "react";
 import {
@@ -16,9 +16,12 @@ export default function Increment() {
 
   const counter = Counter.use();
   const doubleCounter = DoubleCounter.use();
+  const debug = IsDebug.use();
   return (
     <div className="flex flex-col text-white">
       <div className="h-20">
+        Is Debug: <span>{debug?.value ?? "??"}</span>
+        <br />
         Counter: <span>{counter?.value ?? "??"}</span>
         <br />
         Double Counter!: <span>{doubleCounter?.value ?? "??"}</span>

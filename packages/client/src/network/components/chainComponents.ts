@@ -188,6 +188,7 @@ export default {
   LastBuiltAt,
   LastClaimedAt,
   Health,
+  IsDebug,
   Item,
   Research,
   StarterPackInitialized,
