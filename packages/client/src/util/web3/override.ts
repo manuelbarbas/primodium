@@ -17,23 +17,23 @@ export const addTileOverride = (
   const tempPositionId = uuid();
   const tempEntityIndex = 34567543456 as EntityIndex;
   const blockNumber = BlockNumber.get(undefined, { value: 0 });
-  Position.addOverride(tempPositionId, {
+  Position.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: pos,
   });
-  BuildingType.addOverride(tempPositionId, {
+  BuildingType.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: blockType },
   });
-  OwnedBy.addOverride(tempPositionId, {
+  OwnedBy.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: { value: player },
   });
-  LastBuiltAt.addOverride(tempPositionId, {
+  LastBuiltAt.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: blockNumber,
   });
-  LastClaimedAt.addOverride(tempPositionId, {
+  LastClaimedAt.override.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: blockNumber,
   });
@@ -42,9 +42,9 @@ export const addTileOverride = (
 };
 
 export const removeTileOverride = (tempPositionId: string) => {
-  Position.removeOverride(tempPositionId);
-  BuildingType.removeOverride(tempPositionId);
-  OwnedBy.removeOverride(tempPositionId);
-  LastBuiltAt.removeOverride(tempPositionId);
-  LastClaimedAt.removeOverride(tempPositionId);
+  Position.override.removeOverride(tempPositionId);
+  BuildingType.override.removeOverride(tempPositionId);
+  OwnedBy.override.removeOverride(tempPositionId);
+  LastBuiltAt.override.removeOverride(tempPositionId);
+  LastClaimedAt.override.removeOverride(tempPositionId);
 };

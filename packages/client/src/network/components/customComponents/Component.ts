@@ -166,6 +166,7 @@ function newComponent<
   const context = {
     ...component,
     ...overrides,
+    override: component,
     get,
     set,
     getAll,
@@ -177,7 +178,6 @@ function newComponent<
     has,
     use,
   };
-  console.log(`${component.id}: `, context);
   return context;
 }
 
