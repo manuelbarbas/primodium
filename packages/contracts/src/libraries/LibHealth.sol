@@ -3,11 +3,7 @@ pragma solidity >=0.8.0;
 import { HealthComponent } from "components/HealthComponent.sol";
 
 library LibHealth {
-  function checkAlive(HealthComponent component, uint256 entity) internal view returns (bool) {
-    if (!component.has(entity)) {
-      return true;
-    } else {
-      return component.getValue(entity) > 0;
-    }
+  function isAlive(HealthComponent component, uint256 entity) internal view returns (bool) {
+    return !component.has(entity) || component.getValue(entity) > 0;
   }
 }

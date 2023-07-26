@@ -52,7 +52,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
 
     // Check that health is not zero
     require(
-      LibHealth.checkAlive(HealthComponent(getAddressById(components, HealthComponentID)), entity),
+      LibHealth.isAlive(HealthComponent(getAddressById(components, HealthComponentID)), entity),
       "[ClaimFromMineSystem] Cannot claim from mines on a tile with zero health"
     );
 

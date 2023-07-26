@@ -19,4 +19,10 @@ library LibBlueprint {
     require(!blueprintComponent.has(buildingType), "[BlueprintSystem]: building already has a blueprint");
     blueprintComponent.set(buildingType, blueprint);
   }
+
+  function get1x1Blueprint() internal pure returns (int32[] memory blueprint) {
+    blueprint = new int32[](2);
+    blueprint[0] = 0;
+    blueprint[1] = 0;
+  }
 }
