@@ -26,8 +26,8 @@ import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "componen
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -152,12 +152,12 @@ library LibDeploy {
       comp = new ItemComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying ResearchComponent");
-      comp = new ResearchComponent(address(result.world));
+      console.log("Deploying HasResearchedComponent");
+      comp = new HasResearchedComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying MainBaseInitializedComponent");
-      comp = new MainBaseInitializedComponent(address(result.world));
+      console.log("Deploying MainBaseComponent");
+      comp = new MainBaseComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying StarterPackInitializedComponent");
@@ -275,7 +275,7 @@ library LibDeploy {
     system = new ResearchSystem(world, address(components));
     world.registerSystem(address(system), ResearchSystemID);
     authorizeWriter(components, ItemComponentID, address(system));
-    authorizeWriter(components, ResearchComponentID, address(system));
+    authorizeWriter(components, HasResearchedComponentID, address(system));
     authorizeWriter(components, LastResearchedAtComponentID, address(system));
     console.log(address(system));
 
@@ -311,9 +311,9 @@ library LibDeploy {
     authorizeWriter(components, LastBuiltAtComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
-    authorizeWriter(components, MainBaseInitializedComponentID, address(system));
+    authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
-    authorizeWriter(components, MainBaseInitializedComponentID, address(system));
+    authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, ChildrenComponentID, address(system));
     console.log(address(system));
 
@@ -337,7 +337,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
-    authorizeWriter(components, MainBaseInitializedComponentID, address(system));
+    authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, ChildrenComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
     authorizeWriter(components, MaxBuildingsComponentID, address(system));
@@ -541,8 +541,8 @@ library LibDeploy {
     authorizeWriter(components, LastResearchedAtComponentID, address(system));
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
-    authorizeWriter(components, ResearchComponentID, address(system));
-    authorizeWriter(components, MainBaseInitializedComponentID, address(system));
+    authorizeWriter(components, HasResearchedComponentID, address(system));
+    authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, StarterPackInitializedComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
     authorizeWriter(components, RequiredResearchComponentID, address(system));

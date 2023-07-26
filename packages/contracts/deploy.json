@@ -9,7 +9,7 @@
     "HealthComponent",
 
     "ItemComponent",
-    "ResearchComponent",
+    "HasResearchedComponent",
     "MainBaseComponent",
     "StarterPackInitializedComponent",
     "LevelComponent",
@@ -42,7 +42,7 @@
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["ItemComponent", "ResearchComponent"]
+      "writeAccess": ["ItemComponent", "HasResearchedComponent"]
     },
     {
       "name": "StarterPackSystem",
@@ -65,6 +65,7 @@
         "LastClaimedAtComponent",
         "ItemComponent",
 
+        "MainBaseComponent",
         "LevelComponent",
         "MainBaseComponent",
         "ChildrenComponent"

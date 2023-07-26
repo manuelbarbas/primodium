@@ -12,7 +12,7 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
@@ -160,10 +160,12 @@ library LibDebugInitializer {
     initializeFactories(world);
 
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(components, HasResearchedComponentID)
+    );
     //initialize technologies
     initializeTechnologies(
-      researchComponent,
+      hasResearchedComponent,
       itemComponent,
       levelComponent,
       requiredResearch,
@@ -576,20 +578,20 @@ library LibDebugInitializer {
   }
 
   function initializeTechnologies(
-    ResearchComponent researchComponent,
+    HasResearchedComponent hasResearchedComponent,
     ItemComponent itemComponent,
     LevelComponent levelComponent,
     RequiredResearchComponent requiredResearchComponent,
     RequiredResourcesComponent requiredResourcesComponent
   ) internal {
     // DebugSimpleTechnologyNoReqsID
-    researchComponent.set(DebugSimpleTechnologyNoReqsID);
+    hasResearchedComponent.set(DebugSimpleTechnologyNoReqsID);
 
     //DebugSimpleTechnologyResearchReqsID
     requiredResearchComponent.set(DebugSimpleTechnologyResearchReqsID, DebugSimpleTechnologyNoReqsID);
-    researchComponent.set(DebugSimpleTechnologyResearchReqsID);
+    hasResearchedComponent.set(DebugSimpleTechnologyResearchReqsID);
     //DebugSimpleTechnologyResourceReqsID
-    researchComponent.set(DebugSimpleTechnologyResourceReqsID);
+    hasResearchedComponent.set(DebugSimpleTechnologyResourceReqsID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResourcesComponent,
       itemComponent,
@@ -599,7 +601,7 @@ library LibDebugInitializer {
     );
 
     //DebugSimpleTechnologyMainBaseLevelReqsID
-    researchComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
+    hasResearchedComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     levelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
   }
 

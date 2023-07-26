@@ -19,7 +19,7 @@ import React from "react";
 import {
   Level,
   MainBase,
-  Research,
+  HasResearched,
 } from "src/network/components/chainComponents";
 import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
@@ -34,10 +34,10 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     const { name, levels, description } = data;
 
     //we assume the order of this loop will never change. TODO: pull out into component since this is a nono
-    useObservableValue(Research.update$);
+    useObservableValue(HasResearched.update$);
     const levelsResearched = levels.map(({ id }) => {
       const entity = hashKeyEntityAndTrim(id, address);
-      const isResearched = Research.get(entity);
+      const isResearched = HasResearched.get(entity);
       return isResearched?.value ?? false;
     });
 
@@ -63,7 +63,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     }, [researchRequirement, address]);
 
     const isResearchRequirementsMet = useMemo(
-      () => Research.get(researchOwner)?.value ?? false,
+      () => HasResearched.get(researchOwner)?.value ?? false,
       [researchOwner]
     );
 

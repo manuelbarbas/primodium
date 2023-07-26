@@ -18,7 +18,7 @@ import { hashKeyEntityAndTrim } from "src/util/encode";
 import {
   RawBlueprint,
   RequiredResearchComponent,
-  Research,
+  HasResearched,
 } from "src/network/components/chainComponents";
 
 const HotbarItem: React.FC<{
@@ -37,7 +37,7 @@ const HotbarItem: React.FC<{
 
   const entity = hashKeyEntityAndTrim(requiredResearch ?? SingletonID, address);
 
-  const researched = Research.get(entity)?.value;
+  const researched = HasResearched.get(entity)?.value;
 
   useEffect(() => {
     if (!requiredResearch) {

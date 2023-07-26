@@ -67,9 +67,9 @@ export const Item = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}Item` },
 });
 
-export const Research = newBoolComponent(world, {
-  id: "Research",
-  metadata: { contractId: `${commonIdPrefix}Research` },
+export const HasResearched = newBoolComponent(world, {
+  id: "HasResearched",
+  metadata: { contractId: `${commonIdPrefix}HasResearched` },
 });
 
 export const StarterPackInitialized = newBoolComponent(world, {
@@ -182,7 +182,7 @@ export default {
   LastClaimedAt,
   Health,
   Item,
-  Research,
+  HasResearched,
   StarterPackInitialized,
   MainBase,
   RequiredResearchComponent,

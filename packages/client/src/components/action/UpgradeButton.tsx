@@ -17,7 +17,7 @@ import { GameButton } from "../shared/GameButton";
 import {
   Level,
   MaxLevel,
-  Research,
+  HasResearched,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
 
@@ -76,7 +76,7 @@ export default function UpgradeButton({
   }, [researchRequirement]);
 
   const isResearched = useMemo(() => {
-    return Research.get(researchOwner);
+    return HasResearched.get(researchOwner);
   }, [researchOwner]);
 
   const isUpgradeLocked = useMemo(() => {

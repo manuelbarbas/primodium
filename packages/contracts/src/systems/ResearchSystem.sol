@@ -4,7 +4,7 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
@@ -33,9 +33,11 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(components, HasResearchedComponentID)
+    );
 
-    require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
+    require(hasResearchedComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
       checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),
@@ -51,7 +53,7 @@ contract ResearchSystem is System {
       LibResourceCost.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Not enough resources to research"
     );
-    researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
+    hasResearchedComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
     return abi.encode(true);
   }
 

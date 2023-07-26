@@ -132,7 +132,7 @@ When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent
 
 ```
   ItemComponent
-  ResearchComponent
+  HasResearchedComponent
 ```
 
 `Passive Resources`

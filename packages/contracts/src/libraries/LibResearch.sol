@@ -5,7 +5,7 @@ import { IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 
 import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -18,10 +18,13 @@ library LibResearch {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(world.components(), RequiredResearchComponentID)
     );
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(world.components(), ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(world.components(), HasResearchedComponentID)
+    );
 
     if (!requiredResearchComponent.has(entity)) return true;
 
-    return researchComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
+    return
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
   }
 }
