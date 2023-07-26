@@ -34,7 +34,7 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
@@ -184,8 +184,8 @@ library LibDeploy {
       comp = new IgnoreBuildLimitComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying BuildingTilesComponent");
-      comp = new BuildingTilesComponent(address(result.world));
+      console.log("Deploying ChildrenComponent");
+      comp = new ChildrenComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying BlueprintComponent");
@@ -314,7 +314,7 @@ library LibDeploy {
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
-    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    authorizeWriter(components, ChildrenComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying PostBuildSystem");
@@ -338,10 +338,10 @@ library LibDeploy {
     authorizeWriter(components, HealthComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, MainBaseInitializedComponentID, address(system));
-    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    authorizeWriter(components, ChildrenComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
     authorizeWriter(components, MaxBuildingsComponentID, address(system));
-    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    authorizeWriter(components, ChildrenComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying PostDestroySystem");
@@ -549,7 +549,7 @@ library LibDeploy {
     authorizeWriter(components, RequiredResourcesComponentID, address(system));
     authorizeWriter(components, MaxBuildingsComponentID, address(system));
     authorizeWriter(components, IgnoreBuildLimitComponentID, address(system));
-    authorizeWriter(components, BuildingTilesComponentID, address(system));
+    authorizeWriter(components, ChildrenComponentID, address(system));
     authorizeWriter(components, BlueprintComponentID, address(system));
     authorizeWriter(components, StorageCapacityComponentID, address(system));
     authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));

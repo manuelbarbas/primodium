@@ -17,7 +17,7 @@
     "RequiredResourcesComponent",
     "MaxBuildingsComponent",
     "IgnoreBuildLimitComponent",
-    "BuildingTilesComponent",
+    "ChildrenComponent",
     "BlueprintComponent",
     "StorageCapacityComponent",
     "StorageCapacityResourcesComponent",
@@ -68,7 +68,7 @@
         "MainBaseInitializedComponent",
         "LevelComponent",
         "MainBaseInitializedComponent",
-        "BuildingTilesComponent"
+        "ChildrenComponent"
       ]
     },
     {
@@ -93,10 +93,10 @@
         "PathComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingTilesComponent",
+        "ChildrenComponent",
         "LevelComponent",
         "MaxBuildingsComponent",
-        "BuildingTilesComponent"
+        "ChildrenComponent"
       ]
     },
     {

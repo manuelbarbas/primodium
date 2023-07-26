@@ -5,7 +5,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 import { ID as BuildSystemID } from "systems/BuildSystem.sol";
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";

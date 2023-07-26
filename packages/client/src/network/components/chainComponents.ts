@@ -139,12 +139,12 @@ export const MaxBuildings = newNumberComponent(world, {
   overridable: true,
 });
 
-export const BuildingTiles = newComponent(
+export const Children = newComponent(
   world,
   { value: Type.EntityArray },
   {
-    id: "BuildingTiles",
-    metadata: { contractId: `${commonIdPrefix}BuildingTiles` },
+    id: "Children",
+    metadata: { contractId: `${commonIdPrefix}Children` },
   }
 );
 
@@ -193,7 +193,7 @@ export default {
   StorageCapacityResources,
   Mine,
   MaxBuildings,
-  BuildingTiles,
+  Children,
   RawBlueprint,
   UnclaimedResource,
   SystemsRegistry,

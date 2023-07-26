@@ -12,7 +12,7 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 // components
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
@@ -32,7 +32,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   OwnedByComponent public ownedByComponent;
   BlueprintComponent public blueprintComponent;
-  BuildingTilesComponent public buildingTilesComponent;
+  ChildrenComponent public childrenComponent;
   LevelComponent public levelComponent;
   MaxBuildingsComponent public maxBuildingsComponent;
   TileComponent public tileComponent;
@@ -49,7 +49,7 @@ contract DestroySystemTest is PrimodiumTest {
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
-    buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
+    childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     levelComponent = LevelComponent(component(LevelComponentID));
     tileComponent = TileComponent(component(TileComponentID));
     mainBaseInitializedComponent = MainBaseInitializedComponent(component(MainBaseInitializedComponentID));
@@ -72,13 +72,13 @@ contract DestroySystemTest is PrimodiumTest {
   }
 
   function destroy(uint256 buildingEntity, Coord memory _coord) public {
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
+    uint256[] memory children = childrenComponent.getValue(buildingEntity);
     uint256 maxBuildings = maxBuildingsComponent.getValue(playerEntity);
     destroySystem.executeTyped(_coord);
 
-    for (uint256 i = 0; i < buildingTiles.length; i++) {
-      assertFalse(ownedByComponent.has(buildingTiles[i]));
-      assertFalse(tileComponent.has(buildingTiles[i]));
+    for (uint256 i = 0; i < children.length; i++) {
+      assertFalse(ownedByComponent.has(children[i]));
+      assertFalse(tileComponent.has(children[i]));
     }
 
     assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");

@@ -11,7 +11,7 @@ import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
@@ -40,7 +40,7 @@ contract BuildSystem is PrimodiumSystem {
     uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
     require(
-      !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
+      !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
       "[BuildSystem] Building already exists here"
     );
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
@@ -65,7 +65,7 @@ contract BuildSystem is PrimodiumSystem {
       Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
-    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
+    ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(

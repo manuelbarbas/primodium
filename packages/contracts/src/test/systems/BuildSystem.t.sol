@@ -8,7 +8,7 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 
-import { BuildingTilesComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
+import { ChildrenComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
 
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
@@ -17,7 +17,7 @@ import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "../../components/BlueprintComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
@@ -47,7 +47,7 @@ contract BuildSystemTest is PrimodiumTest {
   BuildSystem public buildSystem;
 
   OwnedByComponent public ownedByComponent;
-  BuildingTilesComponent public buildingTilesComponent;
+  ChildrenComponent public childrenComponent;
   TileComponent public tileComponent;
 
   function setUp() public override {
@@ -59,7 +59,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
-    buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
+    childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     tileComponent = TileComponent(component(TileComponentID));
 
     // init other
@@ -234,13 +234,13 @@ contract BuildSystemTest is PrimodiumTest {
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
     Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
 
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
-    assertEq(blueprint.length, buildingTiles.length);
+    uint256[] memory children = childrenComponent.getValue(buildingEntity);
+    assertEq(blueprint.length, children.length);
 
-    for (uint i = 0; i < buildingTiles.length; i++) {
-      position = LibEncode.decodeCoordEntity(buildingTiles[i]);
+    for (uint i = 0; i < children.length; i++) {
+      position = LibEncode.decodeCoordEntity(children[i]);
       assertCoordEq(position, blueprint[i]);
-      assertEq(buildingEntity, ownedByComponent.getValue(buildingTiles[i]));
+      assertEq(buildingEntity, ownedByComponent.getValue(children[i]));
     }
   }
 

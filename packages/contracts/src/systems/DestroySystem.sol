@@ -12,7 +12,7 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 
 // types
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
@@ -60,7 +60,7 @@ contract DestroySystem is PrimodiumSystem {
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    BuildingTilesComponent buildingTilesComponent = BuildingTilesComponent(getC(BuildingTilesComponentID));
+    ChildrenComponent childrenComponent = ChildrenComponent(getC(ChildrenComponentID));
 
     MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
@@ -75,12 +75,12 @@ contract DestroySystem is PrimodiumSystem {
 
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
-    buildingTilesComponent.remove(buildingEntity);
-    for (uint i = 0; i < buildingTiles.length; i++) {
-      clearBuildingTile(ownedByComponent, buildingTiles[i]);
+    uint256[] memory children = childrenComponent.getValue(buildingEntity);
+    childrenComponent.remove(buildingEntity);
+    for (uint i = 0; i < children.length; i++) {
+      clearBuildingTile(ownedByComponent, children[i]);
     }
-    buildingTilesComponent.remove(buildingEntity);
+    childrenComponent.remove(buildingEntity);
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
       IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
@@ -119,7 +119,7 @@ contract DestroySystem is PrimodiumSystem {
     tileComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
     LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
-    buildingTilesComponent.remove(buildingEntity);
+    childrenComponent.remove(buildingEntity);
     return abi.encode(buildingEntity);
   }
 
