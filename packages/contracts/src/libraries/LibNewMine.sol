@@ -6,7 +6,7 @@ import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
 
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
+import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
@@ -19,10 +19,10 @@ import { LibMath } from "./LibMath.sol";
 
 library LibNewMine {
   function claimResourcesFromMines(IWorld world, uint256 playerEntity) internal {
-    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
-      world.getComponent(MaxStorageResourcesComponentID)
+    OwnedResourcesComponent ownedResourcesComponent = OwnedResourcesComponent(
+      world.getComponent(OwnedResourcesComponentID)
     );
-    if (!maxStorageResourcesComponent.has(playerEntity)) return;
+    if (!ownedResourcesComponent.has(playerEntity)) return;
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
@@ -31,7 +31,7 @@ library LibNewMine {
     );
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(world.getComponent(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    uint256[] memory storageResourceIds = maxStorageResourcesComponent.getValue(playerEntity);
+    uint256[] memory storageResourceIds = ownedResourcesComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
       if (MineComponent(world.getComponent(MineComponentID)).has(playerResourceEntity))

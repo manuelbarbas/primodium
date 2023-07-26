@@ -9,7 +9,7 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
+import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 
@@ -30,12 +30,10 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
 
   function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
-    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
-      getC(MaxStorageResourcesComponentID)
-    );
+    OwnedResourcesComponent ownedResourcesComponent = OwnedResourcesComponent(getC(OwnedResourcesComponentID));
     uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
-    if (!maxStorageResourcesComponent.has(buildingTypeLevel)) return;
-    uint256[] memory storageResources = maxStorageResourcesComponent.getValue(buildingTypeLevel);
+    if (!ownedResourcesComponent.has(buildingTypeLevel)) return;
+    uint256[] memory storageResources = ownedResourcesComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
         maxStorageComponent,
@@ -48,7 +46,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
         storageResources[i]
       );
       LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        maxStorageResourcesComponent,
+        ownedResourcesComponent,
         maxStorageComponent,
         playerEntity,
         storageResources[i],

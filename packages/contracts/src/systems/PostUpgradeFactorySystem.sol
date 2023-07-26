@@ -5,7 +5,7 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
+import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";

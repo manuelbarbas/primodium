@@ -12,7 +12,7 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 
 // types
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
+import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
@@ -68,7 +68,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
 
       LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        MaxStorageResourcesComponent(getAddressById(components, MaxStorageResourcesComponentID)),
+        OwnedResourcesComponent(getAddressById(components, OwnedResourcesComponentID)),
         maxStorageComponent,
         playerEntity,
         resourceId,
@@ -80,14 +80,12 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
 
   function checkAndUpdatePlayerStorageAfterDestroy(uint256 playerEntity, uint256 buildingId, uint256 level) internal {
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
-    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
-      getC(MaxStorageResourcesComponentID)
-    );
+    OwnedResourcesComponent ownedResourcesComponent = OwnedResourcesComponent(getC(OwnedResourcesComponentID));
     ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
 
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, level);
-    if (!maxStorageResourcesComponent.has(buildingIdLevel)) return;
-    uint256[] memory storageResources = maxStorageResourcesComponent.getValue(buildingIdLevel);
+    if (!ownedResourcesComponent.has(buildingIdLevel)) return;
+    uint256[] memory storageResources = ownedResourcesComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
       uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
@@ -101,7 +99,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
         storageResources[i]
       );
       LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        maxStorageResourcesComponent,
+        ownedResourcesComponent,
         maxStorageComponent,
         playerEntity,
         storageResources[i],

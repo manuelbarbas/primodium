@@ -5,12 +5,12 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
+import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
 library LibStorageUpdate {
   function updateMaxStorageOfResourceForEntity(
-    MaxStorageResourcesComponent maxStorageResourcesComponent,
+    OwnedResourcesComponent ownedResourcesComponent,
     MaxStorageComponent maxStorageComponent,
     uint256 entity,
     uint256 resourceId,
@@ -19,18 +19,18 @@ library LibStorageUpdate {
     uint256 resourceEntity = LibEncode.hashKeyEntity(resourceId, entity);
     if (!maxStorageComponent.has(resourceEntity)) {
       uint256[] memory storageResourceIds;
-      if (maxStorageResourcesComponent.has(entity)) {
-        storageResourceIds = maxStorageResourcesComponent.getValue(entity);
+      if (ownedResourcesComponent.has(entity)) {
+        storageResourceIds = ownedResourcesComponent.getValue(entity);
         uint256[] memory updatedResourceIds = new uint256[](storageResourceIds.length + 1);
         for (uint256 i = 0; i < storageResourceIds.length; i++) {
           updatedResourceIds[i] = storageResourceIds[i];
         }
         updatedResourceIds[storageResourceIds.length] = resourceId;
-        maxStorageResourcesComponent.set(entity, updatedResourceIds);
+        ownedResourcesComponent.set(entity, updatedResourceIds);
       } else {
         storageResourceIds = new uint256[](1);
         storageResourceIds[0] = resourceId;
-        maxStorageResourcesComponent.set(entity, storageResourceIds);
+        ownedResourcesComponent.set(entity, storageResourceIds);
       }
     }
     maxStorageComponent.set(resourceEntity, newMaxStorage);

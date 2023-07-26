@@ -2,7 +2,7 @@ pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
+import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -33,8 +33,8 @@ contract DebugAcquireStorageForAllResourcesSystem is System {
     ];
 
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
-    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
-      getAddressById(components, MaxStorageResourcesComponentID)
+    OwnedResourcesComponent ownedResourcesComponent = OwnedResourcesComponent(
+      getAddressById(components, OwnedResourcesComponentID)
     );
 
     uint256[] memory maxStorage = new uint256[](allResourceIds.length);
@@ -43,7 +43,7 @@ contract DebugAcquireStorageForAllResourcesSystem is System {
       maxStorageComponent.set(LibEncode.hashKeyEntity(allResourceIds[i], addressToEntity(msg.sender)), BIGNUM);
       maxStorage[i] = allResourceIds[i];
     }
-    maxStorageResourcesComponent.set(addressToEntity(msg.sender), maxStorage);
+    ownedResourcesComponent.set(addressToEntity(msg.sender), maxStorage);
   }
 
   function executeTyped() public returns (bytes memory) {
