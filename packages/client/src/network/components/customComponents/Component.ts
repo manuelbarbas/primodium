@@ -16,7 +16,6 @@ import {
   defineQuery,
   getComponentValue,
   hasComponent,
-  overridableComponent,
   removeComponent,
   runQuery,
   setComponent,
@@ -24,7 +23,7 @@ import {
 } from "@latticexyz/recs";
 import { singletonIndex } from "../../world";
 import { useEffect, useState } from "react";
-
+import { overridableComponent } from "./overridableComponent";
 type OverridableType<
   Overridable extends boolean,
   S extends Schema,
@@ -160,7 +159,6 @@ function newComponent<
 
   const context = {
     ...component,
-    override: component,
     get,
     set,
     getAll,

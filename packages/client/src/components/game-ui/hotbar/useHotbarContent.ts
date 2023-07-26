@@ -119,7 +119,7 @@ export const useHotbarContent = () => {
     setHotbarContent(
       [
         mainBase ? buildingHotbar : mainBaseHotbar,
-        IsDebug.get(BlockType.IsDebug) ? debugHotbar : undefined,
+        IsDebug.get() ? debugHotbar : undefined,
       ].filter(Boolean) as Hotbar[]
     );
   }, [mainBase]);
