@@ -24,13 +24,13 @@ library LibResourceCost {
 
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.length; i++) {
-      uint256 resourceCost = LibMath.getSafeUint256Value(
+      uint32 resourceCost = LibMath.getSafeUint32Value(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResources[i], entity)
       );
       if (
         resourceCost >
-        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], playerEntity))
+        LibMath.getSafeUint32Value(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], playerEntity))
       ) return false;
     }
     return true;
@@ -45,14 +45,14 @@ library LibResourceCost {
     if (!requiredResourcesComponent.has(entity)) return true;
 
     uint256[] memory requiredResourceIds = requiredResourcesComponent.getValue(entity);
-    uint256[] memory requiredResources = new uint256[](requiredResourceIds.length);
-    uint256[] memory currentResources = new uint256[](requiredResourceIds.length);
+    uint32[] memory requiredResources = new uint32[](requiredResourceIds.length);
+    uint32[] memory currentResources = new uint32[](requiredResourceIds.length);
     for (uint256 i = 0; i < requiredResourceIds.length; i++) {
-      requiredResources[i] = LibMath.getSafeUint256Value(
+      requiredResources[i] = LibMath.getSafeUint32Value(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResourceIds[i], entity)
       );
-      currentResources[i] = LibMath.getSafeUint256Value(
+      currentResources[i] = LibMath.getSafeUint32Value(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResourceIds[i], playerEntity)
       );
@@ -79,12 +79,12 @@ library LibResourceCost {
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.length; i++) {
       uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources[i], playerEntity);
-      uint256 resourceCost = LibMath.getSafeUint256Value(
+      uint32 resourceCost = LibMath.getSafeUint32Value(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResources[i], entity)
       );
-      uint256 curItem = LibMath.getSafeUint256Value(itemComponent, playerResourceHash);
-      itemComponent.set(playerResourceHash, curItem - resourceCost);
+      uint32 currItem = LibMath.getSafeUint32Value(itemComponent, playerResourceHash);
+      itemComponent.set(playerResourceHash, currItem - resourceCost);
     }
   }
 }

@@ -38,7 +38,7 @@ library LibNewMine {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
       if (MineComponent(world.getComponent(MineComponentID)).has(playerResourceEntity))
         LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, storageResourceIds[i]);
-      uint256 unclaimedResourceAmount = LibMath.getSafeUint256Value(unclaimedResourceComponent, playerResourceEntity);
+      uint32 unclaimedResourceAmount = LibMath.getSafeUint32Value(unclaimedResourceComponent, playerResourceEntity);
       if (unclaimedResourceAmount > 0)
         LibClaim.addResourceToStorage(
           itemComponent,

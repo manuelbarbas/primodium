@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
@@ -13,20 +14,17 @@ contract DebugAcquireResourcesSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function execute(bytes memory args) public returns (bytes memory) {
-    (uint256 resourceId, uint256 amount) = abi.decode(args, (uint256, uint256));
+    (uint256 resourceId, uint32 amount) = abi.decode(args, (uint256, uint32));
     if (!LibDebug.isDebug(world)) {
       revert("Not in debug mode");
     }
     ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
+    uint256 playerEntity = addressToEntity(msg.sender);
     itemComponent.set(
-      LibEncode.hashKeyEntity(resourceId, addressToEntity(msg.sender)),
-      LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceId, addressToEntity(msg.sender))) +
-        amount
+      LibEncode.hashKeyEntity(resourceId, playerEntity),
+      LibMath.getSafeUint32Value(itemComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) + amount
     );
-    return
-      abi.encode(
-        LibMath.getSafeUint256Value(itemComponent, LibEncode.hashKeyEntity(resourceId, addressToEntity(msg.sender)))
-      );
+    return abi.encode(LibMath.getSafeUint32Value(itemComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)));
   }
 
   function executeTyped(uint256 resourceId, uint256 amount) public returns (bytes memory) {

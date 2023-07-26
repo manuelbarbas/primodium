@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
@@ -134,7 +135,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     updateUnclaimedForResource(playerEntity, factoryProductionData.ResourceID);
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
-    if (LibMath.getSafeUint256Value(mineComponent, playerResourceEntity) <= 0) revert("this should not be possible");
+    if (LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) <= 0) revert("this should not be possible");
     //update resource production
     LibResourceProduction.updateResourceProduction(
       world,

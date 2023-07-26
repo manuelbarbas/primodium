@@ -395,7 +395,7 @@ library LibBuildingDesignInitializer {
     //maxLevelComponent.set(AlloyFactoryID, 3);
     uint256[] memory requiredPassiveResourceIDs = new uint256[](1);
     requiredPassiveResourceIDs[0] = ElectricityPassiveResourceID;
-    uint256[] memory requiredPassiveResourceAmounts = new uint256[](1);
+    uint32[] memory requiredPassiveResourceAmounts = new uint32[](1);
     requiredPassiveResourceAmounts[0] = 2;
 
     requiredPassiveResourceComponent.set(

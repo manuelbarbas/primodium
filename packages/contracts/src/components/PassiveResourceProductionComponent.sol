@@ -7,7 +7,7 @@ uint256 constant ID = uint256(keccak256("component.PassiveResourceProduction"));
 
 struct PassiveResourceProductionData {
   uint256 ResourceID;
-  uint256 ResourceProduction;
+  uint32 ResourceProduction;
 }
 
 contract PassiveResourceProductionComponent is Component {
@@ -21,7 +21,7 @@ contract PassiveResourceProductionComponent is Component {
     values[0] = LibTypes.SchemaValue.UINT256;
 
     keys[1] = "ResourceProduction";
-    values[1] = LibTypes.SchemaValue.UINT256;
+    values[1] = LibTypes.SchemaValue.UINT32;
   }
 
   function set(uint256 entity, PassiveResourceProductionData calldata value) public virtual {
@@ -29,7 +29,7 @@ contract PassiveResourceProductionComponent is Component {
   }
 
   function getValue(uint256 entity) public view virtual returns (PassiveResourceProductionData memory) {
-    (uint256 resourceID, uint256 resourceProduction) = abi.decode(getRawValue(entity), (uint256, uint256));
+    (uint256 resourceID, uint32 resourceProduction) = abi.decode(getRawValue(entity), (uint256, uint32));
     return PassiveResourceProductionData(resourceID, resourceProduction);
   }
 

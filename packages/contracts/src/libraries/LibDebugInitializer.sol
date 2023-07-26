@@ -294,7 +294,7 @@ library LibDebugInitializer {
     ignoreBuildLimitComponent.set(DebugSimpleBuildingPassiveResourceRequirement);
     RequiredPassiveResourceData memory requiredPassiveResourceData = RequiredPassiveResourceData({
       ResourceIDs: new uint256[](1),
-      RequiredAmounts: new uint256[](1)
+      RequiredAmounts: new uint32[](1)
     });
     requiredPassiveResourceData.ResourceIDs[0] = ElectricityPassiveResourceID;
     requiredPassiveResourceData.RequiredAmounts[0] = 2;

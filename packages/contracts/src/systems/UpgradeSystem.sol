@@ -72,7 +72,7 @@ contract UpgradeSystem is PrimodiumSystem {
       LibResourceCost.checkAndSpendRequiredResources(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
-    uint256 newLevel = buildingLevelComponent.getValue(buildingEntity) + 1;
+    uint32 newLevel = buildingLevelComponent.getValue(buildingEntity) + 1;
     buildingLevelComponent.set(buildingEntity, newLevel);
 
     if (MineComponent(getAddressById(components, MineComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel)))

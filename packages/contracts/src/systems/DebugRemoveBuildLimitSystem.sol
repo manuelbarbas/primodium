@@ -8,6 +8,8 @@ import { LibDebug } from "../libraries/LibDebug.sol";
 
 uint256 constant ID = uint256(keccak256("system.DebugRemoveBuildLimit"));
 
+uint32 constant BIGNUM = 1_294_967_295;
+
 contract DebugRemoveBuildLimitSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
@@ -17,7 +19,7 @@ contract DebugRemoveBuildLimitSystem is System {
     }
     BuildingLimitComponent buildingLimit = BuildingLimitComponent(getAddressById(components, BuildingLimitComponentID));
     for (uint256 i = 0; i < 100; i++) {
-      buildingLimit.set(i, 1000000000000);
+      buildingLimit.set(i, BIGNUM);
     }
     return abi.encode(buildingLimit.getValue(0));
   }

@@ -23,6 +23,13 @@ contract LibEncodeTest is MudTest {
     vm.stopPrank();
   }
 
+  function testHash32vs256() public {
+    uint256 entityId = 2345676543;
+    uint32 small = 32;
+    uint256 big = 32;
+    assertEq(LibEncode.hashKeyEntity(small, entityId), LibEncode.hashKeyEntity(big, entityId));
+  }
+
   function testHashKeyEntity() public {
     bytes32 clientTestOne = bytes32(LibEncode.hashKeyEntity(0, 0));
     bytes32 clientTestTwo = bytes32(LibEncode.hashKeyEntity(90, 2));

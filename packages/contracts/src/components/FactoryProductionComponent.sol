@@ -7,7 +7,7 @@ uint256 constant ID = uint256(keccak256("component.FactoryProduction"));
 
 struct FactoryProductionData {
   uint256 ResourceID;
-  uint256 ResourceProductionRate;
+  uint32 ResourceProductionRate;
 }
 
 contract FactoryProductionComponent is Component {
@@ -21,7 +21,7 @@ contract FactoryProductionComponent is Component {
     values[0] = LibTypes.SchemaValue.UINT256;
 
     keys[1] = "ResourceProductionRate";
-    values[1] = LibTypes.SchemaValue.UINT256;
+    values[1] = LibTypes.SchemaValue.UINT32;
   }
 
   function set(uint256 entity, FactoryProductionData calldata value) public virtual {
@@ -29,7 +29,7 @@ contract FactoryProductionComponent is Component {
   }
 
   function getValue(uint256 entity) public view virtual returns (FactoryProductionData memory) {
-    (uint256 resourceID, uint256 resourceProductionRate) = abi.decode(getRawValue(entity), (uint256, uint256));
+    (uint256 resourceID, uint32 resourceProductionRate) = abi.decode(getRawValue(entity), (uint256, uint32));
     return FactoryProductionData(resourceID, resourceProductionRate);
   }
 
