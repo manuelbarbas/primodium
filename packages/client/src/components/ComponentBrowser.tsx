@@ -15,7 +15,11 @@ export const ComponentBrowser = () => {
   };
 
   return (
-    <div className="z-10 fixed bottom-0 right-0 w-96 h-full text-xs">
+    <div
+      className={`z-10 fixed bottom-0 right-0 ${
+        isVisible ? "w-96" : ""
+      } h-full text-xs`}
+    >
       {isVisible && (
         <ECSBrowser
           world={world}
