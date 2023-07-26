@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "../components/LastClaimedAtComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "../components/StorageCapacityComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../components/MineComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 
@@ -20,9 +20,7 @@ library LibUnclaimedResource {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
-    StorageCapacityComponent storageComponent = StorageCapacityComponent(
-      world.getComponent(StorageCapacityComponentID)
-    );
+    MaxStorageComponent storageComponent = MaxStorageComponent(world.getComponent(MaxStorageComponentID));
     MineComponent mineComponent = MineComponent(world.getComponent(MineComponentID));
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
 

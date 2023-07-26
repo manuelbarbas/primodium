@@ -18,8 +18,8 @@
     "IgnoreBuildLimitComponent",
     "ChildrenComponent",
     "BlueprintComponent",
-    "StorageCapacityComponent",
-    "StorageCapacityResourcesComponent",
+    "MaxStorageComponent",
+    "MaxStorageResourcesComponent",
     "MineComponent",
     "UnclaimedResourceComponent",
     "ActiveComponent",
@@ -72,8 +72,8 @@
       "name": "PostBuildSystem",
       "writeAccess": [
         "ItemComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent",
+        "MaxStorageComponent",
+        "MaxStorageResourcesComponent",
         "FactoryMineBuildingsComponent",
         "LastClaimedAtComponent",
         "MaxBuildingsComponent"
@@ -98,7 +98,7 @@
     },
     {
       "name": "PostDestroySystem",
-      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent", "ItemComponent"]
+      "writeAccess": ["MaxStorageComponent", "MaxStorageResourcesComponent", "ItemComponent"]
     },
     {
       "name": "BuildPathSystem",
@@ -148,7 +148,7 @@
     {
       "name": "PostDestroyPathSystem",
       "writeAccess": [
-        "StorageCapacityComponent",
+        "MaxStorageComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
@@ -179,12 +179,7 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": [
-        "LevelComponent",
-        "ItemComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent"
-      ]
+      "writeAccess": ["LevelComponent", "ItemComponent", "MaxStorageComponent", "MaxStorageResourcesComponent"]
     },
     {
       "name": "PostUpgradeMineSystem",
@@ -231,7 +226,7 @@
     },
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",
-      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent"]
+      "writeAccess": ["MaxStorageComponent", "MaxStorageResourcesComponent"]
     }
   ]
 }

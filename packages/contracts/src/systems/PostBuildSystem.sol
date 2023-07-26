@@ -8,8 +8,8 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 
@@ -29,30 +29,30 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getC(StorageCapacityResourcesComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
+    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
+      getC(MaxStorageResourcesComponentID)
     );
     uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
-    if (!storageCapacityResourcesComponent.has(buildingTypeLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingTypeLevel);
+    if (!maxStorageResourcesComponent.has(buildingTypeLevel)) return;
+    uint256[] memory storageResources = maxStorageResourcesComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
+      uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
+        maxStorageComponent,
         playerEntity,
         storageResources[i]
       );
-      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
+      uint32 maxStorageIncrease = LibStorage.getEntityMaxStorageForResource(
+        maxStorageComponent,
         buildingTypeLevel,
         storageResources[i]
       );
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        storageCapacityResourcesComponent,
-        storageCapacityComponent,
+      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
+        maxStorageResourcesComponent,
+        maxStorageComponent,
         playerEntity,
         storageResources[i],
-        playerResourceStorageCapacity + storageCapacityIncrease
+        playerResourceMaxStorage + maxStorageIncrease
       );
     }
   }

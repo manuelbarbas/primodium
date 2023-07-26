@@ -36,8 +36,8 @@ import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
@@ -192,12 +192,12 @@ library LibDeploy {
       comp = new BlueprintComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying StorageCapacityComponent");
-      comp = new StorageCapacityComponent(address(result.world));
+      console.log("Deploying MaxStorageComponent");
+      comp = new MaxStorageComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying StorageCapacityResourcesComponent");
-      comp = new StorageCapacityResourcesComponent(address(result.world));
+      console.log("Deploying MaxStorageResourcesComponent");
+      comp = new MaxStorageResourcesComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying MineComponent");
@@ -321,8 +321,8 @@ library LibDeploy {
     system = new PostBuildSystem(world, address(components));
     world.registerSystem(address(system), PostBuildSystemID);
     authorizeWriter(components, ItemComponentID, address(system));
-    authorizeWriter(components, StorageCapacityComponentID, address(system));
-    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
+    authorizeWriter(components, MaxStorageComponentID, address(system));
+    authorizeWriter(components, MaxStorageResourcesComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, MaxBuildingsComponentID, address(system));
@@ -347,8 +347,8 @@ library LibDeploy {
     console.log("Deploying PostDestroySystem");
     system = new PostDestroySystem(world, address(components));
     world.registerSystem(address(system), PostDestroySystemID);
-    authorizeWriter(components, StorageCapacityComponentID, address(system));
-    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
+    authorizeWriter(components, MaxStorageComponentID, address(system));
+    authorizeWriter(components, MaxStorageResourcesComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
     console.log(address(system));
 
@@ -406,7 +406,7 @@ library LibDeploy {
     console.log("Deploying PostDestroyPathSystem");
     system = new PostDestroyPathSystem(world, address(components));
     world.registerSystem(address(system), PostDestroyPathSystemID);
-    authorizeWriter(components, StorageCapacityComponentID, address(system));
+    authorizeWriter(components, MaxStorageComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
@@ -454,8 +454,8 @@ library LibDeploy {
     world.registerSystem(address(system), UpgradeSystemID);
     authorizeWriter(components, LevelComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
-    authorizeWriter(components, StorageCapacityComponentID, address(system));
-    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
+    authorizeWriter(components, MaxStorageComponentID, address(system));
+    authorizeWriter(components, MaxStorageResourcesComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying PostUpgradeMineSystem");
@@ -524,8 +524,8 @@ library LibDeploy {
     console.log("Deploying DebugAcquireStorageForAllResourcesSystem");
     system = new DebugAcquireStorageForAllResourcesSystem(world, address(components));
     world.registerSystem(address(system), DebugAcquireStorageForAllResourcesSystemID);
-    authorizeWriter(components, StorageCapacityComponentID, address(system));
-    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
+    authorizeWriter(components, MaxStorageComponentID, address(system));
+    authorizeWriter(components, MaxStorageResourcesComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying ComponentDevSystem");
@@ -551,8 +551,8 @@ library LibDeploy {
     authorizeWriter(components, IgnoreBuildLimitComponentID, address(system));
     authorizeWriter(components, ChildrenComponentID, address(system));
     authorizeWriter(components, BlueprintComponentID, address(system));
-    authorizeWriter(components, StorageCapacityComponentID, address(system));
-    authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
+    authorizeWriter(components, MaxStorageComponentID, address(system));
+    authorizeWriter(components, MaxStorageResourcesComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));

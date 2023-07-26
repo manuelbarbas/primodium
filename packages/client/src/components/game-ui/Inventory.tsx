@@ -13,7 +13,7 @@ import {
   LastClaimedAt,
   MainBase,
   Mine,
-  StorageCapacity,
+  MaxStorage,
   UnclaimedResource,
 } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
@@ -270,12 +270,12 @@ Inventory.AllPassiveResourceLabels = ({
   entityIndex?: EntityIndex;
 }) => {
   const { components } = useMud();
-  const storageCapacity = useResourceCount(
-    components.StorageCapacity,
+  const maxStorage = useResourceCount(
+    components.MaxStorage,
     BlockType.ElectricityPassiveResource,
     entityIndex
   );
-  if (!storageCapacity)
+  if (!maxStorage)
     return (
       <div className="flex justify-center items-center text-lg">
         No Utilities
@@ -305,11 +305,7 @@ Inventory.ResourceLabel = ({
 
   const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
-  const storageCapacity = useResourceCount(
-    StorageCapacity,
-    resourceId,
-    entityIndex
-  );
+  const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
 
   const production = useResourceCount(Mine, resourceId, entityIndex);
 
@@ -328,14 +324,13 @@ Inventory.ResourceLabel = ({
   const resourcesToClaim = useMemo(() => {
     const toClaim =
       unclaimedResource + (blockNumber - lastClaimedAt) * production;
-    if (toClaim > storageCapacity - resourceCount)
-      return storageCapacity - resourceCount;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   }, [unclaimedResource, lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (storageCapacity > 0) {
+  if (maxStorage > 0) {
     return (
       <div className="mb-1">
         <div className="flex justify-between">
@@ -347,28 +342,27 @@ Inventory.ResourceLabel = ({
         </div>
         <div
           className={`flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt ${
-            resourceCount + resourcesToClaim === storageCapacity
+            resourceCount + resourcesToClaim === maxStorage
               ? "animate-pulse"
               : ""
           }`}
         >
           <div
             className="h-full bg-cyan-600"
-            style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
+            style={{ width: `${(resourceCount / maxStorage) * 100}%` }}
           />
 
           <div
             className="h-full bg-cyan-800"
             style={{
-              width: `${(resourcesToClaim / storageCapacity) * 100}%`,
+              width: `${(resourcesToClaim / maxStorage) * 100}%`,
             }}
           />
           <div
             className="h-full bg-gray-900"
             style={{
               width: `${
-                ((storageCapacity - resourceCount - resourcesToClaim) /
-                  storageCapacity) *
+                ((maxStorage - resourceCount - resourcesToClaim) / maxStorage) *
                 100
               }%`,
             }}
@@ -381,7 +375,7 @@ Inventory.ResourceLabel = ({
               <span className="opacity-50">(+{resourcesToClaim})</span>
             )}
           </p>
-          <b>{storageCapacity}</b>
+          <b>{maxStorage}</b>
         </div>
       </div>
     );
@@ -403,11 +397,7 @@ Inventory.PassiveResourceLabel = ({
 
   const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
-  const storageCapacity = useResourceCount(
-    StorageCapacity,
-    resourceId,
-    entityIndex
-  );
+  const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
 
   const production = useResourceCount(Mine, resourceId, entityIndex);
 
@@ -427,14 +417,13 @@ Inventory.PassiveResourceLabel = ({
     const toClaim =
       unclaimedResource +
       ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
-    if (toClaim > storageCapacity - resourceCount)
-      return storageCapacity - resourceCount;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   }, [unclaimedResource, lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (storageCapacity > 0) {
+  if (maxStorage > 0) {
     return (
       <div className="mb-1">
         <div className="flex justify-between">
@@ -446,18 +435,17 @@ Inventory.PassiveResourceLabel = ({
         <div>
           <div
             className="h-full bg-cyan-600"
-            style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
+            style={{ width: `${(resourceCount / maxStorage) * 100}%` }}
           />
           <div
             className="h-full bg-cyan-800"
-            style={{ width: `${(resourcesToClaim / storageCapacity) * 100}%` }}
+            style={{ width: `${(resourcesToClaim / maxStorage) * 100}%` }}
           />
           <div
             className="h-full bg-gray-900"
             style={{
               width: `${
-                ((storageCapacity - resourceCount - resourcesToClaim) /
-                  storageCapacity) *
+                ((maxStorage - resourceCount - resourcesToClaim) / maxStorage) *
                 100
               }%`,
             }}
@@ -465,7 +453,7 @@ Inventory.PassiveResourceLabel = ({
         </div>
         <div className="flex justify-between">
           <p>{resourceCount}</p>
-          <b>{storageCapacity}</b>
+          <b>{maxStorage}</b>
         </div>
       </div>
     );

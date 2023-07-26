@@ -15,8 +15,8 @@ import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBas
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 
 // types
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
@@ -46,7 +46,7 @@ contract DestroySystem is PrimodiumSystem {
     if (passiveResourceProductionComponent.has(blockType)) {
       return
         LibStorage.getAvailableSpaceInStorageForResource(
-          StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
+          MaxStorageComponent(getAddressById(components, MaxStorageComponentID)),
           ItemComponent(getAddressById(components, ItemComponentID)),
           addressToEntity(msg.sender),
           passiveResourceProductionComponent.getValue(blockType).ResourceID
@@ -103,9 +103,7 @@ contract DestroySystem is PrimodiumSystem {
 
     // for main base tile, remove main base initialized.
     if (buildingType == MainBaseID) {
-      MainBaseComponent mainBaseComponent = MainBaseComponent(
-        getC(MainBaseComponentID)
-      );
+      MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
       mainBaseComponent.remove(playerEntity);
     }
 

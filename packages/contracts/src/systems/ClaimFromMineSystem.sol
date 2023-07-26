@@ -8,8 +8,8 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";

@@ -1,8 +1,8 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -32,20 +32,18 @@ contract DebugAcquireStorageForAllResourcesSystem is System {
       IronPlateCraftedItemID
     ];
 
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
+    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
+      getAddressById(components, MaxStorageResourcesComponentID)
     );
 
-    uint256[] memory storageCapacity = new uint256[](allResourceIds.length);
+    uint256[] memory maxStorage = new uint256[](allResourceIds.length);
 
     for (uint256 i = 0; i < allResourceIds.length; i++) {
-      storageCapacityComponent.set(LibEncode.hashKeyEntity(allResourceIds[i], addressToEntity(msg.sender)), BIGNUM);
-      storageCapacity[i] = allResourceIds[i];
+      maxStorageComponent.set(LibEncode.hashKeyEntity(allResourceIds[i], addressToEntity(msg.sender)), BIGNUM);
+      maxStorage[i] = allResourceIds[i];
     }
-    storageCapacityResourcesComponent.set(addressToEntity(msg.sender), storageCapacity);
+    maxStorageResourcesComponent.set(addressToEntity(msg.sender), maxStorage);
   }
 
   function executeTyped() public returns (bytes memory) {

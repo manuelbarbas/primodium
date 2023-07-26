@@ -11,8 +11,8 @@ import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "componen
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 
 // types
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
@@ -65,54 +65,52 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     );
     if (passiveResourceProductionComponent.has(blockType)) {
       uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
-      StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-        getAddressById(components, StorageCapacityComponentID)
-      );
+      MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
 
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        StorageCapacityResourcesComponent(getAddressById(components, StorageCapacityResourcesComponentID)),
-        storageCapacityComponent,
+      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
+        MaxStorageResourcesComponent(getAddressById(components, MaxStorageResourcesComponentID)),
+        maxStorageComponent,
         playerEntity,
         resourceId,
-        storageCapacityComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
+        maxStorageComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
           passiveResourceProductionComponent.getValue(blockType).ResourceProduction
       );
     }
   }
 
   function checkAndUpdatePlayerStorageAfterDestroy(uint256 playerEntity, uint256 buildingId, uint256 level) internal {
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getC(StorageCapacityResourcesComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
+    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
+      getC(MaxStorageResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
 
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, level);
-    if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
+    if (!maxStorageResourcesComponent.has(buildingIdLevel)) return;
+    uint256[] memory storageResources = maxStorageResourcesComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
-      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
+      uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
+        maxStorageComponent,
         playerEntity,
         storageResources[i]
       );
-      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
+      uint32 maxStorageIncrease = LibStorage.getEntityMaxStorageForResource(
+        maxStorageComponent,
         buildingIdLevel,
         storageResources[i]
       );
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        storageCapacityResourcesComponent,
-        storageCapacityComponent,
+      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
+        maxStorageResourcesComponent,
+        maxStorageComponent,
         playerEntity,
         storageResources[i],
-        playerResourceStorageCapacity - storageCapacityIncrease
+        playerResourceMaxStorage - maxStorageIncrease
       );
 
       uint32 playerResourceAmount = LibMath.getSafeUint32Value(itemComponent, playerResourceStorageEntity);
-      if (playerResourceAmount > playerResourceStorageCapacity - storageCapacityIncrease) {
-        itemComponent.set(playerResourceStorageEntity, playerResourceStorageCapacity - storageCapacityIncrease);
+      if (playerResourceAmount > playerResourceMaxStorage - maxStorageIncrease) {
+        itemComponent.set(playerResourceStorageEntity, playerResourceMaxStorage - maxStorageIncrease);
       }
     }
   }

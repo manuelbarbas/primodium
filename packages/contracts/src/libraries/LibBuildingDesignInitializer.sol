@@ -13,8 +13,8 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
@@ -191,8 +191,8 @@ library LibBuildingDesignInitializer {
 
   function initStorageUnit(
     ItemComponent itemComponent,
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent,
+    MaxStorageResourcesComponent maxStorageResourcesComponent,
+    MaxStorageComponent maxStorageComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResources
@@ -211,8 +211,8 @@ library LibBuildingDesignInitializer {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(StorageUnitID, 1);
     //storage increase
     LibSetRequiredResources.set2RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       1000,
@@ -232,8 +232,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set3RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       2000,
@@ -255,8 +255,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       3000,
@@ -659,8 +659,8 @@ library LibBuildingDesignInitializer {
 
   function initMainBase(
     ItemComponent itemComponent,
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent,
+    MaxStorageResourcesComponent maxStorageResourcesComponent,
+    MaxStorageComponent maxStorageComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResourcesComponent requiredResources
   ) internal {
@@ -671,8 +671,8 @@ library LibBuildingDesignInitializer {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 1);
     //MainBase ID Level 1
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       1000
@@ -690,8 +690,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set2RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       1500,
@@ -712,8 +712,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set3RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       2500,
@@ -734,8 +734,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       4000,
@@ -760,8 +760,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       LithiumCopperOxideCraftedItemID,
       2000,
@@ -784,8 +784,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       LithiumCopperOxideCraftedItemID,
       2000,
@@ -814,11 +814,9 @@ library LibBuildingDesignInitializer {
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
+    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
+      getAddressById(components, MaxStorageResourcesComponentID)
     );
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
@@ -829,8 +827,8 @@ library LibBuildingDesignInitializer {
 
     initMainBase(
       itemComponent,
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       maxLevelComponent,
       requiredResources
     );
@@ -863,8 +861,8 @@ library LibBuildingDesignInitializer {
 
     initStorageUnit(
       itemComponent,
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       maxLevelComponent,
       requiredResearch,
       requiredResources

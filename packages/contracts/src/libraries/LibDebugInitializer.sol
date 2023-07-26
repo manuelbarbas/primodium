@@ -17,8 +17,8 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
@@ -150,11 +150,9 @@ library LibDebugInitializer {
     //initialize Mines
     initializeMines(world);
 
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
+    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
+      getAddressById(components, MaxStorageResourcesComponentID)
     );
     //initialize factories
     initializeFactories(world);
@@ -174,8 +172,8 @@ library LibDebugInitializer {
 
     initializeStorageBuildings(
       ignoreBuildLimitComponent,
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       maxLevelComponent
     );
   }
@@ -303,11 +301,11 @@ library LibDebugInitializer {
     TileComponent tileComponent = TileComponent(getAddressById(world.components(), TileComponentID));
     MineComponent mineComponent = MineComponent(getAddressById(world.components(), MineComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(world.components(), StorageCapacityComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(
+      getAddressById(world.components(), MaxStorageComponentID)
     );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(world.components(), StorageCapacityResourcesComponentID)
+    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
+      getAddressById(world.components(), MaxStorageResourcesComponentID)
     );
     // DebugIronMineID
     ignoreBuildLimitComponent.set(DebugIronMineID);
@@ -369,8 +367,8 @@ library LibDebugInitializer {
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 2, 5);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 3, 7);
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       LibEncode.hashKeyEntity(DebugCopperMineID, 1),
       CopperResourceItemID,
       1000
@@ -383,8 +381,8 @@ library LibDebugInitializer {
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugLithiumMineID, 2, 5);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugLithiumMineID, 3, 7);
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       LibEncode.hashKeyEntity(DebugLithiumMineID, 1),
       CopperResourceItemID,
       1000
@@ -405,11 +403,9 @@ library LibDebugInitializer {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
-    );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
+    MaxStorageResourcesComponent maxStorageResourcesComponent = MaxStorageResourcesComponent(
+      getAddressById(components, MaxStorageResourcesComponentID)
     );
 
     PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
@@ -421,8 +417,8 @@ library LibDebugInitializer {
 
     //set a storage amount for IronPlateCraftedItemID to stream line usage
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 1),
       IronPlateCraftedItemID,
       1000
@@ -453,8 +449,8 @@ library LibDebugInitializer {
 
     //DebugIronPlateFactoryID
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
       IronPlateCraftedItemID,
       1000
@@ -517,8 +513,8 @@ library LibDebugInitializer {
 
     //DebugAlloyFactoryID
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       LibEncode.hashKeyEntity(DebugAlloyFactoryID, 1),
       AlloyCraftedItemID,
       1000
@@ -544,8 +540,8 @@ library LibDebugInitializer {
 
     //LithiumCopperOxideFactoryID
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1),
       LithiumCopperOxideCraftedItemID,
       1000
@@ -607,8 +603,8 @@ library LibDebugInitializer {
 
   function initializeStorageBuildings(
     IgnoreBuildLimitComponent ignoreBuildLimitComponent,
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent,
+    MaxStorageResourcesComponent maxStorageResourcesComponent,
+    MaxStorageComponent maxStorageComponent,
     MaxLevelComponent maxLevelComponent
   ) internal {
     //DebugStorageBuildingID
@@ -617,8 +613,8 @@ library LibDebugInitializer {
     //DebugStorageBuildingID level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 1);
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       200
@@ -626,8 +622,8 @@ library LibDebugInitializer {
     //DebugStorageBuildingID level 2
     buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 2);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxStorageResourcesComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       200,

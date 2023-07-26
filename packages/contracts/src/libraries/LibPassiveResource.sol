@@ -6,8 +6,8 @@ pragma solidity >=0.8.0;
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
@@ -29,8 +29,8 @@ library LibPassiveResource {
     RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
       getAddressById(world.components(), RequiredPassiveResourceComponentID)
     );
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(world.components(), StorageCapacityComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(
+      getAddressById(world.components(), MaxStorageComponentID)
     );
     if (requiredPassiveResourceComponent.has(blockType)) {
       ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
@@ -39,7 +39,7 @@ library LibPassiveResource {
       for (uint256 i = 0; i < resourceIDs.length; i++) {
         if (
           LibStorage.getAvailableSpaceInStorageForResource(
-            storageCapacityComponent,
+            maxStorageComponent,
             itemComponent,
             playerEntity,
             resourceIDs[i]
@@ -76,16 +76,16 @@ library LibPassiveResource {
       getAddressById(world.components(), PassiveResourceProductionComponentID)
     );
     if (passiveResourceProductionComponent.has(blockType)) {
-      StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-        getAddressById(world.components(), StorageCapacityComponentID)
+      MaxStorageComponent maxStorageComponent = MaxStorageComponent(
+        getAddressById(world.components(), MaxStorageComponentID)
       );
       uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        StorageCapacityResourcesComponent(getAddressById(world.components(), StorageCapacityResourcesComponentID)),
-        storageCapacityComponent,
+      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
+        MaxStorageResourcesComponent(getAddressById(world.components(), MaxStorageResourcesComponentID)),
+        maxStorageComponent,
         playerEntity,
         resourceId,
-        LibMath.getSafeUint32Value(storageCapacityComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
+        LibMath.getSafeUint32Value(maxStorageComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
           passiveResourceProductionComponent.getValue(blockType).ResourceProduction
       );
     }

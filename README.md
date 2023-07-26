@@ -79,7 +79,7 @@ Player resource production is updated when:
 
 `UnclaimedResourceComponent` tracks how much resource is produced but not claimed. It is updated for the player entity and resource ID before production is changed.
 
-`UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point. The unclaimed resource count will always be less than or equal to the available space for that resource in the players storage, which is stored in `StorageCapacityComponent`.
+`UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point. The unclaimed resource count will always be less than or equal to the available space for that resource in the players storage, which is stored in `MaxStorageComponent`.
 
 # Factories
 
@@ -114,7 +114,7 @@ When a building is upgraded, `PostUpgradeSystem` is called to update the buildin
 
 # Building Storage
 
-In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `StorageCapacityResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `StorageCapacityComponent`.
+In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `MaxStorageResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `MaxStorageComponent`.
 
 ```
   levelId = hashKeyEntity(buildingId, level)
@@ -122,9 +122,9 @@ In `LibStorageDesignInitializer`, buildings which increase storage capacity are 
 ```
 
 For example, the amount of Iron storage that is provided by a level 2 MainBase is:
-`storageCapacityComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
+`maxStorageComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
 
-When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent` is updated for the player and the resources they modify the capacity for.
+When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is updated for the player and the resources they modify the capacity for.
 
 # Player Storage
 
@@ -144,7 +144,7 @@ When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent
 `RequiredPassiveResourceComponent`: for `LibHash(BuildingType, Level)` indicates what passive resources it requires and how much.
 `PassiveResourceProductionComponent`: for `LibHash(BuildingType, Level)` indicates what passive resource and how much of it the building produces.
 
-- The total amount of `PassiveResourceCapacity` the player has is stored in the `StorageCapacityComponent` for `LibHash(ResourceID, PlayerEntity)`
+- The total amount of `PassiveResourceCapacity` the player has is stored in the `MaxStorageComponent` for `LibHash(ResourceID, PlayerEntity)`
 - The total amount of used up `PassiveResourceCapacity` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
 
 - Passive resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.

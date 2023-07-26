@@ -112,18 +112,18 @@ export const Level = newNumberComponent(world, {
   overridable: true,
 });
 
-export const StorageCapacity = newNumberComponent(world, {
-  id: "StorageCapacity",
-  metadata: { contractId: `${commonIdPrefix}StorageCapacity` },
+export const MaxStorage = newNumberComponent(world, {
+  id: "MaxStorage",
+  metadata: { contractId: `${commonIdPrefix}MaxStorage` },
   overridable: true,
 });
 
-export const StorageCapacityResources = newComponent(
+export const MaxStorageResources = newComponent(
   world,
   { value: Type.EntityArray },
   {
-    id: "StorageCapacityResources",
-    metadata: { contractId: `${commonIdPrefix}StorageCapacityResources` },
+    id: "MaxStorageResources",
+    metadata: { contractId: `${commonIdPrefix}MaxStorageResources` },
   }
 );
 
@@ -189,8 +189,8 @@ export default {
   RequiredResourcesComponent,
   MaxLevel,
   Level,
-  StorageCapacity,
-  StorageCapacityResources,
+  MaxStorage,
+  MaxStorageResources,
   Mine,
   MaxBuildings,
   Children,

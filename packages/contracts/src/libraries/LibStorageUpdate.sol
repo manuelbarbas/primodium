@@ -4,35 +4,35 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxStorageResourcesComponent, ID as MaxStorageResourcesComponentID } from "components/MaxStorageResourcesComponent.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
 library LibStorageUpdate {
-  function updateStorageCapacityOfResourceForEntity(
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent,
+  function updateMaxStorageOfResourceForEntity(
+    MaxStorageResourcesComponent maxStorageResourcesComponent,
+    MaxStorageComponent maxStorageComponent,
     uint256 entity,
     uint256 resourceId,
-    uint32 newStorageCapacity
+    uint32 newMaxStorage
   ) internal {
     uint256 resourceEntity = LibEncode.hashKeyEntity(resourceId, entity);
-    if (!storageCapacityComponent.has(resourceEntity)) {
+    if (!maxStorageComponent.has(resourceEntity)) {
       uint256[] memory storageResourceIds;
-      if (storageCapacityResourcesComponent.has(entity)) {
-        storageResourceIds = storageCapacityResourcesComponent.getValue(entity);
+      if (maxStorageResourcesComponent.has(entity)) {
+        storageResourceIds = maxStorageResourcesComponent.getValue(entity);
         uint256[] memory updatedResourceIds = new uint256[](storageResourceIds.length + 1);
         for (uint256 i = 0; i < storageResourceIds.length; i++) {
           updatedResourceIds[i] = storageResourceIds[i];
         }
         updatedResourceIds[storageResourceIds.length] = resourceId;
-        storageCapacityResourcesComponent.set(entity, updatedResourceIds);
+        maxStorageResourcesComponent.set(entity, updatedResourceIds);
       } else {
         storageResourceIds = new uint256[](1);
         storageResourceIds[0] = resourceId;
-        storageCapacityResourcesComponent.set(entity, storageResourceIds);
+        maxStorageResourcesComponent.set(entity, storageResourceIds);
       }
     }
-    storageCapacityComponent.set(resourceEntity, newStorageCapacity);
+    maxStorageComponent.set(resourceEntity, newMaxStorage);
   }
 }
