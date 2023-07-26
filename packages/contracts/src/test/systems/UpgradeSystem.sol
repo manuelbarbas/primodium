@@ -13,12 +13,12 @@ import { BuildingLevelComponent, ID as BuildingComponentID } from "../../compone
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes.sol";
 import { DebugSimpleBuildingNoReqsID, DebugIronMineNoTileReqID } from "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
-import { BuildingKey } from "../../prototypes/Keys.sol";
+import { BuildingKey } from "../../prototypes.sol";
 
 contract UpgradeSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}

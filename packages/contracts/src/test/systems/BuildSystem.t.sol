@@ -27,11 +27,11 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "../../components/StorageCapacityComponent.sol";
 
-import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
-import { ElectricityPassiveResourceID } from "../../prototypes/Keys.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
+import { ElectricityPassiveResourceID } from "../../prototypes.sol";
 
 //debug buildings
-import "../../prototypes/Tiles.sol";
+import "../../prototypes.sol";
 import "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 

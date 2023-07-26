@@ -20,7 +20,7 @@ import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } fr
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
 import { Coord } from "../../types.sol";
-import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes.sol";
 
 contract DestroySystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}

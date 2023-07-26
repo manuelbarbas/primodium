@@ -6,7 +6,7 @@ import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { Coord } from "../../types.sol";
-import { BuildingTileKey } from "../../prototypes/Keys.sol";
+import { BuildingTileKey } from "../../prototypes.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
 

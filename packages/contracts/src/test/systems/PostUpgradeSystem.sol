@@ -14,7 +14,7 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
-import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes.sol";
 import { Coord } from "../../types.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";

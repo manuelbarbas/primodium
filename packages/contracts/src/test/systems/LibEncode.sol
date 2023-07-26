@@ -7,10 +7,10 @@ import { MudTest } from "std-contracts/test/MudTest.t.sol";
 
 import { addressToEntity, entityToAddress } from "solecs/utils.sol";
 import { Coord } from "std-contracts/components/CoordComponent.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
+import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 
-import { TitaniumResourceItemID } from "../../prototypes/Keys.sol";
-import { IronMineID } from "../../prototypes/Tiles.sol";
+import { TitaniumResourceItemID } from "../../prototypes.sol";
+import { IronMineID } from "../../prototypes.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
 

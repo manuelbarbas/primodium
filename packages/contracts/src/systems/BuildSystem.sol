@@ -15,7 +15,7 @@ import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "componen
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
-import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
+import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 
 // libraries
 import { Coord } from "../types.sol";
@@ -24,7 +24,6 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 

@@ -16,7 +16,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { BuildingKey } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 
