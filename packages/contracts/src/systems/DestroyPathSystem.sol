@@ -10,8 +10,8 @@ import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "componen
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { MainBaseID } from "../prototypes.sol";
+import { BuildingKey } from "../prototypes.sol";
 import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
 import { Coord } from "../types.sol";
 

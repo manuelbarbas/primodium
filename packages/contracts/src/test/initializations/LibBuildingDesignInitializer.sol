@@ -11,7 +11,7 @@ import { ItemComponent, ID as ItemComponentID } from "../../components/ItemCompo
 import { Coord } from "../../types.sol";
 
 // in-game blocks/factories
-import { MainBaseID } from "../../prototypes/Tiles.sol";
+import { MainBaseID } from "../../prototypes.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
 

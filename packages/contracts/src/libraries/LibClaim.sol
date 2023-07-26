@@ -2,21 +2,21 @@
 pragma solidity >=0.8.0;
 // Production Buildings
 
-import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+import { Uint32Component } from "std-contracts/components/Uint32Component.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { LibStorage } from "./LibStorage.sol";
 
 library LibClaim {
   function addResourceToStorage(
-    Uint256Component itemComponent,
-    Uint256Component storageComponent,
+    Uint32Component itemComponent,
+    Uint32Component storageComponent,
     uint256 resourceId,
-    uint256 resourceAmount,
+    uint32 resourceAmount,
     uint256 playerEntity
-  ) internal returns (uint256) {
+  ) internal returns (uint32) {
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    uint256 availableSpaceInPlayerStorage = LibStorage.getAvailableSpaceInStorageForResource(
+    uint32 availableSpaceInPlayerStorage = LibStorage.getAvailableSpaceInStorageForResource(
       storageComponent,
       itemComponent,
       playerEntity,
@@ -25,13 +25,13 @@ library LibClaim {
     if (availableSpaceInPlayerStorage > resourceAmount) {
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + resourceAmount
+        LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) + resourceAmount
       );
       return 0;
     } else {
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
+        LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
       );
       return resourceAmount - availableSpaceInPlayerStorage;
     }

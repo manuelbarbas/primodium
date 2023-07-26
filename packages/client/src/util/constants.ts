@@ -13,7 +13,6 @@ export enum Action {
 }
 
 export const BlockType = {
-  IsDebug: keccak256("component.IsDebug") as EntityID,
   // Landscape blocks
   Water: keccak256("block.Water") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,

@@ -12,13 +12,16 @@ import { getBlockTypeName } from "src/util/common";
 import { useMud } from "src/hooks";
 
 export default function Increment() {
-  const { systems, providers } = useMud();
+  const network = useMud();
 
   const counter = Counter.use();
   const doubleCounter = DoubleCounter.use();
+  const debug = IsDebug.use();
   return (
     <div className="flex flex-col text-white">
       <div className="h-20">
+        Is Debug: <span>{debug?.value ?? "??"}</span>
+        <br />
         Counter: <span>{counter?.value ?? "??"}</span>
         <br />
         Double Counter!: <span>{doubleCounter?.value ?? "??"}</span>
@@ -27,10 +30,7 @@ export default function Increment() {
         type="button"
         onClick={(event) => {
           event.preventDefault();
-          execute(
-            systems["system.Increment"].executeTyped(SingletonID),
-            providers
-          );
+          increment(SingletonID, network);
         }}
       >
         Increment

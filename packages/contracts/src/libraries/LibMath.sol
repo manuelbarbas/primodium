@@ -17,8 +17,13 @@ library LibMath {
     return component.has(entity) ? component.getValue(entity) : 0;
   }
 
-  function incrementBy(Uint256Component component, uint256 entity, uint256 incBy) internal {
-    uint256 current = getSafeUint256Value(component, entity);
+  // ###########################################################################
+  function getSafeUint32Value(Uint32Component component, uint256 entity) internal view returns (uint32) {
+    return component.has(entity) ? component.getValue(entity) : 0;
+  }
+
+  function incrementBy(Uint32Component component, uint256 entity, uint32 incBy) internal {
+    uint32 current = getSafeUint32Value(component, entity);
     component.set(entity, current + incBy);
   }
 }

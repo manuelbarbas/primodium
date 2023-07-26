@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { EntityID } from "@latticexyz/recs";
+
 import { getRecipe } from "../../../util/resource";
 import {
   BlockIdToKey,
@@ -15,6 +16,7 @@ import {
 } from "../../../util/research";
 import { GameButton } from "src/components/shared/GameButton";
 import React from "react";
+import { research } from "src/util/web3";
 import {
   BuildingLevel,
   MainBase,
@@ -94,13 +96,13 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       researchRequirement,
       isMainBaseLevelRequirementsMet,
     ]);
-
     // New state so not every other research item button shows loading when only current research button is clicked.
     const [userClickedLoading, setUserClickedLoading] = useState(false);
 
-    const research = useCallback(async () => {
+    const executeResearch = useCallback(async () => {
       setUserClickedLoading(true);
-      await researchBuilding(researchId, network);
+      await research(researchId, network);
+
       setUserClickedLoading(false);
     }, []);
 
@@ -183,7 +185,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
               <div className="flex items-center w-full justify-center">
                 <GameButton
                   id={`${name}-research`}
-                  onClick={research}
+                  onClick={executeResearch}
                   className=" bg-cyan-600 text-sm w-3/4"
                 >
                   <div className="px-2 py-1">

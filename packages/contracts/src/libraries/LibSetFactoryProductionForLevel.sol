@@ -10,9 +10,9 @@ library LibSetFactoryProductionForLevel {
   function setFactoryProductionForLevel(
     FactoryProductionComponent factoryProductionComponent,
     uint256 entity,
-    uint256 level,
+    uint32 level,
     uint256 resourceId,
-    uint256 productionPerBlock
+    uint32 productionPerBlock
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(entity, level);
     factoryProductionComponent.set(buildingIdLevel, FactoryProductionData(resourceId, productionPerBlock));

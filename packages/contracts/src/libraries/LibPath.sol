@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
-import { MainBaseID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";

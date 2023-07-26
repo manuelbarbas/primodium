@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
@@ -36,12 +37,12 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     if (!storageCapacityResourcesComponent.has(buildingTypeLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         playerEntity,
         storageResources[i]
       );
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         buildingTypeLevel,
         storageResources[i]
@@ -88,7 +89,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     // update building count if the built building counts towards the build limit
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
       BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) + 1);
+      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint32Value(buildingLimitComponent, playerEntity) + 1);
     }
 
     updatePlayerStorage(buildingType, playerEntity);

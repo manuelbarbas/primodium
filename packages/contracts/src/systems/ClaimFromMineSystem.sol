@@ -7,7 +7,6 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
@@ -16,9 +15,8 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
-import { ClaimComponents } from "../prototypes/ClaimComponents.sol";
 
-import { BuildingKey } from "../prototypes/Keys.sol";
+import { BuildingKey } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 
@@ -35,33 +33,31 @@ contract ClaimFromMineSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     // Components
-    ClaimComponents memory c = ClaimComponents(
-      TileComponent(getAddressById(components, TileComponentID)),
-      OwnedByComponent(getAddressById(components, OwnedByComponentID)),
-      LastClaimedAtComponent(getAddressById(components, LastClaimedAtComponentID)),
-      HealthComponent(getAddressById(components, HealthComponentID))
-    );
+    uint256 playerEntity = addressToEntity(msg.sender);
 
     Coord memory coord = abi.decode(args, (Coord));
 
     // check if main base
     uint256 entity = getBuildingFromCoord(coord);
-    require(c.tileComponent.has(entity), "[ClaimFromMineSystem] Cannot claim from mines on an empty coordinate");
+    require(
+      TileComponent(getAddressById(components, TileComponentID)).has(entity),
+      "[ClaimFromMineSystem] Cannot claim from mines on an empty coordinate"
+    );
 
     // Check that the coordinates is owned by the msg.sender
-    uint256 ownedEntityAtStartCoord = c.ownedByComponent.getValue(entity);
+    uint256 ownedEntityAtStartCoord = OwnedByComponent(getAddressById(components, OwnedByComponentID)).getValue(entity);
     require(
-      ownedEntityAtStartCoord == addressToEntity(msg.sender),
+      ownedEntityAtStartCoord == playerEntity,
       "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
     );
 
     // Check that health is not zero
     require(
-      LibHealth.checkAlive(c.healthComponent, entity),
+      LibHealth.checkAlive(HealthComponent(getAddressById(components, HealthComponentID)), entity),
       "[ClaimFromMineSystem] Cannot claim from mines on a tile with zero health"
     );
 
-    LibNewMine.claimResourcesFromMines(world, addressToEntity(msg.sender));
+    LibNewMine.claimResourcesFromMines(world, playerEntity);
 
     return abi.encode(0);
   }

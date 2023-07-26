@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { Coord } from "@latticexyz/utils";
 
 import { execute } from "../../network/actions";
@@ -10,42 +9,23 @@ import { useMud } from "src/hooks/useMud";
 
 export default function ClaimButton({
   id,
-  coords: { x, y },
+  coords,
 }: {
   id?: string;
   coords: Coord;
 }) {
-  const { systems, providers } = useMud();
-  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+  const network = useMud();
+  const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
-    state.setTransactionLoading,
   ]);
-  const [setNotification] = useNotificationStore((state) => [
-    state.setNotification,
-  ]);
-
-  const claimAction = useCallback(async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.ClaimFromMine"].executeTyped(
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 5_000_000,
-        }
-      ),
-      providers,
-      setNotification
-    );
-
-    setTransactionLoading(false);
-  }, []);
 
   return (
     <div className="relative">
-      <GameButton id={id} className="mt-2 text-sm" onClick={claimAction}>
+      <GameButton
+        id={id}
+        className="mt-2 text-sm"
+        onClick={() => claimFromMine(coords, network)}
+      >
         <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2 w-40">
           {transactionLoading ? <Spinner /> : "Claim Resources"}
         </div>

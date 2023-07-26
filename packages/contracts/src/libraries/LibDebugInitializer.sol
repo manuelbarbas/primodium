@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { getAddressById } from "solecs/utils.sol";
+import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
@@ -24,7 +25,6 @@ import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLeve
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
@@ -32,12 +32,8 @@ import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeRes
 import { LibSetMineBuildingProductionForLevel } from "../libraries/LibSetMineBuildingProductionForLevel.sol";
 import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProductionForLevel.sol";
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
-//tiles
-import "../prototypes/Tiles.sol";
-import "../prototypes/Keys.sol";
 
-// Items
-import { ElectricityPassiveResourceID, BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID } from "../prototypes/Keys.sol";
+import "../prototypes.sol";
 
 // Research
 import { LibDebug } from "../libraries/LibDebug.sol";
@@ -100,7 +96,7 @@ uint256 constant DebugStorageBuildingID = uint256(keccak256("block.DebugStorageB
 library LibDebugInitializer {
   function init(IWorld world) internal {
     //should only work if debug is enabled
-    IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(IsDebugComponentID);
+    // IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(SingletonID);
 
     BlueprintComponent blueprintComponent = BlueprintComponent(
       getAddressById(world.components(), BlueprintComponentID)
@@ -294,7 +290,7 @@ library LibDebugInitializer {
     ignoreBuildLimitComponent.set(DebugSimpleBuildingPassiveResourceRequirement);
     RequiredPassiveResourceData memory requiredPassiveResourceData = RequiredPassiveResourceData({
       ResourceIDs: new uint256[](1),
-      RequiredAmounts: new uint256[](1)
+      RequiredAmounts: new uint32[](1)
     });
     requiredPassiveResourceData.ResourceIDs[0] = ElectricityPassiveResourceID;
     requiredPassiveResourceData.RequiredAmounts[0] = 2;

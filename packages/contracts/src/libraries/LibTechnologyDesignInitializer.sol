@@ -17,10 +17,9 @@ import { BuildingLevelComponent, ID as BuildingComponentID } from "components/Bu
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "libraries/LibSetRequiredResources.sol";
 // Items
-import { BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID } from "../prototypes/Keys.sol";
 
 // Research
-import "../prototypes/Keys.sol";
+import "../prototypes.sol";
 
 library LibTechnologyDesignInitializer {
   function init(IWorld world) internal {

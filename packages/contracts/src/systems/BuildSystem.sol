@@ -15,7 +15,7 @@ import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "componen
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
-import { BuildingTileKey, BuildingKey } from "../prototypes/Keys.sol";
+import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 
 // libraries
 import { Coord } from "../types.sol";
@@ -24,7 +24,6 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -67,10 +66,8 @@ contract BuildSystem is PrimodiumSystem {
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
     BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
-      buildingLevelComponent.set(playerEntity, buildingEntity);
       MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
         getC(MainBaseInitializedComponentID)
       );
@@ -90,7 +87,7 @@ contract BuildSystem is PrimodiumSystem {
     LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
 
     //set level of building to 1
-    buildingLevelComponent.set(buildingEntity, 1);
+    BuildingLevelComponent(getC(BuildingLevelComponentID)).set(buildingEntity, 1);
     TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
