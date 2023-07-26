@@ -34,11 +34,6 @@ const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
 
     const gameCoord = { x, y: -y };
 
-    //block invalid clicks in tutorial
-    // if (inTutorial(address, network)) {
-    //   if (!validTutorialClick(gameCoord, network)) return;
-    // }
-
     const selectedAction = SelectedAction.get()?.value;
 
     //handle web3 mutations

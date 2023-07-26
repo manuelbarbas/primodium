@@ -2,7 +2,7 @@ import { useEntityQuery } from "@latticexyz/react";
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { FixedSizeGrid as Grid } from "react-window";
 
-import { useMud } from "../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BlockColors } from "../util/constants";
 import { getTopLayerKey } from "src/util/tile";

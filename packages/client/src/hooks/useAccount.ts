@@ -1,6 +1,6 @@
 import { Address, useAccount as useWagmiAccount } from "wagmi";
-import { useMud } from "../context/MudContext";
 import { EntityID } from "@latticexyz/recs";
+import { useMud } from "./useMud";
 
 export function useAccount(): { rawAddress: Address; address: EntityID } {
   const { address } = useWagmiAccount();

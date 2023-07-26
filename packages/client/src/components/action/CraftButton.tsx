@@ -1,7 +1,8 @@
 import { Coord } from "@latticexyz/utils";
-import { useMud } from "../../context/MudContext";
+
+import { useMud } from "src/hooks/useMud";
 import { useGameStore } from "../../store/GameStore";
-import Spinner from "../Spinner";
+import Spinner from "../shared/Spinner";
 import { craft } from "src/util/web3";
 
 export default function CraftButton({ coords }: { coords: Coord }) {

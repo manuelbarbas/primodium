@@ -12,37 +12,6 @@ export enum Action {
   PlaceBuilding,
 }
 
-export const BlockKey = {
-  //landscape blocks
-  Water: "Water",
-  Sandstone: "Sandstone",
-  Biofilm: "Biofilm",
-  Alluvium: "Alluvium",
-  Regolith: "Regolith",
-  Bedrock: "Bedrock",
-  Air: "Air",
-
-  //metal ores
-  Lithium: "Lithium",
-  Iron: "Iron",
-  Copper: "Copper",
-  Titanium: "Titanium",
-  Iridium: "Iridium",
-  Osmium: "Osmium",
-  Tungsten: "Tungsten",
-
-  //mineral ores
-  Kimberlite: "Kimberlite",
-  Uraninite: "Uraninite",
-  Bolutite: "Bolutite",
-
-  // placeable blocks
-  MainBase: "MainBase",
-  Miner: "Miner",
-
-  Silo: "Silo",
-};
-
 export const BlockType = {
   // Landscape blocks
   Water: keccak256("block.Water") as EntityID,
@@ -188,18 +157,6 @@ export const BlockType = {
     "item.KimberliteCrystalCatalystCrafted"
   ) as EntityID,
 
-  // debug
-  // BulletFactoryResearch: keccak256(
-  //   "research.BulletFactoryResearch"
-  // ) as EntityID,
-  // SiloResearch: keccak256("research.SiloResearch") as EntityID,
-
-  // Research components
-  // MainBaseResearch: keccak256("research.MainBase") as EntityID,
-  // BasicMinerResearch: keccak256("research.BasicMiner") as EntityID,
-  // ConveyorResearch: keccak256("research.Conveyor") as EntityID,
-  // NodeResearch: keccak256("research.Node") as EntityID,
-
   IronMine2Research: keccak256("research.IronMine2") as EntityID,
   IronMine3Research: keccak256("research.IronMine3") as EntityID,
   IronMine4Research: keccak256("research.IronMine4") as EntityID,
@@ -260,65 +217,6 @@ export const BlockType = {
   BuildingKey: "building" as EntityID,
 
   ArrowMarker: keccak256("marker.Arrow") as EntityID,
-
-  // IronResearch: keccak256("research.Iron") as EntityID,
-
-  // CopperResearch: keccak256("block.Copper") as EntityID,
-  // LithiumResearch: keccak256("block.Lithium") as EntityID,
-  // TitaniumResearch: keccak256("block.Titanium") as EntityID,
-  // OsmiumResearch: keccak256("block.Osmium") as EntityID,
-  // TungstenResearch: keccak256("block.Tungsten") as EntityID,
-  // IridiumResearch: keccak256("block.Iridium") as EntityID,
-  // KimberliteResearch: keccak256("block.Kimberlite") as EntityID,
-
-  // PlatingFactoryResearch: keccak256("research.PlatingFactory") as EntityID,
-  // BasicBatteryFactoryResearch: keccak256(
-  //   "research.BasicBatteryFactory"
-  // ) as EntityID,
-  // KineticMissileFactoryResearch: keccak256(
-  //   "research.KineticMissileFactory"
-  // ) as EntityID,
-  // ProjectileLauncherResearch: keccak256(
-  //   "research.ProjectileLauncher"
-  // ) as EntityID,
-  // HardenedDrillResearch: keccak256("research.HardenedDrill") as EntityID,
-  // DenseMetalRefineryResearch: keccak256(
-  //   "research.DenseMetalRefinery"
-  // ) as EntityID,
-  // AdvancedBatteryFactoryResearch: keccak256(
-  //   "research.AdvancedBatteryFactory"
-  // ) as EntityID,
-  // HighTempFoundryResearch: keccak256("research.HighTempFoundry") as EntityID,
-  // PrecisionMachineryFactoryResearch: keccak256(
-  //   "research.PrecisionMachineryFactory"
-  // ) as EntityID,
-  // IridiumDrillbitFactoryResearch: keccak256(
-  //   "research.IridiumDrillbitFactory"
-  // ) as EntityID,
-  // PrecisionPneumaticDrillResearch: keccak256(
-  //   "research.PrecisionPneumaticDrill"
-  // ) as EntityID,
-  // PenetratorFactoryResearch: keccak256(
-  //   "research.PenetratorFactory"
-  // ) as EntityID,
-  // PenetratingMissileFactoryResearch: keccak256(
-  //   "research.PenetratingMissileFactory"
-  // ) as EntityID,
-  // MissileLaunchComplexResearch: keccak256(
-  //   "research.MissileLaunchComplex"
-  // ) as EntityID,
-  // HighEnergyLaserFactoryResearch: keccak256(
-  //   "research.HighEnergyLaserFactory"
-  // ) as EntityID,
-  // ThermobaricWarheadFactoryResearch: keccak256(
-  //   "research.ThermobaricWarheadFactory"
-  // ) as EntityID,
-  // ThermobaricMissileFactoryResearch: keccak256(
-  //   "research.ThermobaricMissileFactory"
-  // ) as EntityID,
-  // KimberliteCatalystFactoryResearch: keccak256(
-  //   "research.KimberliteCatalystFactory"
-  // ) as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -354,25 +252,10 @@ export const BlockColors = new Map<EntityID, string>([
   [BlockType.Uraninite, "#d9f99d"],
   [BlockType.Bolutite, "#a21caf"],
 
-  // Utility
-  // [BlockType.Miner, "#cf6664"],
-  // [BlockType.LithiumMiner, "#cf6664"],
-
   // Resource
   [BlockType.MainBase, "#8676c0"],
-  // [BlockType.DebugNode, "#ffcd00"],
   [BlockType.Conveyor, "#ffcd00"],
-
-  // Debug factories
-  // [BlockType.BulletFactory, "#824947"],
-  // [BlockType.Silo, "#bebebe"],
 ]);
-
-// TODO switch this to an object with the below interface
-
-export interface BackgroundImages {
-  [x: EntityID]: string;
-}
 
 export const BackgroundImage = new Map<EntityID, string[]>([
   //landscape blocks
@@ -500,11 +383,6 @@ export const BackgroundImage = new Map<EntityID, string[]>([
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
-  // [BlockType.MainBaseResearch, "/img/building/mainbase.gif"],
-  // [BlockType.BasicMinerResearch, "/img/building/minerdrill.gif"],
-  // [BlockType.ConveyorResearch, "/img/building/conveyor.gif"],
-  // [BlockType.NodeResearch, "/img/building/node.gif"],
-
   [BlockType.Iron, "/img/resource/iron_resource.png"],
   [BlockType.Copper, "/img/resource/copper_resource.png"],
   [BlockType.Lithium, "/img/resource/lithium_resource.png"],
@@ -615,64 +493,6 @@ export const ResearchImage = new Map<EntityID, string>([
   ],
 
   [BlockType.HousingUnitResearch, "/img/building/newplatingfactory.gif"],
-
-  // [BlockType.PlatingFactoryResearch, "/img/building/newplatingfactory.gif"],
-  // [
-  //   BlockType.BasicBatteryFactoryResearch,
-  //   "/img/building/newbasicbatteryfactory.gif",
-  // ],
-  // [
-  //   BlockType.KineticMissileFactoryResearch,
-  //   "/img/building/kineticmissilefactory.png",
-  // ],
-  // [
-  //   BlockType.ProjectileLauncherResearch,
-  //   "/img/building/projectilelauncher.png",
-  // ],
-  // [BlockType.HardenedDrillResearch, "/img/building/hardeneddrill.gif"],
-  // [
-  //   BlockType.DenseMetalRefineryResearch,
-  //   "/img/building/densemetalrefinery.gif",
-  // ],
-  // [
-  //   BlockType.AdvancedBatteryFactoryResearch,
-  //   "/img/building/advancedbatteryfactory.gif",
-  // ],
-  // [BlockType.HighTempFoundryResearch, "/img/building/hightempfoundry.gif"],
-  // [
-  //   BlockType.PrecisionMachineryFactoryResearch,
-  //   "/img/building/precisionmachineryfactory.gif",
-  // ],
-  // [
-  //   BlockType.IridiumDrillbitFactoryResearch,
-  //   "/img/building/iridiumdrillbitfactory.gif",
-  // ],
-  // [
-  //   BlockType.PrecisionPneumaticDrillResearch,
-  //   "/img/building/precisionpneumaticdrill.gif",
-  // ],
-  // [BlockType.PenetratorFactoryResearch, "/img/building/penetratorfactory.png"],
-  // [
-  //   BlockType.PenetratingMissileFactoryResearch,
-  //   "/img/building/penetratingmissilefactory.png",
-  // ],
-  // [
-  //   BlockType.MissileLaunchComplexResearch,
-  //   "/img/building/missilelaunchcomplex.gif",
-  // ],
-  // [BlockType.HighEnergyLaserFactoryResearch, "/img/building/laserfactory.gif"],
-  // [
-  //   BlockType.ThermobaricWarheadFactoryResearch,
-  //   "/img/building/thermobaricwarheadfactory.png",
-  // ],
-  // [
-  //   BlockType.ThermobaricMissileFactoryResearch,
-  //   "/img/building/thermobaricmissilefactory.png",
-  // ],
-  // [
-  //   BlockType.KimberliteCatalystFactoryResearch,
-  //   "/img/building/kimberlitecatalyst.gif",
-  // ],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([

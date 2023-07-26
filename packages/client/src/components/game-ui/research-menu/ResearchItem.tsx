@@ -9,7 +9,6 @@ import {
 } from "../../../util/constants";
 import { useAccount } from "../../../hooks/useAccount";
 import { hashKeyEntityAndTrim } from "../../../util/encode";
-import Spinner from "../../Spinner";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import {
   getBuildingResearchRequirement,
@@ -25,7 +24,8 @@ import {
 } from "src/network/components/chainComponents";
 import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks";
+import Spinner from "src/components/shared/Spinner";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {

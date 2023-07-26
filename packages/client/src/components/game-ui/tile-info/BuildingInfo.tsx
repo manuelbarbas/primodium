@@ -1,7 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import React, { useMemo, useState } from "react";
 
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
 import { getBuildingMaxHealth } from "src/util/health";
 import Header from "./Header";

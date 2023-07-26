@@ -1,7 +1,6 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { useMud } from "src/context/MudContext";
 import useResourceCount from "src/hooks/useResourceCount";
 import ClaimButton from "../action/ClaimButton";
 import { BlockType, ResourceImage } from "src/util/constants";
@@ -17,6 +16,7 @@ import {
   UnclaimedResource,
 } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
+import { useMud } from "src/hooks";
 
 export const Inventory = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);

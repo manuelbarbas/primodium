@@ -1,7 +1,7 @@
 import { Browser as ECSBrowser } from "@latticexyz/ecs-browser";
 import { Layer } from "@latticexyz/recs";
 import { useState } from "react";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks";
 import components from "src/network/components";
 import { world } from "src/network/world";
 
