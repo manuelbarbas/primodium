@@ -4,9 +4,9 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
@@ -81,18 +81,14 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     }
   }
 
-  function checkAndUpdatePlayerStorageAfterDestroy(
-    uint256 playerEntity,
-    uint256 buildingId,
-    uint256 buildingLevel
-  ) internal {
+  function checkAndUpdatePlayerStorageAfterDestroy(uint256 playerEntity, uint256 buildingId, uint256 level) internal {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
     StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
       getC(StorageCapacityResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
 
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, buildingLevel);
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, level);
     if (!storageCapacityResourcesComponent.has(buildingIdLevel)) return;
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
@@ -135,7 +131,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     checkAndUpdatePlayerStorageAfterDestroy(
       playerEntity,
       buildingType,
-      BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(buildingEntity)
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
     );
     updatePassiveResourcesBasedOnRequirements(playerEntity, buildingType);
     updatePassiveResourceProduction(playerEntity, buildingType);

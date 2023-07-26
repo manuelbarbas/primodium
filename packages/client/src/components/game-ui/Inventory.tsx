@@ -8,7 +8,7 @@ import { BlockType, ResourceImage } from "src/util/constants";
 import { useGameStore } from "src/store/GameStore";
 import { BlockNumber } from "src/network/components/clientComponents";
 import {
-  BuildingLevel,
+  Level,
   Item,
   LastClaimedAt,
   MainBase,
@@ -25,12 +25,12 @@ export const Inventory = () => {
   const mainBaseCoord = useMainBaseCoord();
   const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
 
-  const buildingLevel = BuildingLevel.use(mainBase);
+  const level = Level.use(mainBase);
   useEffect(() => {
-    if (buildingLevel === undefined) return;
+    if (level === undefined) return;
 
     setMenuIndex(0);
-  }, [buildingLevel]);
+  }, [level]);
 
   return (
     <div

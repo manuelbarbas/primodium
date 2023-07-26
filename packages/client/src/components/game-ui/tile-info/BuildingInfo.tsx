@@ -12,7 +12,7 @@ import { GameButton } from "src/components/shared/GameButton";
 import { demolishBuilding, demolishPath } from "src/util/web3";
 import PortalModal from "src/components/shared/PortalModal";
 import {
-  BuildingLevel,
+  Level,
   BuildingType,
   Health,
   OwnedBy,
@@ -32,7 +32,7 @@ export const BuildingInfo: React.FC<{
   const health = Health.use(building)?.value;
   const owner = OwnedBy.use(building)?.value;
 
-  const currLevel = BuildingLevel.use(building)?.value;
+  const currLevel = Level.use(building)?.value;
 
   const isOwner = owner === address.toLowerCase();
 

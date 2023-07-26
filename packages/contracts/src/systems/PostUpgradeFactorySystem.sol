@@ -2,7 +2,7 @@ pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
@@ -32,27 +32,23 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
 
   function checkFactoryConnectedMinesLevelCondition(
     ActiveComponent activeComponent,
-    BuildingLevelComponent buildingLevelComponent,
+    LevelComponent levelComponent,
     PathComponent pathComponent,
     uint256 factoryEntity
   ) internal view returns (bool) {
     if (!activeComponent.has(factoryEntity)) return false;
-    uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
+    uint256 factoryLevel = levelComponent.getValue(factoryEntity);
     uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(factoryEntity);
     for (uint256 i = 0; i < connectedMineEntities.length; i++) {
-      if (buildingLevelComponent.getValue(connectedMineEntities[i]) < factoryLevel) return false;
+      if (levelComponent.getValue(connectedMineEntities[i]) < factoryLevel) return false;
     }
     return true;
   }
 
   //after factory level is increased
   function handleFactoryUpgrade(uint256 playerEntity, uint256 factoryEntity) internal {
-    ActiveComponent activeComponent = ActiveComponent(
-      getAddressById(components, ActiveComponentID)
-    );
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingLevelComponentID)
-    );
+    ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     //if factory was non functional nothing to do
     if (!activeComponent.has(factoryEntity)) return;
@@ -61,19 +57,19 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       getAddressById(components, FactoryProductionComponentID)
     );
 
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+    uint256 levelEntity = LibEncode.hashKeyEntity(
       tileComponent.getValue(factoryEntity),
-      buildingLevelComponent.getValue(factoryEntity)
+      levelComponent.getValue(factoryEntity)
     );
 
     LibUnclaimedResource.updateUnclaimedForResource(
       world,
       playerEntity,
-      factoryProductionComponent.getValue(buildingLevelEntity).ResourceID
+      factoryProductionComponent.getValue(levelEntity).ResourceID
     );
 
     FactoryProductionData memory factoryProductionDataPreUpgrade = factoryProductionComponent.getValue(
-      LibEncode.hashKeyEntity(tileComponent.getValue(factoryEntity), buildingLevelComponent.getValue(factoryEntity) - 1)
+      LibEncode.hashKeyEntity(tileComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
     );
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionDataPreUpgrade.ResourceID, playerEntity);
@@ -82,7 +78,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     if (
       checkFactoryConnectedMinesLevelCondition(
         activeComponent,
-        buildingLevelComponent,
+        levelComponent,
         PathComponent(getAddressById(components, PathComponentID)),
         factoryEntity
       )
@@ -93,7 +89,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
         world,
         playerResourceEntity,
         MineComponent(getAddressById(components, MineComponentID)).getValue(playerResourceEntity) +
-          (factoryProductionComponent.getValue(buildingLevelEntity).ResourceProductionRate -
+          (factoryProductionComponent.getValue(levelEntity).ResourceProductionRate -
             factoryProductionDataPreUpgrade.ResourceProductionRate)
       );
     } else {

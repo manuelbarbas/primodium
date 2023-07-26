@@ -106,9 +106,9 @@ export const MaxLevel = newNumberComponent(world, {
   overridable: true,
 });
 
-export const BuildingLevel = newNumberComponent(world, {
-  id: "BuildingLevel",
-  metadata: { contractId: `${commonIdPrefix}BuildingLevel` },
+export const Level = newNumberComponent(world, {
+  id: "Level",
+  metadata: { contractId: `${commonIdPrefix}Level` },
   overridable: true,
 });
 
@@ -133,9 +133,9 @@ export const Mine = newNumberComponent(world, {
   overridable: true,
 });
 
-export const BuildingLimit = newNumberComponent(world, {
-  id: "BuildingLimit",
-  metadata: { contractId: `${commonIdPrefix}BuildingLimit` },
+export const MaxBuildings = newNumberComponent(world, {
+  id: "MaxBuildings",
+  metadata: { contractId: `${commonIdPrefix}MaxBuildings` },
   overridable: true,
 });
 
@@ -188,11 +188,11 @@ export default {
   RequiredResearchComponent,
   RequiredResourcesComponent,
   MaxLevel,
-  BuildingLevel,
+  Level,
   StorageCapacity,
   StorageCapacityResources,
   Mine,
-  BuildingLimit,
+  MaxBuildings,
   BuildingTiles,
   RawBlueprint,
   UnclaimedResource,

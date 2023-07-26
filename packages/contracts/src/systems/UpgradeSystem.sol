@@ -4,7 +4,7 @@ import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
@@ -38,16 +38,14 @@ contract UpgradeSystem is PrimodiumSystem {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
 
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingComponentID)
-    );
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
     // Check there isn't another tile there
     uint256 buildingEntity = getBuildingFromCoord(coord);
     require(buildingEntity != 0, "[UpgradeSystem] no building at this coordinate");
-    require(buildingLevelComponent.has(buildingEntity), "[UpgradeSystem] Cannot upgrade a non-building");
+    require(levelComponent.has(buildingEntity), "[UpgradeSystem] Cannot upgrade a non-building");
     uint256 playerEntity = addressToEntity(msg.sender);
     require(
       ownedByComponent.getValue(buildingEntity) == playerEntity,
@@ -56,14 +54,11 @@ contract UpgradeSystem is PrimodiumSystem {
     uint256 buildingType = tileComponent.getValue(buildingEntity);
     require(
       maxLevelComponent.has(buildingType) &&
-        (buildingLevelComponent.getValue(buildingEntity) < maxLevelComponent.getValue(buildingType)),
+        (levelComponent.getValue(buildingEntity) < maxLevelComponent.getValue(buildingType)),
       "[UpgradeSystem] Cannot upgrade building that does not have max level or has reached max level"
     );
 
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(
-      buildingType,
-      buildingLevelComponent.getValue(buildingEntity) + 1
-    );
+    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity) + 1);
     require(
       LibResearch.hasResearched(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
@@ -72,8 +67,8 @@ contract UpgradeSystem is PrimodiumSystem {
       LibResourceCost.checkAndSpendRequiredResources(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
-    uint32 newLevel = buildingLevelComponent.getValue(buildingEntity) + 1;
-    buildingLevelComponent.set(buildingEntity, newLevel);
+    uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
+    levelComponent.set(buildingEntity, newLevel);
 
     if (MineComponent(getAddressById(components, MineComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel)))
       IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeMineSystemID)).executeTyped(
@@ -94,7 +89,7 @@ contract UpgradeSystem is PrimodiumSystem {
       world,
       playerEntity,
       tileComponent.getValue(buildingEntity),
-      buildingLevelComponent.getValue(buildingEntity)
+      levelComponent.getValue(buildingEntity)
     );
 
     return abi.encode(buildingEntity);

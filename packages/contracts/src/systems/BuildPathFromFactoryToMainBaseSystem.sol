@@ -6,7 +6,7 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
@@ -40,17 +40,17 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
       uint256 playerEntity = addressToEntity(playerAddress);
 
       uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(fromBuildingEntity);
-      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      uint256 levelEntity = LibEncode.hashKeyEntity(
         buildingId,
-        BuildingLevelComponent(getC(BuildingLevelComponentID)).getValue(fromBuildingEntity)
+        LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
       );
       FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
         getC(FactoryProductionComponentID)
-      ).getValue(buildingLevelEntity);
+      ).getValue(levelEntity);
 
       LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
 
-      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, buildingLevelEntity, true);
+      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
     }
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);

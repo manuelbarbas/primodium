@@ -12,7 +12,7 @@ import { TileComponent, ID as TileComponentID } from "components/TileComponent.s
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
@@ -55,7 +55,7 @@ contract BuildSystem is PrimodiumSystem {
     );
     //check build limit
     require(
-      LibBuilding.isBuildingLimitConditionMet(world, playerEntity, buildingType),
+      LibBuilding.isMaxBuildingsConditionMet(world, playerEntity, buildingType),
       "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
@@ -87,7 +87,7 @@ contract BuildSystem is PrimodiumSystem {
     LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
 
     //set level of building to 1
-    BuildingLevelComponent(getC(BuildingLevelComponentID)).set(buildingEntity, 1);
+    LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
     TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 

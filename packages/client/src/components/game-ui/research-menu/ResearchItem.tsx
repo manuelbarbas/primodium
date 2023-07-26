@@ -17,7 +17,7 @@ import {
 import { GameButton } from "src/components/shared/GameButton";
 import React from "react";
 import {
-  BuildingLevel,
+  Level,
   MainBase,
   Research,
 } from "src/network/components/chainComponents";
@@ -72,10 +72,10 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       value: "-1" as EntityID,
     }).value;
 
-    const mainBaseLevel = BuildingLevel.use(mainBaseEntity, {
+    const mainBaseLevel = Level.use(mainBaseEntity, {
       value: 0,
     }).value;
-    const requiredMainBaseLevel = BuildingLevel.use(researchId, {
+    const requiredMainBaseLevel = Level.use(researchId, {
       value: 0,
     }).value;
 

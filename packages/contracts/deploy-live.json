@@ -11,10 +11,10 @@
     "ResearchComponent",
     "MainBaseInitializedComponent",
     "StarterPackInitializedComponent",
-    "BuildingLevelComponent",
+    "LevelComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
-    "BuildingLimitComponent",
+    "MaxBuildingsComponent",
     "IgnoreBuildLimitComponent",
     "BuildingTilesComponent",
     "BlueprintComponent",
@@ -33,7 +33,7 @@
   ],
   "initializers": [
     "LibBuildingDesignInitializer",
-    "LibBuildingLimitDesignInitializer",
+    "LibMaxBuildingsDesignInitializer",
     "LibTechnologyDesignInitializer",
     "LibBlueprintInitializer"
   ],
@@ -64,7 +64,7 @@
         "ItemComponent",
 
         "MainBaseInitializedComponent",
-        "BuildingLevelComponent",
+        "LevelComponent",
         "MainBaseInitializedComponent",
         "BuildingTilesComponent"
       ]
@@ -77,7 +77,7 @@
         "StorageCapacityResourcesComponent",
         "FactoryMineBuildingsComponent",
         "LastClaimedAtComponent",
-        "BuildingLimitComponent"
+        "MaxBuildingsComponent"
       ]
     },
     {
@@ -92,8 +92,8 @@
 
         "MainBaseInitializedComponent",
         "BuildingTilesComponent",
-        "BuildingLevelComponent",
-        "BuildingLimitComponent",
+        "LevelComponent",
+        "MaxBuildingsComponent",
         "BuildingTilesComponent"
       ]
     },
@@ -181,7 +181,7 @@
     {
       "name": "UpgradeSystem",
       "writeAccess": [
-        "BuildingLevelComponent",
+        "LevelComponent",
         "ItemComponent",
         "StorageCapacityComponent",
         "StorageCapacityResourcesComponent"

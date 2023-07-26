@@ -56,20 +56,20 @@ When a building is created, its tiles are determined based on the prototype's bl
 
 # Resource and Research Requirements
 
-The following components are used to store _metadata_ that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `BuildingLimitComponent` stores building limit requirements.
+The following components are used to store _metadata_ that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `MaxBuildingsComponent` stores building limit requirements.
 
 ```
   RequiredResearchComponent
   RequiredResourcesComponent
   ItemComponent
-  BuildingLimitComponent
+  MaxBuildingsComponent
 ```
 
 # Resource Production
 
 `MineComponent` stores both metadata and player data.
 
-- _Metadata_: with `hashKeyEntity(buildingId, buildingLevel)` as key, stores the production rate of that resource for that level of that building per blockchain block. In `LibBuildingDesignInitializer`, the production rate is set for each level of each building that produces resources.
+- _Metadata_: with `hashKeyEntity(buildingId, level)` as key, stores the production rate of that resource for that level of that building per blockchain block. In `LibBuildingDesignInitializer`, the production rate is set for each level of each building that produces resources.
 - _Player Data_: with `hashKeyEntity(resourceId, playerEntity)` as key, stores the production of that resource per blockchain block.
 
 Player resource production is updated when:
@@ -85,12 +85,12 @@ Player resource production is updated when:
 
 Factory production is similar to how mining resource production is calculated. However, to produce resources factories require other mines to be connected to them. For a factory to be functional, the level of the mine connected should not be lower then the level of the factory itself.
 
-`FactoryMineBuildingsComponent`: with `hashKeyEntity(buildingId, buildingLevel)` as key, contains two arrays:
+`FactoryMineBuildingsComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two arrays:
 
 - `MineBuildingId` : a list of mine building ids that has to be connected to the factory for it to be functional
 - `MineBuildingCount`: a list of how many of each mine building that has to be connected to the factory
 
-`FactoryProductionComponent`: with `hashKeyEntity(buildingId, buildingLevel)` as key, contains two IDs:
+`FactoryProductionComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two IDs:
 
 - `ResourceID` : the resource type this factory produces
 - `ResourceProductionRate` : the production of this factory per block (note for future we should modify the way this value is interpreted so it isn't per block to be able to reduce the tempo. maybe the rate can be per 100 blocks for example)
@@ -108,7 +108,7 @@ Factory production is similar to how mining resource production is calculated. H
 Each building can be upgraded to unlock more capabilities. Specifications are located [here](https://www.notion.so/palifer/abe7f4855bb441198acd4bae918b4619?v=54c17e8787e24596bc3d4f94f81761bd&p=96af4ae778304d11b40b773a94a826df&pm=s).
 
 - `MaxLevelComponent` with a building ID (e.g. DebugIronMineID) as key, indicates that that a building can be upgraded and up to what level.
-- `BuildingLevelComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
+- `LevelComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
 
 When a building is upgraded, `PostUpgradeSystem` is called to update the building's components and the player's resource production.
 
@@ -117,8 +117,8 @@ When a building is upgraded, `PostUpgradeSystem` is called to update the buildin
 In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `StorageCapacityResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `StorageCapacityComponent`.
 
 ```
-  buildingLevelId = hashKeyEntity(buildingId, buildingLevel)
-  resourceBuildingLevelId = hashKeyEntity(resourceId, buildingLevelId)
+  levelId = hashKeyEntity(buildingId, level)
+  resourceLevelId = hashKeyEntity(resourceId, levelId)
 ```
 
 For example, the amount of Iron storage that is provided by a level 2 MainBase is:

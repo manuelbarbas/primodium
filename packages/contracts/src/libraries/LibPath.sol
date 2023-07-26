@@ -13,7 +13,7 @@ library LibPath {
     Uint256Component tileComponent,
     Uint256Component mineComponent,
     Uint256Component storageComponent,
-    Uint256Component buildingLevelComponent,
+    Uint256Component levelComponent,
     uint256 fromEntity,
     uint256 toEntity,
     uint256 playerEntity
@@ -28,7 +28,7 @@ library LibPath {
     }
     return
       mineComponent.has(
-        LibEncode.hashKeyEntity(tileComponent.getValue(fromEntity), buildingLevelComponent.getValue(fromEntity))
+        LibEncode.hashKeyEntity(tileComponent.getValue(fromEntity), levelComponent.getValue(fromEntity))
       );
   }
 }

@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
@@ -32,22 +32,18 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
 
     uint256 factoryEntity = pathComponent.getValue(mineEntity);
-    ActiveComponent activeComponent = ActiveComponent(
-      getAddressById(components, ActiveComponentID)
-    );
+    ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
     //if connected to factory check if factory is functional, if it is mine upgrade has no effect so do nothing
     if (activeComponent.has(factoryEntity)) return;
 
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingLevelComponentID)
-    );
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
     //if is not functional check if it can be made functional
 
     // first check if any connected mines are not at the required level if so do nothing
-    uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
+    uint256 factoryLevel = levelComponent.getValue(factoryEntity);
     uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(factoryEntity);
     for (uint256 i = 0; i < connectedMineEntities.length; i++) {
-      if (buildingLevelComponent.getValue(connectedMineEntities[i]) < factoryLevel) {
+      if (levelComponent.getValue(connectedMineEntities[i]) < factoryLevel) {
         return;
       }
     }
@@ -66,33 +62,31 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
       getAddressById(components, FactoryProductionComponentID)
     );
 
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+    uint256 levelEntity = LibEncode.hashKeyEntity(
       TileComponent(getAddressById(components, TileComponentID)).getValue(factoryEntity),
-      buildingLevelComponent.getValue(factoryEntity)
+      levelComponent.getValue(factoryEntity)
     );
     //first update unclaimed resources up to this point
     LibUnclaimedResource.updateUnclaimedForResource(
       world,
       playerEntity,
-      factoryProductionComponent.getValue(buildingLevelEntity).ResourceID
+      factoryProductionComponent.getValue(levelEntity).ResourceID
     );
 
     //then update resource production
-    LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, buildingLevelEntity, true);
+    LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    uint32 buildingLevel = BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(
-      mineEntity
-    );
+    uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);
     uint256 tile = TileComponent(getAddressById(components, TileComponentID)).getValue(mineEntity);
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
       mineComponent.getValue(playerResourceEntity) +
-        mineComponent.getValue(LibEncode.hashKeyEntity(tile, buildingLevel)) -
-        mineComponent.getValue(LibEncode.hashKeyEntity(tile, buildingLevel - 1))
+        mineComponent.getValue(LibEncode.hashKeyEntity(tile, level)) -
+        mineComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1))
     );
   }
 
@@ -125,7 +119,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     (address playerAddress, uint256 entity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
 
-    uint32 newLevel = BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(entity);
+    uint32 newLevel = LevelComponent(getAddressById(components, LevelComponentID)).getValue(entity);
 
     uint256 buildingId = TileComponent(getAddressById(components, TileComponentID)).getValue(entity);
 

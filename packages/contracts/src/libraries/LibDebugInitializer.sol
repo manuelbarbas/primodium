@@ -16,7 +16,7 @@ import { ResearchComponent, ID as ResearchComponentID } from "components/Researc
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
@@ -159,15 +159,13 @@ library LibDebugInitializer {
     //initialize factories
     initializeFactories(world);
 
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingComponentID)
-    );
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
     ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
     //initialize technologies
     initializeTechnologies(
       researchComponent,
       itemComponent,
-      buildingLevelComponent,
+      levelComponent,
       requiredResearch,
       requiredResourcesComponent
     );
@@ -580,7 +578,7 @@ library LibDebugInitializer {
   function initializeTechnologies(
     ResearchComponent researchComponent,
     ItemComponent itemComponent,
-    BuildingLevelComponent buildingLevelComponent,
+    LevelComponent levelComponent,
     RequiredResearchComponent requiredResearchComponent,
     RequiredResourcesComponent requiredResourcesComponent
   ) internal {
@@ -602,7 +600,7 @@ library LibDebugInitializer {
 
     //DebugSimpleTechnologyMainBaseLevelReqsID
     researchComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
-    buildingLevelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
+    levelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
   }
 
   function initializeStorageBuildings(

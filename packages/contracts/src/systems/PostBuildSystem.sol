@@ -6,7 +6,7 @@ import { ID as BuildSystemID } from "systems/BuildSystem.sol";
 // components
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
@@ -62,13 +62,11 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
       getC(FactoryMineBuildingsComponentID)
     );
     uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
-    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
+    uint256 levelEntity = LibEncode.hashKeyEntity(buildingId, 1);
+    if (!factoryMineBuildingsComponent.has(levelEntity)) {
       return;
     }
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
-      buildingLevelEntity
-    );
+    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(levelEntity);
     factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
   }
 
@@ -88,8 +86,8 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     // update building count if the built building counts towards the build limit
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint32Value(buildingLimitComponent, playerEntity) + 1);
+      MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
+      maxBuildingsComponent.set(playerEntity, LibMath.getSafeUint32Value(maxBuildingsComponent, playerEntity) + 1);
     }
 
     updatePlayerStorage(buildingType, playerEntity);

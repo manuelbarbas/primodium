@@ -16,7 +16,7 @@ import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequireme
 import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 
@@ -408,7 +408,7 @@ contract ClaimSystemTest is MudTest {
   function testClaimOnUpgrade() public {
     vm.startPrank(alice);
 
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(component(BuildingComponentID));
+    LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
@@ -441,21 +441,13 @@ contract ClaimSystemTest is MudTest {
 
     upgradeSystem.executeTyped(coord);
 
-    assertEq(
-      buildingLevelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
-      2,
-      "IronMine should be level 2"
-    );
+    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 2, "IronMine should be level 2");
     vm.roll(20);
 
     claimSystem.executeTyped(mainBaseCoord);
     assertEq(itemComponent.getValue(hashedAliceKey), 30, "Alice should have 30 iron");
     upgradeSystem.executeTyped(coord);
-    assertEq(
-      buildingLevelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
-      3,
-      "IronMine should be level 3"
-    );
+    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 3, "IronMine should be level 3");
 
     vm.roll(30);
 

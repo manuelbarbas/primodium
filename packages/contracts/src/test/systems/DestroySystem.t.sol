@@ -11,9 +11,9 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 
 // components
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
@@ -33,8 +33,8 @@ contract DestroySystemTest is PrimodiumTest {
   OwnedByComponent public ownedByComponent;
   BlueprintComponent public blueprintComponent;
   BuildingTilesComponent public buildingTilesComponent;
-  BuildingLevelComponent public buildingLevelComponent;
-  BuildingLimitComponent public buildingLimitComponent;
+  LevelComponent public levelComponent;
+  MaxBuildingsComponent public maxBuildingsComponent;
   TileComponent public tileComponent;
   MainBaseInitializedComponent public mainBaseInitializedComponent;
 
@@ -50,10 +50,10 @@ contract DestroySystemTest is PrimodiumTest {
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
     buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
-    buildingLevelComponent = BuildingLevelComponent(component(BuildingLevelComponentID));
+    levelComponent = LevelComponent(component(LevelComponentID));
     tileComponent = TileComponent(component(TileComponentID));
     mainBaseInitializedComponent = MainBaseInitializedComponent(component(MainBaseInitializedComponentID));
-    buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
+    maxBuildingsComponent = MaxBuildingsComponent(component(MaxBuildingsComponentID));
 
     // init other
     vm.startPrank(alice);
@@ -73,7 +73,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function destroy(uint256 buildingEntity, Coord memory _coord) public {
     uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
-    uint256 buildingLimit = buildingLimitComponent.getValue(playerEntity);
+    uint256 maxBuildings = maxBuildingsComponent.getValue(playerEntity);
     destroySystem.executeTyped(_coord);
 
     for (uint256 i = 0; i < buildingTiles.length; i++) {
@@ -83,8 +83,8 @@ contract DestroySystemTest is PrimodiumTest {
 
     assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");
     assertFalse(tileComponent.has(buildingEntity), "has tile");
-    assertFalse(buildingLevelComponent.has(buildingEntity), "has level");
-    assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1, "wrong limit");
+    assertFalse(levelComponent.has(buildingEntity), "has level");
+    assertEq(maxBuildingsComponent.getValue(playerEntity), maxBuildings - 1, "wrong limit");
   }
 
   function testDestroyWithTile() public {

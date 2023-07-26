@@ -14,16 +14,14 @@ library LibFactory {
   function updateResourceProductionOnActiveChange(
     IWorld world,
     uint256 playerEntity,
-    uint256 factoryBuildingLevelEntity,
+    uint256 factoryLevelEntity,
     bool isFunctional
   ) internal {
     MineComponent mineComponent = MineComponent(world.getComponent(MineComponentID));
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       world.getComponent(FactoryProductionComponentID)
     );
-    FactoryProductionData memory factoryProductionData = factoryProductionComponent.getValue(
-      factoryBuildingLevelEntity
-    );
+    FactoryProductionData memory factoryProductionData = factoryProductionComponent.getValue(factoryLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
     uint32 newResourceProductionRate = isFunctional
       ? LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate

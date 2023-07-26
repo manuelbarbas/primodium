@@ -6,7 +6,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
 
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -25,12 +25,10 @@ contract ResearchSystem is System {
     uint256 playerEntity,
     uint256 entity
   ) internal view returns (bool) {
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(world.components(), BuildingLevelComponentID)
-    );
-    if (!buildingLevelComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = LibBuilding.getBaseLevel(world, playerEntity);
-    return mainBuildingLevel >= buildingLevelComponent.getValue(entity);
+    LevelComponent levelComponent = LevelComponent(getAddressById(world.components(), LevelComponentID));
+    if (!levelComponent.has(entity)) return true;
+    uint256 mainLevel = LibBuilding.getBaseLevel(world, playerEntity);
+    return mainLevel >= levelComponent.getValue(entity);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {

@@ -15,7 +15,7 @@ import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
 import {
-  BuildingLevel,
+  Level,
   MaxLevel,
   Research,
 } from "src/network/components/chainComponents";
@@ -42,7 +42,7 @@ export default function UpgradeButton({
     state.setNotification,
   ]);
 
-  const currLevel = BuildingLevel.use(buildingEntity);
+  const currLevel = Level.use(buildingEntity);
   const maxLevel = MaxLevel.use(builtTile);
   const upgradedLevel = useMemo(() => {
     return parseInt(currLevel?.value.toString() ?? "0") + 1;

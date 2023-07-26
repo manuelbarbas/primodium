@@ -5,7 +5,7 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
@@ -70,12 +70,12 @@ contract BuildPathSystem is PrimodiumSystem {
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     uint256 startCoordBuildingId = tileComponent.getValue(startBuilding);
     uint256 endCoordBuildingId = tileComponent.getValue(endBuilding);
-    uint256 startCoordBuildingLevelEntity = LibEncode.hashKeyEntity(
+    uint256 startCoordLevelEntity = LibEncode.hashKeyEntity(
       startCoordBuildingId,
-      BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(startBuilding)
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(startBuilding)
     );
 
-    if (MineComponent(getAddressById(components, MineComponentID)).has(startCoordBuildingLevelEntity)) {
+    if (MineComponent(getAddressById(components, MineComponentID)).has(startCoordLevelEntity)) {
       if (endCoordBuildingId == MainBaseID) {
         IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromMineToMainBaseSystemID)).executeTyped(
           msg.sender,
@@ -91,7 +91,7 @@ contract BuildPathSystem is PrimodiumSystem {
       }
     } else if (
       FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)).has(
-        startCoordBuildingLevelEntity
+        startCoordLevelEntity
       )
     ) {
       require(
