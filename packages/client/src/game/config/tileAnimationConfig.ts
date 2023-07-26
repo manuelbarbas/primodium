@@ -1,4 +1,4 @@
-import { TileAnimation } from "../../engine/types";
+import { TileAnimation } from "engine/types";
 import { Tilekeys, TileAnimationKeys } from "../constants";
 
 const generateTileFrames = (tile: number, length: number) => {

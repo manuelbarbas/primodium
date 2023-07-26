@@ -2,7 +2,7 @@ import { EntityID, defineComponentSystem } from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 import { createPath } from "../factory/path";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { Path } from "src/network/components/chainComponents";
 import { Position } from "src/network/components/clientComponents";

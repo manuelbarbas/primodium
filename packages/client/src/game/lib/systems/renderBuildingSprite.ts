@@ -11,7 +11,7 @@ import {
 
 import { Coord } from "@latticexyz/utils";
 
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { createBuilding } from "../factory/building";
 import { world } from "src/network/world";
 import {

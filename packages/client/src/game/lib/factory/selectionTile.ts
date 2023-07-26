@@ -1,5 +1,5 @@
 import { DepthLayers } from "@game/constants";
-import { GameObjectComponent } from "../../../engine/types";
+import { GameObjectComponent } from "engine/types";
 
 export const createSelectionTile = (options: {
   id: string;

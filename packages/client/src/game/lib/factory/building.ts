@@ -1,5 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
-import { GameObjectComponent } from "../../../engine/types";
+import { GameObjectComponent } from "engine/types";
 import {
   Assets,
   DepthLayers,

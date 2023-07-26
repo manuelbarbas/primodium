@@ -1,6 +1,6 @@
 import { KeybindActions } from "@game/constants";
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { pan, updateWorldView } from "src/game/api/camera";
 import { isDown } from "src/game/api/input";
 import { Action } from "src/util/constants";

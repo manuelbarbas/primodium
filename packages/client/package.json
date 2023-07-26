@@ -74,6 +74,7 @@
     "threads": "^1.7.0",
     "wagmi": "^0.10.10",
     "walktour": "^5.2.0",
-    "zustand": "^4.3.9"
+    "zustand": "^4.3.9",
+    "engine": "^1.0.0"
   }
 }

@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+
 export const createPhaserScene = (options: {
   key: string;
   preload?: (scene: Phaser.Scene) => void;
