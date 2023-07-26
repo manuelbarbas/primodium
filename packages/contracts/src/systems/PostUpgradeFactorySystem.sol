@@ -10,7 +10,7 @@ import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesCompon
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
@@ -31,12 +31,12 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
   function checkFactoryConnectedMinesLevelCondition(
-    FactoryIsFunctionalComponent factoryIsFunctionalComponent,
+    ActiveComponent activeComponent,
     BuildingLevelComponent buildingLevelComponent,
     PathComponent pathComponent,
     uint256 factoryEntity
   ) internal view returns (bool) {
-    if (!factoryIsFunctionalComponent.has(factoryEntity)) return false;
+    if (!activeComponent.has(factoryEntity)) return false;
     uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
     uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(factoryEntity);
     for (uint256 i = 0; i < connectedMineEntities.length; i++) {
@@ -47,15 +47,15 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
 
   //after factory level is increased
   function handleFactoryUpgrade(uint256 playerEntity, uint256 factoryEntity) internal {
-    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
-      getAddressById(components, FactoryIsFunctionalComponentID)
+    ActiveComponent activeComponent = ActiveComponent(
+      getAddressById(components, ActiveComponentID)
     );
     BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
       getAddressById(components, BuildingLevelComponentID)
     );
     TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
     //if factory was non functional nothing to do
-    if (!factoryIsFunctionalComponent.has(factoryEntity)) return;
+    if (!activeComponent.has(factoryEntity)) return;
 
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
@@ -81,7 +81,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     //check to see if factory is still functional after upgrade
     if (
       checkFactoryConnectedMinesLevelCondition(
-        factoryIsFunctionalComponent,
+        activeComponent,
         buildingLevelComponent,
         PathComponent(getAddressById(components, PathComponentID)),
         factoryEntity
@@ -98,7 +98,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       );
     } else {
       // if not functional remove resource production of the factory and set as non functional
-      factoryIsFunctionalComponent.remove(factoryEntity);
+      activeComponent.remove(factoryEntity);
       LibResourceProduction.updateResourceProduction(
         world,
         playerResourceEntity,

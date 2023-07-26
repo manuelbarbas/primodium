@@ -23,7 +23,7 @@
     "StorageCapacityResourcesComponent",
     "MineComponent",
     "UnclaimedResourceComponent",
-    "FactoryIsFunctionalComponent",
+    "ActiveComponent",
     "FactoryMineBuildingsComponent",
     "FactoryProductionComponent",
     "MaxLevelComponent",
@@ -114,7 +114,7 @@
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
-        "FactoryIsFunctionalComponent",
+        "ActiveComponent",
         "FactoryProductionComponent"
       ]
     },
@@ -125,7 +125,7 @@
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
-        "FactoryIsFunctionalComponent",
+        "ActiveComponent",
         "FactoryMineBuildingsComponent",
         "FactoryProductionComponent"
       ]
@@ -143,7 +143,7 @@
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
-        "FactoryIsFunctionalComponent",
+        "ActiveComponent",
         "FactoryMineBuildingsComponent",
         "FactoryProductionComponent"
       ]
@@ -155,7 +155,7 @@
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
-        "FactoryIsFunctionalComponent",
+        "ActiveComponent",
         "FactoryProductionComponent",
         "FactoryMineBuildingsComponent"
       ]
@@ -191,12 +191,7 @@
     },
     {
       "name": "PostUpgradeMineSystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent"
-      ]
+      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "MineComponent", "ActiveComponent"]
     },
     {
       "name": "PostUpgradeFactorySystem",
@@ -204,7 +199,7 @@
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
         "MineComponent",
-        "FactoryIsFunctionalComponent",
+        "ActiveComponent",
         "FactoryProductionComponent"
       ]
     },

@@ -2,9 +2,9 @@
 pragma solidity >=0.8.0;
 import "std-contracts/components/BoolComponent.sol";
 
-uint256 constant ID = uint256(keccak256("component.FactoryIsFunctional"));
+uint256 constant ID = uint256(keccak256("component.Active"));
 
 //set for buildings to ignore the build limit
-contract FactoryIsFunctionalComponent is BoolComponent {
+contract ActiveComponent is BoolComponent {
   constructor(address world) BoolComponent(world, ID) {}
 }

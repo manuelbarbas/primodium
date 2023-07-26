@@ -95,13 +95,13 @@ Factory production is similar to how mining resource production is calculated. H
 - `ResourceID` : the resource type this factory produces
 - `ResourceProductionRate` : the production of this factory per block (note for future we should modify the way this value is interpreted so it isn't per block to be able to reduce the tempo. maybe the rate can be per 100 blocks for example)
 
-`FactoryIsFunctionalComponent`: for an existing factory entity, declares if that factory is functional. This value is updated when a player action either results in the factory becoming functional or results in it becoming non-functional.
+`ActiveComponent`: for an existing factory entity, declares if that factory is functional. This value is updated when a player action either results in the factory becoming functional or results in it becoming non-functional.
 
 `LibFactoryDesignInitializer` writes the design data for factories for each of their levels on `FactoryMineBuildingsComponent` and `FactoryProductionComponent`.
 
 `LibFactory` contains the core logic functions for two main purposes:
 
-- updating the `FactoryIsFunctionalComponent` for a factory entity when a player action may result in the factory to become functional or non functional
+- updating the `ActiveComponent` for a factory entity when a player action may result in the factory to become functional or non functional
 
 # Building Upgrades
 

@@ -9,7 +9,7 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
@@ -29,8 +29,8 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
 
   //checks if path from mine to factory can be built, if yes updates factory is functional status
   function canBuildPath(uint256 mineEntity, uint256 factoryEntity) internal returns (bool) {
-    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
-      getC(FactoryIsFunctionalComponentID)
+    ActiveComponent activeComponent = ActiveComponent(
+      getC(ActiveComponentID)
     );
     BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
     TileComponent tileComponent = TileComponent(getC(TileComponentID));
@@ -38,7 +38,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
       getC(FactoryMineBuildingsComponentID)
     );
 
-    if (factoryIsFunctionalComponent.has(factoryEntity)) return false;
+    if (activeComponent.has(factoryEntity)) return false;
     uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
     bool isFunctional = true;
     bool isMineConnected = false;
@@ -65,7 +65,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     }
 
     if (isFunctional) {
-      factoryIsFunctionalComponent.set(factoryEntity);
+      activeComponent.set(factoryEntity);
     }
 
     return isMineConnected;
@@ -98,7 +98,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
       "[BuildPathSystem] Cannot build path to a the target factory"
     );
     if (
-      FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(toBuildingEntity) &&
+      ActiveComponent(getC(ActiveComponentID)).has(toBuildingEntity) &&
       PathComponent(getC(PathComponentID)).has(toBuildingEntity)
     ) {
       uint256 playerEntity = addressToEntity(playerAddress);
@@ -109,7 +109,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
 
       LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
 
-      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
+      LibFactory.updateResourceProductionOnActiveChange(
         world,
         playerEntity,
         factoryBuildingLevelEntity,

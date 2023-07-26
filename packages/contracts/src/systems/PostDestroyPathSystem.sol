@@ -7,7 +7,7 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
@@ -65,15 +65,15 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     uint256 mineEntity,
     uint256 factoryEntity
   ) internal {
-    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
-      getAddressById(components, FactoryIsFunctionalComponentID)
+    ActiveComponent activeComponent = ActiveComponent(
+      getAddressById(components, ActiveComponentID)
     );
 
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
     );
 
-    bool isFunctional = factoryIsFunctionalComponent.has(factoryEntity);
+    bool isFunctional = activeComponent.has(factoryEntity);
     uint256 factoryBuildingLevelEntity = LibEncode.hashKeyEntity(
       tileComponent.getValue(factoryEntity),
       buildingLevelComponent.getValue(factoryEntity)
@@ -89,7 +89,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     //when a path from mine to factory is destroyed, factory becomes non functional
     //and required connected mine building count is increased
-    factoryIsFunctionalComponent.remove(factoryEntity);
+    activeComponent.remove(factoryEntity);
     FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(factoryEntity);
     for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
       if (factoryMineBuildingsData.MineBuildingIDs[i] == tileComponent.getValue(mineEntity)) {
@@ -101,7 +101,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     //if factory was functional player resource production must be cecreased by the resource production of the factory
     if (isFunctional && PathComponent(getAddressById(components, PathComponentID)).has(factoryEntity))
-      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
+      LibFactory.updateResourceProductionOnActiveChange(
         world,
         playerEntity,
         factoryBuildingLevelEntity,
@@ -117,7 +117,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     uint256 factoryEntity
   ) internal {
     // if factory was non functional before path was destroyed, nothing to change
-    if (!FactoryIsFunctionalComponent(getAddressById(components, FactoryIsFunctionalComponentID)).has(factoryEntity))
+    if (!ActiveComponent(getAddressById(components, ActiveComponentID)).has(factoryEntity))
       return;
 
     // when path from factory to main base is destroyed, factory becomes non functional

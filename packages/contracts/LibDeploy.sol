@@ -40,7 +40,7 @@ import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "comp
 import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
@@ -208,8 +208,8 @@ library LibDeploy {
       comp = new UnclaimedResourceComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying FactoryIsFunctionalComponent");
-      comp = new FactoryIsFunctionalComponent(address(result.world));
+      console.log("Deploying ActiveComponent");
+      comp = new ActiveComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying FactoryMineBuildingsComponent");
@@ -371,7 +371,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
-    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
     console.log(address(system));
 
@@ -382,7 +382,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
-    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
     console.log(address(system));
@@ -405,7 +405,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
-    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
     console.log(address(system));
@@ -417,7 +417,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
-    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     console.log(address(system));
@@ -471,7 +471,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
-    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, ActiveComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying PostUpgradeFactorySystem");
@@ -480,7 +480,7 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
-    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
     console.log(address(system));
 
@@ -562,7 +562,7 @@ library LibDeploy {
     authorizeWriter(components, StorageCapacityResourcesComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, FactoryIsFunctionalComponentID, address(system));
+    authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     authorizeWriter(components, FactoryProductionComponentID, address(system));
     authorizeWriter(components, MaxLevelComponentID, address(system));

@@ -8,7 +8,7 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
@@ -36,7 +36,7 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
       "BuildPathFromFactoryToMainBase: Only BuildPathSystem can call this function"
     );
 
-    if (FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(fromBuildingEntity)) {
+    if (ActiveComponent(getC(ActiveComponentID)).has(fromBuildingEntity)) {
       uint256 playerEntity = addressToEntity(playerAddress);
 
       uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(fromBuildingEntity);
@@ -50,7 +50,7 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
 
       LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
 
-      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(world, playerEntity, buildingLevelEntity, true);
+      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, buildingLevelEntity, true);
     }
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);

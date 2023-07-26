@@ -11,7 +11,7 @@ import { LibResourceProduction } from "./LibResourceProduction.sol";
 library LibFactory {
   //checks all required conditions for a factory to be functional and updates factory is functional status
 
-  function updateResourceProductionOnFactoryIsFunctionalChange(
+  function updateResourceProductionOnActiveChange(
     IWorld world,
     uint256 playerEntity,
     uint256 factoryBuildingLevelEntity,

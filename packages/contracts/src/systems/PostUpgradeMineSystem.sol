@@ -8,7 +8,7 @@ import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "componen
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
@@ -32,11 +32,11 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
 
     uint256 factoryEntity = pathComponent.getValue(mineEntity);
-    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
-      getAddressById(components, FactoryIsFunctionalComponentID)
+    ActiveComponent activeComponent = ActiveComponent(
+      getAddressById(components, ActiveComponentID)
     );
     //if connected to factory check if factory is functional, if it is mine upgrade has no effect so do nothing
-    if (factoryIsFunctionalComponent.has(factoryEntity)) return;
+    if (activeComponent.has(factoryEntity)) return;
 
     BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
       getAddressById(components, BuildingLevelComponentID)
@@ -61,7 +61,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     }
 
     //if all conditions are met make factory functional
-    factoryIsFunctionalComponent.set(factoryEntity);
+    activeComponent.set(factoryEntity);
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
     );
@@ -78,7 +78,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     );
 
     //then update resource production
-    LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(world, playerEntity, buildingLevelEntity, true);
+    LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, buildingLevelEntity, true);
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
