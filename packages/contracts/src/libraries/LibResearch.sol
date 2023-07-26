@@ -6,7 +6,6 @@ import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.s
 
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
 
 import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -24,16 +23,5 @@ library LibResearch {
     if (!requiredResearchComponent.has(entity)) return true;
 
     return researchComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
-  }
-
-  // ###########################################################################
-  // Write last researched time into LastResearchedComponent
-
-  function setResearchTime(IWorld world, uint256 researchKey, uint256 entity) internal {
-    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
-      getAddressById(world.components(), LastResearchedAtComponentID)
-    );
-    uint256 hashedResearchKey = LibEncode.hashKeyEntity(researchKey, entity);
-    lastResearchedAtComponent.set(hashedResearchKey, block.number);
   }
 }

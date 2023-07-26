@@ -6,7 +6,6 @@
     "PathComponent",
 
     "LastClaimedAtComponent",
-    "LastResearchedAtComponent",
     "HealthComponent",
 
     "ItemComponent",
@@ -43,7 +42,7 @@
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["ItemComponent", "ResearchComponent", "LastResearchedAtComponent"]
+      "writeAccess": ["ItemComponent", "ResearchComponent"]
     },
     {
       "name": "StarterPackSystem",

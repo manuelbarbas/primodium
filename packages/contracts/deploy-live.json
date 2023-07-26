@@ -5,11 +5,8 @@
     "TileComponent",
     "OwnedByComponent",
     "PathComponent",
-
     "LastClaimedAtComponent",
-    "LastResearchedAtComponent",
     "HealthComponent",
-
     "ItemComponent",
     "ResearchComponent",
     "MainBaseInitializedComponent",
@@ -43,7 +40,7 @@
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["ItemComponent", "ResearchComponent", "LastResearchedAtComponent"]
+      "writeAccess": ["ItemComponent", "ResearchComponent"]
     },
     {
       "name": "StarterPackSystem",
