@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
 // components
@@ -34,7 +35,7 @@ library LibPassiveResource {
     if (requiredPassiveResourceComponent.has(blockType)) {
       ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
       uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
-      uint256[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
+      uint32[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
       for (uint256 i = 0; i < resourceIDs.length; i++) {
         if (
           LibStorage.getAvailableSpaceInStorageForResource(
@@ -58,13 +59,13 @@ library LibPassiveResource {
     if (requiredPassiveResourceComponent.has(blockType)) {
       ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
       uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
-      uint256[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
+      uint32[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
 
       for (uint256 i = 0; i < resourceIDs.length; i++) {
         uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
         itemComponent.set(
           playerResourceEntity,
-          LibMath.getSafeUint256Value(itemComponent, playerResourceEntity) + requiredAmounts[i]
+          LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) + requiredAmounts[i]
         );
       }
     }
@@ -84,7 +85,7 @@ library LibPassiveResource {
         storageCapacityComponent,
         playerEntity,
         resourceId,
-        LibMath.getSafeUint256Value(storageCapacityComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
+        LibMath.getSafeUint32Value(storageCapacityComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
           passiveResourceProductionComponent.getValue(blockType).ResourceProduction
       );
     }

@@ -8,21 +8,20 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  setComponent,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Network } from "src/network/layer";
-import { hoverTile } from "../../api/components";
 import { createHoverTile } from "../factory/createHoverTile";
+import { HoverTile } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
 const objGraphicsIndex = (entity: EntityIndex) =>
   `${entity}_hoverTile_graphics`;
 
-export const renderHoverTile = (scene: Scene, network: Network) => {
-  const { world, offChainComponents, singletonIndex } = network;
+export const renderHoverTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
 
-  const query = [Has(offChainComponents.HoverTile)];
+  const query = [Has(HoverTile)];
+
   scene.input.pointermove$.pipe().subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.pointer.worldX, y: event.pointer.worldY },
@@ -31,10 +30,7 @@ export const renderHoverTile = (scene: Scene, network: Network) => {
     );
 
     const mouseCoord = { x, y: -y };
-    setComponent(offChainComponents.HoverTile, singletonIndex, {
-      ...mouseCoord,
-    });
-    hoverTile(network).set(mouseCoord);
+    HoverTile.set({ ...mouseCoord });
   });
 
   const render = ({ entity }: { entity: EntityIndex }) => {
@@ -43,7 +39,7 @@ export const renderHoverTile = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = hoverTile(network).get();
+    const tileCoord = HoverTile.get();
 
     if (!tileCoord) return;
 

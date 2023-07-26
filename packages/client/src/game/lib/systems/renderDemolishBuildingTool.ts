@@ -6,23 +6,23 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  getComponentValue,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Network } from "src/network/layer";
 import { Action } from "src/util/constants";
 import { createSelectionTile } from "../factory/selectionTile";
+import {
+  HoverTile,
+  SelectedAction,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
-export const renderDemolishBuildingTool = (scene: Scene, network: Network) => {
-  const { world, offChainComponents } = network;
+export const renderDemolishBuildingTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_demolishBuilding";
 
   const query = [
-    Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedAction, {
-      value: Action.DemolishBuilding,
-    }),
+    Has(HoverTile),
+    HasValue(SelectedAction, { value: Action.DemolishBuilding }),
   ];
 
   const render = (update: ComponentUpdate) => {
@@ -37,11 +37,7 @@ export const renderDemolishBuildingTool = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = getComponentValue(
-      offChainComponents.HoverTile,
-      entityIndex
-    );
-
+    const tileCoord = HoverTile.get(world.entities[entityIndex]);
     if (!tileCoord) return;
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);

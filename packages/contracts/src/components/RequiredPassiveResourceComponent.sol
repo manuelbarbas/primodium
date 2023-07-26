@@ -4,7 +4,7 @@ import "solecs/Component.sol";
 
 struct RequiredPassiveResourceData {
   uint256[] ResourceIDs;
-  uint256[] RequiredAmounts;
+  uint32[] RequiredAmounts;
 }
 uint256 constant ID = uint256(keccak256("component.RequiredPassiveResource"));
 
@@ -19,7 +19,7 @@ contract RequiredPassiveResourceComponent is Component {
     values[0] = LibTypes.SchemaValue.UINT256_ARRAY;
 
     keys[1] = "RequiredAmounts";
-    values[1] = LibTypes.SchemaValue.UINT256_ARRAY;
+    values[1] = LibTypes.SchemaValue.UINT32_ARRAY;
   }
 
   function set(uint256 entity, RequiredPassiveResourceData calldata value) public virtual {
@@ -27,9 +27,9 @@ contract RequiredPassiveResourceComponent is Component {
   }
 
   function getValue(uint256 entity) public view virtual returns (RequiredPassiveResourceData memory) {
-    (uint256[] memory resourceIDs, uint256[] memory requiredAmounts) = abi.decode(
+    (uint256[] memory resourceIDs, uint32[] memory requiredAmounts) = abi.decode(
       getRawValue(entity),
-      (uint256[], uint256[])
+      (uint256[], uint32[])
     );
     return RequiredPassiveResourceData(resourceIDs, requiredAmounts);
   }

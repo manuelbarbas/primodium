@@ -5,7 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { StarterPackInitializedComponent, ID as StarterPackInitializedComponentID } from "components/StarterPackInitializedComponent.sol";
 
-import { IronResourceItemID } from "../prototypes/Keys.sol";
+import { IronResourceItemID } from "../prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 

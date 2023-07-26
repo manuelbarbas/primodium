@@ -13,7 +13,7 @@ library LibStorageUpgrade {
     IWorld world,
     uint256 playerEntity,
     uint256 buildingId,
-    uint256 newLevel
+    uint32 newLevel
   ) internal {
     StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
       world.getComponent(StorageCapacityComponentID)
@@ -28,13 +28,13 @@ library LibStorageUpgrade {
 
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdNewLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         playerEntity,
         storageResources[i]
       );
 
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         buildingIdNewLevel,
         storageResources[i]

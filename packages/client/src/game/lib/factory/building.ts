@@ -27,6 +27,7 @@ export const createBuilding = ({
   return {
     id: renderId,
     once: (gameObject) => {
+      //set sprite
       gameObject.setPosition(x, y);
 
       //set sprite

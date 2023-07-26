@@ -4,7 +4,7 @@ import "solecs/Component.sol";
 
 struct FactoryMineBuildingsData {
   uint256[] MineBuildingIDs;
-  uint256[] MineBuildingCount;
+  uint32[] MineBuildingCount;
 }
 uint256 constant ID = uint256(keccak256("component.FactoryMineBuildings"));
 
@@ -19,7 +19,7 @@ contract FactoryMineBuildingsComponent is Component {
     values[0] = LibTypes.SchemaValue.UINT256_ARRAY;
 
     keys[1] = "MineBuildingCount";
-    values[1] = LibTypes.SchemaValue.UINT256_ARRAY;
+    values[1] = LibTypes.SchemaValue.UINT32_ARRAY;
   }
 
   function set(uint256 entity, FactoryMineBuildingsData calldata value) public virtual {
@@ -27,9 +27,9 @@ contract FactoryMineBuildingsComponent is Component {
   }
 
   function getValue(uint256 entity) public view virtual returns (FactoryMineBuildingsData memory) {
-    (uint256[] memory mineBuildingIDs, uint256[] memory mineBuildingCount) = abi.decode(
+    (uint256[] memory mineBuildingIDs, uint32[] memory mineBuildingCount) = abi.decode(
       getRawValue(entity),
-      (uint256[], uint256[])
+      (uint256[], uint32[])
     );
     return FactoryMineBuildingsData(mineBuildingIDs, mineBuildingCount);
   }

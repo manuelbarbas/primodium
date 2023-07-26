@@ -1,4 +1,4 @@
-// components
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
@@ -18,7 +18,7 @@ import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesCompon
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
+import { MainBaseID } from "../prototypes.sol";
 
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -98,12 +98,12 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
-      uint256 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
+      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         playerEntity,
         storageResources[i]
       );
-      uint256 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
+      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
         storageCapacityComponent,
         buildingIdLevel,
         storageResources[i]
@@ -116,7 +116,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
         playerResourceStorageCapacity - storageCapacityIncrease
       );
 
-      uint256 playerResourceAmount = LibMath.getSafeUint256Value(itemComponent, playerResourceStorageEntity);
+      uint32 playerResourceAmount = LibMath.getSafeUint32Value(itemComponent, playerResourceStorageEntity);
       if (playerResourceAmount > playerResourceStorageCapacity - storageCapacityIncrease) {
         itemComponent.set(playerResourceStorageEntity, playerResourceStorageCapacity - storageCapacityIncrease);
       }

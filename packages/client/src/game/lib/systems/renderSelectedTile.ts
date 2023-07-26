@@ -5,17 +5,16 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  getComponentValue,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Network } from "src/network/layer";
 import { createSelectionTile } from "../factory/selectionTile";
+import { world } from "src/network/world";
+import { SelectedTile } from "src/network/components/clientComponents";
 
-export const renderSelectedTile = (scene: Scene, network: Network) => {
-  const { world, offChainComponents } = network;
+export const renderSelectedTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
 
-  const query = [Has(offChainComponents.SelectedTile)];
+  const query = [Has(SelectedTile)];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
@@ -29,10 +28,7 @@ export const renderSelectedTile = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = getComponentValue(
-      offChainComponents.SelectedTile,
-      entityIndex
-    );
+    const tileCoord = SelectedTile.get(world.entities[entityIndex]);
 
     if (!tileCoord) return;
 

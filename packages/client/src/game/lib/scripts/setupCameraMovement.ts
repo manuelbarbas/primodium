@@ -1,22 +1,17 @@
 import { KeybindActions } from "@game/constants";
-// import { Scene } from "src/engine/types";
+import { EntityID } from "@latticexyz/recs";
 import { pan } from "src/game/api/camera";
 import { Scene } from "engine/types";
 import { isDown } from "src/game/api/input";
-import { Network } from "src/network/layer";
+import { MainBase } from "src/network/components/chainComponents";
+import { Position } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { Address } from "wagmi";
-import * as components from "../../api/components";
 
 const SPEED = 750;
 const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;
 
-const setupCameraMovement = (
-  scene: Scene,
-  network: Network,
-  address: Address
-) => {
+const setupCameraMovement = (scene: Scene, player: EntityID) => {
   const { maxZoom, minZoom } = scene.config.camera;
 
   //accumalate sub-pixel movement during a gametick and add to next game tick.
@@ -49,7 +44,9 @@ const setupCameraMovement = (
     }
 
     if (isDown(KeybindActions.Base)) {
-      const mainBaseCoord = components.mainBase(network).get(address);
+      const mainBase = MainBase.get(player)?.value;
+      if (!mainBase) return;
+      const mainBaseCoord = Position.get(mainBase);
 
       if (mainBaseCoord) pan(mainBaseCoord);
     }

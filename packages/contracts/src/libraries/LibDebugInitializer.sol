@@ -24,7 +24,6 @@ import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLeve
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
@@ -32,12 +31,8 @@ import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeRes
 import { LibSetMineBuildingProductionForLevel } from "../libraries/LibSetMineBuildingProductionForLevel.sol";
 import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProductionForLevel.sol";
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
-//tiles
-import "../prototypes/Tiles.sol";
-import "../prototypes/Keys.sol";
 
-// Items
-import { ElectricityPassiveResourceID, BolutiteResourceItemID, CopperResourceItemID, IridiumResourceItemID, IronResourceItemID, KimberliteResourceItemID, LithiumResourceItemID, OsmiumResourceItemID, TitaniumResourceItemID, TungstenResourceItemID, UraniniteResourceItemID, IronPlateCraftedItemID } from "../prototypes/Keys.sol";
+import "../prototypes.sol";
 
 // Research
 import { LibDebug } from "../libraries/LibDebug.sol";
@@ -294,7 +289,7 @@ library LibDebugInitializer {
     ignoreBuildLimitComponent.set(DebugSimpleBuildingPassiveResourceRequirement);
     RequiredPassiveResourceData memory requiredPassiveResourceData = RequiredPassiveResourceData({
       ResourceIDs: new uint256[](1),
-      RequiredAmounts: new uint256[](1)
+      RequiredAmounts: new uint32[](1)
     });
     requiredPassiveResourceData.ResourceIDs[0] = ElectricityPassiveResourceID;
     requiredPassiveResourceData.RequiredAmounts[0] = 2;

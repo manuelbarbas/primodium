@@ -7,37 +7,36 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  getComponentValue,
 } from "@latticexyz/recs";
 
 import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
-import { Network } from "src/network/layer";
-import { offChainComponents, singletonIndex } from "src/network/world";
 import { createBuilding } from "../factory/building";
+import { world } from "src/network/world";
+import {
+  Position,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
+import {
+  BuildingLevel,
+  BuildingType,
+} from "src/network/components/chainComponents";
 
 const MAX_SIZE = 2 ** 15 - 1;
-export const renderBuildingSprite = (scene: Scene, network: Network) => {
-  const {
-    world,
-    components: { Position, BuildingType, BuildingLevel },
-  } = network;
-  const { SelectedBuilding } = offChainComponents;
+export const renderBuildingSprite = (scene: Scene) => {
   const { tileHeight, tileWidth } = scene.tilemap;
 
   const render = ({ entity }: { entity: EntityIndex }) => {
     const entityId = world.entities[entity];
     const renderId = `${entity}_entitySprite`;
-    const tilePosition = getComponentValue(Position, entity);
-
-    const buildingType = getComponentValue(BuildingType, entity)?.value;
-    const buildingLevel = getComponentValue(BuildingLevel, entity)?.value;
+    const tilePosition = Position.get(entityId);
+    const buildingType = BuildingType.get(entityId)?.value;
+    const buildingLevel = BuildingLevel.get(entityId)?.value;
 
     if (!buildingType || !tilePosition) return;
 
-    const selected =
-      getComponentValue(SelectedBuilding, singletonIndex)?.value === entityId;
+    const selected = SelectedBuilding.get()?.value === entityId;
 
     // don't render beyond coord map limitation
     if (

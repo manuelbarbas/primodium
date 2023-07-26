@@ -6,30 +6,32 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  getComponentValue,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import * as components from "src/game/api/components";
-import { Network } from "src/network/layer";
 import { Action } from "src/util/constants";
 import { createPath } from "../factory/path";
 import { createSelectionTile } from "../factory/selectionTile";
+import {
+  HoverTile,
+  SelectedAction,
+  StartSelectedPath,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
-export const renderPathPlacementTool = (scene: Scene, network: Network) => {
-  const { world, offChainComponents } = network;
+export const renderPathPlacementTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_pathPlacement";
 
   const query = [
-    Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedAction, {
+    Has(HoverTile),
+    HasValue(SelectedAction, {
       value: Action.Conveyor,
     }),
   ];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
-    const startPathCoord = components.startSelectedPath(network).get();
+    const startPathCoord = StartSelectedPath.get();
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
 
     // Avoid updating on optimistic overrides
@@ -40,10 +42,7 @@ export const renderPathPlacementTool = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = getComponentValue(
-      offChainComponents.HoverTile,
-      entityIndex
-    );
+    const tileCoord = HoverTile.get(world.entities[entityIndex]);
 
     if (!tileCoord) return;
 
@@ -108,7 +107,7 @@ export const renderPathPlacementTool = (scene: Scene, network: Network) => {
   defineExitSystem(world, query, (update) => {
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
     scene.objectPool.remove(objGraphicsIndex);
-    components.startSelectedPath(network).remove();
+    StartSelectedPath.remove();
 
     console.info(
       "[EXIT SYSTEM](renderPathPlacementTool) Path placement tool has been removed"

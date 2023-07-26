@@ -1,49 +1,43 @@
 import { primodium } from "@game/api";
 import { KeybindActions } from "@game/constants";
 import { isMobile } from "react-device-detect";
-import { useComponentValue } from "@latticexyz/react";
-import { EntityID, getComponentValue } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { SingletonID } from "@latticexyz/network";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useState } from "react";
-import { useMud } from "src/context/MudContext";
 import { Key } from "engine/types";
+import {
+  SelectedAction,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
 import { useAccount } from "src/hooks/useAccount";
-import { singletonIndex, contractComponents, world } from "src/network/world";
 import { calcDims, convertToCoords } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { Action, BackgroundImage, KeyImages } from "src/util/constants";
 import { hashKeyEntityAndTrim } from "src/util/encode";
+import {
+  RawBlueprint,
+  RequiredResearchComponent,
+  Research,
+} from "src/network/components/chainComponents";
 
 const HotbarItem: React.FC<{
   blockType: EntityID;
   action: Action;
   index: number;
 }> = ({ blockType, action, index }) => {
-  const network = useMud();
-  const { RequiredResearchComponent, Research } = contractComponents;
+  const selectedBuilding = SelectedBuilding.use()?.value;
   const { address } = useAccount();
-  const selectedBuilding = primodium.hooks.useSelectedBuilding();
   const [isResearched, setIsResearched] = useState(false);
 
   const keybinds = primodium.hooks.useKeybinds();
   let dimensions: { width: number; height: number } | undefined;
-  const buildingTypeEntity = world.entityToIndex.get(blockType);
 
-  const requiredResearch = useComponentValue(
-    RequiredResearchComponent,
-    buildingTypeEntity
-  )?.value as unknown as EntityID | undefined;
+  const requiredResearch = RequiredResearchComponent.use(blockType)?.value;
 
-  const entity = hashKeyEntityAndTrim(
-    requiredResearch ?? SingletonID,
-    address.toString().toLowerCase()
-  ) as EntityID;
+  const entity = hashKeyEntityAndTrim(requiredResearch ?? SingletonID, address);
 
-  const researched = getComponentValue(
-    Research,
-    world.entityToIndex.get(entity) ?? singletonIndex
-  )?.value;
+  const researched = Research.get(entity)?.value;
 
   useEffect(() => {
     if (!requiredResearch) {
@@ -76,13 +70,13 @@ const HotbarItem: React.FC<{
 
     const listener = primodium.input.addListener(keybindAction, () => {
       if (selectedBuilding === blockType) {
-        primodium.components.selectedBuilding(network).remove();
-        primodium.components.selectedAction().remove();
+        SelectedBuilding.remove();
+        SelectedAction.remove();
         return;
       }
 
-      primodium.components.selectedBuilding(network).set(blockType);
-      primodium.components.selectedAction().set(action);
+      SelectedBuilding.set({ value: blockType });
+      SelectedAction.set({ value: action });
     });
 
     return () => {
@@ -97,26 +91,23 @@ const HotbarItem: React.FC<{
     keybindAction,
   ]);
 
-  if (buildingTypeEntity) {
-    const blueprint = getComponentValue(
-      network.components.RawBlueprint,
-      buildingTypeEntity
-    )?.value;
+  if (blockType) {
+    const blueprint = RawBlueprint.get(blockType)?.value;
 
     dimensions = blueprint
-      ? calcDims(buildingTypeEntity, convertToCoords(blueprint))
+      ? calcDims(blockType, convertToCoords(blueprint))
       : undefined;
   }
 
   const handleSelectBuilding = () => {
     if (selectedBuilding === blockType) {
-      primodium.components.selectedBuilding(network).remove();
-      primodium.components.selectedAction().remove();
+      SelectedBuilding.remove();
+      SelectedAction.remove();
       return;
     }
 
-    primodium.components.selectedBuilding(network).set(blockType);
-    primodium.components.selectedAction().set(action);
+    SelectedBuilding.set({ value: blockType });
+    SelectedAction.set({ value: action });
   };
 
   if (!isResearched) return null;

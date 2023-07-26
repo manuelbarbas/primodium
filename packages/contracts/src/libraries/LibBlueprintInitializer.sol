@@ -7,9 +7,8 @@ import { LibDebug } from "libraries/LibDebug.sol";
 import { getAddressById } from "solecs/utils.sol";
 
 import { BlueprintComponent as Blueprint, ID as BlueprintID } from "components/BlueprintComponent.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
 
-import "../prototypes/Tiles.sol";
+import "../prototypes/Building.sol";
 
 library LibBlueprintInitializer {
   function init(IWorld world) internal {

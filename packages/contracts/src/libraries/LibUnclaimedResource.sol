@@ -33,13 +33,13 @@ library LibUnclaimedResource {
     } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) == block.number) {
       return;
     }
-    uint256 playerResourceProduction = LibMath.getSafeUint256Value(mineComponent, playerResourceProductionEntity);
+    uint32 playerResourceProduction = LibMath.getSafeUint32Value(mineComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;
     }
 
-    uint256 availableSpaceInStorage = LibStorage.getAvailableSpaceInStorageForResource(
+    uint32 availableSpaceInStorage = LibStorage.getAvailableSpaceInStorageForResource(
       storageComponent,
       itemComponent,
       playerEntity,
@@ -50,12 +50,9 @@ library LibUnclaimedResource {
       return;
     }
 
-    uint256 unclaimedResource = LibMath.getSafeUint256Value(
-      unclaimedResourceComponent,
-      playerResourceProductionEntity
-    ) +
+    uint32 unclaimedResource = LibMath.getSafeUint32Value(unclaimedResourceComponent, playerResourceProductionEntity) +
       (playerResourceProduction *
-        (block.number - LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity)));
+        uint32(block.number - LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity)));
 
     if (availableSpaceInStorage < unclaimedResource) {
       unclaimedResource = availableSpaceInStorage;

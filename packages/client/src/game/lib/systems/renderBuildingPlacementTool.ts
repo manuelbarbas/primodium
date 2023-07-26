@@ -6,23 +6,25 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-  getComponentValue,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import * as components from "src/game/api/components";
-import { Network } from "src/network/layer";
 import { Action } from "src/util/constants";
 import { createBuilding } from "../factory/building";
 import { createSelectionTile } from "../factory/selectionTile";
+import {
+  HoverTile,
+  SelectedAction,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
-export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
-  const { world, offChainComponents } = network;
+export const renderBuildingPlacementTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_buildingPlacement";
 
   const query = [
-    Has(offChainComponents.HoverTile),
-    HasValue(offChainComponents.SelectedAction, {
+    Has(HoverTile),
+    HasValue(SelectedAction, {
       value: Action.PlaceBuilding,
     }),
   ];
@@ -31,7 +33,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
     const entityIndex = update.entity;
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
     const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
-    const selectedBuilding = components.selectedBuilding(network).get();
+    const selectedBuilding = SelectedBuilding.get()?.value;
 
     // Avoid updating on optimistic overrides
     if (
@@ -42,11 +44,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       return;
     }
 
-    const tileCoord = getComponentValue(
-      offChainComponents.HoverTile,
-      entityIndex
-    );
-
+    const tileCoord = HoverTile.get(world.entities[entityIndex]);
     if (!tileCoord) return;
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
