@@ -3,11 +3,11 @@ pragma solidity >=0.8.0;
 
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
@@ -31,7 +31,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
   function canBuildPath(uint256 mineEntity, uint256 factoryEntity) internal returns (bool) {
     ActiveComponent activeComponent = ActiveComponent(getC(ActiveComponentID));
     LevelComponent levelComponent = LevelComponent(getC(LevelComponentID));
-    TileComponent tileComponent = TileComponent(getC(TileComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getC(FactoryMineBuildingsComponentID)
     );
@@ -42,7 +42,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     bool isMineConnected = false;
     FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(factoryEntity);
     for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
-      if (factoryMineBuildingsData.MineBuildingIDs[i] == tileComponent.getValue(mineEntity)) {
+      if (factoryMineBuildingsData.MineBuildingIDs[i] == buildingTypeComponent.getValue(mineEntity)) {
         if (factoryMineBuildingsData.MineBuildingCount[i] <= 0) return false;
         factoryMineBuildingsData.MineBuildingCount[i]--;
         factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
@@ -81,7 +81,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     );
 
     uint256 factoryLevelEntity = LibEncode.hashKeyEntity(
-      TileComponent(getC(TileComponentID)).getValue(toBuildingEntity),
+      BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(toBuildingEntity),
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(toBuildingEntity)
     );
 

@@ -1,7 +1,7 @@
 {
   "components": [
     "CounterComponent",
-    "TileComponent",
+    "BuildingTypeComponent",
     "OwnedByComponent",
     "PathComponent",
 
@@ -50,7 +50,13 @@
     },
     {
       "name": "AttackSystem",
-      "writeAccess": ["HealthComponent", "ItemComponent", "TileComponent", "OwnedByComponent", "LastClaimedAtComponent"]
+      "writeAccess": [
+        "HealthComponent",
+        "ItemComponent",
+        "BuildingTypeComponent",
+        "OwnedByComponent",
+        "LastClaimedAtComponent"
+      ]
     },
     {
       "name": "IncrementSystem",
@@ -59,7 +65,7 @@
     {
       "name": "BuildSystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
 
         "LastClaimedAtComponent",
@@ -84,7 +90,7 @@
     {
       "name": "DestroySystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
 
         "LastClaimedAtComponent",
@@ -136,7 +142,7 @@
     {
       "name": "DestroyPathSystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
         "PathComponent",
         "LastClaimedAtComponent",
@@ -162,7 +168,7 @@
     {
       "name": "ClaimFromMineSystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
         "PathComponent",
 
@@ -173,11 +179,23 @@
     },
     {
       "name": "ClaimFromFactorySystem",
-      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent", "LastClaimedAtComponent", "ItemComponent"]
+      "writeAccess": [
+        "BuildingTypeComponent",
+        "OwnedByComponent",
+        "PathComponent",
+        "LastClaimedAtComponent",
+        "ItemComponent"
+      ]
     },
     {
       "name": "CraftSystem",
-      "writeAccess": ["TileComponent", "OwnedByComponent", "PathComponent", "LastClaimedAtComponent", "ItemComponent"]
+      "writeAccess": [
+        "BuildingTypeComponent",
+        "OwnedByComponent",
+        "PathComponent",
+        "LastClaimedAtComponent",
+        "ItemComponent"
+      ]
     },
     {
       "name": "UpgradeSystem",

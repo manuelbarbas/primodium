@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
@@ -49,7 +49,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
   function handleFactoryUpgrade(uint256 playerEntity, uint256 factoryEntity) internal {
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
     //if factory was non functional nothing to do
     if (!activeComponent.has(factoryEntity)) return;
 
@@ -58,7 +58,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     );
 
     uint256 levelEntity = LibEncode.hashKeyEntity(
-      tileComponent.getValue(factoryEntity),
+      buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
 
@@ -69,7 +69,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     );
 
     FactoryProductionData memory factoryProductionDataPreUpgrade = factoryProductionComponent.getValue(
-      LibEncode.hashKeyEntity(tileComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
+      LibEncode.hashKeyEntity(buildingTypeComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
     );
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionDataPreUpgrade.ResourceID, playerEntity);

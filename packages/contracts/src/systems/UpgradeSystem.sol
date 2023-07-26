@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 
@@ -35,7 +35,7 @@ contract UpgradeSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
 
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
@@ -51,7 +51,7 @@ contract UpgradeSystem is PrimodiumSystem {
       ownedByComponent.getValue(buildingEntity) == playerEntity,
       "[UpgradeSystem] Cannot upgrade a building that is not owned by you"
     );
-    uint256 buildingType = tileComponent.getValue(buildingEntity);
+    uint256 buildingType = buildingTypeComponent.getValue(buildingEntity);
     require(
       maxLevelComponent.has(buildingType) &&
         (levelComponent.getValue(buildingEntity) < maxLevelComponent.getValue(buildingType)),
@@ -88,7 +88,7 @@ contract UpgradeSystem is PrimodiumSystem {
     LibStorageUpgrade.checkAndUpdatePlayerStorageAfterUpgrade(
       world,
       playerEntity,
-      tileComponent.getValue(buildingEntity),
+      buildingTypeComponent.getValue(buildingEntity),
       levelComponent.getValue(buildingEntity)
     );
 

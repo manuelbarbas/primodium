@@ -153,7 +153,7 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
 
 # Building Positions
 
-`TileComponent` stores a packed representation of `int32` by `int32` coordinates as the key with `buildingId` as value. Keys are generated with `encodeCoordEntity(Coord memory coord, string memory key)`. The string passed into `encodeCoordEntity` is padding that ensures that there are no collisions. Implemented in #25.
+`BuildingTypeComponent` stores a packed representation of `int32` by `int32` coordinates as the key with `buildingId` as value. Keys are generated with `encodeCoordEntity(Coord memory coord, string memory key)`. The string passed into `encodeCoordEntity` is padding that ensures that there are no collisions. Implemented in #25.
 
 ## Core Components
 
@@ -162,7 +162,7 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
 ```
   CounterComponent
   GameConfigComponent (unused)
-  TileComponent
+  BuildingTypeComponent
   OwnedByComponent
   PathComponent
   LastClaimedAtComponent

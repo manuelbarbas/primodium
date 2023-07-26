@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -121,7 +121,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 buildingType = TileComponent(getAddressById(components, TileComponentID)).getValue(buildingEntity);
+    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(buildingEntity);
 
     checkAndUpdatePlayerStorageAfterDestroy(
       playerEntity,

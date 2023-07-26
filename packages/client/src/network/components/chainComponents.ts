@@ -19,7 +19,7 @@ export const BuildingType = newComponent(
   { value: Type.Entity },
   {
     id: "BuildingType",
-    metadata: { contractId: `${commonIdPrefix}Tile` },
+    metadata: { contractId: `${commonIdPrefix}BuildingType` },
     overridable: true,
   }
 );

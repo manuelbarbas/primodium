@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
@@ -63,7 +63,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     );
 
     uint256 levelEntity = LibEncode.hashKeyEntity(
-      TileComponent(getAddressById(components, TileComponentID)).getValue(factoryEntity),
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
     //first update unclaimed resources up to this point
@@ -80,7 +80,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
     uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);
-    uint256 tile = TileComponent(getAddressById(components, TileComponentID)).getValue(mineEntity);
+    uint256 tile = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(mineEntity);
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
@@ -96,7 +96,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     if (!pathComponent.has(mineEntity)) return;
     //check to see if its connected to MainBase
     if (
-      TileComponent(getAddressById(components, TileComponentID)).getValue(pathComponent.getValue(mineEntity)) ==
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(pathComponent.getValue(mineEntity)) ==
       MainBaseID
     ) {
       uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
@@ -121,7 +121,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
 
     uint32 newLevel = LevelComponent(getAddressById(components, LevelComponentID)).getValue(entity);
 
-    uint256 buildingId = TileComponent(getAddressById(components, TileComponentID)).getValue(entity);
+    uint256 buildingId = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(entity);
 
     handleMineUpgrade(playerEntity, entity);
 

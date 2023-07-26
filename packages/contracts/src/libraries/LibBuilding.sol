@@ -6,7 +6,7 @@ import { IWorld } from "solecs/System.sol";
 
 //components
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -47,9 +47,7 @@ library LibBuilding {
   }
 
   function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint32) {
-    MainBaseComponent mainBaseComponent = MainBaseComponent(
-      getAddressById(world.components(), MainBaseComponentID)
-    );
+    MainBaseComponent mainBaseComponent = MainBaseComponent(getAddressById(world.components(), MainBaseComponentID));
 
     if (!mainBaseComponent.has(playerEntity)) return 0;
     uint256 mainBase = mainBaseComponent.getValue(playerEntity);

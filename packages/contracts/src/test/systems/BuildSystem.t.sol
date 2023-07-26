@@ -18,13 +18,13 @@ import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "../../components/BlueprintComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "../../components/MaxBuildingsComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
@@ -48,7 +48,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   OwnedByComponent public ownedByComponent;
   ChildrenComponent public childrenComponent;
-  TileComponent public tileComponent;
+  BuildingTypeComponent public buildingTypeComponent;
 
   function setUp() public override {
     super.setUp();
@@ -60,7 +60,7 @@ contract BuildSystemTest is PrimodiumTest {
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     childrenComponent = ChildrenComponent(component(ChildrenComponentID));
-    tileComponent = TileComponent(component(TileComponentID));
+    buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
 
     // init other
   }

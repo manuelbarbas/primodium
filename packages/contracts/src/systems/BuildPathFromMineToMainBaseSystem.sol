@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
@@ -36,7 +36,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
 
     LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
 
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(fromBuildingEntity);
+    uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(fromBuildingEntity);
     uint256 levelEntity = LibEncode.hashKeyEntity(
       buildingId,
       LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)

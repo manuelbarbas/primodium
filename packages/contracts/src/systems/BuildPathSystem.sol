@@ -6,7 +6,7 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
@@ -67,9 +67,9 @@ contract BuildPathSystem is PrimodiumSystem {
       !PathComponent(getC(PathComponentID)).has(startBuilding),
       "[BuildPathSystem] Cannot start more than one path from the same building"
     );
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    uint256 startCoordBuildingId = tileComponent.getValue(startBuilding);
-    uint256 endCoordBuildingId = tileComponent.getValue(endBuilding);
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    uint256 startCoordBuildingId = buildingTypeComponent.getValue(startBuilding);
+    uint256 endCoordBuildingId = buildingTypeComponent.getValue(endBuilding);
     uint256 startCoordLevelEntity = LibEncode.hashKeyEntity(
       startCoordBuildingId,
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(startBuilding)

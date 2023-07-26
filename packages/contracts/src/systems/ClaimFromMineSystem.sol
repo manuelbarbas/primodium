@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
@@ -39,7 +39,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
     // check if main base
     uint256 entity = getBuildingFromCoord(coord);
     require(
-      TileComponent(getAddressById(components, TileComponentID)).has(entity),
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).has(entity),
       "[ClaimFromMineSystem] Cannot claim from mines on an empty coordinate"
     );
 

@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 // components
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
@@ -57,7 +57,7 @@ contract DestroySystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
-    TileComponent tileComponent = TileComponent(getC(TileComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     ChildrenComponent childrenComponent = ChildrenComponent(getC(ChildrenComponentID));
@@ -67,7 +67,7 @@ contract DestroySystem is PrimodiumSystem {
 
     uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
-    uint256 buildingType = tileComponent.getValue(buildingEntity);
+    uint256 buildingType = buildingTypeComponent.getValue(buildingEntity);
     require(
       checkPassiveResourceRequirementsMetAfterDestroy(buildingType),
       "[DestroySystem] can not destory passive resource production building if requirements are not met, destroy passive resource consumers first or increase passive resource production"
@@ -114,7 +114,7 @@ contract DestroySystem is PrimodiumSystem {
     IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);
 
     levelComponent.remove(buildingEntity);
-    tileComponent.remove(buildingEntity);
+    buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
     LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
     childrenComponent.remove(buildingEntity);

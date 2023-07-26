@@ -2,11 +2,11 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
@@ -34,7 +34,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
   function handleOnDestroyPathFromMineToMainBase(
     MineComponent mineComponent,
-    TileComponent tileComponent,
+    BuildingTypeComponent buildingTypeComponent,
     uint256 playerEntity,
     uint256 mineEntity
   ) internal {
@@ -50,14 +50,14 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
       playerResourceEntity,
       mineComponent.getValue(playerResourceEntity) -
         mineComponent.getValue(
-          LibEncode.hashKeyEntity(tileComponent.getValue(mineEntity), levelComponent.getValue(mineEntity))
+          LibEncode.hashKeyEntity(buildingTypeComponent.getValue(mineEntity), levelComponent.getValue(mineEntity))
         )
     );
   }
 
   function handleOnDestroyPathFromMineToFactory(
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
-    TileComponent tileComponent,
+    BuildingTypeComponent buildingTypeComponent,
     LevelComponent levelComponent,
     uint256 playerEntity,
     uint256 mineEntity,
@@ -71,7 +71,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     bool isFunctional = activeComponent.has(factoryEntity);
     uint256 factoryLevelEntity = LibEncode.hashKeyEntity(
-      tileComponent.getValue(factoryEntity),
+      buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
 
@@ -85,7 +85,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     activeComponent.remove(factoryEntity);
     FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(factoryEntity);
     for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
-      if (factoryMineBuildingsData.MineBuildingIDs[i] == tileComponent.getValue(mineEntity)) {
+      if (factoryMineBuildingsData.MineBuildingIDs[i] == buildingTypeComponent.getValue(mineEntity)) {
         factoryMineBuildingsData.MineBuildingCount[i]++;
         factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
         break;
@@ -100,7 +100,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   function handleOnDestroyPathFromFactoryToMainBase(
     MineComponent mineComponent,
     LevelComponent levelComponent,
-    TileComponent tileComponent,
+    BuildingTypeComponent buildingTypeComponent,
     uint256 playerEntity,
     uint256 factoryEntity
   ) internal {
@@ -112,7 +112,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     // first update unclaimed resources so the unclaimed resource value up to this point is calculated
     uint256 factoryLevelEntity = LibEncode.hashKeyEntity(
-      tileComponent.getValue(factoryEntity),
+      buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
     FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
@@ -140,27 +140,27 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     (address playerAddress, uint256 startCoordEntity) = abi.decode(args, (address, uint256));
     uint256 endCoordEntity = PathComponent(getAddressById(components, PathComponentID)).getValue(startCoordEntity);
 
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
 
     uint256 startCoordLevelEntity = LibEncode.hashKeyEntity(
-      tileComponent.getValue(startCoordEntity),
+      buildingTypeComponent.getValue(startCoordEntity),
       levelComponent.getValue(startCoordEntity)
     );
     if (mineComponent.has(startCoordLevelEntity)) {
-      if (tileComponent.getValue(endCoordEntity) == MainBaseID) {
+      if (buildingTypeComponent.getValue(endCoordEntity) == MainBaseID) {
         handleOnDestroyPathFromMineToMainBase(
           mineComponent,
-          tileComponent,
+          buildingTypeComponent,
           addressToEntity(playerAddress),
           startCoordEntity
         );
       } else {
         handleOnDestroyPathFromMineToFactory(
           FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)),
-          tileComponent,
+          buildingTypeComponent,
           levelComponent,
           addressToEntity(playerAddress),
           startCoordEntity,
@@ -175,7 +175,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
       handleOnDestroyPathFromFactoryToMainBase(
         mineComponent,
         levelComponent,
-        tileComponent,
+        buildingTypeComponent,
         addressToEntity(playerAddress),
         startCoordEntity
       );

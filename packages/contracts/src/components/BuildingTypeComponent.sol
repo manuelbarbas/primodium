@@ -4,6 +4,6 @@ import "std-contracts/components/Uint256Component.sol";
 
 uint256 constant ID = uint256(keccak256("component.Tile"));
 
-contract TileComponent is Uint256Component {
+contract BuildingTypeComponent is Uint256Component {
   constructor(address world) Uint256Component(world, ID) {}
 }

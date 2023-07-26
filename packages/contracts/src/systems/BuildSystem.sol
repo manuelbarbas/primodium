@@ -8,7 +8,7 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
 
 // components
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
@@ -88,7 +88,7 @@ contract BuildSystem is PrimodiumSystem {
 
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
-    TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
+    BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);

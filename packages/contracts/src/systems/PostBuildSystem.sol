@@ -4,7 +4,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 import { ID as BuildSystemID } from "systems/BuildSystem.sol";
 // components
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
@@ -59,7 +59,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getC(FactoryMineBuildingsComponentID)
     );
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(factoryEntity);
+    uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(factoryEntity);
     uint256 levelEntity = LibEncode.hashKeyEntity(buildingId, 1);
     if (!factoryMineBuildingsComponent.has(levelEntity)) {
       return;
@@ -76,7 +76,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 buildingType = TileComponent(getAddressById(components, TileComponentID)).getValue(buildingEntity);
+    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(buildingEntity);
 
     LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world, playerEntity, buildingType);
     LibPassiveResource.updatePassiveResourceProduction(world, playerEntity, buildingType);

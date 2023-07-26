@@ -14,7 +14,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
@@ -35,7 +35,7 @@ contract DestroySystemTest is PrimodiumTest {
   ChildrenComponent public childrenComponent;
   LevelComponent public levelComponent;
   MaxBuildingsComponent public maxBuildingsComponent;
-  TileComponent public tileComponent;
+  BuildingTypeComponent public buildingTypeComponent;
   MainBaseComponent public mainBaseComponent;
 
   function setUp() public override {
@@ -51,7 +51,7 @@ contract DestroySystemTest is PrimodiumTest {
     blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
     childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     levelComponent = LevelComponent(component(LevelComponentID));
-    tileComponent = TileComponent(component(TileComponentID));
+    buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
     mainBaseComponent = MainBaseComponent(component(MainBaseComponentID));
     maxBuildingsComponent = MaxBuildingsComponent(component(MaxBuildingsComponentID));
 
@@ -78,11 +78,11 @@ contract DestroySystemTest is PrimodiumTest {
 
     for (uint256 i = 0; i < children.length; i++) {
       assertFalse(ownedByComponent.has(children[i]));
-      assertFalse(tileComponent.has(children[i]));
+      assertFalse(buildingTypeComponent.has(children[i]));
     }
 
     assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");
-    assertFalse(tileComponent.has(buildingEntity), "has tile");
+    assertFalse(buildingTypeComponent.has(buildingEntity), "has tile");
     assertFalse(levelComponent.has(buildingEntity), "has level");
     assertEq(maxBuildingsComponent.getValue(playerEntity), maxBuildings - 1, "wrong limit");
   }

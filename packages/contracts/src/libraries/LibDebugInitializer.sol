@@ -10,7 +10,7 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
@@ -190,7 +190,7 @@ library LibDebugInitializer {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       getAddressById(components, IgnoreBuildLimitComponentID)
     );
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
     RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
@@ -217,7 +217,7 @@ library LibDebugInitializer {
 
     // DebugSimpleBuildingTileReqID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingTileReqID);
-    tileComponent.set(DebugSimpleBuildingTileReqID, IronID);
+    buildingTypeComponent.set(DebugSimpleBuildingTileReqID, IronID);
 
     //DebugSimpleBuildingWithUpgradeResourceReqsID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID);
@@ -298,7 +298,7 @@ library LibDebugInitializer {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       getAddressById(world.components(), IgnoreBuildLimitComponentID)
     );
-    TileComponent tileComponent = TileComponent(getAddressById(world.components(), TileComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(world.components(), BuildingTypeComponentID));
     MineComponent mineComponent = MineComponent(getAddressById(world.components(), MineComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(
@@ -309,7 +309,7 @@ library LibDebugInitializer {
     );
     // DebugIronMineID
     ignoreBuildLimitComponent.set(DebugIronMineID);
-    tileComponent.set(DebugIronMineID, IronID);
+    buildingTypeComponent.set(DebugIronMineID, IronID);
     maxLevelComponent.set(DebugIronMineID, 3);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugIronMineID, 1, 1);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugIronMineID, 2, 2);
@@ -339,7 +339,7 @@ library LibDebugInitializer {
 
     //DebugIronMineWithBuildLimitID
     maxLevelComponent.set(DebugIronMineWithBuildLimitID, 3);
-    tileComponent.set(DebugIronMineWithBuildLimitID, IronID);
+    buildingTypeComponent.set(DebugIronMineWithBuildLimitID, IronID);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
       mineComponent,
       DebugIronMineWithBuildLimitID,
@@ -361,7 +361,7 @@ library LibDebugInitializer {
 
     //DebugCopperMineID
     maxLevelComponent.set(DebugCopperMineID, 3);
-    tileComponent.set(DebugCopperMineID, CopperID);
+    buildingTypeComponent.set(DebugCopperMineID, CopperID);
     ignoreBuildLimitComponent.set(DebugCopperMineID);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 1, 3);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugCopperMineID, 2, 5);
@@ -375,7 +375,7 @@ library LibDebugInitializer {
     );
 
     maxLevelComponent.set(DebugLithiumMineID, 3);
-    tileComponent.set(DebugLithiumMineID, LithiumID);
+    buildingTypeComponent.set(DebugLithiumMineID, LithiumID);
     ignoreBuildLimitComponent.set(DebugLithiumMineID);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugLithiumMineID, 1, 3);
     LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(mineComponent, DebugLithiumMineID, 2, 5);
