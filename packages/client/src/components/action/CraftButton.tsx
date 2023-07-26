@@ -1,10 +1,9 @@
 import { Coord } from "@latticexyz/utils";
 
 import { useMud } from "src/hooks/useMud";
-import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import Spinner from "../shared/Spinner";
-import { useNotificationStore } from "../../store/NotificationStore";
+import { craft } from "src/util/web3";
 
 export default function CraftButton({ coords }: { coords: Coord }) {
   const network = useMud();

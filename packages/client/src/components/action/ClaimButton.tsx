@@ -1,11 +1,9 @@
 import { Coord } from "@latticexyz/utils";
-
-import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
-import Spinner from "../shared/Spinner";
-import { useNotificationStore } from "../../store/NotificationStore";
 import { GameButton } from "../shared/GameButton";
-import { useMud } from "src/hooks/useMud";
+import { claimFromMine } from "src/util/web3";
+import { useMud } from "src/hooks";
+import Spinner from "../shared/Spinner";
 
 export default function ClaimButton({
   id,

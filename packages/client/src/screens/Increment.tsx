@@ -1,6 +1,5 @@
 import { SingletonID } from "@latticexyz/network";
-import { execute } from "../network/actions";
-import { Counter } from "src/network/components/chainComponents";
+import { Counter, IsDebug } from "src/network/components/chainComponents";
 import { DoubleCounter } from "src/network/components/clientComponents";
 import { Fragment, useMemo, useState } from "react";
 import {
@@ -10,6 +9,7 @@ import {
 } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useMud } from "src/hooks";
+import { increment } from "src/util/web3";
 
 export default function Increment() {
   const network = useMud();

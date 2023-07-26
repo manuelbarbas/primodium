@@ -24,7 +24,6 @@ import {
 } from "src/network/components/chainComponents";
 import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
-import { researchBuilding } from "src/util/web3";
 import { useMud } from "src/hooks";
 import Spinner from "src/components/shared/Spinner";
 

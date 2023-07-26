@@ -3,7 +3,6 @@ import { Coord } from "@latticexyz/utils";
 import { hashKeyEntityAndTrim } from "src/util/encode";
 import { useAccount } from "../../hooks/useAccount";
 import { useMud } from "src/hooks/useMud";
-import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
 import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../shared/Spinner";
