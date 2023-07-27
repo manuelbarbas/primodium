@@ -24,9 +24,7 @@ import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
-import { MainBaseID, IronID, CopperID, LithiumID } from "../../prototypes.sol";
-
-import { DebugSimpleBuildingWithUpgradeResearchReqsID, DebugSimpleBuildingResearchReqsID, DebugSimpleTechnologyNoReqsID, DebugSimpleTechnologyResourceReqsID, DebugSimpleTechnologyResearchReqsID, DebugSimpleTechnologyMainBaseLevelReqsID } from "../../libraries/LibDebugInitializer.sol";
+import "../../prototypes.sol";
 
 contract ResearchSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}

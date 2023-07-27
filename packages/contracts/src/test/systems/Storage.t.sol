@@ -22,7 +22,6 @@ import { MineProductionComponent, ID as MineProductionComponentID } from "../../
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 
 import "../../prototypes.sol";
-import { DebugCopperMineID, DebugIronMineID, DebugIronPlateFactoryID, DebugStorageBuildingID } from "../../libraries/LibDebugInitializer.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibStorage } from "../../libraries/LibStorage.sol";

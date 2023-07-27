@@ -20,11 +20,7 @@ import { LevelComponent, ID as BuildingComponentID } from "../../components/Leve
 import { MineProductionComponent, ID as MineProductionComponentID } from "../../components/MineProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 
-import { MainBaseID } from "../../prototypes.sol";
-import { DebugCopperMineID, DebugIronMineID, DebugIronPlateFactoryID } from "../../libraries/LibDebugInitializer.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
-import { IronPlateCraftedItemID } from "../../prototypes.sol";
-import { BuildingKey } from "../../prototypes.sol";
+import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";

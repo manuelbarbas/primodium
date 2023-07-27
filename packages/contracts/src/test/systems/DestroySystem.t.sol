@@ -6,7 +6,6 @@ import { addressToEntity } from "solecs/utils.sol";
 
 // systems
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 
 // components
@@ -18,6 +17,7 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../comp
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
+import { LibBlueprint } from "libraries/LibBlueprint.sol";
 import { Coord } from "../../types.sol";
 import { MainBaseID } from "../../prototypes.sol";
 
@@ -26,7 +26,6 @@ contract DestroySystemTest is PrimodiumTest {
 
   uint256 public playerEntity;
 
-  BlueprintSystem public blueprintSystem;
   BuildSystem public buildSystem;
   DestroySystem public destroySystem;
 
@@ -42,13 +41,12 @@ contract DestroySystemTest is PrimodiumTest {
     super.setUp();
 
     // init systems
-    blueprintSystem = BlueprintSystem(system(BlueprintSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
     destroySystem = DestroySystem(system(DestroySystemID));
 
     // init components
-    ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
+    ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     levelComponent = LevelComponent(component(LevelComponentID));
     buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
@@ -65,8 +63,8 @@ contract DestroySystemTest is PrimodiumTest {
 
   function buildDummy() public returns (uint256) {
     vm.startPrank(alice);
-    Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(dummyBuilding, blueprint);
+    int32[] memory blueprint = LibBlueprint.get3x3Blueprint();
+    blueprintComponent.set(dummyBuilding, blueprint);
     bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, coord1);
     return abi.decode(rawBuilding, (uint256));
   }

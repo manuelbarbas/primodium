@@ -13,8 +13,7 @@ import { LevelComponent, ID as BuildingComponentID } from "../../components/Leve
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { MainBaseID } from "../../prototypes.sol";
-import { DebugSimpleBuildingNoReqsID, DebugIronMineNoTileReqID } from "../../libraries/LibDebugInitializer.sol";
+import "../../prototypes.sol";
 import { Coord } from "../../types.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";

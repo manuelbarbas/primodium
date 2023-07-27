@@ -9,7 +9,6 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 
 import { ChildrenComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
 
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
 import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "../../systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
@@ -32,10 +31,10 @@ import { ElectricityPassiveResourceID } from "../../prototypes.sol";
 
 //debug buildings
 import "../../prototypes.sol";
-import "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
+import { LibBlueprint } from "../../libraries/LibBlueprint.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
@@ -43,7 +42,6 @@ import { LibTerrain } from "../../libraries/LibTerrain.sol";
 contract BuildSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
-  BlueprintSystem public blueprintSystem;
   BuildSystem public buildSystem;
 
   OwnedByComponent public ownedByComponent;
@@ -54,7 +52,6 @@ contract BuildSystemTest is PrimodiumTest {
     super.setUp();
 
     // init systems
-    blueprintSystem = BlueprintSystem(system(BlueprintSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
 
     // init components
@@ -227,9 +224,9 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildLargeBuilding() public prank(deployer) {
-    BlueprintComponent(component(BlueprintComponentID)).remove(MainBaseID);
-    Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(MainBaseID, blueprint);
+    BlueprintComponent blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
+    int32[] memory blueprint = LibBlueprint.get3x3Blueprint();
+    blueprintComponent.set(MainBaseID, blueprint);
     bytes memory rawBuildingEntity = buildSystem.executeTyped(MainBaseID, coord);
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
     Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
@@ -239,7 +236,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     for (uint i = 0; i < children.length; i++) {
       position = LibEncode.decodeCoordEntity(children[i]);
-      assertCoordEq(position, blueprint[i]);
+      assertCoordEq(position, Coord(blueprint[i * 2], blueprint[i * 2 + 1]));
       assertEq(buildingEntity, ownedByComponent.getValue(children[i]));
     }
   }

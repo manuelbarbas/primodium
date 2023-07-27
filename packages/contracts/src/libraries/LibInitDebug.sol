@@ -17,7 +17,7 @@ import { HasResearchedComponent, ID as HasResearchedComponentID } from "componen
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
-import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
@@ -28,7 +28,6 @@ import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugCo
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
-import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeResearchRequirements.sol";
 import { LibSetMineBuildingProductionForLevel } from "../libraries/LibSetMineBuildingProductionForLevel.sol";
 import { LibSetProductionForLevel } from "../libraries/LibSetProductionForLevel.sol";
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
@@ -37,95 +36,60 @@ import "../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../types.sol";
 
 // Research
+import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBlueprint } from "../libraries/LibBlueprint.sol";
+
+bool constant DEBUG = true;
 
 // the purpose of this lib is to define and initialize debug buildings that can be used for testing
 // so additions and removal of actual game design elements don't effect the already written tests
 library LibDebugInitializer {
   function init(IWorld world) internal {
     //should only work if debug is enabled
-    IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(SingletonID);
+    if (DEBUG) IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(SingletonID);
 
-    BlueprintComponent blueprintComponent = BlueprintComponent(
-      getAddressById(world.components(), BlueprintComponentID)
-    );
-    int32[] memory coords = new int32[](2);
-    coords[0] = 0;
-    coords[1] = 0;
-
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingNoReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingResourceReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingResearchReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingBuildLimitReq, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingTileReqID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingWithUpgradeResourceReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingWithUpgradeResearchReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugIronMineID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugCopperMineID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugIronMineWithBuildLimitID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugIronMineNoTileReqID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugIronPlateFactoryNoMineReqID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugIronPlateFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSuperIronMineID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSuperIronPlateFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyNoReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyResourceReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyResearchReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleTechnologyMainBaseLevelReqsID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugStorageBuildingID, coords);
-
-    LibBlueprint.createBlueprint(blueprintComponent, DebugPassiveProductionBuilding, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSimpleBuildingPassiveResourceRequirement, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugLithiumMineID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugAlloyFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugLithiumCopperOxideFactoryID, coords);
-    LibBlueprint.createBlueprint(blueprintComponent, DebugSolarPanelID, coords);
-
-    IUint256Component components = world.components();
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
-      getAddressById(components, RequiredResearchComponentID)
-    );
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
-    );
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
-      getAddressById(components, IgnoreBuildLimitComponentID)
-    );
-    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
-    //initialize simple buildings
     initializeSimpleBuildings(world);
 
-    //initialize Mines
     initializeMines(world);
 
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      getAddressById(components, MaxResourceStorageComponentID)
-    );
-    //initialize factories
     initializeFactories(world);
 
-    LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
-    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
-      getAddressById(components, HasResearchedComponentID)
-    );
-    //initialize technologies
-    initializeTechnologies(
-      hasResearchedComponent,
-      itemComponent,
-      levelComponent,
-      requiredResearch,
-      requiredResourcesComponent
-    );
+    initializeTechnologies(world);
 
-    initializeStorageBuildings(
-      ignoreBuildLimitComponent,
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      maxLevelComponent
-    );
+    initializeStorageBuildings(world);
+  }
+
+  function initBlueprints(IWorld world) internal {
+    BlueprintComponent blueprintComponent = BlueprintComponent(world.getComponent(BlueprintComponentID));
+    int32[] memory coords = LibBlueprint.get1x1Blueprint();
+    blueprintComponent.set(DebugSimpleBuildingNoReqsID, coords);
+    blueprintComponent.set(DebugSimpleBuildingResourceReqsID, coords);
+    blueprintComponent.set(DebugSimpleBuildingResearchReqsID, coords);
+    blueprintComponent.set(DebugSimpleBuildingBuildLimitReq, coords);
+    blueprintComponent.set(DebugSimpleBuildingTileReqID, coords);
+    blueprintComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID, coords);
+    blueprintComponent.set(DebugSimpleBuildingWithUpgradeResearchReqsID, coords);
+    blueprintComponent.set(DebugIronMineID, coords);
+    blueprintComponent.set(DebugCopperMineID, coords);
+    blueprintComponent.set(DebugIronMineWithBuildLimitID, coords);
+    blueprintComponent.set(DebugIronMineNoTileReqID, coords);
+    blueprintComponent.set(DebugIronPlateFactoryNoMineReqID, coords);
+    blueprintComponent.set(DebugIronPlateFactoryID, coords);
+    blueprintComponent.set(DebugSuperIronMineID, coords);
+    blueprintComponent.set(DebugSuperIronPlateFactoryID, coords);
+    blueprintComponent.set(DebugSimpleTechnologyNoReqsID, coords);
+    blueprintComponent.set(DebugSimpleTechnologyResourceReqsID, coords);
+    blueprintComponent.set(DebugSimpleTechnologyResearchReqsID, coords);
+    blueprintComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, coords);
+    blueprintComponent.set(DebugStorageBuildingID, coords);
+
+    blueprintComponent.set(DebugPassiveProductionBuilding, coords);
+    blueprintComponent.set(DebugSimpleBuildingPassiveResourceRequirement, coords);
+    blueprintComponent.set(DebugLithiumMineID, coords);
+    blueprintComponent.set(DebugAlloyFactoryID, coords);
+    blueprintComponent.set(DebugLithiumCopperOxideFactoryID, coords);
+    blueprintComponent.set(DebugSolarPanelID, coords);
   }
 
   function initializeSimpleBuildings(IWorld world) internal {
@@ -554,13 +518,14 @@ library LibDebugInitializer {
     passiveProductionComponent.set(DebugSolarPanelID, ResourceValue(ElectricityPassiveResourceID, 10));
   }
 
-  function initializeTechnologies(
-    HasResearchedComponent hasResearchedComponent,
-    ItemComponent itemComponent,
-    LevelComponent levelComponent,
-    RequiredResearchComponent requiredResearchComponent,
-    RequiredResourcesComponent requiredResourcesComponent
-  ) internal {
+  function initializeTechnologies(IWorld world) internal {
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      world.getComponent(HasResearchedComponentID)
+    );
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
+      world.getComponent(RequiredResearchComponentID)
+    );
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     // DebugSimpleTechnologyNoReqsID
     hasResearchedComponent.set(DebugSimpleTechnologyNoReqsID);
 
@@ -569,47 +534,41 @@ library LibDebugInitializer {
     hasResearchedComponent.set(DebugSimpleTechnologyResearchReqsID);
     //DebugSimpleTechnologyResourceReqsID
     hasResearchedComponent.set(DebugSimpleTechnologyResourceReqsID);
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      requiredResourcesComponent,
-      itemComponent,
-      DebugSimpleTechnologyResourceReqsID,
-      IronResourceItemID,
-      100
-    );
+    /****************** Required Resources *******************/
+    uint256 techLevel1Entity = LibEncode.hashKeyEntity(DebugSimpleTechnologyResourceReqsID, 1);
+
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+
+    LibSetBuildingReqs.setResourceReqs(world, techLevel1Entity, resourceValues);
 
     //DebugSimpleTechnologyMainBaseLevelReqsID
     hasResearchedComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     levelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
   }
 
-  function initializeStorageBuildings(
-    IgnoreBuildLimitComponent ignoreBuildLimitComponent,
-    MaxResourceStorageComponent maxResourceStorageComponent,
-    MaxStorageComponent maxStorageComponent,
-    MaxLevelComponent maxLevelComponent
-  ) internal {
+  function initializeStorageBuildings(IWorld world) internal {
+    IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
+      world.getComponent(IgnoreBuildLimitComponentID)
+    );
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(world.getComponent(MaxLevelComponentID));
     //DebugStorageBuildingID
     ignoreBuildLimitComponent.set(DebugStorageBuildingID);
     maxLevelComponent.set(DebugStorageBuildingID, 2);
     //DebugStorageBuildingID level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 1);
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      buildingIdLevel,
-      IronResourceItemID,
-      200
-    );
+
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 200 });
+
+    LibSetBuildingReqs.setStorageUpgrades(world, buildingIdLevel, resourceValues);
     //DebugStorageBuildingID level 2
+
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 200 });
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 200 });
+
     buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 2);
-    LibSetRequiredResources.set2RequiredResourcesForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      buildingIdLevel,
-      IronResourceItemID,
-      200,
-      CopperResourceItemID,
-      200
-    );
+    LibSetBuildingReqs.setStorageUpgrades(world, buildingIdLevel, resourceValues);
   }
 }
