@@ -15,6 +15,8 @@ import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponen
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
@@ -244,11 +246,31 @@ library LibInitBuildingPrototypes {
     requiredResources[1] = resourceValues;
 
     /****************** Required Mines *******************/
-    uint256[] memory mineIds = new uint256[](2);
+    ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    // LEVEL 1
+    uint256[] memory mineIds = new uint256[](1);
+    uint32[] memory mineCounts = new uint32[](1);
+    mineIds[0] = IronPlateFactoryID;
+    mineCounts[0] = 1;
+    requiredMines[0] = ResourceValues(mineIds, mineCounts);
+    // LEVEL 2
+    mineIds[0] = IronMineID;
+    mineCounts[0] = 1;
+    requiredMines[1] = ResourceValues(mineIds, mineCounts);
+
     /****************** Factory Production *******************/
+    ResourceValue[] memory production = new ResourceValue[](maxLevel);
+    // LEVEL 1
+
+    uint256 resourceIds = IronPlateCraftedItemID;
+    uint32 rates = 2;
+    production[0] = ResourceValue(resourceIds, rates);
+    // LEVEL 2
+    resourceIds = IronPlateCraftedItemID;
+    rates = 4;
+    production[1] = ResourceValue(resourceIds, rates);
 
     /* ***********************Set Values ************************* */
-
     MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
     RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, IronResourceItemID);
     BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
@@ -262,6 +284,14 @@ library LibInitBuildingPrototypes {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      FactoryMineBuildingsComponent(world.getComponent(FactoryMineBuildingsComponentID)).set(
+        buildingLevelEntity,
+        requiredMines[i]
+      );
+      FactoryProductionComponent(world.getComponent(FactoryProductionComponentID)).set(
+        buildingLevelEntity,
+        production[i]
+      );
     }
   }
 

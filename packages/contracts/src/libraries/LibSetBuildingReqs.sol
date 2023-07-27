@@ -36,19 +36,4 @@ library LibSetBuildingReqs {
     }
     OwnedResourcesComponent(world.getComponent(RequiredResourcesComponentID)).set(buildingType, resources);
   }
-
-  function setFactoryMineReqs(
-    IWorld world,
-    uint256 factoryBuildingId,
-    uint32 level,
-    uint256[] memory mineIds,
-    uint32[] memory mineCounts
-  ) internal {
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
-    ResourceValues memory factoryMines = ResourceValues(mineIds, mineCounts);
-    FactoryMineBuildingsComponent(world.getComponent(FactoryMineBuildingsComponentID)).set(
-      buildingIdLevel,
-      factoryMines
-    );
-  }
 }
