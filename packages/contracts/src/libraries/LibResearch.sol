@@ -18,12 +18,12 @@ library LibResearch {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(world.components(), RequiredResearchComponentID)
     );
-    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
-      getAddressById(world.components(), HasResearchedComponentID)
-    );
 
     if (!requiredResearchComponent.has(entity)) return true;
 
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(world.components(), HasResearchedComponentID)
+    );
     return
       hasResearchedComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
   }

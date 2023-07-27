@@ -9,6 +9,7 @@ import { RequiredTileComponent, ID as RequiredTileComponentID } from "components
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
+import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID, ResourceValue } from "components/PassiveProductionComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
@@ -18,14 +19,14 @@ import { MinesComponent, ID as MinesComponentID } from "components/MinesComponen
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
+import { LibBlueprint } from "../libraries/LibBlueprint.sol";
 
 import "../prototypes.sol";
-import { LibBlueprint } from "../libraries/LibBlueprint.sol";
 import { ResourceValue, ResourceValues } from "../types.sol";
 
 uint32 constant NONE = 0;
 
-library LibInitBuildingPrototypes {
+library LibInitBuildings {
   function initIronMine(IWorld world) internal {
     uint256 entity = IronMineID;
     uint32 maxLevel = 3;
@@ -454,6 +455,7 @@ library LibInitBuildingPrototypes {
     uint256 entity = MainBaseID;
     uint32 maxLevel = 6;
 
+    IgnoreBuildLimitComponent(world.getComponent(IgnoreBuildLimitComponentID)).set(MainBaseID);
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
 

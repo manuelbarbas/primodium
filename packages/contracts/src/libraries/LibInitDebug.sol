@@ -2,52 +2,37 @@
 pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-import { getAddressById } from "solecs/utils.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
-import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
-import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
-import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
-import { LibSetMineBuildingProductionForLevel } from "../libraries/LibSetMineBuildingProductionForLevel.sol";
-import { LibSetProductionForLevel } from "../libraries/LibSetProductionForLevel.sol";
-import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
 
 import "../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../types.sol";
+import { DEBUG } from "../constants.sol";
 
 // Research
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
-import { LibDebug } from "../libraries/LibDebug.sol";
 import { LibBlueprint } from "../libraries/LibBlueprint.sol";
-
-bool constant DEBUG = true;
 
 // the purpose of this lib is to define and initialize debug buildings that can be used for testing
 // so additions and removal of actual game design elements don't effect the already written tests
-library LibDebugInitializer {
+library LibInitDebug {
   function init(IWorld world) internal {
     //should only work if debug is enabled
-    if (DEBUG) IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(SingletonID);
+    if (DEBUG) IsDebugComponent(world.getComponent(IsDebugComponentID)).set(SingletonID);
 
     initBlueprints(world);
     initializeSimpleBuildings(world);
@@ -94,20 +79,17 @@ library LibDebugInitializer {
   }
 
   function initializeSimpleBuildings(IWorld world) internal {
-    IUint256Component components = world.components();
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(components, RequiredResearchComponentID)
+      world.getComponent(RequiredResearchComponentID)
     );
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
-      getAddressById(components, IgnoreBuildLimitComponentID)
+      world.getComponent(IgnoreBuildLimitComponentID)
     );
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
-      getAddressById(components, BuildingTypeComponentID)
-    );
-    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(world.getComponent(BuildingTypeComponentID));
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(world.getComponent(MaxLevelComponentID));
 
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
-      getAddressById(components, RequiredPassiveComponentID)
+      world.getComponent(RequiredPassiveComponentID)
     );
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
     // DebugSimpleBuildingNoReqsID
@@ -176,15 +158,13 @@ library LibDebugInitializer {
 
   function initializeMines(IWorld world) internal {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
-      getAddressById(world.components(), IgnoreBuildLimitComponentID)
+      world.getComponent(IgnoreBuildLimitComponentID)
     );
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
-      getAddressById(world.components(), BuildingTypeComponentID)
-    );
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(world.getComponent(BuildingTypeComponentID));
     MineProductionComponent mineProductionComponent = MineProductionComponent(
-      getAddressById(world.components(), MineProductionComponentID)
+      world.getComponent(MineProductionComponentID)
     );
-    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(world.getComponent(MaxLevelComponentID));
 
     // DebugIronMineID
     ignoreBuildLimitComponent.set(DebugIronMineID);
@@ -259,18 +239,16 @@ library LibDebugInitializer {
   }
 
   function initializeFactories(IWorld world) internal {
-    IUint256Component components = world.components();
-
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
-      getAddressById(components, IgnoreBuildLimitComponentID)
+      world.getComponent(IgnoreBuildLimitComponentID)
     );
 
-    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
-    MinesComponent minesComponent = MinesComponent(getAddressById(components, MinesComponentID));
-    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
+    MaxLevelComponent maxLevelComponent = MaxLevelComponent(world.getComponent(MaxLevelComponentID));
+    MinesComponent minesComponent = MinesComponent(world.getComponent(MinesComponentID));
+    ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
 
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
-      getAddressById(components, PassiveProductionComponentID)
+      world.getComponent(PassiveProductionComponentID)
     );
     //DebugIronPlateFactoryNoMineReqID
     uint256 entity = DebugIronPlateFactoryNoMineReqID;
