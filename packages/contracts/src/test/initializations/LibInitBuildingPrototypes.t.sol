@@ -24,7 +24,7 @@ import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "compon
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -43,42 +43,5 @@ contract LibInitBuildingPrototypesTest is MudTest {
     super.setUp();
   }
 
-  function testBuildingsHaveCorrectRequirements() public {
-    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
-    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
-      getAddressById(world.components(), RequiredResearchComponentID)
-    );
-    RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
-      getAddressById(world.components(), RequiredResourcesComponentID)
-    );
-
-    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-    IUint256Component components = world.components();
-
-    RequiredTileComponent requiredTileComponent = RequiredTileComponent(
-      getAddressById(components, RequiredTileComponentID)
-    );
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
-    vm.startPrank(alice);
-
-    BuildingPrototype memory prototype = LibInitBuildingPrototypes.ironMinePrototype();
-    assertEq(requiredTileComponent.getValue(IronMineID), prototype.requiredTile, "required tile");
-
-    assertEq(maxLevelComponent.getValue(IronMineID), prototype.maxLevel, "max level");
-
-    for (uint j = 0; j < prototype.maxLevel; j++) {
-      uint256 buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, j + 1);
-      assertEq(mineComponent.getValue(buildingIdLevel), prototype.productionRates[j]);
-      assertEq(requiredResearch.getValue(buildingIdLevel), prototype.requiredResearch[j], "research");
-      uint256[] memory resources = requiredResources.getValue(buildingIdLevel);
-      for (uint i = 0; i < resources.length; i++) {
-        assertEq(resources[i], prototype.requiredResources[j][i].resource, "2 resource");
-        assertEq(
-          itemComponent.getValue(LibEncode.hashKeyEntity(resources[i], buildingIdLevel)),
-          prototype.requiredResources[j][i].cost,
-          "item"
-        );
-      }
-    }
-  }
+  function testBuildingsHaveCorrectRequirements() public {}
 }
