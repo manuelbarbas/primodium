@@ -7,7 +7,7 @@ import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComp
 
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -34,7 +34,7 @@ library LibNewMine {
     uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
-      if (MineComponent(world.getComponent(MineComponentID)).has(playerResourceEntity))
+      if (MineProductionComponent(world.getComponent(MineProductionComponentID)).has(playerResourceEntity))
         LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, storageResourceIds[i]);
       uint32 unclaimedResourceAmount = LibMath.getSafeUint32Value(unclaimedResourceComponent, playerResourceEntity);
       if (unclaimedResourceAmount > 0)

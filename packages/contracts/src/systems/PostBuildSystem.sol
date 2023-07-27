@@ -11,7 +11,7 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
@@ -58,16 +58,14 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
   }
 
   function setupFactory(uint256 factoryEntity) internal {
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getC(FactoryMineBuildingsComponentID)
-    );
+    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
     uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(factoryEntity);
     uint256 levelEntity = LibEncode.hashKeyEntity(buildingId, 1);
-    if (!factoryMineBuildingsComponent.has(levelEntity)) {
+    if (!minesComponent.has(levelEntity)) {
       return;
     }
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(levelEntity);
-    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
+    MinesData memory minesData = minesComponent.getValue(levelEntity);
+    minesComponent.set(factoryEntity, minesData);
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -83,7 +81,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     );
 
     LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world, playerEntity, buildingType);
-    LibPassiveResource.updatePassiveResourceProduction(world, playerEntity, buildingType);
+    LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType);
     //set MainBase id for player address for easy lookup
 
     // update building count if the built building counts towards the build limit

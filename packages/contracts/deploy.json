@@ -21,15 +21,15 @@
     "BlueprintComponent",
     "MaxStorageComponent",
     "MaxResourceStorageComponent",
-    "MineComponent",
+    "MineProductionComponent",
     "UnclaimedResourceComponent",
     "ActiveComponent",
-    "FactoryMineBuildingsComponent",
+    "MinesComponent",
     "ProductionComponent",
     "MaxLevelComponent",
     "RequiredTileComponent",
-    "RequiredPassiveResourceComponent",
-    "PassiveResourceProductionComponent",
+    "RequiredPassiveComponent",
+    "PassiveProductionComponent",
     "IsDebugComponent"
   ],
   "initializers": [
@@ -82,7 +82,7 @@
         "ItemComponent",
         "MaxStorageComponent",
         "MaxResourceStorageComponent",
-        "FactoryMineBuildingsComponent",
+        "MinesComponent",
         "LastClaimedAtComponent",
         "MaxBuildingsComponent"
       ]
@@ -118,7 +118,7 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
+        "MineProductionComponent",
         "ActiveComponent",
         "ProductionComponent"
       ]
@@ -129,15 +129,20 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
+        "MineProductionComponent",
         "ActiveComponent",
-        "FactoryMineBuildingsComponent",
+        "MinesComponent",
         "ProductionComponent"
       ]
     },
     {
       "name": "BuildPathFromMineToMainBaseSystem",
-      "writeAccess": ["PathComponent", "LastClaimedAtComponent", "UnclaimedResourceComponent", "MineComponent"]
+      "writeAccess": [
+        "PathComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineProductionComponent"
+      ]
     },
     {
       "name": "DestroyPathSystem",
@@ -147,9 +152,9 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
+        "MineProductionComponent",
         "ActiveComponent",
-        "FactoryMineBuildingsComponent",
+        "MinesComponent",
         "ProductionComponent"
       ]
     },
@@ -159,10 +164,10 @@
         "MaxStorageComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
+        "MineProductionComponent",
         "ActiveComponent",
         "ProductionComponent",
-        "FactoryMineBuildingsComponent"
+        "MinesComponent"
       ]
     },
     {
@@ -203,14 +208,19 @@
     },
     {
       "name": "PostUpgradeMineSystem",
-      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "MineComponent", "ActiveComponent"]
+      "writeAccess": [
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineProductionComponent",
+        "ActiveComponent"
+      ]
     },
     {
       "name": "PostUpgradeFactorySystem",
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
+        "MineProductionComponent",
         "ActiveComponent",
         "ProductionComponent"
       ]

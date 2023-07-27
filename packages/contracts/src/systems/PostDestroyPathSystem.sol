@@ -4,11 +4,11 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
@@ -33,7 +33,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   }
 
   function handleOnDestroyPathFromMineToMainBase(
-    MineComponent mineComponent,
+    MineProductionComponent mineProductionComponent,
     BuildingTypeComponent buildingTypeComponent,
     uint256 playerEntity,
     uint256 mineEntity
@@ -48,15 +48,15 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
-      mineComponent.getValue(playerResourceEntity) -
-        mineComponent.getValue(
+      mineProductionComponent.getValue(playerResourceEntity) -
+        mineProductionComponent.getValue(
           LibEncode.hashKeyEntity(buildingTypeComponent.getValue(mineEntity), levelComponent.getValue(mineEntity))
         )
     );
   }
 
   function handleOnDestroyPathFromMineToFactory(
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    MinesComponent minesComponent,
     BuildingTypeComponent buildingTypeComponent,
     LevelComponent levelComponent,
     uint256 playerEntity,
@@ -81,11 +81,11 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     //when a path from mine to factory is destroyed, factory becomes non functional
     //and required connected mine building count is increased
     activeComponent.remove(factoryEntity);
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(factoryEntity);
-    for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
-      if (factoryMineBuildingsData.MineBuildingIDs[i] == buildingTypeComponent.getValue(mineEntity)) {
-        factoryMineBuildingsData.MineBuildingCount[i]++;
-        factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
+    MinesData memory minesData = minesComponent.getValue(factoryEntity);
+    for (uint256 i = 0; i < minesData.MineBuildingCount.length; i++) {
+      if (minesData.MineBuildingIDs[i] == buildingTypeComponent.getValue(mineEntity)) {
+        minesData.MineBuildingCount[i]++;
+        minesComponent.set(factoryEntity, minesData);
         break;
       }
     }
@@ -96,7 +96,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   }
 
   function handleOnDestroyPathFromFactoryToMainBase(
-    MineComponent mineComponent,
+    MineProductionComponent mineProductionComponent,
     LevelComponent levelComponent,
     BuildingTypeComponent buildingTypeComponent,
     uint256 playerEntity,
@@ -119,12 +119,13 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     updateUnclaimedForResource(playerEntity, productionData.ResourceID);
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.ResourceID, playerEntity);
-    if (LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) <= 0) revert("this should not be possible");
+    if (LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) <= 0)
+      revert("this should not be possible");
     //update resource production
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
-      mineComponent.getValue(playerResourceEntity) - productionData.ResourceProductionRate
+      mineProductionComponent.getValue(playerResourceEntity) - productionData.ResourceProductionRate
     );
   }
 
@@ -142,23 +143,25 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     );
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+    MineProductionComponent mineProductionComponent = MineProductionComponent(
+      getAddressById(components, MineProductionComponentID)
+    );
 
     uint256 startCoordLevelEntity = LibEncode.hashKeyEntity(
       buildingTypeComponent.getValue(startCoordEntity),
       levelComponent.getValue(startCoordEntity)
     );
-    if (mineComponent.has(startCoordLevelEntity)) {
+    if (mineProductionComponent.has(startCoordLevelEntity)) {
       if (buildingTypeComponent.getValue(endCoordEntity) == MainBaseID) {
         handleOnDestroyPathFromMineToMainBase(
-          mineComponent,
+          mineProductionComponent,
           buildingTypeComponent,
           addressToEntity(playerAddress),
           startCoordEntity
         );
       } else {
         handleOnDestroyPathFromMineToFactory(
-          FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)),
+          MinesComponent(getAddressById(components, MinesComponentID)),
           buildingTypeComponent,
           levelComponent,
           addressToEntity(playerAddress),
@@ -166,13 +169,9 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
           endCoordEntity
         );
       }
-    } else if (
-      FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)).has(
-        startCoordLevelEntity
-      )
-    ) {
+    } else if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
       handleOnDestroyPathFromFactoryToMainBase(
-        mineComponent,
+        mineProductionComponent,
         levelComponent,
         buildingTypeComponent,
         addressToEntity(playerAddress),

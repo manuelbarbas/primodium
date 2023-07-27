@@ -38,15 +38,15 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
+import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
@@ -200,8 +200,8 @@ library LibDeploy {
       comp = new MaxResourceStorageComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying MineComponent");
-      comp = new MineComponent(address(result.world));
+      console.log("Deploying MineProductionComponent");
+      comp = new MineProductionComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying UnclaimedResourceComponent");
@@ -212,8 +212,8 @@ library LibDeploy {
       comp = new ActiveComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying FactoryMineBuildingsComponent");
-      comp = new FactoryMineBuildingsComponent(address(result.world));
+      console.log("Deploying MinesComponent");
+      comp = new MinesComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying ProductionComponent");
@@ -228,12 +228,12 @@ library LibDeploy {
       comp = new RequiredTileComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying RequiredPassiveResourceComponent");
-      comp = new RequiredPassiveResourceComponent(address(result.world));
+      console.log("Deploying RequiredPassiveComponent");
+      comp = new RequiredPassiveComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying PassiveResourceProductionComponent");
-      comp = new PassiveResourceProductionComponent(address(result.world));
+      console.log("Deploying PassiveProductionComponent");
+      comp = new PassiveProductionComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying IsDebugComponent");
@@ -323,7 +323,7 @@ library LibDeploy {
     authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, MaxStorageComponentID, address(system));
     authorizeWriter(components, MaxResourceStorageComponentID, address(system));
-    authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
+    authorizeWriter(components, MinesComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, MaxBuildingsComponentID, address(system));
     console.log(address(system));
@@ -363,7 +363,7 @@ library LibDeploy {
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
@@ -374,9 +374,9 @@ library LibDeploy {
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
-    authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
+    authorizeWriter(components, MinesComponentID, address(system));
     authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
 
@@ -386,7 +386,7 @@ library LibDeploy {
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DestroyPathSystem");
@@ -397,9 +397,9 @@ library LibDeploy {
     authorizeWriter(components, PathComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
-    authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
+    authorizeWriter(components, MinesComponentID, address(system));
     authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
 
@@ -409,10 +409,10 @@ library LibDeploy {
     authorizeWriter(components, MaxStorageComponentID, address(system));
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, ProductionComponentID, address(system));
-    authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
+    authorizeWriter(components, MinesComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying ClaimFromMineSystem");
@@ -463,7 +463,7 @@ library LibDeploy {
     world.registerSystem(address(system), PostUpgradeMineSystemID);
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     console.log(address(system));
 
@@ -472,7 +472,7 @@ library LibDeploy {
     world.registerSystem(address(system), PostUpgradeFactorySystemID);
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
@@ -553,15 +553,15 @@ library LibDeploy {
     authorizeWriter(components, BlueprintComponentID, address(system));
     authorizeWriter(components, MaxStorageComponentID, address(system));
     authorizeWriter(components, MaxResourceStorageComponentID, address(system));
-    authorizeWriter(components, MineComponentID, address(system));
+    authorizeWriter(components, MineProductionComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
-    authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
+    authorizeWriter(components, MinesComponentID, address(system));
     authorizeWriter(components, ProductionComponentID, address(system));
     authorizeWriter(components, MaxLevelComponentID, address(system));
     authorizeWriter(components, RequiredTileComponentID, address(system));
-    authorizeWriter(components, RequiredPassiveResourceComponentID, address(system));
-    authorizeWriter(components, PassiveResourceProductionComponentID, address(system));
+    authorizeWriter(components, RequiredPassiveComponentID, address(system));
+    authorizeWriter(components, PassiveProductionComponentID, address(system));
     authorizeWriter(components, IsDebugComponentID, address(system));
     console.log(address(system));
   }

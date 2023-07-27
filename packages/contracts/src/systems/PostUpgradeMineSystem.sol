@@ -5,8 +5,8 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
@@ -48,12 +48,10 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
       }
     }
 
-    FactoryMineBuildingsData memory factoryMineBuildingsData = FactoryMineBuildingsComponent(
-      getAddressById(components, FactoryMineBuildingsComponentID)
-    ).getValue(factoryEntity);
+    MinesData memory minesData = MinesComponent(getAddressById(components, MinesComponentID)).getValue(factoryEntity);
     //then check if there are enough connected mines
-    for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
-      if (factoryMineBuildingsData.MineBuildingCount[i] > 0) return;
+    for (uint256 i = 0; i < minesData.MineBuildingCount.length; i++) {
+      if (minesData.MineBuildingCount[i] > 0) return;
     }
 
     //if all conditions are met make factory functional
@@ -76,15 +74,17 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+    MineProductionComponent mineProductionComponent = MineProductionComponent(
+      getAddressById(components, MineProductionComponentID)
+    );
     uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);
     uint256 tile = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(mineEntity);
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
-      mineComponent.getValue(playerResourceEntity) +
-        mineComponent.getValue(LibEncode.hashKeyEntity(tile, level)) -
-        mineComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1))
+      mineProductionComponent.getValue(playerResourceEntity) +
+        mineProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level)) -
+        mineProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1))
     );
   }
 

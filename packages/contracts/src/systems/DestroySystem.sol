@@ -18,8 +18,8 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, RequiredPassiveData } from "components/RequiredPassiveComponent.sol";
+import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
@@ -40,17 +40,17 @@ contract DestroySystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function checkPassiveResourceRequirementsMetAfterDestroy(uint256 blockType) internal view returns (bool) {
-    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
-      getAddressById(components, PassiveResourceProductionComponentID)
+    PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
+      getAddressById(components, PassiveProductionComponentID)
     );
-    if (passiveResourceProductionComponent.has(blockType)) {
+    if (passiveProductionComponent.has(blockType)) {
       return
         LibStorage.getAvailableSpaceInStorageForResource(
           MaxStorageComponent(getAddressById(components, MaxStorageComponentID)),
           ItemComponent(getAddressById(components, ItemComponentID)),
           addressToEntity(msg.sender),
-          passiveResourceProductionComponent.getValue(blockType).ResourceID
-        ) >= passiveResourceProductionComponent.getValue(blockType).ResourceProduction;
+          passiveProductionComponent.getValue(blockType).ResourceID
+        ) >= passiveProductionComponent.getValue(blockType).ResourceProduction;
     }
     return true;
   }

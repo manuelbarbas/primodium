@@ -11,7 +11,7 @@ import { LibTerrain } from "libraries/LibTerrain.sol";
 library LibPath {
   function checkCanBuildPath(
     Uint256Component buildingTypeComponent,
-    Uint256Component mineComponent,
+    Uint256Component mineProductionComponent,
     Uint256Component storageComponent,
     Uint256Component levelComponent,
     uint256 fromEntity,
@@ -27,7 +27,7 @@ library LibPath {
       return false;
     }
     return
-      mineComponent.has(
+      mineProductionComponent.has(
         LibEncode.hashKeyEntity(buildingTypeComponent.getValue(fromEntity), levelComponent.getValue(fromEntity))
       );
   }

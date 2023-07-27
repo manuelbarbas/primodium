@@ -67,7 +67,7 @@ The following components are used to store _metadata_ that is read before a buil
 
 # Resource Production
 
-`MineComponent` stores both metadata and player data.
+`MineProductionComponent` stores both metadata and player data.
 
 - _Metadata_: with `hashKeyEntity(buildingId, level)` as key, stores the production rate of that resource for that level of that building per blockchain block. In `LibBuildingDesignInitializer`, the production rate is set for each level of each building that produces resources.
 - _Player Data_: with `hashKeyEntity(resourceId, playerEntity)` as key, stores the production of that resource per blockchain block.
@@ -85,7 +85,7 @@ Player resource production is updated when:
 
 Factory production is similar to how mining resource production is calculated. However, to produce resources factories require other mines to be connected to them. For a factory to be functional, the level of the mine connected should not be lower then the level of the factory itself.
 
-`FactoryMineBuildingsComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two arrays:
+`MinesComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two arrays:
 
 - `MineBuildingId` : a list of mine building ids that has to be connected to the factory for it to be functional
 - `MineBuildingCount`: a list of how many of each mine building that has to be connected to the factory
@@ -97,7 +97,7 @@ Factory production is similar to how mining resource production is calculated. H
 
 `ActiveComponent`: for an existing factory entity, declares if that factory is functional. This value is updated when a player action either results in the factory becoming functional or results in it becoming non-functional.
 
-`LibFactoryDesignInitializer` writes the design data for factories for each of their levels on `FactoryMineBuildingsComponent` and `ProductionComponent`.
+`LibFactoryDesignInitializer` writes the design data for factories for each of their levels on `MinesComponent` and `ProductionComponent`.
 
 `LibFactory` contains the core logic functions for two main purposes:
 
@@ -141,15 +141,15 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
 - Solar Panel increases Electricity Capacity by 4 value
 - Alloy Factory requires and occupies 2 Electricity
 
-`RequiredPassiveResourceComponent`: for `LibHash(BuildingType, Level)` indicates what passive resources it requires and how much.
-`PassiveResourceProductionComponent`: for `LibHash(BuildingType, Level)` indicates what passive resource and how much of it the building produces.
+`RequiredPassiveComponent`: for `LibHash(BuildingType, Level)` indicates what passive resources it requires and how much.
+`PassiveProductionComponent`: for `LibHash(BuildingType, Level)` indicates what passive resource and how much of it the building produces.
 
 - The total amount of `PassiveResourceCapacity` the player has is stored in the `MaxStorageComponent` for `LibHash(ResourceID, PlayerEntity)`
 - The total amount of used up `PassiveResourceCapacity` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
 
 - Passive resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.
 - The player not build a building that requires passive resources if they the total occuppied capacity for that resource will excceed the current capacity after build is complete.
-- The Player can not destroy a `BuildingType` that has `PassiveResourceProductionComponent` if the total capacity of that resource will be less than the total occuped capacity of that resource.
+- The Player can not destroy a `BuildingType` that has `PassiveProductionComponent` if the total capacity of that resource will be less than the total occuped capacity of that resource.
 
 # Building Positions
 

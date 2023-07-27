@@ -7,8 +7,8 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
@@ -88,7 +88,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       LibResourceProduction.updateResourceProduction(
         world,
         playerResourceEntity,
-        MineComponent(getAddressById(components, MineComponentID)).getValue(playerResourceEntity) +
+        MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) +
           (productionComponent.getValue(levelEntity).ResourceProductionRate -
             productionDataPreUpgrade.ResourceProductionRate)
       );
@@ -98,7 +98,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       LibResourceProduction.updateResourceProduction(
         world,
         playerResourceEntity,
-        MineComponent(getAddressById(components, MineComponentID)).getValue(playerResourceEntity) -
+        MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) -
           productionDataPreUpgrade.ResourceProductionRate
       );
     }

@@ -77,7 +77,7 @@ contract BuildSystemTest is PrimodiumTest {
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
@@ -97,7 +97,7 @@ contract BuildSystemTest is PrimodiumTest {
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
@@ -121,7 +121,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
@@ -136,12 +136,12 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testDestroyPassiveResourceProduction() public {
+  function testDestroyPassiveProduction() public {
     vm.startPrank(alice);
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
 
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
@@ -161,7 +161,7 @@ contract BuildSystemTest is PrimodiumTest {
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
@@ -185,12 +185,12 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testFailDestroyPassiveResourceProductionWhenRequirementsWouldFail() public {
+  function testFailDestroyPassiveProductionWhenRequirementsWouldFail() public {
     vm.startPrank(alice);
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
       maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
