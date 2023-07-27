@@ -21,7 +21,6 @@ import { LevelComponent, ID as BuildingComponentID } from "../../components/Leve
 import { IronResourceItemID, CopperResourceItemID, LithiumResourceItemID, IronPlateCraftedItemID } from "../../prototypes.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
-import { LibHealth } from "../../libraries/LibHealth.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 

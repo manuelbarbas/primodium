@@ -7,7 +7,6 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
@@ -20,7 +19,6 @@ import { BuildingKey } from "../prototypes.sol";
 import { Coord } from "../types.sol";
 
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -48,12 +46,6 @@ contract ClaimFromMineSystem is PrimodiumSystem {
     require(
       ownedEntityAtStartCoord == playerEntity,
       "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
-    );
-
-    // Check that health is not zero
-    require(
-      LibHealth.checkAlive(HealthComponent(getAddressById(components, HealthComponentID)), entity),
-      "[ClaimFromMineSystem] Cannot claim from mines on a tile with zero health"
     );
 
     LibNewMine.claimResourcesFromMines(world, playerEntity);

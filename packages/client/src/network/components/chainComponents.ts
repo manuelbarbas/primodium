@@ -57,10 +57,6 @@ export const LoadingState = newComponent(
     metadata: { contractId: `${commonIdPrefix}LoadingState` },
   }
 );
-export const Health = newNumberComponent(world, {
-  id: "Health",
-  metadata: { contractId: `${commonIdPrefix}Health` },
-});
 
 export const Item = newNumberComponent(world, {
   id: "Item",
@@ -175,7 +171,6 @@ export default {
   Path,
   OwnedBy,
   LastClaimedAt,
-  Health,
   IsDebug,
   Item,
   HasResearched,

@@ -6,7 +6,6 @@
     "OwnedByComponent",
     "PathComponent",
     "LastClaimedAtComponent",
-    "HealthComponent",
     "ItemComponent",
     "HasResearchedComponent",
     "MainBaseComponent",
@@ -43,13 +42,7 @@
     },
     {
       "name": "AttackSystem",
-      "writeAccess": [
-        "HealthComponent",
-        "ItemComponent",
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["ItemComponent", "BuildingTypeComponent", "OwnedByComponent", "LastClaimedAtComponent"]
     },
     {
       "name": "IncrementSystem",
@@ -87,7 +80,6 @@
         "OwnedByComponent",
 
         "LastClaimedAtComponent",
-        "HealthComponent",
         "PathComponent",
 
         "MainBaseComponent",

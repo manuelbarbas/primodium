@@ -166,7 +166,6 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
   OwnedByComponent
   PathComponent
   LastClaimedAtComponent
-  HealthComponent
 ```
 
 # TODO: which systems call systems?
