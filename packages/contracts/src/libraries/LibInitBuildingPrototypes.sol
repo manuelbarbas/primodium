@@ -100,12 +100,12 @@ library LibInitBuildingPrototypes {
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1500 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1500 });
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
     requiredResources[2] = resourceValues;
 
     /* ***********************Set Values ************************* */
     MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, IronResourceItemID);
+    RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, CopperResourceItemID);
     BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
@@ -126,19 +126,16 @@ library LibInitBuildingPrototypes {
 
     /****************** Required Research *******************/
     uint256[] memory requiredResearch = new uint256[](maxLevel);
-
     requiredResearch[0] = LithiumMineResearchID;
     requiredResearch[1] = LithiumMine2ResearchID;
+
     /****************** Production Rates *******************/
-
     uint32[] memory productionRates = new uint32[](maxLevel);
-
     productionRates[0] = 2;
     productionRates[1] = 3;
 
-    ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-
     /****************** Required Resources *******************/
+    ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
     // LEVEL 1
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1500 });
@@ -149,7 +146,7 @@ library LibInitBuildingPrototypes {
 
     /* ***********************Set Values ************************* */
     MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, IronResourceItemID);
+    RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, LithiumResourceItemID);
     BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
@@ -177,8 +174,8 @@ library LibInitBuildingPrototypes {
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-    // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    // LEVEL 1
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 500 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
@@ -203,9 +200,11 @@ library LibInitBuildingPrototypes {
     storageUpgrades[1] = resourceValues;
 
     // LEVEL 3
+    resourceValues = new ResourceValue[](4);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 3000 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 3000 });
+    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 1000 });
     storageUpgrades[2] = resourceValues;
 
     /* ***********************Set Values ************************* */
@@ -230,9 +229,8 @@ library LibInitBuildingPrototypes {
 
     /****************** Required Research *******************/
     uint256[] memory requiredResearch = new uint256[](maxLevel);
-    // no research required for level 1
     requiredResearch[0] = IronPlateFactoryResearchID;
-    requiredResearch[2] = IronPlateFactory2ResearchID;
+    requiredResearch[1] = IronPlateFactory2ResearchID;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -250,7 +248,7 @@ library LibInitBuildingPrototypes {
     // LEVEL 1
     uint256[] memory mineIds = new uint256[](1);
     uint32[] memory mineCounts = new uint32[](1);
-    mineIds[0] = IronPlateFactoryID;
+    mineIds[0] = IronMineID;
     mineCounts[0] = 1;
     requiredMines[0] = ResourceValues(mineIds, mineCounts);
     // LEVEL 2
@@ -300,20 +298,19 @@ library LibInitBuildingPrototypes {
 
     /****************** Required Research *******************/
     uint256[] memory requiredResearch = new uint256[](maxLevel);
+    //LEVEL 1
     requiredResearch[0] = AlloyFactoryResearchID;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-
-    // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](2);
+    // LEVEL 1
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 800 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1500 });
     requiredResources[0] = resourceValues;
 
     /****************** Required Passive Resources *******************/
     ResourceValues[] memory requiredPassiveResources = new ResourceValues[](maxLevel);
-
     // LEVEL 1
     uint256[] memory resourceIds = new uint256[](1);
     uint32[] memory resourceAmounts = new uint32[](1);
@@ -324,20 +321,18 @@ library LibInitBuildingPrototypes {
     /****************** Required Mines *******************/
     ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
     // LEVEL 1
-    uint256[] memory mineIds = new uint256[](2);
-    uint32[] memory mineCounts = new uint32[](2);
-    mineIds[0] = IronMineID;
-    mineCounts[0] = 1;
-    mineIds[1] = CopperMineID;
-    mineCounts[0] = 1;
-    requiredMines[0] = ResourceValues(mineIds, mineCounts);
+    resourceIds = new uint256[](2);
+    resourceAmounts = new uint32[](2);
+    resourceIds[0] = IronMineID;
+    resourceAmounts[0] = 1;
+    resourceIds[1] = CopperMineID;
+    resourceAmounts[1] = 1;
+    requiredMines[0] = ResourceValues(resourceIds, resourceAmounts);
 
     /****************** Factory Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
     // LEVEL 1
-    uint256 resourceId = AlloyCraftedItemID;
-    uint32 rate = 1;
-    production[0] = ResourceValue(resourceId, rate);
+    production[0] = ResourceValue(AlloyCraftedItemID, 1);
 
     /* ***********************Set Values ************************* */
     MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
@@ -374,34 +369,32 @@ library LibInitBuildingPrototypes {
 
     /****************** Required Research *******************/
     uint256[] memory requiredResearch = new uint256[](maxLevel);
+    // LEVEL 1
     requiredResearch[0] = LithiumCopperOxideFactoryResearchID;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-
-    // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](2);
+    // LEVEL 1
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 800 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1500 });
     requiredResources[0] = resourceValues;
 
     /****************** Required Mines *******************/
     ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    uint256[] memory resourceIds = new uint256[](2);
+    uint32[] memory amounts = new uint32[](2);
     // LEVEL 1
-    uint256[] memory mineIds = new uint256[](2);
-    uint32[] memory mineCounts = new uint32[](2);
-    mineIds[0] = LithiumMineID;
-    mineCounts[0] = 1;
-    mineIds[1] = CopperMineID;
-    mineCounts[0] = 1;
-    requiredMines[0] = ResourceValues(mineIds, mineCounts);
+    resourceIds[0] = LithiumMineID;
+    amounts[0] = 1;
+    resourceIds[1] = CopperMineID;
+    amounts[1] = 1;
+    requiredMines[0] = ResourceValues(resourceIds, amounts);
 
-    /****************** Factory Production *******************/
+    /****************** Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
     // LEVEL 1
-    uint256 resourceId = LithiumCopperOxideCraftedItemID;
-    uint32 rate = 1;
-    production[0] = ResourceValue(resourceId, rate);
+    production[0] = ResourceValue(LithiumCopperOxideCraftedItemID, 1);
 
     /* ***********************Set Values ************************* */
     MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
@@ -433,18 +426,19 @@ library LibInitBuildingPrototypes {
 
     /****************** Required Research *******************/
     uint256[] memory requiredResearch = new uint256[](maxLevel);
+    // LEVEL 1
     requiredResearch[0] = SolarPanelResearchID;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-
-    // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    // LEVEL 1
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
     requiredResources[0] = resourceValues;
 
     /****************** Passive Production*******************/
     ResourceValue[] memory passiveProduction = new ResourceValue[](1);
+    // LEVEL 1
     passiveProduction[0] = ResourceValue({ resource: ElectricityPassiveResourceID, value: 4 });
 
     /* ***********************Set Values ************************* */
@@ -539,7 +533,7 @@ library LibInitBuildingPrototypes {
     storageUpgrades[5] = resourceValues;
     /* ***********************Set Values ************************* */
     MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get3x3Blueprint());
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
