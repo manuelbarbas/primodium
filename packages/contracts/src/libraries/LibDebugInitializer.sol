@@ -16,7 +16,7 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
@@ -30,7 +30,7 @@ import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.so
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
 import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeResearchRequirements.sol";
 import { LibSetMineBuildingProductionForLevel } from "../libraries/LibSetMineBuildingProductionForLevel.sol";
-import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProductionForLevel.sol";
+import { LibSetProductionForLevel } from "../libraries/LibSetProductionForLevel.sol";
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
 
 import "../prototypes.sol";
@@ -402,9 +402,7 @@ library LibDebugInitializer {
     );
 
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(components, FactoryProductionComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
@@ -428,24 +426,24 @@ library LibDebugInitializer {
       IronPlateCraftedItemID,
       1000
     );
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       DebugIronPlateFactoryNoMineReqID,
       1,
       IronPlateCraftedItemID,
       2
     );
 
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       DebugIronPlateFactoryNoMineReqID,
       2,
       IronPlateCraftedItemID,
       4
     );
 
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       DebugIronPlateFactoryNoMineReqID,
       3,
       IronPlateCraftedItemID,
@@ -470,8 +468,8 @@ library LibDebugInitializer {
       DebugIronMineID,
       1
     );
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       DebugIronPlateFactoryID,
       1,
       IronPlateCraftedItemID,
@@ -485,8 +483,8 @@ library LibDebugInitializer {
       DebugIronMineID,
       1
     );
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       DebugIronPlateFactoryID,
       2,
       IronPlateCraftedItemID,
@@ -501,8 +499,8 @@ library LibDebugInitializer {
       DebugIronMineID,
       2
     );
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       DebugIronPlateFactoryID,
       3,
       IronPlateCraftedItemID,
@@ -535,13 +533,7 @@ library LibDebugInitializer {
       DebugCopperMineID,
       1
     );
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
-      DebugAlloyFactoryID,
-      1,
-      AlloyCraftedItemID,
-      1
-    );
+    LibSetProductionForLevel.setProductionForLevel(productionComponent, DebugAlloyFactoryID, 1, AlloyCraftedItemID, 1);
 
     //LithiumCopperOxideFactoryID
     LibSetRequiredResources.set1RequiredResourceForEntity(
@@ -562,8 +554,8 @@ library LibDebugInitializer {
       DebugCopperMineID,
       1
     );
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       LithiumCopperOxideFactoryID,
       1,
       LithiumCopperOxideCraftedItemID,

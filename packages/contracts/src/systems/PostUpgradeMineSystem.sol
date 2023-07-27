@@ -7,7 +7,7 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -58,9 +58,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
 
     //if all conditions are met make factory functional
     activeComponent.set(factoryEntity);
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(components, FactoryProductionComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
 
     uint256 levelEntity = LibEncode.hashKeyEntity(
       BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(factoryEntity),
@@ -70,7 +68,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     LibUnclaimedResource.updateUnclaimedForResource(
       world,
       playerEntity,
-      factoryProductionComponent.getValue(levelEntity).ResourceID
+      productionComponent.getValue(levelEntity).ResourceID
     );
 
     //then update resource production
@@ -96,8 +94,9 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     if (!pathComponent.has(mineEntity)) return;
     //check to see if its connected to MainBase
     if (
-      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(pathComponent.getValue(mineEntity)) ==
-      MainBaseID
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
+        pathComponent.getValue(mineEntity)
+      ) == MainBaseID
     ) {
       uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
       //if connected to MainBase update unclaimed resources up to this point

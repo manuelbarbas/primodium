@@ -16,7 +16,7 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
@@ -24,7 +24,7 @@ import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLeve
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
-import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProductionForLevel.sol";
+import { LibSetProductionForLevel } from "../libraries/LibSetProductionForLevel.sol";
 import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeResearchRequirements.sol";
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
 
@@ -272,7 +272,7 @@ library LibBuildingDesignInitializer {
   function initIronPlateFactory(
     ItemComponent itemComponent,
     FactoryMineBuildingsComponent factoryMineBuildingsComponent,
-    FactoryProductionComponent factoryProductionComponent,
+    ProductionComponent productionComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResources
@@ -299,8 +299,8 @@ library LibBuildingDesignInitializer {
       1
     );
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       IronPlateFactoryID,
       1,
       IronPlateCraftedItemID,
@@ -328,8 +328,8 @@ library LibBuildingDesignInitializer {
     );
 
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       IronPlateFactoryID,
       2,
       IronPlateCraftedItemID,
@@ -357,8 +357,8 @@ library LibBuildingDesignInitializer {
     // );
 
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   IronPlateFactoryID,
     //   3,
     //   IronPlateCraftedItemID,
@@ -378,8 +378,8 @@ library LibBuildingDesignInitializer {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(world.components(), FactoryMineBuildingsComponentID)
     );
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(world.components(), FactoryProductionComponentID)
+    ProductionComponent productionComponent = ProductionComponent(
+      getAddressById(world.components(), ProductionComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
     RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
@@ -421,13 +421,7 @@ library LibBuildingDesignInitializer {
       1
     );
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
-      AlloyFactoryID,
-      1,
-      AlloyCraftedItemID,
-      1
-    );
+    LibSetProductionForLevel.setProductionForLevel(productionComponent, AlloyFactoryID, 1, AlloyCraftedItemID, 1);
 
     // //AlloyFactoryID Level 2
     // buildingIdLevel = LibEncode.hashKeyEntity(AlloyFactoryID, 2);
@@ -453,8 +447,8 @@ library LibBuildingDesignInitializer {
     //   1
     // );
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   AlloyFactoryID,
     //   2,
     //   AlloyCraftedItemID,
@@ -484,8 +478,8 @@ library LibBuildingDesignInitializer {
     // );
 
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   AlloyFactoryID,
     //   3,
     //   AlloyCraftedItemID,
@@ -504,8 +498,8 @@ library LibBuildingDesignInitializer {
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(world.components(), FactoryMineBuildingsComponentID)
     );
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(world.components(), FactoryProductionComponentID)
+    ProductionComponent productionComponent = ProductionComponent(
+      getAddressById(world.components(), ProductionComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
 
@@ -533,8 +527,8 @@ library LibBuildingDesignInitializer {
       1
     );
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       LithiumCopperOxideFactoryID,
       1,
       LithiumCopperOxideCraftedItemID,
@@ -565,8 +559,8 @@ library LibBuildingDesignInitializer {
     //   1
     // );
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   LithiumCopperOxideFactoryID,
     //   2,
     //   LithiumCopperOxideCraftedItemID,
@@ -598,8 +592,8 @@ library LibBuildingDesignInitializer {
     // );
 
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   LithiumCopperOxideFactoryID,
     //   3,
     //   LithiumCopperOxideCraftedItemID,
@@ -818,9 +812,7 @@ library LibBuildingDesignInitializer {
     MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
       getAddressById(components, MaxResourceStorageComponentID)
     );
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(components, FactoryProductionComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
     FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     );
@@ -865,7 +857,7 @@ library LibBuildingDesignInitializer {
     initIronPlateFactory(
       itemComponent,
       factoryMineBuildingsComponent,
-      factoryProductionComponent,
+      productionComponent,
       maxLevelComponent,
       requiredResearch,
       requiredResources

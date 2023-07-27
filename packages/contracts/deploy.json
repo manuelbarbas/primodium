@@ -25,7 +25,7 @@
     "UnclaimedResourceComponent",
     "ActiveComponent",
     "FactoryMineBuildingsComponent",
-    "FactoryProductionComponent",
+    "ProductionComponent",
     "MaxLevelComponent",
     "RequiredTileComponent",
     "RequiredPassiveResourceComponent",
@@ -120,7 +120,7 @@
         "UnclaimedResourceComponent",
         "MineComponent",
         "ActiveComponent",
-        "FactoryProductionComponent"
+        "ProductionComponent"
       ]
     },
     {
@@ -132,7 +132,7 @@
         "MineComponent",
         "ActiveComponent",
         "FactoryMineBuildingsComponent",
-        "FactoryProductionComponent"
+        "ProductionComponent"
       ]
     },
     {
@@ -150,7 +150,7 @@
         "MineComponent",
         "ActiveComponent",
         "FactoryMineBuildingsComponent",
-        "FactoryProductionComponent"
+        "ProductionComponent"
       ]
     },
     {
@@ -161,7 +161,7 @@
         "UnclaimedResourceComponent",
         "MineComponent",
         "ActiveComponent",
-        "FactoryProductionComponent",
+        "ProductionComponent",
         "FactoryMineBuildingsComponent"
       ]
     },
@@ -212,7 +212,7 @@
         "UnclaimedResourceComponent",
         "MineComponent",
         "ActiveComponent",
-        "FactoryProductionComponent"
+        "ProductionComponent"
       ]
     },
 

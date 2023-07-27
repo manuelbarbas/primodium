@@ -9,7 +9,7 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
@@ -67,7 +67,9 @@ contract BuildPathSystem is PrimodiumSystem {
       !PathComponent(getC(PathComponentID)).has(startBuilding),
       "[BuildPathSystem] Cannot start more than one path from the same building"
     );
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     uint256 startCoordBuildingId = buildingTypeComponent.getValue(startBuilding);
     uint256 endCoordBuildingId = buildingTypeComponent.getValue(endBuilding);
     uint256 startCoordLevelEntity = LibEncode.hashKeyEntity(

@@ -42,7 +42,7 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
@@ -216,8 +216,8 @@ library LibDeploy {
       comp = new FactoryMineBuildingsComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying FactoryProductionComponent");
-      comp = new FactoryProductionComponent(address(result.world));
+      console.log("Deploying ProductionComponent");
+      comp = new ProductionComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying MaxLevelComponent");
@@ -365,7 +365,7 @@ library LibDeploy {
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
-    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathFromMineToFactorySystem");
@@ -377,7 +377,7 @@ library LibDeploy {
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
-    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathFromMineToMainBaseSystem");
@@ -400,7 +400,7 @@ library LibDeploy {
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
-    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying PostDestroyPathSystem");
@@ -411,7 +411,7 @@ library LibDeploy {
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
-    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, ProductionComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
     console.log(address(system));
 
@@ -474,7 +474,7 @@ library LibDeploy {
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, MineComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
-    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, ProductionComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DebugAcquireResourcesSystem");
@@ -557,7 +557,7 @@ library LibDeploy {
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, FactoryMineBuildingsComponentID, address(system));
-    authorizeWriter(components, FactoryProductionComponentID, address(system));
+    authorizeWriter(components, ProductionComponentID, address(system));
     authorizeWriter(components, MaxLevelComponentID, address(system));
     authorizeWriter(components, RequiredTileComponentID, address(system));
     authorizeWriter(components, RequiredPassiveResourceComponentID, address(system));

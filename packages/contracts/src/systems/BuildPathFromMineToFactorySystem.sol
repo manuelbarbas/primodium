@@ -10,7 +10,7 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -85,7 +85,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(toBuildingEntity)
     );
 
-    uint256 factoryResourceId = FactoryProductionComponent(getC(FactoryProductionComponentID))
+    uint256 factoryResourceId = ProductionComponent(getC(ProductionComponentID))
       .getValue(factoryLevelEntity)
       .ResourceID;
 
@@ -101,11 +101,11 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     ) {
       uint256 playerEntity = addressToEntity(playerAddress);
 
-      FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
-        getC(FactoryProductionComponentID)
-      ).getValue(factoryLevelEntity);
+      ProductionData memory productionData = ProductionComponent(getC(ProductionComponentID)).getValue(
+        factoryLevelEntity
+      );
 
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
+      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, productionData.ResourceID);
 
       LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, factoryLevelEntity, true);
     }

@@ -9,7 +9,7 @@ import { LevelComponent, ID as BuildingComponentID } from "components/LevelCompo
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
@@ -65,9 +65,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   ) internal {
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
 
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(components, FactoryProductionComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
 
     bool isFunctional = activeComponent.has(factoryEntity);
     uint256 factoryLevelEntity = LibEncode.hashKeyEntity(
@@ -77,7 +75,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     if (isFunctional) {
       // update unclaimed resources
-      updateUnclaimedForResource(playerEntity, factoryProductionComponent.getValue(factoryLevelEntity).ResourceID);
+      updateUnclaimedForResource(playerEntity, productionComponent.getValue(factoryLevelEntity).ResourceID);
     }
 
     //when a path from mine to factory is destroyed, factory becomes non functional
@@ -115,19 +113,18 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
       buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
-    FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
-      getAddressById(components, FactoryProductionComponentID)
-    ).getValue(factoryLevelEntity);
+    ProductionData memory productionData = ProductionComponent(getAddressById(components, ProductionComponentID))
+      .getValue(factoryLevelEntity);
     // update unclaimed resources
-    updateUnclaimedForResource(playerEntity, factoryProductionData.ResourceID);
+    updateUnclaimedForResource(playerEntity, productionData.ResourceID);
 
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.ResourceID, playerEntity);
     if (LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) <= 0) revert("this should not be possible");
     //update resource production
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
-      mineComponent.getValue(playerResourceEntity) - factoryProductionData.ResourceProductionRate
+      mineComponent.getValue(playerResourceEntity) - productionData.ResourceProductionRate
     );
   }
 
@@ -140,7 +137,9 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     (address playerAddress, uint256 startCoordEntity) = abi.decode(args, (address, uint256));
     uint256 endCoordEntity = PathComponent(getAddressById(components, PathComponentID)).getValue(startCoordEntity);
 
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
