@@ -14,14 +14,14 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMines } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -33,6 +33,7 @@ import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProdu
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
 
 import "../prototypes.sol";
+import { ResourceValue, ResourceValues } from "../types.sol";
 
 // Research
 import { LibDebug } from "../libraries/LibDebug.sol";
@@ -190,7 +191,9 @@ library LibDebugInitializer {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       getAddressById(components, IgnoreBuildLimitComponentID)
     );
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
     RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
@@ -285,12 +288,12 @@ library LibDebugInitializer {
 
     //DebugSimpleBuildingPassiveResourceRequirement
     ignoreBuildLimitComponent.set(DebugSimpleBuildingPassiveResourceRequirement);
-    RequiredPassiveResourceData memory requiredPassiveResourceData = RequiredPassiveResourceData({
-      ResourceIDs: new uint256[](1),
-      RequiredAmounts: new uint32[](1)
+    ResourceValues memory requiredPassiveResourceData = ResourceValues({
+      resources: new uint256[](1),
+      values: new uint32[](1)
     });
-    requiredPassiveResourceData.ResourceIDs[0] = ElectricityPassiveResourceID;
-    requiredPassiveResourceData.RequiredAmounts[0] = 2;
+    requiredPassiveResourceData.resources[0] = ElectricityPassiveResourceID;
+    requiredPassiveResourceData.values[0] = 2;
     requiredPassiveResourceComponent.set(DebugSimpleBuildingPassiveResourceRequirement, requiredPassiveResourceData);
   }
 
@@ -298,7 +301,9 @@ library LibDebugInitializer {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       getAddressById(world.components(), IgnoreBuildLimitComponentID)
     );
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(world.components(), BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(world.components(), BuildingTypeComponentID)
+    );
     MineComponent mineComponent = MineComponent(getAddressById(world.components(), MineComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(

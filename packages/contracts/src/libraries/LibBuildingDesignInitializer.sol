@@ -18,7 +18,7 @@ import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "compon
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
 import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
+import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -28,6 +28,7 @@ import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProdu
 import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeResearchRequirements.sol";
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
 
+import { ResourceValue, ResourceValues } from "../types.sol";
 import "../prototypes.sol";
 
 library LibBuildingDesignInitializer {
@@ -395,7 +396,7 @@ library LibBuildingDesignInitializer {
 
     requiredPassiveResourceComponent.set(
       AlloyFactoryID,
-      RequiredPassiveResourceData(requiredPassiveResourceIDs, requiredPassiveResourceAmounts)
+      ResourceValues(requiredPassiveResourceIDs, requiredPassiveResourceAmounts)
     );
 
     requiredResearch.set(AlloyFactoryID, AlloyFactoryResearchID);
