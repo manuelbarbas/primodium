@@ -11,7 +11,7 @@ import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "co
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
@@ -64,8 +64,8 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     if (!factoryMineBuildingsComponent.has(levelEntity)) {
       return;
     }
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(levelEntity);
-    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
+    ResourceValues memory factoryMines = factoryMineBuildingsComponent.getValue(levelEntity);
+    factoryMineBuildingsComponent.set(factoryEntity, factoryMines);
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -76,7 +76,9 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(buildingEntity);
+    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
+      buildingEntity
+    );
 
     LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world, playerEntity, buildingType);
     LibPassiveResource.updatePassiveResourceProduction(world, playerEntity, buildingType);

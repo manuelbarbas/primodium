@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
@@ -8,8 +9,8 @@ import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/Max
 import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
 
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -49,7 +50,9 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
   function handleFactoryUpgrade(uint256 playerEntity, uint256 factoryEntity) internal {
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     //if factory was non functional nothing to do
     if (!activeComponent.has(factoryEntity)) return;
 
@@ -65,14 +68,14 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     LibUnclaimedResource.updateUnclaimedForResource(
       world,
       playerEntity,
-      factoryProductionComponent.getValue(levelEntity).ResourceID
+      factoryProductionComponent.getValue(levelEntity).resource
     );
 
-    FactoryProductionData memory factoryProductionDataPreUpgrade = factoryProductionComponent.getValue(
+    ResourceValue memory factoryProductionDataPreUpgrade = factoryProductionComponent.getValue(
       LibEncode.hashKeyEntity(buildingTypeComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
     );
 
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionDataPreUpgrade.ResourceID, playerEntity);
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionDataPreUpgrade.resource, playerEntity);
 
     //check to see if factory is still functional after upgrade
     if (
@@ -89,8 +92,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
         world,
         playerResourceEntity,
         MineComponent(getAddressById(components, MineComponentID)).getValue(playerResourceEntity) +
-          (factoryProductionComponent.getValue(levelEntity).ResourceProductionRate -
-            factoryProductionDataPreUpgrade.ResourceProductionRate)
+          (factoryProductionComponent.getValue(levelEntity).value - factoryProductionDataPreUpgrade.value)
       );
     } else {
       // if not functional remove resource production of the factory and set as non functional
@@ -99,7 +101,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
         world,
         playerResourceEntity,
         MineComponent(getAddressById(components, MineComponentID)).getValue(playerResourceEntity) -
-          factoryProductionDataPreUpgrade.ResourceProductionRate
+          factoryProductionDataPreUpgrade.value
       );
     }
   }

@@ -14,8 +14,8 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMines } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";

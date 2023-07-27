@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "../components/FactoryProductionComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "../components/FactoryProductionComponent.sol";
 import { MineComponent, ID as MineComponentID } from "../components/MineComponent.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
@@ -21,11 +21,11 @@ library LibFactory {
     FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
       world.getComponent(FactoryProductionComponentID)
     );
-    FactoryProductionData memory factoryProductionData = factoryProductionComponent.getValue(factoryLevelEntity);
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
+    ResourceValue memory factoryProductionData = factoryProductionComponent.getValue(factoryLevelEntity);
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.resource, playerEntity);
     uint32 newResourceProductionRate = isFunctional
-      ? LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) + factoryProductionData.ResourceProductionRate
-      : LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) - factoryProductionData.ResourceProductionRate;
+      ? LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) + factoryProductionData.value
+      : LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) - factoryProductionData.value;
     LibResourceProduction.updateResourceProduction(world, playerResourceEntity, newResourceProductionRate);
   }
 }

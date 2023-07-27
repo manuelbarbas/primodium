@@ -8,8 +8,8 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
@@ -77,17 +77,17 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     if (isFunctional) {
       // update unclaimed resources
-      updateUnclaimedForResource(playerEntity, factoryProductionComponent.getValue(factoryLevelEntity).ResourceID);
+      updateUnclaimedForResource(playerEntity, factoryProductionComponent.getValue(factoryLevelEntity).resource);
     }
 
     //when a path from mine to factory is destroyed, factory becomes non functional
     //and required connected mine building count is increased
     activeComponent.remove(factoryEntity);
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(factoryEntity);
-    for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
-      if (factoryMineBuildingsData.MineBuildingIDs[i] == buildingTypeComponent.getValue(mineEntity)) {
-        factoryMineBuildingsData.MineBuildingCount[i]++;
-        factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
+    ResourceValues memory factoryMines = factoryMineBuildingsComponent.getValue(factoryEntity);
+    for (uint256 i = 0; i < factoryMines.values.length; i++) {
+      if (factoryMines.resources[i] == buildingTypeComponent.getValue(mineEntity)) {
+        factoryMines.values[i]++;
+        factoryMineBuildingsComponent.set(factoryEntity, factoryMines);
         break;
       }
     }
@@ -115,19 +115,19 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
       buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
-    FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
+    ResourceValue memory factoryProductionData = FactoryProductionComponent(
       getAddressById(components, FactoryProductionComponentID)
     ).getValue(factoryLevelEntity);
     // update unclaimed resources
-    updateUnclaimedForResource(playerEntity, factoryProductionData.ResourceID);
+    updateUnclaimedForResource(playerEntity, factoryProductionData.resource);
 
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.ResourceID, playerEntity);
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionData.resource, playerEntity);
     if (LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) <= 0) revert("this should not be possible");
     //update resource production
     LibResourceProduction.updateResourceProduction(
       world,
       playerResourceEntity,
-      mineComponent.getValue(playerResourceEntity) - factoryProductionData.ResourceProductionRate
+      mineComponent.getValue(playerResourceEntity) - factoryProductionData.value
     );
   }
 
@@ -140,7 +140,9 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     (address playerAddress, uint256 startCoordEntity) = abi.decode(args, (address, uint256));
     uint256 endCoordEntity = PathComponent(getAddressById(components, PathComponentID)).getValue(startCoordEntity);
 
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
     MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));

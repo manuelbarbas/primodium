@@ -6,8 +6,8 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -48,12 +48,12 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
       }
     }
 
-    FactoryMineBuildingsData memory factoryMineBuildingsData = FactoryMineBuildingsComponent(
+    ResourceValues memory factoryMines = FactoryMineBuildingsComponent(
       getAddressById(components, FactoryMineBuildingsComponentID)
     ).getValue(factoryEntity);
     //then check if there are enough connected mines
-    for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
-      if (factoryMineBuildingsData.MineBuildingCount[i] > 0) return;
+    for (uint256 i = 0; i < factoryMines.values.length; i++) {
+      if (factoryMines.values[i] > 0) return;
     }
 
     //if all conditions are met make factory functional
@@ -70,7 +70,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     LibUnclaimedResource.updateUnclaimedForResource(
       world,
       playerEntity,
-      factoryProductionComponent.getValue(levelEntity).ResourceID
+      factoryProductionComponent.getValue(levelEntity).resource
     );
 
     //then update resource production
@@ -96,8 +96,9 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     if (!pathComponent.has(mineEntity)) return;
     //check to see if its connected to MainBase
     if (
-      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(pathComponent.getValue(mineEntity)) ==
-      MainBaseID
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
+        pathComponent.getValue(mineEntity)
+      ) == MainBaseID
     ) {
       uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
       //if connected to MainBase update unclaimed resources up to this point

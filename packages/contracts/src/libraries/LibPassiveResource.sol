@@ -34,8 +34,8 @@ library LibPassiveResource {
     );
     if (requiredPassiveResourceComponent.has(blockType)) {
       ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
-      uint32[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
+      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).resources;
+      uint32[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).values;
       for (uint256 i = 0; i < resourceIDs.length; i++) {
         if (
           LibStorage.getAvailableSpaceInStorageForResource(
@@ -58,8 +58,8 @@ library LibPassiveResource {
     );
     if (requiredPassiveResourceComponent.has(blockType)) {
       ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).ResourceIDs;
-      uint32[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).RequiredAmounts;
+      uint256[] memory resourceIDs = requiredPassiveResourceComponent.getValue(blockType).resources;
+      uint32[] memory requiredAmounts = requiredPassiveResourceComponent.getValue(blockType).values;
 
       for (uint256 i = 0; i < resourceIDs.length; i++) {
         uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);

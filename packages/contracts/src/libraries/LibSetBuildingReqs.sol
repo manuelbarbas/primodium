@@ -7,9 +7,9 @@ import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "co
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMines } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
 
-import { ResourceValue } from "../types.sol";
+import { ResourceValue, ResourceValues } from "../types.sol";
 import { LibEncode } from "./LibEncode.sol";
 
 library LibSetBuildingReqs {
@@ -42,10 +42,10 @@ library LibSetBuildingReqs {
     uint256 factoryBuildingId,
     uint32 level,
     uint256[] memory mineIds,
-    uint256[] memory mineCounts
+    uint32[] memory mineCounts
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
-    FactoryMines memory factoryMines = FactoryMines(mineIds, mineCounts);
+    ResourceValues memory factoryMines = ResourceValues(mineIds, mineCounts);
     FactoryMineBuildingsComponent(world.getComponent(FactoryMineBuildingsComponentID)).set(
       buildingIdLevel,
       factoryMines

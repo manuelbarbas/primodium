@@ -9,7 +9,7 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -44,11 +44,10 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
         buildingId,
         LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
       );
-      FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
-        getC(FactoryProductionComponentID)
-      ).getValue(levelEntity);
+      ResourceValue memory factoryProductionData = FactoryProductionComponent(getC(FactoryProductionComponentID))
+        .getValue(levelEntity);
 
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
+      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.resource);
 
       LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
     }

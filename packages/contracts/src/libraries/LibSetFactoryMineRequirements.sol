@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
 import { LibMath } from "./LibMath.sol";
@@ -15,13 +15,13 @@ library LibSetFactoryMineRequirements {
     uint32 numMineBuilding1
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
-    FactoryMineBuildingsData memory factoryMineBuildingsData;
-    factoryMineBuildingsData.MineBuildingIDs = new uint256[](1);
-    factoryMineBuildingsData.MineBuildingIDs[0] = mineBuildingId1;
-    factoryMineBuildingsData.MineBuildingCount = new uint32[](1);
-    factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
+    ResourceValues memory factoryMines;
+    factoryMines.resources = new uint256[](1);
+    factoryMines.resources[0] = mineBuildingId1;
+    factoryMines.values = new uint32[](1);
+    factoryMines.values[0] = numMineBuilding1;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMineBuildingsData);
+    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
   }
 
   function setFactory2MineRequirement(
@@ -34,15 +34,15 @@ library LibSetFactoryMineRequirements {
     uint32 numMineBuilding2
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
-    FactoryMineBuildingsData memory factoryMineBuildingsData;
-    factoryMineBuildingsData.MineBuildingIDs = new uint256[](2);
-    factoryMineBuildingsData.MineBuildingIDs[0] = mineBuildingId1;
-    factoryMineBuildingsData.MineBuildingIDs[1] = mineBuildingId2;
-    factoryMineBuildingsData.MineBuildingCount = new uint32[](2);
-    factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
-    factoryMineBuildingsData.MineBuildingCount[1] = numMineBuilding2;
+    ResourceValues memory factoryMines;
+    factoryMines.resources = new uint256[](2);
+    factoryMines.resources[0] = mineBuildingId1;
+    factoryMines.resources[1] = mineBuildingId2;
+    factoryMines.values = new uint32[](2);
+    factoryMines.values[0] = numMineBuilding1;
+    factoryMines.values[1] = numMineBuilding2;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMineBuildingsData);
+    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
   }
 
   function setFactory3MineRequirement(
@@ -57,17 +57,17 @@ library LibSetFactoryMineRequirements {
     uint32 numMineBuilding3
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
-    FactoryMineBuildingsData memory factoryMineBuildingsData;
-    factoryMineBuildingsData.MineBuildingIDs = new uint256[](3);
-    factoryMineBuildingsData.MineBuildingIDs[0] = mineBuildingId1;
-    factoryMineBuildingsData.MineBuildingIDs[1] = mineBuildingId2;
-    factoryMineBuildingsData.MineBuildingIDs[2] = mineBuildingId3;
-    factoryMineBuildingsData.MineBuildingCount = new uint32[](3);
-    factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
-    factoryMineBuildingsData.MineBuildingCount[1] = numMineBuilding2;
-    factoryMineBuildingsData.MineBuildingCount[2] = numMineBuilding3;
+    ResourceValues memory factoryMines;
+    factoryMines.resources = new uint256[](3);
+    factoryMines.resources[0] = mineBuildingId1;
+    factoryMines.resources[1] = mineBuildingId2;
+    factoryMines.resources[2] = mineBuildingId3;
+    factoryMines.values = new uint32[](3);
+    factoryMines.values[0] = numMineBuilding1;
+    factoryMines.values[1] = numMineBuilding2;
+    factoryMines.values[2] = numMineBuilding3;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMineBuildingsData);
+    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
   }
 
   function setFactory3MineRequirement(
@@ -84,18 +84,18 @@ library LibSetFactoryMineRequirements {
     uint32 numMineBuilding4
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(factoryBuildingId, level);
-    FactoryMineBuildingsData memory factoryMineBuildingsData;
-    factoryMineBuildingsData.MineBuildingIDs = new uint256[](4);
-    factoryMineBuildingsData.MineBuildingIDs[0] = mineBuildingId1;
-    factoryMineBuildingsData.MineBuildingIDs[1] = mineBuildingId2;
-    factoryMineBuildingsData.MineBuildingIDs[2] = mineBuildingId3;
-    factoryMineBuildingsData.MineBuildingIDs[3] = mineBuildingId4;
-    factoryMineBuildingsData.MineBuildingCount = new uint32[](4);
-    factoryMineBuildingsData.MineBuildingCount[0] = numMineBuilding1;
-    factoryMineBuildingsData.MineBuildingCount[1] = numMineBuilding2;
-    factoryMineBuildingsData.MineBuildingCount[2] = numMineBuilding3;
-    factoryMineBuildingsData.MineBuildingCount[3] = numMineBuilding4;
+    ResourceValues memory factoryMines;
+    factoryMines.resources = new uint256[](4);
+    factoryMines.resources[0] = mineBuildingId1;
+    factoryMines.resources[1] = mineBuildingId2;
+    factoryMines.resources[2] = mineBuildingId3;
+    factoryMines.resources[3] = mineBuildingId4;
+    factoryMines.values = new uint32[](4);
+    factoryMines.values[0] = numMineBuilding1;
+    factoryMines.values[1] = numMineBuilding2;
+    factoryMines.values[2] = numMineBuilding3;
+    factoryMines.values[3] = numMineBuilding4;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMineBuildingsData);
+    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
   }
 }
