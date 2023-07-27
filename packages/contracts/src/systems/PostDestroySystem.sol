@@ -59,7 +59,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       getAddressById(components, PassiveResourceProductionComponentID)
     );
     if (passiveResourceProductionComponent.has(blockType)) {
-      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
+      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).resource;
       MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
 
       LibStorageUpdate.updateMaxStorageOfResourceForEntity(
@@ -68,7 +68,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
         playerEntity,
         resourceId,
         maxStorageComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
-          passiveResourceProductionComponent.getValue(blockType).ResourceProduction
+          passiveResourceProductionComponent.getValue(blockType).value
       );
     }
   }

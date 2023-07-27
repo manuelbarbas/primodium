@@ -22,7 +22,7 @@ import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "compon
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
+import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, ResourceValue } from "components/PassiveResourceProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
@@ -513,7 +513,7 @@ library LibDebugInitializer {
     ignoreBuildLimitComponent.set(DebugPassiveResourceProductionBuilding);
     passiveResourceProductionComponent.set(
       DebugPassiveResourceProductionBuilding,
-      PassiveResourceProductionData(ElectricityPassiveResourceID, 10)
+      ResourceValue(ElectricityPassiveResourceID, 10)
     );
 
     //DebugAlloyFactoryID
@@ -572,10 +572,7 @@ library LibDebugInitializer {
 
     //DebugSolarPanelID
     ignoreBuildLimitComponent.set(DebugSolarPanelID);
-    passiveResourceProductionComponent.set(
-      DebugSolarPanelID,
-      PassiveResourceProductionData(ElectricityPassiveResourceID, 10)
-    );
+    passiveResourceProductionComponent.set(DebugSolarPanelID, ResourceValue(ElectricityPassiveResourceID, 10));
   }
 
   function initializeTechnologies(

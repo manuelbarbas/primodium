@@ -79,14 +79,14 @@ library LibPassiveResource {
       MaxStorageComponent maxStorageComponent = MaxStorageComponent(
         getAddressById(world.components(), MaxStorageComponentID)
       );
-      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
+      uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).resource;
       LibStorageUpdate.updateMaxStorageOfResourceForEntity(
         OwnedResourcesComponent(getAddressById(world.components(), OwnedResourcesComponentID)),
         maxStorageComponent,
         playerEntity,
         resourceId,
         LibMath.getSafeUint32Value(maxStorageComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
-          passiveResourceProductionComponent.getValue(blockType).ResourceProduction
+          passiveResourceProductionComponent.getValue(blockType).value
       );
     }
   }

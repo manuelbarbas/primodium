@@ -2,13 +2,8 @@
 pragma solidity >=0.8.0;
 import "solecs/Component.sol";
 import "std-contracts/components/Uint256Component.sol";
-
+import { ResourceValue } from "../types.sol";
 uint256 constant ID = uint256(keccak256("component.PassiveResourceProduction"));
-
-struct PassiveResourceProductionData {
-  uint256 ResourceID;
-  uint32 ResourceProduction;
-}
 
 contract PassiveResourceProductionComponent is Component {
   constructor(address world) Component(world, ID) {}
@@ -24,18 +19,16 @@ contract PassiveResourceProductionComponent is Component {
     values[1] = LibTypes.SchemaValue.UINT32;
   }
 
-  function set(uint256 entity, PassiveResourceProductionData calldata value) public virtual {
+  function set(uint256 entity, ResourceValue calldata value) public virtual {
     set(entity, abi.encode(value));
   }
 
-  function getValue(uint256 entity) public view virtual returns (PassiveResourceProductionData memory) {
+  function getValue(uint256 entity) public view virtual returns (ResourceValue memory) {
     (uint256 resourceID, uint32 resourceProduction) = abi.decode(getRawValue(entity), (uint256, uint32));
-    return PassiveResourceProductionData(resourceID, resourceProduction);
+    return ResourceValue(resourceID, resourceProduction);
   }
 
-  function getEntitiesWithValue(
-    PassiveResourceProductionData calldata passiveResourceProductionData
-  ) public view virtual returns (uint256[] memory) {
-    return getEntitiesWithValue(abi.encode(passiveResourceProductionData));
+  function getEntitiesWithValue(ResourceValue calldata resourceValue) public view virtual returns (uint256[] memory) {
+    return getEntitiesWithValue(abi.encode(resourceValue));
   }
 }

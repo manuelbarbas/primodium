@@ -10,7 +10,7 @@ import { MineComponent, ID as MineComponentID } from "components/MineComponent.s
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
 import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
+import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, ResourceValue } from "components/PassiveResourceProductionComponent.sol";
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";

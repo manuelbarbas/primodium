@@ -48,8 +48,8 @@ contract DestroySystem is PrimodiumSystem {
           MaxStorageComponent(getAddressById(components, MaxStorageComponentID)),
           ItemComponent(getAddressById(components, ItemComponentID)),
           addressToEntity(msg.sender),
-          passiveResourceProductionComponent.getValue(blockType).ResourceID
-        ) >= passiveResourceProductionComponent.getValue(blockType).ResourceProduction;
+          passiveResourceProductionComponent.getValue(blockType).resource
+        ) >= passiveResourceProductionComponent.getValue(blockType).value;
     }
     return true;
   }
