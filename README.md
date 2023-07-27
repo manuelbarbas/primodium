@@ -114,7 +114,7 @@ When a building is upgraded, `PostUpgradeSystem` is called to update the buildin
 
 # Building Storage
 
-In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `OwnedResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `MaxStorageComponent`.
+In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `MaxResourceStorageComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `MaxStorageComponent`.
 
 ```
   levelId = hashKeyEntity(buildingId, level)

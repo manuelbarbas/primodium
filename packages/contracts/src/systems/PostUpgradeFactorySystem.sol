@@ -5,7 +5,7 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
 import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
 import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
@@ -49,7 +49,9 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
   function handleFactoryUpgrade(uint256 playerEntity, uint256 factoryEntity) internal {
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     //if factory was non functional nothing to do
     if (!activeComponent.has(factoryEntity)) return;
 

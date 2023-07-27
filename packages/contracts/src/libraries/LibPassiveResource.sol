@@ -7,7 +7,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
 import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
@@ -81,7 +81,7 @@ library LibPassiveResource {
       );
       uint256 resourceId = passiveResourceProductionComponent.getValue(blockType).ResourceID;
       LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        OwnedResourcesComponent(getAddressById(world.components(), OwnedResourcesComponentID)),
+        MaxResourceStorageComponent(getAddressById(world.components(), MaxResourceStorageComponentID)),
         maxStorageComponent,
         playerEntity,
         resourceId,
