@@ -49,6 +49,7 @@ library LibDebugInitializer {
     //should only work if debug is enabled
     if (DEBUG) IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(SingletonID);
 
+    initBlueprints(world);
     initializeSimpleBuildings(world);
 
     initializeMines(world);
@@ -94,12 +95,8 @@ library LibDebugInitializer {
 
   function initializeSimpleBuildings(IWorld world) internal {
     IUint256Component components = world.components();
-    ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-    RequiredResearchComponent requiredResearch = RequiredResearchComponent(
+    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
-    );
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      getAddressById(components, RequiredResourcesComponentID)
     );
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       getAddressById(components, IgnoreBuildLimitComponentID)
@@ -112,24 +109,19 @@ library LibDebugInitializer {
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
       getAddressById(components, RequiredPassiveComponentID)
     );
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
     // DebugSimpleBuildingNoReqsID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingNoReqsID);
 
     // DebugSimpleBuildingResourceReqsID
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      requiredResourcesComponent,
-      itemComponent,
-      DebugSimpleBuildingResourceReqsID,
-      IronResourceItemID,
-      100
-    );
-    ignoreBuildLimitComponent.set(DebugSimpleBuildingResourceReqsID);
+    uint256 entity = LibEncode.hashKeyEntity(DebugSimpleBuildingResourceReqsID, 1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 100 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     // DebugSimpleBuildingResearchReqsID
-    requiredResearch.set(DebugSimpleBuildingResearchReqsID, DebugSimpleTechnologyNoReqsID);
-    ignoreBuildLimitComponent.set(DebugSimpleBuildingResearchReqsID);
-
-    // DebugSimpleBuildingBuildLimitReq do nothing
+    ignoreBuildLimitComponent.set(DebugSimpleBuildingResourceReqsID);
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingResearchReqsID, 1);
+    requiredResearchComponent.set(entity, DebugSimpleTechnologyNoReqsID);
 
     // DebugSimpleBuildingTileReqID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingTileReqID);
@@ -139,71 +131,47 @@ library LibDebugInitializer {
     ignoreBuildLimitComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID);
     maxLevelComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID, 4);
     //DebugSimpleBuildingWithUpgradeResourceReqsID level 2
-    LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
-      requiredResourcesComponent,
-      itemComponent,
-      DebugSimpleBuildingWithUpgradeResourceReqsID,
-      IronResourceItemID,
-      100,
-      2
-    );
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingWithUpgradeResourceReqsID, 2);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 100 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     //DebugSimpleBuildingWithUpgradeResourceReqsID level 3
-    LibSetRequiredResourcesUpgrade.set2RequiredResourcesForEntityUpgradeToLevel(
-      requiredResourcesComponent,
-      itemComponent,
-      DebugSimpleBuildingWithUpgradeResourceReqsID,
-      IronResourceItemID,
-      100,
-      CopperResourceItemID,
-      100,
-      3
-    );
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingWithUpgradeResourceReqsID, 3);
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 100 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 100 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     //DebugSimpleBuildingWithUpgradeResourceReqsID level 4
-    LibSetRequiredResourcesUpgrade.set3RequiredResourcesForEntityUpgradeToLevel(
-      requiredResourcesComponent,
-      itemComponent,
-      DebugSimpleBuildingWithUpgradeResourceReqsID,
-      IronResourceItemID,
-      100,
-      CopperResourceItemID,
-      100,
-      LithiumResourceItemID,
-      100,
-      4
-    );
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingWithUpgradeResourceReqsID, 4);
+    resourceValues = new ResourceValue[](3);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 100 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 100 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 100 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     //DebugSimpleBuildingWithUpgradeResourceReqsID level 4
-    LibSetRequiredResourcesUpgrade.set4RequiredResourcesForEntityUpgradeToLevel(
-      requiredResourcesComponent,
-      itemComponent,
-      DebugSimpleBuildingWithUpgradeResourceReqsID,
-      IronResourceItemID,
-      100,
-      CopperResourceItemID,
-      100,
-      LithiumResourceItemID,
-      100,
-      OsmiumResourceItemID,
-      100,
-      4
-    );
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingWithUpgradeResourceReqsID, 4);
+    resourceValues = new ResourceValue[](4);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 100 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 100 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 100 });
+    resourceValues[3] = ResourceValue({ resource: OsmiumResourceItemID, value: 100 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     //DebugSimpleBuildingWithUpgradeResearchReqsID
     maxLevelComponent.set(DebugSimpleBuildingWithUpgradeResearchReqsID, 2);
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(DebugSimpleBuildingWithUpgradeResearchReqsID, 2);
-    RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
-      LibEncode.hashKeyEntity(DebugSimpleTechnologyNoReqsID, buildingIdLevel),
-      DebugSimpleTechnologyNoReqsID
-    );
+    requiredResearchComponent.set(buildingIdLevel, DebugSimpleTechnologyNoReqsID);
 
     //DebugSimpleBuildingPassiveResourceRequirement
     ignoreBuildLimitComponent.set(DebugSimpleBuildingPassiveResourceRequirement);
+    // LEVEL 1
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingPassiveResourceRequirement, 1);
     ResourceValues memory requiredPassiveData = ResourceValues(new uint256[](1), new uint32[](1));
     requiredPassiveData.resources[0] = ElectricityPassiveResourceID;
     requiredPassiveData.values[0] = 2;
-    requiredPassiveComponent.set(DebugSimpleBuildingPassiveResourceRequirement, requiredPassiveData);
+    requiredPassiveComponent.set(entity, requiredPassiveData);
   }
 
   function initializeMines(IWorld world) internal {
@@ -217,137 +185,77 @@ library LibDebugInitializer {
       getAddressById(world.components(), MineProductionComponentID)
     );
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(world.components(), MaxLevelComponentID));
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(
-      getAddressById(world.components(), MaxStorageComponentID)
-    );
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      getAddressById(world.components(), MaxResourceStorageComponentID)
-    );
+
     // DebugIronMineID
     ignoreBuildLimitComponent.set(DebugIronMineID);
     buildingTypeComponent.set(DebugIronMineID, IronID);
     maxLevelComponent.set(DebugIronMineID, 3);
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineID,
-      1,
-      1
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineID,
-      2,
-      2
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineID,
-      3,
-      3
-    );
+
+    uint256 entity = LibEncode.hashKeyEntity(DebugIronMineID, 1);
+    mineProductionComponent.set(entity, 1);
+
+    entity = LibEncode.hashKeyEntity(DebugIronMineID, 2);
+    mineProductionComponent.set(entity, 2);
+    entity = LibEncode.hashKeyEntity(DebugIronMineID, 3);
+    mineProductionComponent.set(entity, 3);
 
     // DebugIronMineNoTileReqID
     ignoreBuildLimitComponent.set(DebugIronMineNoTileReqID);
     maxLevelComponent.set(DebugIronMineNoTileReqID, 3);
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineNoTileReqID,
-      1,
-      5
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineNoTileReqID,
-      2,
-      7
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineNoTileReqID,
-      3,
-      10
-    );
+    entity = LibEncode.hashKeyEntity(DebugIronMineNoTileReqID, 1);
+    mineProductionComponent.set(entity, 5);
+
+    entity = LibEncode.hashKeyEntity(DebugIronMineNoTileReqID, 2);
+    mineProductionComponent.set(entity, 7);
+
+    entity = LibEncode.hashKeyEntity(DebugIronMineNoTileReqID, 3);
+    mineProductionComponent.set(entity, 10);
 
     //DebugIronMineWithBuildLimitID
     maxLevelComponent.set(DebugIronMineWithBuildLimitID, 3);
     buildingTypeComponent.set(DebugIronMineWithBuildLimitID, IronID);
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineWithBuildLimitID,
-      1,
-      5
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineWithBuildLimitID,
-      2,
-      7
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugIronMineWithBuildLimitID,
-      3,
-      10
-    );
+
+    entity = LibEncode.hashKeyEntity(DebugIronMineWithBuildLimitID, 1);
+    mineProductionComponent.set(entity, 5);
+
+    entity = LibEncode.hashKeyEntity(DebugIronMineWithBuildLimitID, 2);
+    mineProductionComponent.set(entity, 7);
+
+    entity = LibEncode.hashKeyEntity(DebugIronMineWithBuildLimitID, 3);
+    mineProductionComponent.set(entity, 10);
 
     //DebugCopperMineID
     maxLevelComponent.set(DebugCopperMineID, 3);
     buildingTypeComponent.set(DebugCopperMineID, CopperID);
     ignoreBuildLimitComponent.set(DebugCopperMineID);
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugCopperMineID,
-      1,
-      3
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugCopperMineID,
-      2,
-      5
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugCopperMineID,
-      3,
-      7
-    );
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      LibEncode.hashKeyEntity(DebugCopperMineID, 1),
-      CopperResourceItemID,
-      1000
-    );
+
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+
+    entity = LibEncode.hashKeyEntity(DebugCopperMineID, 1);
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+    mineProductionComponent.set(entity, 3);
+
+    entity = LibEncode.hashKeyEntity(DebugCopperMineID, 2);
+    mineProductionComponent.set(entity, 5);
+
+    entity = LibEncode.hashKeyEntity(DebugCopperMineID, 3);
+    mineProductionComponent.set(entity, 7);
 
     maxLevelComponent.set(DebugLithiumMineID, 3);
     buildingTypeComponent.set(DebugLithiumMineID, LithiumID);
     ignoreBuildLimitComponent.set(DebugLithiumMineID);
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugLithiumMineID,
-      1,
-      3
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugLithiumMineID,
-      2,
-      5
-    );
-    LibSetMineBuildingProductionForLevel.setMineBuildingProductionForLevel(
-      mineProductionComponent,
-      DebugLithiumMineID,
-      3,
-      7
-    );
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      LibEncode.hashKeyEntity(DebugLithiumMineID, 1),
-      CopperResourceItemID,
-      1000
-    );
+
+    entity = LibEncode.hashKeyEntity(DebugLithiumMineID, 1);
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+    mineProductionComponent.set(entity, 3);
+
+    entity = LibEncode.hashKeyEntity(DebugLithiumMineID, 2);
+    mineProductionComponent.set(entity, 5);
+
+    entity = LibEncode.hashKeyEntity(DebugLithiumMineID, 3);
+    mineProductionComponent.set(entity, 7);
   }
 
   function initializeFactories(IWorld world) internal {
@@ -358,160 +266,112 @@ library LibDebugInitializer {
     );
 
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
-    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
     MinesComponent minesComponent = MinesComponent(getAddressById(components, MinesComponentID));
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      getAddressById(components, MaxResourceStorageComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
 
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
       getAddressById(components, PassiveProductionComponentID)
     );
     //DebugIronPlateFactoryNoMineReqID
-    maxLevelComponent.set(DebugIronPlateFactoryNoMineReqID, 3);
-    ignoreBuildLimitComponent.set(DebugIronPlateFactoryNoMineReqID);
+    uint256 entity = DebugIronPlateFactoryNoMineReqID;
+    maxLevelComponent.set(entity, 3);
+    ignoreBuildLimitComponent.set(entity);
 
     //set a storage amount for IronPlateCraftedItemID to stream line usage
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 1),
-      IronPlateCraftedItemID,
-      1000
-    );
-    LibSetProductionForLevel.setProductionForLevel(
-      productionComponent,
-      DebugIronPlateFactoryNoMineReqID,
-      1,
-      IronPlateCraftedItemID,
-      2
-    );
+    entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 1);
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
 
-    LibSetProductionForLevel.setProductionForLevel(
-      productionComponent,
-      DebugIronPlateFactoryNoMineReqID,
-      2,
-      IronPlateCraftedItemID,
-      4
-    );
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
-    LibSetProductionForLevel.setProductionForLevel(
-      productionComponent,
-      DebugIronPlateFactoryNoMineReqID,
-      3,
-      IronPlateCraftedItemID,
-      6
-    );
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: DebugIronPlateFactoryNoMineReqID, value: 1 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2 });
+    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
+
+    entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 2);
+    resourceValues[0] = ResourceValue({ resource: DebugIronPlateFactoryNoMineReqID, value: 2 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 4 });
+    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
+
+    entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 3);
+    resourceValues[0] = ResourceValue({ resource: DebugIronPlateFactoryNoMineReqID, value: 3 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 6 });
+    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     //DebugIronPlateFactoryID
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
-      IronPlateCraftedItemID,
-      1000
-    );
+
     ignoreBuildLimitComponent.set(DebugIronPlateFactoryID);
     maxLevelComponent.set(DebugIronPlateFactoryID, 3);
     //DebugIronPlateFactoryID level 1
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
-      minesComponent,
-      DebugIronPlateFactoryID,
-      1,
-      DebugIronMineID,
-      1
-    );
-    LibSetProductionForLevel.setProductionForLevel(
-      productionComponent,
-      DebugIronPlateFactoryID,
-      1,
-      IronPlateCraftedItemID,
-      2
-    );
+    entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1);
+    resourceValues = new ResourceValue[](1);
+
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+
+    ResourceValues memory requiredMines = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredMines.resources[0] = IronMineID;
+    requiredMines.values[0] = 1;
+    minesComponent.set(entity, requiredMines);
+
+    productionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 2 }));
+
     //DebugIronPlateFactoryID level 2
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
-      minesComponent,
-      DebugIronPlateFactoryID,
-      2,
-      DebugIronMineID,
-      1
-    );
-    LibSetProductionForLevel.setProductionForLevel(
-      productionComponent,
-      DebugIronPlateFactoryID,
-      2,
-      IronPlateCraftedItemID,
-      4
-    );
+    entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2);
+    requiredMines.resources[0] = DebugIronMineID;
+    requiredMines.values[0] = 1;
+    minesComponent.set(entity, requiredMines);
+
+    productionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 4 }));
 
     //DebugIronPlateFactoryID level 3
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
-      minesComponent,
-      DebugIronPlateFactoryID,
-      3,
-      DebugIronMineID,
-      2
-    );
-    LibSetProductionForLevel.setProductionForLevel(
-      productionComponent,
-      DebugIronPlateFactoryID,
-      3,
-      IronPlateCraftedItemID,
-      6
-    );
+    entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 3);
+    requiredMines.resources[0] = DebugIronMineID;
+    requiredMines.values[0] = 2;
+    minesComponent.set(entity, requiredMines);
+
+    productionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 6 }));
 
     //DebugPassiveProductionBuilding
     ignoreBuildLimitComponent.set(DebugPassiveProductionBuilding);
     passiveProductionComponent.set(DebugPassiveProductionBuilding, ResourceValue(ElectricityPassiveResourceID, 10));
 
     //DebugAlloyFactoryID
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      LibEncode.hashKeyEntity(DebugAlloyFactoryID, 1),
-      AlloyCraftedItemID,
-      1000
-    );
     ignoreBuildLimitComponent.set(DebugAlloyFactoryID);
+
     //DebugAlloyFactoryID level 1
-    LibSetFactoryMineRequirements.setFactory2MineRequirement(
-      minesComponent,
-      DebugAlloyFactoryID,
-      1,
-      DebugIronMineID,
-      1,
-      DebugCopperMineID,
-      1
-    );
-    LibSetProductionForLevel.setProductionForLevel(productionComponent, DebugAlloyFactoryID, 1, AlloyCraftedItemID, 1);
+    entity = LibEncode.hashKeyEntity(DebugAlloyFactoryID, 1);
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+
+    requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
+    requiredMines.resources[0] = DebugIronMineID;
+    requiredMines.values[0] = 1;
+    requiredMines.resources[0] = DebugCopperMineID;
+    requiredMines.values[0] = 1;
+
+    minesComponent.set(entity, requiredMines);
+
+    productionComponent.set(entity, ResourceValue({ resource: AlloyCraftedItemID, value: 1 }));
 
     //LithiumCopperOxideFactoryID
-    LibSetRequiredResources.set1RequiredResourceForEntity(
-      maxResourceStorageComponent,
-      maxStorageComponent,
-      LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1),
-      LithiumCopperOxideCraftedItemID,
-      1000
-    );
+
     ignoreBuildLimitComponent.set(LithiumCopperOxideFactoryID);
     //LithiumCopperOxideFactoryID level 1
-    LibSetFactoryMineRequirements.setFactory2MineRequirement(
-      minesComponent,
-      LithiumCopperOxideFactoryID,
-      1,
-      DebugLithiumMineID,
-      1,
-      DebugCopperMineID,
-      1
-    );
-    LibSetProductionForLevel.setProductionForLevel(
-      productionComponent,
-      LithiumCopperOxideFactoryID,
-      1,
-      LithiumCopperOxideCraftedItemID,
-      2
-    );
+    entity = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1);
+    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+
+    requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
+    requiredMines.resources[0] = DebugLithiumMineID;
+    requiredMines.values[0] = 1;
+    requiredMines.resources[0] = DebugCopperMineID;
+    requiredMines.values[0] = 1;
+
+    minesComponent.set(entity, requiredMines);
+
+    productionComponent.set(entity, ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2 }));
 
     //DebugSolarPanelID
     ignoreBuildLimitComponent.set(DebugSolarPanelID);
