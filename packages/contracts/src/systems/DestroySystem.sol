@@ -38,7 +38,7 @@ uint256 constant ID = uint256(keccak256("system.Destroy"));
 contract DestroySystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function checkPassiveResourceRequirementsMetAfterDestroy(uint256 blockType) internal view returns (bool) {
+  function checkPassiveResourceReqsMetAfterDestroy(uint256 blockType) internal view returns (bool) {
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
       getAddressById(components, PassiveProductionComponentID)
     );
@@ -67,7 +67,7 @@ contract DestroySystem is PrimodiumSystem {
     uint256 playerEntity = addressToEntity(msg.sender);
     uint256 buildingType = buildingTypeComponent.getValue(buildingEntity);
     require(
-      checkPassiveResourceRequirementsMetAfterDestroy(buildingType),
+      checkPassiveResourceReqsMetAfterDestroy(buildingType),
       "[DestroySystem] can not destory passive resource production building if requirements are not met, destroy passive resource consumers first or increase passive resource production"
     );
 
@@ -106,7 +106,7 @@ contract DestroySystem is PrimodiumSystem {
     }
 
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      maxBuildingsComponent.set(playerEntity, LibMath.getSafeUint32Value(maxBuildingsComponent, playerEntity) - 1);
+      maxBuildingsComponent.set(playerEntity, LibMath.getSafeUint32(maxBuildingsComponent, playerEntity) - 1);
     }
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);

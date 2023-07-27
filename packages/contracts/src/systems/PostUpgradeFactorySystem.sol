@@ -63,11 +63,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       levelComponent.getValue(factoryEntity)
     );
 
-    LibUnclaimedResource.updateUnclaimedForResource(
-      world,
-      playerEntity,
-      productionComponent.getValue(levelEntity).resource
-    );
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionComponent.getValue(levelEntity).resource);
 
     ResourceValue memory productionDataPreUpgrade = productionComponent.getValue(
       LibEncode.hashKeyEntity(buildingTypeComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)

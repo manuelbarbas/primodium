@@ -22,9 +22,9 @@ contract DebugAcquireResourcesSystem is System {
     uint256 playerEntity = addressToEntity(msg.sender);
     itemComponent.set(
       LibEncode.hashKeyEntity(resourceId, playerEntity),
-      LibMath.getSafeUint32Value(itemComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) + amount
+      LibMath.getSafeUint32(itemComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) + amount
     );
-    return abi.encode(LibMath.getSafeUint32Value(itemComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)));
+    return abi.encode(LibMath.getSafeUint32(itemComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)));
   }
 
   function executeTyped(uint256 resourceId, uint256 amount) public returns (bytes memory) {

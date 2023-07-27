@@ -16,7 +16,6 @@ import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
 import { Coord } from "../types.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibPath } from "../libraries/LibPath.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";

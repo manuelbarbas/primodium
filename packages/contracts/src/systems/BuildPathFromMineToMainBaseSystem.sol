@@ -34,7 +34,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
     uint256 playerEntity = addressToEntity(playerAddress);
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromBuildingEntity));
 
-    LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
 
     uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(fromBuildingEntity);
     uint256 levelEntity = LibEncode.hashKeyEntity(
@@ -49,7 +49,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) +
+      LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) +
         mineProductionComponent.getValue(levelEntity)
     );
 

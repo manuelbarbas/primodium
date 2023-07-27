@@ -11,21 +11,16 @@ import { LibResource } from "./LibResource.sol";
 library LibFactory {
   //checks all required conditions for a factory to be functional and updates factory is functional status
 
-  function updateResourceProductionOnActiveChange(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 factoryLevelEntity,
-    bool isFunctional
-  ) internal {
+  function updateProduction(IWorld world, uint256 playerEntity, uint256 factoryLevelEntity, bool increase) internal {
     MineProductionComponent mineProductionComponent = MineProductionComponent(
       world.getComponent(MineProductionComponentID)
     );
     ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
     ResourceValue memory productionData = productionComponent.getValue(factoryLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.resource, playerEntity);
-    uint32 newResourceProductionRate = isFunctional
-      ? LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) + productionData.value
-      : LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) - productionData.value;
+    uint32 newResourceProductionRate = increase
+      ? LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) + productionData.value
+      : LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) - productionData.value;
     LibResource.updateResourceProduction(world, playerResourceEntity, newResourceProductionRate);
   }
 }

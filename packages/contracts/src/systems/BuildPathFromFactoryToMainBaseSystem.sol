@@ -46,9 +46,9 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
       );
       ResourceValue memory productionData = ProductionComponent(getC(ProductionComponentID)).getValue(levelEntity);
 
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, productionData.resource);
+      LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionData.resource);
 
-      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
+      LibFactory.updateProduction(world, playerEntity, levelEntity, true);
     }
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);

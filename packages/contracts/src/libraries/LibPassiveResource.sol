@@ -20,7 +20,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 
 library LibPassiveResource {
-  function checkPassiveResourceRequirements(
+  function checkPassiveResourceReqs(
     IWorld world,
     uint256 playerEntity,
     uint256 buildingType
@@ -61,7 +61,7 @@ library LibPassiveResource {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) + requiredAmounts[i]
+        LibMath.getSafeUint32(itemComponent, playerResourceEntity) + requiredAmounts[i]
       );
     }
   }
@@ -80,7 +80,7 @@ library LibPassiveResource {
     if (!passiveProductionComponent.has(buildingLevelEntity)) return;
 
     uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
-    uint32 newMaxStorage = LibMath.getSafeUint32Value(
+    uint32 newMaxStorage = LibMath.getSafeUint32(
       MaxStorageComponent(world.getComponent(MaxStorageComponentID)),
       LibEncode.hashKeyEntity(resourceId, playerEntity)
     ) + passiveProductionComponent.getValue(buildingLevelEntity).value;

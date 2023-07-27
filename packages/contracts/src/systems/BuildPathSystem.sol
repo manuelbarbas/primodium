@@ -32,8 +32,8 @@ uint256 constant ID = uint256(keccak256("system.BuildPath"));
 contract BuildPathSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function updateUnclaimedForResource(uint256 playerEntity, uint256 startBuilding) internal {
-    LibUnclaimedResource.updateUnclaimedForResource(
+  function updateResourceClaimed(uint256 playerEntity, uint256 startBuilding) internal {
+    LibUnclaimedResource.updateResourceClaimed(
       world,
       playerEntity,
       LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startBuilding))

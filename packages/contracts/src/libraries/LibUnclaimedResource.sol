@@ -13,7 +13,7 @@ import { LibMath } from "./LibMath.sol";
 import { LibStorage } from "./LibStorage.sol";
 
 library LibUnclaimedResource {
-  function updateUnclaimedForResource(IWorld world, uint256 playerEntity, uint256 resourceId) internal {
+  function updateResourceClaimed(IWorld world, uint256 playerEntity, uint256 resourceId) internal {
     UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
       world.getComponent(UnclaimedResourceComponentID)
     );
@@ -31,10 +31,7 @@ library LibUnclaimedResource {
     } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) == block.number) {
       return;
     }
-    uint32 playerResourceProduction = LibMath.getSafeUint32Value(
-      mineProductionComponent,
-      playerResourceProductionEntity
-    );
+    uint32 playerResourceProduction = LibMath.getSafeUint32(mineProductionComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;
@@ -46,9 +43,9 @@ library LibUnclaimedResource {
       return;
     }
 
-    uint32 unclaimedResource = LibMath.getSafeUint32Value(unclaimedResourceComponent, playerResourceProductionEntity) +
+    uint32 unclaimedResource = LibMath.getSafeUint32(unclaimedResourceComponent, playerResourceProductionEntity) +
       (playerResourceProduction *
-        uint32(block.number - LibMath.getSafeUint256Value(lastClaimedAtComponent, playerResourceProductionEntity)));
+        uint32(block.number - LibMath.getSafeUint256(lastClaimedAtComponent, playerResourceProductionEntity)));
 
     if (availableSpaceInStorage < unclaimedResource) {
       unclaimedResource = availableSpaceInStorage;

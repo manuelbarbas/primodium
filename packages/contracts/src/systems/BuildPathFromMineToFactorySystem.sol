@@ -85,7 +85,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
 
     uint256 factoryResourceId = ProductionComponent(getC(ProductionComponentID)).getValue(factoryLevelEntity).resource;
 
-    LibUnclaimedResource.updateUnclaimedForResource(world, addressToEntity(playerAddress), factoryResourceId);
+    LibUnclaimedResource.updateResourceClaimed(world, addressToEntity(playerAddress), factoryResourceId);
 
     require(
       canBuildPath(fromBuildingEntity, toBuildingEntity),
@@ -101,9 +101,9 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
         factoryLevelEntity
       );
 
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.resource);
+      LibUnclaimedResource.updateResourceClaimed(world, playerEntity, factoryProductionData.resource);
 
-      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, factoryLevelEntity, true);
+      LibFactory.updateProduction(world, playerEntity, factoryLevelEntity, true);
     }
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);
     return abi.encode(fromBuildingEntity, toBuildingEntity);

@@ -5,25 +5,11 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 import { LibEncode } from "./LibEncode.sol";
 
 library LibMath {
-  // ###########################################################################
-  // Debug Increment function
-  function increment(Uint32Component component, uint256 entity) internal {
-    uint32 current = component.has(entity) ? component.getValue(entity) : 0;
-    component.set(entity, current + 1);
-  }
-
-  // ###########################################################################
-  function getSafeUint256Value(Uint256Component component, uint256 entity) internal view returns (uint256) {
+  function getSafeUint256(Uint256Component component, uint256 entity) internal view returns (uint256) {
     return component.has(entity) ? component.getValue(entity) : 0;
   }
 
-  // ###########################################################################
-  function getSafeUint32Value(Uint32Component component, uint256 entity) internal view returns (uint32) {
+  function getSafeUint32(Uint32Component component, uint256 entity) internal view returns (uint32) {
     return component.has(entity) ? component.getValue(entity) : 0;
-  }
-
-  function incrementBy(Uint32Component component, uint256 entity, uint32 incBy) internal {
-    uint32 current = getSafeUint32Value(component, entity);
-    component.set(entity, current + incBy);
   }
 }

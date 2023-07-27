@@ -295,7 +295,7 @@ contract BuildSystemTest is PrimodiumTest {
     uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(debugLevel1);
     assertEq(resourceRequirements.length, 1, "DebugSimpleBuildingResourceReqs should have 1 resource requirement");
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint32 resourceCost = LibMath.getSafeUint32Value(
+      uint32 resourceCost = LibMath.getSafeUint32(
         itemComponent,
         LibEncode.hashKeyEntity(resourceRequirements[i], debugLevel1)
       );
@@ -342,7 +342,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailBuildMoreThenBuildLimit() public {
     vm.startPrank(alice);
     buildMainBaseAtZero();
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
+    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -354,7 +354,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildUpToBuildLimit() public prank(alice) {
     buildMainBaseAtZero();
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
+    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -366,7 +366,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildUpToBuildLimitIgnoreMainBaseAndBuildingWithIgnoreLimit() public {
     vm.startPrank(alice);
 
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
+    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
 
     Coord memory coord1 = Coord({ x: -1, y: -1 });
     buildSystem.executeTyped(MainBaseID, coord1);

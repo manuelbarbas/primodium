@@ -55,7 +55,7 @@ contract BuildSystem is PrimodiumSystem {
     );
     //check build limit
     require(
-      LibBuilding.isMaxBuildingsConditionMet(world, playerEntity, buildingType),
+      LibBuilding.isMaxBuildingsMet(world, playerEntity, buildingType),
       "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
@@ -77,7 +77,7 @@ contract BuildSystem is PrimodiumSystem {
       }
     }
     require(
-      LibPassiveResource.checkPassiveResourceRequirements(world, playerEntity, buildingType),
+      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType),
       "[BuildSystem] You do not have the required passive resources"
     );
 

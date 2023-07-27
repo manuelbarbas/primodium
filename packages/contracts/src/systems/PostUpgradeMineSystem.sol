@@ -65,14 +65,10 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
       levelComponent.getValue(factoryEntity)
     );
     //first update unclaimed resources up to this point
-    LibUnclaimedResource.updateUnclaimedForResource(
-      world,
-      playerEntity,
-      productionComponent.getValue(levelEntity).resource
-    );
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionComponent.getValue(levelEntity).resource);
 
     //then update resource production
-    LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
+    LibFactory.updateProduction(world, playerEntity, levelEntity, true);
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
@@ -102,7 +98,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     ) {
       uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
       //if connected to MainBase update unclaimed resources up to this point
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+      LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
       //and update resource production
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
       updateResourceProduction(playerResourceEntity, mineEntity);

@@ -28,8 +28,8 @@ uint256 constant ID = uint256(keccak256("system.PostDestroyPath"));
 contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function updateUnclaimedForResource(uint256 playerEntity, uint256 resourceId) internal {
-    LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+  function updateResourceClaimed(uint256 playerEntity, uint256 resourceId) internal {
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
   }
 
   function handleOnDestroyPathFromMineToMainBase(
@@ -40,7 +40,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   ) internal {
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
     // update unclaimed resources
-    updateUnclaimedForResource(playerEntity, resourceId);
+    updateResourceClaimed(playerEntity, resourceId);
     // when path from mine to main base is destroyed resource production is reduced by the mines resource production
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
@@ -75,7 +75,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     if (isFunctional) {
       // update unclaimed resources
-      updateUnclaimedForResource(playerEntity, productionComponent.getValue(factoryLevelEntity).resource);
+      updateResourceClaimed(playerEntity, productionComponent.getValue(factoryLevelEntity).resource);
     }
 
     //when a path from mine to factory is destroyed, factory becomes non functional
@@ -92,7 +92,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     //if factory was functional player resource production must be cecreased by the resource production of the factory
     if (isFunctional && PathComponent(getAddressById(components, PathComponentID)).has(factoryEntity))
-      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, factoryLevelEntity, false);
+      LibFactory.updateProduction(world, playerEntity, factoryLevelEntity, false);
   }
 
   function handleOnDestroyPathFromFactoryToMainBase(
@@ -116,10 +116,10 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     ResourceValue memory productionData = ProductionComponent(getAddressById(components, ProductionComponentID))
       .getValue(factoryLevelEntity);
     // update unclaimed resources
-    updateUnclaimedForResource(playerEntity, productionData.resource);
+    updateResourceClaimed(playerEntity, productionData.resource);
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.resource, playerEntity);
-    if (LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) <= 0)
+    if (LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) <= 0)
       revert("this should not be possible");
     //update resource production
     LibResource.updateResourceProduction(
