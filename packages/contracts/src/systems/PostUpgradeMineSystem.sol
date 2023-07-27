@@ -17,7 +17,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
@@ -81,7 +81,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     );
     uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);
     uint256 tile = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(mineEntity);
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       mineProductionComponent.getValue(playerResourceEntity) +

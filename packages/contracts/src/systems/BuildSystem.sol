@@ -21,7 +21,7 @@ import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 import { Coord } from "../types.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
-import { LibResourceCost } from "../libraries/LibResourceCost.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
@@ -50,7 +50,7 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     require(
-      LibResourceCost.hasRequiredResources(world, buildingType, playerEntity),
+      LibResource.hasRequiredResources(world, buildingType, playerEntity),
       "[BuildSystem] You do not have the required resources"
     );
     //check build limit
@@ -68,9 +68,7 @@ contract BuildSystem is PrimodiumSystem {
     ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
-      MainBaseComponent mainBaseComponent = MainBaseComponent(
-        getC(MainBaseComponentID)
-      );
+      MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
 
       if (mainBaseComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
@@ -84,7 +82,7 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     //check resource requirements and if ok spend required resources
-    LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
+    LibResource.spendRequiredResources(world, buildingType, playerEntity);
 
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);

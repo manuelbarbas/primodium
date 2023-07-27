@@ -17,7 +17,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
@@ -45,7 +45,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       mineProductionComponent.getValue(playerResourceEntity) -
@@ -122,7 +122,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     if (LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) <= 0)
       revert("this should not be possible");
     //update resource production
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       mineProductionComponent.getValue(playerResourceEntity) - productionData.value

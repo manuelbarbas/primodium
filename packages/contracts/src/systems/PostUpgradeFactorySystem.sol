@@ -21,7 +21,7 @@ import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
@@ -86,7 +86,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     ) {
       // if functional increase resource production by the difference in resource production between the two levels
 
-      LibResourceProduction.updateResourceProduction(
+      LibResource.updateResourceProduction(
         world,
         playerResourceEntity,
         MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) +
@@ -95,7 +95,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     } else {
       // if not functional remove resource production of the factory and set as non functional
       activeComponent.remove(factoryEntity);
-      LibResourceProduction.updateResourceProduction(
+      LibResource.updateResourceProduction(
         world,
         playerResourceEntity,
         MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) -

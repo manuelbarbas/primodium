@@ -18,7 +18,7 @@ import { MinesComponent, ID as MinesComponentID, ResourceValues } from "componen
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibClaim } from "../libraries/LibClaim.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";

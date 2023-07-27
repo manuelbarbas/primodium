@@ -11,7 +11,7 @@ import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
@@ -46,7 +46,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
     require(mineProductionComponent.has(levelEntity), "Mine level entity not found");
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) +

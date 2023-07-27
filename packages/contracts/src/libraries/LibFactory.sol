@@ -6,7 +6,7 @@ import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from 
 import { MineProductionComponent, ID as MineProductionComponentID } from "../components/MineProductionComponent.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
-import { LibResourceProduction } from "./LibResourceProduction.sol";
+import { LibResource } from "./LibResource.sol";
 
 library LibFactory {
   //checks all required conditions for a factory to be functional and updates factory is functional status
@@ -26,6 +26,6 @@ library LibFactory {
     uint32 newResourceProductionRate = isFunctional
       ? LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) + productionData.value
       : LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) - productionData.value;
-    LibResourceProduction.updateResourceProduction(world, playerResourceEntity, newResourceProductionRate);
+    LibResource.updateResourceProduction(world, playerResourceEntity, newResourceProductionRate);
   }
 }

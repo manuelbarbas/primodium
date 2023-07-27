@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
 import { IWorld } from "solecs/interfaces/IWorld.sol";
@@ -70,6 +71,31 @@ library LibStorage {
         getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);
 
       updateResourceMaxStorage(world, playerEntity, storageResources[i], playerResourceMaxStorage + maxStorageIncrease);
+    }
+  }
+
+  function addResourceToStorage(
+    IWorld world,
+    uint256 resourceId,
+    uint32 resourceAmount,
+    uint256 playerEntity
+  ) internal returns (uint32) {
+    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
+
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    uint32 availableSpaceInPlayerStorage = getResourceStorageSpace(world, playerEntity, resourceId);
+    if (availableSpaceInPlayerStorage > resourceAmount) {
+      itemComponent.set(
+        playerResourceEntity,
+        LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) + resourceAmount
+      );
+      return 0;
+    } else {
+      itemComponent.set(
+        playerResourceEntity,
+        LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
+      );
+      return resourceAmount - availableSpaceInPlayerStorage;
     }
   }
 }
