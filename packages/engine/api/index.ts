@@ -1,5 +1,5 @@
 import { useEngineStore } from "../store/EngineStore";
-import { Game } from "../types";
+import { Game, GameConfig } from "../types";
 import { createGame as _createGame } from "../lib/core/createGame";
 
 export const initializeContext = (game: Game) => {
@@ -12,7 +12,7 @@ export const getGame = () => {
   return useEngineStore.getState().game;
 };
 
-export const createGame = async (config: Phaser.Types.Core.GameConfig) => {
+export const createGame = async (config: GameConfig) => {
   return await _createGame(config);
 };
 

@@ -22,7 +22,9 @@ export type Key =
   | "POINTER_LEFT"
   | "POINTER_RIGHT";
 
-export type GameConfig = Phaser.Types.Core.GameConfig;
+export type GameConfig = Phaser.Types.Core.GameConfig & {
+  assetPackUrl: string;
+};
 
 export type TilesetConfig = {
   [x: string]: {
@@ -35,7 +37,6 @@ export type TilesetConfig = {
 
 export interface SceneConfig {
   key: string;
-  assetPackUrl: string;
   camera: CameraConfig;
   animations?: Animation<any>[];
   cullingChunkSize: number;

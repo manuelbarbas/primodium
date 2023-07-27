@@ -1,5 +1,5 @@
 {
-  "MAIN": {
+  "ROOT": {
     "files": [
       {
         "type": "image",
@@ -16,12 +16,6 @@
         "key": "sprite-atlas",
         "textureURL": "/assets/sprites/atlas.png",
         "atlasURL": "/assets/sprites/atlas.json"
-      },
-      {
-        "type": "atlas",
-        "key": "base-atlas",
-        "textureURL": "/assets/sprites/base.png",
-        "atlasURL": "/assets/sprites/base.json"
       }
     ]
   }

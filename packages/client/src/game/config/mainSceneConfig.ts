@@ -6,7 +6,6 @@ import { tileAnimationConfig } from "./tileAnimationConfig";
 
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
-  assetPackUrl: Assets.Pack,
   camera: {
     minZoom: Math.max(1, window.devicePixelRatio),
     maxZoom: window.devicePixelRatio * 5,

@@ -1,6 +1,9 @@
+import { Assets } from "@game/constants";
+import { GameConfig } from "engine/types";
+
 const RENDER_RESOLUTION = 1;
 
-const gameConfig: Phaser.Types.Core.GameConfig = {
+const gameConfig: GameConfig = {
   type: Phaser.WEBGL,
   parent: "phaser-container",
   backgroundColor: "64748b",
@@ -15,6 +18,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   autoRound: true,
   transparent: true,
   pixelArt: true,
+  assetPackUrl: Assets.Pack,
 };
 
 export default gameConfig;

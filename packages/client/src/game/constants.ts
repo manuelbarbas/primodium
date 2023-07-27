@@ -1,8 +1,9 @@
 import { BlockType } from "../util/constants";
 
 export enum Scenes {
+  Default = "DEFAULT",
   Main = "MAIN",
-  Test = "TEST",
+  STARMAP = "STARMAP",
 }
 
 export const TILE_HEIGHT = 16;

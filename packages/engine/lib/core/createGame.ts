@@ -4,6 +4,8 @@ import { createSceneManager } from "./createSceneManager";
 import { deferred } from "@latticexyz/utils";
 import { resizePhaserGame } from "../util/resizePhaserGame";
 import { GameConfig } from "../../types";
+import createPhaserScene from "../util/createPhaserScene";
+import { getSceneLoadPromise } from "../util/getSceneLoadPromise";
 
 export const createGame = async (config: GameConfig) => {
   try {
@@ -16,6 +18,20 @@ export const createGame = async (config: GameConfig) => {
     await promise;
 
     const resizer = resizePhaserGame(phaserGame);
+
+    // Create scene for loading assets
+    const phaserScene = createPhaserScene({
+      key: "ROOT",
+      preload: (scene: Phaser.Scene) => {
+        scene.load.pack("ROOT", config.assetPackUrl);
+      },
+    });
+
+    let loadScene = new phaserScene();
+
+    phaserGame.scene.add("ROOT", loadScene, true);
+
+    await getSceneLoadPromise(loadScene);
 
     /* -------------------------- Create Scene Manager -------------------------- */
 

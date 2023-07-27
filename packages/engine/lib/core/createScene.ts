@@ -7,7 +7,6 @@ import {
 import { ObjectPool } from "@latticexyz/phaserx/dist/types";
 
 import createInput from "./createInput";
-import getSceneLoadPromise from "../util/getSceneLoadPromise";
 import { createPhaserScene } from "../util/createPhaserScene";
 import { createCamera } from "./createCamera";
 import { createScriptManager } from "./createScriptManager";
@@ -41,16 +40,11 @@ export const createScene = async (
 
   const phaserScene = createPhaserScene({
     key: config.key,
-    preload: (scene: Phaser.Scene) => {
-      scene.load.pack(config.key, config.assetPackUrl);
-    },
   });
 
   let scene = new phaserScene();
 
   phaserGame.scene.add(config.key, scene, autoStart);
-
-  await getSceneLoadPromise(scene);
 
   const camera = createCamera(scene.cameras.main, {
     maxZoom,
@@ -62,7 +56,7 @@ export const createScene = async (
 
   const tilemap = createTilemap(
     scene,
-    //@ts-ignore
+    // @ts-ignore
     camera,
     tileWidth,
     tileHeight,
