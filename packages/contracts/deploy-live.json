@@ -10,7 +10,6 @@
     "ItemComponent",
     "HasResearchedComponent",
     "MainBaseComponent",
-    "StarterPackClaimedComponent",
     "LevelComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
@@ -41,10 +40,6 @@
     {
       "name": "ResearchSystem",
       "writeAccess": ["ItemComponent", "HasResearchedComponent"]
-    },
-    {
-      "name": "StarterPackSystem",
-      "writeAccess": ["ItemComponent", "StarterPackClaimedComponent"]
     },
     {
       "name": "AttackSystem",

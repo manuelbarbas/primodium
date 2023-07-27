@@ -245,42 +245,6 @@ export default function buildTourSteps(ctx: Network, player: EntityID) {
       },
     }),
 
-    // CHECKPOINT 2: CLAIMED STARTER PACK
-    buildStep({
-      name: "claim starter pack",
-      selector: "#starter-pack-button",
-      checkpoint: true,
-      narration: (
-        <p>
-          Looks like you are getting the hang of it. I’ve given you <b>200</b>{" "}
-          iron to get you started.
-          <br />
-          <br />
-          To see it, open the Inventory tab. This is where all of your resources
-          will be stored.
-        </p>
-      ),
-      customTooltipRenderer: () => {
-        return <Arrow direction="right" bounce />;
-      },
-      validate: async () => {
-        return true;
-      },
-      orientation: [CardinalOrientation.CENTER, CardinalOrientation.WEST],
-    }),
-    //ROUTE TO MINER
-    ...buildRoute({
-      route: ["#build", "#miners", "#basic-miner"],
-      narration: [
-        <p>
-          Now it’s time to mine some iron. Iron is required for most buildings
-          and items to set you up for early success.
-          <br />
-          <br />
-          To build a miner, open the <b>building menu again</b>.
-        </p>,
-      ],
-    }),
     //CHECKPOINT 3: PLACED DOWN MINER
     buildStep({
       name: "place down miner",
