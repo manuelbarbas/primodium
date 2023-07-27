@@ -43,9 +43,8 @@ library LibStorageUpgrade {
             : 0
         );
 
-      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        maxResourceStorageComponent,
-        maxStorageComponent,
+      LibStorageUpdate.updateResourceMaxStorage(
+        world,
         playerEntity,
         storageResources[i],
         playerResourceMaxStorage + maxStorageIncrease

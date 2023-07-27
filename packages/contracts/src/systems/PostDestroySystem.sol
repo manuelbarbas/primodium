@@ -36,7 +36,7 @@ uint256 constant ID = uint256(keccak256("system.PostDestroy"));
 contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function updatePassiveResourcesBasedOnRequirements(uint256 playerEntity, uint256 blockType) internal {
+  function updatePassiveResources(uint256 playerEntity, uint256 blockType) internal {
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
       getAddressById(components, RequiredPassiveComponentID)
     );
@@ -62,9 +62,8 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       uint256 resourceId = passiveProductionComponent.getValue(blockType).resource;
       MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
 
-      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        MaxResourceStorageComponent(getAddressById(components, MaxResourceStorageComponentID)),
-        maxStorageComponent,
+      LibStorageUpdate.updateResourceMaxStorage(
+        world,
         playerEntity,
         resourceId,
         maxStorageComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
@@ -95,9 +94,8 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
         buildingIdLevel,
         storageResources[i]
       );
-      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        maxResourceStorageComponent,
-        maxStorageComponent,
+      LibStorageUpdate.updateResourceMaxStorage(
+        world,
         playerEntity,
         storageResources[i],
         playerResourceMaxStorage - maxStorageIncrease
@@ -127,7 +125,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       buildingType,
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
     );
-    updatePassiveResourcesBasedOnRequirements(playerEntity, buildingType);
+    updatePassiveResources(playerEntity, buildingType);
     updatePassiveProduction(playerEntity, buildingType);
   }
 

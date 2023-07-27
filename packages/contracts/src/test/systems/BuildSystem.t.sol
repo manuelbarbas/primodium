@@ -232,7 +232,7 @@ contract BuildSystemTest is PrimodiumTest {
     Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
 
     uint256[] memory children = childrenComponent.getValue(buildingEntity);
-    assertEq(blueprint.length, children.length);
+    assertEq(blueprint.length, children.length * 2);
 
     for (uint i = 0; i < children.length; i++) {
       position = LibEncode.decodeCoordEntity(children[i]);
@@ -287,16 +287,17 @@ contract BuildSystemTest is PrimodiumTest {
       component(RequiredResourcesComponentID)
     );
 
+    uint256 debugLevel1 = LibEncode.hashKeyEntity(DebugSimpleBuildingResourceReqsID, 1);
     assertTrue(
-      requiredResourcesComponent.has(DebugSimpleBuildingResourceReqsID),
-      "DebugSimpleBuildingResourceReqs should have resource requirements"
+      requiredResourcesComponent.has(debugLevel1),
+      "DebugSimpleBuildingResourceReqs Level 1 should have resource requirements"
     );
-    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(DebugSimpleBuildingResourceReqsID);
+    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(debugLevel1);
     assertEq(resourceRequirements.length, 1, "DebugSimpleBuildingResourceReqs should have 1 resource requirement");
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
       uint32 resourceCost = LibMath.getSafeUint32Value(
         itemComponent,
-        LibEncode.hashKeyEntity(resourceRequirements[i], DebugSimpleBuildingResourceReqsID)
+        LibEncode.hashKeyEntity(resourceRequirements[i], debugLevel1)
       );
       console.log(
         "DebugSimpleBuildingResourceReqs requires resource: %s of amount %s",

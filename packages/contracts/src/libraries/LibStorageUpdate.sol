@@ -9,13 +9,11 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 import { LibStorage } from "libraries/LibStorage.sol";
 
 library LibStorageUpdate {
-  function updateMaxStorageOfResourceForEntity(
-    MaxResourceStorageComponent maxResourceStorageComponent,
-    MaxStorageComponent maxStorageComponent,
-    uint256 entity,
-    uint256 resourceId,
-    uint32 newMaxStorage
-  ) internal {
+  function updateResourceMaxStorage(IWorld world, uint256 entity, uint256 resourceId, uint32 newMaxStorage) internal {
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(world.getComponent(MaxStorageComponentID));
+    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
+      world.getComponent(MaxResourceStorageComponentID)
+    );
     uint256 resourceEntity = LibEncode.hashKeyEntity(resourceId, entity);
     if (!maxStorageComponent.has(resourceEntity)) {
       uint256[] memory storageResourceIds;
