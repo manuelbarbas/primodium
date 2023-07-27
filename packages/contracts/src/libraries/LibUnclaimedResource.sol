@@ -20,11 +20,9 @@ library LibUnclaimedResource {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
-    MaxStorageComponent storageComponent = MaxStorageComponent(world.getComponent(MaxStorageComponentID));
     MineProductionComponent mineProductionComponent = MineProductionComponent(
       world.getComponent(MineProductionComponentID)
     );
-    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
 
     uint256 playerResourceProductionEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
     if (!lastClaimedAtComponent.has(playerResourceProductionEntity)) {
@@ -42,12 +40,7 @@ library LibUnclaimedResource {
       return;
     }
 
-    uint32 availableSpaceInStorage = LibStorage.getAvailableSpaceInStorageForResource(
-      storageComponent,
-      itemComponent,
-      playerEntity,
-      resourceId
-    );
+    uint32 availableSpaceInStorage = LibStorage.getResourceStorageSpace(world, playerEntity, resourceId);
     if (availableSpaceInStorage <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;

@@ -18,7 +18,6 @@ import { MinesComponent, ID as MinesComponentID, ResourceValues } from "componen
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 import { LibClaim } from "../libraries/LibClaim.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
@@ -59,7 +58,6 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
   }
 
   function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
     MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
       getC(MaxResourceStorageComponentID)
     );
@@ -68,17 +66,9 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     if (!maxResourceStorageComponent.has(buildingTypeLevel)) return;
     uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
-        maxStorageComponent,
-        playerEntity,
-        storageResources[i]
-      );
-      uint32 maxStorageIncrease = LibStorage.getEntityMaxStorageForResource(
-        maxStorageComponent,
-        buildingTypeLevel,
-        storageResources[i]
-      );
-      LibStorageUpdate.updateResourceMaxStorage(
+      uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
+      uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingTypeLevel, storageResources[i]);
+      LibStorage.updateResourceMaxStorage(
         world,
         playerEntity,
         storageResources[i],

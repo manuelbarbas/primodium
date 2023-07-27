@@ -27,7 +27,6 @@ import { Coord, ResourceValues } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
@@ -62,7 +61,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       uint256 resourceId = passiveProductionComponent.getValue(blockType).resource;
       MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
 
-      LibStorageUpdate.updateResourceMaxStorage(
+      LibStorage.updateResourceMaxStorage(
         world,
         playerEntity,
         resourceId,
@@ -73,7 +72,6 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
   }
 
   function checkAndUpdatePlayerStorageAfterDestroy(uint256 playerEntity, uint256 buildingId, uint256 level) internal {
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
     MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
       getC(MaxResourceStorageComponentID)
     );
@@ -84,17 +82,9 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
-      uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
-        maxStorageComponent,
-        playerEntity,
-        storageResources[i]
-      );
-      uint32 maxStorageIncrease = LibStorage.getEntityMaxStorageForResource(
-        maxStorageComponent,
-        buildingIdLevel,
-        storageResources[i]
-      );
-      LibStorageUpdate.updateResourceMaxStorage(
+      uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
+      uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingIdLevel, storageResources[i]);
+      LibStorage.updateResourceMaxStorage(
         world,
         playerEntity,
         storageResources[i],

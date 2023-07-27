@@ -22,7 +22,7 @@ import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResourceCost } from "../libraries/LibResourceCost.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibStorageUpgrade } from "../libraries/LibStorageUpgrade.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
@@ -89,7 +89,7 @@ contract UpgradeSystem is PrimodiumSystem {
         buildingEntity
       );
 
-    LibStorageUpgrade.checkAndUpdatePlayerStorageAfterUpgrade(
+    LibStorage.upgradePlayerStorage(
       world,
       playerEntity,
       buildingTypeComponent.getValue(buildingEntity),

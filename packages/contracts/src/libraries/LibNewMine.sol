@@ -29,8 +29,6 @@ library LibNewMine {
     UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
       world.getComponent(UnclaimedResourceComponentID)
     );
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(world.getComponent(MaxStorageComponentID));
-    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
     uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
@@ -38,13 +36,7 @@ library LibNewMine {
         LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, storageResourceIds[i]);
       uint32 unclaimedResourceAmount = LibMath.getSafeUint32Value(unclaimedResourceComponent, playerResourceEntity);
       if (unclaimedResourceAmount > 0)
-        LibClaim.addResourceToStorage(
-          itemComponent,
-          maxStorageComponent,
-          storageResourceIds[i],
-          unclaimedResourceAmount,
-          playerEntity
-        );
+        LibClaim.addResourceToStorage(world, storageResourceIds[i], unclaimedResourceAmount, playerEntity);
       lastClaimedAtComponent.set(playerResourceEntity, block.number);
       unclaimedResourceComponent.set(playerResourceEntity, 0);
     }

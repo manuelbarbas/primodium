@@ -32,7 +32,6 @@ import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -45,9 +44,8 @@ contract DestroySystem is PrimodiumSystem {
     );
     if (passiveProductionComponent.has(blockType)) {
       return
-        LibStorage.getAvailableSpaceInStorageForResource(
-          MaxStorageComponent(getAddressById(components, MaxStorageComponentID)),
-          ItemComponent(getAddressById(components, ItemComponentID)),
+        LibStorage.getResourceStorageSpace(
+          world,
           addressToEntity(msg.sender),
           passiveProductionComponent.getValue(blockType).resource
         ) >= passiveProductionComponent.getValue(blockType).value;

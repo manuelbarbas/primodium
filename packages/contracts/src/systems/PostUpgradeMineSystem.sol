@@ -18,7 +18,7 @@ import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
-import { LibStorageUpgrade } from "../libraries/LibStorageUpgrade.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 
@@ -126,7 +126,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
 
     handleMineUpgrade(playerEntity, entity);
 
-    LibStorageUpgrade.checkAndUpdatePlayerStorageAfterUpgrade(world, playerEntity, buildingId, newLevel);
+    LibStorage.upgradePlayerStorage(world, playerEntity, buildingId, newLevel);
     return abi.encode(entity);
   }
 
