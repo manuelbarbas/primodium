@@ -535,7 +535,7 @@ export default function buildTourSteps(ctx: Network, player: EntityID) {
             </div>
             <div className="text-md text-center mb-4">
               Use your newfound knowledge to gather more advanced resources,
-              research new factories and attack others.
+              research new factories.
             </div>
             <button
               className="bg-green-500 p-4 rounded w-full"

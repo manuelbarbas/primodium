@@ -41,10 +41,6 @@
       "writeAccess": ["ItemComponent", "HasResearchedComponent"]
     },
     {
-      "name": "AttackSystem",
-      "writeAccess": ["ItemComponent", "BuildingTypeComponent", "OwnedByComponent", "LastClaimedAtComponent"]
-    },
-    {
       "name": "IncrementSystem",
       "writeAccess": ["CounterComponent"]
     },
@@ -234,10 +230,6 @@
     {
       "name": "DebugRemoveBuildLimitSystem",
       "writeAccess": ["IgnoreBuildLimitComponent"]
-    },
-    {
-      "name": "BlueprintSystem",
-      "writeAccess": ["BlueprintComponent"]
     },
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",

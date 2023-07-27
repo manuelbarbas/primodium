@@ -1,4 +1,3 @@
-export * from "./attackBuilding";
 export * from "./buildBuilding";
 export * from "./buildPath";
 export * from "./claimFromMine";
