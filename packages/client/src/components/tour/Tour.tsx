@@ -5,10 +5,9 @@ import buildTourSteps from "./Steps";
 import NarrationBox from "./NarrationBox";
 import { useTourStore } from "../../store/TourStore";
 import { useGameStore } from "../../store/GameStore";
-import { useMud } from "../../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { TourStep } from "../../util/types";
 import { useAccount } from "../../hooks/useAccount";
-import { validTutorialClick } from "src/util/tutorial";
 import { Marker, SelectedTile } from "src/network/components/clientComponents";
 
 export const Tour = () => {
@@ -93,7 +92,7 @@ export const Tour = () => {
 
           if (!selectedTile) return false;
 
-          return validTutorialClick(selectedTile);
+          return true;
         }}
         customCloseFunc={(tourLogic) => {
           setCheckpoint(null);

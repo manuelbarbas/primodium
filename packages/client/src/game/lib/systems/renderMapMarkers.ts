@@ -4,7 +4,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { createArrowMarker } from "../factory/arrowMarker";
 import { Marker, Position } from "src/network/components/clientComponents";

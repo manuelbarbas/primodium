@@ -1,5 +1,5 @@
 // import DragPlugin from "phaser3-rex-plugins/plugins/drag-plugin";
-import { api } from "../../api";
+import { initializeContext } from "../../api";
 import { createSceneManager } from "./createSceneManager";
 import { deferred } from "@latticexyz/utils";
 import { resizePhaserGame } from "../util/resizePhaserGame";
@@ -32,7 +32,7 @@ export const createGame = async (config: GameConfig) => {
       },
     };
 
-    api.initializeContext(context);
+    initializeContext(context);
 
     return context;
   } catch (e) {

@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { getAddressById } from "solecs/utils.sol";
+import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
@@ -96,7 +97,7 @@ uint256 constant DebugStorageBuildingID = uint256(keccak256("block.DebugStorageB
 library LibDebugInitializer {
   function init(IWorld world) internal {
     //should only work if debug is enabled
-    IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(IsDebugComponentID);
+    // IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).set(SingletonID);
 
     BlueprintComponent blueprintComponent = BlueprintComponent(
       getAddressById(world.components(), BlueprintComponentID)

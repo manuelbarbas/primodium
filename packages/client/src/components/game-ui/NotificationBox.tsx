@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { Transition, TransitionStatus } from "react-transition-group";
-import { useNotificationStore } from "../store/NotificationStore";
+import { useNotificationStore } from "../../store/NotificationStore";
 
 function NotificationBox() {
   const [title, message, showUI, setShowUI] = useNotificationStore((state) => [

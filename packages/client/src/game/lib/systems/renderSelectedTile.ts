@@ -6,7 +6,7 @@ import {
   defineExitSystem,
   defineUpdateSystem,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { createSelectionTile } from "../factory/selectionTile";
 import { world } from "src/network/world";
 import { SelectedTile } from "src/network/components/clientComponents";

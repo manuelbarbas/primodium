@@ -5,7 +5,7 @@ import { EntityID } from "@latticexyz/recs";
 import { SingletonID } from "@latticexyz/network";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useState } from "react";
-import { Key } from "src/engine/lib/core/createInput";
+import { Key } from "engine/types";
 import {
   SelectedAction,
   SelectedBuilding,
