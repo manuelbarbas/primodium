@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
 import { LibMath } from "./LibMath.sol";
@@ -8,7 +9,7 @@ import { LibEncode } from "./LibEncode.sol";
 
 library LibSetFactoryMineRequirements {
   function setFactory1MineRequirement(
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    MinesComponent minesComponent,
     uint256 factoryBuildingId,
     uint32 level,
     uint256 mineBuildingId1,
@@ -21,11 +22,11 @@ library LibSetFactoryMineRequirements {
     factoryMines.values = new uint32[](1);
     factoryMines.values[0] = numMineBuilding1;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
+    minesComponent.set(buildingIdLevel, factoryMines);
   }
 
   function setFactory2MineRequirement(
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    MinesComponent minesComponent,
     uint256 factoryBuildingId,
     uint32 level,
     uint256 mineBuildingId1,
@@ -42,11 +43,11 @@ library LibSetFactoryMineRequirements {
     factoryMines.values[0] = numMineBuilding1;
     factoryMines.values[1] = numMineBuilding2;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
+    minesComponent.set(buildingIdLevel, factoryMines);
   }
 
   function setFactory3MineRequirement(
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    MinesComponent minesComponent,
     uint256 factoryBuildingId,
     uint32 level,
     uint256 mineBuildingId1,
@@ -67,11 +68,11 @@ library LibSetFactoryMineRequirements {
     factoryMines.values[1] = numMineBuilding2;
     factoryMines.values[2] = numMineBuilding3;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
+    minesComponent.set(buildingIdLevel, factoryMines);
   }
 
   function setFactory3MineRequirement(
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
+    MinesComponent minesComponent,
     uint256 factoryBuildingId,
     uint32 level,
     uint256 mineBuildingId1,
@@ -96,6 +97,6 @@ library LibSetFactoryMineRequirements {
     factoryMines.values[2] = numMineBuilding3;
     factoryMines.values[3] = numMineBuilding4;
 
-    factoryMineBuildingsComponent.set(buildingIdLevel, factoryMines);
+    minesComponent.set(buildingIdLevel, factoryMines);
   }
 }

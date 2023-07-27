@@ -5,12 +5,12 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -32,9 +32,6 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     ActiveComponent activeComponent = ActiveComponent(getC(ActiveComponentID));
     LevelComponent levelComponent = LevelComponent(getC(LevelComponentID));
     BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getC(FactoryMineBuildingsComponentID)
-    );
 
     if (activeComponent.has(factoryEntity)) return false;
     uint256 factoryLevel = levelComponent.getValue(factoryEntity);
@@ -85,9 +82,7 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(toBuildingEntity)
     );
 
-    uint256 factoryResourceId = FactoryProductionComponent(getC(FactoryProductionComponentID))
-      .getValue(factoryLevelEntity)
-      .resource;
+    uint256 factoryResourceId = ProductionComponent(getC(ProductionComponentID)).getValue(factoryLevelEntity).resource;
 
     LibUnclaimedResource.updateUnclaimedForResource(world, addressToEntity(playerAddress), factoryResourceId);
 

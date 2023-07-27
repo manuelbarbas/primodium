@@ -6,11 +6,11 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -56,9 +56,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     //if factory was non functional nothing to do
     if (!activeComponent.has(factoryEntity)) return;
 
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(components, FactoryProductionComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
 
     uint256 levelEntity = LibEncode.hashKeyEntity(
       buildingTypeComponent.getValue(factoryEntity),
@@ -68,14 +66,14 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     LibUnclaimedResource.updateUnclaimedForResource(
       world,
       playerEntity,
-      factoryProductionComponent.getValue(levelEntity).resource
+      productionComponent.getValue(levelEntity).resource
     );
 
-    ResourceValue memory factoryProductionDataPreUpgrade = factoryProductionComponent.getValue(
+    ProductionData memory productionDataPreUpgrade = productionComponent.getValue(
       LibEncode.hashKeyEntity(buildingTypeComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
     );
 
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(factoryProductionDataPreUpgrade.resource, playerEntity);
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionDataPreUpgrade.resource, playerEntity);
 
     //check to see if factory is still functional after upgrade
     if (
@@ -91,8 +89,8 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       LibResourceProduction.updateResourceProduction(
         world,
         playerResourceEntity,
-        MineComponent(getAddressById(components, MineComponentID)).getValue(playerResourceEntity) +
-          (factoryProductionComponent.getValue(levelEntity).value - factoryProductionDataPreUpgrade.value)
+        MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) +
+          (productionComponent.getValue(levelEntity).value - productionDataPreUpgrade.value)
       );
     } else {
       // if not functional remove resource production of the factory and set as non functional
@@ -100,8 +98,8 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       LibResourceProduction.updateResourceProduction(
         world,
         playerResourceEntity,
-        MineComponent(getAddressById(components, MineComponentID)).getValue(playerResourceEntity) -
-          factoryProductionDataPreUpgrade.value
+        MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) -
+          productionDataPreUpgrade.value
       );
     }
   }

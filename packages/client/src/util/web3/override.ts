@@ -1,12 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
-import {
-  BuildingType,
-  LastBuiltAt,
-  LastClaimedAt,
-  OwnedBy,
-} from "src/network/components/chainComponents";
-import { BlockNumber, Position } from "src/network/components/clientComponents";
+import { BuildingType, OwnedBy } from "src/network/components/chainComponents";
+import { Position } from "src/network/components/clientComponents";
 import { singletonIndex } from "src/network/world";
 
 // Component overrides
@@ -17,7 +12,6 @@ export const addTileOverride = (
 ) => {
   const tempPositionId = uuid();
   const tempEntityIndex = singletonIndex;
-  const blockNumber = BlockNumber.get(undefined, { value: 0 });
   Position.addOverride(tempPositionId, {
     entity: tempEntityIndex,
     value: pos,
@@ -30,14 +24,6 @@ export const addTileOverride = (
     entity: tempEntityIndex,
     value: { value: player },
   });
-  LastBuiltAt.addOverride(tempPositionId, {
-    entity: tempEntityIndex,
-    value: blockNumber,
-  });
-  LastClaimedAt.addOverride(tempPositionId, {
-    entity: tempEntityIndex,
-    value: blockNumber,
-  });
 
   return { tempPositionId, tempEntityIndex };
 };
@@ -45,6 +31,4 @@ export const addTileOverride = (
 export const removeTileOverride = (tempPositionId: string) => {
   Position.removeOverride(tempPositionId);
   BuildingType.removeOverride(tempPositionId);
-  LastBuiltAt.removeOverride(tempPositionId);
-  LastClaimedAt.removeOverride(tempPositionId);
 };

@@ -9,9 +9,9 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, ResourceValues } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
@@ -30,10 +30,12 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
 
   function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
     MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
-    OwnedResourcesComponent ownedResourcesComponent = OwnedResourcesComponent(getC(OwnedResourcesComponentID));
+    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
+      getC(MaxResourceStorageComponentID)
+    );
     uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
-    if (!ownedResourcesComponent.has(buildingTypeLevel)) return;
-    uint256[] memory storageResources = ownedResourcesComponent.getValue(buildingTypeLevel);
+    if (!maxResourceStorageComponent.has(buildingTypeLevel)) return;
+    uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
         maxStorageComponent,
@@ -46,7 +48,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
         storageResources[i]
       );
       LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        ownedResourcesComponent,
+        maxResourceStorageComponent,
         maxStorageComponent,
         playerEntity,
         storageResources[i],
@@ -56,16 +58,14 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
   }
 
   function setupFactory(uint256 factoryEntity) internal {
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getC(FactoryMineBuildingsComponentID)
-    );
+    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
     uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(factoryEntity);
     uint256 levelEntity = LibEncode.hashKeyEntity(buildingId, 1);
-    if (!factoryMineBuildingsComponent.has(levelEntity)) {
+    if (!minesComponent.has(levelEntity)) {
       return;
     }
-    ResourceValues memory factoryMines = factoryMineBuildingsComponent.getValue(levelEntity);
-    factoryMineBuildingsComponent.set(factoryEntity, factoryMines);
+    ResourceValues memory factoryMines = minesComponent.getValue(levelEntity);
+    minesComponent.set(factoryEntity, factoryMines);
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -81,7 +81,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     );
 
     LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world, playerEntity, buildingType);
-    LibPassiveResource.updatePassiveResourceProduction(world, playerEntity, buildingType);
+    LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType);
     //set MainBase id for player address for easy lookup
 
     // update building count if the built building counts towards the build limit

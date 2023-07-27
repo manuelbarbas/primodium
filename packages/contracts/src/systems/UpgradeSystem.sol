@@ -11,8 +11,8 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
 
 import { MainBaseID } from "../prototypes.sol";
@@ -35,7 +35,9 @@ contract UpgradeSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
 
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
@@ -70,15 +72,17 @@ contract UpgradeSystem is PrimodiumSystem {
     uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
     levelComponent.set(buildingEntity, newLevel);
 
-    if (MineComponent(getAddressById(components, MineComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel)))
+    if (
+      MineProductionComponent(getAddressById(components, MineProductionComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, newLevel)
+      )
+    )
       IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeMineSystemID)).executeTyped(
         msg.sender,
         buildingEntity
       );
     else if (
-      FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, newLevel)
-      )
+      MinesComponent(getAddressById(components, MinesComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel))
     )
       IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeFactorySystemID)).executeTyped(
         msg.sender,

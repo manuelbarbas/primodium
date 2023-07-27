@@ -9,12 +9,12 @@ import { LibEncode } from "./LibEncode.sol";
 
 library LibSetMineBuildingProductionForLevel {
   function setMineBuildingProductionForLevel(
-    Uint32Component mineComponent,
+    Uint32Component mineProductionComponent,
     uint256 entity,
     uint32 level,
     uint32 productionPerBlock
   ) internal {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(entity, level);
-    mineComponent.set(buildingIdLevel, productionPerBlock);
+    mineProductionComponent.set(buildingIdLevel, productionPerBlock);
   }
 }

@@ -5,11 +5,11 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, ResourceValue } from "components/FactoryProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -44,10 +44,9 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
         buildingId,
         LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
       );
-      ResourceValue memory factoryProductionData = FactoryProductionComponent(getC(FactoryProductionComponentID))
-        .getValue(levelEntity);
+      ResourceValue memory productionData = ProductionComponent(getC(ProductionComponentID)).getValue(levelEntity);
 
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.resource);
+      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, productionData.resource);
 
       LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
     }
