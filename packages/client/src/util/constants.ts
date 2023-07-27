@@ -8,7 +8,6 @@ export enum Action {
   SelectPath,
   SelectBuilding,
   Conveyor,
-  SelectAttack,
   PlaceBuilding,
 }
 

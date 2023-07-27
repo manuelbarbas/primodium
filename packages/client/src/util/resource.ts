@@ -2,7 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { hashKeyEntityAndTrim } from "./encode";
 import {
   Item,
-  RequiredResourcesComponent,
+  RequiredResources,
 } from "src/network/components/chainComponents";
 
 export type ResourceCostData = {
@@ -18,7 +18,7 @@ export type ResourceCostData = {
 // building a building requires resources
 // fetch directly from component data
 export function getRecipe(entityId: EntityID): ResourceCostData["resources"] {
-  const requiredResources = RequiredResourcesComponent.get(entityId)?.value;
+  const requiredResources = RequiredResources.get(entityId)?.value;
 
   if (!requiredResources) return [];
   return requiredResources.map((resourceId: EntityID) => {

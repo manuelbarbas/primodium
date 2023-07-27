@@ -82,12 +82,12 @@ export const RequiredResearchComponent = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}RequiredResearch` },
 });
 
-export const RequiredResourcesComponent = newComponent(
+export const RequiredResources = newComponent(
   world,
   { value: Type.EntityArray },
   {
-    id: "RequiredResourcesComponent",
-    metadata: { contractId: `${commonIdPrefix}RequiredResourcesComponent` },
+    id: "RequiredResources",
+    metadata: { contractId: `${commonIdPrefix}RequiredResources` },
   }
 );
 
@@ -108,15 +108,6 @@ export const MaxStorage = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}MaxStorage` },
   overridable: true,
 });
-
-export const OwnedResources = newComponent(
-  world,
-  { value: Type.EntityArray },
-  {
-    id: "OwnedResources",
-    metadata: { contractId: `${commonIdPrefix}OwnedResources` },
-  }
-);
 
 export const Mine = newNumberComponent(world, {
   id: "Mine",
@@ -176,11 +167,10 @@ export default {
   HasResearched,
   MainBase,
   RequiredResearchComponent,
-  RequiredResourcesComponent,
+  RequiredResources,
   MaxLevel,
   Level,
   MaxStorage,
-  OwnedResources,
   Mine,
   MaxBuildings,
   Children,
