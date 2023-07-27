@@ -2,17 +2,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { mountStoreDevtool } from "simple-zustand-devtools";
-import Phaser from "phaser";
 import { transferListeners, removeListeners } from "../api/input";
 
 import { KeybindActions } from "@game/constants";
+import { Key } from "engine/types";
 
 const VERSION = 1;
-
-type Key =
-  | keyof typeof Phaser.Input.Keyboard.KeyCodes
-  | "POINTER_LEFT"
-  | "POINTER_RIGHT";
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;

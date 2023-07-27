@@ -64,6 +64,7 @@ export function createCamera(
     )
     .subscribe(([, zoom]) => {
       // Set the gesture zoom state to the current zoom value to avoid zooming beyond the max values
+      // @ts-ignore
       if (gesture._ctrl.state.pinch) gesture._ctrl.state.pinch.offset[0] = zoom;
       setZoom(zoom);
     });

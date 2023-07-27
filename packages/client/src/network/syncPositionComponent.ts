@@ -14,4 +14,13 @@ export function syncPositionComponent() {
     const coord = decodeCoordEntity(world.entities[entity]);
     Position.set(coord, world.entities[entity]);
   });
+
+  defineComponentSystem(world, Position, (update) => {
+    console.log(
+      "updating position of ",
+      update.entity,
+      `to: `,
+      update.value[0]
+    );
+  });
 }

@@ -5,7 +5,6 @@ import { Animation } from "@latticexyz/phaserx/dist/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
 import { createAnimatedTilemap } from "@latticexyz/phaserx";
-import { Assets } from "../game/constants";
 
 export type Game = Awaited<ReturnType<typeof createGame>>;
 export type Scene = Awaited<ReturnType<typeof createScene>>;
@@ -18,11 +17,16 @@ export type CameraConfig = {
   defaultZoom: number;
 };
 
+export type Key =
+  | keyof typeof Phaser.Input.Keyboard.KeyCodes
+  | "POINTER_LEFT"
+  | "POINTER_RIGHT";
+
 export type GameConfig = Phaser.Types.Core.GameConfig;
 
 export type TilesetConfig = {
   [x: string]: {
-    key: Assets;
+    key: string;
     tileWidth: number;
     tileHeight: number;
     extrusion?: number;

@@ -7,7 +7,7 @@ import {
   defineExitSystem,
   defineUpdateSystem,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
 import { createSelectionTile } from "../factory/selectionTile";
 import {

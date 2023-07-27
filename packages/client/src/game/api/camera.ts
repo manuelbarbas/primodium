@@ -1,4 +1,4 @@
-import { engine } from "@engine/api";
+import engine from "engine";
 import { Scenes } from "@game/constants";
 import {
   coordEq,

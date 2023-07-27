@@ -1,9 +1,9 @@
 import { throttle } from "lodash";
 
 import { KeybindActions, Scenes } from "@game/constants";
-import { engine } from "@engine/api";
+import engine from "engine";
 import { useSettingsStore } from "../stores/SettingsStore";
-import { Key } from "src/engine/lib/core/createInput";
+import { Key } from "engine/types";
 
 export const isDown = (
   keybindAction: KeybindActions,

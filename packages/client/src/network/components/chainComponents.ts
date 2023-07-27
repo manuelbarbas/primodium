@@ -181,6 +181,7 @@ export default {
   OwnedBy,
   LastClaimedAt,
   Health,
+  IsDebug,
   Item,
   HasResearched,
   StarterPackClaimed,

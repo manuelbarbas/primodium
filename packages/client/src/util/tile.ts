@@ -84,16 +84,25 @@ export function getResourceKey(coord: Coord, perlin: Perlin) {
 
   return BlockType.Air;
 }
+const topLayerKeys = new Map<string, EntityID>();
 
 export function getTopLayerKey(coord: Coord, perlin: Perlin) {
+  const coordKey = `${coord.x}-${coord.y}`; // Assuming 2D coords. Adjust if needed.
+
+  if (topLayerKeys.has(coordKey)) return topLayerKeys.get(coordKey);
+
   const terrainKey = getTerrainKey(coord, perlin);
   const resourceKey = getResourceKey(coord, perlin);
+  let result;
 
   if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
-    return terrainKey;
+    result = terrainKey;
   } else {
-    return resourceKey;
+    result = resourceKey;
   }
+
+  topLayerKeys.set(coordKey, result);
+  return result;
 }
 
 export function getTopLayerKeyPair(

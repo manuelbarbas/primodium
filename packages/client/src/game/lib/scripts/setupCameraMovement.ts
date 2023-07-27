@@ -1,11 +1,12 @@
 import { KeybindActions } from "@game/constants";
 import { EntityID } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
 import { pan } from "src/game/api/camera";
+import { Scene } from "engine/types";
 import { isDown } from "src/game/api/input";
 import { MainBase } from "src/network/components/chainComponents";
 import { Position } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+
 const SPEED = 750;
 const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;
