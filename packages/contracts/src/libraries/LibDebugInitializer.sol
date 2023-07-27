@@ -15,15 +15,15 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, RequiredPassiveData } from "components/RequiredPassiveComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID, PassiveProductionData } from "components/PassiveProductionComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
+import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
@@ -287,12 +287,9 @@ library LibDebugInitializer {
 
     //DebugSimpleBuildingPassiveResourceRequirement
     ignoreBuildLimitComponent.set(DebugSimpleBuildingPassiveResourceRequirement);
-    RequiredPassiveData memory requiredPassiveData = RequiredPassiveData({
-      ResourceIDs: new uint256[](1),
-      RequiredAmounts: new uint32[](1)
-    });
-    requiredPassiveData.ResourceIDs[0] = ElectricityPassiveResourceID;
-    requiredPassiveData.RequiredAmounts[0] = 2;
+    ResourceValues memory requiredPassiveData = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredPassiveData.resources[0] = ElectricityPassiveResourceID;
+    requiredPassiveData.values[0] = 2;
     requiredPassiveComponent.set(DebugSimpleBuildingPassiveResourceRequirement, requiredPassiveData);
   }
 
@@ -553,10 +550,7 @@ library LibDebugInitializer {
 
     //DebugPassiveProductionBuilding
     ignoreBuildLimitComponent.set(DebugPassiveProductionBuilding);
-    passiveProductionComponent.set(
-      DebugPassiveProductionBuilding,
-      PassiveProductionData(ElectricityPassiveResourceID, 10)
-    );
+    passiveProductionComponent.set(DebugPassiveProductionBuilding, ResourceValue(ElectricityPassiveResourceID, 10));
 
     //DebugAlloyFactoryID
     LibSetRequiredResources.set1RequiredResourceForEntity(
@@ -608,7 +602,7 @@ library LibDebugInitializer {
 
     //DebugSolarPanelID
     ignoreBuildLimitComponent.set(DebugSolarPanelID);
-    passiveProductionComponent.set(DebugSolarPanelID, PassiveProductionData(ElectricityPassiveResourceID, 10));
+    passiveProductionComponent.set(DebugSolarPanelID, ResourceValue(ElectricityPassiveResourceID, 10));
   }
 
   function initializeTechnologies(

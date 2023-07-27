@@ -6,17 +6,15 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
-import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, ResourceValue } from "components/PassiveResourceProductionComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID } from "components/RequiredPassiveResourceComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
+import { PassiveProductionComponent, ID as PassiveProductionComponentID, ResourceValue } from "components/PassiveProductionComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID } from "components/FactoryProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
@@ -63,7 +61,10 @@ library LibInitBuildingPrototypes {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      MineComponent(world.getComponent(MineComponentID)).set(buildingLevelEntity, productionRates[i]);
+      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+        buildingLevelEntity,
+        productionRates[i]
+      );
       RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
@@ -111,7 +112,10 @@ library LibInitBuildingPrototypes {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      MineComponent(world.getComponent(MineComponentID)).set(buildingLevelEntity, productionRates[i]);
+      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+        buildingLevelEntity,
+        productionRates[i]
+      );
       RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
@@ -152,7 +156,10 @@ library LibInitBuildingPrototypes {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      MineComponent(world.getComponent(MineComponentID)).set(buildingLevelEntity, productionRates[i]);
+      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+        buildingLevelEntity,
+        productionRates[i]
+      );
       RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
@@ -281,14 +288,8 @@ library LibInitBuildingPrototypes {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
-      FactoryMineBuildingsComponent(world.getComponent(FactoryMineBuildingsComponentID)).set(
-        buildingLevelEntity,
-        requiredMines[i]
-      );
-      FactoryProductionComponent(world.getComponent(FactoryProductionComponentID)).set(
-        buildingLevelEntity,
-        production[i]
-      );
+      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
+      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
   }
 
@@ -310,13 +311,13 @@ library LibInitBuildingPrototypes {
     requiredResources[0] = resourceValues;
 
     /****************** Required Passive Resources *******************/
-    ResourceValues[] memory requiredPassiveResources = new ResourceValues[](maxLevel);
+    ResourceValues[] memory requiredPassives = new ResourceValues[](maxLevel);
     // LEVEL 1
     uint256[] memory resourceIds = new uint256[](1);
     uint32[] memory resourceAmounts = new uint32[](1);
     resourceIds[0] = ElectricityPassiveResourceID;
     resourceAmounts[0] = 2;
-    requiredPassiveResources[0] = ResourceValues(resourceIds, resourceAmounts);
+    requiredPassives[0] = ResourceValues(resourceIds, resourceAmounts);
 
     /****************** Required Mines *******************/
     ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
@@ -347,18 +348,12 @@ library LibInitBuildingPrototypes {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
-      FactoryMineBuildingsComponent(world.getComponent(FactoryMineBuildingsComponentID)).set(
+      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
+      RequiredPassiveComponent(world.getComponent(RequiredPassiveComponentID)).set(
         buildingLevelEntity,
-        requiredMines[i]
+        requiredPassives[i]
       );
-      RequiredPassiveResourceComponent(world.getComponent(RequiredPassiveResourceComponentID)).set(
-        buildingLevelEntity,
-        requiredPassiveResources[i]
-      );
-      FactoryProductionComponent(world.getComponent(FactoryProductionComponentID)).set(
-        buildingLevelEntity,
-        production[i]
-      );
+      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
   }
 
@@ -409,14 +404,8 @@ library LibInitBuildingPrototypes {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
-      FactoryMineBuildingsComponent(world.getComponent(FactoryMineBuildingsComponentID)).set(
-        buildingLevelEntity,
-        requiredMines[i]
-      );
-      FactoryProductionComponent(world.getComponent(FactoryProductionComponentID)).set(
-        buildingLevelEntity,
-        production[i]
-      );
+      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
+      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
   }
 
@@ -454,7 +443,7 @@ library LibInitBuildingPrototypes {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
-      PassiveResourceProductionComponent(world.getComponent(PassiveResourceProductionComponentID)).set(
+      PassiveProductionComponent(world.getComponent(PassiveProductionComponentID)).set(
         buildingLevelEntity,
         passiveProduction[i]
       );

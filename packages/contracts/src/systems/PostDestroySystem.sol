@@ -44,8 +44,8 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
       ResourceValues memory requiredPassiveData = requiredPassiveComponent.getValue(blockType);
-      for (uint256 i = 0; i < requiredPassiveData.ResourceIDs.length; i++) {
-        uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredPassiveData.ResourceIDs[i], playerEntity);
+      for (uint256 i = 0; i < requiredPassiveData.resources.length; i++) {
+        uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredPassiveData.resources[i], playerEntity);
         itemComponent.set(
           playerResourceEntity,
           itemComponent.getValue(playerResourceEntity) - requiredPassiveData.values[i]

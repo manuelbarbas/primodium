@@ -69,7 +69,7 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       productionComponent.getValue(levelEntity).resource
     );
 
-    ProductionData memory productionDataPreUpgrade = productionComponent.getValue(
+    ResourceValue memory productionDataPreUpgrade = productionComponent.getValue(
       LibEncode.hashKeyEntity(buildingTypeComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
     );
 

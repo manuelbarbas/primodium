@@ -85,7 +85,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     for (uint256 i = 0; i < factoryMines.values.length; i++) {
       if (factoryMines.resources[i] == buildingTypeComponent.getValue(mineEntity)) {
         factoryMines.values[i]++;
-        factoryMineBuildingsComponent.set(factoryEntity, factoryMines);
+        minesComponent.set(factoryEntity, factoryMines);
         break;
       }
     }
@@ -113,12 +113,12 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
       buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
-    ProductionData memory productionData = ProductionComponent(getAddressById(components, ProductionComponentID))
+    ResourceValue memory productionData = ProductionComponent(getAddressById(components, ProductionComponentID))
       .getValue(factoryLevelEntity);
     // update unclaimed resources
     updateUnclaimedForResource(playerEntity, productionData.resource);
 
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.ResourceID, playerEntity);
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.resource, playerEntity);
     if (LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) <= 0)
       revert("this should not be possible");
     //update resource production

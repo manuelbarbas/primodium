@@ -6,8 +6,7 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { OwnedResourcesComponent, ID as OwnedResourcesComponentID } from "components/OwnedResourcesComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
 import { ResourceValue, ResourceValues } from "../types.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -34,6 +33,6 @@ library LibSetBuildingReqs {
         resourceValues[i].value
       );
     }
-    OwnedResourcesComponent(world.getComponent(RequiredResourcesComponentID)).set(buildingType, resources);
+    MaxResourceStorageComponent(world.getComponent(RequiredResourcesComponentID)).set(buildingType, resources);
   }
 }

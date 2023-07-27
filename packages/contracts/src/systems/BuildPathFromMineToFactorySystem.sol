@@ -31,18 +31,19 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
   function canBuildPath(uint256 mineEntity, uint256 factoryEntity) internal returns (bool) {
     ActiveComponent activeComponent = ActiveComponent(getC(ActiveComponentID));
     LevelComponent levelComponent = LevelComponent(getC(LevelComponentID));
+    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
     BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
 
     if (activeComponent.has(factoryEntity)) return false;
     uint256 factoryLevel = levelComponent.getValue(factoryEntity);
     bool isFunctional = true;
     bool isMineConnected = false;
-    ResourceValues memory factoryMines = factoryMineBuildingsComponent.getValue(factoryEntity);
+    ResourceValues memory factoryMines = minesComponent.getValue(factoryEntity);
     for (uint256 i = 0; i < factoryMines.values.length; i++) {
       if (factoryMines.resources[i] == buildingTypeComponent.getValue(mineEntity)) {
         if (factoryMines.values[i] <= 0) return false;
         factoryMines.values[i]--;
-        factoryMineBuildingsComponent.set(factoryEntity, factoryMines);
+        minesComponent.set(factoryEntity, factoryMines);
         isMineConnected = true;
         if (factoryMines.values[i] > 0) isFunctional = false;
         if (levelComponent.getValue(mineEntity) < factoryLevel) isFunctional = false;
@@ -96,8 +97,9 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     ) {
       uint256 playerEntity = addressToEntity(playerAddress);
 
-      ResourceValue memory factoryProductionData = FactoryProductionComponent(getC(FactoryProductionComponentID))
-        .getValue(factoryLevelEntity);
+      ResourceValue memory factoryProductionData = ProductionComponent(getC(ProductionComponentID)).getValue(
+        factoryLevelEntity
+      );
 
       LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.resource);
 

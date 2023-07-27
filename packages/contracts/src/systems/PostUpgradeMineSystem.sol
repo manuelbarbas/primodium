@@ -52,7 +52,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
       factoryEntity
     );
     //then check if there are enough connected mines
-    for (uint256 i = 0; i < minesData.MineBuildingCount.length; i++) {
+    for (uint256 i = 0; i < minesData.values.length; i++) {
       if (minesData.values[i] > 0) return;
     }
 
