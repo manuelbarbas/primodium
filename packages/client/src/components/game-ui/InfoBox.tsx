@@ -30,14 +30,12 @@ export const InfoBox = () => {
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
-  console.log("mainebase level: " + mainBaseLevel.toString());
   const buildLimit = MaxBuildings.use(
     trimEntityId(mainBaseLevel as unknown as EntityID)
   );
 
   const playerBuildingCount = MaxBuildings.use(address);
   const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
-  console.log("building limit: " + buildLimitNumber);
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
   );
