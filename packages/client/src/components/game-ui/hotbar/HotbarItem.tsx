@@ -17,7 +17,7 @@ import { Action, BackgroundImage, KeyImages } from "src/util/constants";
 import { hashKeyEntityAndTrim } from "src/util/encode";
 import {
   RawBlueprint,
-  RequiredResearchComponent,
+  RequiredResearch,
   HasResearched,
 } from "src/network/components/chainComponents";
 
@@ -33,7 +33,7 @@ const HotbarItem: React.FC<{
   const keybinds = primodium.hooks.useKeybinds();
   let dimensions: { width: number; height: number } | undefined;
 
-  const requiredResearch = RequiredResearchComponent.use(blockType)?.value;
+  const requiredResearch = RequiredResearch.use(blockType)?.value;
 
   const entity = hashKeyEntityAndTrim(requiredResearch ?? SingletonID, address);
 
