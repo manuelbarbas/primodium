@@ -77,8 +77,8 @@ export const MainBase = newComponent(
   }
 );
 
-export const RequiredResearchComponent = newNumberComponent(world, {
-  id: "RequiredResearchComponent",
+export const RequiredResearch = newNumberComponent(world, {
+  id: "RequiredResearch",
   metadata: { contractId: `${commonIdPrefix}RequiredResearch` },
 });
 
@@ -109,9 +109,9 @@ export const MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
-export const Mine = newNumberComponent(world, {
-  id: "Mine",
-  metadata: { contractId: `${commonIdPrefix}Mine` },
+export const MineProduction = newNumberComponent(world, {
+  id: "MineProduction",
+  metadata: { contractId: `${commonIdPrefix}MineProduction` },
   overridable: true,
 });
 
@@ -166,12 +166,12 @@ export default {
   Item,
   HasResearched,
   MainBase,
-  RequiredResearchComponent,
+  RequiredResearch,
   RequiredResources,
   MaxLevel,
   Level,
   MaxStorage,
-  Mine,
+  MineProduction,
   MaxBuildings,
   Children,
   RawBlueprint,

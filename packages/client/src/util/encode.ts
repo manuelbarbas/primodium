@@ -89,6 +89,10 @@ export function hashKeyEntityAndTrim(
   return BigNumber.from(hashKeyEntity(key, entity)).toHexString() as EntityID;
 }
 
+export function trimEntityId(entityId: EntityID): EntityID {
+  return BigNumber.from(entityId).toHexString() as EntityID;
+}
+
 export function padTo64Bytes(hex: string): string {
   // Remove "0x" prefix if present
   const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex;

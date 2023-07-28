@@ -11,7 +11,7 @@ import {
   Item,
   LastClaimedAt,
   MainBase,
-  Mine,
+  MineProduction,
   MaxStorage,
   UnclaimedResource,
 } from "src/network/components/chainComponents";
@@ -307,7 +307,7 @@ Inventory.ResourceLabel = ({
 
   const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
 
-  const production = useResourceCount(Mine, resourceId, entityIndex);
+  const production = useResourceCount(MineProduction, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,
@@ -399,7 +399,7 @@ Inventory.PassiveResourceLabel = ({
 
   const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
 
-  const production = useResourceCount(Mine, resourceId, entityIndex);
+  const production = useResourceCount(MineProduction, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,
