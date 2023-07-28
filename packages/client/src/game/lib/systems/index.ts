@@ -1,5 +1,4 @@
 import { Scene } from "engine/types";
-import { renderAttackTargetingTool } from "./renderAttackTargetingTool";
 import { renderBuildingPaths } from "./renderBuildingPaths";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
 import { renderBuildingSprite } from "./renderBuildingSprite";
@@ -20,7 +19,6 @@ export const runSystems = (scene: Scene) => {
   renderHoverTile(scene);
   renderBuildingPlacementTool(scene);
   renderPathPlacementTool(scene);
-  renderAttackTargetingTool(scene);
   renderDemolishBuildingTool(scene);
   renderDemolishPathTool(scene);
   renderMapMarkers(scene);

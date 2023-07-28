@@ -2,8 +2,8 @@
 pragma solidity >=0.8.0;
 import "std-contracts/components/Uint32Component.sol";
 
-uint256 constant ID = uint256(keccak256("component.BuildingLevel"));
+uint256 constant ID = uint256(keccak256("component.Level"));
 
-contract BuildingLevelComponent is Uint32Component {
+contract LevelComponent is Uint32Component {
   constructor(address world) Uint32Component(world, ID) {}
 }

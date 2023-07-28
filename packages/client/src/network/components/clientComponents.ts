@@ -4,7 +4,6 @@ import newComponent, {
   newCoordComponent,
   newNumberComponent,
 } from "./customComponents/Component";
-import newSelectedAttackComponent from "./customComponents/SelectedAttackComponent";
 import newMarkerComponent from "./customComponents/MarkerComponent";
 import { world } from "../world";
 
@@ -32,9 +31,7 @@ export const SelectedAction = newNumberComponent(world, {
 export const StartSelectedPath = newCoordComponent(world, {
   id: "StartSelectedPath",
 });
-export const SelectedAttack = newSelectedAttackComponent(world, {
-  id: "SelectedAttack",
-});
+
 export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
 });
@@ -49,6 +46,5 @@ export default {
   SelectedBuilding,
   SelectedAction,
   StartSelectedPath,
-  SelectedAttack,
   Marker,
 };

@@ -14,14 +14,13 @@ import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSy
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
 import { DebugAcquireResourcesBasedOnRequirementSystem, ID as DebugAcquireResourcesBasedOnRequirementSystemID } from "../../systems/DebugAcquireResourcesBasedOnRequirementSystem.sol";
 import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "../../components/ResearchComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "../../components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { IronResourceItemID, CopperResourceItemID, LithiumResourceItemID, IronPlateCraftedItemID } from "../../prototypes.sol";
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
-import { LibHealth } from "../../libraries/LibHealth.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
@@ -49,7 +48,7 @@ contract ResearchSystemTest is MudTest {
   function testResearchWithResourceRequirements() public {
     vm.startPrank(alice);
 
-    ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     DebugAcquireResourcesBasedOnRequirementSystem debugAcquireResourcesBasedOnRequirementSystem = DebugAcquireResourcesBasedOnRequirementSystem(
         system(DebugAcquireResourcesBasedOnRequirementSystemID)
@@ -58,7 +57,7 @@ contract ResearchSystemTest is MudTest {
     // alice researches DebugSimpleTechnologyResourceReqsID
     researchSystem.executeTyped(DebugSimpleTechnologyResourceReqsID);
     assertTrue(
-      researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResourceReqsID, addressToEntity(alice))),
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResourceReqsID, addressToEntity(alice))),
       "alice should have researched DebugSimpleTechnologyResourceReqsID"
     );
     // not enough resources
@@ -78,27 +77,27 @@ contract ResearchSystemTest is MudTest {
   function testResearchWithResearchRequirements() public {
     vm.startPrank(alice);
 
-    ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
 
     // alice researches DebugSimpleTechnologyResourceReqsID
     assertTrue(
-      !researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyNoReqsID, addressToEntity(alice))),
+      !hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyNoReqsID, addressToEntity(alice))),
       "alice should not have researched DebugSimpleTechnologyNoReqsID yet"
     );
     assertTrue(
-      !researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResearchReqsID, addressToEntity(alice))),
+      !hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResearchReqsID, addressToEntity(alice))),
       "alice should not have researched DebugSimpleTechnologyResearchReqsID yet"
     );
     researchSystem.executeTyped(DebugSimpleTechnologyNoReqsID);
     assertTrue(
-      researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyNoReqsID, addressToEntity(alice))),
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyNoReqsID, addressToEntity(alice))),
       "alice should have researched DebugSimpleTechnologyNoReqsID"
     );
 
     researchSystem.executeTyped(DebugSimpleTechnologyResearchReqsID);
     assertTrue(
-      researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResearchReqsID, addressToEntity(alice))),
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResearchReqsID, addressToEntity(alice))),
       "alice should have researched DebugSimpleTechnologyResearchReqsID"
     );
     // not enough resources
@@ -108,16 +107,16 @@ contract ResearchSystemTest is MudTest {
   function testFailResearchWithResearchRequirementsNotMet() public {
     vm.startPrank(alice);
 
-    ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
 
     // alice researches DebugSimpleTechnologyResourceReqsID
     assertTrue(
-      !researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyNoReqsID, addressToEntity(alice))),
+      !hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyNoReqsID, addressToEntity(alice))),
       "alice should not have researched DebugSimpleTechnologyNoReqsID yet"
     );
     assertTrue(
-      !researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResearchReqsID, addressToEntity(alice))),
+      !hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyResearchReqsID, addressToEntity(alice))),
       "alice should not have researched DebugSimpleTechnologyResourceReqsID yet"
     );
     // should fail because alice has not researched DebugSimpleTechnologyNoReqsID
@@ -127,10 +126,10 @@ contract ResearchSystemTest is MudTest {
     vm.stopPrank();
   }
 
-  function testResearchWithMainBuildingLevelRequirements() public {
+  function testResearchWithMainLevelRequirements() public {
     vm.startPrank(alice);
 
-    ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
@@ -139,7 +138,9 @@ contract ResearchSystemTest is MudTest {
     );
     // alice researches DebugSimpleTechnologyResourceReqsID
     assertTrue(
-      !researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyMainBaseLevelReqsID, addressToEntity(alice))),
+      !hasResearchedComponent.has(
+        LibEncode.hashKeyEntity(DebugSimpleTechnologyMainBaseLevelReqsID, addressToEntity(alice))
+      ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
     buildSystem.executeTyped(MainBaseID, Coord({ x: 0, y: 0 }));
@@ -149,24 +150,28 @@ contract ResearchSystemTest is MudTest {
     // should succeed because alice has upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);
     assertTrue(
-      researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyMainBaseLevelReqsID, addressToEntity(alice))),
+      hasResearchedComponent.has(
+        LibEncode.hashKeyEntity(DebugSimpleTechnologyMainBaseLevelReqsID, addressToEntity(alice))
+      ),
       "alice should have researched DebugSimpleTechnologyMainBaseLevelReqsID"
     );
     // not enough resources
     vm.stopPrank();
   }
 
-  function testFailResearchWithMainBuildingLevelRequirementsNotMet() public {
+  function testFailResearchWithMainLevelRequirementsNotMet() public {
     vm.startPrank(alice);
 
-    ResearchComponent researchComponent = ResearchComponent(component(ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
 
     // alice researches DebugSimpleTechnologyResourceReqsID
     assertTrue(
-      !researchComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyMainBaseLevelReqsID, addressToEntity(alice))),
+      !hasResearchedComponent.has(
+        LibEncode.hashKeyEntity(DebugSimpleTechnologyMainBaseLevelReqsID, addressToEntity(alice))
+      ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
     buildSystem.executeTyped(MainBaseID, Coord({ x: 0, y: 0 }));

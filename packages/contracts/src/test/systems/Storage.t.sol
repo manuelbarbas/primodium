@@ -17,9 +17,9 @@ import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequireme
 import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
-import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "../../components/StorageCapacityComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "../../components/MineProductionComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 
 import "../../prototypes.sol";
 import { DebugCopperMineID, DebugIronMineID, DebugIronPlateFactoryID, DebugStorageBuildingID } from "../../libraries/LibDebugInitializer.sol";
@@ -44,7 +44,7 @@ contract Storage is MudTest {
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    StorageCapacityComponent storageComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent storageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
@@ -100,7 +100,7 @@ contract Storage is MudTest {
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    StorageCapacityComponent storageComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent storageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
@@ -109,11 +109,7 @@ contract Storage is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
-    uint256 ironCapacity = LibStorage.getEntityStorageCapacityForResource(
-      storageComponent,
-      addressToEntity(alice),
-      IronID
-    );
+    uint256 ironCapacity = LibStorage.getEntityMaxStorageForResource(storageComponent, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
     // START CLAIMING
     uint256 currBlockNum = 0;
@@ -147,7 +143,7 @@ contract Storage is MudTest {
     );
     removeUpgradeRequirementsSystem.executeTyped(MainBaseID);
     upgradeSystem.executeTyped(mainBaseCoord);
-    uint256 newIronCapacity = LibStorage.getEntityStorageCapacityForResource(
+    uint256 newIronCapacity = LibStorage.getEntityMaxStorageForResource(
       storageComponent,
       addressToEntity(alice),
       IronID
@@ -201,7 +197,7 @@ contract Storage is MudTest {
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    StorageCapacityComponent storageComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent storageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
@@ -210,11 +206,7 @@ contract Storage is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
-    uint256 ironCapacity = LibStorage.getEntityStorageCapacityForResource(
-      storageComponent,
-      addressToEntity(alice),
-      IronID
-    );
+    uint256 ironCapacity = LibStorage.getEntityMaxStorageForResource(storageComponent, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
     // START CLAIMING
     uint256 currBlockNum = 0;
@@ -240,7 +232,7 @@ contract Storage is MudTest {
     console.log("building storage ");
     Coord memory storageBuildingCoord = Coord({ x: 1, y: 1 });
     buildSystem.executeTyped(DebugStorageBuildingID, storageBuildingCoord);
-    uint256 newIronCapacity = LibStorage.getEntityStorageCapacityForResource(
+    uint256 newIronCapacity = LibStorage.getEntityMaxStorageForResource(
       storageComponent,
       addressToEntity(alice),
       IronID
@@ -262,7 +254,7 @@ contract Storage is MudTest {
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
     destroySystem.executeTyped(storageBuildingCoord);
     console.log("destroyed storage building");
-    uint256 afterDestroyIronCapacity = LibStorage.getEntityStorageCapacityForResource(
+    uint256 afterDestroyIronCapacity = LibStorage.getEntityMaxStorageForResource(
       storageComponent,
       addressToEntity(alice),
       IronID

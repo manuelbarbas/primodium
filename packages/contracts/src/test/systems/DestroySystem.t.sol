@@ -11,12 +11,11 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 
 // components
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
 import { Coord } from "../../types.sol";
@@ -33,12 +32,11 @@ contract DestroySystemTest is PrimodiumTest {
 
   OwnedByComponent public ownedByComponent;
   BlueprintComponent public blueprintComponent;
-  BuildingTilesComponent public buildingTilesComponent;
-  BuildingLevelComponent public buildingLevelComponent;
-  BuildingLimitComponent public buildingLimitComponent;
-  TileComponent public tileComponent;
-  LastBuiltAtComponent public lastBuiltAtComponent;
-  MainBaseInitializedComponent public mainBaseInitializedComponent;
+  ChildrenComponent public childrenComponent;
+  LevelComponent public levelComponent;
+  MaxBuildingsComponent public maxBuildingsComponent;
+  BuildingTypeComponent public buildingTypeComponent;
+  MainBaseComponent public mainBaseComponent;
 
   function setUp() public override {
     super.setUp();
@@ -51,12 +49,11 @@ contract DestroySystemTest is PrimodiumTest {
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
-    buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
-    buildingLevelComponent = BuildingLevelComponent(component(BuildingLevelComponentID));
-    tileComponent = TileComponent(component(TileComponentID));
-    lastBuiltAtComponent = LastBuiltAtComponent(component(LastBuiltAtComponentID));
-    mainBaseInitializedComponent = MainBaseInitializedComponent(component(MainBaseInitializedComponentID));
-    buildingLimitComponent = BuildingLimitComponent(component(BuildingLimitComponentID));
+    childrenComponent = ChildrenComponent(component(ChildrenComponentID));
+    levelComponent = LevelComponent(component(LevelComponentID));
+    buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
+    mainBaseComponent = MainBaseComponent(component(MainBaseComponentID));
+    maxBuildingsComponent = MaxBuildingsComponent(component(MaxBuildingsComponentID));
 
     // init other
     vm.startPrank(alice);
@@ -75,20 +72,19 @@ contract DestroySystemTest is PrimodiumTest {
   }
 
   function destroy(uint256 buildingEntity, Coord memory _coord) public {
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
-    uint256 buildingLimit = buildingLimitComponent.getValue(playerEntity);
+    uint256[] memory children = childrenComponent.getValue(buildingEntity);
+    uint256 maxBuildings = maxBuildingsComponent.getValue(playerEntity);
     destroySystem.executeTyped(_coord);
 
-    for (uint256 i = 0; i < buildingTiles.length; i++) {
-      assertFalse(ownedByComponent.has(buildingTiles[i]));
-      assertFalse(tileComponent.has(buildingTiles[i]));
+    for (uint256 i = 0; i < children.length; i++) {
+      assertFalse(ownedByComponent.has(children[i]));
+      assertFalse(buildingTypeComponent.has(children[i]));
     }
 
     assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");
-    assertFalse(tileComponent.has(buildingEntity), "has tile");
-    assertFalse(lastBuiltAtComponent.has(buildingEntity), "has lastbuild");
-    assertFalse(buildingLevelComponent.has(buildingEntity), "has level");
-    assertEq(buildingLimitComponent.getValue(playerEntity), buildingLimit - 1, "wrong limit");
+    assertFalse(buildingTypeComponent.has(buildingEntity), "has tile");
+    assertFalse(levelComponent.has(buildingEntity), "has level");
+    assertEq(maxBuildingsComponent.getValue(playerEntity), maxBuildings - 1, "wrong limit");
   }
 
   function testDestroyWithTile() public {

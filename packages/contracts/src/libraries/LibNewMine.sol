@@ -5,9 +5,9 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 import { BoolComponent } from "std-contracts/components/BoolComponent.sol";
 import { Uint256ArrayComponent } from "std-contracts/components/Uint256ArrayComponent.sol";
 
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
@@ -19,30 +19,28 @@ import { LibMath } from "./LibMath.sol";
 
 library LibNewMine {
   function claimResourcesFromMines(IWorld world, uint256 playerEntity) internal {
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      world.getComponent(StorageCapacityResourcesComponentID)
+    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
+      world.getComponent(MaxResourceStorageComponentID)
     );
-    if (!storageCapacityResourcesComponent.has(playerEntity)) return;
+    if (!maxResourceStorageComponent.has(playerEntity)) return;
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
     UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
       world.getComponent(UnclaimedResourceComponentID)
     );
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      world.getComponent(StorageCapacityComponentID)
-    );
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(world.getComponent(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    uint256[] memory storageResourceIds = storageCapacityResourcesComponent.getValue(playerEntity);
+    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
-      if (MineComponent(world.getComponent(MineComponentID)).has(playerResourceEntity))
+      if (MineProductionComponent(world.getComponent(MineProductionComponentID)).has(playerResourceEntity))
         LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, storageResourceIds[i]);
       uint32 unclaimedResourceAmount = LibMath.getSafeUint32Value(unclaimedResourceComponent, playerResourceEntity);
       if (unclaimedResourceAmount > 0)
         LibClaim.addResourceToStorage(
           itemComponent,
-          storageCapacityComponent,
+          maxStorageComponent,
           storageResourceIds[i],
           unclaimedResourceAmount,
           playerEntity

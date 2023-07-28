@@ -5,8 +5,7 @@ import { IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 
 import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -19,21 +18,13 @@ library LibResearch {
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       getAddressById(world.components(), RequiredResearchComponentID)
     );
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(world.components(), ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(world.components(), HasResearchedComponentID)
+    );
 
     if (!requiredResearchComponent.has(entity)) return true;
 
-    return researchComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
-  }
-
-  // ###########################################################################
-  // Write last researched time into LastResearchedComponent
-
-  function setResearchTime(IWorld world, uint256 researchKey, uint256 entity) internal {
-    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
-      getAddressById(world.components(), LastResearchedAtComponentID)
-    );
-    uint256 hashedResearchKey = LibEncode.hashKeyEntity(researchKey, entity);
-    lastResearchedAtComponent.set(hashedResearchKey, block.number);
+    return
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
   }
 }

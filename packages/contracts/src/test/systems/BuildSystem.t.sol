@@ -8,7 +8,7 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 
-import { BuildingTilesComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
+import { ChildrenComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
 
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
@@ -17,15 +17,15 @@ import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "../../components/BlueprintComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "../../components/BuildingTilesComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "../../components/MaxBuildingsComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "../../components/StorageCapacityComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 import { ElectricityPassiveResourceID } from "../../prototypes.sol";
@@ -47,8 +47,8 @@ contract BuildSystemTest is PrimodiumTest {
   BuildSystem public buildSystem;
 
   OwnedByComponent public ownedByComponent;
-  BuildingTilesComponent public buildingTilesComponent;
-  TileComponent public tileComponent;
+  ChildrenComponent public childrenComponent;
+  BuildingTypeComponent public buildingTypeComponent;
 
   function setUp() public override {
     super.setUp();
@@ -59,8 +59,8 @@ contract BuildSystemTest is PrimodiumTest {
 
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
-    buildingTilesComponent = BuildingTilesComponent(component(BuildingTilesComponentID));
-    tileComponent = TileComponent(component(TileComponentID));
+    childrenComponent = ChildrenComponent(component(ChildrenComponentID));
+    buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
 
     // init other
   }
@@ -74,12 +74,12 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testPassiveResourceRequirement() public {
     vm.startPrank(alice);
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -94,12 +94,12 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testPassiveResourceRequirementUpToMax() public {
     vm.startPrank(alice);
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -119,11 +119,11 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testFailPassiveResourceRequirementMoreThenMax() public {
     vm.startPrank(alice);
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -136,20 +136,20 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testDestroyPassiveResourceProduction() public {
+  function testDestroyPassiveProduction() public {
     vm.startPrank(alice);
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
 
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
     destroySystem.executeTyped(Coord({ x: 0, y: 0 }));
     assertEq(
-      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       0,
       "Electricity Storage should be 0"
     );
@@ -158,12 +158,12 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testDestroyPassiveResourceRequirement() public {
     vm.startPrank(alice);
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -185,14 +185,14 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testFailDestroyPassiveResourceProductionWhenRequirementsWouldFail() public {
+  function testFailDestroyPassiveProductionWhenRequirementsWouldFail() public {
     vm.startPrank(alice);
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
-    buildSystem.executeTyped(DebugPassiveResourceProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      storageCapacityComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxStorageComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -234,13 +234,13 @@ contract BuildSystemTest is PrimodiumTest {
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
     Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
 
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
-    assertEq(blueprint.length, buildingTiles.length);
+    uint256[] memory children = childrenComponent.getValue(buildingEntity);
+    assertEq(blueprint.length, children.length);
 
-    for (uint i = 0; i < buildingTiles.length; i++) {
-      position = LibEncode.decodeCoordEntity(buildingTiles[i]);
+    for (uint i = 0; i < children.length; i++) {
+      position = LibEncode.decodeCoordEntity(children[i]);
       assertCoordEq(position, blueprint[i]);
-      assertEq(buildingEntity, ownedByComponent.getValue(buildingTiles[i]));
+      assertEq(buildingEntity, ownedByComponent.getValue(children[i]));
     }
   }
 

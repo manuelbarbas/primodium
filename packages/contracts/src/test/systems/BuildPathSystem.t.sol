@@ -9,11 +9,11 @@ import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "../../components/BuildingLimitComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "../../components/MaxBuildingsComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { TileComponent, ID as TileComponentID } from "../../components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 //debug buildings
 import { MainBaseID } from "../../prototypes.sol";
@@ -35,7 +35,7 @@ contract BuildPathSystemTest is PrimodiumTest {
 
   OwnedByComponent public ownedByComponent;
   PathComponent public pathComponent;
-  TileComponent public tileComponent;
+  BuildingTypeComponent public buildingTypeComponent;
 
   Coord public startCoord = Coord({ x: -5, y: 2 });
   Coord public endCoord = Coord({ x: 0, y: 1 });
@@ -48,7 +48,7 @@ contract BuildPathSystemTest is PrimodiumTest {
 
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     pathComponent = PathComponent(component(PathComponentID));
-    tileComponent = TileComponent(component(TileComponentID));
+    buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
     vm.stopPrank();
   }
 
@@ -57,9 +57,9 @@ contract BuildPathSystemTest is PrimodiumTest {
 
     assertEq(LibTerrain.getTopLayerKey(startCoord), IronID, "test should try to build IronMineID on IronID tile");
 
-    assertTrue(tileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
+    assertTrue(buildingTypeComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
-      tileComponent.getValue(DebugIronMineID),
+      buildingTypeComponent.getValue(DebugIronMineID),
       IronID,
       "IronMineID should have IronID as requireed tile type to build on"
     );
@@ -103,9 +103,9 @@ contract BuildPathSystemTest is PrimodiumTest {
 
     assertEq(LibTerrain.getTopLayerKey(startCoord), IronID, "test should try to build IronMineID on IronID tile");
 
-    assertTrue(tileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
+    assertTrue(buildingTypeComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
-      tileComponent.getValue(DebugIronMineID),
+      buildingTypeComponent.getValue(DebugIronMineID),
       IronID,
       "IronMineID should have IronID as requireed tile type to build on"
     );

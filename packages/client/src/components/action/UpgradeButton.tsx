@@ -14,9 +14,9 @@ import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
 import { upgrade } from "src/util/web3";
 import {
-  BuildingLevel,
+  Level,
   MaxLevel,
-  Research,
+  HasResearched,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
 
@@ -37,7 +37,7 @@ export default function UpgradeButton({
     state.transactionLoading,
   ]);
 
-  const currLevel = BuildingLevel.use(buildingEntity);
+  const currLevel = Level.use(buildingEntity);
   const maxLevel = MaxLevel.use(builtTile);
   const upgradedLevel = useMemo(() => {
     return parseInt(currLevel?.value.toString() ?? "0") + 1;
@@ -71,7 +71,7 @@ export default function UpgradeButton({
   }, [researchRequirement]);
 
   const isResearched = useMemo(() => {
-    return Research.get(researchOwner);
+    return HasResearched.get(researchOwner);
   }, [researchOwner]);
 
   const isUpgradeLocked = useMemo(() => {

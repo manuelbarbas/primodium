@@ -19,7 +19,7 @@ export const BuildingType = newComponent(
   { value: Type.Entity },
   {
     id: "BuildingType",
-    metadata: { contractId: `${commonIdPrefix}Tile` },
+    metadata: { contractId: `${commonIdPrefix}BuildingType` },
     overridable: true,
   }
 );
@@ -57,24 +57,15 @@ export const LoadingState = newComponent(
     metadata: { contractId: `${commonIdPrefix}LoadingState` },
   }
 );
-export const Health = newNumberComponent(world, {
-  id: "Health",
-  metadata: { contractId: `${commonIdPrefix}Health` },
-});
 
 export const Item = newNumberComponent(world, {
   id: "Item",
   metadata: { contractId: `${commonIdPrefix}Item` },
 });
 
-export const Research = newBoolComponent(world, {
-  id: "Research",
-  metadata: { contractId: `${commonIdPrefix}Research` },
-});
-
-export const StarterPackInitialized = newBoolComponent(world, {
-  id: "StarterPackInitialized",
-  metadata: { contractId: `${commonIdPrefix}StarterPackInitialized` },
+export const HasResearched = newBoolComponent(world, {
+  id: "HasResearched",
+  metadata: { contractId: `${commonIdPrefix}HasResearched` },
 });
 
 export const MainBase = newComponent(
@@ -82,21 +73,21 @@ export const MainBase = newComponent(
   { value: Type.Entity },
   {
     id: "MainBase",
-    metadata: { contractId: `${commonIdPrefix}MainBaseInitialized` },
+    metadata: { contractId: `${commonIdPrefix}MainBase` },
   }
 );
 
-export const RequiredResearchComponent = newNumberComponent(world, {
-  id: "RequiredResearchComponent",
+export const RequiredResearch = newNumberComponent(world, {
+  id: "RequiredResearch",
   metadata: { contractId: `${commonIdPrefix}RequiredResearch` },
 });
 
-export const RequiredResourcesComponent = newComponent(
+export const RequiredResources = newComponent(
   world,
   { value: Type.EntityArray },
   {
-    id: "RequiredResourcesComponent",
-    metadata: { contractId: `${commonIdPrefix}RequiredResourcesComponent` },
+    id: "RequiredResources",
+    metadata: { contractId: `${commonIdPrefix}RequiredResources` },
   }
 );
 
@@ -106,45 +97,36 @@ export const MaxLevel = newNumberComponent(world, {
   overridable: true,
 });
 
-export const BuildingLevel = newNumberComponent(world, {
-  id: "BuildingLevel",
-  metadata: { contractId: `${commonIdPrefix}BuildingLevel` },
+export const Level = newNumberComponent(world, {
+  id: "Level",
+  metadata: { contractId: `${commonIdPrefix}Level` },
   overridable: true,
 });
 
-export const StorageCapacity = newNumberComponent(world, {
-  id: "StorageCapacity",
-  metadata: { contractId: `${commonIdPrefix}StorageCapacity` },
+export const MaxStorage = newNumberComponent(world, {
+  id: "MaxStorage",
+  metadata: { contractId: `${commonIdPrefix}MaxStorage` },
   overridable: true,
 });
 
-export const StorageCapacityResources = newComponent(
+export const MineProduction = newNumberComponent(world, {
+  id: "MineProduction",
+  metadata: { contractId: `${commonIdPrefix}MineProduction` },
+  overridable: true,
+});
+
+export const MaxBuildings = newNumberComponent(world, {
+  id: "MaxBuildings",
+  metadata: { contractId: `${commonIdPrefix}MaxBuildings` },
+  overridable: true,
+});
+
+export const Children = newComponent(
   world,
   { value: Type.EntityArray },
   {
-    id: "StorageCapacityResources",
-    metadata: { contractId: `${commonIdPrefix}StorageCapacityResources` },
-  }
-);
-
-export const Mine = newNumberComponent(world, {
-  id: "Mine",
-  metadata: { contractId: `${commonIdPrefix}Mine` },
-  overridable: true,
-});
-
-export const BuildingLimit = newNumberComponent(world, {
-  id: "BuildingLimit",
-  metadata: { contractId: `${commonIdPrefix}BuildingLimit` },
-  overridable: true,
-});
-
-export const BuildingTiles = newComponent(
-  world,
-  { value: Type.EntityArray },
-  {
-    id: "BuildingTiles",
-    metadata: { contractId: `${commonIdPrefix}BuildingTiles` },
+    id: "Children",
+    metadata: { contractId: `${commonIdPrefix}Children` },
   }
 );
 
@@ -164,12 +146,6 @@ export const OwnedBy = newComponent(
   }
 );
 
-export const LastBuiltAt = newNumberComponent(world, {
-  id: "LastBuiltAt",
-  metadata: { contractId: `${commonIdPrefix}LastBuiltAt` },
-  overridable: true,
-});
-
 export const LastClaimedAt = newNumberComponent(world, {
   id: "LastClaimedAt",
   metadata: { contractId: `${commonIdPrefix}LastClaimedAt` },
@@ -185,23 +161,19 @@ export default {
   BuildingType,
   Path,
   OwnedBy,
-  LastBuiltAt,
   LastClaimedAt,
-  Health,
   IsDebug,
   Item,
-  Research,
-  StarterPackInitialized,
+  HasResearched,
   MainBase,
-  RequiredResearchComponent,
-  RequiredResourcesComponent,
+  RequiredResearch,
+  RequiredResources,
   MaxLevel,
-  BuildingLevel,
-  StorageCapacity,
-  StorageCapacityResources,
-  Mine,
-  BuildingLimit,
-  BuildingTiles,
+  Level,
+  MaxStorage,
+  MineProduction,
+  MaxBuildings,
+  Children,
   RawBlueprint,
   UnclaimedResource,
   SystemsRegistry,

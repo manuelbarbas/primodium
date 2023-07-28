@@ -11,20 +11,20 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID, PassiveResourceProductionData } from "components/PassiveResourceProductionComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
+import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
+import { PassiveProductionComponent, ID as PassiveProductionComponentID, PassiveProductionData } from "components/PassiveProductionComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, RequiredPassiveData } from "components/RequiredPassiveComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetRequiredResources } from "../libraries/LibSetRequiredResources.sol";
 import { LibSetFactoryMineRequirements } from "../libraries/LibSetFactoryMineRequirements.sol";
-import { LibSetFactoryProductionForLevel } from "../libraries/LibSetFactoryProductionForLevel.sol";
+import { LibSetProductionForLevel } from "../libraries/LibSetProductionForLevel.sol";
 import { LibSetUpgradeResearchRequirements } from "../libraries/LibSetUpgradeResearchRequirements.sol";
 import { LibSetRequiredResourcesUpgrade } from "../libraries/LibSetRequiredResourcesUpgrade.sol";
 
@@ -34,7 +34,7 @@ library LibBuildingDesignInitializer {
   function initIronMine(
     ItemComponent itemComponent,
     RequiredTileComponent requiredTileComponent,
-    MineComponent mineComponent,
+    MineProductionComponent mineProductionComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResources
@@ -44,11 +44,11 @@ library LibBuildingDesignInitializer {
     maxLevelComponent.set(IronMineID, 3);
     //IronMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 1);
-    mineComponent.set(buildingIdLevel, 5);
+    mineProductionComponent.set(buildingIdLevel, 5);
 
     //IronMineID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 2);
-    mineComponent.set(buildingIdLevel, 7);
+    mineProductionComponent.set(buildingIdLevel, 7);
     requiredResearch.set(buildingIdLevel, IronMine2ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -61,7 +61,7 @@ library LibBuildingDesignInitializer {
 
     //IronMineID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 3);
-    mineComponent.set(buildingIdLevel, 10);
+    mineProductionComponent.set(buildingIdLevel, 10);
     requiredResearch.set(buildingIdLevel, IronMine3ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -72,7 +72,7 @@ library LibBuildingDesignInitializer {
       3
     );
     buildingIdLevel = LibEncode.hashKeyEntity(IronMineID, 4);
-    mineComponent.set(buildingIdLevel, 13);
+    mineProductionComponent.set(buildingIdLevel, 13);
     requiredResearch.set(buildingIdLevel, IronMine4ResearchID);
     LibSetRequiredResourcesUpgrade.set2RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -89,7 +89,7 @@ library LibBuildingDesignInitializer {
   function initCopperMine(
     ItemComponent itemComponent,
     RequiredTileComponent requiredTileComponent,
-    MineComponent mineComponent,
+    MineProductionComponent mineProductionComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResources
@@ -101,7 +101,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 1);
-    mineComponent.set(buildingIdLevel, 3);
+    mineProductionComponent.set(buildingIdLevel, 3);
     requiredResearch.set(buildingIdLevel, CopperMineResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
@@ -113,7 +113,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 2);
-    mineComponent.set(buildingIdLevel, 5);
+    mineProductionComponent.set(buildingIdLevel, 5);
     requiredResearch.set(buildingIdLevel, CopperMine2ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -126,7 +126,7 @@ library LibBuildingDesignInitializer {
 
     //CopperMineID Level 3
     buildingIdLevel = LibEncode.hashKeyEntity(CopperMineID, 3);
-    mineComponent.set(buildingIdLevel, 7);
+    mineProductionComponent.set(buildingIdLevel, 7);
     requiredResearch.set(buildingIdLevel, CopperMine3ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -141,7 +141,7 @@ library LibBuildingDesignInitializer {
   function initLithiumMine(
     ItemComponent itemComponent,
     RequiredTileComponent requiredTileComponent,
-    MineComponent mineComponent,
+    MineProductionComponent mineProductionComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResources
@@ -152,7 +152,7 @@ library LibBuildingDesignInitializer {
     maxLevelComponent.set(LithiumMineID, 2);
     //LithiumMineID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(LithiumMineID, 1);
-    mineComponent.set(buildingIdLevel, 2);
+    mineProductionComponent.set(buildingIdLevel, 2);
     requiredResearch.set(buildingIdLevel, LithiumMineResearchID);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
@@ -164,7 +164,7 @@ library LibBuildingDesignInitializer {
 
     //LithiumMineID Level 2
     buildingIdLevel = LibEncode.hashKeyEntity(LithiumMineID, 2);
-    mineComponent.set(buildingIdLevel, 3);
+    mineProductionComponent.set(buildingIdLevel, 3);
     requiredResearch.set(buildingIdLevel, LithiumMine2ResearchID);
     LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
       requiredResources,
@@ -177,7 +177,7 @@ library LibBuildingDesignInitializer {
 
     // //LithiumMineID Level 3
     // buildingIdLevel = LibEncode.hashKeyEntity(LithiumMineID, 3);
-    // mineComponent.set(buildingIdLevel, 5);
+    // mineProductionComponent.set(buildingIdLevel, 5);
     // requiredResearch.set(buildingIdLevel, LithiumMine3ResearchID);
     // LibSetRequiredResourcesUpgrade.set1RequiredResourcesForEntityUpgradeToLevel(
     //   requiredResources,
@@ -191,8 +191,8 @@ library LibBuildingDesignInitializer {
 
   function initStorageUnit(
     ItemComponent itemComponent,
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent,
+    MaxResourceStorageComponent maxResourceStorageComponent,
+    MaxStorageComponent maxStorageComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResources
@@ -211,8 +211,8 @@ library LibBuildingDesignInitializer {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(StorageUnitID, 1);
     //storage increase
     LibSetRequiredResources.set2RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       1000,
@@ -232,8 +232,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set3RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       2000,
@@ -255,8 +255,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       3000,
@@ -271,8 +271,8 @@ library LibBuildingDesignInitializer {
 
   function initIronPlateFactory(
     ItemComponent itemComponent,
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent,
-    FactoryProductionComponent factoryProductionComponent,
+    MinesComponent minesComponent,
+    ProductionComponent productionComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResearchComponent requiredResearch,
     RequiredResourcesComponent requiredResources
@@ -291,16 +291,10 @@ library LibBuildingDesignInitializer {
     //IronPlateFactoryID Level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(IronPlateFactoryID, 1);
     //required Mines
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
-      factoryMineBuildingsComponent,
-      IronPlateFactoryID,
-      1,
-      IronMineID,
-      1
-    );
+    LibSetFactoryMineRequirements.setFactory1MineRequirement(minesComponent, IronPlateFactoryID, 1, IronMineID, 1);
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       IronPlateFactoryID,
       1,
       IronPlateCraftedItemID,
@@ -319,17 +313,11 @@ library LibBuildingDesignInitializer {
     );
 
     //required Mines
-    LibSetFactoryMineRequirements.setFactory1MineRequirement(
-      factoryMineBuildingsComponent,
-      IronPlateFactoryID,
-      2,
-      IronMineID,
-      1
-    );
+    LibSetFactoryMineRequirements.setFactory1MineRequirement(minesComponent, IronPlateFactoryID, 2, IronMineID, 1);
 
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       IronPlateFactoryID,
       2,
       IronPlateCraftedItemID,
@@ -349,7 +337,7 @@ library LibBuildingDesignInitializer {
 
     // //required Mines
     // LibSetFactoryMineRequirements.setFactory1MineRequirement(
-    //   factoryMineBuildingsComponent,
+    //   minesComponent,
     //   IronPlateFactoryID,
     //   3,
     //   IronMineID,
@@ -357,8 +345,8 @@ library LibBuildingDesignInitializer {
     // );
 
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   IronPlateFactoryID,
     //   3,
     //   IronPlateCraftedItemID,
@@ -375,28 +363,23 @@ library LibBuildingDesignInitializer {
     RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
       getAddressById(world.components(), RequiredResourcesComponentID)
     );
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getAddressById(world.components(), FactoryMineBuildingsComponentID)
-    );
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(world.components(), FactoryProductionComponentID)
+    MinesComponent minesComponent = MinesComponent(getAddressById(world.components(), MinesComponentID));
+    ProductionComponent productionComponent = ProductionComponent(
+      getAddressById(world.components(), ProductionComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-    RequiredPassiveResourceComponent requiredPassiveResourceComponent = RequiredPassiveResourceComponent(
-      getAddressById(world.components(), RequiredPassiveResourceComponentID)
+    RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
+      getAddressById(world.components(), RequiredPassiveComponentID)
     );
 
     //AlloyFactoryID
     //maxLevelComponent.set(AlloyFactoryID, 3);
-    uint256[] memory requiredPassiveResourceIDs = new uint256[](1);
-    requiredPassiveResourceIDs[0] = ElectricityPassiveResourceID;
-    uint32[] memory requiredPassiveResourceAmounts = new uint32[](1);
-    requiredPassiveResourceAmounts[0] = 2;
+    uint256[] memory requiredPassiveIDs = new uint256[](1);
+    requiredPassiveIDs[0] = ElectricityPassiveResourceID;
+    uint32[] memory requiredPassiveAmounts = new uint32[](1);
+    requiredPassiveAmounts[0] = 2;
 
-    requiredPassiveResourceComponent.set(
-      AlloyFactoryID,
-      RequiredPassiveResourceData(requiredPassiveResourceIDs, requiredPassiveResourceAmounts)
-    );
+    requiredPassiveComponent.set(AlloyFactoryID, RequiredPassiveData(requiredPassiveIDs, requiredPassiveAmounts));
 
     requiredResearch.set(AlloyFactoryID, AlloyFactoryResearchID);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
@@ -412,7 +395,7 @@ library LibBuildingDesignInitializer {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(AlloyFactoryID, 1);
     //required Mines
     LibSetFactoryMineRequirements.setFactory2MineRequirement(
-      factoryMineBuildingsComponent,
+      minesComponent,
       AlloyFactoryID,
       1,
       IronMineID,
@@ -421,13 +404,7 @@ library LibBuildingDesignInitializer {
       1
     );
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
-      AlloyFactoryID,
-      1,
-      AlloyCraftedItemID,
-      1
-    );
+    LibSetProductionForLevel.setProductionForLevel(productionComponent, AlloyFactoryID, 1, AlloyCraftedItemID, 1);
 
     // //AlloyFactoryID Level 2
     // buildingIdLevel = LibEncode.hashKeyEntity(AlloyFactoryID, 2);
@@ -444,7 +421,7 @@ library LibBuildingDesignInitializer {
     // //AlloyFactoryID Level 2
     // //required Mines
     // LibSetFactoryMineRequirements.setFactory2MineRequirement(
-    //   factoryMineBuildingsComponent,
+    //   minesComponent,
     //   AlloyFactoryID,
     //   2,
     //   IronMineID,
@@ -453,8 +430,8 @@ library LibBuildingDesignInitializer {
     //   1
     // );
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   AlloyFactoryID,
     //   2,
     //   AlloyCraftedItemID,
@@ -474,7 +451,7 @@ library LibBuildingDesignInitializer {
 
     // //required Mines
     // LibSetFactoryMineRequirements.setFactory2MineRequirement(
-    //   factoryMineBuildingsComponent,
+    //   minesComponent,
     //   AlloyFactoryID,
     //   3,
     //   IronMineID,
@@ -484,8 +461,8 @@ library LibBuildingDesignInitializer {
     // );
 
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   AlloyFactoryID,
     //   3,
     //   AlloyCraftedItemID,
@@ -501,11 +478,9 @@ library LibBuildingDesignInitializer {
     RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
       getAddressById(world.components(), RequiredResourcesComponentID)
     );
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getAddressById(world.components(), FactoryMineBuildingsComponentID)
-    );
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(world.components(), FactoryProductionComponentID)
+    MinesComponent minesComponent = MinesComponent(getAddressById(world.components(), MinesComponentID));
+    ProductionComponent productionComponent = ProductionComponent(
+      getAddressById(world.components(), ProductionComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
 
@@ -524,7 +499,7 @@ library LibBuildingDesignInitializer {
     );
     //required Mines
     LibSetFactoryMineRequirements.setFactory2MineRequirement(
-      factoryMineBuildingsComponent,
+      minesComponent,
       LithiumCopperOxideFactoryID,
       1,
       LithiumMineID,
@@ -533,8 +508,8 @@ library LibBuildingDesignInitializer {
       1
     );
     // production
-    LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-      factoryProductionComponent,
+    LibSetProductionForLevel.setProductionForLevel(
+      productionComponent,
       LithiumCopperOxideFactoryID,
       1,
       LithiumCopperOxideCraftedItemID,
@@ -556,7 +531,7 @@ library LibBuildingDesignInitializer {
     // //LithiumCopperOxideFactoryID Level 2
     // //required Mines
     // LibSetFactoryMineRequirements.setFactory2MineRequirement(
-    //   factoryMineBuildingsComponent,
+    //   minesComponent,
     //   LithiumCopperOxideFactoryID,
     //   2,
     //   LithiumMineID,
@@ -565,8 +540,8 @@ library LibBuildingDesignInitializer {
     //   1
     // );
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   LithiumCopperOxideFactoryID,
     //   2,
     //   LithiumCopperOxideCraftedItemID,
@@ -588,7 +563,7 @@ library LibBuildingDesignInitializer {
 
     // //required Mines
     // LibSetFactoryMineRequirements.setFactory2MineRequirement(
-    //   factoryMineBuildingsComponent,
+    //   minesComponent,
     //   LithiumCopperOxideFactoryID,
     //   3,
     //   LithiumMineID,
@@ -598,8 +573,8 @@ library LibBuildingDesignInitializer {
     // );
 
     // // production
-    // LibSetFactoryProductionForLevel.setFactoryProductionForLevel(
-    //   factoryProductionComponent,
+    // LibSetProductionForLevel.setProductionForLevel(
+    //   productionComponent,
     //   LithiumCopperOxideFactoryID,
     //   3,
     //   LithiumCopperOxideCraftedItemID,
@@ -615,8 +590,8 @@ library LibBuildingDesignInitializer {
       getAddressById(world.components(), RequiredResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
-      getAddressById(world.components(), PassiveResourceProductionComponentID)
+    PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
+      getAddressById(world.components(), PassiveProductionComponentID)
     );
     //SolarPanelID
 
@@ -628,10 +603,7 @@ library LibBuildingDesignInitializer {
       LithiumCopperOxideCraftedItemID,
       500
     );
-    passiveResourceProductionComponent.set(
-      SolarPanelID,
-      PassiveResourceProductionData(ElectricityPassiveResourceID, 4)
-    );
+    passiveProductionComponent.set(SolarPanelID, PassiveProductionData(ElectricityPassiveResourceID, 4));
   }
 
   function initHousingUnit(IWorld world) internal {
@@ -642,8 +614,8 @@ library LibBuildingDesignInitializer {
     //   getAddressById(world.components(), RequiredResourcesComponentID)
     // );
     // ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-    // PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
-    //   getAddressById(world.components(), PassiveResourceProductionComponentID)
+    // PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
+    //   getAddressById(world.components(), PassiveProductionComponentID)
     // );
     // //HousingUnitID
     // requiredResearch.set(HousingUnitID, HousingUnitResearchID);
@@ -654,13 +626,13 @@ library LibBuildingDesignInitializer {
     //   IronPlateCraftedItemID,
     //   1000
     // );
-    // passiveResourceProductionComponent.set(HousingUnitID, PassiveResourceProductionData(HousingPassiveResourceID, 20));
+    // passiveProductionComponent.set(HousingUnitID, PassiveProductionData(HousingPassiveResourceID, 20));
   }
 
   function initMainBase(
     ItemComponent itemComponent,
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent,
-    StorageCapacityComponent storageCapacityComponent,
+    MaxResourceStorageComponent maxResourceStorageComponent,
+    MaxStorageComponent maxStorageComponent,
     MaxLevelComponent maxLevelComponent,
     RequiredResourcesComponent requiredResources
   ) internal {
@@ -671,8 +643,8 @@ library LibBuildingDesignInitializer {
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(MainBaseID, 1);
     //MainBase ID Level 1
     LibSetRequiredResources.set1RequiredResourceForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       1000
@@ -690,8 +662,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set2RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       1500,
@@ -712,8 +684,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set3RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       2500,
@@ -734,8 +706,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       IronResourceItemID,
       4000,
@@ -760,8 +732,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       LithiumCopperOxideCraftedItemID,
       2000,
@@ -784,8 +756,8 @@ library LibBuildingDesignInitializer {
     );
     //storage increase
     LibSetRequiredResources.set4RequiredResourcesForEntity(
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       buildingIdLevel,
       LithiumCopperOxideCraftedItemID,
       2000,
@@ -811,35 +783,25 @@ library LibBuildingDesignInitializer {
     RequiredTileComponent requiredTileComponent = RequiredTileComponent(
       getAddressById(components, RequiredTileComponentID)
     );
-    MineComponent mineComponent = MineComponent(getAddressById(components, MineComponentID));
+    MineProductionComponent mineProductionComponent = MineProductionComponent(
+      getAddressById(components, MineProductionComponentID)
+    );
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
 
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(
-      getAddressById(components, StorageCapacityComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
+    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
+      getAddressById(components, MaxResourceStorageComponentID)
     );
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getAddressById(components, StorageCapacityResourcesComponentID)
-    );
-    FactoryProductionComponent factoryProductionComponent = FactoryProductionComponent(
-      getAddressById(components, FactoryProductionComponentID)
-    );
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getAddressById(components, FactoryMineBuildingsComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
+    MinesComponent minesComponent = MinesComponent(getAddressById(components, MinesComponentID));
 
-    initMainBase(
-      itemComponent,
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
-      maxLevelComponent,
-      requiredResources
-    );
+    initMainBase(itemComponent, maxResourceStorageComponent, maxStorageComponent, maxLevelComponent, requiredResources);
 
     //Iron Mine
     initIronMine(
       itemComponent,
       requiredTileComponent,
-      mineComponent,
+      mineProductionComponent,
       maxLevelComponent,
       requiredResearch,
       requiredResources
@@ -847,7 +809,7 @@ library LibBuildingDesignInitializer {
     initCopperMine(
       itemComponent,
       requiredTileComponent,
-      mineComponent,
+      mineProductionComponent,
       maxLevelComponent,
       requiredResearch,
       requiredResources
@@ -855,7 +817,7 @@ library LibBuildingDesignInitializer {
     initLithiumMine(
       itemComponent,
       requiredTileComponent,
-      mineComponent,
+      mineProductionComponent,
       maxLevelComponent,
       requiredResearch,
       requiredResources
@@ -863,8 +825,8 @@ library LibBuildingDesignInitializer {
 
     initStorageUnit(
       itemComponent,
-      storageCapacityResourcesComponent,
-      storageCapacityComponent,
+      maxResourceStorageComponent,
+      maxStorageComponent,
       maxLevelComponent,
       requiredResearch,
       requiredResources
@@ -872,8 +834,8 @@ library LibBuildingDesignInitializer {
 
     initIronPlateFactory(
       itemComponent,
-      factoryMineBuildingsComponent,
-      factoryProductionComponent,
+      minesComponent,
+      productionComponent,
       maxLevelComponent,
       requiredResearch,
       requiredResources

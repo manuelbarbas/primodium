@@ -4,14 +4,14 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 import { ID as BuildSystemID } from "systems/BuildSystem.sol";
 // components
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
@@ -29,47 +29,43 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getC(StorageCapacityResourcesComponentID)
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
+    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
+      getC(MaxResourceStorageComponentID)
     );
     uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
-    if (!storageCapacityResourcesComponent.has(buildingTypeLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingTypeLevel);
+    if (!maxResourceStorageComponent.has(buildingTypeLevel)) return;
+    uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingTypeLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
-      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
+      uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
+        maxStorageComponent,
         playerEntity,
         storageResources[i]
       );
-      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
+      uint32 maxStorageIncrease = LibStorage.getEntityMaxStorageForResource(
+        maxStorageComponent,
         buildingTypeLevel,
         storageResources[i]
       );
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        storageCapacityResourcesComponent,
-        storageCapacityComponent,
+      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
+        maxResourceStorageComponent,
+        maxStorageComponent,
         playerEntity,
         storageResources[i],
-        playerResourceStorageCapacity + storageCapacityIncrease
+        playerResourceMaxStorage + maxStorageIncrease
       );
     }
   }
 
   function setupFactory(uint256 factoryEntity) internal {
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getC(FactoryMineBuildingsComponentID)
-    );
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
-    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
+    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
+    uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(factoryEntity);
+    uint256 levelEntity = LibEncode.hashKeyEntity(buildingId, 1);
+    if (!minesComponent.has(levelEntity)) {
       return;
     }
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
-      buildingLevelEntity
-    );
-    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
+    MinesData memory minesData = minesComponent.getValue(levelEntity);
+    minesComponent.set(factoryEntity, minesData);
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -80,16 +76,18 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 buildingType = TileComponent(getAddressById(components, TileComponentID)).getValue(buildingEntity);
+    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
+      buildingEntity
+    );
 
     LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world, playerEntity, buildingType);
-    LibPassiveResource.updatePassiveResourceProduction(world, playerEntity, buildingType);
+    LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType);
     //set MainBase id for player address for easy lookup
 
     // update building count if the built building counts towards the build limit
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint32Value(buildingLimitComponent, playerEntity) + 1);
+      MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
+      maxBuildingsComponent.set(playerEntity, LibMath.getSafeUint32Value(maxBuildingsComponent, playerEntity) + 1);
     }
 
     updatePlayerStorage(buildingType, playerEntity);

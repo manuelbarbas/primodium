@@ -10,15 +10,15 @@ import { LibTerrain } from "libraries/LibTerrain.sol";
 
 library LibPath {
   function checkCanBuildPath(
-    Uint256Component tileComponent,
-    Uint256Component mineComponent,
+    Uint256Component buildingTypeComponent,
+    Uint256Component mineProductionComponent,
     Uint256Component storageComponent,
-    Uint256Component buildingLevelComponent,
+    Uint256Component levelComponent,
     uint256 fromEntity,
     uint256 toEntity,
     uint256 playerEntity
   ) internal view returns (bool) {
-    if (tileComponent.getValue(toEntity) != MainBaseID) {
+    if (buildingTypeComponent.getValue(toEntity) != MainBaseID) {
       return false;
     }
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromEntity));
@@ -27,8 +27,8 @@ library LibPath {
       return false;
     }
     return
-      mineComponent.has(
-        LibEncode.hashKeyEntity(tileComponent.getValue(fromEntity), buildingLevelComponent.getValue(fromEntity))
+      mineProductionComponent.has(
+        LibEncode.hashKeyEntity(buildingTypeComponent.getValue(fromEntity), levelComponent.getValue(fromEntity))
       );
   }
 }

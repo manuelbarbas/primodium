@@ -56,8 +56,6 @@ const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
 
         buildPath(startCoord, gameCoord, network);
         break;
-      case Action.SelectAttack:
-        return;
       case Action.PlaceBuilding:
         const selectedBuilding = SelectedBuilding.get()?.value;
         if (!selectedBuilding) return;

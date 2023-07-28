@@ -10,8 +10,8 @@ import { IUint256Component } from "solecs/interfaces/IUint256Component.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 
 // Libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -28,13 +28,13 @@ library LibTechnologyDesignInitializer {
     RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingComponentID)
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(components, HasResearchedComponentID)
     );
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
-    researchComponent.set(CopperMineResearchID);
-    buildingLevelComponent.set(CopperMineResearchID, 2);
+    hasResearchedComponent.set(CopperMineResearchID);
+    levelComponent.set(CopperMineResearchID, 2);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -43,8 +43,8 @@ library LibTechnologyDesignInitializer {
       300
     );
 
-    researchComponent.set(CopperMine2ResearchID);
-    buildingLevelComponent.set(CopperMine2ResearchID, 3);
+    hasResearchedComponent.set(CopperMine2ResearchID);
+    levelComponent.set(CopperMine2ResearchID, 3);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -53,8 +53,8 @@ library LibTechnologyDesignInitializer {
       1500
     );
 
-    researchComponent.set(CopperMine3ResearchID);
-    buildingLevelComponent.set(CopperMine3ResearchID, 5);
+    hasResearchedComponent.set(CopperMine3ResearchID);
+    levelComponent.set(CopperMine3ResearchID, 5);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -63,8 +63,8 @@ library LibTechnologyDesignInitializer {
       4000
     );
 
-    researchComponent.set(IronMine2ResearchID);
-    buildingLevelComponent.set(IronMine2ResearchID, 2);
+    hasResearchedComponent.set(IronMine2ResearchID);
+    levelComponent.set(IronMine2ResearchID, 2);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -73,8 +73,8 @@ library LibTechnologyDesignInitializer {
       300
     );
 
-    researchComponent.set(IronMine3ResearchID);
-    buildingLevelComponent.set(IronMine3ResearchID, 3);
+    hasResearchedComponent.set(IronMine3ResearchID);
+    levelComponent.set(IronMine3ResearchID, 3);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -83,8 +83,8 @@ library LibTechnologyDesignInitializer {
       3000
     );
 
-    researchComponent.set(IronPlateFactoryResearchID);
-    buildingLevelComponent.set(IronPlateFactoryResearchID, 3);
+    hasResearchedComponent.set(IronPlateFactoryResearchID);
+    levelComponent.set(IronPlateFactoryResearchID, 3);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -95,8 +95,8 @@ library LibTechnologyDesignInitializer {
       1000
     );
 
-    researchComponent.set(IronPlateFactory2ResearchID);
-    buildingLevelComponent.set(IronPlateFactory2ResearchID, 4);
+    hasResearchedComponent.set(IronPlateFactory2ResearchID);
+    levelComponent.set(IronPlateFactory2ResearchID, 4);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -107,8 +107,8 @@ library LibTechnologyDesignInitializer {
       3000
     );
 
-    researchComponent.set(IronPlateFactory3ResearchID);
-    buildingLevelComponent.set(IronPlateFactory3ResearchID, 5);
+    hasResearchedComponent.set(IronPlateFactory3ResearchID);
+    levelComponent.set(IronPlateFactory3ResearchID, 5);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -118,8 +118,8 @@ library LibTechnologyDesignInitializer {
       CopperResourceItemID,
       1000
     );
-    // researchComponent.set(IronPlateFactory3ResearchID);
-    // buildingLevelComponent.set(IronPlateFactory3ResearchID, 5);
+    // hasResearchedComponent.set(IronPlateFactory3ResearchID);
+    // levelComponent.set(IronPlateFactory3ResearchID, 5);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -130,8 +130,8 @@ library LibTechnologyDesignInitializer {
     //   1000
     // );
 
-    // researchComponent.set(IronPlateFactory4ResearchID);
-    // buildingLevelComponent.set(IronPlateFactory4ResearchID, 6);
+    // hasResearchedComponent.set(IronPlateFactory4ResearchID);
+    // levelComponent.set(IronPlateFactory4ResearchID, 6);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -143,8 +143,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // Research StorageUnitResearchID with 1000 IronResourceItemID and 1000 CopperResourceItemID
-    researchComponent.set(StorageUnitResearchID);
-    buildingLevelComponent.set(StorageUnitResearchID, 3);
+    hasResearchedComponent.set(StorageUnitResearchID);
+    levelComponent.set(StorageUnitResearchID, 3);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -156,8 +156,8 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research StorageUnit2ResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
-    researchComponent.set(StorageUnit2ResearchID);
-    buildingLevelComponent.set(StorageUnit2ResearchID, 4);
+    hasResearchedComponent.set(StorageUnit2ResearchID);
+    levelComponent.set(StorageUnit2ResearchID, 4);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -169,8 +169,8 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research StorageUnit3ResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
-    researchComponent.set(StorageUnit3ResearchID);
-    buildingLevelComponent.set(StorageUnit3ResearchID, 5);
+    hasResearchedComponent.set(StorageUnit3ResearchID);
+    levelComponent.set(StorageUnit3ResearchID, 5);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -182,8 +182,8 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research LithiumMineResearchID with 2000 IronResourceItemID and 2000 CopperResourceItemID
-    researchComponent.set(LithiumMineResearchID);
-    buildingLevelComponent.set(LithiumMineResearchID, 4);
+    hasResearchedComponent.set(LithiumMineResearchID);
+    levelComponent.set(LithiumMineResearchID, 4);
     LibSetRequiredResources.set1RequiredResourceForEntity(
       requiredResources,
       itemComponent,
@@ -193,8 +193,8 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research LithiumMine2ResearchID with 2000 IronPlateCraftedItemID and 4000 CopperResourceItemID
-    researchComponent.set(LithiumMine2ResearchID);
-    buildingLevelComponent.set(LithiumMine2ResearchID, 5);
+    hasResearchedComponent.set(LithiumMine2ResearchID);
+    levelComponent.set(LithiumMine2ResearchID, 5);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -206,8 +206,8 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research LithiumMine3ResearchID with 3000 IronPlateCraftedItemID and 8000 CopperResourceItemID
-    // researchComponent.set(LithiumMine3ResearchID);
-    // buildingLevelComponent.set(LithiumMine3ResearchID, 6);
+    // hasResearchedComponent.set(LithiumMine3ResearchID);
+    // levelComponent.set(LithiumMine3ResearchID, 6);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -219,8 +219,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // Research AlloyFactoryResearchID with 3000 IronPlateCraftedItemID and 2000 LithiumResourceItemID
-    researchComponent.set(AlloyFactoryResearchID);
-    buildingLevelComponent.set(AlloyFactoryResearchID, 5);
+    hasResearchedComponent.set(AlloyFactoryResearchID);
+    levelComponent.set(AlloyFactoryResearchID, 5);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -232,8 +232,8 @@ library LibTechnologyDesignInitializer {
     );
 
     // Research AlloyFactory2ResearchID with 3000 IronPlateCraftedItemID and 2000 LithiumResourceItemID
-    // researchComponent.set(AlloyFactory2ResearchID);
-    // buildingLevelComponent.set(AlloyFactory2ResearchID, 6);
+    // hasResearchedComponent.set(AlloyFactory2ResearchID);
+    // levelComponent.set(AlloyFactory2ResearchID, 6);
     // LibSetRequiredResources.set1RequiredResourceForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -243,8 +243,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // Research AlloyFactory3ResearchID with 3000 IronPlateCraftedItemID and 2000 LithiumResourceItemID
-    // researchComponent.set(AlloyFactory3ResearchID);
-    // buildingLevelComponent.set(AlloyFactory3ResearchID, 7);
+    // hasResearchedComponent.set(AlloyFactory3ResearchID);
+    // levelComponent.set(AlloyFactory3ResearchID, 7);
     // LibSetRequiredResources.set1RequiredResourceForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -254,8 +254,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // Research LithiumCopperOxideFactoryResearchID with 3000 IronPlateCraftedItemID and 5000 CopperReosurceItemID
-    researchComponent.set(LithiumCopperOxideFactoryResearchID);
-    buildingLevelComponent.set(LithiumCopperOxideFactoryResearchID, 5);
+    hasResearchedComponent.set(LithiumCopperOxideFactoryResearchID);
+    levelComponent.set(LithiumCopperOxideFactoryResearchID, 5);
     LibSetRequiredResources.set2RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -266,8 +266,8 @@ library LibTechnologyDesignInitializer {
       5000
     );
 
-    // Research LithiumCopperOxideFactory2ResearchID with 10000 IronPlateCraftedItemID and 10000 CopperReosurceItemID    // researchComponent.set(LithiumCopperOxideFactory2ResearchID);
-    // buildingLevelComponent.set(LithiumCopperOxideFactory2ResearchID, 6);
+    // Research LithiumCopperOxideFactory2ResearchID with 10000 IronPlateCraftedItemID and 10000 CopperReosurceItemID    // hasResearchedComponent.set(LithiumCopperOxideFactory2ResearchID);
+    // levelComponent.set(LithiumCopperOxideFactory2ResearchID, 6);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -279,8 +279,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // // Research LithiumCopperOxideFactory3ResearchID with 10000 IronPlateCraftedItemID and 20000 CopperReosurceItemID
-    // researchComponent.set(LithiumCopperOxideFactory3ResearchID);
-    // buildingLevelComponent.set(LithiumCopperOxideFactory3ResearchID, 7);
+    // hasResearchedComponent.set(LithiumCopperOxideFactory3ResearchID);
+    // levelComponent.set(LithiumCopperOxideFactory3ResearchID, 7);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -292,8 +292,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // // Research SpaceFuelFactoryResearchID with 1000 AlloyCraftedItemID
-    // researchComponent.set(SpaceFuelFactoryResearchID);
-    // buildingLevelComponent.set(SpaceFuelFactoryResearchID, 6);
+    // hasResearchedComponent.set(SpaceFuelFactoryResearchID);
+    // levelComponent.set(SpaceFuelFactoryResearchID, 6);
     // LibSetRequiredResources.set1RequiredResourceForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -302,8 +302,8 @@ library LibTechnologyDesignInitializer {
     //   1000
     // );
     // // Research SpaceFuelFactory2ResearchID with 3000 AlloyCraftedItemID
-    // researchComponent.set(SpaceFuelFactory2ResearchID);
-    // buildingLevelComponent.set(SpaceFuelFactory2ResearchID, 7);
+    // hasResearchedComponent.set(SpaceFuelFactory2ResearchID);
+    // levelComponent.set(SpaceFuelFactory2ResearchID, 7);
     // LibSetRequiredResources.set1RequiredResourceForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -313,8 +313,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // Research SpaceFuelFactory3ResearchID with 10000 AlloyCraftedItemID
-    // researchComponent.set(SpaceFuelFactory3ResearchID);
-    // buildingLevelComponent.set(SpaceFuelFactory3ResearchID, 8);
+    // hasResearchedComponent.set(SpaceFuelFactory3ResearchID);
+    // levelComponent.set(SpaceFuelFactory3ResearchID, 8);
     // LibSetRequiredResources.set1RequiredResourceForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -324,8 +324,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // Research SolarPanelResearchID with 1000 AlloyCraftedItemID
-    researchComponent.set(SolarPanelResearchID);
-    buildingLevelComponent.set(SolarPanelResearchID, 5);
+    hasResearchedComponent.set(SolarPanelResearchID);
+    levelComponent.set(SolarPanelResearchID, 5);
     LibSetRequiredResources.set3RequiredResourcesForEntity(
       requiredResources,
       itemComponent,
@@ -338,8 +338,8 @@ library LibTechnologyDesignInitializer {
       1500
     );
     // // Research SolarPanelResearchID with 3000 AlloyCraftedItemID
-    // researchComponent.set(SolarPanel2ResearchID);
-    // buildingLevelComponent.set(SolarPanel2ResearchID, 6);
+    // hasResearchedComponent.set(SolarPanel2ResearchID);
+    // levelComponent.set(SolarPanel2ResearchID, 6);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
     //   itemComponent,
@@ -351,8 +351,8 @@ library LibTechnologyDesignInitializer {
     // );
 
     // // Research SolarPanel3ResearchID with 10000 AlloyCraftedItemID
-    // researchComponent.set(SolarPanel3ResearchID);
-    // buildingLevelComponent.set(SolarPanel3ResearchID, 7);
+    // hasResearchedComponent.set(SolarPanel3ResearchID);
+    // levelComponent.set(SolarPanel3ResearchID, 7);
     // LibSetRequiredResources.set2RequiredResourcesForEntity(
     //   requiredResources,
     //   itemComponent,

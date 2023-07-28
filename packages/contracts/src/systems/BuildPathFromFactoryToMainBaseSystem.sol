@@ -3,13 +3,13 @@ pragma solidity >=0.8.0;
 
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -36,21 +36,19 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
       "BuildPathFromFactoryToMainBase: Only BuildPathSystem can call this function"
     );
 
-    if (FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(fromBuildingEntity)) {
+    if (ActiveComponent(getC(ActiveComponentID)).has(fromBuildingEntity)) {
       uint256 playerEntity = addressToEntity(playerAddress);
 
-      uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(fromBuildingEntity);
-      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(fromBuildingEntity);
+      uint256 levelEntity = LibEncode.hashKeyEntity(
         buildingId,
-        BuildingLevelComponent(getC(BuildingLevelComponentID)).getValue(fromBuildingEntity)
+        LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
       );
-      FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
-        getC(FactoryProductionComponentID)
-      ).getValue(buildingLevelEntity);
+      ProductionData memory productionData = ProductionComponent(getC(ProductionComponentID)).getValue(levelEntity);
 
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
+      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, productionData.ResourceID);
 
-      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(world, playerEntity, buildingLevelEntity, true);
+      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
     }
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);
