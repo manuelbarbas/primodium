@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
-import { encodeCoordEntityAndTrim } from "src/util/encode";
+import { encodeCoordEntityAndTrim, trimEntityId } from "src/util/encode";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
 import { GameButton } from "../shared/GameButton";
@@ -30,11 +30,14 @@ export const InfoBox = () => {
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
-
-  const buildLimit = MaxBuildings.use(mainBaseLevel as unknown as EntityID);
+  console.log("mainebase level: " + mainBaseLevel.toString());
+  const buildLimit = MaxBuildings.use(
+    trimEntityId(mainBaseLevel as unknown as EntityID)
+  );
 
   const playerBuildingCount = MaxBuildings.use(address);
   const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
+  console.log("building limit: " + buildLimitNumber);
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
   );
