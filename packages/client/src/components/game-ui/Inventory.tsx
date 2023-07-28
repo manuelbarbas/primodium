@@ -17,11 +17,14 @@ import {
 } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useMud } from "src/hooks";
-import { PanZoom } from "../shared/PanZoom";
+import { Starmap } from "./panes/starmap/Starmap";
+import { FullStarmap } from "./panes/starmap/StarmapModal";
+import { GameButton } from "../shared/GameButton";
 
 export const Inventory = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
+  const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
 
   const mainBaseCoord = useMainBaseCoord();
   const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
@@ -92,11 +95,13 @@ export const Inventory = () => {
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scale: 0 }}
-              className=" bg-gray-900 z-[999] w-96 border border-cyan-600 p-2 text-xs h-48"
+              className=" bg-gray-900 z-[999] w-96 border border-cyan-600 p-2 text-xs h-56"
             >
-              <PanZoom size={2000}>
-                <span className="absolute w-20 h-20 top-0 left-0 bg-red-300" />
-              </PanZoom>
+              <Starmap gridSize={16} />
+              <FullStarmap
+                show={showFullStarmap}
+                onClose={() => setShowFullStarmap(false)}
+              />
             </motion.div>
           )}
 
@@ -106,6 +111,16 @@ export const Inventory = () => {
                 <ClaimButton id="claim-button" coords={mainBaseCoord} />
               )}
             </div>
+          )}
+
+          {menuIndex === 2 && (
+            <GameButton
+              className="m-2"
+              color="bg-amber-600"
+              onClick={() => setShowFullStarmap(true)}
+            >
+              <p className="p-1 px-3">View Starmap</p>
+            </GameButton>
           )}
         </div>
       </motion.div>

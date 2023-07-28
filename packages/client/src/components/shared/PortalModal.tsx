@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
 interface ModalProps {
@@ -15,7 +15,6 @@ const PortalModal: React.FC<ModalProps> = ({
   title,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const [el] = useState(document.createElement("div"));
 
   useEffect(() => {
     const handleEscPress = (event: KeyboardEvent) => {
@@ -25,12 +24,10 @@ const PortalModal: React.FC<ModalProps> = ({
     };
 
     window.addEventListener("keydown", handleEscPress);
-    document.body.appendChild(el);
     return () => {
       window.removeEventListener("keydown", handleEscPress);
-      document.body.removeChild(el);
     };
-  }, [el, onClose, show]);
+  }, [onClose, show]);
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -65,7 +62,7 @@ const PortalModal: React.FC<ModalProps> = ({
         </div>
       )}
     </>,
-    el
+    document.getElementById("modal-root")!
   );
 };
 
