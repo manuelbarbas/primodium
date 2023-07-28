@@ -1,6 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "./constants";
-import { RequiredResearchComponent } from "src/network/components/chainComponents";
+import { RequiredResearch } from "src/network/components/chainComponents";
 
 export type ResearchTreeType = ResearchCategoryType[];
 
@@ -25,7 +25,7 @@ export type ResearchItemLevelType = {
 export function getBuildingResearchRequirement(
   buildingId: EntityID
 ): EntityID | null {
-  const requiredResearch = RequiredResearchComponent.get(buildingId)?.value;
+  const requiredResearch = RequiredResearch.get(buildingId)?.value;
 
   if (!requiredResearch) return null;
   return requiredResearch.toString() as EntityID;
