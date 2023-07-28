@@ -91,7 +91,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
         playerResourceMaxStorage - maxStorageIncrease
       );
 
-      uint32 playerResourceAmount = LibMath.getSafeUint32(itemComponent, playerResourceStorageEntity);
+      uint32 playerResourceAmount = LibMath.getSafe(itemComponent, playerResourceStorageEntity);
       if (playerResourceAmount > playerResourceMaxStorage - maxStorageIncrease) {
         itemComponent.set(playerResourceStorageEntity, playerResourceMaxStorage - maxStorageIncrease);
       }

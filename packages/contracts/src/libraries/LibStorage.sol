@@ -13,7 +13,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 library LibStorage {
   function getResourceStorageSpace(IWorld world, uint256 entity, uint256 resourceId) internal view returns (uint32) {
     uint32 currentMaxStorage = getResourceMaxStorage(world, entity, resourceId);
-    uint32 currentOccupiedStorage = LibMath.getSafeUint32(
+    uint32 currentOccupiedStorage = LibMath.getSafe(
       ItemComponent(world.getComponent(ItemComponentID)),
       LibEncode.hashKeyEntity(resourceId, entity)
     );
@@ -23,7 +23,7 @@ library LibStorage {
 
   function getResourceMaxStorage(IWorld world, uint256 entity, uint256 resourceId) internal view returns (uint32) {
     return
-      LibMath.getSafeUint32(
+      LibMath.getSafe(
         MaxStorageComponent(world.getComponent(MaxStorageComponentID)),
         LibEncode.hashKeyEntity(resourceId, entity)
       );
@@ -87,13 +87,13 @@ library LibStorage {
     if (availableSpaceInPlayerStorage > resourceAmount) {
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint32(itemComponent, playerResourceEntity) + resourceAmount
+        LibMath.getSafe(itemComponent, playerResourceEntity) + resourceAmount
       );
       return 0;
     } else {
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint32(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
+        LibMath.getSafe(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
       );
       return resourceAmount - availableSpaceInPlayerStorage;
     }

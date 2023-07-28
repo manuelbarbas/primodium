@@ -119,7 +119,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     updateResourceClaimed(playerEntity, productionData.resource);
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.resource, playerEntity);
-    if (LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) <= 0)
+    if (LibMath.getSafe(mineProductionComponent, playerResourceEntity) <= 0)
       revert("this should not be possible");
     //update resource production
     LibResource.updateResourceProduction(

@@ -49,7 +49,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) +
+      LibMath.getSafe(mineProductionComponent, playerResourceEntity) +
         mineProductionComponent.getValue(levelEntity)
     );
 
