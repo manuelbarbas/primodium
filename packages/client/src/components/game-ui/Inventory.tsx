@@ -17,6 +17,7 @@ import {
 } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useMud } from "src/hooks";
+import { PanZoom } from "../shared/PanZoom";
 
 export const Inventory = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -56,6 +57,12 @@ export const Inventory = () => {
               active={menuIndex === 1}
               onClick={() => setMenuIndex(menuIndex === 1 ? null : 1)}
             />
+            <Inventory.Button
+              name="Star Map"
+              icon="/img/icons/utilitiesicon.png"
+              active={menuIndex === 2}
+              onClick={() => setMenuIndex(menuIndex === 2 ? null : 2)}
+            />
           </motion.div>
 
           {menuIndex === 0 && (
@@ -63,7 +70,7 @@ export const Inventory = () => {
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scale: 0 }}
-              className=" bg-gray-900 z-[999] w-72 border border-cyan-600 p-2 text-xs min-h-[5rem]"
+              className=" bg-gray-900 z-[999] w-full border border-cyan-600 p-2 text-xs min-h-[5rem]"
             >
               <Inventory.AllResourceLabels />
             </motion.div>
@@ -74,9 +81,22 @@ export const Inventory = () => {
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scale: 0 }}
-              className=" bg-gray-900 z-[999] w-72 border border-cyan-600 p-2 text-xs min-h-[5rem]"
+              className=" bg-gray-900 z-[999] w-full border border-cyan-600 p-2 text-xs min-h-[5rem]"
             >
               <Inventory.AllPassiveResourceLabels />
+            </motion.div>
+          )}
+
+          {menuIndex === 2 && (
+            <motion.div
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              exit={{ scale: 0 }}
+              className=" bg-gray-900 z-[999] w-96 border border-cyan-600 p-2 text-xs h-48"
+            >
+              <PanZoom size={2000}>
+                <span className="absolute w-20 h-20 top-0 left-0 bg-red-300" />
+              </PanZoom>
             </motion.div>
           )}
 
