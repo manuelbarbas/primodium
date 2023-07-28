@@ -30,6 +30,7 @@ export const createGame = async (config: GameConfig) => {
     let loadScene = new phaserScene();
 
     phaserGame.scene.add("ROOT", loadScene, true);
+    loadScene.input.enabled = false;
 
     await getSceneLoadPromise(loadScene);
 
