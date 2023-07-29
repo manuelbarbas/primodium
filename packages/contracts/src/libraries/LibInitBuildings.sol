@@ -109,6 +109,7 @@ library LibInitBuildings {
     storageUpgrades[3] = resourceValues;
 
     // LEVEL 5
+    resourceValues = new ResourceValue[](4);
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2000 });
     resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 4000 });
@@ -116,6 +117,7 @@ library LibInitBuildings {
     storageUpgrades[4] = resourceValues;
 
     // LEVEL 5
+    resourceValues = new ResourceValue[](4);
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2000 });
     resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
     resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 4000 });
@@ -256,11 +258,13 @@ library LibInitBuildings {
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    ResourceValue[] memory resourceValues;
     // LEVEL 1
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1500 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 700 });
     requiredResources[1] = resourceValues;
 
@@ -297,24 +301,31 @@ library LibInitBuildings {
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    ResourceValue[] memory resourceValues;
 
     // LEVEL 1
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 3000 });
     requiredResources[1] = resourceValues;
 
     /****************** Required Mines *******************/
     ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
     // LEVEL 1
-    uint256[] memory mineIds = new uint256[](1);
-    uint32[] memory mineCounts = new uint32[](1);
+    uint256[] memory mineIds;
+    uint32[] memory mineCounts;
+
+    mineIds = new uint256[](1);
+    mineCounts = new uint32[](1);
     mineIds[0] = IronMineID;
     mineCounts[0] = 1;
     requiredMines[0] = ResourceValues(mineIds, mineCounts);
     // LEVEL 2
+    mineIds = new uint256[](1);
+    mineCounts = new uint32[](1);
     mineIds[0] = IronMineID;
     mineCounts[0] = 1;
     requiredMines[1] = ResourceValues(mineIds, mineCounts);
@@ -360,8 +371,9 @@ library LibInitBuildings {
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-    ResourceValue[] memory resourceValues = new ResourceValue[](2);
+    ResourceValue[] memory resourceValues;
     // LEVEL 1
+    resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 800 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1500 });
     requiredResources[0] = resourceValues;
@@ -369,8 +381,11 @@ library LibInitBuildings {
     /****************** Required Passive Resources *******************/
     ResourceValues[] memory requiredPassives = new ResourceValues[](maxLevel);
     // LEVEL 1
-    uint256[] memory resourceIds = new uint256[](1);
-    uint32[] memory resourceAmounts = new uint32[](1);
+    uint256[] memory resourceIds;
+    uint32[] memory resourceAmounts;
+
+    resourceIds = new uint256[](1);
+    resourceAmounts = new uint32[](1);
     resourceIds[0] = ElectricityPassiveResourceID;
     resourceAmounts[0] = 2;
     requiredPassives[0] = ResourceValues(resourceIds, resourceAmounts);
@@ -479,14 +494,17 @@ library LibInitBuildings {
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    ResourceValue[] memory resourceValues;
     // LEVEL 1
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 500 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 400 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
     requiredResources[2] = resourceValues;
 
