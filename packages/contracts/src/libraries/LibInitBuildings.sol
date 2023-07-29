@@ -82,6 +82,10 @@ library LibInitBuildings {
 
     /****************** Storage Upgrades *******************/
     ResourceValue[][] memory storageUpgrades = new ResourceValue[][](maxLevel);
+    // LEVEL 1
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1000 });
+    storageUpgrades[0] = resourceValues;
 
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
