@@ -39,18 +39,20 @@ contract BuildSystem is PrimodiumSystem {
 
     uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
+
+    uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
     require(
       !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
       "[BuildSystem] Building already exists here"
     );
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
     require(
-      LibResearch.hasResearched(world, buildingType, playerEntity),
+      LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"
     );
 
     require(
-      LibResource.hasRequiredResources(world, buildingType, playerEntity),
+      LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You do not have the required resources"
     );
     //check build limit
@@ -82,7 +84,7 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     //check resource requirements and if ok spend required resources
-    LibResource.spendRequiredResources(world, buildingType, playerEntity);
+    LibResource.spendRequiredResources(world, buildingTypeLevelEntity, playerEntity);
 
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
