@@ -134,7 +134,12 @@ contract ClaimSystemTest is MudTest {
 
     buildPathSystem.executeTyped(platingFactoryCoord, mainBaseCoord);
     console.log("built path from PlatingFactory to MainBase");
-
+    console.log(
+      "Iron PLate Production is %s",
+      MineProductionComponent(component(MineProductionComponentID)).getValue(
+        LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))
+      )
+    );
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
