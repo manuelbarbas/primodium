@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 // Production Buildings
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-
+import "forge-std/console.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
@@ -35,6 +35,7 @@ library LibStorage {
       world.getComponent(MaxResourceStorageComponentID)
     );
     uint256 resourceEntity = LibEncode.hashKeyEntity(resourceId, entity);
+    console.log("updating max storage");
     if (!maxStorageComponent.has(resourceEntity)) {
       uint256[] memory storageResourceIds;
       if (maxResourceStorageComponent.has(entity)) {
@@ -45,10 +46,12 @@ library LibStorage {
         }
         updatedResourceIds[storageResourceIds.length] = resourceId;
         maxResourceStorageComponent.set(entity, updatedResourceIds);
+        console.log("updating max storage resource ids count: %s", updatedResourceIds.length);
       } else {
         storageResourceIds = new uint256[](1);
         storageResourceIds[0] = resourceId;
         maxResourceStorageComponent.set(entity, storageResourceIds);
+        console.log("updating max storage fresh resource ids count: %s", storageResourceIds.length);
       }
     }
     maxStorageComponent.set(resourceEntity, newMaxStorage);
@@ -85,10 +88,7 @@ library LibStorage {
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
     uint32 availableSpaceInPlayerStorage = getResourceStorageSpace(world, playerEntity, resourceId);
     if (availableSpaceInPlayerStorage > resourceAmount) {
-      itemComponent.set(
-        playerResourceEntity,
-        LibMath.getSafe(itemComponent, playerResourceEntity) + resourceAmount
-      );
+      itemComponent.set(playerResourceEntity, LibMath.getSafe(itemComponent, playerResourceEntity) + resourceAmount);
       return 0;
     } else {
       itemComponent.set(
