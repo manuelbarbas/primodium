@@ -377,12 +377,11 @@ library LibInitDebug {
     //DebugSimpleTechnologyResourceReqsID
     hasResearchedComponent.set(DebugSimpleTechnologyResourceReqsID);
     /****************** Required Resources *******************/
-    uint256 techLevel1Entity = LibEncode.hashKeyEntity(DebugSimpleTechnologyResourceReqsID, 1);
 
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
 
-    LibSetBuildingReqs.setResourceReqs(world, techLevel1Entity, resourceValues);
+    LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyResourceReqsID, resourceValues);
 
     //DebugSimpleTechnologyMainBaseLevelReqsID
     hasResearchedComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
