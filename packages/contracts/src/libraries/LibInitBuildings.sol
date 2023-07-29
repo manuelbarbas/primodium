@@ -55,10 +55,10 @@ library LibInitBuildings {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
 
     // LEVEL 1
-    ResourceValue[] memory resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1000 });
+    ResourceValue[] memory resourceValues = new ResourceValue[](0);
     requiredResources[0] = resourceValues;
     // LEVEL 2
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 500 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
@@ -153,11 +153,15 @@ library LibInitBuildings {
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
-    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    // LEVEL 1
+    ResourceValue[] memory resourceValues = new ResourceValue[](0);
+    requiredResources[0] = resourceValues;
     // LEVEL 2
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 800 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1500 });
     requiredResources[2] = resourceValues;
 
@@ -174,11 +178,12 @@ library LibInitBuildings {
         buildingLevelEntity,
         productionRates[i]
       );
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
-        buildingLevelEntity,
-        requiredResearch[i]
-      );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      if (requiredResearch[i] > 0)
+        RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+          buildingLevelEntity,
+          requiredResearch[i]
+        );
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
     }
   }
 
