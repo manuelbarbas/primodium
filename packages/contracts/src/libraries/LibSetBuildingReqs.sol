@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-
+import "forge-std/console.sol";
 import { IWorld } from "solecs/World.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -14,7 +14,7 @@ import { LibEncode } from "./LibEncode.sol";
 library LibSetBuildingReqs {
   function setResourceReqs(IWorld world, uint256 buildingType, ResourceValue[] memory resourceValues) internal {
     uint256[] memory resources = new uint256[](resourceValues.length);
-    for (uint256 i = 0; i < resources.length; i++) {
+    for (uint256 i = 0; i < resourceValues.length; i++) {
       resources[i] = resourceValues[i].resource;
       ItemComponent(world.getComponent(ItemComponentID)).set(
         LibEncode.hashKeyEntity(resourceValues[i].resource, buildingType),
@@ -26,13 +26,14 @@ library LibSetBuildingReqs {
 
   function setStorageUpgrades(IWorld world, uint256 buildingType, ResourceValue[] memory resourceValues) internal {
     uint256[] memory resources = new uint256[](resourceValues.length);
-    for (uint256 i = 0; i < resources.length; i++) {
+    for (uint256 i = 0; i < resourceValues.length; i++) {
       resources[i] = resourceValues[i].resource;
       MaxStorageComponent(world.getComponent(MaxStorageComponentID)).set(
         LibEncode.hashKeyEntity(resourceValues[i].resource, buildingType),
         resourceValues[i].value
       );
     }
-    MaxResourceStorageComponent(world.getComponent(RequiredResourcesComponentID)).set(buildingType, resources);
+    console.log("adding storage upgrades count %s", resources.length);
+    MaxResourceStorageComponent(world.getComponent(MaxResourceStorageComponentID)).set(buildingType, resources);
   }
 }
