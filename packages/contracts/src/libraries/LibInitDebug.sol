@@ -32,7 +32,7 @@ import { LibBlueprint } from "../libraries/LibBlueprint.sol";
 library LibInitDebug {
   function init(IWorld world) internal {
     //should only work if debug is enabled
-    if (DEBUG) IsDebugComponent(world.getComponent(IsDebugComponentID)).set(SingletonID);
+    IsDebugComponent(world.getComponent(IsDebugComponentID)).set(SingletonID);
 
     initBlueprints(world);
     initializeSimpleBuildings(world);
