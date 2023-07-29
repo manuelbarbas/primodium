@@ -232,6 +232,10 @@
       "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent"]
     },
     {
+      "name": "DebugSetBlueprintForBuildingTypeSystem",
+      "writeAccess": ["BlueprintComponent"]
+    },
+    {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
     }
