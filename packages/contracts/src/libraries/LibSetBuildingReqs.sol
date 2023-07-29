@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 import { IWorld } from "solecs/World.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
@@ -33,7 +32,6 @@ library LibSetBuildingReqs {
         resourceValues[i].value
       );
     }
-    console.log("adding storage upgrades count %s", resources.length);
     MaxResourceStorageComponent(world.getComponent(MaxResourceStorageComponentID)).set(buildingType, resources);
   }
 }
