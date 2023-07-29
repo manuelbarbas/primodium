@@ -9,6 +9,7 @@ contract PrimodiumTest is MudTest {
   constructor() MudTest(new Deploy()) {}
 
   Coord public coord = Coord(0, 0);
+  Coord public origin = Coord(0, 0);
   Coord public coord1 = Coord(0, 1);
   Coord public coord2 = Coord(0, 2);
 
@@ -35,18 +36,5 @@ contract PrimodiumTest is MudTest {
 
   function assertFalse(bool input, string memory message) internal {
     assertTrue(!input, message);
-  }
-
-  function makeBlueprint() internal view returns (int32[] memory blueprint) {
-    blueprint = new int32[](6);
-
-    blueprint[0] = coord.x;
-    blueprint[1] = coord.y;
-
-    blueprint[2] = coord1.x;
-    blueprint[3] = coord1.y;
-
-    blueprint[4] = coord2.x;
-    blueprint[5] = coord2.y;
   }
 }
