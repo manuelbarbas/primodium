@@ -212,9 +212,11 @@ library LibInitBuildings {
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 500 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1500 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
+    resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
     requiredResources[2] = resourceValues;
 
@@ -234,7 +236,7 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredResearch[i]
       );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
     }
   }
 
@@ -278,7 +280,7 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredResearch[i]
       );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
     }
   }
 
@@ -341,7 +343,7 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredResearch[i]
       );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
       ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
@@ -401,7 +403,7 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredResearch[i]
       );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
       RequiredPassiveComponent(world.getComponent(RequiredPassiveComponentID)).set(
         buildingLevelEntity,
@@ -457,7 +459,7 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredResearch[i]
       );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
       ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
@@ -521,8 +523,8 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredResearch[i]
       );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
-      LibSetBuildingReqs.setStorageUpgrades(world, entity, storageUpgrades[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
+      LibSetBuildingReqs.setStorageUpgrades(world, buildingLevelEntity, storageUpgrades[i]);
     }
   }
 
@@ -559,7 +561,7 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredResearch[i]
       );
-      LibSetBuildingReqs.setResourceReqs(world, entity, requiredResources[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       PassiveProductionComponent(world.getComponent(PassiveProductionComponentID)).set(
         buildingLevelEntity,
         passiveProduction[i]
