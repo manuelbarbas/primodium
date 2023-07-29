@@ -35,14 +35,19 @@ uint256 constant ID = uint256(keccak256("system.PostDestroy"));
 contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function updatePassiveResources(uint256 playerEntity, uint256 blockType) internal {
+  function updatePassiveResources(uint256 playerEntity, uint256 buildingEntity) internal {
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
       getAddressById(components, RequiredPassiveComponentID)
     );
-    if (requiredPassiveComponent.has(blockType)) {
+
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(buildingEntity),
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
+    );
+    if (requiredPassiveComponent.has(buildingLevelEntity)) {
       ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
-      ResourceValues memory requiredPassiveData = requiredPassiveComponent.getValue(blockType);
+      ResourceValues memory requiredPassiveData = requiredPassiveComponent.getValue(buildingLevelEntity);
       for (uint256 i = 0; i < requiredPassiveData.resources.length; i++) {
         uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredPassiveData.resources[i], playerEntity);
         itemComponent.set(
@@ -53,12 +58,17 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     }
   }
 
-  function updatePassiveProduction(uint256 playerEntity, uint256 blockType) internal {
+  function updatePassiveProduction(uint256 playerEntity, uint256 buildingEntity) internal {
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
       getAddressById(components, PassiveProductionComponentID)
     );
-    if (passiveProductionComponent.has(blockType)) {
-      uint256 resourceId = passiveProductionComponent.getValue(blockType).resource;
+
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(buildingEntity),
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
+    );
+    if (passiveProductionComponent.has(buildingLevelEntity)) {
+      uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
       MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
 
       LibStorage.updateResourceMaxStorage(
@@ -66,7 +76,7 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
         playerEntity,
         resourceId,
         maxStorageComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
-          passiveProductionComponent.getValue(blockType).value
+          passiveProductionComponent.getValue(buildingLevelEntity).value
       );
     }
   }
@@ -115,8 +125,8 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       buildingType,
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
     );
-    updatePassiveResources(playerEntity, buildingType);
-    updatePassiveProduction(playerEntity, buildingType);
+    updatePassiveResources(playerEntity, buildingEntity);
+    updatePassiveProduction(playerEntity, buildingEntity);
   }
 
   function executeTyped(address playerAddress, uint256 buildingEntity) public returns (bytes memory) {

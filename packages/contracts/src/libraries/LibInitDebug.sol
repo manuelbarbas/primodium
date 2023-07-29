@@ -314,8 +314,9 @@ library LibInitDebug {
     productionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 6 }));
 
     //DebugPassiveProductionBuilding
+    entity = LibEncode.hashKeyEntity(DebugPassiveProductionBuilding, 1);
     ignoreBuildLimitComponent.set(DebugPassiveProductionBuilding);
-    passiveProductionComponent.set(DebugPassiveProductionBuilding, ResourceValue(ElectricityPassiveResourceID, 10));
+    passiveProductionComponent.set(entity, ResourceValue(ElectricityPassiveResourceID, 10));
 
     //DebugAlloyFactoryID
     ignoreBuildLimitComponent.set(DebugAlloyFactoryID);
@@ -355,7 +356,8 @@ library LibInitDebug {
 
     //DebugSolarPanelID
     ignoreBuildLimitComponent.set(DebugSolarPanelID);
-    passiveProductionComponent.set(DebugSolarPanelID, ResourceValue(ElectricityPassiveResourceID, 10));
+    entity = LibEncode.hashKeyEntity(DebugSolarPanelID, 1);
+    passiveProductionComponent.set(entity, ResourceValue(ElectricityPassiveResourceID, 10));
   }
 
   function initializeTechnologies(IWorld world) internal {

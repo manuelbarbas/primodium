@@ -23,16 +23,17 @@ library LibPassiveResource {
   function checkPassiveResourceReqs(
     IWorld world,
     uint256 playerEntity,
-    uint256 buildingType
+    uint256 buildingType,
+    uint32 buildingLevel
   ) internal view returns (bool) {
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
       getAddressById(world.components(), RequiredPassiveComponentID)
     );
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
+    if (!requiredPassiveComponent.has(buildingLevelEntity)) return true;
 
-    if (!requiredPassiveComponent.has(buildingType)) return true;
-
-    uint256[] memory resourceIDs = requiredPassiveComponent.getValue(buildingType).resources;
-    uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(buildingType).values;
+    uint256[] memory resourceIDs = requiredPassiveComponent.getValue(buildingLevelEntity).resources;
+    uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(buildingLevelEntity).values;
     for (uint256 i = 0; i < resourceIDs.length; i++) {
       if (LibStorage.getResourceStorageSpace(world, playerEntity, resourceIDs[i]) < requiredAmounts[i]) {
         return false;

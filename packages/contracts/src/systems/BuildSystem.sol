@@ -77,7 +77,7 @@ contract BuildSystem is PrimodiumSystem {
       }
     }
     require(
-      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType),
+      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
       "[BuildSystem] You do not have the required passive resources"
     );
 
