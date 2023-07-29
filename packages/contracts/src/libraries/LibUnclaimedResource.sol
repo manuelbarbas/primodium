@@ -31,7 +31,7 @@ library LibUnclaimedResource {
     } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) == block.number) {
       return;
     }
-    uint32 playerResourceProduction = LibMath.getSafeUint32(mineProductionComponent, playerResourceProductionEntity);
+    uint32 playerResourceProduction = LibMath.getSafe(mineProductionComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;
@@ -43,9 +43,9 @@ library LibUnclaimedResource {
       return;
     }
 
-    uint32 unclaimedResource = LibMath.getSafeUint32(unclaimedResourceComponent, playerResourceProductionEntity) +
+    uint32 unclaimedResource = LibMath.getSafe(unclaimedResourceComponent, playerResourceProductionEntity) +
       (playerResourceProduction *
-        uint32(block.number - LibMath.getSafeUint256(lastClaimedAtComponent, playerResourceProductionEntity)));
+        uint32(block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceProductionEntity)));
 
     if (availableSpaceInStorage < unclaimedResource) {
       unclaimedResource = availableSpaceInStorage;

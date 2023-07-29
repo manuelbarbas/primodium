@@ -50,7 +50,7 @@ library LibBuilding {
     MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(
       getAddressById(world.components(), MaxBuildingsComponentID)
     );
-    return LibMath.getSafeUint32(maxBuildingsComponent, playerEntity);
+    return LibMath.getSafe(maxBuildingsComponent, playerEntity);
   }
 
   function getMaxBuildingCount(IWorld world, uint256 baseLevel) internal view returns (uint32) {

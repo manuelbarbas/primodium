@@ -27,8 +27,8 @@ contract DebugAcquireResourcesBasedOnRequirementSystem is System {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceRequirements[i], addressToEntity(msg.sender));
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint32(itemComponent, playerResourceEntity) +
-          LibMath.getSafeUint32(itemComponent, LibEncode.hashKeyEntity(resourceRequirements[i], entity))
+        LibMath.getSafe(itemComponent, playerResourceEntity) +
+          LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(resourceRequirements[i], entity))
       );
     }
 

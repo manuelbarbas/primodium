@@ -48,7 +48,7 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
     // update building count if the built building counts towards the build limit
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
       MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
-      maxBuildingsComponent.set(playerEntity, LibMath.getSafeUint32(maxBuildingsComponent, playerEntity) + 1);
+      maxBuildingsComponent.set(playerEntity, LibMath.getSafe(maxBuildingsComponent, playerEntity) + 1);
     }
 
     updatePlayerStorage(buildingType, playerEntity);

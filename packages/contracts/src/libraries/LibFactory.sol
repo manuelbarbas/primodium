@@ -19,8 +19,8 @@ library LibFactory {
     ResourceValue memory productionData = productionComponent.getValue(factoryLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.resource, playerEntity);
     uint32 newResourceProductionRate = increase
-      ? LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) + productionData.value
-      : LibMath.getSafeUint32(mineProductionComponent, playerResourceEntity) - productionData.value;
+      ? LibMath.getSafe(mineProductionComponent, playerResourceEntity) + productionData.value
+      : LibMath.getSafe(mineProductionComponent, playerResourceEntity) - productionData.value;
     LibResource.updateResourceProduction(world, playerResourceEntity, newResourceProductionRate);
   }
 }

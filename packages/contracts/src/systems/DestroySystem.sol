@@ -106,7 +106,7 @@ contract DestroySystem is PrimodiumSystem {
     }
 
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      maxBuildingsComponent.set(playerEntity, LibMath.getSafeUint32(maxBuildingsComponent, playerEntity) - 1);
+      maxBuildingsComponent.set(playerEntity, LibMath.getSafe(maxBuildingsComponent, playerEntity) - 1);
     }
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);

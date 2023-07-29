@@ -43,8 +43,8 @@ library LibResource {
 
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.length; i++) {
-      uint32 resourceCost = LibMath.getSafeUint32(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], entity));
-      uint32 playerResourceCount = LibMath.getSafeUint32(
+      uint32 resourceCost = LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], entity));
+      uint32 playerResourceCount = LibMath.getSafe(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResources[i], playerEntity)
       );
@@ -65,11 +65,11 @@ library LibResource {
     uint32[] memory requiredResources = new uint32[](requiredResourceIds.length);
     uint32[] memory currentResources = new uint32[](requiredResourceIds.length);
     for (uint256 i = 0; i < requiredResourceIds.length; i++) {
-      requiredResources[i] = LibMath.getSafeUint32(
+      requiredResources[i] = LibMath.getSafe(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResourceIds[i], entity)
       );
-      currentResources[i] = LibMath.getSafeUint32(
+      currentResources[i] = LibMath.getSafe(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResourceIds[i], playerEntity)
       );
@@ -96,8 +96,8 @@ library LibResource {
     uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.length; i++) {
       uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources[i], playerEntity);
-      uint32 resourceCost = LibMath.getSafeUint32(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], entity));
-      uint32 currItem = LibMath.getSafeUint32(itemComponent, playerResourceHash);
+      uint32 resourceCost = LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], entity));
+      uint32 currItem = LibMath.getSafe(itemComponent, playerResourceHash);
       itemComponent.set(playerResourceHash, currItem - resourceCost);
     }
   }
@@ -118,7 +118,7 @@ library LibResource {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
       if (MineProductionComponent(world.getComponent(MineProductionComponentID)).has(playerResourceEntity))
         LibUnclaimedResource.updateResourceClaimed(world, playerEntity, storageResourceIds[i]);
-      uint32 unclaimedResourceAmount = LibMath.getSafeUint32(unclaimedResourceComponent, playerResourceEntity);
+      uint32 unclaimedResourceAmount = LibMath.getSafe(unclaimedResourceComponent, playerResourceEntity);
       if (unclaimedResourceAmount > 0)
         LibStorage.addResourceToStorage(world, storageResourceIds[i], unclaimedResourceAmount, playerEntity);
       lastClaimedAtComponent.set(playerResourceEntity, block.number);

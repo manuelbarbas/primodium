@@ -61,7 +61,7 @@ library LibPassiveResource {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
       itemComponent.set(
         playerResourceEntity,
-        LibMath.getSafeUint32(itemComponent, playerResourceEntity) + requiredAmounts[i]
+        LibMath.getSafe(itemComponent, playerResourceEntity) + requiredAmounts[i]
       );
     }
   }
@@ -80,7 +80,7 @@ library LibPassiveResource {
     if (!passiveProductionComponent.has(buildingLevelEntity)) return;
 
     uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
-    uint32 newMaxStorage = LibMath.getSafeUint32(
+    uint32 newMaxStorage = LibMath.getSafe(
       MaxStorageComponent(world.getComponent(MaxStorageComponentID)),
       LibEncode.hashKeyEntity(resourceId, playerEntity)
     ) + passiveProductionComponent.getValue(buildingLevelEntity).value;
