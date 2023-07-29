@@ -37,11 +37,16 @@ contract PrimodiumTest is MudTest {
     assertTrue(!input, message);
   }
 
-  function makeBlueprint() internal view returns (Coord[] memory blueprint) {
-    blueprint = new Coord[](3);
+  function makeBlueprint() internal view returns (int32[] memory blueprint) {
+    blueprint = new int32[](6);
 
-    blueprint[0] = coord;
-    blueprint[1] = coord1;
-    blueprint[2] = coord2;
+    blueprint[0] = coord.x;
+    blueprint[1] = coord.y;
+
+    blueprint[2] = coord1.x;
+    blueprint[3] = coord1.y;
+
+    blueprint[4] = coord2.x;
+    blueprint[5] = coord2.y;
   }
 }

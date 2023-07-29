@@ -7,7 +7,7 @@ import { addressToEntity } from "solecs/utils.sol";
 // systems
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
-
+import { DebugSetBlueprintForBuildingTypeSystem, ID as DebugSetBlueprintForBuildingTypeSystemID } from "../../systems/DebugSetBlueprintForBuildingTypeSystem.sol";
 // components
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -20,12 +20,14 @@ import { BlueprintComponent, ID as BlueprintComponentID } from "components/Bluep
 import { LibBlueprint } from "libraries/LibBlueprint.sol";
 import { Coord } from "../../types.sol";
 import { MainBaseID } from "../../prototypes.sol";
+import { DebugSimpleBuildingNoReqsID } from "../../prototypes/Debug.sol";
 
 contract DestroySystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   uint256 public playerEntity;
 
+  DebugSetBlueprintForBuildingTypeSystem public debugSetBlueprintForBuildingTypeSystem;
   BuildSystem public buildSystem;
   DestroySystem public destroySystem;
 
@@ -43,7 +45,9 @@ contract DestroySystemTest is PrimodiumTest {
     // init systems
     buildSystem = BuildSystem(system(BuildSystemID));
     destroySystem = DestroySystem(system(DestroySystemID));
-
+    debugSetBlueprintForBuildingTypeSystem = DebugSetBlueprintForBuildingTypeSystem(
+      system(DebugSetBlueprintForBuildingTypeSystemID)
+    );
     // init components
     blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
@@ -63,8 +67,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function buildDummy() public returns (uint256) {
     vm.startPrank(alice);
-    int32[] memory blueprint = LibBlueprint.get3x3Blueprint();
-    blueprintComponent.set(dummyBuilding, blueprint);
+    debugSetBlueprintForBuildingTypeSystem.executeTyped(dummyBuilding, makeBlueprint());
     bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, coord1);
     return abi.decode(rawBuilding, (uint256));
   }
@@ -87,8 +90,8 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithTile() public {
     uint256 buildingEntity = buildDummy();
-    Coord[] memory blueprint = makeBlueprint();
-    destroy(buildingEntity, blueprint[blueprint.length - 1]);
+    int32[] memory blueprint = makeBlueprint();
+    destroy(buildingEntity, Coord(blueprint[blueprint.length - 2], blueprint[blueprint.length - 1]));
   }
 
   function testDestroyWithBase() public {
