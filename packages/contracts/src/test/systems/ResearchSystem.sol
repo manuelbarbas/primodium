@@ -6,13 +6,13 @@ import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
-import { DebugAcquireResourcesBasedOnRequirementSystem, ID as DebugAcquireResourcesBasedOnRequirementSystemID } from "../../systems/DebugAcquireResourcesBasedOnRequirementSystem.sol";
 import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "../../components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
@@ -22,6 +22,7 @@ import { IronResourceItemID, CopperResourceItemID, LithiumResourceItemID, IronPl
 
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
+import { LibMath } from "libraries/LibMath.sol";
 import { Coord } from "../../types.sol";
 
 import "../../prototypes.sol";
@@ -29,14 +30,22 @@ import "../../prototypes.sol";
 contract ResearchSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
 
+  ComponentDevSystem public componentDevSystem;
+  ItemComponent public itemComponent;
+
   function setUp() public override {
     super.setUp();
     vm.startPrank(deployer);
+
+    componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    itemComponent = ItemComponent(component(ItemComponentID));
+
     vm.stopPrank();
   }
 
   function testFailResearchInvalidID() public {
     vm.startPrank(alice);
+
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     // arbitrary ID
     researchSystem.executeTyped(5);
@@ -48,10 +57,17 @@ contract ResearchSystemTest is MudTest {
 
     HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
-    DebugAcquireResourcesBasedOnRequirementSystem debugAcquireResourcesBasedOnRequirementSystem = DebugAcquireResourcesBasedOnRequirementSystem(
-        system(DebugAcquireResourcesBasedOnRequirementSystemID)
-      );
-    debugAcquireResourcesBasedOnRequirementSystem.executeTyped(DebugSimpleTechnologyResourceReqsID);
+
+    uint256[] memory resourceRequirements = RequiredResourcesComponent(world.getComponent(RequiredResourcesComponentID))
+      .getValue(DebugSimpleTechnologyResourceReqsID);
+
+    for (uint256 i = 0; i < resourceRequirements.length; i++) {
+      uint256 resourceEntity = LibEncode.hashKeyEntity(resourceRequirements[i], DebugSimpleTechnologyResourceReqsID);
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceRequirements[i], addressToEntity(alice));
+      uint256 playerResources = LibMath.getSafe(itemComponent, playerResourceEntity);
+      uint256 resources = LibMath.getSafe(itemComponent, resourceEntity);
+      componentDevSystem.executeTyped(ItemComponentID, playerResourceEntity, abi.encode(playerResources + resources));
+    }
     // alice researches DebugSimpleTechnologyResourceReqsID
     researchSystem.executeTyped(DebugSimpleTechnologyResourceReqsID);
     assertTrue(

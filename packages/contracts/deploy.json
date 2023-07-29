@@ -208,10 +208,6 @@
       "writeAccess": ["ItemComponent"]
     },
     {
-      "name": "DebugAcquireResourcesBasedOnRequirementSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
       "name": "DebugIgnoreBuildLimitForBuildingSystem",
       "writeAccess": ["IgnoreBuildLimitComponent"]
     },
@@ -230,10 +226,6 @@
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",
       "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent"]
-    },
-    {
-      "name": "DebugSetBlueprintForBuildingTypeSystem",
-      "writeAccess": ["BlueprintComponent"]
     },
     {
       "name": "ComponentDevSystem",
