@@ -121,6 +121,11 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
+    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
+      system(DebugRemoveBuildingRequirementsSystemID)
+    );
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
@@ -159,6 +164,10 @@ contract ClaimSystemTest is MudTest {
     );
     vm.roll(20);
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    DebugRemoveUpgradeRequirementsSystem debugRemoveUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
+      system(DebugRemoveUpgradeRequirementsSystemID)
+    );
+    debugRemoveUpgradeRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
     upgradeSystem.executeTyped(platingFactoryCoord);
     assertEq(
       unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
@@ -484,6 +493,10 @@ contract ClaimSystemTest is MudTest {
     //gain capacity for all resources so can store copper
     debugAcquireStorageForAllResourcesSystem.executeTyped();
     buildSystem.executeTyped(DebugIronMineID, IronCoord);
+    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
+      system(DebugRemoveBuildingRequirementsSystemID)
+    );
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugCopperMineID);
     buildSystem.executeTyped(DebugCopperMineID, CopperCoord);
 
     vm.roll(0);
