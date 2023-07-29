@@ -56,6 +56,8 @@ library LibInitDebug {
     blueprintComponent.set(DebugSimpleBuildingTileReqID, coords);
     blueprintComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID, coords);
     blueprintComponent.set(DebugSimpleBuildingWithUpgradeResearchReqsID, coords);
+    blueprintComponent.set(DebugSimpleBuilding3x3, LibBlueprint.get3x3Blueprint());
+
     blueprintComponent.set(DebugIronMineID, coords);
     blueprintComponent.set(DebugCopperMineID, coords);
     blueprintComponent.set(DebugIronMineWithBuildLimitID, coords);
@@ -154,6 +156,9 @@ library LibInitDebug {
     requiredPassiveData.resources[0] = ElectricityPassiveResourceID;
     requiredPassiveData.values[0] = 2;
     requiredPassiveComponent.set(entity, requiredPassiveData);
+
+    //DebugSimpleBuilding3x3
+    ignoreBuildLimitComponent.set(DebugSimpleBuilding3x3);
   }
 
   function initializeMines(IWorld world) internal {
@@ -263,19 +268,12 @@ library LibInitDebug {
     LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: DebugIronPlateFactoryNoMineReqID, value: 1 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2 });
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 2);
-    resourceValues[0] = ResourceValue({ resource: DebugIronPlateFactoryNoMineReqID, value: 2 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 4 });
-    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 3);
-    resourceValues[0] = ResourceValue({ resource: DebugIronPlateFactoryNoMineReqID, value: 3 });
-    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 6 });
-    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     //DebugIronPlateFactoryID
 
@@ -289,11 +287,15 @@ library LibInitDebug {
     LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     ResourceValues memory requiredMines = ResourceValues(new uint256[](1), new uint32[](1));
-    requiredMines.resources[0] = IronMineID;
+    requiredMines.resources[0] = DebugIronMineID;
     requiredMines.values[0] = 1;
     minesComponent.set(entity, requiredMines);
 
     productionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 2 }));
+
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
+    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     //DebugIronPlateFactoryID level 2
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2);
