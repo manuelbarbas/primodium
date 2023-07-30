@@ -1,9 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
-import { hashKeyEntityAndTrim } from "./encode";
-import {
-  Item,
-  RequiredResources,
-} from "src/network/components/chainComponents";
+import { RequiredResources } from "src/network/components/chainComponents";
 
 export type ResourceCostData = {
   name: string;
