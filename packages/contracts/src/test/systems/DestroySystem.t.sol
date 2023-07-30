@@ -6,9 +6,8 @@ import { addressToEntity } from "solecs/utils.sol";
 
 // systems
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
-
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 // components
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -18,15 +17,18 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../comp
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
+import { LibBlueprint } from "libraries/LibBlueprint.sol";
 import { Coord } from "../../types.sol";
 import { MainBaseID } from "../../prototypes.sol";
+import { DebugSimpleBuildingNoReqsID } from "../../prototypes/Debug.sol";
 
 contract DestroySystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   uint256 public playerEntity;
+  int32[] public blueprint = LibBlueprint.get2x2Blueprint();
 
-  BlueprintSystem public blueprintSystem;
+  ComponentDevSystem public componentDevSystem;
   BuildSystem public buildSystem;
   DestroySystem public destroySystem;
 
@@ -42,13 +44,12 @@ contract DestroySystemTest is PrimodiumTest {
     super.setUp();
 
     // init systems
-    blueprintSystem = BlueprintSystem(system(BlueprintSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
     destroySystem = DestroySystem(system(DestroySystemID));
-
+    componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     // init components
-    ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
+    ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     levelComponent = LevelComponent(component(LevelComponentID));
     buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
@@ -58,16 +59,15 @@ contract DestroySystemTest is PrimodiumTest {
     // init other
     vm.startPrank(alice);
     playerEntity = addressToEntity(alice);
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = Coord({ x: -1000, y: -1000 });
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     vm.stopPrank();
   }
 
   function buildDummy() public returns (uint256) {
     vm.startPrank(alice);
-    Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(dummyBuilding, blueprint);
-    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, coord1);
+    componentDevSystem.executeTyped(BlueprintComponentID, dummyBuilding, abi.encode(blueprint));
+    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, origin);
     return abi.decode(rawBuilding, (uint256));
   }
 
@@ -89,12 +89,11 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithTile() public {
     uint256 buildingEntity = buildDummy();
-    Coord[] memory blueprint = makeBlueprint();
-    destroy(buildingEntity, blueprint[blueprint.length - 1]);
+    destroy(buildingEntity, Coord(blueprint[2], blueprint[3]));
   }
 
   function testDestroyWithBase() public {
     uint256 buildingEntity = buildDummy();
-    destroy(buildingEntity, coord1);
+    destroy(buildingEntity, origin);
   }
 }

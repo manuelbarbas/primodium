@@ -18,76 +18,74 @@ import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 library LibPassiveResource {
-  function checkPassiveResourceRequirements(
+  function checkPassiveResourceReqs(
     IWorld world,
     uint256 playerEntity,
-    uint256 blockType
+    uint256 buildingType,
+    uint32 buildingLevel
   ) internal view returns (bool) {
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
       getAddressById(world.components(), RequiredPassiveComponentID)
     );
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(
-      getAddressById(world.components(), MaxStorageComponentID)
-    );
-    if (requiredPassiveComponent.has(blockType)) {
-      ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-      uint256[] memory resourceIDs = requiredPassiveComponent.getValue(blockType).ResourceIDs;
-      uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(blockType).RequiredAmounts;
-      for (uint256 i = 0; i < resourceIDs.length; i++) {
-        if (
-          LibStorage.getAvailableSpaceInStorageForResource(
-            maxStorageComponent,
-            itemComponent,
-            playerEntity,
-            resourceIDs[i]
-          ) < requiredAmounts[i]
-        ) {
-          return false;
-        }
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
+    if (!requiredPassiveComponent.has(buildingLevelEntity)) return true;
+
+    uint256[] memory resourceIDs = requiredPassiveComponent.getValue(buildingLevelEntity).resources;
+    uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(buildingLevelEntity).values;
+    for (uint256 i = 0; i < resourceIDs.length; i++) {
+      if (LibStorage.getResourceStorageSpace(world, playerEntity, resourceIDs[i]) < requiredAmounts[i]) {
+        return false;
       }
     }
     return true;
   }
 
-  function updatePassiveResourcesBasedOnRequirements(IWorld world, uint256 playerEntity, uint256 blockType) internal {
+  function updatePassiveResources(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 buildingType,
+    uint32 buildingLevel
+  ) internal {
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
-      getAddressById(world.components(), RequiredPassiveComponentID)
+      world.getComponent(RequiredPassiveComponentID)
     );
-    if (requiredPassiveComponent.has(blockType)) {
-      ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
-      uint256[] memory resourceIDs = requiredPassiveComponent.getValue(blockType).ResourceIDs;
-      uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(blockType).RequiredAmounts;
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
+    if (!requiredPassiveComponent.has(buildingLevelEntity)) return;
 
-      for (uint256 i = 0; i < resourceIDs.length; i++) {
-        uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
-        itemComponent.set(
-          playerResourceEntity,
-          LibMath.getSafeUint32Value(itemComponent, playerResourceEntity) + requiredAmounts[i]
-        );
-      }
+    ItemComponent itemComponent = ItemComponent(getAddressById(world.components(), ItemComponentID));
+    uint256[] memory resourceIDs = requiredPassiveComponent.getValue(buildingLevelEntity).resources;
+    uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(buildingLevelEntity).values;
+
+    for (uint256 i = 0; i < resourceIDs.length; i++) {
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
+      itemComponent.set(
+        playerResourceEntity,
+        LibMath.getSafe(itemComponent, playerResourceEntity) + requiredAmounts[i]
+      );
     }
   }
 
-  function updatePassiveProduction(IWorld world, uint256 playerEntity, uint256 blockType) internal {
+  function updatePassiveProduction(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 buildingType,
+    uint32 buildingLevel
+  ) internal {
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
       getAddressById(world.components(), PassiveProductionComponentID)
     );
-    if (passiveProductionComponent.has(blockType)) {
-      MaxStorageComponent maxStorageComponent = MaxStorageComponent(
-        getAddressById(world.components(), MaxStorageComponentID)
-      );
-      uint256 resourceId = passiveProductionComponent.getValue(blockType).ResourceID;
-      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        MaxResourceStorageComponent(getAddressById(world.components(), MaxResourceStorageComponentID)),
-        maxStorageComponent,
-        playerEntity,
-        resourceId,
-        LibMath.getSafeUint32Value(maxStorageComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
-          passiveProductionComponent.getValue(blockType).ResourceProduction
-      );
-    }
+
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
+    if (!passiveProductionComponent.has(buildingLevelEntity)) return;
+
+    uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
+    uint32 newMaxStorage = LibMath.getSafe(
+      MaxStorageComponent(world.getComponent(MaxStorageComponentID)),
+      LibEncode.hashKeyEntity(resourceId, playerEntity)
+    ) + passiveProductionComponent.getValue(buildingLevelEntity).value;
+
+    LibStorage.updateResourceMaxStorage(world, playerEntity, resourceId, newMaxStorage);
   }
 }

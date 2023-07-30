@@ -20,9 +20,9 @@ import { MainBaseID } from "../prototypes.sol";
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibResourceCost } from "../libraries/LibResourceCost.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibStorageUpgrade } from "../libraries/LibStorageUpgrade.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
@@ -66,7 +66,7 @@ contract UpgradeSystem is PrimodiumSystem {
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
     require(
-      LibResourceCost.checkAndSpendRequiredResources(world, buildingIdLevel, playerEntity),
+      LibResource.checkAndSpendRequiredResources(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
     );
     uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
@@ -89,7 +89,7 @@ contract UpgradeSystem is PrimodiumSystem {
         buildingEntity
       );
 
-    LibStorageUpgrade.checkAndUpdatePlayerStorageAfterUpgrade(
+    LibStorage.upgradePlayerStorage(
       world,
       playerEntity,
       buildingTypeComponent.getValue(buildingEntity),

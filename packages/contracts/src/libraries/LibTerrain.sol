@@ -34,6 +34,16 @@ library LibTerrain {
     return 17326;
   }
 
+  // multiply depth and convert to readable number
+  function mulDepthBy10000(int128 depth) internal pure returns (int256) {
+    return Math.muli(depth, 10000);
+  }
+
+  function getTerrainDepth(Coord memory coord) internal pure returns (int128) {
+    int128 terrainKey = getSingleDepth(coord, 0, 8);
+    return terrainKey;
+  }
+
   function avgTerrainNormalizedDepth(
     int128 depth1,
     int128 depth2,

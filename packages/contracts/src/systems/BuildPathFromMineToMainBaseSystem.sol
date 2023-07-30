@@ -11,7 +11,7 @@ import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
@@ -34,7 +34,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
     uint256 playerEntity = addressToEntity(playerAddress);
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromBuildingEntity));
 
-    LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
 
     uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(fromBuildingEntity);
     uint256 levelEntity = LibEncode.hashKeyEntity(
@@ -46,10 +46,10 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
     require(mineProductionComponent.has(levelEntity), "Mine level entity not found");
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) +
+      LibMath.getSafe(mineProductionComponent, playerResourceEntity) +
         mineProductionComponent.getValue(levelEntity)
     );
 

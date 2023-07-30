@@ -11,7 +11,7 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 
 import { LibResearch } from "libraries/LibResearch.sol";
-import { LibResourceCost } from "libraries/LibResourceCost.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 uint256 constant ID = uint256(keccak256("system.Research"));
@@ -50,7 +50,7 @@ contract ResearchSystem is System {
     );
 
     require(
-      LibResourceCost.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
+      LibResource.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Not enough resources to research"
     );
     hasResearchedComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));

@@ -5,10 +5,7 @@ import "std-contracts/components/Uint256Component.sol";
 
 uint256 constant ID = uint256(keccak256("component.Production"));
 
-struct ProductionData {
-  uint256 ResourceID;
-  uint32 ResourceProductionRate;
-}
+import { ResourceValue } from "../types.sol";
 
 contract ProductionComponent is Component {
   constructor(address world) Component(world, ID) {}
@@ -24,16 +21,18 @@ contract ProductionComponent is Component {
     values[1] = LibTypes.SchemaValue.UINT32;
   }
 
-  function set(uint256 entity, ProductionData calldata value) public virtual {
+  function set(uint256 entity, ResourceValue calldata value) public virtual {
     set(entity, abi.encode(value));
   }
 
-  function getValue(uint256 entity) public view virtual returns (ProductionData memory) {
+  function getValue(uint256 entity) public view virtual returns (ResourceValue memory) {
     (uint256 resourceID, uint32 resourceProductionRate) = abi.decode(getRawValue(entity), (uint256, uint32));
-    return ProductionData(resourceID, resourceProductionRate);
+    return ResourceValue(resourceID, resourceProductionRate);
   }
 
-  function getEntitiesWithValue(ProductionData calldata productionData) public view virtual returns (uint256[] memory) {
-    return getEntitiesWithValue(abi.encode(productionData));
+  function getEntitiesWithValue(
+    ResourceValue calldata factoryProductionData
+  ) public view virtual returns (uint256[] memory) {
+    return getEntitiesWithValue(abi.encode(factoryProductionData));
   }
 }

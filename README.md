@@ -87,13 +87,13 @@ Factory production is similar to how mining resource production is calculated. H
 
 `MinesComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two arrays:
 
-- `MineBuildingId` : a list of mine building ids that has to be connected to the factory for it to be functional
-- `MineBuildingCount`: a list of how many of each mine building that has to be connected to the factory
+- `resources` : a list of mine building ids that has to be connected to the factory for it to be functional
+- `values`: a list of how many of each mine building that has to be connected to the factory
 
 `ProductionComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two IDs:
 
-- `ResourceID` : the resource type this factory produces
-- `ResourceProductionRate` : the production of this factory per block (note for future we should modify the way this value is interpreted so it isn't per block to be able to reduce the tempo. maybe the rate can be per 100 blocks for example)
+- `resource` : the resource type this factory produces
+- `value` : the production of this factory per block (note for future we should modify the way this value is interpreted so it isn't per block to be able to reduce the tempo. maybe the rate can be per 100 blocks for example)
 
 `ActiveComponent`: for an existing factory entity, declares if that factory is functional. This value is updated when a player action either results in the factory becoming functional or results in it becoming non-functional.
 

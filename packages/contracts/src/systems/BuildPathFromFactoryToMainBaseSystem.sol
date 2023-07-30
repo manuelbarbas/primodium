@@ -9,13 +9,13 @@ import { MineProductionComponent, ID as MineProductionComponentID } from "compon
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
@@ -44,11 +44,11 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
         buildingId,
         LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
       );
-      ProductionData memory productionData = ProductionComponent(getC(ProductionComponentID)).getValue(levelEntity);
+      ResourceValue memory productionData = ProductionComponent(getC(ProductionComponentID)).getValue(levelEntity);
 
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, productionData.ResourceID);
+      LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionData.resource);
 
-      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
+      LibFactory.updateProduction(world, playerEntity, levelEntity, true);
     }
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);

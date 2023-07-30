@@ -16,10 +16,9 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 //debug buildings
-import { MainBaseID } from "../../prototypes.sol";
+import "../../prototypes.sol";
 
 //main buildings
-import { DebugIronMineID } from "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";

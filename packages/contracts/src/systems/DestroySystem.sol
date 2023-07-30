@@ -7,7 +7,7 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
@@ -18,7 +18,7 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, RequiredPassiveData } from "components/RequiredPassiveComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
@@ -32,25 +32,32 @@ import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
 contract DestroySystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function checkPassiveResourceRequirementsMetAfterDestroy(uint256 blockType) internal view returns (bool) {
+  function checkPassiveResourceReqsMetAfterDestroy(uint256 buildingEntity) internal view returns (bool) {
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
       getAddressById(components, PassiveProductionComponentID)
     );
-    if (passiveProductionComponent.has(blockType)) {
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
+
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      buildingTypeComponent.getValue(buildingEntity),
+      levelComponent.getValue(buildingEntity)
+    );
+    if (passiveProductionComponent.has(buildingLevelEntity)) {
       return
-        LibStorage.getAvailableSpaceInStorageForResource(
-          MaxStorageComponent(getAddressById(components, MaxStorageComponentID)),
-          ItemComponent(getAddressById(components, ItemComponentID)),
+        LibStorage.getResourceStorageSpace(
+          world,
           addressToEntity(msg.sender),
-          passiveProductionComponent.getValue(blockType).ResourceID
-        ) >= passiveProductionComponent.getValue(blockType).ResourceProduction;
+          passiveProductionComponent.getValue(buildingLevelEntity).resource
+        ) >= passiveProductionComponent.getValue(buildingLevelEntity).value;
     }
     return true;
   }
@@ -63,13 +70,13 @@ contract DestroySystem is PrimodiumSystem {
     ChildrenComponent childrenComponent = ChildrenComponent(getC(ChildrenComponentID));
 
     MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
-    LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
 
     uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
     uint256 buildingType = buildingTypeComponent.getValue(buildingEntity);
     require(
-      checkPassiveResourceRequirementsMetAfterDestroy(buildingType),
+      checkPassiveResourceReqsMetAfterDestroy(buildingEntity),
       "[DestroySystem] can not destory passive resource production building if requirements are not met, destroy passive resource consumers first or increase passive resource production"
     );
 
@@ -108,7 +115,7 @@ contract DestroySystem is PrimodiumSystem {
     }
 
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      maxBuildingsComponent.set(playerEntity, LibMath.getSafeUint32Value(maxBuildingsComponent, playerEntity) - 1);
+      maxBuildingsComponent.set(playerEntity, LibMath.getSafe(maxBuildingsComponent, playerEntity) - 1);
     }
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);

@@ -20,19 +20,11 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibTerrain } from "./LibTerrain.sol";
 
 library LibBuilding {
-  function isMaxBuildingsConditionMet(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 buildingId
-  ) internal view returns (bool) {
-    return
-      IgnoreBuildLimitComponent(getAddressById(world.components(), IgnoreBuildLimitComponentID)).has(buildingId) ||
-      isBuildingCountWithinLimit(world, playerEntity);
-  }
-
-  function isBuildingCountWithinLimit(IWorld world, uint256 playerEntity) internal view returns (bool) {
+  function isMaxBuildingsMet(IWorld world, uint256 playerEntity, uint256 buildingId) internal view returns (bool) {
+    if (IgnoreBuildLimitComponent(getAddressById(world.components(), IgnoreBuildLimitComponentID)).has(buildingId))
+      return true;
     uint32 baseLevel = getBaseLevel(world, playerEntity);
-    uint32 buildCountLimit = getBuildingCountLimit(world, baseLevel);
+    uint32 buildCountLimit = getMaxBuildingCount(world, baseLevel);
     uint32 buildingCount = getBuildingCount(world, playerEntity);
     return buildingCount < buildCountLimit;
   }
@@ -58,10 +50,10 @@ library LibBuilding {
     MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(
       getAddressById(world.components(), MaxBuildingsComponentID)
     );
-    return LibMath.getSafeUint32Value(maxBuildingsComponent, playerEntity);
+    return LibMath.getSafe(maxBuildingsComponent, playerEntity);
   }
 
-  function getBuildingCountLimit(IWorld world, uint256 baseLevel) internal view returns (uint32) {
+  function getMaxBuildingCount(IWorld world, uint256 baseLevel) internal view returns (uint32) {
     MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(
       getAddressById(world.components(), MaxBuildingsComponentID)
     );

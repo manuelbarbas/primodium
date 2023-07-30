@@ -9,7 +9,6 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 
 import { ChildrenComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { BlueprintSystem, ID as BlueprintSystemID } from "../../systems/BlueprintSystem.sol";
 
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
 import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "../../systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
@@ -32,10 +31,10 @@ import { ElectricityPassiveResourceID } from "../../prototypes.sol";
 
 //debug buildings
 import "../../prototypes.sol";
-import "../../libraries/LibDebugInitializer.sol";
 import { Coord } from "../../types.sol";
 
 import { LibBuilding } from "../../libraries/LibBuilding.sol";
+import { LibBlueprint } from "../../libraries/LibBlueprint.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
@@ -43,7 +42,6 @@ import { LibTerrain } from "../../libraries/LibTerrain.sol";
 contract BuildSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
-  BlueprintSystem public blueprintSystem;
   BuildSystem public buildSystem;
 
   OwnedByComponent public ownedByComponent;
@@ -54,7 +52,6 @@ contract BuildSystemTest is PrimodiumTest {
     super.setUp();
 
     // init systems
-    blueprintSystem = BlueprintSystem(system(BlueprintSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
 
     // init components
@@ -227,19 +224,19 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildLargeBuilding() public prank(deployer) {
-    BlueprintComponent(component(BlueprintComponentID)).remove(MainBaseID);
-    Coord[] memory blueprint = makeBlueprint();
-    blueprintSystem.executeTyped(MainBaseID, blueprint);
+    BlueprintComponent blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
+    int32[] memory blueprint = LibBlueprint.get3x3Blueprint();
+    blueprintComponent.set(MainBaseID, blueprint);
     bytes memory rawBuildingEntity = buildSystem.executeTyped(MainBaseID, coord);
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
     Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
 
     uint256[] memory children = childrenComponent.getValue(buildingEntity);
-    assertEq(blueprint.length, children.length);
+    assertEq(blueprint.length, children.length * 2);
 
     for (uint i = 0; i < children.length; i++) {
       position = LibEncode.decodeCoordEntity(children[i]);
-      assertCoordEq(position, blueprint[i]);
+      assertCoordEq(position, Coord(blueprint[i * 2], blueprint[i * 2 + 1]));
       assertEq(buildingEntity, ownedByComponent.getValue(children[i]));
     }
   }
@@ -290,16 +287,17 @@ contract BuildSystemTest is PrimodiumTest {
       component(RequiredResourcesComponentID)
     );
 
+    uint256 debugLevel1 = LibEncode.hashKeyEntity(DebugSimpleBuildingResourceReqsID, 1);
     assertTrue(
-      requiredResourcesComponent.has(DebugSimpleBuildingResourceReqsID),
-      "DebugSimpleBuildingResourceReqs should have resource requirements"
+      requiredResourcesComponent.has(debugLevel1),
+      "DebugSimpleBuildingResourceReqs Level 1 should have resource requirements"
     );
-    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(DebugSimpleBuildingResourceReqsID);
+    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(debugLevel1);
     assertEq(resourceRequirements.length, 1, "DebugSimpleBuildingResourceReqs should have 1 resource requirement");
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint32 resourceCost = LibMath.getSafeUint32Value(
+      uint32 resourceCost = LibMath.getSafe(
         itemComponent,
-        LibEncode.hashKeyEntity(resourceRequirements[i], DebugSimpleBuildingResourceReqsID)
+        LibEncode.hashKeyEntity(resourceRequirements[i], debugLevel1)
       );
       console.log(
         "DebugSimpleBuildingResourceReqs requires resource: %s of amount %s",
@@ -344,7 +342,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailBuildMoreThenBuildLimit() public {
     vm.startPrank(alice);
     buildMainBaseAtZero();
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
+    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -356,7 +354,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildUpToBuildLimit() public prank(alice) {
     buildMainBaseAtZero();
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
+    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
       Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1 });
@@ -368,7 +366,7 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildUpToBuildLimitIgnoreMainBaseAndBuildingWithIgnoreLimit() public {
     vm.startPrank(alice);
 
-    uint256 buildLimit = LibBuilding.getBuildingCountLimit(world, 1);
+    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
 
     Coord memory coord1 = Coord({ x: -1, y: -1 });
     buildSystem.executeTyped(MainBaseID, coord1);

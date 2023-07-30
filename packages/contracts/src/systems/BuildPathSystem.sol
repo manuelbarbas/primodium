@@ -7,9 +7,9 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
@@ -19,7 +19,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as BuildPathFromFactoryToMainBaseSystemID } from "./BuildPathFromFactoryToMainBaseSystem.sol";
 import { ID as BuildPathFromMineToMainBaseSystemID } from "./BuildPathFromMineToMainBaseSystem.sol";
@@ -32,8 +32,8 @@ uint256 constant ID = uint256(keccak256("system.BuildPath"));
 contract BuildPathSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function updateUnclaimedForResource(uint256 playerEntity, uint256 startBuilding) internal {
-    LibUnclaimedResource.updateUnclaimedForResource(
+  function updateResourceClaimed(uint256 playerEntity, uint256 startBuilding) internal {
+    LibUnclaimedResource.updateResourceClaimed(
       world,
       playerEntity,
       LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startBuilding))

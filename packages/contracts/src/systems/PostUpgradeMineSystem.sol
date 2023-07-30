@@ -6,8 +6,8 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
-import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -17,8 +17,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
-import { LibStorageUpgrade } from "../libraries/LibStorageUpgrade.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 
@@ -48,10 +47,12 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
       }
     }
 
-    MinesData memory minesData = MinesComponent(getAddressById(components, MinesComponentID)).getValue(factoryEntity);
+    ResourceValues memory minesData = MinesComponent(getAddressById(components, MinesComponentID)).getValue(
+      factoryEntity
+    );
     //then check if there are enough connected mines
-    for (uint256 i = 0; i < minesData.MineBuildingCount.length; i++) {
-      if (minesData.MineBuildingCount[i] > 0) return;
+    for (uint256 i = 0; i < minesData.values.length; i++) {
+      if (minesData.values[i] > 0) return;
     }
 
     //if all conditions are met make factory functional
@@ -63,14 +64,10 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
       levelComponent.getValue(factoryEntity)
     );
     //first update unclaimed resources up to this point
-    LibUnclaimedResource.updateUnclaimedForResource(
-      world,
-      playerEntity,
-      productionComponent.getValue(levelEntity).ResourceID
-    );
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionComponent.getValue(levelEntity).resource);
 
     //then update resource production
-    LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, levelEntity, true);
+    LibFactory.updateProduction(world, playerEntity, levelEntity, true);
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
@@ -79,7 +76,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     );
     uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);
     uint256 tile = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(mineEntity);
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       mineProductionComponent.getValue(playerResourceEntity) +
@@ -100,7 +97,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     ) {
       uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
       //if connected to MainBase update unclaimed resources up to this point
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+      LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
       //and update resource production
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
       updateResourceProduction(playerResourceEntity, mineEntity);
@@ -118,13 +115,8 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     (address playerAddress, uint256 entity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
 
-    uint32 newLevel = LevelComponent(getAddressById(components, LevelComponentID)).getValue(entity);
-
-    uint256 buildingId = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(entity);
-
     handleMineUpgrade(playerEntity, entity);
 
-    LibStorageUpgrade.checkAndUpdatePlayerStorageAfterUpgrade(world, playerEntity, buildingId, newLevel);
     return abi.encode(entity);
   }
 

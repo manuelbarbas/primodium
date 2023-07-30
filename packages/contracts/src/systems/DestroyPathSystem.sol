@@ -16,12 +16,11 @@ import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
 import { Coord } from "../types.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibPath } from "../libraries/LibPath.sol";
-import { LibNewMine } from "../libraries/LibNewMine.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
@@ -32,13 +31,18 @@ contract DestroyPathSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coordStart = abi.decode(args, (Coord));
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
     // Check that the coordinates exist tiles
     uint256 startCoordEntity = getBuildingFromCoord(coordStart);
-    require(buildingTypeComponent.has(startCoordEntity), "[DestroyPathSystem] Cannot destroy path from an empty coordinate");
+    require(
+      buildingTypeComponent.has(startCoordEntity),
+      "[DestroyPathSystem] Cannot destroy path from an empty coordinate"
+    );
 
     // Check that the coordinates are both owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(startCoordEntity);

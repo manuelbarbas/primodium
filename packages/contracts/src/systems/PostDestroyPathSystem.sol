@@ -8,8 +8,8 @@ import { MineProductionComponent, ID as MineProductionComponentID } from "compon
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
@@ -17,7 +17,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
@@ -28,8 +28,8 @@ uint256 constant ID = uint256(keccak256("system.PostDestroyPath"));
 contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function updateUnclaimedForResource(uint256 playerEntity, uint256 resourceId) internal {
-    LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+  function updateResourceClaimed(uint256 playerEntity, uint256 resourceId) internal {
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
   }
 
   function handleOnDestroyPathFromMineToMainBase(
@@ -40,12 +40,12 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   ) internal {
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(mineEntity));
     // update unclaimed resources
-    updateUnclaimedForResource(playerEntity, resourceId);
+    updateResourceClaimed(playerEntity, resourceId);
     // when path from mine to main base is destroyed resource production is reduced by the mines resource production
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       mineProductionComponent.getValue(playerResourceEntity) -
@@ -75,24 +75,24 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
     if (isFunctional) {
       // update unclaimed resources
-      updateUnclaimedForResource(playerEntity, productionComponent.getValue(factoryLevelEntity).ResourceID);
+      updateResourceClaimed(playerEntity, productionComponent.getValue(factoryLevelEntity).resource);
     }
 
     //when a path from mine to factory is destroyed, factory becomes non functional
     //and required connected mine building count is increased
     activeComponent.remove(factoryEntity);
-    MinesData memory minesData = minesComponent.getValue(factoryEntity);
-    for (uint256 i = 0; i < minesData.MineBuildingCount.length; i++) {
-      if (minesData.MineBuildingIDs[i] == buildingTypeComponent.getValue(mineEntity)) {
-        minesData.MineBuildingCount[i]++;
-        minesComponent.set(factoryEntity, minesData);
+    ResourceValues memory factoryMines = minesComponent.getValue(factoryEntity);
+    for (uint256 i = 0; i < factoryMines.values.length; i++) {
+      if (factoryMines.resources[i] == buildingTypeComponent.getValue(mineEntity)) {
+        factoryMines.values[i]++;
+        minesComponent.set(factoryEntity, factoryMines);
         break;
       }
     }
 
     //if factory was functional player resource production must be cecreased by the resource production of the factory
     if (isFunctional && PathComponent(getAddressById(components, PathComponentID)).has(factoryEntity))
-      LibFactory.updateResourceProductionOnActiveChange(world, playerEntity, factoryLevelEntity, false);
+      LibFactory.updateProduction(world, playerEntity, factoryLevelEntity, false);
   }
 
   function handleOnDestroyPathFromFactoryToMainBase(
@@ -113,19 +113,19 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
       buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
-    ProductionData memory productionData = ProductionComponent(getAddressById(components, ProductionComponentID))
+    ResourceValue memory productionData = ProductionComponent(getAddressById(components, ProductionComponentID))
       .getValue(factoryLevelEntity);
     // update unclaimed resources
-    updateUnclaimedForResource(playerEntity, productionData.ResourceID);
+    updateResourceClaimed(playerEntity, productionData.resource);
 
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.ResourceID, playerEntity);
-    if (LibMath.getSafeUint32Value(mineProductionComponent, playerResourceEntity) <= 0)
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.resource, playerEntity);
+    if (LibMath.getSafe(mineProductionComponent, playerResourceEntity) <= 0)
       revert("this should not be possible");
     //update resource production
-    LibResourceProduction.updateResourceProduction(
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      mineProductionComponent.getValue(playerResourceEntity) - productionData.ResourceProductionRate
+      mineProductionComponent.getValue(playerResourceEntity) - productionData.value
     );
   }
 

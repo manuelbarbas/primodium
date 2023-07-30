@@ -1,11 +1,12 @@
 {
   "components": [
     "CounterComponent",
-    "GameConfigComponent",
     "BuildingTypeComponent",
     "OwnedByComponent",
     "PathComponent",
+
     "LastClaimedAtComponent",
+
     "ItemComponent",
     "HasResearchedComponent",
     "MainBaseComponent",
@@ -29,12 +30,7 @@
     "PassiveProductionComponent",
     "IsDebugComponent"
   ],
-  "initializers": [
-    "LibBuildingDesignInitializer",
-    "LibMaxBuildingsDesignInitializer",
-    "LibTechnologyDesignInitializer",
-    "LibBlueprintInitializer"
-  ],
+  "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch"],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -234,6 +230,10 @@
     {
       "name": "DebugAcquireStorageForAllResourcesSystem",
       "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent"]
+    },
+    {
+      "name": "ComponentDevSystem",
+      "writeAccess": ["*"]
     }
   ]
 }

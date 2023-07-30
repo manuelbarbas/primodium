@@ -2,10 +2,8 @@
 pragma solidity >=0.8.0;
 import "solecs/Component.sol";
 
-struct MinesData {
-  uint256[] MineBuildingIDs;
-  uint32[] MineBuildingCount;
-}
+import { ResourceValues } from "../types.sol";
+
 uint256 constant ID = uint256(keccak256("component.Mines"));
 
 contract MinesComponent is Component {
@@ -15,26 +13,23 @@ contract MinesComponent is Component {
     keys = new string[](2);
     values = new LibTypes.SchemaValue[](2);
 
-    keys[0] = "MineBuildingIDs";
+    keys[0] = "resources";
     values[0] = LibTypes.SchemaValue.UINT256_ARRAY;
 
-    keys[1] = "MineBuildingCount";
+    keys[1] = "values";
     values[1] = LibTypes.SchemaValue.UINT32_ARRAY;
   }
 
-  function set(uint256 entity, MinesData calldata value) public virtual {
-    set(entity, abi.encode(value.MineBuildingIDs, value.MineBuildingCount));
+  function set(uint256 entity, ResourceValues calldata value) public virtual {
+    set(entity, abi.encode(value.resources, value.values));
   }
 
-  function getValue(uint256 entity) public view virtual returns (MinesData memory) {
-    (uint256[] memory mineBuildingIDs, uint32[] memory mineBuildingCount) = abi.decode(
-      getRawValue(entity),
-      (uint256[], uint32[])
-    );
-    return MinesData(mineBuildingIDs, mineBuildingCount);
+  function getValue(uint256 entity) public view virtual returns (ResourceValues memory) {
+    (uint256[] memory mineIds, uint32[] memory mineCounts) = abi.decode(getRawValue(entity), (uint256[], uint32[]));
+    return ResourceValues(mineIds, mineCounts);
   }
 
-  function getEntitiesWithValue(MinesData calldata minesData) public view virtual returns (uint256[] memory) {
-    return getEntitiesWithValue(abi.encode(minesData));
+  function getEntitiesWithValue(ResourceValues calldata mines) public view virtual returns (uint256[] memory) {
+    return getEntitiesWithValue(abi.encode(mines));
   }
 }

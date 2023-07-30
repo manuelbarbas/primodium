@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
@@ -8,8 +9,8 @@ import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/Max
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
-import { MinesComponent, ID as MinesComponentID, MinesData } from "components/MinesComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ProductionData } from "components/ProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -20,7 +21,7 @@ import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
@@ -62,17 +63,13 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       levelComponent.getValue(factoryEntity)
     );
 
-    LibUnclaimedResource.updateUnclaimedForResource(
-      world,
-      playerEntity,
-      productionComponent.getValue(levelEntity).ResourceID
-    );
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionComponent.getValue(levelEntity).resource);
 
-    ProductionData memory productionDataPreUpgrade = productionComponent.getValue(
+    ResourceValue memory productionDataPreUpgrade = productionComponent.getValue(
       LibEncode.hashKeyEntity(buildingTypeComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
     );
 
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionDataPreUpgrade.ResourceID, playerEntity);
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionDataPreUpgrade.resource, playerEntity);
 
     //check to see if factory is still functional after upgrade
     if (
@@ -85,21 +82,20 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     ) {
       // if functional increase resource production by the difference in resource production between the two levels
 
-      LibResourceProduction.updateResourceProduction(
+      LibResource.updateResourceProduction(
         world,
         playerResourceEntity,
         MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) +
-          (productionComponent.getValue(levelEntity).ResourceProductionRate -
-            productionDataPreUpgrade.ResourceProductionRate)
+          (productionComponent.getValue(levelEntity).value - productionDataPreUpgrade.value)
       );
     } else {
       // if not functional remove resource production of the factory and set as non functional
       activeComponent.remove(factoryEntity);
-      LibResourceProduction.updateResourceProduction(
+      LibResource.updateResourceProduction(
         world,
         playerResourceEntity,
         MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) -
-          productionDataPreUpgrade.ResourceProductionRate
+          productionDataPreUpgrade.value
       );
     }
   }

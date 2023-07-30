@@ -13,8 +13,7 @@ import { LevelComponent, ID as BuildingComponentID } from "../../components/Leve
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { MainBaseID } from "../../prototypes.sol";
-import { DebugSimpleBuildingNoReqsID, DebugIronMineNoTileReqID } from "../../libraries/LibDebugInitializer.sol";
+import "../../prototypes.sol";
 import { Coord } from "../../types.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
@@ -99,7 +98,7 @@ contract UpgradeSystemTest is MudTest {
     console.log("upgrading MainBase to level 2");
     uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashKeyEntity(MainBaseID, 2));
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint32 resourceCost = LibMath.getSafeUint32Value(
+      uint32 resourceCost = LibMath.getSafe(
         itemComponent,
         LibEncode.hashKeyEntity(resourceRequirements[i], LibEncode.hashKeyEntity(MainBaseID, 2))
       );

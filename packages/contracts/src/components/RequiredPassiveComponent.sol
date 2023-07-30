@@ -2,10 +2,8 @@
 pragma solidity >=0.8.0;
 import "solecs/Component.sol";
 
-struct RequiredPassiveData {
-  uint256[] ResourceIDs;
-  uint32[] RequiredAmounts;
-}
+import { ResourceValues } from "../types.sol";
+
 uint256 constant ID = uint256(keccak256("component.RequiredPassive"));
 
 contract RequiredPassiveComponent is Component {
@@ -15,26 +13,26 @@ contract RequiredPassiveComponent is Component {
     keys = new string[](2);
     values = new LibTypes.SchemaValue[](2);
 
-    keys[0] = "ResourceIDs";
+    keys[0] = "resourceIDs";
     values[0] = LibTypes.SchemaValue.UINT256_ARRAY;
 
-    keys[1] = "RequiredAmounts";
+    keys[1] = "requiredAmounts";
     values[1] = LibTypes.SchemaValue.UINT32_ARRAY;
   }
 
-  function set(uint256 entity, RequiredPassiveData calldata value) public virtual {
-    set(entity, abi.encode(value.ResourceIDs, value.RequiredAmounts));
+  function set(uint256 entity, ResourceValues calldata resourceValues) public virtual {
+    set(entity, abi.encode(resourceValues.resources, resourceValues.values));
   }
 
-  function getValue(uint256 entity) public view virtual returns (RequiredPassiveData memory) {
+  function getValue(uint256 entity) public view virtual returns (ResourceValues memory) {
     (uint256[] memory resourceIDs, uint32[] memory requiredAmounts) = abi.decode(
       getRawValue(entity),
       (uint256[], uint32[])
     );
-    return RequiredPassiveData(resourceIDs, requiredAmounts);
+    return ResourceValues(resourceIDs, requiredAmounts);
   }
 
-  function getEntitiesWithValue(RequiredPassiveData calldata minesData) public view virtual returns (uint256[] memory) {
-    return getEntitiesWithValue(abi.encode(minesData));
+  function getEntitiesWithValue(ResourceValues calldata resources) public view virtual returns (uint256[] memory) {
+    return getEntitiesWithValue(abi.encode(resources));
   }
 }

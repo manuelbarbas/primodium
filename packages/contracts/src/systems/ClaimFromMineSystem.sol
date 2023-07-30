@@ -22,7 +22,7 @@ import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibNewMine } from "../libraries/LibNewMine.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));
 
 contract ClaimFromMineSystem is PrimodiumSystem {
@@ -48,7 +48,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
       "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
     );
 
-    LibNewMine.claimResourcesFromMines(world, playerEntity);
+    LibResource.claimMineResources(world, playerEntity);
 
     return abi.encode(0);
   }

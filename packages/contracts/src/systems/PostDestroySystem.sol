@@ -14,20 +14,19 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, RequiredPassiveData } from "components/RequiredPassiveComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { Coord } from "../types.sol";
+import { Coord, ResourceValues } from "../types.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
@@ -36,45 +35,53 @@ uint256 constant ID = uint256(keccak256("system.PostDestroy"));
 contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function updatePassiveResourcesBasedOnRequirements(uint256 playerEntity, uint256 blockType) internal {
+  function updatePassiveResources(uint256 playerEntity, uint256 buildingEntity) internal {
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
       getAddressById(components, RequiredPassiveComponentID)
     );
-    if (requiredPassiveComponent.has(blockType)) {
+
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(buildingEntity),
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
+    );
+    if (requiredPassiveComponent.has(buildingLevelEntity)) {
       ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
 
-      RequiredPassiveData memory requiredPassiveData = requiredPassiveComponent.getValue(blockType);
-      for (uint256 i = 0; i < requiredPassiveData.ResourceIDs.length; i++) {
-        uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredPassiveData.ResourceIDs[i], playerEntity);
+      ResourceValues memory requiredPassiveData = requiredPassiveComponent.getValue(buildingLevelEntity);
+      for (uint256 i = 0; i < requiredPassiveData.resources.length; i++) {
+        uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredPassiveData.resources[i], playerEntity);
         itemComponent.set(
           playerResourceEntity,
-          itemComponent.getValue(playerResourceEntity) - requiredPassiveData.RequiredAmounts[i]
+          itemComponent.getValue(playerResourceEntity) - requiredPassiveData.values[i]
         );
       }
     }
   }
 
-  function updatePassiveProduction(uint256 playerEntity, uint256 blockType) internal {
+  function updatePassiveProduction(uint256 playerEntity, uint256 buildingEntity) internal {
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
       getAddressById(components, PassiveProductionComponentID)
     );
-    if (passiveProductionComponent.has(blockType)) {
-      uint256 resourceId = passiveProductionComponent.getValue(blockType).ResourceID;
+
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(buildingEntity),
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
+    );
+    if (passiveProductionComponent.has(buildingLevelEntity)) {
+      uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
       MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
 
-      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        MaxResourceStorageComponent(getAddressById(components, MaxResourceStorageComponentID)),
-        maxStorageComponent,
+      LibStorage.updateResourceMaxStorage(
+        world,
         playerEntity,
         resourceId,
         maxStorageComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
-          passiveProductionComponent.getValue(blockType).ResourceProduction
+          passiveProductionComponent.getValue(buildingLevelEntity).value
       );
     }
   }
 
   function checkAndUpdatePlayerStorageAfterDestroy(uint256 playerEntity, uint256 buildingId, uint256 level) internal {
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(getC(MaxStorageComponentID));
     MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
       getC(MaxResourceStorageComponentID)
     );
@@ -85,25 +92,16 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingIdLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
-      uint32 playerResourceMaxStorage = LibStorage.getEntityMaxStorageForResource(
-        maxStorageComponent,
-        playerEntity,
-        storageResources[i]
-      );
-      uint32 maxStorageIncrease = LibStorage.getEntityMaxStorageForResource(
-        maxStorageComponent,
-        buildingIdLevel,
-        storageResources[i]
-      );
-      LibStorageUpdate.updateMaxStorageOfResourceForEntity(
-        maxResourceStorageComponent,
-        maxStorageComponent,
+      uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
+      uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingIdLevel, storageResources[i]);
+      LibStorage.updateResourceMaxStorage(
+        world,
         playerEntity,
         storageResources[i],
         playerResourceMaxStorage - maxStorageIncrease
       );
 
-      uint32 playerResourceAmount = LibMath.getSafeUint32Value(itemComponent, playerResourceStorageEntity);
+      uint32 playerResourceAmount = LibMath.getSafe(itemComponent, playerResourceStorageEntity);
       if (playerResourceAmount > playerResourceMaxStorage - maxStorageIncrease) {
         itemComponent.set(playerResourceStorageEntity, playerResourceMaxStorage - maxStorageIncrease);
       }
@@ -127,8 +125,8 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       buildingType,
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
     );
-    updatePassiveResourcesBasedOnRequirements(playerEntity, buildingType);
-    updatePassiveProduction(playerEntity, buildingType);
+    updatePassiveResources(playerEntity, buildingEntity);
+    updatePassiveProduction(playerEntity, buildingEntity);
   }
 
   function executeTyped(address playerAddress, uint256 buildingEntity) public returns (bytes memory) {

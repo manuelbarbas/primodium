@@ -30,13 +30,7 @@
     "PassiveProductionComponent",
     "IsDebugComponent"
   ],
-  "initializers": [
-    "LibBuildingDesignInitializer",
-    "LibMaxBuildingsDesignInitializer",
-    "LibTechnologyDesignInitializer",
-    "LibBlueprintInitializer",
-    "LibDebugInitializer"
-  ],
+  "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -211,10 +205,6 @@
 
     {
       "name": "DebugAcquireResourcesSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
-      "name": "DebugAcquireResourcesBasedOnRequirementSystem",
       "writeAccess": ["ItemComponent"]
     },
     {
