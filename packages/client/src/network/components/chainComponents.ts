@@ -84,7 +84,8 @@ export const RequiredResearch = newNumberComponent(world, {
 
 export const RequiredResources = newComponent(
   world,
-  { value: Type.EntityArray },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "RequiredResources",
     metadata: { contractId: `${commonIdPrefix}RequiredResources` },

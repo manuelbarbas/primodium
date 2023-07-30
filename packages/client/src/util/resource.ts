@@ -18,20 +18,16 @@ export type ResourceCostData = {
 // building a building requires resources
 // fetch directly from component data
 export function getRecipe(entityId: EntityID): ResourceCostData["resources"] {
-  const requiredResources = RequiredResources.get(entityId)?.value;
+  const requiredResources = RequiredResources.get(entityId)?.resources;
 
   if (!requiredResources) return [];
-  return requiredResources.map((resourceId: EntityID) => {
+  return requiredResources.map((resourceId: EntityID, index: number) => {
     // remove leading zeros due to mudv1 hashing behavior
-    const resourceEntity = hashKeyEntityAndTrim(
-      resourceId,
-      entityId
-    ) as EntityID;
-    const resourceCost = Item.get(resourceEntity);
+    const resourceCost = RequiredResources.get(entityId)?.values[index];
 
     return {
       id: resourceId,
-      amount: resourceCost ? parseInt(resourceCost!.value.toString()) : -1,
+      amount: resourceCost ? parseInt(resourceCost.toString()) : -1,
     };
   });
 }
