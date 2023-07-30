@@ -13,6 +13,7 @@ import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
 import { LibStorage } from "./LibStorage.sol";
+import { ResourceValue, ResourceValues } from "../types.sol";
 
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
@@ -41,12 +42,15 @@ library LibResource {
 
     if (!requiredResourcesComponent.has(entity)) return true;
 
-    uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
-    for (uint256 i = 0; i < requiredResources.length; i++) {
-      uint32 resourceCost = LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], entity));
+    ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      uint32 resourceCost = LibMath.getSafe(
+        itemComponent,
+        LibEncode.hashKeyEntity(requiredResources.values[i], entity)
+      );
       uint32 playerResourceCount = LibMath.getSafe(
         itemComponent,
-        LibEncode.hashKeyEntity(requiredResources[i], playerEntity)
+        LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity)
       );
       if (resourceCost > playerResourceCount) return false;
     }
@@ -61,27 +65,22 @@ library LibResource {
 
     if (!requiredResourcesComponent.has(entity)) return true;
 
-    uint256[] memory requiredResourceIds = requiredResourcesComponent.getValue(entity);
-    uint32[] memory requiredResources = new uint32[](requiredResourceIds.length);
-    uint32[] memory currentResources = new uint32[](requiredResourceIds.length);
-    for (uint256 i = 0; i < requiredResourceIds.length; i++) {
-      requiredResources[i] = LibMath.getSafe(
-        itemComponent,
-        LibEncode.hashKeyEntity(requiredResourceIds[i], entity)
-      );
+    ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
+    uint32[] memory currentResources = new uint32[](requiredResources.resources.length);
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       currentResources[i] = LibMath.getSafe(
         itemComponent,
-        LibEncode.hashKeyEntity(requiredResourceIds[i], playerEntity)
+        LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity)
       );
-      if (requiredResources[i] > currentResources[i]) {
+      if (requiredResources.values[i] > currentResources[i]) {
         for (uint256 j = 0; j < i; j++) {
-          itemComponent.set(LibEncode.hashKeyEntity(requiredResourceIds[j], playerEntity), currentResources[j]);
+          itemComponent.set(LibEncode.hashKeyEntity(requiredResources.resources[j], playerEntity), currentResources[j]);
         }
         return false;
       }
       itemComponent.set(
-        LibEncode.hashKeyEntity(requiredResourceIds[i], playerEntity),
-        currentResources[i] - requiredResources[i]
+        LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity),
+        currentResources[i] - requiredResources.values[i]
       );
     }
     return true;
@@ -93,12 +92,11 @@ library LibResource {
     );
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
     if (!requiredResourcesComponent.has(entity)) return;
-    uint256[] memory requiredResources = requiredResourcesComponent.getValue(entity);
-    for (uint256 i = 0; i < requiredResources.length; i++) {
-      uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources[i], playerEntity);
-      uint32 resourceCost = LibMath.getSafe(itemComponent, LibEncode.hashKeyEntity(requiredResources[i], entity));
+    ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
       uint32 currItem = LibMath.getSafe(itemComponent, playerResourceHash);
-      itemComponent.set(playerResourceHash, currItem - resourceCost);
+      itemComponent.set(playerResourceHash, currItem - requiredResources.values[i]);
     }
   }
 

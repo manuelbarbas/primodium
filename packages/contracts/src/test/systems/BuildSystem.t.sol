@@ -38,6 +38,7 @@ import { LibBlueprint } from "../../libraries/LibBlueprint.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
+import { ResourceValue, ResourceValues } from "../../types.sol";
 
 contract BuildSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
@@ -292,19 +293,19 @@ contract BuildSystemTest is PrimodiumTest {
       requiredResourcesComponent.has(debugLevel1),
       "DebugSimpleBuildingResourceReqs Level 1 should have resource requirements"
     );
-    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(debugLevel1);
-    assertEq(resourceRequirements.length, 1, "DebugSimpleBuildingResourceReqs should have 1 resource requirement");
-    for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint32 resourceCost = LibMath.getSafe(
-        itemComponent,
-        LibEncode.hashKeyEntity(resourceRequirements[i], debugLevel1)
-      );
+    ResourceValues memory requiredResources = requiredResourcesComponent.getValue(debugLevel1);
+    assertEq(
+      requiredResources.resources.length,
+      1,
+      "DebugSimpleBuildingResourceReqs should have 1 resource requirement"
+    );
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       console.log(
         "DebugSimpleBuildingResourceReqs requires resource: %s of amount %s",
-        resourceRequirements[i],
-        resourceCost
+        requiredResources.resources[i],
+        requiredResources.values[i]
       );
-      debugAcquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
+      debugAcquireResourcesSystem.executeTyped(requiredResources.resources[i], requiredResources.values[i]);
     }
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory ironCoord = Coord({ x: -5, y: 2 });

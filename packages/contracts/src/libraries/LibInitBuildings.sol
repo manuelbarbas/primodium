@@ -3,7 +3,6 @@ pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 // Production Buildings
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";

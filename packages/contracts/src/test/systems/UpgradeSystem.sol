@@ -18,6 +18,7 @@ import { Coord } from "../../types.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
 import { BuildingKey } from "../../prototypes.sol";
+import { ResourceValue, ResourceValues } from "../../types.sol";
 
 contract UpgradeSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -87,7 +88,6 @@ contract UpgradeSystemTest is MudTest {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       component(RequiredResourcesComponentID)
     );
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     console.log("building MainBase");
     bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
     console.log("MainBase built");
@@ -96,15 +96,17 @@ contract UpgradeSystemTest is MudTest {
     assertTrue(levelComponent.has(blockEntityID), "MainBase entity id should have building component");
     assertTrue(levelComponent.getValue(blockEntityID) == 1, "MainBase entity id should be level 1");
     console.log("upgrading MainBase to level 2");
-    uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashKeyEntity(MainBaseID, 2));
-    for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint32 resourceCost = LibMath.getSafe(
-        itemComponent,
-        LibEncode.hashKeyEntity(resourceRequirements[i], LibEncode.hashKeyEntity(MainBaseID, 2))
+    ResourceValues memory requiredResources = requiredResourcesComponent.getValue(
+      LibEncode.hashKeyEntity(MainBaseID, 2)
+    );
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      console.log(
+        "MainBase level 2 requires resource: %s of amount %s",
+        requiredResources.resources[i],
+        requiredResources.values[i]
       );
-      console.log("MainBase level 2 requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
-      debugAcquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
-      console.log("%s of amount %s provided to player", resourceRequirements[i], resourceCost);
+      debugAcquireResourcesSystem.executeTyped(requiredResources.resources[i], requiredResources.values[i]);
+      console.log("%s of amount %s provided to player", requiredResources.resources[i], requiredResources.values[i]);
     }
     upgradeSystem.executeTyped(coord);
     assertTrue(levelComponent.getValue(blockEntityID) == 2);
