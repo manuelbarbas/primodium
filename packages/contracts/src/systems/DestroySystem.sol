@@ -9,7 +9,7 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
@@ -68,8 +68,6 @@ contract DestroySystem is PrimodiumSystem {
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     ChildrenComponent childrenComponent = ChildrenComponent(getC(ChildrenComponentID));
-
-    MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
 
     uint256 buildingEntity = getBuildingFromCoord(coord);
@@ -115,7 +113,8 @@ contract DestroySystem is PrimodiumSystem {
     }
 
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      maxBuildingsComponent.set(playerEntity, LibMath.getSafe(maxBuildingsComponent, playerEntity) - 1);
+      BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
+      buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) - 1);
     }
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);
