@@ -8,7 +8,6 @@ import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugCo
 
 library LibDebug {
   function isDebug(IWorld world) internal view returns (bool) {
-    //return true;
     return IsDebugComponent(getAddressById(world.components(), IsDebugComponentID)).has(SingletonID);
   }
 }

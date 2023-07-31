@@ -4,21 +4,21 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 import { ID as BuildSystemID } from "systems/BuildSystem.sol";
 // components
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
-import { LibClaim } from "../libraries/LibClaim.sol";
+import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -28,50 +28,6 @@ uint256 constant ID = uint256(keccak256("system.PostBuild"));
 contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
-    StorageCapacityComponent storageCapacityComponent = StorageCapacityComponent(getC(StorageCapacityComponentID));
-    StorageCapacityResourcesComponent storageCapacityResourcesComponent = StorageCapacityResourcesComponent(
-      getC(StorageCapacityResourcesComponentID)
-    );
-    uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
-    if (!storageCapacityResourcesComponent.has(buildingTypeLevel)) return;
-    uint256[] memory storageResources = storageCapacityResourcesComponent.getValue(buildingTypeLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint32 playerResourceStorageCapacity = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i]
-      );
-      uint32 storageCapacityIncrease = LibStorage.getEntityStorageCapacityForResource(
-        storageCapacityComponent,
-        buildingTypeLevel,
-        storageResources[i]
-      );
-      LibStorageUpdate.updateStorageCapacityOfResourceForEntity(
-        storageCapacityResourcesComponent,
-        storageCapacityComponent,
-        playerEntity,
-        storageResources[i],
-        playerResourceStorageCapacity + storageCapacityIncrease
-      );
-    }
-  }
-
-  function setupFactory(uint256 factoryEntity) internal {
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getC(FactoryMineBuildingsComponentID)
-    );
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(factoryEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
-    if (!factoryMineBuildingsComponent.has(buildingLevelEntity)) {
-      return;
-    }
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(
-      buildingLevelEntity
-    );
-    factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
-  }
-
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID),
@@ -80,22 +36,56 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 buildingType = TileComponent(getAddressById(components, TileComponentID)).getValue(buildingEntity);
+    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
+      buildingEntity
+    );
+    uint32 buildingLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(buildingEntity);
 
-    LibPassiveResource.updatePassiveResourcesBasedOnRequirements(world, playerEntity, buildingType);
-    LibPassiveResource.updatePassiveResourceProduction(world, playerEntity, buildingType);
+    LibPassiveResource.updatePassiveResources(world, playerEntity, buildingType, buildingLevel);
+    LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType, buildingLevel);
     //set MainBase id for player address for easy lookup
 
     // update building count if the built building counts towards the build limit
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint32Value(buildingLimitComponent, playerEntity) + 1);
+      MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
+      maxBuildingsComponent.set(playerEntity, LibMath.getSafe(maxBuildingsComponent, playerEntity) + 1);
     }
 
     updatePlayerStorage(buildingType, playerEntity);
     setupFactory(buildingEntity);
 
     return abi.encode(buildingEntity);
+  }
+
+  function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
+    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
+      getC(MaxResourceStorageComponentID)
+    );
+    // todo: make this actually get the current main base level
+    uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
+    if (!maxResourceStorageComponent.has(buildingTypeLevel)) return;
+    uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingTypeLevel);
+    for (uint256 i = 0; i < storageResources.length; i++) {
+      uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
+      uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingTypeLevel, storageResources[i]);
+      LibStorage.updateResourceMaxStorage(
+        world,
+        playerEntity,
+        storageResources[i],
+        playerResourceMaxStorage + maxStorageIncrease
+      );
+    }
+  }
+
+  function setupFactory(uint256 factoryEntity) internal {
+    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
+    uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(factoryEntity);
+    uint256 levelEntity = LibEncode.hashKeyEntity(buildingId, 1);
+    if (!minesComponent.has(levelEntity)) {
+      return;
+    }
+    ResourceValues memory factoryMines = minesComponent.getValue(levelEntity);
+    minesComponent.set(factoryEntity, factoryMines);
   }
 
   function executeTyped(address playerAddress, uint256 buildingEntity) public returns (bytes memory) {

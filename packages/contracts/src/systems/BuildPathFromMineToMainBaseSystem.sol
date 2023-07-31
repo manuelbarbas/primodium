@@ -2,16 +2,16 @@
 pragma solidity >=0.8.0;
 
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
@@ -34,22 +34,23 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
     uint256 playerEntity = addressToEntity(playerAddress);
     uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromBuildingEntity));
 
-    LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, resourceId);
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
 
-    uint256 buildingId = TileComponent(getC(TileComponentID)).getValue(fromBuildingEntity);
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+    uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(fromBuildingEntity);
+    uint256 levelEntity = LibEncode.hashKeyEntity(
       buildingId,
-      BuildingLevelComponent(getC(BuildingLevelComponentID)).getValue(fromBuildingEntity)
+      LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
     );
 
-    MineComponent mineComponent = MineComponent(getC(MineComponentID));
+    MineProductionComponent mineProductionComponent = MineProductionComponent(getC(MineProductionComponentID));
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    require(mineComponent.has(buildingLevelEntity), "Mine level entity not found");
-    LibResourceProduction.updateResourceProduction(
+    require(mineProductionComponent.has(levelEntity), "Mine level entity not found");
+    LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      LibMath.getSafeUint32Value(mineComponent, playerResourceEntity) + mineComponent.getValue(buildingLevelEntity)
+      LibMath.getSafe(mineProductionComponent, playerResourceEntity) +
+        mineProductionComponent.getValue(levelEntity)
     );
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);

@@ -3,10 +3,10 @@ import { useMemo } from "react";
 import useResourceCount from "src/hooks/useResourceCount";
 import {
   Item,
-  StorageCapacity,
-  Mine,
   LastClaimedAt,
   UnclaimedResource,
+  MaxStorage,
+  MineProduction,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { ResourceImage } from "src/util/constants";
@@ -24,13 +24,9 @@ export const ResourceLabel = ({
 
   const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
-  const storageCapacity = useResourceCount(
-    StorageCapacity,
-    resourceId,
-    entityIndex
-  );
+  const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
 
-  const production = useResourceCount(Mine, resourceId, entityIndex);
+  const production = useResourceCount(MineProduction, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,
@@ -47,14 +43,13 @@ export const ResourceLabel = ({
   const resourcesToClaim = useMemo(() => {
     const toClaim =
       unclaimedResource + (blockNumber - lastClaimedAt) * production;
-    if (toClaim > storageCapacity - resourceCount)
-      return storageCapacity - resourceCount;
+    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   }, [unclaimedResource, lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 
-  if (storageCapacity > 0) {
+  if (maxStorage > 0) {
     return (
       <div className="mb-1">
         <div className="flex justify-between">
@@ -66,28 +61,27 @@ export const ResourceLabel = ({
         </div>
         <div
           className={`flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-900/90 crt ${
-            resourceCount + resourcesToClaim === storageCapacity
+            resourceCount + resourcesToClaim === maxStorage
               ? "animate-pulse"
               : ""
           }`}
         >
           <div
             className="h-full bg-cyan-600"
-            style={{ width: `${(resourceCount / storageCapacity) * 100}%` }}
+            style={{ width: `${(resourceCount / maxStorage) * 100}%` }}
           />
 
           <div
             className="h-full bg-cyan-800"
             style={{
-              width: `${(resourcesToClaim / storageCapacity) * 100}%`,
+              width: `${(resourcesToClaim / maxStorage) * 100}%`,
             }}
           />
           <div
             className="h-full bg-gray-900"
             style={{
               width: `${
-                ((storageCapacity - resourceCount - resourcesToClaim) /
-                  storageCapacity) *
+                ((maxStorage - resourceCount - resourcesToClaim) / maxStorage) *
                 100
               }%`,
             }}
@@ -100,7 +94,7 @@ export const ResourceLabel = ({
               <span className="opacity-50">(+{resourcesToClaim})</span>
             )}
           </p>
-          <b>{storageCapacity}</b>
+          <b>{maxStorage}</b>
         </div>
       </div>
     );

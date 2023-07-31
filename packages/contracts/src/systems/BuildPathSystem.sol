@@ -4,12 +4,12 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
@@ -19,7 +19,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as BuildPathFromFactoryToMainBaseSystemID } from "./BuildPathFromFactoryToMainBaseSystem.sol";
 import { ID as BuildPathFromMineToMainBaseSystemID } from "./BuildPathFromMineToMainBaseSystem.sol";
@@ -32,8 +32,8 @@ uint256 constant ID = uint256(keccak256("system.BuildPath"));
 contract BuildPathSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function updateUnclaimedForResource(uint256 playerEntity, uint256 startBuilding) internal {
-    LibUnclaimedResource.updateUnclaimedForResource(
+  function updateResourceClaimed(uint256 playerEntity, uint256 startBuilding) internal {
+    LibUnclaimedResource.updateResourceClaimed(
       world,
       playerEntity,
       LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(startBuilding))
@@ -67,15 +67,17 @@ contract BuildPathSystem is PrimodiumSystem {
       !PathComponent(getC(PathComponentID)).has(startBuilding),
       "[BuildPathSystem] Cannot start more than one path from the same building"
     );
-    TileComponent tileComponent = TileComponent(getAddressById(components, TileComponentID));
-    uint256 startCoordBuildingId = tileComponent.getValue(startBuilding);
-    uint256 endCoordBuildingId = tileComponent.getValue(endBuilding);
-    uint256 startCoordBuildingLevelEntity = LibEncode.hashKeyEntity(
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
+    uint256 startCoordBuildingId = buildingTypeComponent.getValue(startBuilding);
+    uint256 endCoordBuildingId = buildingTypeComponent.getValue(endBuilding);
+    uint256 startCoordLevelEntity = LibEncode.hashKeyEntity(
       startCoordBuildingId,
-      BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(startBuilding)
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(startBuilding)
     );
 
-    if (MineComponent(getAddressById(components, MineComponentID)).has(startCoordBuildingLevelEntity)) {
+    if (MineProductionComponent(getAddressById(components, MineProductionComponentID)).has(startCoordLevelEntity)) {
       if (endCoordBuildingId == MainBaseID) {
         IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromMineToMainBaseSystemID)).executeTyped(
           msg.sender,
@@ -89,11 +91,7 @@ contract BuildPathSystem is PrimodiumSystem {
           endBuilding
         );
       }
-    } else if (
-      FactoryMineBuildingsComponent(getAddressById(components, FactoryMineBuildingsComponentID)).has(
-        startCoordBuildingLevelEntity
-      )
-    ) {
+    } else if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
       require(
         endCoordBuildingId == MainBaseID,
         "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"

@@ -10,12 +10,12 @@ export const AllPassiveResourceLabels = ({
   entityIndex?: EntityIndex;
 }) => {
   const { components } = useMud();
-  const storageCapacity = useResourceCount(
-    components.StorageCapacity,
+  const maxStorage = useResourceCount(
+    components.MaxStorage,
     BlockType.ElectricityPassiveResource,
     entityIndex
   );
-  if (!storageCapacity)
+  if (!maxStorage)
     return (
       <div className="flex justify-center items-center text-lg">
         No Utilities

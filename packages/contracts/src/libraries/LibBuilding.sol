@@ -6,12 +6,12 @@ import { IWorld } from "solecs/System.sol";
 
 //components
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
 
@@ -20,19 +20,11 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibTerrain } from "./LibTerrain.sol";
 
 library LibBuilding {
-  function isBuildingLimitConditionMet(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 buildingId
-  ) internal view returns (bool) {
-    return
-      IgnoreBuildLimitComponent(getAddressById(world.components(), IgnoreBuildLimitComponentID)).has(buildingId) ||
-      isBuildingCountWithinLimit(world, playerEntity);
-  }
-
-  function isBuildingCountWithinLimit(IWorld world, uint256 playerEntity) internal view returns (bool) {
+  function isMaxBuildingsMet(IWorld world, uint256 playerEntity, uint256 buildingId) internal view returns (bool) {
+    if (IgnoreBuildLimitComponent(getAddressById(world.components(), IgnoreBuildLimitComponentID)).has(buildingId))
+      return true;
     uint32 baseLevel = getBaseLevel(world, playerEntity);
-    uint32 buildCountLimit = getBuildingCountLimit(world, baseLevel);
+    uint32 buildCountLimit = getMaxBuildingCount(world, baseLevel);
     uint32 buildingCount = getBuildingCount(world, playerEntity);
     return buildingCount < buildCountLimit;
   }
@@ -47,27 +39,25 @@ library LibBuilding {
   }
 
   function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint32) {
-    MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-      getAddressById(world.components(), MainBaseInitializedComponentID)
-    );
+    MainBaseComponent mainBaseComponent = MainBaseComponent(getAddressById(world.components(), MainBaseComponentID));
 
-    if (!mainBaseInitializedComponent.has(playerEntity)) return 0;
-    uint256 mainBase = mainBaseInitializedComponent.getValue(playerEntity);
-    return BuildingLevelComponent(getAddressById(world.components(), BuildingLevelComponentID)).getValue(mainBase);
+    if (!mainBaseComponent.has(playerEntity)) return 0;
+    uint256 mainBase = mainBaseComponent.getValue(playerEntity);
+    return LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(mainBase);
   }
 
   function getBuildingCount(IWorld world, uint256 playerEntity) internal view returns (uint32) {
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
-      getAddressById(world.components(), BuildingLimitComponentID)
+    MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(
+      getAddressById(world.components(), MaxBuildingsComponentID)
     );
-    return LibMath.getSafeUint32Value(buildingLimitComponent, playerEntity);
+    return LibMath.getSafe(maxBuildingsComponent, playerEntity);
   }
 
-  function getBuildingCountLimit(IWorld world, uint256 baseLevel) internal view returns (uint32) {
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(
-      getAddressById(world.components(), BuildingLimitComponentID)
+  function getMaxBuildingCount(IWorld world, uint256 baseLevel) internal view returns (uint32) {
+    MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(
+      getAddressById(world.components(), MaxBuildingsComponentID)
     );
-    if (buildingLimitComponent.has(baseLevel)) return buildingLimitComponent.getValue(baseLevel);
+    if (maxBuildingsComponent.has(baseLevel)) return maxBuildingsComponent.getValue(baseLevel);
     else revert("Invalid Base Level");
   }
 

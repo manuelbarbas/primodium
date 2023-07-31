@@ -4,10 +4,7 @@ import { useState, useEffect } from "react";
 import ClaimButton from "src/components/action/ClaimButton";
 import { GameButton } from "src/components/shared/GameButton";
 import { useMainBaseCoord } from "src/hooks";
-import {
-  MainBase,
-  BuildingLevel,
-} from "src/network/components/chainComponents";
+import { MainBase, Level } from "src/network/components/chainComponents";
 import { useGameStore } from "src/store/GameStore";
 import { PanelButton } from "./PanelButton";
 import { Starmap } from "./panes/starmap/Starmap";
@@ -23,12 +20,12 @@ export const UserPanel = () => {
   const mainBaseCoord = useMainBaseCoord();
   const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
 
-  const buildingLevel = BuildingLevel.use(mainBase);
+  const level = Level.use(mainBase);
   useEffect(() => {
-    if (buildingLevel === undefined) return;
+    if (Level === undefined) return;
 
     setMenuIndex(0);
-  }, [buildingLevel]);
+  }, [level]);
 
   return (
     <div
