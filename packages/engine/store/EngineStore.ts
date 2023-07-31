@@ -3,20 +3,25 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { Game } from "../types";
 
 type EngineState = {
-  game: Game | null;
+  instances: Map<string, Game>;
 };
 
 type EngineActions = {
-  setGame: (game: Game) => void;
+  setGame: (key: string, game: Game) => void;
 };
 
 const defaults: EngineState = {
-  game: null,
+  instances: new Map(),
 };
 
 export const useEngineStore = create<EngineState & EngineActions>()((set) => ({
   ...defaults,
-  setGame: (game: Game) => set({ game: game }),
+  setGame: (key: string, game: Game) =>
+    set((state) => {
+      const instances = new Map<string, Game>(state.instances);
+      instances.set(key, game);
+      return { instances };
+    }),
 }));
 
 // store dev tools

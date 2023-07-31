@@ -165,33 +165,27 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
 
           <div className="my-4">
             {isResearched && (
-              <div className="flex items-center w-full justify-center">
-                <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
-                  <p className="px-2 py-1"> Researched </p>
-                </GameButton>
-              </div>
+              <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+                <p className="px-2 py-1"> Researched </p>
+              </GameButton>
             )}
             {isLocked && (
-              <div className="flex items-center w-full justify-center">
-                <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
-                  <p className="px-2 py-1">
-                    Lvl. {requiredMainBaseLevel} Base Required
-                  </p>
-                </GameButton>
-              </div>
+              <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+                <p className="px-2 py-1">
+                  Lvl. {requiredMainBaseLevel} Base Required
+                </p>
+              </GameButton>
             )}
             {!isLocked && !isResearched && (
-              <div className="flex items-center w-full justify-center">
-                <GameButton
-                  id={`${name}-research`}
-                  onClick={executeResearch}
-                  className=" bg-cyan-600 text-sm w-3/4"
-                >
-                  <div className="px-2 py-1">
-                    {userClickedLoading ? <Spinner /> : "Research"}
-                  </div>
-                </GameButton>
-              </div>
+              <GameButton
+                id={`${name}-research`}
+                onClick={executeResearch}
+                className=" bg-cyan-600 text-sm w-3/4"
+              >
+                <div className="px-2 py-1">
+                  {userClickedLoading ? <Spinner /> : "Research"}
+                </div>
+              </GameButton>
             )}
           </div>
         </div>

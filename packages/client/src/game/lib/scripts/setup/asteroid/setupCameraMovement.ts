@@ -1,8 +1,8 @@
 import { KeybindActions } from "@game/constants";
 import { EntityID } from "@latticexyz/recs";
-import { pan } from "src/game/api/camera";
+import { createCameraApi } from "src/game/api/camera";
 import { Scene } from "engine/types";
-import { isDown } from "src/game/api/input";
+import { createInputApi } from "src/game/api/input";
 import { MainBase } from "src/network/components/chainComponents";
 import { Position } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
@@ -12,6 +12,8 @@ const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;
 
 const setupCameraMovement = (scene: Scene, player: EntityID) => {
+  const { isDown } = createInputApi(scene);
+  const { pan } = createCameraApi(scene);
   const { maxZoom, minZoom } = scene.config.camera;
 
   //accumalate sub-pixel movement during a gametick and add to next game tick.

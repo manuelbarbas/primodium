@@ -23,6 +23,7 @@ export type Key =
   | "POINTER_RIGHT";
 
 export type GameConfig = Phaser.Types.Core.GameConfig & {
+  key: string;
   assetPackUrl: string;
 };
 

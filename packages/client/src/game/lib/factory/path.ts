@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { AsteroidMap } from "@game/constants";
 import { GameObjectComponent } from "engine/types";
 
 interface Circle {
@@ -203,7 +203,7 @@ export const createPath = (
       gameObject.clear();
       gameObject.x = startX;
       gameObject.y = startY;
-      gameObject.setDepth(DepthLayers.Path);
+      gameObject.setDepth(AsteroidMap.DepthLayers.Path);
 
       if (!circles.length) {
         const delay = 2000;

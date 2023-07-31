@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
+import { AsteroidMap, KeybindActions } from "@game/constants";
 import { isMobile } from "react-device-detect";
 import { EntityID } from "@latticexyz/recs";
 import { SingletonID } from "@latticexyz/network";
@@ -29,8 +29,11 @@ const HotbarItem: React.FC<{
   const selectedBuilding = SelectedBuilding.use()?.value;
   const { address } = useAccount();
   const [isResearched, setIsResearched] = useState(false);
-
-  const keybinds = primodium.hooks.useKeybinds();
+  const {
+    hooks: { useKeybinds },
+    input: { addListener },
+  } = primodium.api(AsteroidMap.KEY)!;
+  const keybinds = useKeybinds();
   let dimensions: { width: number; height: number } | undefined;
 
   const requiredResearch = RequiredResearch.use(blockType)?.value;
@@ -68,7 +71,7 @@ const HotbarItem: React.FC<{
   useEffect(() => {
     if (!keybinds || !isResearched || !keybindAction) return;
 
-    const listener = primodium.input.addListener(keybindAction, () => {
+    const listener = addListener(keybindAction, () => {
       if (selectedBuilding === blockType) {
         SelectedBuilding.remove();
         SelectedAction.remove();

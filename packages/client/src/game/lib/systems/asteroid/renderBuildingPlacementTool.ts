@@ -9,28 +9,35 @@ import {
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
-import { createSelectionTile } from "../factory/selectionTile";
+import { createBuilding } from "../../factory/building";
+import { createSelectionTile } from "../../factory/selectionTile";
 import {
   HoverTile,
   SelectedAction,
+  SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 
-export const renderDemolishBuildingTool = (scene: Scene) => {
+export const renderBuildingPlacementTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const objIndexSuffix = "_demolishBuilding";
+  const objIndexSuffix = "_buildingPlacement";
 
   const query = [
     Has(HoverTile),
-    HasValue(SelectedAction, { value: Action.DemolishBuilding }),
+    HasValue(SelectedAction, {
+      value: Action.PlaceBuilding,
+    }),
   ];
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+    const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
+    const selectedBuilding = SelectedBuilding.get()?.value;
 
     // Avoid updating on optimistic overrides
     if (
+      !selectedBuilding ||
       typeof entityIndex !== "number" ||
       entityIndex >= world.entities.length
     ) {
@@ -42,19 +49,32 @@ export const renderDemolishBuildingTool = (scene: Scene) => {
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
-    const demolishTileGraphicsEmbodiedEntity = scene.objectPool.get(
+    const hoverTileGraphicsEmbodiedEntity = scene.objectPool.get(
       objGraphicsIndex,
       "Graphics"
     );
 
-    demolishTileGraphicsEmbodiedEntity.setComponent(
+    const hoverTileSpriteEmbodiedEntity = scene.objectPool.get(
+      objSpriteIndex,
+      "Sprite"
+    );
+
+    hoverTileSpriteEmbodiedEntity.setComponent(
+      createBuilding({
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
+        buildingType: selectedBuilding,
+      })
+    );
+
+    hoverTileGraphicsEmbodiedEntity.setComponent(
       createSelectionTile({
         id: objGraphicsIndex,
         x: pixelCoord.x,
         y: -pixelCoord.y,
         tileHeight,
         tileWidth,
-        color: 0xff0000,
+        alpha: 0,
       })
     );
   };
@@ -63,7 +83,7 @@ export const renderDemolishBuildingTool = (scene: Scene) => {
     render(update);
 
     console.info(
-      "[ENTER SYSTEM](renderDemolishBuilding) Demolish Building tool has been added"
+      "[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added"
     );
   });
 
@@ -71,10 +91,13 @@ export const renderDemolishBuildingTool = (scene: Scene) => {
 
   defineExitSystem(world, query, (update) => {
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+    const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
+
     scene.objectPool.remove(objGraphicsIndex);
+    scene.objectPool.remove(objSpriteIndex);
 
     console.info(
-      "[EXIT SYSTEM](renderDemolishBuilding) Demolish building tool has been removed"
+      "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
     );
   });
 };

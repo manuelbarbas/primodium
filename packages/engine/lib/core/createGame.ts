@@ -1,4 +1,3 @@
-// import DragPlugin from "phaser3-rex-plugins/plugins/drag-plugin";
 import { initializeContext } from "../../api";
 import { createSceneManager } from "./createSceneManager";
 import { deferred } from "@latticexyz/utils";
@@ -23,7 +22,7 @@ export const createGame = async (config: GameConfig) => {
     const phaserScene = createPhaserScene({
       key: "ROOT",
       preload: (scene: Phaser.Scene) => {
-        scene.load.pack("ROOT", config.assetPackUrl);
+        scene.load.pack(config.key, config.assetPackUrl, config.key);
       },
     });
 
@@ -36,7 +35,7 @@ export const createGame = async (config: GameConfig) => {
 
     /* -------------------------- Create Scene Manager -------------------------- */
 
-    const sceneManager = createSceneManager();
+    const sceneManager = createSceneManager(phaserGame);
 
     /* -------------------------------------------------------------------------- */
     const context = {
@@ -49,7 +48,7 @@ export const createGame = async (config: GameConfig) => {
       },
     };
 
-    initializeContext(context);
+    initializeContext(config.key, context);
 
     return context;
   } catch (e) {

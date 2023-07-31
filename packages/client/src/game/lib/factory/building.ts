@@ -1,13 +1,15 @@
 import { EntityID } from "@latticexyz/recs";
 import { GameObjectComponent } from "engine/types";
-import {
+import { AsteroidMap } from "../../constants";
+import { safeIndex } from "src/util/array";
+
+const {
   Assets,
+  SpriteKeys,
   DepthLayers,
   EntityIDtoAnimationKey,
   EntityIDtoSpriteKey,
-  SpriteKeys,
-} from "../../constants";
-import { safeIndex } from "src/util/array";
+} = AsteroidMap;
 
 export const createBuilding = ({
   renderId = "building",

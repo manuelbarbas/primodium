@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { AsteroidMap } from "@game/constants";
 import { GameObjectComponent } from "engine/types";
 
 interface Circle {
@@ -104,7 +104,7 @@ export const createSelectionPath = (
 
       gameObject.x = startX;
       gameObject.y = startY;
-      gameObject.setDepth(DepthLayers.Tooltip);
+      gameObject.setDepth(AsteroidMap.DepthLayers.Tooltip);
 
       //initialize circles if it has not been populated yet
       if (!circles.length) {

@@ -1,8 +1,10 @@
 // import { SceneConfig } from "../../types";
 import { SceneConfig } from "engine/types";
-import { Assets, Scenes, Tilesets, Tilekeys } from "../constants";
+import { AsteroidMap } from "../constants";
 import { animationConfig } from "./animationConfig";
 import { tileAnimationConfig } from "./tileAnimationConfig";
+
+const { Assets, Scenes, Tilesets, Tilekeys } = AsteroidMap;
 
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,

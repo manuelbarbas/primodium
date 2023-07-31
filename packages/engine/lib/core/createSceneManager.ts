@@ -1,25 +1,23 @@
-import { useEngineStore } from "../../store/EngineStore";
 import { createScene } from "./createScene";
 import { deferred } from "@latticexyz/utils";
 
 export type Scene = Awaited<ReturnType<typeof createScene>>;
 
-export const createSceneManager = () => {
+export const createSceneManager = (phaserGame: Phaser.Game) => {
   const scenes = new Map<string, Scene>();
 
   const addScene = async (
     key: string,
-    config: Parameters<typeof createScene>[0],
+    config: Parameters<typeof createScene>[1],
     autoStart: boolean = true
   ) => {
-    const scene = await createScene(config, autoStart);
+    const scene = await createScene(phaserGame, config, autoStart);
     scenes.set(key, scene);
 
     return scene;
   };
 
   const removeScene = (key: string) => {
-    const { phaserGame } = useEngineStore.getState().game!;
     if (!phaserGame) throw new Error("Phaser game not initialized");
 
     scenes.get(key)?.dispose();

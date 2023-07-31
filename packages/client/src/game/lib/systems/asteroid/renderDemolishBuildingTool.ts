@@ -9,22 +9,20 @@ import {
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
-import { createSelectionTile } from "../factory/selectionTile";
+import { createSelectionTile } from "../../factory/selectionTile";
 import {
   HoverTile,
   SelectedAction,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 
-export const renderDemolishPathTool = (scene: Scene) => {
+export const renderDemolishBuildingTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const objIndexSuffix = "_demolishPath";
+  const objIndexSuffix = "_demolishBuilding";
 
   const query = [
     Has(HoverTile),
-    HasValue(SelectedAction, {
-      value: Action.DemolishPath,
-    }),
+    HasValue(SelectedAction, { value: Action.DemolishBuilding }),
   ];
 
   const render = (update: ComponentUpdate) => {
@@ -40,7 +38,6 @@ export const renderDemolishPathTool = (scene: Scene) => {
     }
 
     const tileCoord = HoverTile.get(world.entities[entityIndex]);
-
     if (!tileCoord) return;
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
@@ -57,7 +54,7 @@ export const renderDemolishPathTool = (scene: Scene) => {
         y: -pixelCoord.y,
         tileHeight,
         tileWidth,
-        color: 0xffa500,
+        color: 0xff0000,
       })
     );
   };
@@ -66,7 +63,7 @@ export const renderDemolishPathTool = (scene: Scene) => {
     render(update);
 
     console.info(
-      "[ENTER SYSTEM](renderDemolishPath) Demolish Path tool has been added"
+      "[ENTER SYSTEM](renderDemolishBuilding) Demolish Building tool has been added"
     );
   });
 
@@ -77,7 +74,7 @@ export const renderDemolishPathTool = (scene: Scene) => {
     scene.objectPool.remove(objGraphicsIndex);
 
     console.info(
-      "[EXIT SYSTEM](renderDemolishPath) Demolish Path tool has been removed"
+      "[EXIT SYSTEM](renderDemolishBuilding) Demolish building tool has been removed"
     );
   });
 };

@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { AsteroidMap } from "@game/constants";
 import { GameObjectComponent } from "engine/types";
 
 export const createSelectionTile = (options: {
@@ -24,7 +24,7 @@ export const createSelectionTile = (options: {
     gameObject.lineStyle(1, color);
     gameObject.strokeRect(0, 0, tileHeight, tileWidth);
     gameObject.fillRect(0, 0, tileWidth, tileHeight);
-    gameObject.setDepth(DepthLayers.Tooltip);
+    gameObject.setDepth(AsteroidMap.DepthLayers.Tooltip);
   }
 
   return {

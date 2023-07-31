@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { AsteroidMap } from "@game/constants";
 import { GameObjectComponent } from "engine/types";
 
 export const createHoverTile = (options: {
@@ -22,7 +22,7 @@ export const createHoverTile = (options: {
   function drawHoverTile(gameObject: Phaser.GameObjects.Graphics) {
     gameObject.fillStyle(color, alpha);
     gameObject.fillRect(0, 0, tileWidth, tileHeight);
-    gameObject.setDepth(DepthLayers.Tooltip);
+    gameObject.setDepth(AsteroidMap.DepthLayers.Tooltip);
   }
 
   return {

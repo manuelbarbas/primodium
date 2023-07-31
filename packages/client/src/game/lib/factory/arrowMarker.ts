@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { AsteroidMap } from "@game/constants";
 import { GameObjectComponent } from "engine/types";
 
 export const createArrowMarker = (options: {
@@ -45,7 +45,7 @@ export const createArrowMarker = (options: {
     once: (gameObject) => {
       gameObject.x = Math.floor(x / tileWidth) * tileWidth;
       gameObject.y = Math.floor(y / tileHeight) * tileHeight;
-      gameObject.setDepth(DepthLayers.Marker);
+      gameObject.setDepth(AsteroidMap.DepthLayers.Marker);
 
       gameObject.clear();
       drawTile(gameObject);

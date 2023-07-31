@@ -11,11 +11,11 @@ import { createPhaserScene } from "../util/createPhaserScene";
 import { createCamera } from "./createCamera";
 import { createScriptManager } from "./createScriptManager";
 import { createTilemap } from "./createTilemap";
-import { useEngineStore } from "../../store/EngineStore";
 import { SceneConfig } from "../../types";
 import { createObjectPool } from "./createObjectPool";
 
 export const createScene = async (
+  phaserGame: Phaser.Game,
   config: SceneConfig,
   autoStart: boolean = true
 ) => {
@@ -33,8 +33,7 @@ export const createScene = async (
     },
     cullingChunkSize,
     animations,
-    phaserGame,
-  } = { ...config, ...useEngineStore.getState().game! };
+  } = config;
 
   if (!phaserGame) throw new Error("Phaser game not initialized");
 

@@ -1,16 +1,17 @@
-// PRIMODIUM ENTRY POINT
+// ASTEROID MAP ENTRY POINT
 import engine from "engine";
 import { Network } from "../../../network/layer";
 import gameConfig from "../../config/gameConfig";
 import mainSceneConfig from "../../config/mainSceneConfig";
-import { Scenes } from "../../constants";
-import { runSystems } from "../systems";
-import { createChunkManager } from "./managers/chunkManager";
-import setupCameraMovement from "./setupCameraMovement";
-import setupMouseInputs from "./setupMouseInputs";
+import { AsteroidMap } from "../../constants";
+import { runSystems } from "../systems/asteroid";
+import { setupAsteroidChunkManager } from "./setup/asteroid/setupChunkManager";
+import setupCameraMovement from "./setup/asteroid/setupCameraMovement";
+import setupMouseInputs from "./setup/asteroid/setupMouseInputs";
 import { EntityID } from "@latticexyz/recs";
 
-export const init = async (player: EntityID, network: Network) => {
+export const initAsteroidMap = async (player: EntityID, network: Network) => {
+  const { Scenes } = AsteroidMap;
   const { world } = network;
 
   const game = await engine.createGame(gameConfig);
@@ -20,7 +21,7 @@ export const init = async (player: EntityID, network: Network) => {
     true
   );
 
-  const chunkManager = await createChunkManager(scene.tilemap);
+  const chunkManager = await setupAsteroidChunkManager(scene.tilemap);
   chunkManager.renderInitialChunks();
   chunkManager.startChunkRenderer();
 

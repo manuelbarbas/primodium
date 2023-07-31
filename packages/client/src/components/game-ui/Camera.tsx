@@ -1,4 +1,5 @@
 import { primodium } from "@game/api";
+import { AsteroidMap } from "@game/constants";
 import { FaCircle } from "react-icons/fa";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockNumber } from "src/network/components/clientComponents";
@@ -7,7 +8,9 @@ import { useGameStore } from "src/store/GameStore";
 export const Camera = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const { address } = useAccount();
-  const { worldCoord, normalizedZoom } = primodium.hooks.useCamera();
+  const { worldCoord, normalizedZoom } = primodium
+    .api(AsteroidMap.KEY)!
+    .hooks.useCamera();
 
   const blockNumber = BlockNumber.use()?.value;
 

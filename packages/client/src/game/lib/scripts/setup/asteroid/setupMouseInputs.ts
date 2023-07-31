@@ -1,8 +1,9 @@
-import { KeybindActions } from "@game/constants";
+import { EntityID } from "@latticexyz/recs";
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { KeybindActions } from "@game/constants";
 import { Scene } from "engine/types";
-import { pan, updateWorldView } from "src/game/api/camera";
-import { isDown } from "src/game/api/input";
+import { createCameraApi } from "src/game/api/camera";
+import { createInputApi } from "src/game/api/input";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
 import {
@@ -11,7 +12,6 @@ import {
   demolishBuilding,
   demolishPath,
 } from "src/util/web3";
-import { Network } from "../../../network/layer";
 import {
   HoverTile,
   SelectedAction,
@@ -20,9 +20,11 @@ import {
   StartSelectedPath,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { EntityID } from "@latticexyz/recs";
+import { Network } from "src/network/layer";
 
 const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
+  const { pan, updateWorldView } = createCameraApi(scene);
+  const { isDown } = createInputApi(scene);
   const { maxZoom, minZoom, wheelSpeed } = scene.config.camera;
 
   scene.input.click$.subscribe((event) => {

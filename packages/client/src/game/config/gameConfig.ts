@@ -1,12 +1,12 @@
-import { Assets } from "@game/constants";
+import { ASSET_PACK, AsteroidMap } from "@game/constants";
 import { GameConfig } from "engine/types";
 
 const RENDER_RESOLUTION = 1;
 
 const gameConfig: GameConfig = {
+  key: AsteroidMap.KEY,
   type: Phaser.WEBGL,
   parent: "phaser-container",
-  fullscreenTarget: "starmap",
   backgroundColor: "64748b",
   width: window.innerWidth * window.devicePixelRatio * RENDER_RESOLUTION,
   height: window.innerHeight * window.devicePixelRatio * RENDER_RESOLUTION,
@@ -19,7 +19,7 @@ const gameConfig: GameConfig = {
   autoRound: true,
   transparent: true,
   pixelArt: true,
-  assetPackUrl: Assets.Pack,
+  assetPackUrl: ASSET_PACK,
 };
 
 export default gameConfig;

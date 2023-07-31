@@ -1,9 +1,8 @@
-import { RENDER_INTERVAL, TileAnimationKeys } from "../../../constants";
+import { AsteroidMap } from "../../../../constants";
 import type { AnimatedTilemap } from "@latticexyz/phaserx";
-import { getTopLayerKeyPair } from "../../../../util/tile";
+import { getTopLayerKeyPair } from "../../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
-import { EntityIdtoTilesetId, Tilekeys } from "../../../constants";
 import { interval } from "rxjs";
 import { Scene } from "engine/types";
 
@@ -15,6 +14,7 @@ const renderChunk = async (
   map: AnimatedTilemap<number, string, string>,
   chunkSize: number
 ) => {
+  const { Tilekeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
   //don't render if already rendered
   if (chunkCache.get(coord)) return;
 
@@ -47,7 +47,8 @@ const renderChunk = async (
   chunkCache.set(coord, true);
 };
 
-export const createChunkManager = async (tilemap: Scene["tilemap"]) => {
+export const setupAsteroidChunkManager = async (tilemap: Scene["tilemap"]) => {
+  const { RENDER_INTERVAL } = AsteroidMap;
   const { chunks, map, chunkSize } = tilemap;
   let chunkStream: ReturnType<typeof chunks.addedChunks$.subscribe>;
 

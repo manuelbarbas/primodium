@@ -2,14 +2,14 @@ import { useEngineStore } from "../store/EngineStore";
 import { Game, GameConfig } from "../types";
 import { createGame as _createGame } from "../lib/core/createGame";
 
-export const initializeContext = (game: Game) => {
+export const initializeContext = (key: string, game: Game) => {
   const setGame = useEngineStore.getState().setGame;
 
-  setGame(game);
+  setGame(key, game);
 };
 
-export const getGame = () => {
-  return useEngineStore.getState().game;
+export const getGame = (key: string) => {
+  return useEngineStore.getState().instances.get(key);
 };
 
 export const createGame = async (config: GameConfig) => {
