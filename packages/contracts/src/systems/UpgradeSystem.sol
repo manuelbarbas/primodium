@@ -12,6 +12,7 @@ import { HasResearchedComponent, ID as HasResearchedComponentID } from "componen
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
 
@@ -73,22 +74,22 @@ contract UpgradeSystem is PrimodiumSystem {
     levelComponent.set(buildingEntity, newLevel);
 
     if (
-      MineProductionComponent(getAddressById(components, MineProductionComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, newLevel)
-      )
-    )
-      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeMineSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
-    else if (
       MinesComponent(getAddressById(components, MinesComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel))
-    )
+    ) {
       IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeFactorySystemID)).executeTyped(
         msg.sender,
         buildingEntity
       );
-
+    } else if (
+      ProductionComponent(getAddressById(components, ProductionComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, newLevel)
+      )
+    ) {
+      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeMineSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity
+      );
+    }
     LibStorage.upgradePlayerStorage(
       world,
       playerEntity,

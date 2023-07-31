@@ -174,11 +174,11 @@ library LibInitBuildings {
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
-
-      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+      ProductionComponent(world.getComponent(ProductionComponentID)).set(
         buildingLevelEntity,
-        productionRates[i]
+        ResourceValue({ resource: IronResourceItemID, value: productionRates[i] })
       );
+
       if (requiredResearch[i] > 0)
         RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
           buildingLevelEntity,
@@ -229,9 +229,9 @@ library LibInitBuildings {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+      ProductionComponent(world.getComponent(ProductionComponentID)).set(
         buildingLevelEntity,
-        productionRates[i]
+        ResourceValue({ resource: CopperResourceItemID, value: productionRates[i] })
       );
       RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
         buildingLevelEntity,
@@ -275,9 +275,9 @@ library LibInitBuildings {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+      ProductionComponent(world.getComponent(ProductionComponentID)).set(
         buildingLevelEntity,
-        productionRates[i]
+        ResourceValue({ resource: LithiumResourceItemID, value: productionRates[i] })
       );
       RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
         buildingLevelEntity,

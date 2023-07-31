@@ -6,7 +6,7 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
-
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
@@ -26,31 +26,30 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
       msg.sender == getAddressById(world.systems(), BuildPathSystemID),
       "PostUpgradeSystem: Only BuildSystem can call this function"
     );
+    MineProductionComponent mineProductionComponent = MineProductionComponent(getC(MineProductionComponentID));
+    ProductionComponent productionComponent = ProductionComponent(getC(ProductionComponentID));
 
     (address playerAddress, uint256 fromBuildingEntity, uint256 toBuildingEntity) = abi.decode(
       args,
       (address, uint256, uint256)
     );
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 resourceId = LibTerrain.getTopLayerKey(LibEncode.decodeCoordEntity(fromBuildingEntity));
-
-    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
-
     uint256 buildingId = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(fromBuildingEntity);
     uint256 levelEntity = LibEncode.hashKeyEntity(
       buildingId,
       LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
     );
+    require(productionComponent.has(levelEntity), "Mine level entity not found");
 
-    MineProductionComponent mineProductionComponent = MineProductionComponent(getC(MineProductionComponentID));
+    uint256 resourceId = productionComponent.getValue(levelEntity).resource;
+
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-    require(mineProductionComponent.has(levelEntity), "Mine level entity not found");
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      LibMath.getSafe(mineProductionComponent, playerResourceEntity) +
-        mineProductionComponent.getValue(levelEntity)
+      LibMath.getSafe(mineProductionComponent, playerResourceEntity) + productionComponent.getValue(levelEntity).value
     );
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);

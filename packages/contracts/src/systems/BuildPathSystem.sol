@@ -77,7 +77,17 @@ contract BuildPathSystem is PrimodiumSystem {
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(startBuilding)
     );
 
-    if (MineProductionComponent(getAddressById(components, MineProductionComponentID)).has(startCoordLevelEntity)) {
+    if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
+      require(
+        endCoordBuildingId == MainBaseID,
+        "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
+      );
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(
+        msg.sender,
+        startBuilding,
+        endBuilding
+      );
+    } else if (ProductionComponent(getAddressById(components, ProductionComponentID)).has(startCoordLevelEntity)) {
       if (endCoordBuildingId == MainBaseID) {
         IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromMineToMainBaseSystemID)).executeTyped(
           msg.sender,
@@ -91,18 +101,7 @@ contract BuildPathSystem is PrimodiumSystem {
           endBuilding
         );
       }
-    } else if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
-      require(
-        endCoordBuildingId == MainBaseID,
-        "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
-      );
-      IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(
-        msg.sender,
-        startBuilding,
-        endBuilding
-      );
     }
-
     return abi.encode(startBuilding);
   }
 

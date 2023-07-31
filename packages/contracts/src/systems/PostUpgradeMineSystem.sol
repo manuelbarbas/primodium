@@ -74,14 +74,15 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     MineProductionComponent mineProductionComponent = MineProductionComponent(
       getAddressById(components, MineProductionComponentID)
     );
+    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
     uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);
     uint256 tile = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(mineEntity);
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       mineProductionComponent.getValue(playerResourceEntity) +
-        mineProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level)) -
-        mineProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1))
+        productionComponent.getValue(LibEncode.hashKeyEntity(tile, level)).value -
+        productionComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1)).value
     );
   }
 
