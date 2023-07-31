@@ -8,7 +8,6 @@ import { KeybindActions } from "@game/constants";
 import { useGameStore } from "../../store/GameStore";
 import { InfoBox } from "./InfoBox";
 import { Camera } from "./Camera";
-import { Inventory } from "./Inventory";
 import Hotbar from "./hotbar/Hotbar";
 import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "./NotificationBox";
@@ -16,6 +15,7 @@ import { BrandingLabel } from "./BrandingLabel";
 import { GameReady } from "src/network/components/clientComponents";
 import { AiOutlineRotateRight } from "react-icons/ai";
 import { useOrientation } from "src/hooks/useOrientation";
+import { UserPanel } from "./user-panel/UserPanel";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -59,7 +59,7 @@ function GameUI() {
                 <TileInfo />
                 <InfoBox />
                 <NotificationBox />
-                <Inventory />
+                <UserPanel />
               </motion.div>
             )}
           </AnimatePresence>

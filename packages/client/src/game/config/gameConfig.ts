@@ -6,6 +6,7 @@ const RENDER_RESOLUTION = 1;
 const gameConfig: GameConfig = {
   type: Phaser.WEBGL,
   parent: "phaser-container",
+  fullscreenTarget: "starmap",
   backgroundColor: "64748b",
   width: window.innerWidth * window.devicePixelRatio * RENDER_RESOLUTION,
   height: window.innerHeight * window.devicePixelRatio * RENDER_RESOLUTION,
