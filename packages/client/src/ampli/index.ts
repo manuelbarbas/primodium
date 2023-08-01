@@ -52,6 +52,38 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instan
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
+export class SystemBuild implements BaseEvent {
+  event_type = 'system.Build';
+}
+
+export class SystemBuildPath implements BaseEvent {
+  event_type = 'system.BuildPath';
+}
+
+export class SystemClaimFromMine implements BaseEvent {
+  event_type = 'system.ClaimFromMine';
+}
+
+export class SystemDestroy implements BaseEvent {
+  event_type = 'system.Destroy';
+}
+
+export class SystemDestroyPath implements BaseEvent {
+  event_type = 'system.DestroyPath';
+}
+
+export class SystemIncrement implements BaseEvent {
+  event_type = 'system.Increment';
+}
+
+export class SystemResearch implements BaseEvent {
+  event_type = 'system.Research';
+}
+
+export class SystemUpgrade implements BaseEvent {
+  event_type = 'system.Upgrade';
+}
+
 export type PromiseResult<T> = { promise: Promise<T | void> };
 
 const getVoidPromiseResult = () => ({ promise: Promise.resolve() });
@@ -150,6 +182,125 @@ export class Ampli {
     return this.amplitude!.track(event, undefined, options);
   }
 
+  /**
+   * system.Build
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Build)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemBuild(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemBuild(), options);
+  }
+
+  /**
+   * system.BuildPath
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.BuildPath)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemBuildPath(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemBuildPath(), options);
+  }
+
+  /**
+   * system.ClaimFromMine
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ClaimFromMine)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemClaimFromMine(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemClaimFromMine(), options);
+  }
+
+  /**
+   * system.Destroy
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Destroy)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemDestroy(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemDestroy(), options);
+  }
+
+  /**
+   * system.DestroyPath
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.DestroyPath)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemDestroyPath(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemDestroyPath(), options);
+  }
+
+  /**
+   * system.Increment
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Increment)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemIncrement(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemIncrement(), options);
+  }
+
+  /**
+   * system.Research
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Research)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemResearch(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemResearch(), options);
+  }
+
+  /**
+   * system.Upgrade
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Upgrade)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemUpgrade(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemUpgrade(), options);
+  }
 }
 
 export const ampli = new Ampli();
