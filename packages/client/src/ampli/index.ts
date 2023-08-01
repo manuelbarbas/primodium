@@ -52,6 +52,10 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instan
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
+export class NavigateAppLoading implements BaseEvent {
+  event_type = 'navigate.AppLoading';
+}
+
 export class SystemBuild implements BaseEvent {
   event_type = 'system.Build';
 }
@@ -62,6 +66,10 @@ export class SystemBuildPath implements BaseEvent {
 
 export class SystemClaimFromMine implements BaseEvent {
   event_type = 'system.ClaimFromMine';
+}
+
+export class SystemCraft implements BaseEvent {
+  event_type = 'system.Craft';
 }
 
 export class SystemDestroy implements BaseEvent {
@@ -183,6 +191,21 @@ export class Ampli {
   }
 
   /**
+   * navigate.AppLoading
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/navigate.AppLoading)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  navigateAppLoading(
+    options?: EventOptions,
+  ) {
+    return this.track(new NavigateAppLoading(), options);
+  }
+
+  /**
    * system.Build
    *
    * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Build)
@@ -225,6 +248,21 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemClaimFromMine(), options);
+  }
+
+  /**
+   * system.Craft
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Craft)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param options Amplitude event options.
+   */
+  systemCraft(
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemCraft(), options);
   }
 
   /**

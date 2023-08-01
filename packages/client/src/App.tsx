@@ -13,6 +13,7 @@ import AppLoadingState from "./AppLoadingState";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import wagmiClient from "./network/wagmi";
 import { ComponentBrowser } from "./components/ComponentBrowser";
+import { ampli } from "./ampli";
 
 const DEV = import.meta.env.VITE_DEV === "true";
 
@@ -38,6 +39,13 @@ export default function App() {
   useEffect(() => {
     setupNetworkLayerOnChange(address, activeConnector);
   }, [activeConnector, address]);
+
+  // Amplitude Analytics
+  if (DEV) {
+    ampli.load({ environment: "dev" });
+  } else {
+    ampli.load({ environment: "prod" });
+  }
 
   if (networkLayer === undefined) {
     return (
