@@ -4,7 +4,6 @@ import { BuildPathFromMineToFactorySystem } from "./ethers-contracts/BuildPathFr
 import { BuildPathFromMineToMainBaseSystem } from "./ethers-contracts/BuildPathFromMineToMainBaseSystem";
 import { BuildPathSystem } from "./ethers-contracts/BuildPathSystem";
 import { BuildSystem } from "./ethers-contracts/BuildSystem";
-import { ClaimFromFactorySystem } from "./ethers-contracts/ClaimFromFactorySystem";
 import { ClaimFromMineSystem } from "./ethers-contracts/ClaimFromMineSystem";
 import { ComponentDevSystem } from "./ethers-contracts/ComponentDevSystem";
 import { CraftSystem } from "./ethers-contracts/CraftSystem";
@@ -31,7 +30,6 @@ export type SystemTypes = {
   "system.BuildPathFromMineToMainBase": BuildPathFromMineToMainBaseSystem;
   "system.BuildPath": BuildPathSystem;
   "system.Build": BuildSystem;
-  "system.ClaimFromFactory": ClaimFromFactorySystem;
   "system.ClaimFromMine": ClaimFromMineSystem;
   "system.ComponentDev": ComponentDevSystem;
   "system.Craft": CraftSystem;

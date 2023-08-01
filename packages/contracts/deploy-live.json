@@ -160,16 +160,6 @@
       ]
     },
     {
-      "name": "ClaimFromFactorySystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "ItemComponent"
-      ]
-    },
-    {
       "name": "CraftSystem",
       "writeAccess": [
         "BuildingTypeComponent",

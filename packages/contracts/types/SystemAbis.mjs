@@ -4,7 +4,6 @@ import BuildPathFromMineToFactorySystem from "../abi/BuildPathFromMineToFactoryS
 import BuildPathFromMineToMainBaseSystem from "../abi/BuildPathFromMineToMainBaseSystem.json";
 import BuildPathSystem from "../abi/BuildPathSystem.json";
 import BuildSystem from "../abi/BuildSystem.json";
-import ClaimFromFactorySystem from "../abi/ClaimFromFactorySystem.json";
 import ClaimFromMineSystem from "../abi/ClaimFromMineSystem.json";
 import ComponentDevSystem from "../abi/ComponentDevSystem.json";
 import CraftSystem from "../abi/CraftSystem.json";
@@ -31,7 +30,6 @@ export const SystemAbis = {
   "system.BuildPathFromMineToMainBase": BuildPathFromMineToMainBaseSystem.abi,
   "system.BuildPath": BuildPathSystem.abi,
   "system.Build": BuildSystem.abi,
-  "system.ClaimFromFactory": ClaimFromFactorySystem.abi,
   "system.ClaimFromMine": ClaimFromMineSystem.abi,
   "system.ComponentDev": ComponentDevSystem.abi,
   "system.Craft": CraftSystem.abi,

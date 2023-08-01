@@ -12,7 +12,6 @@ export { BuildPathSystem__factory } from "./BuildPathSystem__factory";
 export { BuildSystem__factory } from "./BuildSystem__factory";
 export { BuildingTypeComponent__factory } from "./BuildingTypeComponent__factory";
 export { ChildrenComponent__factory } from "./ChildrenComponent__factory";
-export { ClaimFromFactorySystem__factory } from "./ClaimFromFactorySystem__factory";
 export { ClaimFromMineSystem__factory } from "./ClaimFromMineSystem__factory";
 export { ComponentDevSystem__factory } from "./ComponentDevSystem__factory";
 export { CoordComponent__factory } from "./CoordComponent__factory";

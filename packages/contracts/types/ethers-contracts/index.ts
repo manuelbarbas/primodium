@@ -12,7 +12,6 @@ export type { BuildPathSystem } from "./BuildPathSystem";
 export type { BuildSystem } from "./BuildSystem";
 export type { BuildingTypeComponent } from "./BuildingTypeComponent";
 export type { ChildrenComponent } from "./ChildrenComponent";
-export type { ClaimFromFactorySystem } from "./ClaimFromFactorySystem";
 export type { ClaimFromMineSystem } from "./ClaimFromMineSystem";
 export type { ComponentDevSystem } from "./ComponentDevSystem";
 export type { CoordComponent } from "./CoordComponent";
@@ -80,7 +79,6 @@ export { BuildPathFromMineToMainBaseSystem__factory } from "./factories/BuildPat
 export { BuildPathSystem__factory } from "./factories/BuildPathSystem__factory";
 export { BuildSystem__factory } from "./factories/BuildSystem__factory";
 export { ChildrenComponent__factory } from "./factories/ChildrenComponent__factory";
-export { ClaimFromFactorySystem__factory } from "./factories/ClaimFromFactorySystem__factory";
 export { ClaimFromMineSystem__factory } from "./factories/ClaimFromMineSystem__factory";
 export { ComponentDevSystem__factory } from "./factories/ComponentDevSystem__factory";
 export { CoordComponent__factory } from "./factories/CoordComponent__factory";
