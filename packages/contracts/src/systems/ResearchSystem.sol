@@ -4,7 +4,8 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
+import { IsActiveTechnologyComponent, ID as IsActiveTechnologyComponentID } from "components/IsActiveTechnologyComponent.sol";
+import { IsActiveTechnologyComponent, ID as IsActiveTechnologyComponentID } from "components/IsActiveTechnologyComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
@@ -33,11 +34,11 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
-      getAddressById(components, HasResearchedComponentID)
+    IsActiveTechnologyComponent isActiveTechnologyComponent = IsActiveTechnologyComponent(
+      getAddressById(components, IsActiveTechnologyComponentID)
     );
 
-    require(hasResearchedComponent.has(researchItem), "[ResearchSystem] Technology not registered");
+    require(isActiveTechnologyComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
       checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),
@@ -53,7 +54,7 @@ contract ResearchSystem is System {
       LibResource.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Not enough resources to research"
     );
-    hasResearchedComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
+    isActiveTechnologyComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
     return abi.encode(true);
   }
 
