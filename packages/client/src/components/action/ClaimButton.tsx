@@ -1,51 +1,29 @@
-import { useCallback } from "react";
 import { Coord } from "@latticexyz/utils";
-
-import { useMud } from "src/context/MudContext";
-import { execute } from "../../network/actions";
 import { useGameStore } from "../../store/GameStore";
-import Spinner from "../Spinner";
-import { useNotificationStore } from "../../store/NotificationStore";
 import { GameButton } from "../shared/GameButton";
+import { claimFromMine } from "src/util/web3";
+import { useMud } from "src/hooks";
+import Spinner from "../shared/Spinner";
 
 export default function ClaimButton({
   id,
-  coords: { x, y },
+  coords,
 }: {
   id?: string;
   coords: Coord;
 }) {
-  const { systems, providers } = useMud();
-  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+  const network = useMud();
+  const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
-    state.setTransactionLoading,
   ]);
-  const [setNotification] = useNotificationStore((state) => [
-    state.setNotification,
-  ]);
-
-  const claimAction = useCallback(async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.ClaimFromMine"].executeTyped(
-        {
-          x: x,
-          y: y,
-        },
-        {
-          gasLimit: 5_000_000,
-        }
-      ),
-      providers,
-      setNotification
-    );
-
-    setTransactionLoading(false);
-  }, []);
 
   return (
     <div className="relative">
-      <GameButton id={id} className="mt-2 text-sm" onClick={claimAction}>
+      <GameButton
+        id={id}
+        className="mt-2 text-sm"
+        onClick={() => claimFromMine(coords, network)}
+      >
         <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2 w-40">
           {transactionLoading ? <Spinner /> : "Claim Resources"}
         </div>

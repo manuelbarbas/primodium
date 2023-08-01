@@ -4,7 +4,7 @@ import GameUI from "src/components/game-ui/GameUI";
 import { useAccount } from "src/hooks/useAccount";
 // import { useTourStore } from "src/store/TourStore";
 import { decodeCoordEntity } from "src/util/encode";
-import { useMud } from "../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { primodium } from "../game";
 import { GameReady } from "src/network/components/clientComponents";
 import { MainBase } from "src/network/components/chainComponents";

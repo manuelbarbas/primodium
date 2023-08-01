@@ -1,6 +1,6 @@
 import { KeybindActions } from "@game/constants";
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { pan, updateWorldView } from "src/game/api/camera";
 import { isDown } from "src/game/api/input";
 import { Action } from "src/util/constants";
@@ -34,11 +34,6 @@ const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
 
     const gameCoord = { x, y: -y };
 
-    //block invalid clicks in tutorial
-    // if (inTutorial(address, network)) {
-    //   if (!validTutorialClick(gameCoord, network)) return;
-    // }
-
     const selectedAction = SelectedAction.get()?.value;
 
     //handle web3 mutations
@@ -61,8 +56,6 @@ const setupMouseInputs = (scene: Scene, network: Network, player: EntityID) => {
 
         buildPath(startCoord, gameCoord, network);
         break;
-      case Action.SelectAttack:
-        return;
       case Action.PlaceBuilding:
         const selectedBuilding = SelectedBuilding.get()?.value;
         if (!selectedBuilding) return;

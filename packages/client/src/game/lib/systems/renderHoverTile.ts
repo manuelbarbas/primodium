@@ -9,7 +9,7 @@ import {
   defineExitSystem,
   defineUpdateSystem,
 } from "@latticexyz/recs";
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { createHoverTile } from "../factory/createHoverTile";
 import { HoverTile } from "src/network/components/clientComponents";
 import { world } from "src/network/world";

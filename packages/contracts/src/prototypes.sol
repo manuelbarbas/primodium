@@ -6,3 +6,4 @@ import "./prototypes/Item.sol";
 import "./prototypes/Research.sol";
 import "./prototypes/Resource.sol";
 import "./prototypes/Tile.sol";
+import "./prototypes/Debug.sol";

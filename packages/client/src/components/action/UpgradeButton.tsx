@@ -1,23 +1,22 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { hashKeyEntityAndTrim } from "src/util/encode";
-import { useMud } from "../../context/MudContext";
 import { useAccount } from "../../hooks/useAccount";
-import { execute } from "../../network/actions";
+import { useMud } from "src/hooks/useMud";
 import { useGameStore } from "../../store/GameStore";
-import { useNotificationStore } from "../../store/NotificationStore";
 import { getBuildingResearchRequirement } from "../../util/research";
-import Spinner from "../Spinner";
+import Spinner from "../shared/Spinner";
 import { useMemo } from "react";
 import { getRecipe } from "../../util/resource";
 import { ResourceImage } from "../../util/constants";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
+import { upgrade } from "src/util/web3";
 import {
-  BuildingLevel,
+  Level,
   MaxLevel,
-  Research,
+  HasResearched,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
 
@@ -32,17 +31,13 @@ export default function UpgradeButton({
   builtTile: EntityID;
   buildingEntity: EntityID;
 }) {
-  const { systems, providers } = useMud();
+  const network = useMud();
   const { address } = useAccount();
-  const [transactionLoading, setTransactionLoading] = useGameStore((state) => [
+  const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
-    state.setTransactionLoading,
-  ]);
-  const [setNotification] = useNotificationStore((state) => [
-    state.setNotification,
   ]);
 
-  const currLevel = BuildingLevel.use(buildingEntity);
+  const currLevel = Level.use(buildingEntity);
   const maxLevel = MaxLevel.use(builtTile);
   const upgradedLevel = useMemo(() => {
     return parseInt(currLevel?.value.toString() ?? "0") + 1;
@@ -76,7 +71,7 @@ export default function UpgradeButton({
   }, [researchRequirement]);
 
   const isResearched = useMemo(() => {
-    return Research.get(researchOwner);
+    return HasResearched.get(researchOwner);
   }, [researchOwner]);
 
   const isUpgradeLocked = useMemo(() => {
@@ -84,18 +79,6 @@ export default function UpgradeButton({
       researchRequirement != undefined && !(isResearched && isResearched.value)
     );
   }, [isResearched, researchRequirement]);
-
-  const claimAction = async () => {
-    setTransactionLoading(true);
-    await execute(
-      systems["system.Upgrade"].executeTyped(coords, {
-        gasLimit: 5_000_000,
-      }),
-      providers,
-      setNotification
-    );
-    setTransactionLoading(false);
-  };
 
   let upgradeText: string;
   if (isUpgradeLocked) {
@@ -111,7 +94,7 @@ export default function UpgradeButton({
       <GameButton
         id={id}
         className="w-44 mt-2 text-sm"
-        onClick={claimAction}
+        onClick={() => upgrade(coords, network)}
         color={
           isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
         }

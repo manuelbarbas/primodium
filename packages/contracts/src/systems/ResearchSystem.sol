@@ -4,16 +4,14 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 
 import { LibResearch } from "libraries/LibResearch.sol";
-import { LibResourceCost } from "libraries/LibResourceCost.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 uint256 constant ID = uint256(keccak256("system.Research"));
@@ -26,20 +24,20 @@ contract ResearchSystem is System {
     uint256 playerEntity,
     uint256 entity
   ) internal view returns (bool) {
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(world.components(), BuildingLevelComponentID)
-    );
-    if (!buildingLevelComponent.has(entity)) return true;
-    uint256 mainBuildingLevel = LibBuilding.getBaseLevel(world, playerEntity);
-    return mainBuildingLevel >= buildingLevelComponent.getValue(entity);
+    LevelComponent levelComponent = LevelComponent(getAddressById(world.components(), LevelComponentID));
+    if (!levelComponent.has(entity)) return true;
+    uint256 mainLevel = LibBuilding.getBaseLevel(world, playerEntity);
+    return mainLevel >= levelComponent.getValue(entity);
   }
 
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(components, ResearchComponentID));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(components, HasResearchedComponentID)
+    );
 
-    require(researchComponent.has(researchItem), "[ResearchSystem] Technology not registered");
+    require(hasResearchedComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
       checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),
@@ -52,11 +50,10 @@ contract ResearchSystem is System {
     );
 
     require(
-      LibResourceCost.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
+      LibResource.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
       "[ResearchSystem] Not enough resources to research"
     );
-    researchComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
-    LibResearch.setResearchTime(world, researchItem, addressToEntity(msg.sender));
+    hasResearchedComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
     return abi.encode(true);
   }
 

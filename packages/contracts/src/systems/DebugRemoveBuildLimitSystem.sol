@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0;
 import { System, IWorld } from "solecs/System.sol";
 import { getAddressById } from "solecs/utils.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibDebug } from "../libraries/LibDebug.sol";
@@ -17,11 +17,11 @@ contract DebugRemoveBuildLimitSystem is System {
     if (!LibDebug.isDebug(world)) {
       revert("Not in debug mode");
     }
-    BuildingLimitComponent buildingLimit = BuildingLimitComponent(getAddressById(components, BuildingLimitComponentID));
+    MaxBuildingsComponent maxBuildings = MaxBuildingsComponent(getAddressById(components, MaxBuildingsComponentID));
     for (uint256 i = 0; i < 100; i++) {
-      buildingLimit.set(i, BIGNUM);
+      maxBuildings.set(i, BIGNUM);
     }
-    return abi.encode(buildingLimit.getValue(0));
+    return abi.encode(maxBuildings.getValue(0));
   }
 
   function executeTyped() public returns (bytes memory) {

@@ -3,21 +3,21 @@ pragma solidity >=0.8.0;
 
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { FactoryMineBuildingsComponent, ID as FactoryMineBuildingsComponentID, FactoryMineBuildingsData } from "components/FactoryMineBuildingsComponent.sol";
-import { FactoryIsFunctionalComponent, ID as FactoryIsFunctionalComponentID } from "components/FactoryIsFunctionalComponent.sol";
-import { FactoryProductionComponent, ID as FactoryProductionComponentID, FactoryProductionData } from "components/FactoryProductionComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibFactory } from "../libraries/LibFactory.sol";
-import { LibResourceProduction } from "../libraries/LibResourceProduction.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
@@ -29,43 +29,39 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
 
   //checks if path from mine to factory can be built, if yes updates factory is functional status
   function canBuildPath(uint256 mineEntity, uint256 factoryEntity) internal returns (bool) {
-    FactoryIsFunctionalComponent factoryIsFunctionalComponent = FactoryIsFunctionalComponent(
-      getC(FactoryIsFunctionalComponentID)
-    );
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(getC(BuildingLevelComponentID));
-    TileComponent tileComponent = TileComponent(getC(TileComponentID));
-    FactoryMineBuildingsComponent factoryMineBuildingsComponent = FactoryMineBuildingsComponent(
-      getC(FactoryMineBuildingsComponentID)
-    );
+    ActiveComponent activeComponent = ActiveComponent(getC(ActiveComponentID));
+    LevelComponent levelComponent = LevelComponent(getC(LevelComponentID));
+    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
 
-    if (factoryIsFunctionalComponent.has(factoryEntity)) return false;
-    uint256 factoryLevel = buildingLevelComponent.getValue(factoryEntity);
+    if (activeComponent.has(factoryEntity)) return false;
+    uint256 factoryLevel = levelComponent.getValue(factoryEntity);
     bool isFunctional = true;
     bool isMineConnected = false;
-    FactoryMineBuildingsData memory factoryMineBuildingsData = factoryMineBuildingsComponent.getValue(factoryEntity);
-    for (uint256 i = 0; i < factoryMineBuildingsData.MineBuildingCount.length; i++) {
-      if (factoryMineBuildingsData.MineBuildingIDs[i] == tileComponent.getValue(mineEntity)) {
-        if (factoryMineBuildingsData.MineBuildingCount[i] <= 0) return false;
-        factoryMineBuildingsData.MineBuildingCount[i]--;
-        factoryMineBuildingsComponent.set(factoryEntity, factoryMineBuildingsData);
+    ResourceValues memory factoryMines = minesComponent.getValue(factoryEntity);
+    for (uint256 i = 0; i < factoryMines.values.length; i++) {
+      if (factoryMines.resources[i] == buildingTypeComponent.getValue(mineEntity)) {
+        if (factoryMines.values[i] <= 0) return false;
+        factoryMines.values[i]--;
+        minesComponent.set(factoryEntity, factoryMines);
         isMineConnected = true;
-        if (factoryMineBuildingsData.MineBuildingCount[i] > 0) isFunctional = false;
-        if (buildingLevelComponent.getValue(mineEntity) < factoryLevel) isFunctional = false;
+        if (factoryMines.values[i] > 0) isFunctional = false;
+        if (levelComponent.getValue(mineEntity) < factoryLevel) isFunctional = false;
       } else {
-        if (factoryMineBuildingsData.MineBuildingCount[i] > 0) isFunctional = false;
+        if (factoryMines.values[i] > 0) isFunctional = false;
       }
     }
 
     uint256[] memory connectedMineEntities = PathComponent(getC(PathComponentID)).getEntitiesWithValue(factoryEntity);
     for (uint256 i = 0; i < connectedMineEntities.length; i++) {
-      if (buildingLevelComponent.getValue(connectedMineEntities[i]) < factoryLevel) {
+      if (levelComponent.getValue(connectedMineEntities[i]) < factoryLevel) {
         isFunctional = false;
         return isMineConnected;
       }
     }
 
     if (isFunctional) {
-      factoryIsFunctionalComponent.set(factoryEntity);
+      activeComponent.set(factoryEntity);
     }
 
     return isMineConnected;
@@ -82,39 +78,32 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
       (address, uint256, uint256)
     );
 
-    uint256 factoryBuildingLevelEntity = LibEncode.hashKeyEntity(
-      TileComponent(getC(TileComponentID)).getValue(toBuildingEntity),
-      BuildingLevelComponent(getAddressById(components, BuildingLevelComponentID)).getValue(toBuildingEntity)
+    uint256 factoryLevelEntity = LibEncode.hashKeyEntity(
+      BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(toBuildingEntity),
+      LevelComponent(getAddressById(components, LevelComponentID)).getValue(toBuildingEntity)
     );
 
-    uint256 factoryResourceId = FactoryProductionComponent(getC(FactoryProductionComponentID))
-      .getValue(factoryBuildingLevelEntity)
-      .ResourceID;
+    uint256 factoryResourceId = ProductionComponent(getC(ProductionComponentID)).getValue(factoryLevelEntity).resource;
 
-    LibUnclaimedResource.updateUnclaimedForResource(world, addressToEntity(playerAddress), factoryResourceId);
+    LibUnclaimedResource.updateResourceClaimed(world, addressToEntity(playerAddress), factoryResourceId);
 
     require(
       canBuildPath(fromBuildingEntity, toBuildingEntity),
       "[BuildPathSystem] Cannot build path to a the target factory"
     );
     if (
-      FactoryIsFunctionalComponent(getC(FactoryIsFunctionalComponentID)).has(toBuildingEntity) &&
+      ActiveComponent(getC(ActiveComponentID)).has(toBuildingEntity) &&
       PathComponent(getC(PathComponentID)).has(toBuildingEntity)
     ) {
       uint256 playerEntity = addressToEntity(playerAddress);
 
-      FactoryProductionData memory factoryProductionData = FactoryProductionComponent(
-        getC(FactoryProductionComponentID)
-      ).getValue(factoryBuildingLevelEntity);
-
-      LibUnclaimedResource.updateUnclaimedForResource(world, playerEntity, factoryProductionData.ResourceID);
-
-      LibFactory.updateResourceProductionOnFactoryIsFunctionalChange(
-        world,
-        playerEntity,
-        factoryBuildingLevelEntity,
-        true
+      ResourceValue memory factoryProductionData = ProductionComponent(getC(ProductionComponentID)).getValue(
+        factoryLevelEntity
       );
+
+      LibUnclaimedResource.updateResourceClaimed(world, playerEntity, factoryProductionData.resource);
+
+      LibFactory.updateProduction(world, playerEntity, factoryLevelEntity, true);
     }
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);
     return abi.encode(fromBuildingEntity, toBuildingEntity);

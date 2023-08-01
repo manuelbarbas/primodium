@@ -1,7 +1,7 @@
 import { Browser as ECSBrowser } from "@latticexyz/ecs-browser";
 import { Layer } from "@latticexyz/recs";
 import { useState } from "react";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks";
 import components from "src/network/components";
 import { world } from "src/network/world";
 
@@ -15,7 +15,11 @@ export const ComponentBrowser = () => {
   };
 
   return (
-    <div className="z-10 fixed bottom-0 right-0 w-96 h-full text-xs">
+    <div
+      className={`z-10 fixed bottom-0 right-0 ${
+        isVisible ? "w-96" : ""
+      } h-full text-xs`}
+    >
       {isVisible && (
         <ECSBrowser
           world={world}

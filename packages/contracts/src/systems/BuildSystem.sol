@@ -8,12 +8,12 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
 
 // components
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
-import { BuildingLevelComponent, ID as BuildingLevelComponentID } from "components/BuildingLevelComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 
 import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 
@@ -21,7 +21,7 @@ import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 import { Coord } from "../types.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
-import { LibResourceCost } from "../libraries/LibResourceCost.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
@@ -39,23 +39,25 @@ contract BuildSystem is PrimodiumSystem {
 
     uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
+
+    uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
     require(
-      !BuildingTilesComponent(getC(BuildingTilesComponentID)).has(buildingEntity),
+      !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
       "[BuildSystem] Building already exists here"
     );
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
     require(
-      LibResearch.hasResearched(world, buildingType, playerEntity),
+      LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"
     );
 
     require(
-      LibResourceCost.hasRequiredResources(world, buildingType, playerEntity),
+      LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You do not have the required resources"
     );
     //check build limit
     require(
-      LibBuilding.isBuildingLimitConditionMet(world, playerEntity, buildingType),
+      LibBuilding.isMaxBuildingsMet(world, playerEntity, buildingType),
       "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
@@ -65,30 +67,28 @@ contract BuildSystem is PrimodiumSystem {
       Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
-    BuildingTilesComponent(getC(BuildingTilesComponentID)).set(buildingEntity, tiles);
-    //  MainBaseID has a special condition called MainBaseInitialized, so that each wallet only has one MainBase
+    ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
+    //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
-      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-        getC(MainBaseInitializedComponentID)
-      );
+      MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
 
-      if (mainBaseInitializedComponent.has(playerEntity)) {
+      if (mainBaseComponent.has(playerEntity)) {
         revert("[BuildSystem] Cannot build more than one main base per wallet");
       } else {
-        mainBaseInitializedComponent.set(playerEntity, buildingEntity);
+        mainBaseComponent.set(playerEntity, buildingEntity);
       }
     }
     require(
-      LibPassiveResource.checkPassiveResourceRequirements(world, playerEntity, buildingType),
+      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
       "[BuildSystem] You do not have the required passive resources"
     );
 
     //check resource requirements and if ok spend required resources
-    LibResourceCost.spendRequiredResources(world, buildingType, playerEntity);
+    LibResource.spendRequiredResources(world, buildingTypeLevelEntity, playerEntity);
 
     //set level of building to 1
-    BuildingLevelComponent(getC(BuildingLevelComponentID)).set(buildingEntity, 1);
-    TileComponent(getC(TileComponentID)).set(buildingEntity, buildingType);
+    LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
+    BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);

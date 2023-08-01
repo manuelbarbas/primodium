@@ -13,7 +13,8 @@ contract IncrementSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 entity = abi.decode(args, (uint256));
     CounterComponent c = CounterComponent(getAddressById(components, CounterComponentID));
-    LibMath.increment(c, entity);
+    uint32 current = c.has(entity) ? c.getValue(entity) : 0;
+    c.set(entity, current + 1);
     return abi.encode(entity);
   }
 

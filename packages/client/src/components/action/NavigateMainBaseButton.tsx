@@ -2,7 +2,7 @@ import { primodium } from "@game/api";
 import { useCallback, useMemo } from "react";
 import { decodeCoordEntity } from "src/util/encode";
 import { buildBuilding } from "src/util/web3";
-import { useMud } from "../../context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { useAccount } from "../../hooks/useAccount";
 import { BlockType } from "../../util/constants";
 import { MainBase } from "src/network/components/chainComponents";

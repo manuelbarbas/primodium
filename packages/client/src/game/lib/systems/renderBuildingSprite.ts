@@ -11,17 +11,14 @@ import {
 
 import { Coord } from "@latticexyz/utils";
 
-import { Scene } from "src/engine/types";
+import { Scene } from "engine/types";
 import { createBuilding } from "../factory/building";
 import { world } from "src/network/world";
 import {
   Position,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
-import {
-  BuildingLevel,
-  BuildingType,
-} from "src/network/components/chainComponents";
+import { Level, BuildingType } from "src/network/components/chainComponents";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuildingSprite = (scene: Scene) => {
@@ -32,7 +29,7 @@ export const renderBuildingSprite = (scene: Scene) => {
     const renderId = `${entity}_entitySprite`;
     const tilePosition = Position.get(entityId);
     const buildingType = BuildingType.get(entityId)?.value;
-    const buildingLevel = BuildingLevel.get(entityId)?.value;
+    const level = Level.get(entityId)?.value;
 
     if (!buildingType || !tilePosition) return;
 
@@ -61,7 +58,7 @@ export const renderBuildingSprite = (scene: Scene) => {
         y: -pixelCoord.y,
         buildingType: buildingType as EntityID,
         selected,
-        level: parseInt(buildingLevel ? buildingLevel.toString() : "1"),
+        level: parseInt(level ? level.toString() : "1"),
       })
     );
   };
@@ -69,7 +66,7 @@ export const renderBuildingSprite = (scene: Scene) => {
   const positionQuery = [Has(Position), Has(BuildingType)];
   defineEnterSystem(world, positionQuery, render);
 
-  const updateQuery = [Has(Position), Has(BuildingType), Has(BuildingLevel)];
+  const updateQuery = [Has(Position), Has(BuildingType), Has(Level)];
   defineUpdateSystem(world, updateQuery, render);
 
   defineExitSystem(world, positionQuery, ({ entity }) => {

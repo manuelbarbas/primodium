@@ -4,16 +4,14 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
-import { HealthComponent, ID as HealthComponentID } from "components/HealthComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-import { MineComponent, ID as MineComponentID } from "components/MineComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 
 import { BuildingKey } from "../prototypes.sol";
@@ -21,11 +19,10 @@ import { BuildingKey } from "../prototypes.sol";
 import { Coord } from "../types.sol";
 
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibHealth } from "../libraries/LibHealth.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibNewMine } from "../libraries/LibNewMine.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));
 
 contract ClaimFromMineSystem is PrimodiumSystem {
@@ -40,7 +37,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
     // check if main base
     uint256 entity = getBuildingFromCoord(coord);
     require(
-      TileComponent(getAddressById(components, TileComponentID)).has(entity),
+      BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).has(entity),
       "[ClaimFromMineSystem] Cannot claim from mines on an empty coordinate"
     );
 
@@ -51,13 +48,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
       "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
     );
 
-    // Check that health is not zero
-    require(
-      LibHealth.checkAlive(HealthComponent(getAddressById(components, HealthComponentID)), entity),
-      "[ClaimFromMineSystem] Cannot claim from mines on a tile with zero health"
-    );
-
-    LibNewMine.claimResourcesFromMines(world, playerEntity);
+    LibResource.claimMineResources(world, playerEntity);
 
     return abi.encode(0);
   }

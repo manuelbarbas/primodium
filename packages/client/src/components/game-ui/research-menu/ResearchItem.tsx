@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { EntityID } from "@latticexyz/recs";
+
 import { getRecipe } from "../../../util/resource";
 import {
   BlockIdToKey,
@@ -8,7 +9,6 @@ import {
 } from "../../../util/constants";
 import { useAccount } from "../../../hooks/useAccount";
 import { hashKeyEntityAndTrim } from "../../../util/encode";
-import Spinner from "../../Spinner";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import {
   getBuildingResearchRequirement,
@@ -16,15 +16,16 @@ import {
 } from "../../../util/research";
 import { GameButton } from "src/components/shared/GameButton";
 import React from "react";
+import { research } from "src/util/web3";
 import {
-  BuildingLevel,
+  Level,
   MainBase,
-  Research,
+  HasResearched,
 } from "src/network/components/chainComponents";
 import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
-import { researchBuilding } from "src/util/web3";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks";
+import Spinner from "src/components/shared/Spinner";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {
@@ -34,10 +35,10 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     const { name, levels, description } = data;
 
     //we assume the order of this loop will never change. TODO: pull out into component since this is a nono
-    useObservableValue(Research.update$);
+    useObservableValue(HasResearched.update$);
     const levelsResearched = levels.map(({ id }) => {
       const entity = hashKeyEntityAndTrim(id, address);
-      const isResearched = Research.get(entity);
+      const isResearched = HasResearched.get(entity);
       return isResearched?.value ?? false;
     });
 
@@ -63,7 +64,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     }, [researchRequirement, address]);
 
     const isResearchRequirementsMet = useMemo(
-      () => Research.get(researchOwner)?.value ?? false,
+      () => HasResearched.get(researchOwner)?.value ?? false,
       [researchOwner]
     );
 
@@ -72,10 +73,10 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       value: "-1" as EntityID,
     }).value;
 
-    const mainBaseLevel = BuildingLevel.use(mainBaseEntity, {
+    const mainBaseLevel = Level.use(mainBaseEntity, {
       value: 0,
     }).value;
-    const requiredMainBaseLevel = BuildingLevel.use(researchId, {
+    const requiredMainBaseLevel = Level.use(researchId, {
       value: 0,
     }).value;
 
@@ -94,13 +95,13 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       researchRequirement,
       isMainBaseLevelRequirementsMet,
     ]);
-
     // New state so not every other research item button shows loading when only current research button is clicked.
     const [userClickedLoading, setUserClickedLoading] = useState(false);
 
-    const research = useCallback(async () => {
+    const executeResearch = useCallback(async () => {
       setUserClickedLoading(true);
-      await researchBuilding(researchId, network);
+      await research(researchId, network);
+
       setUserClickedLoading(false);
     }, []);
 
@@ -183,7 +184,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
               <div className="flex items-center w-full justify-center">
                 <GameButton
                   id={`${name}-research`}
-                  onClick={research}
+                  onClick={executeResearch}
                   className=" bg-cyan-600 text-sm w-3/4"
                 >
                   <div className="px-2 py-1">

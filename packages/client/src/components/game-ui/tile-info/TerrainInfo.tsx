@@ -1,5 +1,5 @@
 import { Coord } from "@latticexyz/utils";
-import { useMud } from "src/context/MudContext";
+import { useMud } from "src/hooks/useMud";
 import { BackgroundImage, BlockIdToKey } from "src/util/constants";
 import { getTopLayerKeyPair } from "src/util/tile";
 import Header from "./Header";

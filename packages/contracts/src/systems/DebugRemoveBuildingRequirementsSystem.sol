@@ -16,14 +16,15 @@ contract DebugRemoveBuildingRequirementsSystem is System {
       revert("Not in debug mode");
     }
     uint256 buildingId = abi.decode(args, (uint256));
+    uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingId, 1);
     RequiredResearchComponent requiredResearch = RequiredResearchComponent(
       getAddressById(components, RequiredResearchComponentID)
     );
     RequiredResourcesComponent requiredResources = RequiredResourcesComponent(
       getAddressById(components, RequiredResourcesComponentID)
     );
-    requiredResearch.remove(buildingId);
-    requiredResources.remove(buildingId);
+    requiredResearch.remove(buildingTypeLevelEntity);
+    requiredResources.remove(buildingTypeLevelEntity);
   }
 
   function executeTyped(uint256 buildingId) public returns (bytes memory) {

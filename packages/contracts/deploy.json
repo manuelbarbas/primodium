@@ -1,64 +1,40 @@
 {
   "components": [
     "CounterComponent",
-    "TileComponent",
+    "BuildingTypeComponent",
     "OwnedByComponent",
     "PathComponent",
-    "LastBuiltAtComponent",
+
     "LastClaimedAtComponent",
-    "LastResearchedAtComponent",
-    "HealthComponent",
 
     "ItemComponent",
-    "ResearchComponent",
-    "MainBaseInitializedComponent",
-    "StarterPackInitializedComponent",
-    "BuildingLevelComponent",
+    "HasResearchedComponent",
+    "MainBaseComponent",
+    "LevelComponent",
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
-    "BuildingLimitComponent",
+    "MaxBuildingsComponent",
     "IgnoreBuildLimitComponent",
-    "BuildingTilesComponent",
+    "ChildrenComponent",
     "BlueprintComponent",
-    "StorageCapacityComponent",
-    "StorageCapacityResourcesComponent",
-    "MineComponent",
+    "MaxStorageComponent",
+    "MaxResourceStorageComponent",
+    "MineProductionComponent",
     "UnclaimedResourceComponent",
-    "FactoryIsFunctionalComponent",
-    "FactoryMineBuildingsComponent",
-    "FactoryProductionComponent",
+    "ActiveComponent",
+    "MinesComponent",
+    "ProductionComponent",
     "MaxLevelComponent",
     "RequiredTileComponent",
-    "RequiredPassiveResourceComponent",
-    "PassiveResourceProductionComponent",
+    "RequiredPassiveComponent",
+    "PassiveProductionComponent",
     "IsDebugComponent"
   ],
-  "initializers": [
-    "LibBuildingDesignInitializer",
-    "LibBuildingLimitDesignInitializer",
-    "LibTechnologyDesignInitializer",
-    "LibBlueprintInitializer",
-    "LibDebugInitializer"
-  ],
+  "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["ItemComponent", "ResearchComponent", "LastResearchedAtComponent"]
-    },
-    {
-      "name": "StarterPackSystem",
-      "writeAccess": ["ItemComponent", "StarterPackInitializedComponent"]
-    },
-    {
-      "name": "AttackSystem",
-      "writeAccess": [
-        "HealthComponent",
-        "ItemComponent",
-        "TileComponent",
-        "OwnedByComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["ItemComponent", "HasResearchedComponent"]
     },
     {
       "name": "IncrementSystem",
@@ -67,49 +43,47 @@
     {
       "name": "BuildSystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
-        "LastBuiltAtComponent",
+
         "LastClaimedAtComponent",
         "ItemComponent",
 
-        "MainBaseInitializedComponent",
-        "BuildingLevelComponent",
-        "MainBaseInitializedComponent",
-        "BuildingTilesComponent"
+        "LevelComponent",
+        "MainBaseComponent",
+        "ChildrenComponent"
       ]
     },
     {
       "name": "PostBuildSystem",
       "writeAccess": [
         "ItemComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent",
-        "FactoryMineBuildingsComponent",
+        "MaxStorageComponent",
+        "MaxResourceStorageComponent",
+        "MinesComponent",
         "LastClaimedAtComponent",
-        "BuildingLimitComponent"
+        "MaxBuildingsComponent"
       ]
     },
     {
       "name": "DestroySystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
-        "LastBuiltAtComponent",
+
         "LastClaimedAtComponent",
-        "HealthComponent",
         "PathComponent",
 
-        "MainBaseInitializedComponent",
-        "BuildingTilesComponent",
-        "BuildingLevelComponent",
-        "BuildingLimitComponent",
-        "BuildingTilesComponent"
+        "MainBaseComponent",
+        "ChildrenComponent",
+        "LevelComponent",
+        "MaxBuildingsComponent",
+        "ChildrenComponent"
       ]
     },
     {
       "name": "PostDestroySystem",
-      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent", "ItemComponent"]
+      "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent", "ItemComponent"]
     },
     {
       "name": "BuildPathSystem",
@@ -121,9 +95,9 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent"
+        "MineProductionComponent",
+        "ActiveComponent",
+        "ProductionComponent"
       ]
     },
     {
@@ -132,49 +106,54 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryMineBuildingsComponent",
-        "FactoryProductionComponent"
+        "MineProductionComponent",
+        "ActiveComponent",
+        "MinesComponent",
+        "ProductionComponent"
       ]
     },
     {
       "name": "BuildPathFromMineToMainBaseSystem",
-      "writeAccess": ["PathComponent", "LastClaimedAtComponent", "UnclaimedResourceComponent", "MineComponent"]
+      "writeAccess": [
+        "PathComponent",
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "MineProductionComponent"
+      ]
     },
     {
       "name": "DestroyPathSystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryMineBuildingsComponent",
-        "FactoryProductionComponent"
+        "MineProductionComponent",
+        "ActiveComponent",
+        "MinesComponent",
+        "ProductionComponent"
       ]
     },
     {
       "name": "PostDestroyPathSystem",
       "writeAccess": [
-        "StorageCapacityComponent",
+        "MaxStorageComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent",
-        "FactoryMineBuildingsComponent"
+        "MineProductionComponent",
+        "ActiveComponent",
+        "ProductionComponent",
+        "MinesComponent"
       ]
     },
     {
       "name": "ClaimFromMineSystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
         "PathComponent",
-        "LastBuiltAtComponent",
+
         "LastClaimedAtComponent",
         "ItemComponent",
         "UnclaimedResourceComponent"
@@ -183,43 +162,34 @@
     {
       "name": "ClaimFromFactorySystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
         "PathComponent",
-        "LastBuiltAtComponent",
         "LastClaimedAtComponent",
-
         "ItemComponent"
       ]
     },
     {
       "name": "CraftSystem",
       "writeAccess": [
-        "TileComponent",
+        "BuildingTypeComponent",
         "OwnedByComponent",
         "PathComponent",
-        "LastBuiltAtComponent",
         "LastClaimedAtComponent",
-
         "ItemComponent"
       ]
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": [
-        "BuildingLevelComponent",
-        "ItemComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent"
-      ]
+      "writeAccess": ["LevelComponent", "ItemComponent", "MaxStorageComponent", "MaxResourceStorageComponent"]
     },
     {
       "name": "PostUpgradeMineSystem",
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent"
+        "MineProductionComponent",
+        "ActiveComponent"
       ]
     },
     {
@@ -227,18 +197,14 @@
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent"
+        "MineProductionComponent",
+        "ActiveComponent",
+        "ProductionComponent"
       ]
     },
 
     {
       "name": "DebugAcquireResourcesSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
-      "name": "DebugAcquireResourcesBasedOnRequirementSystem",
       "writeAccess": ["ItemComponent"]
     },
     {
@@ -258,12 +224,8 @@
       "writeAccess": ["IgnoreBuildLimitComponent"]
     },
     {
-      "name": "BlueprintSystem",
-      "writeAccess": ["BlueprintComponent"]
-    },
-    {
       "name": "DebugAcquireStorageForAllResourcesSystem",
-      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent"]
+      "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent"]
     },
     {
       "name": "ComponentDevSystem",

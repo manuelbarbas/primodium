@@ -16,15 +16,11 @@ import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequireme
 import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
-import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
+import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
+import { MineProductionComponent, ID as MineProductionComponentID } from "../../components/MineProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 
-import { MainBaseID } from "../../prototypes.sol";
-import { DebugCopperMineID, DebugIronMineID, DebugIronPlateFactoryID } from "../../libraries/LibDebugInitializer.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
-import { IronPlateCraftedItemID } from "../../prototypes.sol";
-import { BuildingKey } from "../../prototypes.sol";
+import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
@@ -125,6 +121,11 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
+    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
+      system(DebugRemoveBuildingRequirementsSystemID)
+    );
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
@@ -138,7 +139,12 @@ contract ClaimSystemTest is MudTest {
 
     buildPathSystem.executeTyped(platingFactoryCoord, mainBaseCoord);
     console.log("built path from PlatingFactory to MainBase");
-
+    console.log(
+      "Iron PLate Production is %s",
+      MineProductionComponent(component(MineProductionComponentID)).getValue(
+        LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))
+      )
+    );
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
@@ -158,6 +164,10 @@ contract ClaimSystemTest is MudTest {
     );
     vm.roll(20);
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    DebugRemoveUpgradeRequirementsSystem debugRemoveUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
+      system(DebugRemoveUpgradeRequirementsSystemID)
+    );
+    debugRemoveUpgradeRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
     upgradeSystem.executeTyped(platingFactoryCoord);
     assertEq(
       unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
@@ -408,7 +418,7 @@ contract ClaimSystemTest is MudTest {
   function testClaimOnUpgrade() public {
     vm.startPrank(alice);
 
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(component(BuildingComponentID));
+    LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
@@ -441,21 +451,13 @@ contract ClaimSystemTest is MudTest {
 
     upgradeSystem.executeTyped(coord);
 
-    assertEq(
-      buildingLevelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
-      2,
-      "IronMine should be level 2"
-    );
+    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 2, "IronMine should be level 2");
     vm.roll(20);
 
     claimSystem.executeTyped(mainBaseCoord);
     assertEq(itemComponent.getValue(hashedAliceKey), 30, "Alice should have 30 iron");
     upgradeSystem.executeTyped(coord);
-    assertEq(
-      buildingLevelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)),
-      3,
-      "IronMine should be level 3"
-    );
+    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 3, "IronMine should be level 3");
 
     vm.roll(30);
 
@@ -491,6 +493,10 @@ contract ClaimSystemTest is MudTest {
     //gain capacity for all resources so can store copper
     debugAcquireStorageForAllResourcesSystem.executeTyped();
     buildSystem.executeTyped(DebugIronMineID, IronCoord);
+    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
+      system(DebugRemoveBuildingRequirementsSystemID)
+    );
+    debugRemoveBuildingRequirementsSystem.executeTyped(DebugCopperMineID);
     buildSystem.executeTyped(DebugCopperMineID, CopperCoord);
 
     vm.roll(0);

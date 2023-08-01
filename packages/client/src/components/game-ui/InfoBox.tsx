@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
-import { encodeCoordEntityAndTrim } from "src/util/encode";
+import { encodeCoordEntityAndTrim, trimEntityId } from "src/util/encode";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
 import { GameButton } from "../shared/GameButton";
@@ -11,10 +11,7 @@ import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
 import { SettingsMenu } from "./SettingsMenu";
-import {
-  BuildingLevel,
-  BuildingLimit,
-} from "src/network/components/chainComponents";
+import { Level, MaxBuildings } from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
 
 export const InfoBox = () => {
@@ -30,13 +27,14 @@ export const InfoBox = () => {
     { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
     BlockType.BuildingKey
   );
-  const mainBaseLevel = BuildingLevel.use(coordEntity, {
+  const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
+  const buildLimit = MaxBuildings.use(
+    trimEntityId(mainBaseLevel as unknown as EntityID)
+  );
 
-  const buildLimit = BuildingLimit.use(mainBaseLevel as unknown as EntityID);
-
-  const playerBuildingCount = BuildingLimit.use(address);
+  const playerBuildingCount = MaxBuildings.use(address);
   const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"
