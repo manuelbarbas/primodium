@@ -7,7 +7,7 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
-import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
+import { IsActiveTechnologyComponent, ID as IsActiveTechnologyComponentID } from "components/IsActiveTechnologyComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
@@ -359,21 +359,21 @@ library LibInitDebug {
   }
 
   function initializeTechnologies(IWorld world) internal {
-    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
-      world.getComponent(HasResearchedComponentID)
+    IsActiveTechnologyComponent isActiveTechnologyComponent = IsActiveTechnologyComponent(
+      world.getComponent(IsActiveTechnologyComponentID)
     );
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       world.getComponent(RequiredResearchComponentID)
     );
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     // DebugSimpleTechnologyNoReqsID
-    hasResearchedComponent.set(DebugSimpleTechnologyNoReqsID);
+    isActiveTechnologyComponent.set(DebugSimpleTechnologyNoReqsID);
 
     //DebugSimpleTechnologyResearchReqsID
     requiredResearchComponent.set(DebugSimpleTechnologyResearchReqsID, DebugSimpleTechnologyNoReqsID);
-    hasResearchedComponent.set(DebugSimpleTechnologyResearchReqsID);
+    isActiveTechnologyComponent.set(DebugSimpleTechnologyResearchReqsID);
     //DebugSimpleTechnologyResourceReqsID
-    hasResearchedComponent.set(DebugSimpleTechnologyResourceReqsID);
+    isActiveTechnologyComponent.set(DebugSimpleTechnologyResourceReqsID);
     /****************** Required Resources *******************/
 
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
@@ -382,7 +382,7 @@ library LibInitDebug {
     LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyResourceReqsID, resourceValues);
 
     //DebugSimpleTechnologyMainBaseLevelReqsID
-    hasResearchedComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
+    isActiveTechnologyComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     levelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
   }
 
