@@ -29,7 +29,8 @@
     "RequiredTileComponent",
     "RequiredPassiveComponent",
     "PassiveProductionComponent",
-    "IsDebugComponent"
+    "IsDebugComponent",
+    "IsActiveTechnologyComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch"],
   "systems": [
