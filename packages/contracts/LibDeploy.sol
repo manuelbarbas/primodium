@@ -58,7 +58,6 @@ import { BuildPathFromMineToMainBaseSystem, ID as BuildPathFromMineToMainBaseSys
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "systems/DestroyPathSystem.sol";
 import { PostDestroyPathSystem, ID as PostDestroyPathSystemID } from "systems/PostDestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
-import { ClaimFromFactorySystem, ID as ClaimFromFactorySystemID } from "systems/ClaimFromFactorySystem.sol";
 import { CraftSystem, ID as CraftSystemID } from "systems/CraftSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "systems/UpgradeSystem.sol";
 import { PostUpgradeMineSystem, ID as PostUpgradeMineSystemID } from "systems/PostUpgradeMineSystem.sol";
@@ -377,16 +376,6 @@ library LibDeploy {
     authorizeWriter(components, LastClaimedAtComponentID, address(system));
     authorizeWriter(components, ItemComponentID, address(system));
     authorizeWriter(components, UnclaimedResourceComponentID, address(system));
-    console.log(address(system));
-
-    console.log("Deploying ClaimFromFactorySystem");
-    system = new ClaimFromFactorySystem(world, address(components));
-    world.registerSystem(address(system), ClaimFromFactorySystemID);
-    authorizeWriter(components, BuildingTypeComponentID, address(system));
-    authorizeWriter(components, OwnedByComponentID, address(system));
-    authorizeWriter(components, PathComponentID, address(system));
-    authorizeWriter(components, LastClaimedAtComponentID, address(system));
-    authorizeWriter(components, ItemComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying CraftSystem");
