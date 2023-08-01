@@ -40,7 +40,6 @@ To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`. For
 
 - `DebugSystems`: Then, use the following systems to modify debug data.
 
-  - `DebugAcquireResourcesBasedOnRequirementSystem`
   - `DebugAcquireResourcesSystem`
   - `DebugAcquireStorageForAllResourcesSystem`
   - `DebugIgnoreBuildLimitForBuildingSystem`

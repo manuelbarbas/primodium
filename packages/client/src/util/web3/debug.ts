@@ -24,28 +24,6 @@ export const debugAcquireResources = async (
   setTransactionLoading(false);
 };
 
-export const debugAcquireResourcesBasedOnRequirement = async (
-  entity: EntityID,
-  network: Network
-) => {
-  const { providers, systems } = network;
-  const setTransactionLoading = useGameStore.getState().setTransactionLoading;
-  const setNotification = useNotificationStore.getState().setNotification;
-
-  setTransactionLoading(true);
-  await execute(
-    systems["system.DebugAcquireResourcesBasedOnRequirement"].executeTyped(
-      entity,
-      {
-        gasLimit: 1_000_000,
-      }
-    ),
-    providers,
-    setNotification
-  );
-  setTransactionLoading(false);
-};
-
 export const debugAcquireStorageForAllResources = async (network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;

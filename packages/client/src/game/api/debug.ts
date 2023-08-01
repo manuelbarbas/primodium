@@ -4,7 +4,6 @@ import { Position } from "src/network/components/clientComponents";
 import { Network } from "src/network/layer";
 import {
   debugAcquireResources,
-  debugAcquireResourcesBasedOnRequirement,
   debugAcquireStorageForAllResources,
   debugIgnoreBuildLimitForBuilding,
   debugRemoveBuildLimit,
@@ -15,10 +14,6 @@ import {
 export const debug = (network: Network) => {
   const acquireResources = async (resourceId: EntityID, amount: number) => {
     await debugAcquireResources(resourceId, amount, network);
-  };
-
-  const acquireResourcesBasedOnRequirement = async (entity: EntityID) => {
-    await debugAcquireResourcesBasedOnRequirement(entity, network);
   };
 
   const acquireStorageForAllResources = async () => {

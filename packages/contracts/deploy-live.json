@@ -208,10 +208,6 @@
       "writeAccess": ["ItemComponent"]
     },
     {
-      "name": "DebugAcquireResourcesBasedOnRequirementSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
       "name": "DebugIgnoreBuildLimitForBuildingSystem",
       "writeAccess": ["IgnoreBuildLimitComponent"]
     },
