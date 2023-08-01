@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";

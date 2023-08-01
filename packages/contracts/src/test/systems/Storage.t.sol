@@ -18,7 +18,7 @@ import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForA
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "../../components/MineProductionComponent.sol";
+import { TotalProductionComponent, ID as TotalProductionComponentID } from "../../components/TotalProductionComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 
 import "../../prototypes.sol";

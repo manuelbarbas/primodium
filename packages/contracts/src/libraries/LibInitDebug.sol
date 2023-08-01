@@ -6,7 +6,7 @@ import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
 import { IsActiveTechnologyComponent, ID as IsActiveTechnologyComponentID } from "components/IsActiveTechnologyComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";

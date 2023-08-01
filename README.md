@@ -67,7 +67,7 @@ The following components are used to store _metadata_ that is read before a buil
 
 # Resource Production
 
-`MineProductionComponent` stores both metadata and player data.
+`TotalProductionComponent` stores both metadata and player data.
 
 - _Metadata_: with `hashKeyEntity(buildingId, level)` as key, stores the production rate of that resource for that level of that building per blockchain block. In `LibBuildingDesignInitializer`, the production rate is set for each level of each building that produces resources.
 - _Player Data_: with `hashKeyEntity(resourceId, playerEntity)` as key, stores the production of that resource per blockchain block.

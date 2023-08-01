@@ -115,9 +115,9 @@ export const MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
-export const MineProduction = newNumberComponent(world, {
-  id: "MineProduction",
-  metadata: { contractId: `${commonIdPrefix}MineProduction` },
+export const TotalProduction = newNumberComponent(world, {
+  id: "TotalProduction",
+  metadata: { contractId: `${commonIdPrefix}TotalProduction` },
   overridable: true,
 });
 
@@ -194,7 +194,7 @@ export default {
   MaxLevel,
   Level,
   MaxStorage,
-  MineProduction,
+  TotalProduction,
   MaxBuildings,
   BuildingCount,
   Children,

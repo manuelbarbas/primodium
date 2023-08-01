@@ -20,7 +20,7 @@
     "BlueprintComponent",
     "MaxStorageComponent",
     "MaxResourceStorageComponent",
-    "MineProductionComponent",
+    "TotalProductionComponent",
     "UnclaimedResourceComponent",
     "ActiveComponent",
     "MinesComponent",
@@ -43,6 +43,10 @@
     {
       "name": "IncrementSystem",
       "writeAccess": ["CounterComponent"]
+    },
+    {
+      "name": "SpendRequiredResourcesSystem",
+      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "ItemComponent"]
     },
     {
       "name": "BuildSystem",
@@ -107,7 +111,7 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "TotalProductionComponent",
         "ActiveComponent",
         "ProductionComponent"
       ]
@@ -118,7 +122,7 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "TotalProductionComponent",
         "ActiveComponent",
         "MinesComponent",
         "ProductionComponent"
@@ -130,7 +134,7 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent"
+        "TotalProductionComponent"
       ]
     },
     {
@@ -141,7 +145,7 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "TotalProductionComponent",
         "ActiveComponent",
         "MinesComponent",
         "ProductionComponent"
@@ -153,7 +157,7 @@
         "MaxStorageComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "TotalProductionComponent",
         "ActiveComponent",
         "ProductionComponent",
         "MinesComponent"
@@ -207,7 +211,7 @@
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "TotalProductionComponent",
         "ActiveComponent"
       ]
     },
@@ -216,7 +220,7 @@
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "TotalProductionComponent",
         "ActiveComponent",
         "ProductionComponent"
       ]

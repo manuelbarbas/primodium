@@ -15,6 +15,10 @@ import { LibResearch } from "libraries/LibResearch.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+
 uint256 constant ID = uint256(keccak256("system.Research"));
 
 contract ResearchSystem is System {
@@ -50,10 +54,17 @@ contract ResearchSystem is System {
       "[ResearchSystem] Research requirements not met"
     );
 
-    require(
-      LibResource.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
-      "[ResearchSystem] Not enough resources to research"
-    );
+    if (RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(researchItem)) {
+      require(
+        LibResource.hasRequiredResources(world, researchItem, addressToEntity(msg.sender)),
+        "[ResearchSystem] Not enough resources to research"
+      );
+      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
+        msg.sender,
+        researchItem
+      );
+    }
+
     HasResearchedComponent(getAddressById(components, HasResearchedComponentID)).set(
       LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender))
     );

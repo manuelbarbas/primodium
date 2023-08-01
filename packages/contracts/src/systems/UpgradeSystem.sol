@@ -11,7 +11,7 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
@@ -28,7 +28,7 @@ import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
 import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
-
+import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is PrimodiumSystem {
@@ -66,10 +66,18 @@ contract UpgradeSystem is PrimodiumSystem {
       LibResearch.hasResearched(world, buildingIdLevel, playerEntity),
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
-    require(
-      LibResource.checkAndSpendRequiredResources(world, buildingIdLevel, playerEntity),
-      "[UpgradeSystem] Cannot upgrade a building that does not meet resource requirements"
-    );
+
+    if (RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingIdLevel)) {
+      require(
+        LibResource.hasRequiredResources(world, buildingIdLevel, playerEntity),
+        "[UpgradeSystem] You do not have the required resources"
+      );
+      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
+        msg.sender,
+        buildingIdLevel
+      );
+    }
+
     uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
     levelComponent.set(buildingEntity, newLevel);
 

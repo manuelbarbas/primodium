@@ -5,7 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
@@ -71,8 +71,8 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
-    MineProductionComponent mineProductionComponent = MineProductionComponent(
-      getAddressById(components, MineProductionComponentID)
+    TotalProductionComponent mineProductionComponent = TotalProductionComponent(
+      getAddressById(components, TotalProductionComponentID)
     );
     ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
     uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);

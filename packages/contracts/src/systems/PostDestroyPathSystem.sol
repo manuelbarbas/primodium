@@ -4,7 +4,7 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
@@ -35,8 +35,8 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
 
   function handleOnDestroyPathFromMineToMainBase(uint256 playerEntity, uint256 mineEntity) internal {
     ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
-    MineProductionComponent mineProductionComponent = MineProductionComponent(
-      getAddressById(components, MineProductionComponentID)
+    TotalProductionComponent mineProductionComponent = TotalProductionComponent(
+      getAddressById(components, TotalProductionComponentID)
     );
     BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
       getAddressById(components, BuildingTypeComponentID)
@@ -102,7 +102,7 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
   }
 
   function handleOnDestroyPathFromFactoryToMainBase(
-    MineProductionComponent mineProductionComponent,
+    TotalProductionComponent mineProductionComponent,
     LevelComponent levelComponent,
     BuildingTypeComponent buildingTypeComponent,
     uint256 playerEntity,
@@ -148,8 +148,8 @@ contract PostDestroyPathSystem is IOnEntitySubsystem, System {
     );
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
-    MineProductionComponent mineProductionComponent = MineProductionComponent(
-      getAddressById(components, MineProductionComponentID)
+    TotalProductionComponent mineProductionComponent = TotalProductionComponent(
+      getAddressById(components, TotalProductionComponentID)
     );
 
     uint256 startCoordLevelEntity = LibEncode.hashKeyEntity(
