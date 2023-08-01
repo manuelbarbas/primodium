@@ -46,7 +46,6 @@ export const debug = (network: Network) => {
 
   return {
     acquireResources,
-    acquireResourcesBasedOnRequirement,
     acquireStorageForAllResources,
     removeBuildLimit,
     removeUpgradeRequirements,
