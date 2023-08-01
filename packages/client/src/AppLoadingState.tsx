@@ -7,9 +7,17 @@ import Map from "./screens/Map";
 import { Game } from "./screens/Game";
 import { LoadingState } from "./network/components/chainComponents";
 
+import { ampli } from "./ampli";
+
 export default function AppLoadingState() {
   // setup loading component, after setting up the network layer and syncing the block state (per emojimon)
   // Loading state component needs to be below the mud context
+
+  if (import.meta.env.VITE_DEV === "true") {
+    ampli.load({ environment: "dev" });
+  } else {
+    ampli.load({ environment: "prod" });
+  }
 
   const loadingState = LoadingState.use(undefined, {
     state: SyncState.CONNECTING,
