@@ -311,10 +311,14 @@ library LibInitDebug {
 
     productionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 6 }));
 
-    //DebugPassiveProductionBuilding
+    //DebugPassiveProductionBuilding level 1
     entity = LibEncode.hashKeyEntity(DebugPassiveProductionBuilding, 1);
+    maxLevelComponent.set(DebugPassiveProductionBuilding, 2);
     ignoreBuildLimitComponent.set(DebugPassiveProductionBuilding);
     passiveProductionComponent.set(entity, ResourceValue(ElectricityPassiveResourceID, 10));
+    //level 2
+    entity = LibEncode.hashKeyEntity(DebugPassiveProductionBuilding, 2);
+    passiveProductionComponent.set(entity, ResourceValue(ElectricityPassiveResourceID, 20));
 
     //DebugAlloyFactoryID
     ignoreBuildLimitComponent.set(DebugAlloyFactoryID);

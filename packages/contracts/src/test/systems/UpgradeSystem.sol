@@ -7,7 +7,8 @@ import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
-
+import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
+import { PassiveResourceCapacityComponent, ID as PassiveResourceCapacityComponentID } from "components/PassiveResourceCapacityComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
@@ -70,6 +71,46 @@ contract UpgradeSystemTest is MudTest {
     assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 3, "building should be level 3");
     upgradeSystem.executeTyped(coord);
     //should fail
+    vm.stopPrank();
+  }
+
+  function testUpgradePassiveProduction() public {
+    vm.startPrank(alice);
+
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
+      component(PassiveResourceCapacityComponentID)
+    );
+    OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
+      component(OccupiedPassiveResourceComponentID)
+    );
+
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
+    assertEq(
+      passiveResourceCapacityComponent.getValue(
+        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
+      ),
+      10,
+      "Electricity Storage should be 10"
+    );
+    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
+    assertEq(
+      occupiedPassiveResourceComponent.getValue(
+        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
+      ),
+      2,
+      "used up electricity should be 2"
+    );
+    upgradeSystem.executeTyped(Coord({ x: 0, y: 0 }));
+    assertEq(
+      passiveResourceCapacityComponent.getValue(
+        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
+      ),
+      20,
+      "Electricity Storage should be 20"
+    );
+
     vm.stopPrank();
   }
 

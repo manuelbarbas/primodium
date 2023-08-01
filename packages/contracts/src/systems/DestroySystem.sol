@@ -20,6 +20,7 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
+
 import { MainBaseID } from "../prototypes.sol";
 
 import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
@@ -32,6 +33,7 @@ import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
+import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -53,7 +55,7 @@ contract DestroySystem is PrimodiumSystem {
     );
     if (passiveProductionComponent.has(buildingLevelEntity)) {
       return
-        LibStorage.getResourceStorageSpace(
+        LibPassiveResource.getAvailablePassiveCapacity(
           world,
           addressToEntity(msg.sender),
           passiveProductionComponent.getValue(buildingLevelEntity).resource

@@ -24,7 +24,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-
+import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
 import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
@@ -97,6 +97,7 @@ contract UpgradeSystem is PrimodiumSystem {
       levelComponent.getValue(buildingEntity)
     );
 
+    LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType, newLevel);
     return abi.encode(buildingEntity);
   }
 

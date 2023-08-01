@@ -14,6 +14,8 @@ import {
   MineProduction,
   MaxStorage,
   UnclaimedResource,
+  PassiveResourceCapacity,
+  OccupiedPassiveResource,
 } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useMud } from "src/hooks";
@@ -270,12 +272,13 @@ Inventory.AllPassiveResourceLabels = ({
   entityIndex?: EntityIndex;
 }) => {
   const { components } = useMud();
-  const maxStorage = useResourceCount(
-    components.MaxStorage,
+
+  const passiveCapacity = useResourceCount(
+    components.PassiveResourceCapacity,
     BlockType.ElectricityPassiveResource,
     entityIndex
   );
-  if (!maxStorage)
+  if (!passiveCapacity)
     return (
       <div className="flex justify-center items-center text-lg">
         No Utilities
@@ -395,9 +398,17 @@ Inventory.PassiveResourceLabel = ({
 }) => {
   const blockNumber = BlockNumber.get();
 
-  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
+  const resourceCount = useResourceCount(
+    OccupiedPassiveResource,
+    resourceId,
+    entityIndex
+  );
 
-  const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
+  const maxStorage = useResourceCount(
+    PassiveResourceCapacity,
+    resourceId,
+    entityIndex
+  );
 
   const production = useResourceCount(MineProduction, resourceId, entityIndex);
 

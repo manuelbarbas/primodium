@@ -15,6 +15,9 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
+import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
+import { PassiveResourceCapacityComponent, ID as PassiveResourceCapacityComponentID } from "components/PassiveResourceCapacityComponent.sol";
+
 import { MainBaseID } from "../prototypes.sol";
 
 import { ID as DestroySystemID } from "./DestroySystem.sol";
@@ -26,7 +29,7 @@ import { Coord, ResourceValues } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-
+import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.PostDestroy"));
@@ -44,14 +47,15 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
     );
     if (requiredPassiveComponent.has(buildingLevelEntity)) {
-      ItemComponent itemComponent = ItemComponent(getAddressById(components, ItemComponentID));
-
+      OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
+        getAddressById(components, OccupiedPassiveResourceComponentID)
+      );
       ResourceValues memory requiredPassiveData = requiredPassiveComponent.getValue(buildingLevelEntity);
       for (uint256 i = 0; i < requiredPassiveData.resources.length; i++) {
         uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredPassiveData.resources[i], playerEntity);
-        itemComponent.set(
+        occupiedPassiveResourceComponent.set(
           playerResourceEntity,
-          itemComponent.getValue(playerResourceEntity) - requiredPassiveData.values[i]
+          occupiedPassiveResourceComponent.getValue(playerResourceEntity) - requiredPassiveData.values[i]
         );
       }
     }
@@ -68,13 +72,12 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     );
     if (passiveProductionComponent.has(buildingLevelEntity)) {
       uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
-      MaxStorageComponent maxStorageComponent = MaxStorageComponent(getAddressById(components, MaxStorageComponentID));
-
-      LibStorage.updateResourceMaxStorage(
-        world,
-        playerEntity,
-        resourceId,
-        maxStorageComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
+      PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
+        getAddressById(components, PassiveResourceCapacityComponentID)
+      );
+      passiveResourceCapacityComponent.set(
+        LibEncode.hashKeyEntity(resourceId, playerEntity),
+        passiveResourceCapacityComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
           passiveProductionComponent.getValue(buildingLevelEntity).value
       );
     }

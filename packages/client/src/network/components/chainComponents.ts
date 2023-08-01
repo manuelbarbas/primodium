@@ -68,6 +68,11 @@ export const HasResearched = newBoolComponent(world, {
   metadata: { contractId: `${commonIdPrefix}HasResearched` },
 });
 
+export const IsActiveTechnology = newBoolComponent(world, {
+  id: "IsActiveTechnology",
+  metadata: { contractId: `${commonIdPrefix}IsActiveTechnology` },
+});
+
 export const MainBase = newComponent(
   world,
   { value: Type.Entity },
@@ -125,6 +130,17 @@ export const MaxBuildings = newNumberComponent(world, {
 export const BuildingCount = newNumberComponent(world, {
   id: "BuildingCount",
   metadata: { contractId: `${commonIdPrefix}BuildingCount` },
+  overridable: true,
+});
+export const PassiveResourceCapacity = newNumberComponent(world, {
+  id: "PassiveResourceCapacity",
+  metadata: { contractId: `${commonIdPrefix}PassiveResourceCapacity` },
+  overridable: true,
+});
+
+export const OccupiedPassiveResource = newNumberComponent(world, {
+  id: "OccupiedPassiveResource",
+  metadata: { contractId: `${commonIdPrefix}OccupiedPassiveResource` },
   overridable: true,
 });
 
@@ -187,4 +203,6 @@ export default {
   SystemsRegistry,
   ComponentsRegistry,
   LoadingState,
+  OccupiedPassiveResource,
+  PassiveResourceCapacity,
 };

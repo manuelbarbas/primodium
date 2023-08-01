@@ -30,7 +30,9 @@
     "RequiredPassiveComponent",
     "PassiveProductionComponent",
     "IsDebugComponent",
-    "IsActiveTechnologyComponent"
+    "IsActiveTechnologyComponent",
+    "PassiveResourceCapacityComponent",
+    "OccupiedPassiveResourceComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -64,7 +66,9 @@
         "MaxResourceStorageComponent",
         "MinesComponent",
         "LastClaimedAtComponent",
-        "BuildingCountComponent"
+        "BuildingCountComponent",
+        "PassiveResourceCapacityComponent",
+        "OccupiedPassiveResourceComponent"
       ]
     },
     {
@@ -85,7 +89,13 @@
     },
     {
       "name": "PostDestroySystem",
-      "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent", "ItemComponent"]
+      "writeAccess": [
+        "MaxStorageComponent",
+        "MaxResourceStorageComponent",
+        "ItemComponent",
+        "PassiveResourceCapacityComponent",
+        "OccupiedPassiveResourceComponent"
+      ]
     },
     {
       "name": "BuildPathSystem",
@@ -183,7 +193,14 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["LevelComponent", "ItemComponent", "MaxStorageComponent", "MaxResourceStorageComponent"]
+      "writeAccess": [
+        "LevelComponent",
+        "ItemComponent",
+        "MaxStorageComponent",
+        "MaxResourceStorageComponent",
+        "PassiveResourceCapacityComponent",
+        "OccupiedPassiveResourceComponent"
+      ]
     },
     {
       "name": "PostUpgradeMineSystem",
