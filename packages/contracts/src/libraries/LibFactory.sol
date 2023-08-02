@@ -12,15 +12,15 @@ library LibFactory {
   //checks all required conditions for a factory to be functional and updates factory is functional status
 
   function updateProduction(IWorld world, uint256 playerEntity, uint256 factoryLevelEntity, bool increase) internal {
-    TotalProductionComponent mineProductionComponent = TotalProductionComponent(
+    TotalProductionComponent totalProductionComponent = TotalProductionComponent(
       world.getComponent(TotalProductionComponentID)
     );
     ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
     ResourceValue memory productionData = productionComponent.getValue(factoryLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(productionData.resource, playerEntity);
     uint32 newResourceProductionRate = increase
-      ? LibMath.getSafe(mineProductionComponent, playerResourceEntity) + productionData.value
-      : LibMath.getSafe(mineProductionComponent, playerResourceEntity) - productionData.value;
+      ? LibMath.getSafe(totalProductionComponent, playerResourceEntity) + productionData.value
+      : LibMath.getSafe(totalProductionComponent, playerResourceEntity) - productionData.value;
     LibResource.updateResourceProduction(world, playerResourceEntity, newResourceProductionRate);
   }
 }
