@@ -83,11 +83,9 @@ export default function UpgradeButton({
 
   const upgradeBuilding = useCallback(() => {
     ampli.systemUpgrade({
-      extra: {
-        coords: coords,
-        currLevel: upgradedLevel,
-        buildingTile: BlockIdToKey[builtTile],
-      },
+      coords: [coords.x, coords.y, 0],
+      currLevel: upgradedLevel,
+      buildingType: BlockIdToKey[builtTile],
     });
     upgrade(coords, network);
   }, []);
