@@ -144,8 +144,8 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
 `RequiredPassiveComponent`: for `LibHash(BuildingType, Level)` indicates what passive resources it requires and how much.
 `PassiveProductionComponent`: for `LibHash(BuildingType, Level)` indicates what passive resource and how much of it the building produces.
 
-- The total amount of `PassiveResourceCapacity` the player has is stored in the `MaxStorageComponent` for `LibHash(ResourceID, PlayerEntity)`
-- The total amount of used up `PassiveResourceCapacity` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
+- The total amount of `MaxPassive` the player has is stored in the `MaxStorageComponent` for `LibHash(ResourceID, PlayerEntity)`
+- The total amount of used up `MaxPassive` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
 
 - Passive resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.
 - The player not build a building that requires passive resources if they the total occuppied capacity for that resource will excceed the current capacity after build is complete.

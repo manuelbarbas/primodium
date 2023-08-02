@@ -31,7 +31,7 @@
     "PassiveProductionComponent",
     "IsDebugComponent",
     "IsTechComponent",
-    "PassiveResourceCapacityComponent",
+    "MaxPassiveComponent",
     "OccupiedPassiveResourceComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
@@ -71,7 +71,7 @@
         "MinesComponent",
         "LastClaimedAtComponent",
         "BuildingCountComponent",
-        "PassiveResourceCapacityComponent",
+        "MaxPassiveComponent",
         "OccupiedPassiveResourceComponent"
       ]
     },
@@ -97,7 +97,7 @@
         "MaxStorageComponent",
         "MaxResourceStorageComponent",
         "ItemComponent",
-        "PassiveResourceCapacityComponent",
+        "MaxPassiveComponent",
         "OccupiedPassiveResourceComponent"
       ]
     },
@@ -202,7 +202,7 @@
         "ItemComponent",
         "MaxStorageComponent",
         "MaxResourceStorageComponent",
-        "PassiveResourceCapacityComponent",
+        "MaxPassiveComponent",
         "OccupiedPassiveResourceComponent"
       ]
     },

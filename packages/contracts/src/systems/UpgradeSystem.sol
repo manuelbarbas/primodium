@@ -11,7 +11,6 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { BuildingKey } from "../prototypes.sol";

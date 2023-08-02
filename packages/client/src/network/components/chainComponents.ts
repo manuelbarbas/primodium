@@ -132,9 +132,9 @@ export const BuildingCount = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}BuildingCount` },
   overridable: true,
 });
-export const PassiveResourceCapacity = newNumberComponent(world, {
-  id: "PassiveResourceCapacity",
-  metadata: { contractId: `${commonIdPrefix}PassiveResourceCapacity` },
+export const MaxPassive = newNumberComponent(world, {
+  id: "MaxPassive",
+  metadata: { contractId: `${commonIdPrefix}MaxPassive` },
   overridable: true,
 });
 
@@ -204,5 +204,5 @@ export default {
   ComponentsRegistry,
   LoadingState,
   OccupiedPassiveResource,
-  PassiveResourceCapacity,
+  MaxPassive,
 };

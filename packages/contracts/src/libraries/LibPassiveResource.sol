@@ -10,7 +10,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
-import { PassiveResourceCapacityComponent, ID as PassiveResourceCapacityComponentID } from "components/PassiveResourceCapacityComponent.sol";
+import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
 // libraries
 
 import { LibMath } from "../libraries/LibMath.sol";
@@ -73,10 +73,7 @@ library LibPassiveResource {
   ) internal view returns (uint32) {
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceID, playerEntity);
     return
-      LibMath.getSafe(
-        PassiveResourceCapacityComponent(world.getComponent(PassiveResourceCapacityComponentID)),
-        playerResourceEntity
-      ) -
+      LibMath.getSafe(MaxPassiveComponent(world.getComponent(MaxPassiveComponentID)), playerResourceEntity) -
       LibMath.getSafe(
         OccupiedPassiveResourceComponent(world.getComponent(OccupiedPassiveResourceComponentID)),
         playerResourceEntity
@@ -95,9 +92,7 @@ library LibPassiveResource {
 
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
     if (!passiveProductionComponent.has(buildingLevelEntity)) return;
-    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-      world.getComponent(PassiveResourceCapacityComponentID)
-    );
+    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(world.getComponent(MaxPassiveComponentID));
     uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
     uint32 capacityIncrease = passiveProductionComponent.getValue(buildingLevelEntity).value;
     if (buildingLevel > 1) {
@@ -105,10 +100,8 @@ library LibPassiveResource {
         capacityIncrease -
         passiveProductionComponent.getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)).value;
     }
-    uint32 newCapacity = LibMath.getSafe(
-      passiveResourceCapacityComponent,
-      LibEncode.hashKeyEntity(resourceId, playerEntity)
-    ) + capacityIncrease;
-    passiveResourceCapacityComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), newCapacity);
+    uint32 newCapacity = LibMath.getSafe(maxPassiveComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
+      capacityIncrease;
+    maxPassiveComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), newCapacity);
   }
 }

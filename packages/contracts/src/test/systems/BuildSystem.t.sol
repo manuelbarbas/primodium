@@ -25,7 +25,7 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
-import { PassiveResourceCapacityComponent, ID as PassiveResourceCapacityComponentID } from "components/PassiveResourceCapacityComponent.sol";
+import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 import { ElectricityPassiveResourceID } from "../../prototypes.sol";
 
@@ -72,18 +72,14 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testPassiveResourceRequirement() public {
     vm.startPrank(alice);
-    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-      component(PassiveResourceCapacityComponentID)
-    );
+    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(component(MaxPassiveComponentID));
     OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
       component(OccupiedPassiveResourceComponentID)
     );
 
     buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      passiveResourceCapacityComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
-      ),
+      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -100,18 +96,14 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testPassiveResourceRequirementUpToMax() public {
     vm.startPrank(alice);
-    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-      component(PassiveResourceCapacityComponentID)
-    );
+    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(component(MaxPassiveComponentID));
     OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
       component(OccupiedPassiveResourceComponentID)
     );
 
     buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      passiveResourceCapacityComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
-      ),
+      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -133,14 +125,10 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testFailPassiveResourceRequirementMoreThenMax() public {
     vm.startPrank(alice);
-    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-      component(PassiveResourceCapacityComponentID)
-    );
+    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(component(MaxPassiveComponentID));
     buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      passiveResourceCapacityComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
-      ),
+      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -156,23 +144,17 @@ contract BuildSystemTest is PrimodiumTest {
   function testDestroyPassiveProduction() public {
     vm.startPrank(alice);
 
-    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-      component(PassiveResourceCapacityComponentID)
-    );
+    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(component(MaxPassiveComponentID));
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
     buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      passiveResourceCapacityComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
-      ),
+      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
     destroySystem.executeTyped(Coord({ x: 0, y: 0 }));
     assertEq(
-      passiveResourceCapacityComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
-      ),
+      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       0,
       "Electricity Storage should be 0"
     );
@@ -181,17 +163,13 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testDestroyPassiveResourceRequirement() public {
     vm.startPrank(alice);
-    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-      component(PassiveResourceCapacityComponentID)
-    );
+    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(component(MaxPassiveComponentID));
     OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
       component(OccupiedPassiveResourceComponentID)
     );
     buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      passiveResourceCapacityComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
-      ),
+      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
@@ -219,17 +197,13 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testFailDestroyPassiveProductionWhenRequirementsWouldFail() public {
     vm.startPrank(alice);
-    PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-      component(PassiveResourceCapacityComponentID)
-    );
+    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(component(MaxPassiveComponentID));
     OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
       component(OccupiedPassiveResourceComponentID)
     );
     buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      passiveResourceCapacityComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
-      ),
+      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );

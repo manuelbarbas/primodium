@@ -16,7 +16,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
-import { PassiveResourceCapacityComponent, ID as PassiveResourceCapacityComponentID } from "components/PassiveResourceCapacityComponent.sol";
+import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
 
@@ -72,12 +72,10 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     );
     if (passiveProductionComponent.has(buildingLevelEntity)) {
       uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
-      PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
-        getAddressById(components, PassiveResourceCapacityComponentID)
-      );
+      MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(getAddressById(components, MaxPassiveComponentID));
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
-      uint32 currentPassiveResourceCapacity = passiveResourceCapacityComponent.getValue(playerResourceEntity);
-      passiveResourceCapacityComponent.set(
+      uint32 currentPassiveResourceCapacity = maxPassiveComponent.getValue(playerResourceEntity);
+      maxPassiveComponent.set(
         playerResourceEntity,
         currentPassiveResourceCapacity - passiveProductionComponent.getValue(buildingLevelEntity).value
       );

@@ -5,7 +5,6 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";

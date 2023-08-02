@@ -14,7 +14,7 @@ import {
   TotalProduction,
   MaxStorage,
   UnclaimedResource,
-  PassiveResourceCapacity,
+  MaxPassive,
   OccupiedPassiveResource,
 } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
@@ -274,7 +274,7 @@ Inventory.AllPassiveResourceLabels = ({
   const { components } = useMud();
 
   const passiveCapacity = useResourceCount(
-    components.PassiveResourceCapacity,
+    components.MaxPassive,
     BlockType.ElectricityPassiveResource,
     entityIndex
   );
@@ -404,11 +404,7 @@ Inventory.PassiveResourceLabel = ({
     entityIndex
   );
 
-  const maxStorage = useResourceCount(
-    PassiveResourceCapacity,
-    resourceId,
-    entityIndex
-  );
+  const maxStorage = useResourceCount(MaxPassive, resourceId, entityIndex);
 
   const production = useResourceCount(TotalProduction, resourceId, entityIndex);
 
