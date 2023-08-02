@@ -7,7 +7,7 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
-import { IsActiveTechnologyComponent, ID as IsActiveTechnologyComponentID } from "components/IsActiveTechnologyComponent.sol";
+import { IsTechComponent, ID as IsTechComponentID } from "components/IsTechComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
@@ -363,9 +363,7 @@ library LibInitDebug {
   }
 
   function initializeTechnologies(IWorld world) internal {
-    IsActiveTechnologyComponent isActiveTechnologyComponent = IsActiveTechnologyComponent(
-      world.getComponent(IsActiveTechnologyComponentID)
-    );
+    IsTechComponent isActiveTechnologyComponent = IsTechComponent(world.getComponent(IsTechComponentID));
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       world.getComponent(RequiredResearchComponentID)
     );

@@ -5,7 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
-import { IsActiveTechnologyComponent, ID as IsActiveTechnologyComponentID } from "components/IsActiveTechnologyComponent.sol";
+import { IsTechComponent, ID as IsTechComponentID } from "components/IsTechComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
@@ -38,9 +38,7 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    IsActiveTechnologyComponent isActiveTechnologyComponent = IsActiveTechnologyComponent(
-      getAddressById(components, IsActiveTechnologyComponentID)
-    );
+    IsTechComponent isActiveTechnologyComponent = IsTechComponent(getAddressById(components, IsTechComponentID));
 
     require(isActiveTechnologyComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 

@@ -30,7 +30,7 @@
     "RequiredPassiveComponent",
     "PassiveProductionComponent",
     "IsDebugComponent",
-    "IsActiveTechnologyComponent",
+    "IsTechComponent",
     "PassiveResourceCapacityComponent",
     "OccupiedPassiveResourceComponent"
   ],
