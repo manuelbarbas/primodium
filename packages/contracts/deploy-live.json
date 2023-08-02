@@ -45,6 +45,20 @@
       "writeAccess": ["CounterComponent"]
     },
     {
+      "name": "SpendRequiredResourcesSystem",
+      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "ItemComponent"]
+    },
+    {
+      "name": "UpdatePlayerStorageSystem",
+      "writeAccess": [
+        "LastClaimedAtComponent",
+        "UnclaimedResourceComponent",
+        "ItemComponent",
+        "MaxStorageComponent",
+        "MaxResourceStorageComponent"
+      ]
+    },
+    {
       "name": "BuildSystem",
       "writeAccess": [
         "BuildingTypeComponent",

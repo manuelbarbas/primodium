@@ -12,6 +12,7 @@ import { HasResearchedComponent, ID as HasResearchedComponentID } from "componen
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
 
@@ -22,12 +23,14 @@ import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
+
 import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
 import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is PrimodiumSystem {
@@ -97,12 +100,18 @@ contract UpgradeSystem is PrimodiumSystem {
         buildingEntity
       );
     }
-    LibStorage.upgradePlayerStorage(
-      world,
-      playerEntity,
-      buildingTypeComponent.getValue(buildingEntity),
-      levelComponent.getValue(buildingEntity)
-    );
+    if (
+      MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
+      )
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
+        msg.sender,
+        buildingTypeComponent.getValue(buildingEntity),
+        levelComponent.getValue(buildingEntity),
+        false
+      );
+    }
 
     LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType, newLevel);
     return abi.encode(buildingEntity);

@@ -82,33 +82,6 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
     }
   }
 
-  function checkAndUpdatePlayerStorageAfterDestroy(uint256 playerEntity, uint256 buildingId, uint256 level) internal {
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      getC(MaxResourceStorageComponentID)
-    );
-    ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
-
-    uint256 buildingIdLevel = LibEncode.hashKeyEntity(buildingId, level);
-    if (!maxResourceStorageComponent.has(buildingIdLevel)) return;
-    uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingIdLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint256 playerResourceStorageEntity = LibEncode.hashKeyEntity(storageResources[i], playerEntity);
-      uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
-      uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingIdLevel, storageResources[i]);
-      LibStorage.updateResourceMaxStorage(
-        world,
-        playerEntity,
-        storageResources[i],
-        playerResourceMaxStorage - maxStorageIncrease
-      );
-
-      uint32 playerResourceAmount = LibMath.getSafe(itemComponent, playerResourceStorageEntity);
-      if (playerResourceAmount > playerResourceMaxStorage - maxStorageIncrease) {
-        itemComponent.set(playerResourceStorageEntity, playerResourceMaxStorage - maxStorageIncrease);
-      }
-    }
-  }
-
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), DestroySystemID),
@@ -121,11 +94,6 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       buildingEntity
     );
 
-    checkAndUpdatePlayerStorageAfterDestroy(
-      playerEntity,
-      buildingType,
-      LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity)
-    );
     updatePassiveResources(playerEntity, buildingEntity);
     updatePassiveProduction(playerEntity, buildingEntity);
   }

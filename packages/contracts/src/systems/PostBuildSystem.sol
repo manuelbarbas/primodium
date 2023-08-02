@@ -51,30 +51,9 @@ contract PostBuildSystem is IOnEntitySubsystem, PrimodiumSystem {
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) + 1);
     }
 
-    updatePlayerStorage(buildingType, playerEntity);
     setupFactory(buildingEntity);
 
     return abi.encode(buildingEntity);
-  }
-
-  function updatePlayerStorage(uint256 buildingType, uint256 playerEntity) internal {
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      getC(MaxResourceStorageComponentID)
-    );
-    // todo: make this actually get the current main base level
-    uint256 buildingTypeLevel = LibEncode.hashKeyEntity(buildingType, 1);
-    if (!maxResourceStorageComponent.has(buildingTypeLevel)) return;
-    uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingTypeLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
-      uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingTypeLevel, storageResources[i]);
-      LibStorage.updateResourceMaxStorage(
-        world,
-        playerEntity,
-        storageResources[i],
-        playerResourceMaxStorage + maxStorageIncrease
-      );
-    }
   }
 
   function setupFactory(uint256 factoryEntity) internal {

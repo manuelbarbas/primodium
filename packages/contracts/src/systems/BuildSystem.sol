@@ -15,7 +15,7 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 
 // libraries
@@ -26,8 +26,11 @@ import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
+import { IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -108,6 +111,16 @@ contract BuildSystem is PrimodiumSystem {
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);
+    if (
+      MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(LibEncode.hashKeyEntity(buildingType, 1))
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
+        msg.sender,
+        buildingType,
+        1,
+        false
+      );
+    }
 
     return abi.encode(buildingEntity);
   }

@@ -8,6 +8,7 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibUnclaimedResource } from "libraries/LibUnclaimedResource.sol";
 
 library LibStorage {
   function getResourceStorageSpace(IWorld world, uint256 entity, uint256 resourceId) internal view returns (uint32) {
@@ -50,26 +51,43 @@ library LibStorage {
         maxResourceStorageComponent.set(entity, storageResourceIds);
       }
     }
+    LibUnclaimedResource.updateResourceClaimed(world, entity, resourceId);
     maxStorageComponent.set(resourceEntity, newMaxStorage);
+
+    uint32 playerResourceAmount = LibMath.getSafe(ItemComponent(world.getComponent(ItemComponentID)), resourceEntity);
+    if (playerResourceAmount > newMaxStorage) {
+      ItemComponent(world.getComponent(ItemComponentID)).set(resourceEntity, newMaxStorage);
+    }
   }
 
-  function upgradePlayerStorage(IWorld world, uint256 playerEntity, uint256 buildingId, uint32 newLevel) internal {
+  function updatePlayerStorage(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 buildingId,
+    uint32 newLevel,
+    bool isDestroy
+  ) internal {
     MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
       world.getComponent(MaxResourceStorageComponentID)
     );
 
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingId, newLevel);
-    uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingId, newLevel - 1);
-    if (!maxResourceStorageComponent.has(buildingIdNewLevel)) return;
 
+    if (!maxResourceStorageComponent.has(buildingIdNewLevel)) return;
+    uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingId, newLevel - 1);
     uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingIdNewLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint32 playerResourceMaxStorage = getResourceMaxStorage(world, playerEntity, storageResources[i]);
 
-      uint32 maxStorageIncrease = getResourceMaxStorage(world, buildingIdNewLevel, storageResources[i]) -
-        getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);
-
-      updateResourceMaxStorage(world, playerEntity, storageResources[i], playerResourceMaxStorage + maxStorageIncrease);
+      uint32 maxStorageIncrease = getResourceMaxStorage(world, buildingIdNewLevel, storageResources[i]);
+      if (!isDestroy && newLevel > 1)
+        maxStorageIncrease = maxStorageIncrease - getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);
+      updateResourceMaxStorage(
+        world,
+        playerEntity,
+        storageResources[i],
+        isDestroy ? playerResourceMaxStorage - maxStorageIncrease : playerResourceMaxStorage + maxStorageIncrease
+      );
     }
   }
 
