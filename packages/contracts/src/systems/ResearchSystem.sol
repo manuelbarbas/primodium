@@ -38,9 +38,9 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    IsTechComponent isActiveTechnologyComponent = IsTechComponent(getAddressById(components, IsTechComponentID));
+    IsTechComponent isTechComponent = IsTechComponent(getAddressById(components, IsTechComponentID));
 
-    require(isActiveTechnologyComponent.has(researchItem), "[ResearchSystem] Technology not registered");
+    require(isTechComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
       checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),

@@ -363,19 +363,19 @@ library LibInitDebug {
   }
 
   function initializeTechnologies(IWorld world) internal {
-    IsTechComponent isActiveTechnologyComponent = IsTechComponent(world.getComponent(IsTechComponentID));
+    IsTechComponent isTechComponent = IsTechComponent(world.getComponent(IsTechComponentID));
     RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
       world.getComponent(RequiredResearchComponentID)
     );
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     // DebugSimpleTechnologyNoReqsID
-    isActiveTechnologyComponent.set(DebugSimpleTechnologyNoReqsID);
+    isTechComponent.set(DebugSimpleTechnologyNoReqsID);
 
     //DebugSimpleTechnologyResearchReqsID
     requiredResearchComponent.set(DebugSimpleTechnologyResearchReqsID, DebugSimpleTechnologyNoReqsID);
-    isActiveTechnologyComponent.set(DebugSimpleTechnologyResearchReqsID);
+    isTechComponent.set(DebugSimpleTechnologyResearchReqsID);
     //DebugSimpleTechnologyResourceReqsID
-    isActiveTechnologyComponent.set(DebugSimpleTechnologyResourceReqsID);
+    isTechComponent.set(DebugSimpleTechnologyResourceReqsID);
     /****************** Required Resources *******************/
 
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
@@ -384,7 +384,7 @@ library LibInitDebug {
     LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyResourceReqsID, resourceValues);
 
     //DebugSimpleTechnologyMainBaseLevelReqsID
-    isActiveTechnologyComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
+    isTechComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     levelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
   }
 
