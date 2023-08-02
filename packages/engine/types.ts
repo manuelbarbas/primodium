@@ -48,7 +48,7 @@ export interface SceneConfig {
     tileHeight: number;
     tilesets: TilesetConfig;
     layerConfig: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
-    backgroundTile: [number, ...number[]];
+    backgroundTile?: [number, ...number[]];
     animationInterval: number;
   };
 }

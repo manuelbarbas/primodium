@@ -1,7 +1,7 @@
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
-import { throttle } from "lodash";
-import { useEffect, useRef, useState } from "react";
+import { throttle, clone } from "lodash";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSettingsStore } from "../stores/SettingsStore";
 import { GameReady } from "src/network/components/clientComponents";
 import { Scene } from "engine/types";
@@ -12,33 +12,19 @@ export function createHooksApi(targetScene: Scene) {
   }
 
   function useCamera() {
-    const [worldCoord, setWorldCoord] = useState<Coord>({ x: 0, y: 0 });
+    const [worldView, setWorldView] = useState<Phaser.Geom.Rectangle>();
     const [zoom, setZoom] = useState(0);
     const gameStatus = GameReady.use();
-    const minZoom = useRef(1);
+    const { camera } = targetScene;
 
     useEffect(() => {
       if (!gameStatus) {
         return;
       }
 
-      const {
-        camera,
-        tilemap: { tileHeight, tileWidth },
-        config: { camera: cameraconfig },
-      } = targetScene;
-
-      minZoom.current = cameraconfig.minZoom;
-
       const worldViewListener = camera?.worldView$.subscribe(
-        throttle((worldView) => {
-          const tileCoord = pixelCoordToTileCoord(
-            { x: worldView.centerX, y: worldView.centerY },
-            tileWidth,
-            tileHeight
-          );
-
-          setWorldCoord({ x: tileCoord.x, y: -tileCoord.y });
+        throttle((worldView: Phaser.Geom.Rectangle) => {
+          setWorldView(clone(worldView));
         }, 100)
       );
 
@@ -50,9 +36,10 @@ export function createHooksApi(targetScene: Scene) {
       };
     }, [gameStatus]);
 
-    const normalizedZoom = zoom / minZoom.current;
-
-    return { worldCoord, zoom, normalizedZoom };
+    return {
+      zoom,
+      worldView,
+    };
   }
 
   return {

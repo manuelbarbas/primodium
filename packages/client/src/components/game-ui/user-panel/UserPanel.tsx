@@ -8,24 +8,27 @@ import { MainBase, Level } from "src/network/components/chainComponents";
 import { useGameStore } from "src/store/GameStore";
 import { PanelButton } from "./PanelButton";
 import { Starmap } from "./panes/starmap/Starmap";
-import { FullStarmap } from "./panes/starmap/StarmapModal";
+import { FullStarmap } from "./panes/starmap/FullStarmap";
 import { AllResourceLabels } from "./panes/inventory/AllResourceLabels";
 import { AllPassiveResourceLabels } from "./panes/utilities/AllPassiveResourceLabels";
+import { primodium } from "@game/api";
+import { BeltMap } from "@game/constants";
 
 export const UserPanel = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const [menuIndex, setMenuIndex] = useState<number | null>(null);
+  const [menuIndex, setMenuIndex] = useState<number | null>(2);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
+  const { setTarget } = primodium.api(BeltMap.KEY)!.game;
 
   const mainBaseCoord = useMainBaseCoord();
   const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
 
   const level = Level.use(mainBase);
-  useEffect(() => {
-    if (Level === undefined) return;
+  // useEffect(() => {
+  //   if (Level === undefined) return;
 
-    setMenuIndex(0);
-  }, [level]);
+  //   setMenuIndex(0);
+  // }, [level]);
 
   return (
     <div
@@ -83,16 +86,18 @@ export const UserPanel = () => {
 
           {menuIndex === 2 && (
             <motion.div
-              id="starmap"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scale: 0 }}
               className=" bg-gray-900 z-[999] w-96 border border-cyan-600 p-2 text-xs h-56"
             >
-              <Starmap gridSize={16} />
+              <Starmap id="starmap" />
               <FullStarmap
                 show={showFullStarmap}
-                onClose={() => setShowFullStarmap(false)}
+                onClose={() => {
+                  setShowFullStarmap(false);
+                  setTarget("starmap");
+                }}
               />
             </motion.div>
           )}

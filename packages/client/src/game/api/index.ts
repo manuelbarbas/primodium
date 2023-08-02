@@ -1,13 +1,14 @@
+import { EntityID } from "@latticexyz/recs";
+import engine from "engine";
+import { Game } from "engine/types";
+import { GameReady } from "src/network/components/clientComponents";
 import { Network } from "../../network/layer";
 import _init from "../init";
 import { createCameraApi } from "./camera";
 import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
-import { GameReady } from "src/network/components/clientComponents";
-import { EntityID } from "@latticexyz/recs";
-import engine from "engine";
-import { Game } from "engine/types";
+import { createSceneApi } from "./scene";
 
 async function init(
   player: EntityID,
@@ -45,9 +46,18 @@ async function init(
   GameReady.set({ value: true });
 }
 
+function destroy() {
+  //for each instance, call game destroy
+  const instances = engine.getGame();
+
+  instances.forEach((instance) => {
+    instance.phaserGame.destroy(true);
+  });
+}
+
 function api(instance: string | Game, sceneKey: string = "MAIN") {
   const _instance =
-    typeof instance === "string" ? engine.getGame(instance) : instance;
+    typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
     console.warn("No instance found with key " + instance);
@@ -66,7 +76,8 @@ function api(instance: string | Game, sceneKey: string = "MAIN") {
     game: createGameApi(_instance),
     hooks: createHooksApi(scene),
     input: createInputApi(scene),
+    scene: createSceneApi(scene),
   };
 }
 
-export const primodium = { api, init };
+export const primodium = { api, init, destroy };

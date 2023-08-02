@@ -4,7 +4,7 @@ export const ASSET_PACK = "/assets/pack.json";
 export namespace AsteroidMap {
   export const TILE_HEIGHT = 16;
   export const TILE_WIDTH = 16;
-  export const RENDER_INTERVAL = 35;
+  export const RENDER_INTERVAL = 30;
   export const ANIMATION_INTERVAL = 200;
   export const KEY = "ASTEROID_MAP";
 
@@ -288,6 +288,14 @@ export namespace BeltMap {
   export enum Scenes {
     Root = "ROOT",
     Main = "MAIN",
+  }
+
+  export enum Assets {
+    GridTileset = "grid-tileset",
+  }
+
+  export enum Tilesets {
+    Grid = "Grid",
   }
 }
 

@@ -25,7 +25,31 @@ export function createGameApi(game: Game) {
     });
   }
 
+  function setTarget(id: string) {
+    const div = game.phaserGame.canvas;
+
+    const target = document.getElementById(id);
+
+    if (target === null) {
+      console.warn("No target found with id " + id);
+      return;
+    }
+
+    target.appendChild(div);
+
+    setResolution(
+      target.offsetWidth * window.devicePixelRatio,
+      target.offsetHeight * window.devicePixelRatio
+    );
+  }
+
+  function getConfig() {
+    return game.phaserGame.config;
+  }
+
   return {
     setResolution,
+    setTarget,
+    getConfig,
   };
 }

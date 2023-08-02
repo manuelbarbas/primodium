@@ -50,6 +50,8 @@ export const createGame = async (config: GameConfig) => {
 
     initializeContext(config.key, context);
 
+    console.log(config.key + ": Created Instance");
+
     return context;
   } catch (e) {
     throw e;

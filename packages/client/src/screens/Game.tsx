@@ -17,8 +17,6 @@ export const Game = () => {
   const gameReady = GameReady.use()?.value;
   console.log("game ready:", gameReady);
 
-  // resourceKey of the entity
-
   // fetch the main base of the user based on address
   const mainBase = MainBase.use(address)?.value;
   if (mainBase) {
@@ -45,6 +43,10 @@ export const Game = () => {
         setError(true);
       }
     })();
+
+    return () => {
+      primodium.destroy();
+    };
   }, []);
 
   useEffect(() => {
@@ -71,9 +73,6 @@ export const Game = () => {
     return <div>Phaser Engine Game Error. Refer to console.</div>;
   }
 
-  //check if player has mainbase and checkpoint is null
-  // const playerInitialized = mainBaseCoord && checkpoint === null;
-
   return (
     <div>
       {!gameReady && (
@@ -87,7 +86,6 @@ export const Game = () => {
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div id="game-container">
-        {/* {!playerInitialized && !completedTutorial && <Tour />} */}
         <div id="phaser-container" className="absolute cursor-pointer" />
         {gameReady && <GameUI />}
       </div>

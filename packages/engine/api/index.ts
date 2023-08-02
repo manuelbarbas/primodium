@@ -8,8 +8,8 @@ export const initializeContext = (key: string, game: Game) => {
   setGame(key, game);
 };
 
-export const getGame = (key: string) => {
-  return useEngineStore.getState().instances.get(key);
+export const getGame = () => {
+  return useEngineStore.getState().instances;
 };
 
 export const createGame = async (config: GameConfig) => {
