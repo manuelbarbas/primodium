@@ -6,7 +6,7 @@ import { useMud } from "src/hooks/useMud";
 import { useGameStore } from "../../store/GameStore";
 import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../shared/Spinner";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { getRecipe } from "../../util/resource";
 import { ResourceImage } from "../../util/constants";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
@@ -19,6 +19,7 @@ import {
   HasResearched,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
+import { ampli } from "src/ampli";
 
 export default function UpgradeButton({
   id,
@@ -80,6 +81,17 @@ export default function UpgradeButton({
     );
   }, [isResearched, researchRequirement]);
 
+  const upgradeBuilding = useCallback(() => {
+    ampli.systemUpgrade({
+      extra: {
+        coords: coords,
+        currLevel: upgradedLevel,
+        buildingTile: BlockIdToKey[builtTile],
+      },
+    });
+    upgrade(coords, network);
+  }, []);
+
   let upgradeText: string;
   if (isUpgradeLocked) {
     upgradeText = "Research Not Met";
@@ -94,7 +106,7 @@ export default function UpgradeButton({
       <GameButton
         id={id}
         className="w-44 mt-2 text-sm"
-        onClick={() => upgrade(coords, network)}
+        onClick={upgradeBuilding}
         color={
           isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
         }
