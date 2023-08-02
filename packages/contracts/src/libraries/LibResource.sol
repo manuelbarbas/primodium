@@ -8,6 +8,8 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
@@ -17,6 +19,14 @@ import { ResourceValue, ResourceValues } from "../types.sol";
 
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
+  function updateResourceProduction(IWorld world, uint256 buildingType, uint32 buildingLevel, bool isDestroy) internal {
+    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
+      world.getComponent(BuildingProductionComponentID)
+    );
+    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
+      world.getComponent(PlayerProductionComponentID)
+    );
+  }
 
   function updateResourceProduction(IWorld world, uint256 entity, uint32 newResourceProductionRate) internal {
     PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(
