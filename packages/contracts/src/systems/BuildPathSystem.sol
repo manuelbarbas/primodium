@@ -79,7 +79,7 @@ contract BuildPathSystem is PrimodiumSystem {
     if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
       require(
         endCoordBuildingId == MainBaseID,
-        "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
+        "[BuildPathSystem] Must build path to MainBase"
       );
       IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(
         msg.sender,
