@@ -1,7 +1,4 @@
-import {
-  pixelCoordToTileCoord,
-  tileCoordToPixelCoord,
-} from "@latticexyz/phaserx";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   EntityIndex,
   Has,
@@ -21,17 +18,6 @@ export const renderHoverTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
 
   const query = [Has(HoverTile)];
-
-  scene.input.pointermove$.pipe().subscribe((event) => {
-    const { x, y } = pixelCoordToTileCoord(
-      { x: event.pointer.worldX, y: event.pointer.worldY },
-      scene.tilemap.tileWidth,
-      scene.tilemap.tileHeight
-    );
-
-    const mouseCoord = { x, y: -y };
-    HoverTile.set({ ...mouseCoord });
-  });
 
   const render = ({ entity }: { entity: EntityIndex }) => {
     // Avoid updating on optimistic overrides

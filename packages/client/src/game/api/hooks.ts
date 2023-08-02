@@ -1,7 +1,5 @@
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
 import { throttle, clone } from "lodash";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSettingsStore } from "../stores/SettingsStore";
 import { GameReady } from "src/network/components/clientComponents";
 import { Scene } from "engine/types";

@@ -8,6 +8,9 @@ import { runSystems } from "../systems";
 import setupCameraMovement from "./setup/setupCameraMovement";
 import setupMouseInputs from "./setup/setupMouseInputs";
 import { EntityID } from "@latticexyz/recs";
+import { createFxApi } from "src/game/api/fx";
+
+const { outline } = createFxApi();
 
 export const initBeltMap = async (player: EntityID, network: Network) => {
   const { Scenes } = AsteroidMap;
@@ -23,11 +26,9 @@ export const initBeltMap = async (player: EntityID, network: Network) => {
   scene.camera.phaserCamera.fadeIn(1000);
 
   scene.phaserScene.add.sprite(0, 0, "asteroid-sprite");
-  scene.phaserScene.add.text(0, 16, "[0, 0]", {
-    align: "center",
-  });
 
-  scene.phaserScene.add.sprite(32, 64, "asteroid-titanium-sprite");
+  outline(scene.phaserScene.add.sprite(32, 64, "asteroid-titanium-sprite"));
+
   scene.phaserScene.add.text(0, 16, "[0, 0]", {
     align: "center",
   });

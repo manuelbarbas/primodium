@@ -9,6 +9,7 @@ import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
+import { createFxApi } from "./fx";
 
 async function init(
   player: EntityID,
@@ -77,6 +78,7 @@ function api(instance: string | Game, sceneKey: string = "MAIN") {
     hooks: createHooksApi(scene),
     input: createInputApi(scene),
     scene: createSceneApi(scene),
+    fx: createFxApi(),
   };
 }
 

@@ -24,11 +24,12 @@ export const UserPanel = () => {
   const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
 
   const level = Level.use(mainBase);
-  // useEffect(() => {
-  //   if (Level === undefined) return;
 
-  //   setMenuIndex(0);
-  // }, [level]);
+  useEffect(() => {
+    if (Level === undefined) return;
+
+    setMenuIndex(0);
+  }, [level]);
 
   return (
     <div

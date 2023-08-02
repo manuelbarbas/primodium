@@ -51,6 +51,7 @@ export const renderBuildingSprite = (scene: Scene) => {
     scene.objectPool.remove(renderId);
 
     const buildingRenderEntity = scene.objectPool.get(renderId, "Sprite");
+
     buildingRenderEntity.setComponent(
       createBuilding({
         renderId,
