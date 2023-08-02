@@ -38,14 +38,7 @@ To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`. For
 
 - `LibDebugInitializer`: First, configure debug buildings and technologies in this initializer library.
 
-- `DebugSystems`: Then, use the following systems to modify debug data.
-
-  - `DebugAcquireResourcesSystem`
-  - `DebugAcquireStorageForAllResourcesSystem`
-  - `DebugIgnoreBuildLimitForBuildingSystem`
-  - `DebugRemoveBuildingRequirementsSystem`
-  - `DebugRemoveBuildLimitSystem`
-  - `DebugRemoveUpgradeRequirementsSystem`
+- `ComponentDevSystem`: Then, `ComponentDevSystem` systems to modify debug data. For example, `ComponentDevSystem` can be used to set the level of a building or the amount of a resource. See the tests in `packages/contracts/src/test/systems` for examples.
 
 # Blueprints
 
