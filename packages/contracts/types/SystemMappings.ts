@@ -8,12 +8,6 @@ export const systemToId = {
   ClaimFromMineSystem: "system.ClaimFromMine",
   ComponentDevSystem: "system.ComponentDev",
   CraftSystem: "system.Craft",
-  DebugAcquireResourcesSystem: "system.DebugAcquireResources",
-  DebugAcquireStorageForAllResourcesSystem: "system.DebugAcquireStorageForAllResources",
-  DebugIgnoreBuildLimitForBuildingSystem: "system.DebugIgnoreBuildLimitForBuilding",
-  DebugRemoveBuildingRequirementsSystem: "system.DebugRemoveBuildingRequirements",
-  DebugRemoveBuildLimitSystem: "system.DebugRemoveBuildLimit",
-  DebugRemoveUpgradeRequirementsSystem: "system.DebugRemoveUpgradeRequirements",
   DestroyPathSystem: "system.DestroyPath",
   DestroySystem: "system.Destroy",
   IncrementSystem: "system.Increment",
@@ -23,6 +17,7 @@ export const systemToId = {
   PostUpgradeFactorySystem: "system.PostUpgradeFactory",
   PostUpgradeMineSystem: "system.PostUpgradeMine",
   ResearchSystem: "system.Research",
+  SpendRequiredResourcesSystem: "system.SpendRequiredResources",
   UpgradeSystem: "system.Upgrade",
 };
 
@@ -35,12 +30,6 @@ export const idToSystem = {
   "system.ClaimFromMine": "ClaimFromMineSystem",
   "system.ComponentDev": "ComponentDevSystem",
   "system.Craft": "CraftSystem",
-  "system.DebugAcquireResources": "DebugAcquireResourcesSystem",
-  "system.DebugAcquireStorageForAllResources": "DebugAcquireStorageForAllResourcesSystem",
-  "system.DebugIgnoreBuildLimitForBuilding": "DebugIgnoreBuildLimitForBuildingSystem",
-  "system.DebugRemoveBuildingRequirements": "DebugRemoveBuildingRequirementsSystem",
-  "system.DebugRemoveBuildLimit": "DebugRemoveBuildLimitSystem",
-  "system.DebugRemoveUpgradeRequirements": "DebugRemoveUpgradeRequirementsSystem",
   "system.DestroyPath": "DestroyPathSystem",
   "system.Destroy": "DestroySystem",
   "system.Increment": "IncrementSystem",
@@ -50,6 +39,7 @@ export const idToSystem = {
   "system.PostUpgradeFactory": "PostUpgradeFactorySystem",
   "system.PostUpgradeMine": "PostUpgradeMineSystem",
   "system.Research": "ResearchSystem",
+  "system.SpendRequiredResources": "SpendRequiredResourcesSystem",
   "system.Upgrade": "UpgradeSystem",
 };
   

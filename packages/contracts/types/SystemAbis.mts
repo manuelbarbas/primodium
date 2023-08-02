@@ -7,12 +7,6 @@ import BuildSystem from "../abi/BuildSystem.json";
 import ClaimFromMineSystem from "../abi/ClaimFromMineSystem.json";
 import ComponentDevSystem from "../abi/ComponentDevSystem.json";
 import CraftSystem from "../abi/CraftSystem.json";
-import DebugAcquireResourcesSystem from "../abi/DebugAcquireResourcesSystem.json";
-import DebugAcquireStorageForAllResourcesSystem from "../abi/DebugAcquireStorageForAllResourcesSystem.json";
-import DebugIgnoreBuildLimitForBuildingSystem from "../abi/DebugIgnoreBuildLimitForBuildingSystem.json";
-import DebugRemoveBuildingRequirementsSystem from "../abi/DebugRemoveBuildingRequirementsSystem.json";
-import DebugRemoveBuildLimitSystem from "../abi/DebugRemoveBuildLimitSystem.json";
-import DebugRemoveUpgradeRequirementsSystem from "../abi/DebugRemoveUpgradeRequirementsSystem.json";
 import DestroyPathSystem from "../abi/DestroyPathSystem.json";
 import DestroySystem from "../abi/DestroySystem.json";
 import IncrementSystem from "../abi/IncrementSystem.json";
@@ -22,6 +16,7 @@ import PostDestroySystem from "../abi/PostDestroySystem.json";
 import PostUpgradeFactorySystem from "../abi/PostUpgradeFactorySystem.json";
 import PostUpgradeMineSystem from "../abi/PostUpgradeMineSystem.json";
 import ResearchSystem from "../abi/ResearchSystem.json";
+import SpendRequiredResourcesSystem from "../abi/SpendRequiredResourcesSystem.json";
 import UpgradeSystem from "../abi/UpgradeSystem.json";
 
 export const SystemAbis = {
@@ -33,12 +28,6 @@ export const SystemAbis = {
   "system.ClaimFromMine": ClaimFromMineSystem.abi,
   "system.ComponentDev": ComponentDevSystem.abi,
   "system.Craft": CraftSystem.abi,
-  "system.DebugAcquireResources": DebugAcquireResourcesSystem.abi,
-  "system.DebugAcquireStorageForAllResources": DebugAcquireStorageForAllResourcesSystem.abi,
-  "system.DebugIgnoreBuildLimitForBuilding": DebugIgnoreBuildLimitForBuildingSystem.abi,
-  "system.DebugRemoveBuildingRequirements": DebugRemoveBuildingRequirementsSystem.abi,
-  "system.DebugRemoveBuildLimit": DebugRemoveBuildLimitSystem.abi,
-  "system.DebugRemoveUpgradeRequirements": DebugRemoveUpgradeRequirementsSystem.abi,
   "system.DestroyPath": DestroyPathSystem.abi,
   "system.Destroy": DestroySystem.abi,
   "system.Increment": IncrementSystem.abi,
@@ -48,5 +37,6 @@ export const SystemAbis = {
   "system.PostUpgradeFactory": PostUpgradeFactorySystem.abi,
   "system.PostUpgradeMine": PostUpgradeMineSystem.abi,
   "system.Research": ResearchSystem.abi,
+  "system.SpendRequiredResources": SpendRequiredResourcesSystem.abi,
   "system.Upgrade": UpgradeSystem.abi,
 };

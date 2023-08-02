@@ -27,21 +27,11 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export type ResourceValueStruct = {
-  resource: PromiseOrValue<BigNumberish>;
-  value: PromiseOrValue<BigNumberish>;
-};
-
-export type ResourceValueStructOutput = [BigNumber, number] & {
-  resource: BigNumber;
-  value: number;
-};
-
-export interface ProductionComponentInterface extends utils.Interface {
+export interface MaxPassiveComponentInterface extends utils.Interface {
   functions: {
     "authorizeWriter(address)": FunctionFragment;
     "getEntities()": FunctionFragment;
-    "getEntitiesWithValue((uint256,uint32))": FunctionFragment;
+    "getEntitiesWithValue(uint32)": FunctionFragment;
     "getEntitiesWithValue(bytes)": FunctionFragment;
     "getRawValue(uint256)": FunctionFragment;
     "getSchema()": FunctionFragment;
@@ -53,7 +43,7 @@ export interface ProductionComponentInterface extends utils.Interface {
     "registerWorld(address)": FunctionFragment;
     "remove(uint256)": FunctionFragment;
     "set(uint256,bytes)": FunctionFragment;
-    "set(uint256,(uint256,uint32))": FunctionFragment;
+    "set(uint256,uint32)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unauthorizeWriter(address)": FunctionFragment;
     "world()": FunctionFragment;
@@ -64,7 +54,7 @@ export interface ProductionComponentInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "authorizeWriter"
       | "getEntities"
-      | "getEntitiesWithValue((uint256,uint32))"
+      | "getEntitiesWithValue(uint32)"
       | "getEntitiesWithValue(bytes)"
       | "getRawValue"
       | "getSchema"
@@ -76,7 +66,7 @@ export interface ProductionComponentInterface extends utils.Interface {
       | "registerWorld"
       | "remove"
       | "set(uint256,bytes)"
-      | "set(uint256,(uint256,uint32))"
+      | "set(uint256,uint32)"
       | "transferOwnership"
       | "unauthorizeWriter"
       | "world"
@@ -92,8 +82,8 @@ export interface ProductionComponentInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getEntitiesWithValue((uint256,uint32))",
-    values: [ResourceValueStruct]
+    functionFragment: "getEntitiesWithValue(uint32)",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getEntitiesWithValue(bytes)",
@@ -131,8 +121,8 @@ export interface ProductionComponentInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "set(uint256,(uint256,uint32))",
-    values: [PromiseOrValue<BigNumberish>, ResourceValueStruct]
+    functionFragment: "set(uint256,uint32)",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -157,7 +147,7 @@ export interface ProductionComponentInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue((uint256,uint32))",
+    functionFragment: "getEntitiesWithValue(uint32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -187,7 +177,7 @@ export interface ProductionComponentInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256,(uint256,uint32))",
+    functionFragment: "set(uint256,uint32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -223,12 +213,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface ProductionComponent extends BaseContract {
+export interface MaxPassiveComponent extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ProductionComponentInterface;
+  interface: MaxPassiveComponentInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -257,8 +247,8 @@ export interface ProductionComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue((uint256,uint32))"(
-      factoryProductionData: ResourceValueStruct,
+    "getEntitiesWithValue(uint32)"(
+      value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
@@ -279,7 +269,7 @@ export interface ProductionComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[ResourceValueStructOutput]>;
+    ): Promise<[number]>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -311,9 +301,9 @@ export interface ProductionComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "set(uint256,(uint256,uint32))"(
+    "set(uint256,uint32)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: ResourceValueStruct,
+      value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -342,8 +332,8 @@ export interface ProductionComponent extends BaseContract {
 
   getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue((uint256,uint32))"(
-    factoryProductionData: ResourceValueStruct,
+  "getEntitiesWithValue(uint32)"(
+    value: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
@@ -364,7 +354,7 @@ export interface ProductionComponent extends BaseContract {
   getValue(
     entity: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<ResourceValueStructOutput>;
+  ): Promise<number>;
 
   has(
     entity: PromiseOrValue<BigNumberish>,
@@ -396,9 +386,9 @@ export interface ProductionComponent extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "set(uint256,(uint256,uint32))"(
+  "set(uint256,uint32)"(
     entity: PromiseOrValue<BigNumberish>,
-    value: ResourceValueStruct,
+    value: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -427,8 +417,8 @@ export interface ProductionComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue((uint256,uint32))"(
-      factoryProductionData: ResourceValueStruct,
+    "getEntitiesWithValue(uint32)"(
+      value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
@@ -449,7 +439,7 @@ export interface ProductionComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<ResourceValueStructOutput>;
+    ): Promise<number>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -481,9 +471,9 @@ export interface ProductionComponent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "set(uint256,(uint256,uint32))"(
+    "set(uint256,uint32)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: ResourceValueStruct,
+      value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -524,8 +514,8 @@ export interface ProductionComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getEntitiesWithValue((uint256,uint32))"(
-      factoryProductionData: ResourceValueStruct,
+    "getEntitiesWithValue(uint32)"(
+      value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -576,9 +566,9 @@ export interface ProductionComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "set(uint256,(uint256,uint32))"(
+    "set(uint256,uint32)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: ResourceValueStruct,
+      value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -608,8 +598,8 @@ export interface ProductionComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue((uint256,uint32))"(
-      factoryProductionData: ResourceValueStruct,
+    "getEntitiesWithValue(uint32)"(
+      value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -660,9 +650,9 @@ export interface ProductionComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "set(uint256,(uint256,uint32))"(
+    "set(uint256,uint32)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: ResourceValueStruct,
+      value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

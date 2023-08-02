@@ -4,6 +4,7 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
@@ -26,11 +27,10 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface DebugAcquireStorageForAllResourcesSystemInterface
-  extends utils.Interface {
+export interface SpendRequiredResourcesSystemInterface extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
-    "executeTyped()": FunctionFragment;
+    "executeTyped(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -49,7 +49,7 @@ export interface DebugAcquireStorageForAllResourcesSystemInterface
   ): string;
   encodeFunctionData(
     functionFragment: "executeTyped",
-    values?: undefined
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -87,12 +87,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface DebugAcquireStorageForAllResourcesSystem extends BaseContract {
+export interface SpendRequiredResourcesSystem extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: DebugAcquireStorageForAllResourcesSystemInterface;
+  interface: SpendRequiredResourcesSystemInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -120,6 +120,8 @@ export interface DebugAcquireStorageForAllResourcesSystem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     executeTyped(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -137,6 +139,8 @@ export interface DebugAcquireStorageForAllResourcesSystem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   executeTyped(
+    playerAddress: PromiseOrValue<string>,
+    targetEntity: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -153,7 +157,11 @@ export interface DebugAcquireStorageForAllResourcesSystem extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    executeTyped(overrides?: CallOverrides): Promise<string>;
+    executeTyped(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -181,6 +189,8 @@ export interface DebugAcquireStorageForAllResourcesSystem extends BaseContract {
     ): Promise<BigNumber>;
 
     executeTyped(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -199,6 +209,8 @@ export interface DebugAcquireStorageForAllResourcesSystem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     executeTyped(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

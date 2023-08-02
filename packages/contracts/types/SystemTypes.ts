@@ -7,12 +7,6 @@ import { BuildSystem } from "./ethers-contracts/BuildSystem";
 import { ClaimFromMineSystem } from "./ethers-contracts/ClaimFromMineSystem";
 import { ComponentDevSystem } from "./ethers-contracts/ComponentDevSystem";
 import { CraftSystem } from "./ethers-contracts/CraftSystem";
-import { DebugAcquireResourcesSystem } from "./ethers-contracts/DebugAcquireResourcesSystem";
-import { DebugAcquireStorageForAllResourcesSystem } from "./ethers-contracts/DebugAcquireStorageForAllResourcesSystem";
-import { DebugIgnoreBuildLimitForBuildingSystem } from "./ethers-contracts/DebugIgnoreBuildLimitForBuildingSystem";
-import { DebugRemoveBuildingRequirementsSystem } from "./ethers-contracts/DebugRemoveBuildingRequirementsSystem";
-import { DebugRemoveBuildLimitSystem } from "./ethers-contracts/DebugRemoveBuildLimitSystem";
-import { DebugRemoveUpgradeRequirementsSystem } from "./ethers-contracts/DebugRemoveUpgradeRequirementsSystem";
 import { DestroyPathSystem } from "./ethers-contracts/DestroyPathSystem";
 import { DestroySystem } from "./ethers-contracts/DestroySystem";
 import { IncrementSystem } from "./ethers-contracts/IncrementSystem";
@@ -22,6 +16,7 @@ import { PostDestroySystem } from "./ethers-contracts/PostDestroySystem";
 import { PostUpgradeFactorySystem } from "./ethers-contracts/PostUpgradeFactorySystem";
 import { PostUpgradeMineSystem } from "./ethers-contracts/PostUpgradeMineSystem";
 import { ResearchSystem } from "./ethers-contracts/ResearchSystem";
+import { SpendRequiredResourcesSystem } from "./ethers-contracts/SpendRequiredResourcesSystem";
 import { UpgradeSystem } from "./ethers-contracts/UpgradeSystem";
  
 export type SystemTypes = {
@@ -33,12 +28,6 @@ export type SystemTypes = {
   "system.ClaimFromMine": ClaimFromMineSystem;
   "system.ComponentDev": ComponentDevSystem;
   "system.Craft": CraftSystem;
-  "system.DebugAcquireResources": DebugAcquireResourcesSystem;
-  "system.DebugAcquireStorageForAllResources": DebugAcquireStorageForAllResourcesSystem;
-  "system.DebugIgnoreBuildLimitForBuilding": DebugIgnoreBuildLimitForBuildingSystem;
-  "system.DebugRemoveBuildingRequirements": DebugRemoveBuildingRequirementsSystem;
-  "system.DebugRemoveBuildLimit": DebugRemoveBuildLimitSystem;
-  "system.DebugRemoveUpgradeRequirements": DebugRemoveUpgradeRequirementsSystem;
   "system.DestroyPath": DestroyPathSystem;
   "system.Destroy": DestroySystem;
   "system.Increment": IncrementSystem;
@@ -48,5 +37,6 @@ export type SystemTypes = {
   "system.PostUpgradeFactory": PostUpgradeFactorySystem;
   "system.PostUpgradeMine": PostUpgradeMineSystem;
   "system.Research": ResearchSystem;
+  "system.SpendRequiredResources": SpendRequiredResourcesSystem;
   "system.Upgrade": UpgradeSystem;
 };
