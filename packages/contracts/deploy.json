@@ -20,11 +20,11 @@
     "BlueprintComponent",
     "MaxStorageComponent",
     "MaxResourceStorageComponent",
-    "TotalProductionComponent",
+    "PlayerProductionComponent",
     "UnclaimedResourceComponent",
     "ActiveComponent",
     "MinesComponent",
-    "ProductionComponent",
+    "BuildingProductionComponent",
     "MaxLevelComponent",
     "RequiredTileComponent",
     "RequiredPassiveComponent",
@@ -111,9 +111,9 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "TotalProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
     {
@@ -122,10 +122,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "TotalProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
         "MinesComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
     {
@@ -134,7 +134,7 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "TotalProductionComponent"
+        "PlayerProductionComponent"
       ]
     },
     {
@@ -145,10 +145,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "TotalProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
         "MinesComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
     {
@@ -157,9 +157,9 @@
         "MaxStorageComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "TotalProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
-        "ProductionComponent",
+        "BuildingProductionComponent",
         "MinesComponent"
       ]
     },
@@ -211,7 +211,7 @@
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "TotalProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent"
       ]
     },
@@ -220,9 +220,9 @@
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "TotalProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
 

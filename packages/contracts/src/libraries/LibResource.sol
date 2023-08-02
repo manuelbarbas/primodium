@@ -5,7 +5,7 @@ import { Uint256Component } from "std-contracts/components/Uint256Component.sol"
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
@@ -19,8 +19,8 @@ library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
 
   function updateResourceProduction(IWorld world, uint256 entity, uint32 newResourceProductionRate) internal {
-    TotalProductionComponent mineProductionComponent = TotalProductionComponent(
-      world.getComponent(TotalProductionComponentID)
+    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(
+      world.getComponent(PlayerProductionComponentID)
     );
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
@@ -71,7 +71,7 @@ library LibResource {
     uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
-      if (TotalProductionComponent(world.getComponent(TotalProductionComponentID)).has(playerResourceEntity))
+      if (PlayerProductionComponent(world.getComponent(PlayerProductionComponentID)).has(playerResourceEntity))
         LibUnclaimedResource.updateResourceClaimed(world, playerEntity, storageResourceIds[i]);
       uint32 unclaimedResourceAmount = LibMath.getSafe(unclaimedResourceComponent, playerResourceEntity);
       if (unclaimedResourceAmount > 0)

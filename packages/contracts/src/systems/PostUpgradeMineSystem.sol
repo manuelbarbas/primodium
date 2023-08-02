@@ -5,9 +5,9 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
-import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -57,32 +57,40 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
 
     //if all conditions are met make factory functional
     activeComponent.set(factoryEntity);
-    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
+    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
+      getAddressById(components, BuildingProductionComponentID)
+    );
 
     uint256 levelEntity = LibEncode.hashKeyEntity(
       BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
     //first update unclaimed resources up to this point
-    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionComponent.getValue(levelEntity).resource);
+    LibUnclaimedResource.updateResourceClaimed(
+      world,
+      playerEntity,
+      buildingProductionComponent.getValue(levelEntity).resource
+    );
 
     //then update resource production
     LibFactory.updateProduction(world, playerEntity, levelEntity, true);
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
-    TotalProductionComponent mineProductionComponent = TotalProductionComponent(
-      getAddressById(components, TotalProductionComponentID)
+    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(
+      getAddressById(components, PlayerProductionComponentID)
     );
-    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
+    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
+      getAddressById(components, BuildingProductionComponentID)
+    );
     uint32 level = LevelComponent(getAddressById(components, LevelComponentID)).getValue(mineEntity);
     uint256 tile = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(mineEntity);
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
       mineProductionComponent.getValue(playerResourceEntity) +
-        productionComponent.getValue(LibEncode.hashKeyEntity(tile, level)).value -
-        productionComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1)).value
+        buildingProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level)).value -
+        buildingProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1)).value
     );
   }
 

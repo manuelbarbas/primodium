@@ -5,7 +5,7 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "../components/LastClaimedAtComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
-import { TotalProductionComponent, ID as TotalProductionComponentID } from "../components/TotalProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../components/PlayerProductionComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 
 import { LibEncode } from "./LibEncode.sol";
@@ -20,8 +20,8 @@ library LibUnclaimedResource {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
-    TotalProductionComponent mineProductionComponent = TotalProductionComponent(
-      world.getComponent(TotalProductionComponentID)
+    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(
+      world.getComponent(PlayerProductionComponentID)
     );
 
     uint256 playerResourceProductionEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);

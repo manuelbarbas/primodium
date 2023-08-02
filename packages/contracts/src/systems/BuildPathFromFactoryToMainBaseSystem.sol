@@ -8,7 +8,7 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -43,7 +43,9 @@ contract BuildPathFromFactoryToMainBaseSystem is IOnTwoEntitySubsystem, Primodiu
         buildingId,
         LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
       );
-      ResourceValue memory productionData = ProductionComponent(getC(ProductionComponentID)).getValue(levelEntity);
+      ResourceValue memory productionData = BuildingProductionComponent(getC(BuildingProductionComponentID)).getValue(
+        levelEntity
+      );
 
       LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionData.resource);
 

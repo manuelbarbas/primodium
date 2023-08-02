@@ -17,7 +17,7 @@ import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForA
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { TotalProductionComponent, ID as TotalProductionComponentID } from "../../components/TotalProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../../components/PlayerProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 
 import "../../prototypes.sol";
@@ -141,7 +141,7 @@ contract ClaimSystemTest is MudTest {
     console.log("built path from PlatingFactory to MainBase");
     console.log(
       "Iron PLate Production is %s",
-      TotalProductionComponent(component(TotalProductionComponentID)).getValue(
+      PlayerProductionComponent(component(PlayerProductionComponentID)).getValue(
         LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))
       )
     );

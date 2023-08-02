@@ -11,7 +11,7 @@ import {
   Item,
   LastClaimedAt,
   MainBase,
-  TotalProduction,
+  PlayerProduction,
   MaxStorage,
   UnclaimedResource,
   MaxPassive,
@@ -310,7 +310,11 @@ Inventory.ResourceLabel = ({
 
   const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
 
-  const production = useResourceCount(TotalProduction, resourceId, entityIndex);
+  const production = useResourceCount(
+    PlayerProduction,
+    resourceId,
+    entityIndex
+  );
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,
@@ -406,7 +410,11 @@ Inventory.PassiveResourceLabel = ({
 
   const maxStorage = useResourceCount(MaxPassive, resourceId, entityIndex);
 
-  const production = useResourceCount(TotalProduction, resourceId, entityIndex);
+  const production = useResourceCount(
+    PlayerProduction,
+    resourceId,
+    entityIndex
+  );
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,

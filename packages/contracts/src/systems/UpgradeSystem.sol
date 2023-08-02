@@ -11,7 +11,7 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
 
@@ -88,7 +88,7 @@ contract UpgradeSystem is PrimodiumSystem {
         buildingEntity
       );
     } else if (
-      ProductionComponent(getAddressById(components, ProductionComponentID)).has(
+      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(
         LibEncode.hashKeyEntity(buildingType, newLevel)
       )
     ) {

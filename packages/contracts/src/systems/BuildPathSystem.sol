@@ -8,7 +8,7 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
@@ -77,16 +77,15 @@ contract BuildPathSystem is PrimodiumSystem {
     );
 
     if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
-      require(
-        endCoordBuildingId == MainBaseID,
-        "[BuildPathSystem] Must build path to MainBase"
-      );
+      require(endCoordBuildingId == MainBaseID, "[BuildPathSystem] Must build path to MainBase");
       IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(
         msg.sender,
         startBuilding,
         endBuilding
       );
-    } else if (ProductionComponent(getAddressById(components, ProductionComponentID)).has(startCoordLevelEntity)) {
+    } else if (
+      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(startCoordLevelEntity)
+    ) {
       if (endCoordBuildingId == MainBaseID) {
         IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromMineToMainBaseSystemID)).executeTyped(
           msg.sender,

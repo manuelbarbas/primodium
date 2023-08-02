@@ -5,8 +5,8 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { TotalProductionComponent, ID as TotalProductionComponentID } from "components/TotalProductionComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
@@ -26,8 +26,10 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
       msg.sender == getAddressById(world.systems(), BuildPathSystemID),
       "PostUpgradeSystem: Only BuildSystem can call this function"
     );
-    TotalProductionComponent mineProductionComponent = TotalProductionComponent(getC(TotalProductionComponentID));
-    ProductionComponent productionComponent = ProductionComponent(getC(ProductionComponentID));
+    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(getC(PlayerProductionComponentID));
+    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
+      getC(BuildingProductionComponentID)
+    );
 
     (address playerAddress, uint256 fromBuildingEntity, uint256 toBuildingEntity) = abi.decode(
       args,
@@ -39,9 +41,9 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
       buildingId,
       LevelComponent(getC(LevelComponentID)).getValue(fromBuildingEntity)
     );
-    require(productionComponent.has(levelEntity), "Mine level entity not found");
+    require(buildingProductionComponent.has(levelEntity), "Mine level entity not found");
 
-    uint256 resourceId = productionComponent.getValue(levelEntity).resource;
+    uint256 resourceId = buildingProductionComponent.getValue(levelEntity).resource;
 
     LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceId);
 
@@ -49,7 +51,8 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      LibMath.getSafe(mineProductionComponent, playerResourceEntity) + productionComponent.getValue(levelEntity).value
+      LibMath.getSafe(mineProductionComponent, playerResourceEntity) +
+        buildingProductionComponent.getValue(levelEntity).value
     );
 
     PathComponent(getC(PathComponentID)).set(fromBuildingEntity, toBuildingEntity);

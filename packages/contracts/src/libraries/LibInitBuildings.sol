@@ -8,7 +8,7 @@ import { RequiredTileComponent, ID as RequiredTileComponentID } from "components
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID, ResourceValue } from "components/PassiveProductionComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
@@ -173,7 +173,7 @@ library LibInitBuildings {
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
         ResourceValue({ resource: IronResourceItemID, value: productionRates[i] })
       );
@@ -228,7 +228,7 @@ library LibInitBuildings {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
         ResourceValue({ resource: CopperResourceItemID, value: productionRates[i] })
       );
@@ -274,7 +274,7 @@ library LibInitBuildings {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
         ResourceValue({ resource: LithiumResourceItemID, value: productionRates[i] })
       );
@@ -354,7 +354,10 @@ library LibInitBuildings {
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+        buildingLevelEntity,
+        production[i]
+      );
     }
   }
 
@@ -422,7 +425,10 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredPassives[i]
       );
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+        buildingLevelEntity,
+        production[i]
+      );
     }
   }
 
@@ -474,7 +480,10 @@ library LibInitBuildings {
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+        buildingLevelEntity,
+        production[i]
+      );
     }
   }
 
