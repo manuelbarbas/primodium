@@ -71,14 +71,15 @@ library LibPassiveResource {
     uint256 playerEntity,
     uint256 resourceID
   ) internal view returns (uint32) {
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceID, playerEntity);
     return
       LibMath.getSafe(
         PassiveResourceCapacityComponent(world.getComponent(PassiveResourceCapacityComponentID)),
-        LibEncode.hashKeyEntity(resourceID, playerEntity)
+        playerResourceEntity
       ) -
       LibMath.getSafe(
         OccupiedPassiveResourceComponent(world.getComponent(OccupiedPassiveResourceComponentID)),
-        LibEncode.hashKeyEntity(resourceID, playerEntity)
+        playerResourceEntity
       );
   }
 
