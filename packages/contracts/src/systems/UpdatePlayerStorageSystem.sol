@@ -5,10 +5,11 @@ import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
-import { IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
-
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResource } from "../libraries/LibResource.sol";
@@ -27,21 +28,26 @@ contract UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {
       "UpdatePlayerStorageSystem: Only BuildSystem, UpgradeSystem, DestroySystem can call this function"
     );
 
-    (address playerAddress, uint256 buildingType, uint32 buildingLevel, bool isDestroy) = abi.decode(
+    (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
       args,
-      (address, uint256, uint32, bool)
+      (address, uint256, EActionType)
+    );
+    uint256 buildingType = BuildingTypeComponent(getAddressById(world.components(), BuildingTypeComponentID)).getValue(
+      buildingEntity
+    );
+    uint32 buildingLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(
+      buildingEntity
     );
     uint256 playerEntity = addressToEntity(playerAddress);
 
-    LibStorage.updatePlayerStorage(world, playerEntity, buildingType, buildingLevel, isDestroy);
+    LibStorage.updatePlayerStorage(world, playerEntity, buildingType, buildingLevel, actionType == EActionType.Destroy);
   }
 
   function executeTyped(
     address playerAddress,
-    uint256 buildingType,
-    uint32 buildingLevel,
-    bool isDestroy
+    uint256 buildingEntity,
+    EActionType actionType
   ) public returns (bytes memory) {
-    return execute(abi.encode(playerAddress, buildingType, buildingLevel, isDestroy));
+    return execute(abi.encode(playerAddress, buildingEntity, actionType));
   }
 }

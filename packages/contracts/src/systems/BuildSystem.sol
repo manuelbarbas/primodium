@@ -26,7 +26,7 @@ import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
-import { IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
@@ -116,9 +116,8 @@ contract BuildSystem is PrimodiumSystem {
     ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
-        buildingType,
-        1,
-        false
+        buildingEntity,
+        EActionType.Build
       );
     }
 

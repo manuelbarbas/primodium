@@ -14,6 +14,7 @@ import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLeve
 import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
 
 import { MainBaseID } from "../prototypes.sol";
@@ -25,12 +26,13 @@ import { LibResource } from "../libraries/LibResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
 import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
+import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerResourceProductionSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is PrimodiumSystem {
@@ -100,6 +102,24 @@ contract UpgradeSystem is PrimodiumSystem {
         buildingEntity
       );
     }
+
+    //Resource Production Update
+    if (
+      ActiveComponent(getAddressById(components, ActiveComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
+      ) ||
+      !MinesComponent(getAddressById(components, MinesComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
+      )
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+
+    //Storage Update
     if (
       MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(
         LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
@@ -107,9 +127,8 @@ contract UpgradeSystem is PrimodiumSystem {
     ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
-        buildingTypeComponent.getValue(buildingEntity),
-        levelComponent.getValue(buildingEntity),
-        false
+        buildingEntity,
+        EActionType.Upgrade
       );
     }
 

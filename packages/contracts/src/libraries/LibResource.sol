@@ -16,15 +16,44 @@ import { LibMath } from "./LibMath.sol";
 import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
 import { LibStorage } from "./LibStorage.sol";
 import { ResourceValue, ResourceValues } from "../types.sol";
+import { EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
-  function updateResourceProduction(IWorld world, uint256 buildingType, uint32 buildingLevel, bool isDestroy) internal {
+  function updatePlayerResourceProduction(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 buildingType,
+    uint32 buildingLevel,
+    EActionType actionType
+  ) internal {
     BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
       world.getComponent(BuildingProductionComponentID)
     );
     PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
       world.getComponent(PlayerProductionComponentID)
+    );
+
+    ResourceValue memory resourceProduction = buildingProductionComponent.getValue(
+      LibEncode.hashKeyEntity(buildingType, buildingLevel)
+    );
+    uint32 currResourceProduction = playerProductionComponent.getValue(
+      LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity)
+    );
+    if (actionType == EActionType.Destroy) {
+      currResourceProduction -= resourceProduction.value;
+    } else if (actionType == EActionType.Upgrade) {
+      currResourceProduction +=
+        resourceProduction.value -
+        buildingProductionComponent.getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)).value;
+    } else {
+      currResourceProduction += resourceProduction.value;
+    }
+    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceProduction.resource);
+    updateResourceProduction(
+      world,
+      LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity),
+      currResourceProduction
     );
   }
 

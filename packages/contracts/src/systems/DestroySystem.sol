@@ -27,7 +27,7 @@ import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
 import { ID as PostDestroySystemID } from "./PostDestroySystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 import { Coord } from "../types.sol";
 
@@ -129,9 +129,8 @@ contract DestroySystem is PrimodiumSystem {
     ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
-        buildingType,
-        levelComponent.getValue(buildingEntity),
-        true
+        buildingEntity,
+        EActionType.Destroy
       );
     }
     levelComponent.remove(buildingEntity);
