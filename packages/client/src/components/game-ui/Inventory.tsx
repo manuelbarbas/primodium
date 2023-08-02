@@ -11,9 +11,11 @@ import {
   Item,
   LastClaimedAt,
   MainBase,
-  MineProduction,
+  PlayerProduction,
   MaxStorage,
   UnclaimedResource,
+  MaxPassive,
+  OccupiedPassiveResource,
 } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useMud } from "src/hooks";
@@ -270,12 +272,13 @@ Inventory.AllPassiveResourceLabels = ({
   entityIndex?: EntityIndex;
 }) => {
   const { components } = useMud();
-  const maxStorage = useResourceCount(
-    components.MaxStorage,
+
+  const passiveCapacity = useResourceCount(
+    components.MaxPassive,
     BlockType.ElectricityPassiveResource,
     entityIndex
   );
-  if (!maxStorage)
+  if (!passiveCapacity)
     return (
       <div className="flex justify-center items-center text-lg">
         No Utilities
@@ -307,7 +310,11 @@ Inventory.ResourceLabel = ({
 
   const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
 
-  const production = useResourceCount(MineProduction, resourceId, entityIndex);
+  const production = useResourceCount(
+    PlayerProduction,
+    resourceId,
+    entityIndex
+  );
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,
@@ -395,11 +402,19 @@ Inventory.PassiveResourceLabel = ({
 }) => {
   const blockNumber = BlockNumber.get();
 
-  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
+  const resourceCount = useResourceCount(
+    OccupiedPassiveResource,
+    resourceId,
+    entityIndex
+  );
 
-  const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
+  const maxStorage = useResourceCount(MaxPassive, resourceId, entityIndex);
 
-  const production = useResourceCount(MineProduction, resourceId, entityIndex);
+  const production = useResourceCount(
+    PlayerProduction,
+    resourceId,
+    entityIndex
+  );
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,

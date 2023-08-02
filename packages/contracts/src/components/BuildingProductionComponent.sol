@@ -3,11 +3,11 @@ pragma solidity >=0.8.0;
 import "solecs/Component.sol";
 import "std-contracts/components/Uint256Component.sol";
 
-uint256 constant ID = uint256(keccak256("component.Production"));
+uint256 constant ID = uint256(keccak256("component.BuildingProduction"));
 
 import { ResourceValue } from "../types.sol";
 
-contract ProductionComponent is Component {
+contract BuildingProductionComponent is Component {
   constructor(address world) Component(world, ID) {}
 
   function getSchema() public pure override returns (string[] memory keys, LibTypes.SchemaValue[] memory values) {

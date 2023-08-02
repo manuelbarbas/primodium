@@ -12,13 +12,12 @@ import { LibEncode } from "./LibEncode.sol";
 
 library LibSetBuildingReqs {
   function setResourceReqs(IWorld world, uint256 buildingType, ResourceValue[] memory resourceValues) internal {
-    uint256[] memory resources = new uint256[](resourceValues.length);
+    ResourceValues memory resources;
+    resources.resources = new uint256[](resourceValues.length);
+    resources.values = new uint32[](resourceValues.length);
     for (uint256 i = 0; i < resourceValues.length; i++) {
-      resources[i] = resourceValues[i].resource;
-      ItemComponent(world.getComponent(ItemComponentID)).set(
-        LibEncode.hashKeyEntity(resourceValues[i].resource, buildingType),
-        resourceValues[i].value
-      );
+      resources.resources[i] = resourceValues[i].resource;
+      resources.values[i] = resourceValues[i].value;
     }
     RequiredResourcesComponent(world.getComponent(RequiredResourcesComponentID)).set(buildingType, resources);
   }

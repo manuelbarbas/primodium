@@ -5,12 +5,11 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -83,7 +82,9 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(toBuildingEntity)
     );
 
-    uint256 factoryResourceId = ProductionComponent(getC(ProductionComponentID)).getValue(factoryLevelEntity).resource;
+    uint256 factoryResourceId = BuildingProductionComponent(getC(BuildingProductionComponentID))
+      .getValue(factoryLevelEntity)
+      .resource;
 
     LibUnclaimedResource.updateResourceClaimed(world, addressToEntity(playerAddress), factoryResourceId);
 
@@ -97,9 +98,8 @@ contract BuildPathFromMineToFactorySystem is IOnTwoEntitySubsystem, PrimodiumSys
     ) {
       uint256 playerEntity = addressToEntity(playerAddress);
 
-      ResourceValue memory factoryProductionData = ProductionComponent(getC(ProductionComponentID)).getValue(
-        factoryLevelEntity
-      );
+      ResourceValue memory factoryProductionData = BuildingProductionComponent(getC(BuildingProductionComponentID))
+        .getValue(factoryLevelEntity);
 
       LibUnclaimedResource.updateResourceClaimed(world, playerEntity, factoryProductionData.resource);
 
