@@ -14,6 +14,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 
 import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 
@@ -24,6 +25,9 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -84,7 +88,19 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     //check resource requirements and if ok spend required resources
-    LibResource.spendRequiredResources(world, buildingTypeLevelEntity, playerEntity);
+
+    if (
+      RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingTypeLevelEntity)
+    ) {
+      require(
+        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, addressToEntity(msg.sender)),
+        "[BuildSystem] Not enough resources to research"
+      );
+      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
+        msg.sender,
+        buildingTypeLevelEntity
+      );
+    }
 
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);

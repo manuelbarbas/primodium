@@ -3,14 +3,12 @@ pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 // Production Buildings
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID, ResourceValue } from "components/PassiveProductionComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
@@ -175,11 +173,11 @@ library LibInitBuildings {
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
-
-      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
-        productionRates[i]
+        ResourceValue({ resource: IronResourceItemID, value: productionRates[i] })
       );
+
       if (requiredResearch[i] > 0)
         RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
           buildingLevelEntity,
@@ -230,9 +228,9 @@ library LibInitBuildings {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
-        productionRates[i]
+        ResourceValue({ resource: CopperResourceItemID, value: productionRates[i] })
       );
       RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
         buildingLevelEntity,
@@ -276,9 +274,9 @@ library LibInitBuildings {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      MineProductionComponent(world.getComponent(MineProductionComponentID)).set(
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
-        productionRates[i]
+        ResourceValue({ resource: LithiumResourceItemID, value: productionRates[i] })
       );
       RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
         buildingLevelEntity,
@@ -356,7 +354,10 @@ library LibInitBuildings {
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+        buildingLevelEntity,
+        production[i]
+      );
     }
   }
 
@@ -424,7 +425,10 @@ library LibInitBuildings {
         buildingLevelEntity,
         requiredPassives[i]
       );
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+        buildingLevelEntity,
+        production[i]
+      );
     }
   }
 
@@ -476,7 +480,10 @@ library LibInitBuildings {
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
       MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
-      ProductionComponent(world.getComponent(ProductionComponentID)).set(buildingLevelEntity, production[i]);
+      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+        buildingLevelEntity,
+        production[i]
+      );
     }
   }
 

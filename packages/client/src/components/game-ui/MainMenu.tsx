@@ -3,7 +3,7 @@ import { GameButton } from "../shared/GameButton";
 
 const params = new URLSearchParams(window.location.search);
 
-export const SettingsMenu = () => {
+export const MainMenu = () => {
   return (
     <div className="flex flex-col items-center gap-2 text-white w-80 min-w-full">
       <h1 className="inline-block align-middle text-xl font-bold">

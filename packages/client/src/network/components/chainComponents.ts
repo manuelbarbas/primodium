@@ -68,6 +68,11 @@ export const HasResearched = newBoolComponent(world, {
   metadata: { contractId: `${commonIdPrefix}HasResearched` },
 });
 
+export const IsActiveTechnology = newBoolComponent(world, {
+  id: "IsActiveTechnology",
+  metadata: { contractId: `${commonIdPrefix}IsActiveTechnology` },
+});
+
 export const MainBase = newComponent(
   world,
   { value: Type.Entity },
@@ -84,7 +89,8 @@ export const RequiredResearch = newNumberComponent(world, {
 
 export const RequiredResources = newComponent(
   world,
-  { value: Type.EntityArray },
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
   {
     id: "RequiredResources",
     metadata: { contractId: `${commonIdPrefix}RequiredResources` },
@@ -109,15 +115,32 @@ export const MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
-export const MineProduction = newNumberComponent(world, {
-  id: "MineProduction",
-  metadata: { contractId: `${commonIdPrefix}MineProduction` },
+export const PlayerProduction = newNumberComponent(world, {
+  id: "PlayerProduction",
+  metadata: { contractId: `${commonIdPrefix}PlayerProduction` },
   overridable: true,
 });
 
 export const MaxBuildings = newNumberComponent(world, {
   id: "MaxBuildings",
   metadata: { contractId: `${commonIdPrefix}MaxBuildings` },
+  overridable: true,
+});
+
+export const BuildingCount = newNumberComponent(world, {
+  id: "BuildingCount",
+  metadata: { contractId: `${commonIdPrefix}BuildingCount` },
+  overridable: true,
+});
+export const MaxPassive = newNumberComponent(world, {
+  id: "MaxPassive",
+  metadata: { contractId: `${commonIdPrefix}MaxPassive` },
+  overridable: true,
+});
+
+export const OccupiedPassiveResource = newNumberComponent(world, {
+  id: "OccupiedPassiveResource",
+  metadata: { contractId: `${commonIdPrefix}OccupiedPassiveResource` },
   overridable: true,
 });
 
@@ -171,12 +194,15 @@ export default {
   MaxLevel,
   Level,
   MaxStorage,
-  MineProduction,
+  PlayerProduction,
   MaxBuildings,
+  BuildingCount,
   Children,
   RawBlueprint,
   UnclaimedResource,
   SystemsRegistry,
   ComponentsRegistry,
   LoadingState,
+  OccupiedPassiveResource,
+  MaxPassive,
 };

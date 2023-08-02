@@ -2,10 +2,10 @@ import { EntityID, EntityIndex } from "@latticexyz/recs";
 import { useMemo } from "react";
 import useResourceCount from "src/hooks/useResourceCount";
 import {
-  Item,
   LastClaimedAt,
-  MineProduction,
-  MaxStorage,
+  MaxPassive,
+  PlayerProduction,
+  OccupiedPassiveResource,
   UnclaimedResource,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
@@ -22,11 +22,19 @@ export const PassiveResourceLabel = ({
 }) => {
   const blockNumber = BlockNumber.get();
 
-  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
+  const resourceCount = useResourceCount(
+    OccupiedPassiveResource,
+    resourceId,
+    entityIndex
+  );
 
-  const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
+  const maxStorage = useResourceCount(MaxPassive, resourceId, entityIndex);
 
-  const production = useResourceCount(MineProduction, resourceId, entityIndex);
+  const production = useResourceCount(
+    PlayerProduction,
+    resourceId,
+    entityIndex
+  );
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,

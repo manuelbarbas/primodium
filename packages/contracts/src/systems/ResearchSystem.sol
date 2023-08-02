@@ -5,6 +5,7 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
+import { IsTechComponent, ID as IsTechComponentID } from "components/IsTechComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
@@ -14,6 +15,10 @@ import { LibResearch } from "libraries/LibResearch.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+
 uint256 constant ID = uint256(keccak256("system.Research"));
 
 contract ResearchSystem is System {
@@ -33,11 +38,9 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
-      getAddressById(components, HasResearchedComponentID)
-    );
+    IsTechComponent isTechComponent = IsTechComponent(getAddressById(components, IsTechComponentID));
 
-    require(hasResearchedComponent.has(researchItem), "[ResearchSystem] Technology not registered");
+    require(isTechComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
       checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),
@@ -49,11 +52,20 @@ contract ResearchSystem is System {
       "[ResearchSystem] Research requirements not met"
     );
 
-    require(
-      LibResource.checkAndSpendRequiredResources(world, researchItem, addressToEntity(msg.sender)),
-      "[ResearchSystem] Not enough resources to research"
+    if (RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(researchItem)) {
+      require(
+        LibResource.hasRequiredResources(world, researchItem, addressToEntity(msg.sender)),
+        "[ResearchSystem] Not enough resources to research"
+      );
+      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
+        msg.sender,
+        researchItem
+      );
+    }
+
+    HasResearchedComponent(getAddressById(components, HasResearchedComponentID)).set(
+      LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender))
     );
-    hasResearchedComponent.set(LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender)));
     return abi.encode(true);
   }
 

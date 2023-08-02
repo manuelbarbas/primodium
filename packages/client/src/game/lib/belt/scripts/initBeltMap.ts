@@ -27,7 +27,9 @@ export const initBeltMap = async (player: EntityID, network: Network) => {
 
   scene.phaserScene.add.sprite(0, 0, "asteroid-sprite");
 
-  outline(scene.phaserScene.add.sprite(32, 64, "asteroid-titanium-sprite"));
+  outline(
+    scene.phaserScene.add.sprite(10 * 32, -10 * 32, "asteroid-titanium-sprite")
+  );
 
   scene.phaserScene.add.text(0, 16, "[0, 0]", {
     align: "center",
