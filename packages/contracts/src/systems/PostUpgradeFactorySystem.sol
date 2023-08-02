@@ -8,9 +8,9 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 
@@ -56,16 +56,22 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
     //if factory was non functional nothing to do
     if (!activeComponent.has(factoryEntity)) return;
 
-    ProductionComponent productionComponent = ProductionComponent(getAddressById(components, ProductionComponentID));
+    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
+      getAddressById(components, BuildingProductionComponentID)
+    );
 
     uint256 levelEntity = LibEncode.hashKeyEntity(
       buildingTypeComponent.getValue(factoryEntity),
       levelComponent.getValue(factoryEntity)
     );
 
-    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, productionComponent.getValue(levelEntity).resource);
+    LibUnclaimedResource.updateResourceClaimed(
+      world,
+      playerEntity,
+      buildingProductionComponent.getValue(levelEntity).resource
+    );
 
-    ResourceValue memory productionDataPreUpgrade = productionComponent.getValue(
+    ResourceValue memory productionDataPreUpgrade = buildingProductionComponent.getValue(
       LibEncode.hashKeyEntity(buildingTypeComponent.getValue(factoryEntity), levelComponent.getValue(factoryEntity) - 1)
     );
 
@@ -85,8 +91,9 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       LibResource.updateResourceProduction(
         world,
         playerResourceEntity,
-        MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) +
-          (productionComponent.getValue(levelEntity).value - productionDataPreUpgrade.value)
+        PlayerProductionComponent(getAddressById(components, PlayerProductionComponentID)).getValue(
+          playerResourceEntity
+        ) + (buildingProductionComponent.getValue(levelEntity).value - productionDataPreUpgrade.value)
       );
     } else {
       // if not functional remove resource production of the factory and set as non functional
@@ -94,8 +101,9 @@ contract PostUpgradeFactorySystem is IOnEntitySubsystem, System {
       LibResource.updateResourceProduction(
         world,
         playerResourceEntity,
-        MineProductionComponent(getAddressById(components, MineProductionComponentID)).getValue(playerResourceEntity) -
-          productionDataPreUpgrade.value
+        PlayerProductionComponent(getAddressById(components, PlayerProductionComponentID)).getValue(
+          playerResourceEntity
+        ) - productionDataPreUpgrade.value
       );
     }
   }

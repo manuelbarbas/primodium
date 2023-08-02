@@ -11,7 +11,11 @@ import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
 import { SettingsMenu } from "./SettingsMenu";
-import { Level, MaxBuildings } from "src/network/components/chainComponents";
+import {
+  Level,
+  MaxBuildings,
+  BuildingCount,
+} from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
 
 export const InfoBox = () => {
@@ -34,7 +38,7 @@ export const InfoBox = () => {
     trimEntityId(mainBaseLevel as unknown as EntityID)
   );
 
-  const playerBuildingCount = MaxBuildings.use(address);
+  const playerBuildingCount = BuildingCount.use(address);
   const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
   const playerBuildingCountNumber = parseInt(
     playerBuildingCount?.value.toString() ?? "0"

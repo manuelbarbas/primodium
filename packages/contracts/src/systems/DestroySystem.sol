@@ -9,7 +9,7 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
@@ -20,6 +20,7 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
+
 import { MainBaseID } from "../prototypes.sol";
 
 import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
@@ -32,6 +33,7 @@ import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
+import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -53,7 +55,7 @@ contract DestroySystem is PrimodiumSystem {
     );
     if (passiveProductionComponent.has(buildingLevelEntity)) {
       return
-        LibStorage.getResourceStorageSpace(
+        LibPassiveResource.getAvailablePassiveCapacity(
           world,
           addressToEntity(msg.sender),
           passiveProductionComponent.getValue(buildingLevelEntity).resource
@@ -68,8 +70,6 @@ contract DestroySystem is PrimodiumSystem {
     PathComponent pathComponent = PathComponent(getC(PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     ChildrenComponent childrenComponent = ChildrenComponent(getC(ChildrenComponentID));
-
-    MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(getC(MaxBuildingsComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
 
     uint256 buildingEntity = getBuildingFromCoord(coord);
@@ -115,7 +115,8 @@ contract DestroySystem is PrimodiumSystem {
     }
 
     if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      maxBuildingsComponent.set(playerEntity, LibMath.getSafe(maxBuildingsComponent, playerEntity) - 1);
+      BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
+      buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) - 1);
     }
 
     IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);

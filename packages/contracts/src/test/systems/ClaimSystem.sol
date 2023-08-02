@@ -15,7 +15,7 @@ import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/Co
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "../../components/MineProductionComponent.sol";
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../../components/PlayerProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "../../components/RequiredResearchComponent.sol";
@@ -54,13 +54,13 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
-      abi.encode("")
+      abi.encode()
     );
 
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
-      abi.encode("")
+      abi.encode()
     );
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
@@ -131,7 +131,13 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
-      abi.encode("")
+      abi.encode()
+    );
+    console.log("removed resource requirements");
+    console.log(
+      RequiredResourcesComponent(component(RequiredResourcesComponentID)).has(
+        LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1)
+      )
     );
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
@@ -148,7 +154,7 @@ contract ClaimSystemTest is MudTest {
     console.log("built path from PlatingFactory to MainBase");
     console.log(
       "Iron PLate Production is %s",
-      MineProductionComponent(component(MineProductionComponentID)).getValue(
+      PlayerProductionComponent(component(PlayerProductionComponentID)).getValue(
         LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))
       )
     );
@@ -175,7 +181,7 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2),
-      abi.encode("")
+      abi.encode()
     );
     upgradeSystem.executeTyped(platingFactoryCoord);
     assertEq(
@@ -230,7 +236,7 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
-      abi.encode("")
+      abi.encode()
     );
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
@@ -239,7 +245,7 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
-      abi.encode("")
+      abi.encode()
     );
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
@@ -300,7 +306,7 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
-      abi.encode("")
+      abi.encode()
     );
 
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
@@ -310,7 +316,7 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
-      abi.encode("")
+      abi.encode()
     );
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
@@ -511,12 +517,12 @@ contract ClaimSystemTest is MudTest {
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
-      abi.encode("")
+      abi.encode()
     );
     componentDevSystem.executeTyped(
       RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugCopperMineID, 1),
-      abi.encode("")
+      abi.encode()
     );
 
     //gain capacity for all resources so can store copper

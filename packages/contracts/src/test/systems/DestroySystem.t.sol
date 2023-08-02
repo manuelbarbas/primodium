@@ -12,7 +12,7 @@ import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/Co
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
-import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
@@ -36,7 +36,7 @@ contract DestroySystemTest is PrimodiumTest {
   BlueprintComponent public blueprintComponent;
   ChildrenComponent public childrenComponent;
   LevelComponent public levelComponent;
-  MaxBuildingsComponent public maxBuildingsComponent;
+  BuildingCountComponent public buildingCountComponent;
   BuildingTypeComponent public buildingTypeComponent;
   MainBaseComponent public mainBaseComponent;
 
@@ -54,7 +54,7 @@ contract DestroySystemTest is PrimodiumTest {
     levelComponent = LevelComponent(component(LevelComponentID));
     buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
     mainBaseComponent = MainBaseComponent(component(MainBaseComponentID));
-    maxBuildingsComponent = MaxBuildingsComponent(component(MaxBuildingsComponentID));
+    buildingCountComponent = BuildingCountComponent(component(BuildingCountComponentID));
 
     // init other
     vm.startPrank(alice);
@@ -73,7 +73,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function destroy(uint256 buildingEntity, Coord memory _coord) public {
     uint256[] memory children = childrenComponent.getValue(buildingEntity);
-    uint256 maxBuildings = maxBuildingsComponent.getValue(playerEntity);
+    uint256 buildingCount = buildingCountComponent.getValue(playerEntity);
     destroySystem.executeTyped(_coord);
 
     for (uint256 i = 0; i < children.length; i++) {
@@ -84,7 +84,7 @@ contract DestroySystemTest is PrimodiumTest {
     assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");
     assertFalse(buildingTypeComponent.has(buildingEntity), "has tile");
     assertFalse(levelComponent.has(buildingEntity), "has level");
-    assertEq(maxBuildingsComponent.getValue(playerEntity), maxBuildings - 1, "wrong limit");
+    assertEq(buildingCountComponent.getValue(playerEntity), buildingCount - 1, "wrong limit");
   }
 
   function testDestroyWithTile() public {

@@ -23,8 +23,8 @@ import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { Coord } from "../../types.sol";
-
 import "../../prototypes.sol";
+import { ResourceValue, ResourceValues } from "../../types.sol";
 
 contract ResearchSystemTest is MudTest {
   constructor() MudTest(new Deploy()) {}
@@ -56,16 +56,18 @@ contract ResearchSystemTest is MudTest {
 
     HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
+    ResourceValues memory requiredResources = RequiredResourcesComponent(
+      world.getComponent(RequiredResourcesComponentID)
+    ).getValue(DebugSimpleTechnologyResourceReqsID);
 
-    uint256[] memory resourceRequirements = RequiredResourcesComponent(world.getComponent(RequiredResourcesComponentID))
-      .getValue(DebugSimpleTechnologyResourceReqsID);
-
-    for (uint256 i = 0; i < resourceRequirements.length; i++) {
-      uint256 resourceEntity = LibEncode.hashKeyEntity(resourceRequirements[i], DebugSimpleTechnologyResourceReqsID);
-      uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceRequirements[i], addressToEntity(alice));
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredResources.resources[i], addressToEntity(alice));
       uint256 playerResources = LibMath.getSafe(itemComponent, playerResourceEntity);
-      uint256 resources = LibMath.getSafe(itemComponent, resourceEntity);
-      componentDevSystem.executeTyped(ItemComponentID, playerResourceEntity, abi.encode(playerResources + resources));
+      componentDevSystem.executeTyped(
+        ItemComponentID,
+        playerResourceEntity,
+        abi.encode(playerResources + requiredResources.values[i])
+      );
     }
     // alice researches DebugSimpleTechnologyResourceReqsID
     researchSystem.executeTyped(DebugSimpleTechnologyResourceReqsID);
@@ -156,11 +158,7 @@ contract ResearchSystemTest is MudTest {
     );
     buildSystem.executeTyped(MainBaseID, Coord({ x: 0, y: 0 }));
 
-    componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
-      LibEncode.hashKeyEntity(MainBaseID, 2),
-      abi.encode("")
-    );
+    componentDevSystem.executeTyped(RequiredResourcesComponentID, LibEncode.hashKeyEntity(MainBaseID, 2), abi.encode());
     upgradeSystem.executeTyped(Coord({ x: 0, y: 0 }));
 
     // should succeed because alice has upgraded their MainBase

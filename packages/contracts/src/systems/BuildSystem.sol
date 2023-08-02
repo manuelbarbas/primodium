@@ -14,6 +14,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 
 import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 
@@ -24,6 +25,9 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
+
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -51,16 +55,31 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] You have not researched the required technology"
     );
 
-    require(
-      LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
-      "[BuildSystem] You do not have the required resources"
-    );
     //check build limit
     require(
       LibBuilding.isMaxBuildingsMet(world, playerEntity, buildingType),
       "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
 
+    require(
+      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
+      "[BuildSystem] You do not have the required passive resources"
+    );
+
+    //check resource requirements and if ok spend required resources
+
+    if (
+      RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingTypeLevelEntity)
+    ) {
+      require(
+        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, addressToEntity(msg.sender)),
+        "[BuildSystem] Not enough resources to research"
+      );
+      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
+        msg.sender,
+        buildingTypeLevelEntity
+      );
+    }
     int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
@@ -78,14 +97,6 @@ contract BuildSystem is PrimodiumSystem {
         mainBaseComponent.set(playerEntity, buildingEntity);
       }
     }
-    require(
-      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
-      "[BuildSystem] You do not have the required passive resources"
-    );
-
-    //check resource requirements and if ok spend required resources
-    LibResource.spendRequiredResources(world, buildingTypeLevelEntity, playerEntity);
-
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);

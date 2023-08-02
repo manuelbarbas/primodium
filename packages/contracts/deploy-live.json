@@ -14,21 +14,25 @@
     "RequiredResearchComponent",
     "RequiredResourcesComponent",
     "MaxBuildingsComponent",
+    "BuildingCountComponent",
     "IgnoreBuildLimitComponent",
     "ChildrenComponent",
     "BlueprintComponent",
     "MaxStorageComponent",
     "MaxResourceStorageComponent",
-    "MineProductionComponent",
+    "PlayerProductionComponent",
     "UnclaimedResourceComponent",
     "ActiveComponent",
     "MinesComponent",
-    "ProductionComponent",
+    "BuildingProductionComponent",
     "MaxLevelComponent",
     "RequiredTileComponent",
     "RequiredPassiveComponent",
     "PassiveProductionComponent",
-    "IsDebugComponent"
+    "IsDebugComponent",
+    "IsTechComponent",
+    "MaxPassiveComponent",
+    "OccupiedPassiveResourceComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch"],
   "systems": [
@@ -62,7 +66,9 @@
         "MaxResourceStorageComponent",
         "MinesComponent",
         "LastClaimedAtComponent",
-        "MaxBuildingsComponent"
+        "BuildingCountComponent",
+        "MaxPassiveComponent",
+        "OccupiedPassiveResourceComponent"
       ]
     },
     {
@@ -77,13 +83,19 @@
         "MainBaseComponent",
         "ChildrenComponent",
         "LevelComponent",
-        "MaxBuildingsComponent",
+        "BuildingCountComponent",
         "ChildrenComponent"
       ]
     },
     {
       "name": "PostDestroySystem",
-      "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent", "ItemComponent"]
+      "writeAccess": [
+        "MaxStorageComponent",
+        "MaxResourceStorageComponent",
+        "ItemComponent",
+        "MaxPassiveComponent",
+        "OccupiedPassiveResourceComponent"
+      ]
     },
     {
       "name": "BuildPathSystem",
@@ -95,9 +107,9 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
     {
@@ -106,10 +118,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
         "MinesComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
     {
@@ -118,7 +130,7 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent"
+        "PlayerProductionComponent"
       ]
     },
     {
@@ -129,10 +141,10 @@
         "PathComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
         "MinesComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
     {
@@ -141,9 +153,9 @@
         "MaxStorageComponent",
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
-        "ProductionComponent",
+        "BuildingProductionComponent",
         "MinesComponent"
       ]
     },
@@ -171,14 +183,21 @@
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": ["LevelComponent", "ItemComponent", "MaxStorageComponent", "MaxResourceStorageComponent"]
+      "writeAccess": [
+        "LevelComponent",
+        "ItemComponent",
+        "MaxStorageComponent",
+        "MaxResourceStorageComponent",
+        "MaxPassiveComponent",
+        "OccupiedPassiveResourceComponent"
+      ]
     },
     {
       "name": "PostUpgradeMineSystem",
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent"
       ]
     },
@@ -187,9 +206,9 @@
       "writeAccess": [
         "LastClaimedAtComponent",
         "UnclaimedResourceComponent",
-        "MineProductionComponent",
+        "PlayerProductionComponent",
         "ActiveComponent",
-        "ProductionComponent"
+        "BuildingProductionComponent"
       ]
     },
     {

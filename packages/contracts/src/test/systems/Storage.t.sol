@@ -16,7 +16,6 @@ import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/Co
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "../../components/MineProductionComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import "../../prototypes.sol";
@@ -130,11 +129,7 @@ contract Storage is MudTest {
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
-    componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
-      LibEncode.hashKeyEntity(MainBaseID, 2),
-      abi.encode("")
-    );
+    componentDevSystem.executeTyped(RequiredResourcesComponentID, LibEncode.hashKeyEntity(MainBaseID, 2), abi.encode());
 
     upgradeSystem.executeTyped(mainBaseCoord);
     uint256 newIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
