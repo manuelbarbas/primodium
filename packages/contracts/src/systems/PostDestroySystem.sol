@@ -75,10 +75,11 @@ contract PostDestroySystem is IOnEntitySubsystem, PrimodiumSystem {
       PassiveResourceCapacityComponent passiveResourceCapacityComponent = PassiveResourceCapacityComponent(
         getAddressById(components, PassiveResourceCapacityComponentID)
       );
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+      uint32 currentPassiveResourceCapacity = passiveResourceCapacityComponent.getValue(playerResourceEntity);
       passiveResourceCapacityComponent.set(
-        LibEncode.hashKeyEntity(resourceId, playerEntity),
-        passiveResourceCapacityComponent.getValue(LibEncode.hashKeyEntity(resourceId, playerEntity)) -
-          passiveProductionComponent.getValue(buildingLevelEntity).value
+        playerResourceEntity,
+        currentPassiveResourceCapacity - passiveProductionComponent.getValue(buildingLevelEntity).value
       );
     }
   }
