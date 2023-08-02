@@ -5,7 +5,8 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
+
+import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
@@ -87,7 +88,7 @@ library LibInitDebug {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       world.getComponent(IgnoreBuildLimitComponentID)
     );
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(world.getComponent(BuildingTypeComponentID));
+    RequiredTileComponent requiredTileComponent = RequiredTileComponent(world.getComponent(RequiredTileComponentID));
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(world.getComponent(MaxLevelComponentID));
 
     RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
@@ -109,7 +110,7 @@ library LibInitDebug {
 
     // DebugSimpleBuildingTileReqID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingTileReqID);
-    buildingTypeComponent.set(DebugSimpleBuildingTileReqID, IronID);
+    requiredTileComponent.set(DebugSimpleBuildingTileReqID, IronID);
 
     //DebugSimpleBuildingWithUpgradeResourceReqsID
     ignoreBuildLimitComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID);
@@ -165,7 +166,7 @@ library LibInitDebug {
     IgnoreBuildLimitComponent ignoreBuildLimitComponent = IgnoreBuildLimitComponent(
       world.getComponent(IgnoreBuildLimitComponentID)
     );
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(world.getComponent(BuildingTypeComponentID));
+    RequiredTileComponent requiredTileComponent = RequiredTileComponent(world.getComponent(RequiredTileComponentID));
     MineProductionComponent mineProductionComponent = MineProductionComponent(
       world.getComponent(MineProductionComponentID)
     );
@@ -173,7 +174,7 @@ library LibInitDebug {
 
     // DebugIronMineID
     ignoreBuildLimitComponent.set(DebugIronMineID);
-    buildingTypeComponent.set(DebugIronMineID, IronID);
+    requiredTileComponent.set(DebugIronMineID, IronID);
     maxLevelComponent.set(DebugIronMineID, 3);
 
     uint256 entity = LibEncode.hashKeyEntity(DebugIronMineID, 1);
@@ -198,7 +199,7 @@ library LibInitDebug {
 
     //DebugIronMineWithBuildLimitID
     maxLevelComponent.set(DebugIronMineWithBuildLimitID, 3);
-    buildingTypeComponent.set(DebugIronMineWithBuildLimitID, IronID);
+    requiredTileComponent.set(DebugIronMineWithBuildLimitID, IronID);
 
     entity = LibEncode.hashKeyEntity(DebugIronMineWithBuildLimitID, 1);
     mineProductionComponent.set(entity, 5);
@@ -211,14 +212,14 @@ library LibInitDebug {
 
     //DebugCopperMineID
     maxLevelComponent.set(DebugCopperMineID, 3);
-    buildingTypeComponent.set(DebugCopperMineID, CopperID);
+    requiredTileComponent.set(DebugCopperMineID, CopperID);
     ignoreBuildLimitComponent.set(DebugCopperMineID);
 
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
 
     entity = LibEncode.hashKeyEntity(DebugCopperMineID, 1);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1000 });
-    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
     mineProductionComponent.set(entity, 3);
 
     entity = LibEncode.hashKeyEntity(DebugCopperMineID, 2);
@@ -228,7 +229,7 @@ library LibInitDebug {
     mineProductionComponent.set(entity, 7);
 
     maxLevelComponent.set(DebugLithiumMineID, 3);
-    buildingTypeComponent.set(DebugLithiumMineID, LithiumID);
+    requiredTileComponent.set(DebugLithiumMineID, LithiumID);
     ignoreBuildLimitComponent.set(DebugLithiumMineID);
 
     entity = LibEncode.hashKeyEntity(DebugLithiumMineID, 1);

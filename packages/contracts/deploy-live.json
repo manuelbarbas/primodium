@@ -192,31 +192,6 @@
         "ProductionComponent"
       ]
     },
-
-    {
-      "name": "DebugAcquireResourcesSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
-      "name": "DebugIgnoreBuildLimitForBuildingSystem",
-      "writeAccess": ["IgnoreBuildLimitComponent"]
-    },
-    {
-      "name": "DebugRemoveBuildingRequirementsSystem",
-      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
-    },
-    {
-      "name": "DebugRemoveUpgradeRequirementsSystem",
-      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
-    },
-    {
-      "name": "DebugRemoveBuildLimitSystem",
-      "writeAccess": ["IgnoreBuildLimitComponent"]
-    },
-    {
-      "name": "DebugAcquireStorageForAllResourcesSystem",
-      "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent"]
-    },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]

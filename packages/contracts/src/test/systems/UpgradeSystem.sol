@@ -6,8 +6,7 @@ import { MudTest } from "std-contracts/test/MudTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
-import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
-
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
@@ -79,9 +78,6 @@ contract UpgradeSystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-    DebugAcquireResourcesSystem debugAcquireResourcesSystem = DebugAcquireResourcesSystem(
-      system(DebugAcquireResourcesSystemID)
-    );
 
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
@@ -96,6 +92,7 @@ contract UpgradeSystemTest is MudTest {
     assertTrue(levelComponent.has(blockEntityID), "MainBase entity id should have building component");
     assertTrue(levelComponent.getValue(blockEntityID) == 1, "MainBase entity id should be level 1");
     console.log("upgrading MainBase to level 2");
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     uint256[] memory resourceRequirements = requiredResourcesComponent.getValue(LibEncode.hashKeyEntity(MainBaseID, 2));
     for (uint256 i = 0; i < resourceRequirements.length; i++) {
       uint32 resourceCost = LibMath.getSafe(
@@ -103,7 +100,11 @@ contract UpgradeSystemTest is MudTest {
         LibEncode.hashKeyEntity(resourceRequirements[i], LibEncode.hashKeyEntity(MainBaseID, 2))
       );
       console.log("MainBase level 2 requires resource: %s of amount %s", resourceRequirements[i], resourceCost);
-      debugAcquireResourcesSystem.executeTyped(resourceRequirements[i], resourceCost);
+      componentDevSystem.executeTyped(
+        ItemComponentID,
+        LibEncode.hashKeyEntity(resourceRequirements[i], addressToEntity(alice)),
+        abi.encode(resourceCost)
+      );
       console.log("%s of amount %s provided to player", resourceRequirements[i], resourceCost);
     }
     upgradeSystem.executeTyped(coord);
