@@ -5,7 +5,9 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
-
+import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
+import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
@@ -34,6 +36,8 @@ import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerResourceProductionSystem.sol";
+import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
+import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
@@ -96,6 +100,7 @@ contract UpgradeSystem is PrimodiumSystem {
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
 
+    //spend required resources
     if (RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingIdLevel)) {
       require(
         LibResource.hasRequiredResources(world, buildingIdLevel, playerEntity),
@@ -107,64 +112,44 @@ contract UpgradeSystem is PrimodiumSystem {
       );
     }
 
-    bool isActive = ActiveComponent(getAddressById(components, ActiveComponentID)).has(buildingEntity) ||
-      !MinesComponent(getAddressById(components, MinesComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
-      );
-
+    //update building level
     uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
     levelComponent.set(buildingEntity, newLevel);
-
-    if (
-      MinesComponent(getAddressById(components, MinesComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel))
-    ) {
-      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeFactorySystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
-    } else if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, newLevel)
-      )
-    ) {
-      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeMineSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
-    }
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, newLevel);
 
     //Resource Production Update
     if (
-      !MinesComponent(getAddressById(components, MinesComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
-      )
+      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
     ) {
       IOnEntitySubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
         msg.sender,
         buildingEntity
       );
-    } else {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Upgrade
-      );
     }
 
     //Storage Update
-    if (
-      MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
-      )
-    ) {
+    if (MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Upgrade
       );
     }
-
-    LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType, newLevel);
+    //Passive Production Update
+    if (PassiveProductionComponent(getC(PassiveProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+    if (RequiredPassiveComponent(getC(RequiredPassiveComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
     return abi.encode(buildingEntity);
   }
 

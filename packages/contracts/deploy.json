@@ -226,6 +226,34 @@
       ]
     },
     {
+      "name": "UpdateActiveStatusSystem",
+      "writeAccess": ["ActiveComponent"]
+    },
+    {
+      "name": "SpendRequiredResourcesSystem",
+      "writeAccess": ["ItemComponent"]
+    },
+    {
+      "name": "UpdatePlayerResourceProductionSystem",
+      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "PlayerProductionComponent"]
+    },
+    {
+      "name": "UpdateUnclaimedResourceSystem",
+      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent"]
+    },
+    {
+      "name": "UpdatePlayerStorageSystem",
+      "writeAccess": ["MaxResourceStorageComponent", "MaxStorageComponent", "ItemComponent"]
+    },
+    {
+      "name": "UpdateOccuppiedPassiveSystem",
+      "writeAccess": ["OccupiedPassiveResourceComponent"]
+    },
+    {
+      "name": "UpdatePassiveProductionSystem",
+      "writeAccess": ["MaxPassiveComponent"]
+    },
+    {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
     }

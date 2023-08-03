@@ -50,17 +50,17 @@ contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
   function updateActiveStatus(address playerAddress, uint256 buildingEntity, bool isActive) internal {
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
     bool previusActiveStatus = activeComponent.has(buildingEntity);
+    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
     if (previusActiveStatus != isActive) {
       if (isActive) {
         activeComponent.set(buildingEntity);
       } else {
         activeComponent.remove(buildingEntity);
       }
-      PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
-      LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
-      BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
-        getAddressById(components, BuildingTypeComponentID)
-      );
       if (pathComponent.has(buildingEntity)) {
         uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
         if (doesRequireMine(connectedToBuildingEntity)) {
@@ -70,6 +70,19 @@ contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
             msg.sender,
             buildingEntity,
             isActive ? EActionType.Build : EActionType.Destroy
+          );
+        }
+      }
+    } else if (isActive) {
+      if (pathComponent.has(buildingEntity)) {
+        uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
+        if (doesRequireMine(connectedToBuildingEntity)) {
+          IOnEntitySubsystem(getAddressById(world.systems(), ID)).executeTyped(msg.sender, connectedToBuildingEntity);
+        } else {
+          IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
+            msg.sender,
+            buildingEntity,
+            levelComponent.getValue(buildingEntity) > 1 ? EActionType.Upgrade : EActionType.Build
           );
         }
       }
@@ -108,27 +121,35 @@ contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
     //if is not functional check if it can be made functional
 
-    // first check if any connected mines are not at the required level if so do nothing
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+
+    if (!pathComponent.has(buildingEntity)) updateActiveStatus(playerAddress, buildingEntity, false);
+
     uint256 buildingLevel = levelComponent.getValue(buildingEntity);
-    uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(buildingEntity);
-    for (uint256 i = 0; i < connectedMineEntities.length; i++) {
-      if (
-        levelComponent.getValue(connectedMineEntities[i]) < buildingLevel ||
-        (doesRequireMine(connectedMineEntities[i]) && !activeComponent.has(connectedMineEntities[i]))
-      ) {
-        updateActiveStatus(playerAddress, buildingEntity, false);
-        return abi.encode(false);
-      }
-    }
+    uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
     ResourceValues memory minesData = MinesComponent(getAddressById(components, MinesComponentID)).getValue(
       buildingEntity
     );
-    //then check if there are enough connected mines
-    for (uint256 i = 0; i < minesData.values.length; i++) {
-      if (minesData.values[i] > 0) {
-        updateActiveStatus(playerAddress, buildingEntity, false);
-        return abi.encode(false);
+
+    // first check if any connected resource production buildings are not at the required level or require resource production buildings themeselves and are not active
+    if (MinesComponent(getC(MinesComponentID)).has(buildingTypeLevelEntity)) {
+      uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(buildingEntity);
+      for (uint256 i = 0; i < connectedMineEntities.length; i++) {
+        if (
+          levelComponent.getValue(connectedMineEntities[i]) < buildingLevel ||
+          (doesRequireMine(connectedMineEntities[i]) && !activeComponent.has(connectedMineEntities[i]))
+        ) {
+          updateActiveStatus(playerAddress, buildingEntity, false);
+          return abi.encode(false);
+        }
+      }
+
+      //then check if there are enough connected resource production buildings
+      for (uint256 i = 0; i < minesData.values.length; i++) {
+        if (minesData.values[i] > 0) {
+          updateActiveStatus(playerAddress, buildingEntity, false);
+          return abi.encode(false);
+        }
       }
     }
 
