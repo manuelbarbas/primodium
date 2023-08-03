@@ -18,8 +18,7 @@
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
-      "@game/api": ["src/game"],
-      "@engine/api" : ["src/engine"],
+      "@game/api": ["src/game/api"],
       "@game/constants": ["src/game/constants"],
     }
   },

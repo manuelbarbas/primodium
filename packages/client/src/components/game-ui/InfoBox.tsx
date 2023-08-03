@@ -10,13 +10,14 @@ import { GameButton } from "../shared/GameButton";
 import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
-import { SettingsMenu } from "./SettingsMenu";
+import { MainMenu } from "./MainMenu";
 import {
   Level,
   MaxBuildings,
   BuildingCount,
 } from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
+import { AsteroidMap } from "@game/constants";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -26,6 +27,7 @@ export const InfoBox = () => {
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
   const [notify, setNotify] = useState<boolean>(false);
+  const { pan } = primodium.api(AsteroidMap.KEY)!.camera;
 
   const coordEntity = encodeCoordEntityAndTrim(
     { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
@@ -117,7 +119,7 @@ export const InfoBox = () => {
                       <button
                         id="goto-mainbase"
                         className="mt-3 text-sm border border-cyan-600 active:bg-cyan-600 outline-none"
-                        onClick={() => primodium.camera.pan(mainBaseCoord)}
+                        onClick={() => pan(mainBaseCoord)}
                       >
                         <div className="flex m-1 items-center gap-2 px-1 h-4">
                           Go to Mainbase
@@ -170,7 +172,7 @@ export const InfoBox = () => {
         show={showMenuModal}
         onClose={() => setShowMenuModal(!showMenuModal)}
       >
-        <SettingsMenu />
+        <MainMenu />
       </Modal>
       <Modal
         title="Research"

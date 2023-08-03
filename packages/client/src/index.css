@@ -42,7 +42,7 @@
     background: #4b5563;
   }
 
-  #phaser-container > canvas {
+  canvas {
     touch-action: none;
     @apply h-full w-full;
   }

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
 interface ModalProps {
   show: boolean;
+  fullscreen?: boolean;
   onClose: () => void;
   children: React.ReactNode;
   title?: string;
@@ -13,9 +14,9 @@ const PortalModal: React.FC<ModalProps> = ({
   onClose,
   children,
   title,
+  fullscreen = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const [el] = useState(document.createElement("div"));
 
   useEffect(() => {
     const handleEscPress = (event: KeyboardEvent) => {
@@ -25,12 +26,10 @@ const PortalModal: React.FC<ModalProps> = ({
     };
 
     window.addEventListener("keydown", handleEscPress);
-    document.body.appendChild(el);
     return () => {
       window.removeEventListener("keydown", handleEscPress);
-      document.body.removeChild(el);
     };
-  }, [el, onClose, show]);
+  }, [onClose, show]);
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -42,12 +41,14 @@ const PortalModal: React.FC<ModalProps> = ({
     <>
       {show && (
         <div
-          className="fixed inset-0 flex items-center justify-center z-[10000] bg-black bg-opacity-60 p-10 text-white font-mono"
+          className="fixed inset-0 flex items-center justify-center z-[10000] bg-black bg-opacity-60 text-white font-mono w-full"
           onClick={handleClickOutside}
         >
           <div
             ref={modalRef}
-            className="bg-slate-900/90 max-w-6xl border-4 border-b-8 border-cyan-600 max-h-full shadow-2xl flex flex-col"
+            className={`bg-slate-900/90 border-4 border-b-8 border-cyan-600 max-h-full shadow-2xl flex flex-col ${
+              fullscreen ? "w-full h-full" : ""
+            }`}
           >
             <div className="bg-gray-800 flex justify-between items-center px-2 w-full text-sm">
               <div className="flex items-center text-pink-50">
@@ -58,14 +59,14 @@ const PortalModal: React.FC<ModalProps> = ({
               </div>
             </div>
 
-            <div className="p-6 w-full overflow-y-auto scrollbar flex-grow">
+            <div className="w-full overflow-y-auto scrollbar flex-grow">
               {children}
             </div>
           </div>
         </div>
       )}
     </>,
-    el
+    document.getElementById("modal-root")!
   );
 };
 

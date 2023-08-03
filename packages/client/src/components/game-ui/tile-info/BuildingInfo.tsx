@@ -101,7 +101,7 @@ export const BuildingInfo: React.FC<{
         show={showDestroyModal}
         onClose={() => setShowDestroyModal(false)}
       >
-        <div className="space-y-8">
+        <div className="space-y-8 p-5">
           <h1>
             Demolish <b>{buildingName}</b> or <b>Path</b> at{" "}
             <b>
