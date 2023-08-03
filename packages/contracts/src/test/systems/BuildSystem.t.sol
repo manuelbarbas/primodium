@@ -9,11 +9,8 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 
 import { ChildrenComponent, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-
-import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
-import { DebugIgnoreBuildLimitForBuildingSystem, ID as DebugIgnoreBuildLimitForBuildingSystemID } from "../../systems/DebugIgnoreBuildLimitForBuildingSystem.sol";
-import { DebugRemoveBuildLimitSystem, ID as DebugRemoveBuildLimitSystemID } from "../../systems/DebugRemoveBuildLimitSystem.sol";
-
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
+import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "../../components/MaxBuildingsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "../../components/BlueprintComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
@@ -28,7 +25,7 @@ import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponen
 import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 import { ElectricityPassiveResourceID } from "../../prototypes.sol";
-
+import { BIGNUM } from "../../prototypes/Debug.sol";
 //debug buildings
 import "../../prototypes.sol";
 import { Coord } from "../../types.sol";
@@ -278,11 +275,9 @@ contract BuildSystemTest is PrimodiumTest {
     // TEMP: tile -6, 2 does not have iron according to current generation seed
     Coord memory nonIronCoord = Coord({ x: -6, y: 2 });
     assertTrue(LibTerrain.getTopLayerKey(nonIronCoord) != IronID, "Tile should not have iron");
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
 
-    DebugRemoveBuildLimitSystem debugRemoveBuildLimitSystem = DebugRemoveBuildLimitSystem(
-      system(DebugRemoveBuildLimitSystemID)
-    );
-    debugRemoveBuildLimitSystem.executeTyped();
+    componentDevSystem.executeTyped(MaxBuildingsComponentID, 1, abi.encode(BIGNUM));
 
     buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
 
@@ -292,13 +287,9 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildWithResourceReqs() public {
     vm.startPrank(alice);
 
-    DebugAcquireResourcesSystem debugAcquireResourcesSystem = DebugAcquireResourcesSystem(
-      system(DebugAcquireResourcesSystemID)
-    );
-
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     buildMainBaseAtZero();
 
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
       component(RequiredResourcesComponentID)
     );
@@ -320,7 +311,12 @@ contract BuildSystemTest is PrimodiumTest {
         requiredResources.resources[i],
         requiredResources.values[i]
       );
-      debugAcquireResourcesSystem.executeTyped(requiredResources.resources[i], requiredResources.values[i]);
+
+      componentDevSystem.executeTyped(
+        ItemComponentID,
+        LibEncode.hashKeyEntity(requiredResources.resources[i], addressToEntity(alice)),
+        abi.encode(requiredResources.values[i])
+      );
     }
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory ironCoord = Coord({ x: -5, y: 2 });

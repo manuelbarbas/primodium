@@ -11,15 +11,14 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "../../systems/DestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
-import { DebugRemoveBuildingRequirementsSystem, ID as DebugRemoveBuildingRequirementsSystemID } from "../../systems/DebugRemoveBuildingRequirementsSystem.sol";
-import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
-import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../../components/PlayerProductionComponent.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
-
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
+import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "../../components/RequiredResearchComponent.sol";
 import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -51,16 +50,22 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronMineID, 1),
+      abi.encode()
     );
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
+      abi.encode()
+    );
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
 
@@ -121,11 +126,19 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
-    );
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
 
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
+      abi.encode()
+    );
+    console.log("removed resource requirements");
+    console.log(
+      RequiredResourcesComponent(component(RequiredResourcesComponentID)).has(
+        LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1)
+      )
+    );
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
@@ -164,10 +177,12 @@ contract ClaimSystemTest is MudTest {
     );
     vm.roll(20);
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-    DebugRemoveUpgradeRequirementsSystem debugRemoveUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
-      system(DebugRemoveUpgradeRequirementsSystemID)
+
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2),
+      abi.encode()
     );
-    debugRemoveUpgradeRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
     upgradeSystem.executeTyped(platingFactoryCoord);
     assertEq(
       unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
@@ -217,16 +232,21 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
+      abi.encode()
     );
-
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronMineID, 1),
+      abi.encode()
+    );
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
 
@@ -282,16 +302,22 @@ contract ClaimSystemTest is MudTest {
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
+      abi.encode()
     );
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronPlateFactoryID);
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
     // START CLAIMING
     vm.roll(0);
 
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugIronMineID);
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronMineID, 1),
+      abi.encode()
+    );
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
 
@@ -487,16 +513,21 @@ contract ClaimSystemTest is MudTest {
     Coord memory mainBaseCoord = Coord({ x: -5, y: -4 });
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
-    DebugAcquireStorageForAllResourcesSystem debugAcquireStorageForAllResourcesSystem = DebugAcquireStorageForAllResourcesSystem(
-        system(DebugAcquireStorageForAllResourcesSystemID)
-      );
-    //gain capacity for all resources so can store copper
-    debugAcquireStorageForAllResourcesSystem.executeTyped();
-    buildSystem.executeTyped(DebugIronMineID, IronCoord);
-    DebugRemoveBuildingRequirementsSystem debugRemoveBuildingRequirementsSystem = DebugRemoveBuildingRequirementsSystem(
-      system(DebugRemoveBuildingRequirementsSystemID)
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugIronMineID, 1),
+      abi.encode()
     );
-    debugRemoveBuildingRequirementsSystem.executeTyped(DebugCopperMineID);
+    componentDevSystem.executeTyped(
+      RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(DebugCopperMineID, 1),
+      abi.encode()
+    );
+
+    //gain capacity for all resources so can store copper
+    buildSystem.executeTyped(DebugIronMineID, IronCoord);
+
     buildSystem.executeTyped(DebugCopperMineID, CopperCoord);
 
     vm.roll(0);
