@@ -102,11 +102,16 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   // Double click stream
   const doubleClick$ = pointerdown$.pipe(
     filter(() => enabled.current),
-    map(() => Date.now()), // Get current timestamp
-    bufferCount(2, 1), // Store the last two timestamps
-    filter(([prev, now]) => now - prev < 250), // Filter clicks with more than 500ms distance
-    throttleTime(250), // A third click within 500ms is not counted as another double click
-    map(() => inputPlugin.manager?.activePointer), // Return the current pointer
+    map(() => ({
+      time: Date.now(),
+    })),
+    bufferCount(2, 1),
+    filter(([prev, now]) => {
+      const timeDiff = now.time - prev.time;
+      return timeDiff < 250 && timeDiff > 20;
+    }),
+    throttleTime(250),
+    map(() => inputPlugin.manager?.activePointer),
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
     filterNullish()
   );
@@ -242,7 +247,6 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointerdown$,
     pointerup$,
     click$,
-    // phaserKeyboard,
     phaserInput: inputPlugin,
     phaserKeys,
     doubleClick$,
