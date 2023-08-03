@@ -58,15 +58,31 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] You have not researched the required technology"
     );
 
-    require(
-      LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
-      "[BuildSystem] You do not have the required resources"
-    );
     //check build limit
     require(
       LibBuilding.isMaxBuildingsMet(world, playerEntity, buildingType),
       "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
     );
+
+    require(
+      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
+      "[BuildSystem] You do not have the required passive resources"
+    );
+
+    //check resource requirements and if ok spend required resources
+
+    if (
+      RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingTypeLevelEntity)
+    ) {
+      require(
+        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
+        "[BuildSystem] You do not have the required resources"
+      );
+      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
+        msg.sender,
+        buildingTypeLevelEntity
+      );
+    }
 
     int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
@@ -85,26 +101,6 @@ contract BuildSystem is PrimodiumSystem {
         mainBaseComponent.set(playerEntity, buildingEntity);
       }
     }
-    require(
-      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
-      "[BuildSystem] You do not have the required passive resources"
-    );
-
-    //check resource requirements and if ok spend required resources
-
-    if (
-      RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingTypeLevelEntity)
-    ) {
-      require(
-        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, addressToEntity(msg.sender)),
-        "[BuildSystem] Not enough resources to research"
-      );
-      IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
-        msg.sender,
-        buildingTypeLevelEntity
-      );
-    }
-
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);

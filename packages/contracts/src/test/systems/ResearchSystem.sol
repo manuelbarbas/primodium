@@ -12,8 +12,7 @@ import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSyste
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
-import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
-import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "../../components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
@@ -149,9 +148,7 @@ contract ResearchSystemTest is MudTest {
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-    DebugRemoveUpgradeRequirementsSystem debugRemoveUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
-      system(DebugRemoveUpgradeRequirementsSystemID)
-    );
+
     // alice researches DebugSimpleTechnologyResourceReqsID
     assertTrue(
       !hasResearchedComponent.has(
@@ -160,7 +157,8 @@ contract ResearchSystemTest is MudTest {
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
     buildSystem.executeTyped(MainBaseID, Coord({ x: 0, y: 0 }));
-    debugRemoveUpgradeRequirementsSystem.executeTyped(MainBaseID);
+
+    componentDevSystem.executeTyped(RequiredResourcesComponentID, LibEncode.hashKeyEntity(MainBaseID, 2), abi.encode());
     upgradeSystem.executeTyped(Coord({ x: 0, y: 0 }));
 
     // should succeed because alice has upgraded their MainBase

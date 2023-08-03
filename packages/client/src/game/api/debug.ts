@@ -1,44 +1,17 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { BytesLike } from "ethers";
 import { Position } from "src/network/components/clientComponents";
 import { Network } from "src/network/layer";
-import {
-  debugAcquireResources,
-  debugAcquireResourcesBasedOnRequirement,
-  debugAcquireStorageForAllResources,
-  debugIgnoreBuildLimitForBuilding,
-  debugRemoveBuildLimit,
-  debugRemoveUpgradeRequirements,
-  debugRemoveBuildingRequirements,
-} from "src/util/web3";
+import { debugComponentDevSystem } from "src/util/web3";
 
 export const debug = (network: Network) => {
-  const acquireResources = async (resourceId: EntityID, amount: number) => {
-    await debugAcquireResources(resourceId, amount, network);
-  };
-
-  const acquireResourcesBasedOnRequirement = async (entity: EntityID) => {
-    await debugAcquireResourcesBasedOnRequirement(entity, network);
-  };
-
-  const acquireStorageForAllResources = async () => {
-    await debugAcquireStorageForAllResources(network);
-  };
-
-  const removeBuildLimit = async () => {
-    await debugRemoveBuildLimit(network);
-  };
-
-  const removeUpgradeRequirements = async (buildingId: EntityID) => {
-    await debugRemoveUpgradeRequirements(buildingId, network);
-  };
-
-  const removeBuildingRequirements = async (buildingId: EntityID) => {
-    await debugRemoveBuildingRequirements(buildingId, network);
-  };
-
-  const ignoreBuildLimitForBuilding = async (buildingId: EntityID) => {
-    await debugIgnoreBuildLimitForBuilding(buildingId, network);
+  const debugSetComponentValue = async (
+    componentId: EntityID,
+    entity: EntityID,
+    value: BytesLike
+  ) => {
+    await debugComponentDevSystem(componentId, entity, value, network);
   };
 
   const getEntityIdAtCoord = (coord: Coord) => {
@@ -50,13 +23,7 @@ export const debug = (network: Network) => {
   };
 
   return {
-    acquireResources,
-    acquireResourcesBasedOnRequirement,
-    acquireStorageForAllResources,
-    removeBuildLimit,
-    removeUpgradeRequirements,
-    removeBuildingRequirements,
-    ignoreBuildLimitForBuilding,
+    debugSetComponentValue,
     getEntityIdAtCoord,
   };
 };

@@ -12,14 +12,12 @@ import { DestroyPathSystem, ID as DestroyPathSystemID } from "../../systems/Dest
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
-import { DebugRemoveBuildingRequirementsSystem, ID as DebugRemoveBuildingRequirementsSystemID } from "../../systems/DebugRemoveBuildingRequirementsSystem.sol";
-import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
-import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
-
+import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -129,10 +127,10 @@ contract Storage is MudTest {
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-    DebugRemoveUpgradeRequirementsSystem removeUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
-      system(DebugRemoveUpgradeRequirementsSystemID)
-    );
-    removeUpgradeRequirementsSystem.executeTyped(MainBaseID);
+
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    componentDevSystem.executeTyped(RequiredResourcesComponentID, LibEncode.hashKeyEntity(MainBaseID, 2), abi.encode());
+
     upgradeSystem.executeTyped(mainBaseCoord);
     uint256 newIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("alice has newIronCapacity of %s", newIronCapacity);

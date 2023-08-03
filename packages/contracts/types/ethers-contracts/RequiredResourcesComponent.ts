@@ -27,12 +27,22 @@ import type {
   PromiseOrValue,
 } from "./common";
 
+export type ResourceValuesStruct = {
+  resources: PromiseOrValue<BigNumberish>[];
+  values: PromiseOrValue<BigNumberish>[];
+};
+
+export type ResourceValuesStructOutput = [BigNumber[], number[]] & {
+  resources: BigNumber[];
+  values: number[];
+};
+
 export interface RequiredResourcesComponentInterface extends utils.Interface {
   functions: {
     "authorizeWriter(address)": FunctionFragment;
     "getEntities()": FunctionFragment;
+    "getEntitiesWithValue((uint256[],uint32[]))": FunctionFragment;
     "getEntitiesWithValue(bytes)": FunctionFragment;
-    "getEntitiesWithValue(uint256)": FunctionFragment;
     "getRawValue(uint256)": FunctionFragment;
     "getSchema()": FunctionFragment;
     "getValue(uint256)": FunctionFragment;
@@ -42,8 +52,8 @@ export interface RequiredResourcesComponentInterface extends utils.Interface {
     "registerIndexer(address)": FunctionFragment;
     "registerWorld(address)": FunctionFragment;
     "remove(uint256)": FunctionFragment;
+    "set(uint256,(uint256[],uint32[]))": FunctionFragment;
     "set(uint256,bytes)": FunctionFragment;
-    "set(uint256,uint256[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unauthorizeWriter(address)": FunctionFragment;
     "world()": FunctionFragment;
@@ -54,8 +64,8 @@ export interface RequiredResourcesComponentInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "authorizeWriter"
       | "getEntities"
+      | "getEntitiesWithValue((uint256[],uint32[]))"
       | "getEntitiesWithValue(bytes)"
-      | "getEntitiesWithValue(uint256)"
       | "getRawValue"
       | "getSchema"
       | "getValue"
@@ -65,8 +75,8 @@ export interface RequiredResourcesComponentInterface extends utils.Interface {
       | "registerIndexer"
       | "registerWorld"
       | "remove"
+      | "set(uint256,(uint256[],uint32[]))"
       | "set(uint256,bytes)"
-      | "set(uint256,uint256[])"
       | "transferOwnership"
       | "unauthorizeWriter"
       | "world"
@@ -82,12 +92,12 @@ export interface RequiredResourcesComponentInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getEntitiesWithValue(bytes)",
-    values: [PromiseOrValue<BytesLike>]
+    functionFragment: "getEntitiesWithValue((uint256[],uint32[]))",
+    values: [ResourceValuesStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "getEntitiesWithValue(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "getEntitiesWithValue(bytes)",
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "getRawValue",
@@ -117,12 +127,12 @@ export interface RequiredResourcesComponentInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "set(uint256,bytes)",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
+    functionFragment: "set(uint256,(uint256[],uint32[]))",
+    values: [PromiseOrValue<BigNumberish>, ResourceValuesStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "set(uint256,uint256[])",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]]
+    functionFragment: "set(uint256,bytes)",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -147,11 +157,11 @@ export interface RequiredResourcesComponentInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue(bytes)",
+    functionFragment: "getEntitiesWithValue((uint256[],uint32[]))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue(uint256)",
+    functionFragment: "getEntitiesWithValue(bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -173,11 +183,11 @@ export interface RequiredResourcesComponentInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "remove", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256,bytes)",
+    functionFragment: "set(uint256,(uint256[],uint32[]))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256,uint256[])",
+    functionFragment: "set(uint256,bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -247,13 +257,13 @@ export interface RequiredResourcesComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint256[],uint32[]))"(
+      mines: ResourceValuesStruct,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue(uint256)"(
-      value: PromiseOrValue<BigNumberish>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
@@ -269,7 +279,7 @@ export interface RequiredResourcesComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
+    ): Promise<[ResourceValuesStructOutput]>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -295,15 +305,15 @@ export interface RequiredResourcesComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "set(uint256,bytes)"(
+    "set(uint256,(uint256[],uint32[]))"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BytesLike>,
+      value: ResourceValuesStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "set(uint256,uint256[])"(
+    "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BigNumberish>[],
+      value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -332,13 +342,13 @@ export interface RequiredResourcesComponent extends BaseContract {
 
   getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue(bytes)"(
-    value: PromiseOrValue<BytesLike>,
+  "getEntitiesWithValue((uint256[],uint32[]))"(
+    mines: ResourceValuesStruct,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue(uint256)"(
-    value: PromiseOrValue<BigNumberish>,
+  "getEntitiesWithValue(bytes)"(
+    value: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
@@ -354,7 +364,7 @@ export interface RequiredResourcesComponent extends BaseContract {
   getValue(
     entity: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
+  ): Promise<ResourceValuesStructOutput>;
 
   has(
     entity: PromiseOrValue<BigNumberish>,
@@ -380,15 +390,15 @@ export interface RequiredResourcesComponent extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "set(uint256,bytes)"(
+  "set(uint256,(uint256[],uint32[]))"(
     entity: PromiseOrValue<BigNumberish>,
-    value: PromiseOrValue<BytesLike>,
+    value: ResourceValuesStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "set(uint256,uint256[])"(
+  "set(uint256,bytes)"(
     entity: PromiseOrValue<BigNumberish>,
-    value: PromiseOrValue<BigNumberish>[],
+    value: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -417,13 +427,13 @@ export interface RequiredResourcesComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint256[],uint32[]))"(
+      mines: ResourceValuesStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue(uint256)"(
-      value: PromiseOrValue<BigNumberish>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
@@ -439,7 +449,7 @@ export interface RequiredResourcesComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
+    ): Promise<ResourceValuesStructOutput>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -465,15 +475,15 @@ export interface RequiredResourcesComponent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "set(uint256,bytes)"(
+    "set(uint256,(uint256[],uint32[]))"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BytesLike>,
+      value: ResourceValuesStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "set(uint256,uint256[])"(
+    "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BigNumberish>[],
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -514,13 +524,13 @@ export interface RequiredResourcesComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint256[],uint32[]))"(
+      mines: ResourceValuesStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "getEntitiesWithValue(uint256)"(
-      value: PromiseOrValue<BigNumberish>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -560,15 +570,15 @@ export interface RequiredResourcesComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "set(uint256,bytes)"(
+    "set(uint256,(uint256[],uint32[]))"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BytesLike>,
+      value: ResourceValuesStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "set(uint256,uint256[])"(
+    "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BigNumberish>[],
+      value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -598,13 +608,13 @@ export interface RequiredResourcesComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue(bytes)"(
-      value: PromiseOrValue<BytesLike>,
+    "getEntitiesWithValue((uint256[],uint32[]))"(
+      mines: ResourceValuesStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue(uint256)"(
-      value: PromiseOrValue<BigNumberish>,
+    "getEntitiesWithValue(bytes)"(
+      value: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -644,15 +654,15 @@ export interface RequiredResourcesComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "set(uint256,bytes)"(
+    "set(uint256,(uint256[],uint32[]))"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BytesLike>,
+      value: ResourceValuesStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "set(uint256,uint256[])"(
+    "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
-      value: PromiseOrValue<BigNumberish>[],
+      value: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

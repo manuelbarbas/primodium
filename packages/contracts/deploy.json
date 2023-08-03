@@ -186,16 +186,6 @@
       ]
     },
     {
-      "name": "ClaimFromFactorySystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "ItemComponent"
-      ]
-    },
-    {
       "name": "CraftSystem",
       "writeAccess": [
         "BuildingTypeComponent",
@@ -234,31 +224,6 @@
         "ActiveComponent",
         "BuildingProductionComponent"
       ]
-    },
-
-    {
-      "name": "DebugAcquireResourcesSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
-      "name": "DebugIgnoreBuildLimitForBuildingSystem",
-      "writeAccess": ["IgnoreBuildLimitComponent"]
-    },
-    {
-      "name": "DebugRemoveBuildingRequirementsSystem",
-      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
-    },
-    {
-      "name": "DebugRemoveUpgradeRequirementsSystem",
-      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
-    },
-    {
-      "name": "DebugRemoveBuildLimitSystem",
-      "writeAccess": ["IgnoreBuildLimitComponent"]
-    },
-    {
-      "name": "DebugAcquireStorageForAllResourcesSystem",
-      "writeAccess": ["MaxStorageComponent", "MaxResourceStorageComponent"]
     },
     {
       "name": "ComponentDevSystem",
