@@ -1,18 +1,7 @@
-import { Coord } from "@latticexyz/utils";
 import { GameObjectComponent } from "engine/types";
 import { createFxApi } from "src/game/api/fx";
 
 const { outline } = createFxApi();
-
-export const SpritePosition = (coord: Coord): GameObjectComponent<"Sprite"> => {
-  return {
-    id: "position",
-    once: (gameObject) => {
-      gameObject.x = coord.x;
-      gameObject.y = coord.y;
-    },
-  };
-};
 
 export const SpriteTexture = (
   key: string,
@@ -35,11 +24,13 @@ export const SpriteAnimation = (key: string): GameObjectComponent<"Sprite"> => {
   };
 };
 
-export const SpriteOutline = (): GameObjectComponent<"Sprite"> => {
+export const SpriteOutline = (
+  options?: Parameters<typeof outline>[1]
+): GameObjectComponent<"Sprite"> => {
   return {
     id: "outline",
     once: (gameObject) => {
-      outline(gameObject);
+      outline(gameObject, options);
     },
   };
 };

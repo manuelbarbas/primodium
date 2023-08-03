@@ -10,12 +10,6 @@ import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMoveme
 import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { EntityID } from "@latticexyz/recs";
 import { setupKeybinds } from "./setup/setupKeybinds";
-import {
-  SpritePosition,
-  SpriteAnimation,
-  SpriteOutline,
-  SpriteTexture,
-} from "../common/object-components/sprite";
 
 export const initAsteroidView = async (player: EntityID, network: Network) => {
   const { Scenes } = AsteroidMap;
@@ -41,18 +35,6 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
   setupKeybinds(scene, player);
 
   runSystems(scene);
-
-  const testObj = scene.objectPool.get("test", "Sprite");
-
-  testObj.setComponents([
-    SpritePosition({ x: 0, y: 0 }),
-    SpriteTexture(
-      AsteroidMap.Assets.SpriteAtlas,
-      AsteroidMap.SpriteKeys.AdvancedBatteryFactory
-    ),
-    SpriteAnimation(AsteroidMap.AnimationKeys.AdvancedBatteryFactory),
-    SpriteOutline(),
-  ]);
 
   world.registerDisposer(() => {
     chunkManager.dispose();
