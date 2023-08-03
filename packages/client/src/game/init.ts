@@ -1,12 +1,12 @@
 import { EntityID } from "@latticexyz/recs";
 import { Network } from "src/network/layer";
 
-import { initAsteroidMap } from "./lib/asteroid/scripts/initAsteroidMap";
-import { initBeltMap } from "./lib/belt/scripts/initBeltMap";
+import { initAsteroidView } from "./lib/asteroid/init";
+import { initBeltView } from "./lib/belt/init";
 
 async function init(player: EntityID, network: Network) {
-  await initAsteroidMap(player, network);
-  await initBeltMap(player, network);
+  await initAsteroidView(player, network);
+  await initBeltView(player, network);
 }
 
 export default init;

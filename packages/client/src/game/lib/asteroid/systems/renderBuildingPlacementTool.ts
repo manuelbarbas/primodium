@@ -9,8 +9,8 @@ import {
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
-import { createBuilding } from "../factory/building";
-import { createSelectionTile } from "../factory/selectionTile";
+import { createBuilding } from "../../common/factory/building";
+import { createSelectionTile } from "../../common/factory/selectionTile";
 import {
   HoverTile,
   SelectedAction,

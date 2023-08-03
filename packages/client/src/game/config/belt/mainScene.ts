@@ -1,8 +1,8 @@
 // import { SceneConfig } from "../../types";
 import { SceneConfig } from "engine/types";
-import { BeltMap } from "../../../constants";
-import { animationConfig } from "../animationConfig";
-import { tileAnimationConfig } from "../tileAnimationConfig";
+import { BeltMap } from "../../constants";
+import { animationConfig } from "./animation";
+import { tileAnimationConfig } from "./tileAnimation";
 
 const { Assets, Scenes, Tilesets } = BeltMap;
 

@@ -6,7 +6,7 @@ import {
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { createArrowMarker } from "../factory/arrowMarker";
+import { createArrowMarker } from "../../common/factory/arrowMarker";
 import { Marker, Position } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 

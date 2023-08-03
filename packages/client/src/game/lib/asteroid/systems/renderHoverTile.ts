@@ -7,7 +7,7 @@ import {
   defineUpdateSystem,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { createHoverTile } from "../factory/createHoverTile";
+import { createHoverTile } from "../../common/factory/createHoverTile";
 import { HoverTile } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 

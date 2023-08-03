@@ -1,6 +1,6 @@
-import { AsteroidMap } from "../../../../constants";
+import { AsteroidMap } from "../../../constants";
 import type { AnimatedTilemap } from "@latticexyz/phaserx";
-import { getTopLayerKeyPair } from "../../../../../util/tile";
+import { getTopLayerKeyPair } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
 import { interval } from "rxjs";
