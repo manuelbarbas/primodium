@@ -39,6 +39,21 @@ To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`. For
 - `LibDebugInitializer`: First, configure debug buildings and technologies in this initializer library.
 
 - `ComponentDevSystem`: Then, `ComponentDevSystem` systems to modify debug data. For example, `ComponentDevSystem` can be used to set the level of a building or the amount of a resource. See the tests in `packages/contracts/src/test/systems` for examples.
+- to set component data for an entity:
+
+componentDevSystem.executeTyped(
+ItemComponentID,
+LibEncode.hashKeyEntity(requiredResources.resources[i], addressToEntity(alice)),
+abi.encode(requiredResources.values[i])
+);
+
+- to remove component data for an entity:
+
+componentDevSystem.executeTyped(
+RequiredResourcesComponentID,
+LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
+abi.encode()
+);
 
 # Blueprints
 
@@ -50,11 +65,13 @@ When a building is created, its tiles are determined based on the prototype's bl
 
 The following components are used to store _metadata_ that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `MaxBuildingsComponent` stores building limit requirements.
 
-```
-  RequiredResearchComponent
-  RequiredResourcesComponent
-  ItemComponent
-  MaxBuildingsComponent
+````
+
+RequiredResearchComponent
+RequiredResourcesComponent
+ItemComponent
+MaxBuildingsComponent
+
 ```
 
 # Resource Production
@@ -109,8 +126,10 @@ When a building is upgraded, `PostUpgradeSystem` is called to update the buildin
 In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `MaxResourceStorageComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `MaxStorageComponent`.
 
 ```
-  levelId = hashKeyEntity(buildingId, level)
-  resourceLevelId = hashKeyEntity(resourceId, levelId)
+
+levelId = hashKeyEntity(buildingId, level)
+resourceLevelId = hashKeyEntity(resourceId, levelId)
+
 ```
 
 For example, the amount of Iron storage that is provided by a level 2 MainBase is:
@@ -123,8 +142,10 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
 `OwnedByComponent` records building ownership while `ItemComponent` records mined and crafted item ownership, with `hashKeyEntity(resourceId, playerEntity)` as key.
 
 ```
-  ItemComponent
-  HasResearchedComponent
+
+ItemComponent
+HasResearchedComponent
+
 ```
 
 `Passive Resources`
@@ -152,12 +173,14 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
 `CounterComponent` is a debug component for testing purposes. `GameConfigComponent` is currently unused. It should be used in the future for randomizing the Perlin noise seed and initializing other game state.
 
 ```
-  CounterComponent
-  GameConfigComponent (unused)
-  BuildingTypeComponent
-  OwnedByComponent
-  PathComponent
-  LastClaimedAtComponent
+
+CounterComponent
+GameConfigComponent (unused)
+BuildingTypeComponent
+OwnedByComponent
+PathComponent
+LastClaimedAtComponent
+
 ```
 
 # TODO: which systems call systems?
@@ -167,9 +190,13 @@ When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is 
 `MainBaseComponent` stores the coordinates of the user's base, where the map is panned to by default.
 
 ```
-  MainBaseComponent
+
+MainBaseComponent
+
 ```
 
 # Item listing
 
 All the items in the game is listed at https://tiles.primodium.com/.
+```
+````
