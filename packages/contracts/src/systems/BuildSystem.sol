@@ -72,14 +72,15 @@ contract BuildSystem is PrimodiumSystem {
       RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingTypeLevelEntity)
     ) {
       require(
-        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, addressToEntity(msg.sender)),
-        "[BuildSystem] Not enough resources to research"
+        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
+        "[BuildSystem] You do not have the required resources"
       );
       IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
         msg.sender,
         buildingTypeLevelEntity
       );
     }
+
     int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
