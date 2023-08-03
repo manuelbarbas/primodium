@@ -1,3 +1,3 @@
-// import { Scene } from "engine/types";
+import { Scene } from "engine/types";
 
-// export const runSystems = (scene: Scene) => {};
+export const runSystems = (_: Scene) => {};
