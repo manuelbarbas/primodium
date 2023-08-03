@@ -23,6 +23,7 @@ contract ComponentDevSystem is System {
     } else {
       c.set(entity, value);
     }
+    return abi.encode(entity);
   }
 
   function executeTyped(

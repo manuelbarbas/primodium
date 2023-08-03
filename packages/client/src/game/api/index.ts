@@ -1,19 +1,21 @@
-import { BlockType } from "src/util/constants";
-import { Network } from "../../network/layer";
-import { init as _init } from "../lib/scripts";
-import * as camera from "./camera";
-import { debug } from "./debug";
-import * as game from "./game";
-import * as hooks from "./hooks";
-import * as input from "./input";
-import { GameReady } from "src/network/components/clientComponents";
 import { EntityID } from "@latticexyz/recs";
+import engine from "engine";
+import { Game } from "engine/types";
+import { GameReady } from "src/network/components/clientComponents";
+import { Network } from "../../network/layer";
+import _init from "../init";
+import { createCameraApi } from "./camera";
+import { createGameApi } from "./game";
+import { createHooksApi } from "./hooks";
+import { createInputApi } from "./input";
+import { createSceneApi } from "./scene";
+import { createFxApi } from "./fx";
 
-const init = async (
+async function init(
   player: EntityID,
   network: Network,
   version: string = "v1"
-) => {
+) {
   const asciiArt = `
                                                                           
                                                                           
@@ -34,20 +36,50 @@ const init = async (
     "https://twitter.com/primodiumgame"
   );
 
-  //expose api to window for debugging
-  // @ts-ignore
-  if (import.meta.env.VITE_DEV === "true") window.network = network;
-
   await _init(player, network);
+
+  //expose api to window for debugging
+  if (import.meta.env.VITE_DEV === "true") {
+    // @ts-ignore
+    window.network = network;
+  }
+
   GameReady.set({ value: true });
-};
-
-export const api = { init, hooks, camera, debug, input, game };
-
-//expose api to window for debugging
-if (import.meta.env.VITE_DEV === "true") {
-  // @ts-ignore
-  window.primodium = api;
-  // @ts-ignore
-  window.BlockType = BlockType;
 }
+
+function destroy() {
+  //for each instance, call game destroy
+  const instances = engine.getGame();
+
+  instances.forEach((instance) => {
+    instance.phaserGame.destroy(true);
+  });
+}
+
+function api(instance: string | Game, sceneKey: string = "MAIN") {
+  const _instance =
+    typeof instance === "string" ? engine.getGame().get(instance) : instance;
+
+  if (_instance === undefined) {
+    console.warn("No instance found with key " + instance);
+    return;
+  }
+
+  const scene = _instance.sceneManager.scenes.get(sceneKey);
+
+  if (scene === undefined) {
+    console.warn("No scene found with key " + sceneKey);
+    return;
+  }
+
+  return {
+    camera: createCameraApi(scene),
+    game: createGameApi(_instance),
+    hooks: createHooksApi(scene),
+    input: createInputApi(scene),
+    scene: createSceneApi(scene),
+    fx: createFxApi(),
+  };
+}
+
+export const primodium = { api, init, destroy };

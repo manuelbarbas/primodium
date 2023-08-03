@@ -21,16 +21,12 @@ export function createCamera(
     Phaser.Cameras.Scene2D.Camera["worldView"]
   >(phaserCamera.worldView);
   const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom);
-  const wheelStream$ = new Subject<GestureState<"onWheel">>();
   const pinchStream$ = new Subject<GestureState<"onPinch">>();
-  const dragStream$ = new Subject<GestureState<"onDrag">>();
 
   const gesture = new Gesture(
     phaserCamera.scene.game.canvas,
     {
       onPinch: (state) => pinchStream$.next(state),
-      onWheel: (state) => wheelStream$.next(state),
-      onDrag: (state) => dragStream$.next(state),
     },
     {}
   );
@@ -99,9 +95,7 @@ export function createCamera(
     ignore,
     dispose: () => {
       pinchSub.unsubscribe();
-      dragStream$.unsubscribe();
       pinchStream$.unsubscribe();
-      wheelStream$.unsubscribe();
       zoom$.unsubscribe();
       gesture.destroy();
       phaserCamera.scene.scale.removeListener("resize", onResize);

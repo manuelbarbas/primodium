@@ -11,6 +11,7 @@ import { RequiredTileComponent, ID as RequiredTileComponentID } from "components
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
@@ -47,8 +48,8 @@ library LibBuilding {
   }
 
   function getBuildingCount(IWorld world, uint256 playerEntity) internal view returns (uint32) {
-    MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(
-      getAddressById(world.components(), MaxBuildingsComponentID)
+    BuildingCountComponent maxBuildingsComponent = BuildingCountComponent(
+      getAddressById(world.components(), BuildingCountComponentID)
     );
     return LibMath.getSafe(maxBuildingsComponent, playerEntity);
   }

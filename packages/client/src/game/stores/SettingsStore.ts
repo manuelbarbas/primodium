@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { mountStoreDevtool } from "simple-zustand-devtools";
-import { transferListeners, removeListeners } from "../api/input";
 
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
@@ -65,8 +64,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
 
         if (!set) return;
 
-        transferListeners(oldKey, newKey);
-
         if (set.delete(oldKey)) set.add(newKey);
       },
       addKey: (keybindAction, key) => {
@@ -81,7 +78,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
 
         if (!set) return;
 
-        if (set.delete(key)) removeListeners(key);
+        set.delete(key);
       },
       setKeybind: (keybindAction, keys) =>
         set({ keybinds: { [keybindAction]: keys } }),

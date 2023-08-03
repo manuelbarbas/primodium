@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
+import { AsteroidMap, KeybindActions } from "@game/constants";
 import { Key } from "@latticexyz/phaserx";
 import { motion } from "framer-motion";
 import { isMobile } from "react-device-detect";
@@ -13,7 +13,10 @@ const HotbarBody: React.FC<{
   setActiveBar: (activeBar: number) => void;
 }> = ({ activeBar, setActiveBar }) => {
   const hotbarContent = useHotbarContent();
-  const keybinds = primodium.hooks.useKeybinds();
+  const {
+    hooks: { useKeybinds },
+  } = primodium.api(AsteroidMap.KEY)!;
+  const keybinds = useKeybinds();
   const prevKey = keybinds[KeybindActions.PrevHotbar]?.entries().next()
     .value[0] as Key;
   const nextKey = keybinds[KeybindActions.NextHotbar]?.entries().next()

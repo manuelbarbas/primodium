@@ -1,4 +1,7 @@
 import { primodium } from "@game/api";
+import { AsteroidMap } from "@game/constants";
+import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { useMemo } from "react";
 import { FaCircle } from "react-icons/fa";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockNumber } from "src/network/components/clientComponents";
@@ -7,9 +10,29 @@ import { useGameStore } from "src/store/GameStore";
 export const Camera = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
   const { address } = useAccount();
-  const { worldCoord, normalizedZoom } = primodium.hooks.useCamera();
+  const {
+    tilemap: { tileWidth, tileHeight },
+    camera: { minZoom },
+  } = primodium.api(AsteroidMap.KEY)!.scene.getConfig();
+  const { worldView, zoom } = primodium.api(AsteroidMap.KEY)!.hooks.useCamera();
 
   const blockNumber = BlockNumber.use()?.value;
+
+  const gameCoord = useMemo(() => {
+    if (!worldView) {
+      return { x: 0, y: 0 };
+    }
+
+    const tileCoord = pixelCoordToTileCoord(
+      { x: worldView.centerX, y: worldView.centerY },
+      tileWidth,
+      tileHeight
+    );
+
+    return { x: tileCoord.x, y: -tileCoord.y };
+  }, [worldView]);
+
+  const normalizedZoom = zoom / minZoom;
 
   return (
     <div
@@ -48,7 +71,7 @@ export const Camera = () => {
         }`}
       >
         <p>x{Math.floor(normalizedZoom)}</p>
-        <p>{`[${worldCoord.x}, ${worldCoord.y}]`}</p>
+        <p>{`[${gameCoord.x}, ${gameCoord.y}]`}</p>
       </div>
       <div
         className={`absolute bottom-8 left-8 text-right font-mono text-cyan-400/80 text-sm font-bold ${

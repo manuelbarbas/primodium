@@ -4,12 +4,11 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { MineProductionComponent, ID as MineProductionComponentID } from "components/MineProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID, ResourceValue } from "components/ProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
@@ -77,7 +76,16 @@ contract BuildPathSystem is PrimodiumSystem {
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(startBuilding)
     );
 
-    if (MineProductionComponent(getAddressById(components, MineProductionComponentID)).has(startCoordLevelEntity)) {
+    if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
+      require(endCoordBuildingId == MainBaseID, "[BuildPathSystem] Must build path to MainBase");
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(
+        msg.sender,
+        startBuilding,
+        endBuilding
+      );
+    } else if (
+      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(startCoordLevelEntity)
+    ) {
       if (endCoordBuildingId == MainBaseID) {
         IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromMineToMainBaseSystemID)).executeTyped(
           msg.sender,
@@ -91,18 +99,7 @@ contract BuildPathSystem is PrimodiumSystem {
           endBuilding
         );
       }
-    } else if (MinesComponent(getAddressById(components, MinesComponentID)).has(startCoordLevelEntity)) {
-      require(
-        endCoordBuildingId == MainBaseID,
-        "[BuildPathSystem] Cannot build path from a factory to any building other then MainBase"
-      );
-      IOnTwoEntitySubsystem(getAddressById(world.systems(), BuildPathFromFactoryToMainBaseSystemID)).executeTyped(
-        msg.sender,
-        startBuilding,
-        endBuilding
-      );
     }
-
     return abi.encode(startBuilding);
   }
 
