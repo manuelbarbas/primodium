@@ -1117,7 +1117,7 @@
     "id": 22289,
     "exportedSymbols": {
       "BareComponent": [
-        52279
+        52281
       ],
       "Component": [
         262
@@ -1126,22 +1126,22 @@
         22275
       ],
       "IEntityIndexer": [
-        52696
+        52698
       ],
       "IWorld": [
         1322
       ],
       "LibTypes": [
-        52318
+        52320
       ],
       "MapSet": [
-        52511
+        52513
       ],
       "OccupiedPassiveResourceComponent": [
         22288
       ],
       "Set": [
-        52677
+        52679
       ],
       "Uint32Component": [
         2078
@@ -1433,8 +1433,8 @@
         ],
         "canonicalName": "OccupiedPassiveResourceComponent",
         "contractDependencies": [
-          52511,
-          52677
+          52513,
+          52679
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
@@ -1442,26 +1442,26 @@
           22288,
           2078,
           262,
-          52279,
-          55012,
-          52715,
+          52281,
+          55014,
+          52717,
           2434,
-          54568,
-          55051,
-          54444,
+          54570,
+          55053,
+          54446,
           1180,
-          54311,
+          54313,
           2477,
-          54578
+          54580
         ],
         "name": "OccupiedPassiveResourceComponent",
         "nameLocation": "202:32:104",
         "scope": 22289,
         "usedErrors": [
-          52079,
-          54937,
-          55048,
-          55050
+          52081,
+          54939,
+          55050,
+          55052
         ]
       }
     ],

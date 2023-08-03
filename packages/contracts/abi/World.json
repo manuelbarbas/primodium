@@ -1128,19 +1128,19 @@
         1322
       ],
       "LibQuery": [
-        54017
+        54019
       ],
       "QueryFragment": [
-        54057
+        54059
       ],
       "RegisterSystem": [
-        54294
+        54296
       ],
       "RegisterType": [
-        54078
+        54080
       ],
       "Set": [
-        52677
+        52679
       ],
       "Uint256Component": [
         1110
@@ -1155,7 +1155,7 @@
         1366
       ],
       "componentsComponentId": [
-        54027
+        54029
       ],
       "entityToAddress": [
         1349
@@ -1170,10 +1170,10 @@
         1431
       ],
       "registerSystemId": [
-        54086
+        54088
       ],
       "systemsComponentId": [
-        54035
+        54037
       ]
     },
     "nodeType": "SourceUnit",
@@ -1200,7 +1200,7 @@
         "file": "./Set.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 988,
-        "sourceUnit": 52678,
+        "sourceUnit": 52680,
         "symbolAliases": [
           {
             "foreign": {
@@ -1208,7 +1208,7 @@
               "name": "Set",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 52677,
+              "referencedDeclaration": 52679,
               "src": "67:3:12",
               "typeDescriptions": {}
             },
@@ -1226,7 +1226,7 @@
         "file": "./LibQuery.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 988,
-        "sourceUnit": 54018,
+        "sourceUnit": 54020,
         "symbolAliases": [
           {
             "foreign": {
@@ -1234,7 +1234,7 @@
               "name": "LibQuery",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 54017,
+              "referencedDeclaration": 54019,
               "src": "100:8:12",
               "typeDescriptions": {}
             },
@@ -1290,7 +1290,7 @@
         "file": "./interfaces/Query.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 988,
-        "sourceUnit": 54058,
+        "sourceUnit": 54060,
         "symbolAliases": [
           {
             "foreign": {
@@ -1298,7 +1298,7 @@
               "name": "QueryFragment",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 54057,
+              "referencedDeclaration": 54059,
               "src": "213:13:12",
               "typeDescriptions": {}
             },
@@ -1442,7 +1442,7 @@
         "file": "./constants.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 988,
-        "sourceUnit": 54036,
+        "sourceUnit": 54038,
         "symbolAliases": [
           {
             "foreign": {
@@ -1450,7 +1450,7 @@
               "name": "componentsComponentId",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 54027,
+              "referencedDeclaration": 54029,
               "src": "525:21:12",
               "typeDescriptions": {}
             },
@@ -1462,7 +1462,7 @@
               "name": "systemsComponentId",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 54035,
+              "referencedDeclaration": 54037,
               "src": "548:18:12",
               "typeDescriptions": {}
             },
@@ -1480,7 +1480,7 @@
         "file": "./systems/RegisterSystem.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 988,
-        "sourceUnit": 54295,
+        "sourceUnit": 54297,
         "symbolAliases": [
           {
             "foreign": {
@@ -1488,7 +1488,7 @@
               "name": "RegisterSystem",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 54294,
+              "referencedDeclaration": 54296,
               "src": "602:14:12",
               "typeDescriptions": {}
             },
@@ -1500,7 +1500,7 @@
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 54086,
+              "referencedDeclaration": 54088,
               "src": "618:2:12",
               "typeDescriptions": {}
             },
@@ -1513,7 +1513,7 @@
               "name": "RegisterType",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 54078,
+              "referencedDeclaration": 54080,
               "src": "642:12:12",
               "typeDescriptions": {}
             },
@@ -1540,7 +1540,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Set_$52677",
+              "typeIdentifier": "t_contract$_Set_$52679",
               "typeString": "contract Set"
             },
             "typeName": {
@@ -1553,13 +1553,13 @@
                   "1626:3:12"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 52677,
+                "referencedDeclaration": 52679,
                 "src": "1626:3:12"
               },
-              "referencedDeclaration": 52677,
+              "referencedDeclaration": 52679,
               "src": "1626:3:12",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Set_$52677",
+                "typeIdentifier": "t_contract$_Set_$52679",
                 "typeString": "contract Set"
               }
             },
@@ -1575,7 +1575,7 @@
                 "nodeType": "NewExpression",
                 "src": "1649:7:12",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_function_creation_nonpayable$__$returns$_t_contract$_Set_$52677_$",
+                  "typeIdentifier": "t_function_creation_nonpayable$__$returns$_t_contract$_Set_$52679_$",
                   "typeString": "function () returns (contract Set)"
                 },
                 "typeName": {
@@ -1588,13 +1588,13 @@
                       "1653:3:12"
                     ],
                     "nodeType": "IdentifierPath",
-                    "referencedDeclaration": 52677,
+                    "referencedDeclaration": 52679,
                     "src": "1653:3:12"
                   },
-                  "referencedDeclaration": 52677,
+                  "referencedDeclaration": 52679,
                   "src": "1653:3:12",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_Set_$52677",
+                    "typeIdentifier": "t_contract$_Set_$52679",
                     "typeString": "contract Set"
                   }
                 }
@@ -1611,7 +1611,7 @@
               "src": "1649:9:12",
               "tryCall": false,
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Set_$52677",
+                "typeIdentifier": "t_contract$_Set_$52679",
                 "typeString": "contract Set"
               }
             },
@@ -1707,7 +1707,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+              "typeIdentifier": "t_contract$_RegisterSystem_$54296",
               "typeString": "contract RegisterSystem"
             },
             "typeName": {
@@ -1720,13 +1720,13 @@
                   "1739:14:12"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 54294,
+                "referencedDeclaration": 54296,
                 "src": "1739:14:12"
               },
-              "referencedDeclaration": 54294,
+              "referencedDeclaration": 54296,
               "src": "1739:14:12",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                 "typeString": "contract RegisterSystem"
               }
             },
@@ -2064,7 +2064,7 @@
                           "name": "componentsComponentId",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 54027,
+                          "referencedDeclaration": 54029,
                           "src": "2072:21:12",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -2230,7 +2230,7 @@
                           "name": "systemsComponentId",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 54035,
+                          "referencedDeclaration": 54037,
                           "src": "2144:18:12",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -2322,7 +2322,7 @@
                       "referencedDeclaration": 496,
                       "src": "2169:8:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                        "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                         "typeString": "contract RegisterSystem"
                       }
                     },
@@ -2419,7 +2419,7 @@
                         "nodeType": "NewExpression",
                         "src": "2180:18:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_creation_nonpayable$_t_contract$_IWorld_$1322_$_t_address_$returns$_t_contract$_RegisterSystem_$54294_$",
+                          "typeIdentifier": "t_function_creation_nonpayable$_t_contract$_IWorld_$1322_$_t_address_$returns$_t_contract$_RegisterSystem_$54296_$",
                           "typeString": "function (contract IWorld,address) returns (contract RegisterSystem)"
                         },
                         "typeName": {
@@ -2432,13 +2432,13 @@
                               "2184:14:12"
                             ],
                             "nodeType": "IdentifierPath",
-                            "referencedDeclaration": 54294,
+                            "referencedDeclaration": 54296,
                             "src": "2184:14:12"
                           },
-                          "referencedDeclaration": 54294,
+                          "referencedDeclaration": 54296,
                           "src": "2184:14:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                            "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                             "typeString": "contract RegisterSystem"
                           }
                         }
@@ -2455,13 +2455,13 @@
                       "src": "2180:46:12",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                        "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                         "typeString": "contract RegisterSystem"
                       }
                     },
                     "src": "2169:57:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                      "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                       "typeString": "contract RegisterSystem"
                     }
                   },
@@ -2482,7 +2482,7 @@
                             "referencedDeclaration": 496,
                             "src": "2265:8:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                              "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                               "typeString": "contract RegisterSystem"
                             }
                           }
@@ -2490,7 +2490,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                              "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                               "typeString": "contract RegisterSystem"
                             }
                           ],
@@ -2557,7 +2557,7 @@
                       "memberLocation": "2241:15:12",
                       "memberName": "authorizeWriter",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 54993,
+                      "referencedDeclaration": 54995,
                       "src": "2232:24:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -2597,7 +2597,7 @@
                             "referencedDeclaration": 496,
                             "src": "2317:8:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                              "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                               "typeString": "contract RegisterSystem"
                             }
                           }
@@ -2605,7 +2605,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                              "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                               "typeString": "contract RegisterSystem"
                             }
                           ],
@@ -2672,7 +2672,7 @@
                       "memberLocation": "2293:15:12",
                       "memberName": "authorizeWriter",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 54993,
+                      "referencedDeclaration": 54995,
                       "src": "2281:27:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -2822,7 +2822,7 @@
                       "memberLocation": "2486:13:12",
                       "memberName": "registerWorld",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 52137,
+                      "referencedDeclaration": 52139,
                       "src": "2474:25:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -2937,7 +2937,7 @@
                       "memberLocation": "2529:13:12",
                       "memberName": "registerWorld",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 52137,
+                      "referencedDeclaration": 52139,
                       "src": "2520:22:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -3002,10 +3002,10 @@
                               "name": "RegisterType",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 54078,
+                              "referencedDeclaration": 54080,
                               "src": "2603:12:12",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_enum$_RegisterType_$54078_$",
+                                "typeIdentifier": "t_type$_t_enum$_RegisterType_$54080_$",
                                 "typeString": "type(enum RegisterType)"
                               }
                             },
@@ -3017,10 +3017,10 @@
                             "memberLocation": "2616:6:12",
                             "memberName": "System",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 54077,
+                            "referencedDeclaration": 54079,
                             "src": "2603:19:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_enum$_RegisterType_$54078",
+                              "typeIdentifier": "t_enum$_RegisterType_$54080",
                               "typeString": "enum RegisterType"
                             }
                           },
@@ -3034,7 +3034,7 @@
                                 "referencedDeclaration": 496,
                                 "src": "2632:8:12",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                                  "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                                   "typeString": "contract RegisterSystem"
                                 }
                               }
@@ -3042,7 +3042,7 @@
                             "expression": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                                  "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                                   "typeString": "contract RegisterSystem"
                                 }
                               ],
@@ -3086,7 +3086,7 @@
                             "name": "registerSystemId",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 54086,
+                            "referencedDeclaration": 54088,
                             "src": "2643:16:12",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -3101,7 +3101,7 @@
                               "typeString": "address"
                             },
                             {
-                              "typeIdentifier": "t_enum$_RegisterType_$54078",
+                              "typeIdentifier": "t_enum$_RegisterType_$54080",
                               "typeString": "enum RegisterType"
                             },
                             {
@@ -3171,7 +3171,7 @@
                         "referencedDeclaration": 496,
                         "src": "2563:8:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                          "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                           "typeString": "contract RegisterSystem"
                         }
                       },
@@ -3183,7 +3183,7 @@
                       "memberLocation": "2572:7:12",
                       "memberName": "execute",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 54293,
+                      "referencedDeclaration": 54295,
                       "src": "2563:16:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_bytes_memory_ptr_$returns$_t_bytes_memory_ptr_$",
@@ -3495,10 +3495,10 @@
                               "name": "RegisterType",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 54078,
+                              "referencedDeclaration": 54080,
                               "src": "3271:12:12",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_enum$_RegisterType_$54078_$",
+                                "typeIdentifier": "t_type$_t_enum$_RegisterType_$54080_$",
                                 "typeString": "type(enum RegisterType)"
                               }
                             },
@@ -3510,10 +3510,10 @@
                             "memberLocation": "3284:9:12",
                             "memberName": "Component",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 54076,
+                            "referencedDeclaration": 54078,
                             "src": "3271:22:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_enum$_RegisterType_$54078",
+                              "typeIdentifier": "t_enum$_RegisterType_$54080",
                               "typeString": "enum RegisterType"
                             }
                           },
@@ -3549,7 +3549,7 @@
                               "typeString": "address"
                             },
                             {
-                              "typeIdentifier": "t_enum$_RegisterType_$54078",
+                              "typeIdentifier": "t_enum$_RegisterType_$54080",
                               "typeString": "enum RegisterType"
                             },
                             {
@@ -3619,7 +3619,7 @@
                         "referencedDeclaration": 496,
                         "src": "3231:8:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                          "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                           "typeString": "contract RegisterSystem"
                         }
                       },
@@ -3631,7 +3631,7 @@
                       "memberLocation": "3240:7:12",
                       "memberName": "execute",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 54293,
+                      "referencedDeclaration": 54295,
                       "src": "3231:16:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_bytes_memory_ptr_$returns$_t_bytes_memory_ptr_$",
@@ -3797,10 +3797,10 @@
                               "name": "RegisterType",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 54078,
+                              "referencedDeclaration": 54080,
                               "src": "3510:12:12",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_enum$_RegisterType_$54078_$",
+                                "typeIdentifier": "t_type$_t_enum$_RegisterType_$54080_$",
                                 "typeString": "type(enum RegisterType)"
                               }
                             },
@@ -3812,10 +3812,10 @@
                             "memberLocation": "3523:6:12",
                             "memberName": "System",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 54077,
+                            "referencedDeclaration": 54079,
                             "src": "3510:19:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_enum$_RegisterType_$54078",
+                              "typeIdentifier": "t_enum$_RegisterType_$54080",
                               "typeString": "enum RegisterType"
                             }
                           },
@@ -3851,7 +3851,7 @@
                               "typeString": "address"
                             },
                             {
-                              "typeIdentifier": "t_enum$_RegisterType_$54078",
+                              "typeIdentifier": "t_enum$_RegisterType_$54080",
                               "typeString": "enum RegisterType"
                             },
                             {
@@ -3921,7 +3921,7 @@
                         "referencedDeclaration": 496,
                         "src": "3470:8:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_RegisterSystem_$54294",
+                          "typeIdentifier": "t_contract$_RegisterSystem_$54296",
                           "typeString": "contract RegisterSystem"
                         }
                       },
@@ -3933,7 +3933,7 @@
                       "memberLocation": "3479:7:12",
                       "memberName": "execute",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 54293,
+                      "referencedDeclaration": 54295,
                       "src": "3470:16:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_bytes_memory_ptr_$returns$_t_bytes_memory_ptr_$",
@@ -4427,7 +4427,7 @@
                             "referencedDeclaration": 487,
                             "src": "4189:8:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           }
@@ -4435,7 +4435,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           ],
@@ -4443,10 +4443,10 @@
                           "name": "Set",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 52677,
+                          "referencedDeclaration": 52679,
                           "src": "4185:3:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_Set_$52677_$",
+                            "typeIdentifier": "t_type$_t_contract$_Set_$52679_$",
                             "typeString": "type(contract Set)"
                           }
                         },
@@ -4462,7 +4462,7 @@
                         "src": "4185:13:12",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Set_$52677",
+                          "typeIdentifier": "t_contract$_Set_$52679",
                           "typeString": "contract Set"
                         }
                       },
@@ -4474,7 +4474,7 @@
                       "memberLocation": "4199:3:12",
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 52551,
+                      "referencedDeclaration": 52553,
                       "src": "4185:17:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -4848,7 +4848,7 @@
                             "referencedDeclaration": 487,
                             "src": "4581:8:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           }
@@ -4856,7 +4856,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           ],
@@ -4864,10 +4864,10 @@
                           "name": "Set",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 52677,
+                          "referencedDeclaration": 52679,
                           "src": "4577:3:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_Set_$52677_$",
+                            "typeIdentifier": "t_type$_t_contract$_Set_$52679_$",
                             "typeString": "type(contract Set)"
                           }
                         },
@@ -4883,7 +4883,7 @@
                         "src": "4577:13:12",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Set_$52677",
+                          "typeIdentifier": "t_contract$_Set_$52679",
                           "typeString": "contract Set"
                         }
                       },
@@ -4895,7 +4895,7 @@
                       "memberLocation": "4591:3:12",
                       "memberName": "add",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 52551,
+                      "referencedDeclaration": 52553,
                       "src": "4577:17:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -6445,7 +6445,7 @@
                             "referencedDeclaration": 487,
                             "src": "6273:8:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           }
@@ -6453,7 +6453,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           ],
@@ -6461,10 +6461,10 @@
                           "name": "Set",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 52677,
+                          "referencedDeclaration": 52679,
                           "src": "6269:3:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_Set_$52677_$",
+                            "typeIdentifier": "t_type$_t_contract$_Set_$52679_$",
                             "typeString": "type(contract Set)"
                           }
                         },
@@ -6480,7 +6480,7 @@
                         "src": "6269:13:12",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Set_$52677",
+                          "typeIdentifier": "t_contract$_Set_$52679",
                           "typeString": "contract Set"
                         }
                       },
@@ -6492,7 +6492,7 @@
                       "memberLocation": "6283:4:12",
                       "memberName": "size",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 52676,
+                      "referencedDeclaration": 52678,
                       "src": "6269:18:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -6604,7 +6604,7 @@
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54057_memory_ptr_$dyn_memory_ptr",
+                        "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54059_memory_ptr_$dyn_memory_ptr",
                         "typeString": "struct QueryFragment[]"
                       },
                       "typeName": {
@@ -6618,13 +6618,13 @@
                               "6542:13:12"
                             ],
                             "nodeType": "IdentifierPath",
-                            "referencedDeclaration": 54057,
+                            "referencedDeclaration": 54059,
                             "src": "6542:13:12"
                           },
-                          "referencedDeclaration": 54057,
+                          "referencedDeclaration": 54059,
                           "src": "6542:13:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_QueryFragment_$54057_storage_ptr",
+                            "typeIdentifier": "t_struct$_QueryFragment_$54059_storage_ptr",
                             "typeString": "struct QueryFragment"
                           }
                         },
@@ -6632,7 +6632,7 @@
                         "nodeType": "ArrayTypeName",
                         "src": "6542:15:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54057_storage_$dyn_storage_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54059_storage_$dyn_storage_ptr",
                           "typeString": "struct QueryFragment[]"
                         }
                       },
@@ -6685,7 +6685,7 @@
                       "nodeType": "NewExpression",
                       "src": "6577:19:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_struct$_QueryFragment_$54057_memory_ptr_$dyn_memory_ptr_$",
+                        "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_struct$_QueryFragment_$54059_memory_ptr_$dyn_memory_ptr_$",
                         "typeString": "function (uint256) pure returns (struct QueryFragment memory[] memory)"
                       },
                       "typeName": {
@@ -6699,13 +6699,13 @@
                               "6581:13:12"
                             ],
                             "nodeType": "IdentifierPath",
-                            "referencedDeclaration": 54057,
+                            "referencedDeclaration": 54059,
                             "src": "6581:13:12"
                           },
-                          "referencedDeclaration": 54057,
+                          "referencedDeclaration": 54059,
                           "src": "6581:13:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_QueryFragment_$54057_storage_ptr",
+                            "typeIdentifier": "t_struct$_QueryFragment_$54059_storage_ptr",
                             "typeString": "struct QueryFragment"
                           }
                         },
@@ -6713,7 +6713,7 @@
                         "nodeType": "ArrayTypeName",
                         "src": "6581:15:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54057_storage_$dyn_storage_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54059_storage_$dyn_storage_ptr",
                           "typeString": "struct QueryFragment[]"
                         }
                       }
@@ -6730,7 +6730,7 @@
                     "src": "6577:47:12",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54057_memory_ptr_$dyn_memory_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54059_memory_ptr_$dyn_memory_ptr",
                       "typeString": "struct QueryFragment memory[] memory"
                     }
                   },
@@ -6759,7 +6759,7 @@
                               "referencedDeclaration": 884,
                               "src": "6691:9:12",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54057_memory_ptr_$dyn_memory_ptr",
+                                "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54059_memory_ptr_$dyn_memory_ptr",
                                 "typeString": "struct QueryFragment memory[] memory"
                               }
                             },
@@ -6783,7 +6783,7 @@
                             "nodeType": "IndexAccess",
                             "src": "6691:12:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_QueryFragment_$54057_memory_ptr",
+                              "typeIdentifier": "t_struct$_QueryFragment_$54059_memory_ptr",
                               "typeString": "struct QueryFragment memory"
                             }
                           },
@@ -6840,7 +6840,7 @@
                                 "referencedDeclaration": 1218,
                                 "src": "6729:32:12",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_enum$_QueryType_$54048",
+                                  "typeIdentifier": "t_enum$_QueryType_$54050",
                                   "typeString": "enum QueryType"
                                 }
                               },
@@ -7007,7 +7007,7 @@
                             "expression": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_enum$_QueryType_$54048",
+                                  "typeIdentifier": "t_enum$_QueryType_$54050",
                                   "typeString": "enum QueryType"
                                 },
                                 {
@@ -7023,10 +7023,10 @@
                               "name": "QueryFragment",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 54057,
+                              "referencedDeclaration": 54059,
                               "src": "6706:13:12",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_struct$_QueryFragment_$54057_storage_ptr_$",
+                                "typeIdentifier": "t_type$_t_struct$_QueryFragment_$54059_storage_ptr_$",
                                 "typeString": "type(struct QueryFragment storage pointer)"
                               }
                             },
@@ -7042,13 +7042,13 @@
                             "src": "6706:176:12",
                             "tryCall": false,
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_QueryFragment_$54057_memory_ptr",
+                              "typeIdentifier": "t_struct$_QueryFragment_$54059_memory_ptr",
                               "typeString": "struct QueryFragment memory"
                             }
                           },
                           "src": "6691:191:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_QueryFragment_$54057_memory_ptr",
+                            "typeIdentifier": "t_struct$_QueryFragment_$54059_memory_ptr",
                             "typeString": "struct QueryFragment memory"
                           }
                         },
@@ -7199,7 +7199,7 @@
                         "referencedDeclaration": 884,
                         "src": "6916:9:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54057_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54059_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct QueryFragment memory[] memory"
                         }
                       }
@@ -7207,7 +7207,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54057_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_QueryFragment_$54059_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct QueryFragment memory[] memory"
                         }
                       ],
@@ -7216,10 +7216,10 @@
                         "name": "LibQuery",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 54017,
+                        "referencedDeclaration": 54019,
                         "src": "6901:8:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_LibQuery_$54017_$",
+                          "typeIdentifier": "t_type$_t_contract$_LibQuery_$54019_$",
                           "typeString": "type(library LibQuery)"
                         }
                       },
@@ -7231,10 +7231,10 @@
                       "memberLocation": "6910:5:12",
                       "memberName": "query",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 53449,
+                      "referencedDeclaration": 53451,
                       "src": "6901:14:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_array$_t_struct$_QueryFragment_$54057_memory_ptr_$dyn_memory_ptr_$returns$_t_array$_t_uint256_$dyn_memory_ptr_$",
+                        "typeIdentifier": "t_function_internal_view$_t_array$_t_struct$_QueryFragment_$54059_memory_ptr_$dyn_memory_ptr_$returns$_t_array$_t_uint256_$dyn_memory_ptr_$",
                         "typeString": "function (struct QueryFragment memory[] memory) view returns (uint256[] memory)"
                       }
                     },
@@ -7421,7 +7421,7 @@
                             "referencedDeclaration": 487,
                             "src": "7077:8:12",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           }
@@ -7429,7 +7429,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Set_$52677",
+                              "typeIdentifier": "t_contract$_Set_$52679",
                               "typeString": "contract Set"
                             }
                           ],
@@ -7437,10 +7437,10 @@
                           "name": "Set",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 52677,
+                          "referencedDeclaration": 52679,
                           "src": "7073:3:12",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_type$_t_contract$_Set_$52677_$",
+                            "typeIdentifier": "t_type$_t_contract$_Set_$52679_$",
                             "typeString": "type(contract Set)"
                           }
                         },
@@ -7456,7 +7456,7 @@
                         "src": "7073:13:12",
                         "tryCall": false,
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Set_$52677",
+                          "typeIdentifier": "t_contract$_Set_$52679",
                           "typeString": "contract Set"
                         }
                       },
@@ -7468,7 +7468,7 @@
                       "memberLocation": "7087:3:12",
                       "memberName": "has",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 52658,
+                      "referencedDeclaration": 52660,
                       "src": "7073:17:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_bool_$",
@@ -8074,8 +8074,8 @@
         "canonicalName": "World",
         "contractDependencies": [
           1110,
-          52677,
-          54294
+          52679,
+          54296
         ],
         "contractKind": "contract",
         "documentation": {

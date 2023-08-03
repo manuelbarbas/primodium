@@ -1064,13 +1064,13 @@
         22471
       ],
       "PrimodiumSystem": [
-        42248
+        42250
       ],
       "ResourceValue": [
-        52001
+        52003
       ],
       "ResourceValues": [
-        52008
+        52010
       ],
       "addressToEntity": [
         1366
@@ -1106,7 +1106,7 @@
         "file": "systems/internal/PrimodiumSystem.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 37236,
-        "sourceUnit": 42249,
+        "sourceUnit": 42251,
         "symbolAliases": [
           {
             "foreign": {
@@ -1114,7 +1114,7 @@
               "name": "PrimodiumSystem",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "67:15:145",
               "typeDescriptions": {}
             },
@@ -1369,7 +1369,7 @@
               "name": "ResourceValues",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 52008,
+              "referencedDeclaration": 52010,
               "src": "613:14:145",
               "typeDescriptions": {}
             },
@@ -1459,7 +1459,7 @@
               "name": "ResourceValue",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 52001,
+              "referencedDeclaration": 52003,
               "src": "834:13:145",
               "typeDescriptions": {}
             },
@@ -1503,7 +1503,7 @@
         "file": "../types.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 37236,
-        "sourceUnit": 52009,
+        "sourceUnit": 52011,
         "symbolAliases": [
           {
             "foreign": {
@@ -1965,7 +1965,7 @@
                     "1901:15:145"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 42248,
+                  "referencedDeclaration": 42250,
                   "src": "1901:15:145"
                 },
                 "nodeType": "ModifierInvocation",
@@ -3466,7 +3466,7 @@
                       "name": "getBuildingFromCoord",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 42239,
+                      "referencedDeclaration": 42241,
                       "src": "2975:20:145",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_view$_t_struct$_Coord_$1710_memory_ptr_$returns$_t_uint256_$",
@@ -3552,7 +3552,7 @@
                       "name": "getBuildingFromCoord",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 42239,
+                      "referencedDeclaration": 42241,
                       "src": "3035:20:145",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_view$_t_struct$_Coord_$1710_memory_ptr_$returns$_t_uint256_$",
@@ -3771,7 +3771,7 @@
                                     "name": "getC",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 42199,
+                                    "referencedDeclaration": 42201,
                                     "src": "3382:4:145",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -5842,7 +5842,7 @@
               ]
             },
             "baseFunctions": [
-              42247
+              42249
             ],
             "functionSelector": "09c5eabe",
             "implemented": true,
@@ -6204,7 +6204,7 @@
                 "1833:15:145"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "1833:15:145"
             },
             "id": 36941,
@@ -6218,23 +6218,23 @@
         "fullyImplemented": true,
         "linearizedBaseContracts": [
           37235,
-          42248,
+          42250,
           327,
-          52715,
+          52717,
           2434,
-          54568,
-          55051,
-          54444,
-          52729,
+          54570,
+          55053,
+          54446,
+          52731,
           2477,
-          54578
+          54580
         ],
         "name": "BuildPathSystem",
         "nameLocation": "1814:15:145",
         "scope": 37236,
         "usedErrors": [
-          55048,
-          55050
+          55050,
+          55052
         ]
       }
     ],

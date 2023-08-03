@@ -1008,13 +1008,13 @@
         22471
       ],
       "PrimodiumSystem": [
-        42248
+        42250
       ],
       "ResourceValue": [
-        52001
+        52003
       ],
       "ResourceValues": [
-        52008
+        52010
       ],
       "addressToEntity": [
         1366
@@ -1050,7 +1050,7 @@
         "file": "systems/internal/PrimodiumSystem.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 36637,
-        "sourceUnit": 42249,
+        "sourceUnit": 42251,
         "symbolAliases": [
           {
             "foreign": {
@@ -1058,7 +1058,7 @@
               "name": "PrimodiumSystem",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "67:15:143",
               "typeDescriptions": {}
             },
@@ -1313,7 +1313,7 @@
               "name": "ResourceValues",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 52008,
+              "referencedDeclaration": 52010,
               "src": "629:14:143",
               "typeDescriptions": {}
             },
@@ -1403,7 +1403,7 @@
               "name": "ResourceValue",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 52001,
+              "referencedDeclaration": 52003,
               "src": "850:13:143",
               "typeDescriptions": {}
             },
@@ -1803,7 +1803,7 @@
                     "1644:15:143"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 42248,
+                  "referencedDeclaration": 42250,
                   "src": "1644:15:143"
                 },
                 "nodeType": "ModifierInvocation",
@@ -1978,7 +1978,7 @@
                           "name": "getC",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 42199,
+                          "referencedDeclaration": 42201,
                           "src": "1930:4:143",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2111,7 +2111,7 @@
                           "name": "getC",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 42199,
+                          "referencedDeclaration": 42201,
                           "src": "2007:4:143",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2244,7 +2244,7 @@
                           "name": "getC",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 42199,
+                          "referencedDeclaration": 42201,
                           "src": "2083:4:143",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2377,7 +2377,7 @@
                           "name": "getC",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 42199,
+                          "referencedDeclaration": 42201,
                           "src": "2180:4:143",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2755,7 +2755,7 @@
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                        "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                         "typeString": "struct ResourceValues"
                       },
                       "typeName": {
@@ -2768,13 +2768,13 @@
                             "2406:14:143"
                           ],
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 52008,
+                          "referencedDeclaration": 52010,
                           "src": "2406:14:143"
                         },
-                        "referencedDeclaration": 52008,
+                        "referencedDeclaration": 52010,
                         "src": "2406:14:143",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_ResourceValues_$52008_storage_ptr",
+                          "typeIdentifier": "t_struct$_ResourceValues_$52010_storage_ptr",
                           "typeString": "struct ResourceValues"
                         }
                       },
@@ -2827,7 +2827,7 @@
                       "referencedDeclaration": 22246,
                       "src": "2443:23:143",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValues_$52008_memory_ptr_$",
+                        "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValues_$52010_memory_ptr_$",
                         "typeString": "function (uint256) view external returns (struct ResourceValues memory)"
                       }
                     },
@@ -2843,7 +2843,7 @@
                     "src": "2443:38:143",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                      "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                       "typeString": "struct ResourceValues memory"
                     }
                   },
@@ -2877,7 +2877,7 @@
                                 "referencedDeclaration": 36303,
                                 "src": "2556:12:143",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                                  "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                                   "typeString": "struct ResourceValues memory"
                                 }
                               },
@@ -2889,7 +2889,7 @@
                               "memberLocation": "2569:9:143",
                               "memberName": "resources",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 52004,
+                              "referencedDeclaration": 52006,
                               "src": "2556:22:143",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
@@ -3019,7 +3019,7 @@
                                       "referencedDeclaration": 36303,
                                       "src": "2984:12:143",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                                        "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                                         "typeString": "struct ResourceValues memory"
                                       }
                                     },
@@ -3031,7 +3031,7 @@
                                     "memberLocation": "2997:6:143",
                                     "memberName": "values",
                                     "nodeType": "MemberAccess",
-                                    "referencedDeclaration": 52007,
+                                    "referencedDeclaration": 52009,
                                     "src": "2984:19:143",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -3168,7 +3168,7 @@
                                       "referencedDeclaration": 36303,
                                       "src": "2643:12:143",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                                        "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                                         "typeString": "struct ResourceValues memory"
                                       }
                                     },
@@ -3180,7 +3180,7 @@
                                     "memberLocation": "2656:6:143",
                                     "memberName": "values",
                                     "nodeType": "MemberAccess",
-                                    "referencedDeclaration": 52007,
+                                    "referencedDeclaration": 52009,
                                     "src": "2643:19:143",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -3282,7 +3282,7 @@
                                       "referencedDeclaration": 36303,
                                       "src": "2694:12:143",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                                        "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                                         "typeString": "struct ResourceValues memory"
                                       }
                                     },
@@ -3294,7 +3294,7 @@
                                     "memberLocation": "2707:6:143",
                                     "memberName": "values",
                                     "nodeType": "MemberAccess",
-                                    "referencedDeclaration": 52007,
+                                    "referencedDeclaration": 52009,
                                     "src": "2694:19:143",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -3357,7 +3357,7 @@
                                     "referencedDeclaration": 36303,
                                     "src": "2762:12:143",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                                      "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                                       "typeString": "struct ResourceValues memory"
                                     }
                                   }
@@ -3369,7 +3369,7 @@
                                       "typeString": "uint256"
                                     },
                                     {
-                                      "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                                      "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                                       "typeString": "struct ResourceValues memory"
                                     }
                                   ],
@@ -3396,7 +3396,7 @@
                                   "referencedDeclaration": 22210,
                                   "src": "2728:18:143",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_struct$_ResourceValues_$52008_memory_ptr_$returns$__$",
+                                    "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_struct$_ResourceValues_$52010_memory_ptr_$returns$__$",
                                     "typeString": "function (uint256,struct ResourceValues memory) external"
                                   }
                                 },
@@ -3488,7 +3488,7 @@
                                       "referencedDeclaration": 36303,
                                       "src": "2821:12:143",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                                        "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                                         "typeString": "struct ResourceValues memory"
                                       }
                                     },
@@ -3500,7 +3500,7 @@
                                     "memberLocation": "2834:6:143",
                                     "memberName": "values",
                                     "nodeType": "MemberAccess",
-                                    "referencedDeclaration": 52007,
+                                    "referencedDeclaration": 52009,
                                     "src": "2821:19:143",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -3792,7 +3792,7 @@
                           "referencedDeclaration": 36303,
                           "src": "2511:12:143",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_ResourceValues_$52008_memory_ptr",
+                            "typeIdentifier": "t_struct$_ResourceValues_$52010_memory_ptr",
                             "typeString": "struct ResourceValues memory"
                           }
                         },
@@ -3804,7 +3804,7 @@
                         "memberLocation": "2524:6:143",
                         "memberName": "values",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 52007,
+                        "referencedDeclaration": 52009,
                         "src": "2511:19:143",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_uint32_$dyn_memory_ptr",
@@ -4013,7 +4013,7 @@
                               "name": "getC",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 42199,
+                              "referencedDeclaration": 42201,
                               "src": "3108:4:143",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -5220,7 +5220,7 @@
                                   "name": "getC",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 42199,
+                                  "referencedDeclaration": 42201,
                                   "src": "3982:4:143",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -5607,7 +5607,7 @@
                                 "name": "getC",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 42199,
+                                "referencedDeclaration": 42201,
                                 "src": "4203:4:143",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -5676,7 +5676,7 @@
                         "referencedDeclaration": 21706,
                         "src": "4175:80:143",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52001_memory_ptr_$",
+                          "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52003_memory_ptr_$",
                           "typeString": "function (uint256) view external returns (struct ResourceValue memory)"
                         }
                       },
@@ -5692,7 +5692,7 @@
                       "src": "4175:100:143",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                        "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                         "typeString": "struct ResourceValue memory"
                       }
                     },
@@ -5704,7 +5704,7 @@
                     "memberLocation": "4283:8:143",
                     "memberName": "resource",
                     "nodeType": "MemberAccess",
-                    "referencedDeclaration": 51998,
+                    "referencedDeclaration": 52000,
                     "src": "4175:116:143",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -6044,7 +6044,7 @@
                                 "name": "getC",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 42199,
+                                "referencedDeclaration": 42201,
                                 "src": "4578:4:143",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -6185,7 +6185,7 @@
                                 "name": "getC",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 42199,
+                                "referencedDeclaration": 42201,
                                 "src": "4648:4:143",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -6391,7 +6391,7 @@
                             "stateVariable": false,
                             "storageLocation": "memory",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                              "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                               "typeString": "struct ResourceValue"
                             },
                             "typeName": {
@@ -6404,13 +6404,13 @@
                                   "4769:13:143"
                                 ],
                                 "nodeType": "IdentifierPath",
-                                "referencedDeclaration": 52001,
+                                "referencedDeclaration": 52003,
                                 "src": "4769:13:143"
                               },
-                              "referencedDeclaration": 52001,
+                              "referencedDeclaration": 52003,
                               "src": "4769:13:143",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_ResourceValue_$52001_storage_ptr",
+                                "typeIdentifier": "t_struct$_ResourceValue_$52003_storage_ptr",
                                 "typeString": "struct ResourceValue"
                               }
                             },
@@ -6468,7 +6468,7 @@
                                     "name": "getC",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 42199,
+                                    "referencedDeclaration": 42201,
                                     "src": "4842:4:143",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -6537,7 +6537,7 @@
                             "referencedDeclaration": 21706,
                             "src": "4814:82:143",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52001_memory_ptr_$",
+                              "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52003_memory_ptr_$",
                               "typeString": "function (uint256) view external returns (struct ResourceValue memory)"
                             }
                           },
@@ -6553,7 +6553,7 @@
                           "src": "4814:102:143",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                            "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                             "typeString": "struct ResourceValue memory"
                           }
                         },
@@ -6596,7 +6596,7 @@
                                 "referencedDeclaration": 36567,
                                 "src": "4989:21:143",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                                  "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                                   "typeString": "struct ResourceValue memory"
                                 }
                               },
@@ -6608,7 +6608,7 @@
                               "memberLocation": "5011:8:143",
                               "memberName": "resource",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 51998,
+                              "referencedDeclaration": 52000,
                               "src": "4989:30:143",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
@@ -6870,7 +6870,7 @@
                               "name": "getC",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 42199,
+                              "referencedDeclaration": 42201,
                               "src": "5129:4:143",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -7052,7 +7052,7 @@
               ]
             },
             "baseFunctions": [
-              42247
+              42249
             ],
             "functionSelector": "09c5eabe",
             "implemented": true,
@@ -7456,7 +7456,7 @@
                 "1576:15:143"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "1576:15:143"
             },
             "id": 36221,
@@ -7470,24 +7470,24 @@
         "fullyImplemented": true,
         "linearizedBaseContracts": [
           36636,
-          42248,
+          42250,
           327,
-          52715,
+          52717,
           2434,
-          54568,
-          55051,
-          54444,
-          52729,
+          54570,
+          55053,
+          54446,
+          52731,
           2477,
-          54578,
+          54580,
           22923
         ],
         "name": "BuildPathFromMineToFactorySystem",
         "nameLocation": "1517:32:143",
         "scope": 36637,
         "usedErrors": [
-          55048,
-          55050
+          55050,
+          55052
         ]
       }
     ],

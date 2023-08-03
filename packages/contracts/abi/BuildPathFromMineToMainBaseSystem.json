@@ -999,10 +999,10 @@
         22495
       ],
       "PrimodiumSystem": [
-        42248
+        42250
       ],
       "ResourceValue": [
-        52001
+        52003
       ],
       "addressToEntity": [
         1366
@@ -1038,7 +1038,7 @@
         "file": "systems/internal/PrimodiumSystem.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 36877,
-        "sourceUnit": 42249,
+        "sourceUnit": 42251,
         "symbolAliases": [
           {
             "foreign": {
@@ -1046,7 +1046,7 @@
               "name": "PrimodiumSystem",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "67:15:144",
               "typeDescriptions": {}
             },
@@ -1301,7 +1301,7 @@
               "name": "ResourceValue",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 52001,
+              "referencedDeclaration": 52003,
               "src": "666:13:144",
               "typeDescriptions": {}
             },
@@ -1675,7 +1675,7 @@
                     "1403:15:144"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 42248,
+                  "referencedDeclaration": 42250,
                   "src": "1403:15:144"
                 },
                 "nodeType": "ModifierInvocation",
@@ -2060,7 +2060,7 @@
                           "name": "getC",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 42199,
+                          "referencedDeclaration": 42201,
                           "src": "1764:4:144",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2193,7 +2193,7 @@
                           "name": "getC",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 42199,
+                          "referencedDeclaration": 42201,
                           "src": "1897:4:144",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2662,7 +2662,7 @@
                               "name": "getC",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 42199,
+                              "referencedDeclaration": 42201,
                               "src": "2196:4:144",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2852,7 +2852,7 @@
                                   "name": "getC",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 42199,
+                                  "referencedDeclaration": 42201,
                                   "src": "2347:4:144",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -3209,7 +3209,7 @@
                         "referencedDeclaration": 21706,
                         "src": "2523:36:144",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52001_memory_ptr_$",
+                          "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52003_memory_ptr_$",
                           "typeString": "function (uint256) view external returns (struct ResourceValue memory)"
                         }
                       },
@@ -3225,7 +3225,7 @@
                       "src": "2523:49:144",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                        "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                         "typeString": "struct ResourceValue memory"
                       }
                     },
@@ -3237,7 +3237,7 @@
                     "memberLocation": "2573:8:144",
                     "memberName": "resource",
                     "nodeType": "MemberAccess",
-                    "referencedDeclaration": 51998,
+                    "referencedDeclaration": 52000,
                     "src": "2523:58:144",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -3633,7 +3633,7 @@
                               "referencedDeclaration": 21706,
                               "src": "2914:36:144",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52001_memory_ptr_$",
+                                "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52003_memory_ptr_$",
                                 "typeString": "function (uint256) view external returns (struct ResourceValue memory)"
                               }
                             },
@@ -3649,7 +3649,7 @@
                             "src": "2914:49:144",
                             "tryCall": false,
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                              "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                               "typeString": "struct ResourceValue memory"
                             }
                           },
@@ -3661,7 +3661,7 @@
                           "memberLocation": "2964:5:144",
                           "memberName": "value",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 52000,
+                          "referencedDeclaration": 52002,
                           "src": "2914:55:144",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint32",
@@ -3804,7 +3804,7 @@
                               "name": "getC",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 42199,
+                              "referencedDeclaration": 42201,
                               "src": "2996:4:144",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -3970,7 +3970,7 @@
               ]
             },
             "baseFunctions": [
-              42247
+              42249
             ],
             "functionSelector": "09c5eabe",
             "implemented": true,
@@ -4374,7 +4374,7 @@
                 "1335:15:144"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "1335:15:144"
             },
             "id": 36686,
@@ -4388,24 +4388,24 @@
         "fullyImplemented": true,
         "linearizedBaseContracts": [
           36876,
-          42248,
+          42250,
           327,
-          52715,
+          52717,
           2434,
-          54568,
-          55051,
-          54444,
-          52729,
+          54570,
+          55053,
+          54446,
+          52731,
           2477,
-          54578,
+          54580,
           22923
         ],
         "name": "BuildPathFromMineToMainBaseSystem",
         "nameLocation": "1275:33:144",
         "scope": 36877,
         "usedErrors": [
-          55048,
-          55050
+          55050,
+          55052
         ]
       }
     ],

@@ -876,7 +876,7 @@
   },
   "ast": {
     "absolutePath": "src/systems/ClaimFromMineSystem.sol",
-    "id": 37856,
+    "id": 37853,
     "exportedSymbols": {
       "BuildingKey": [
         35050
@@ -888,7 +888,7 @@
         21735
       ],
       "ClaimFromMineSystem": [
-        37855
+        37852
       ],
       "Coord": [
         1710
@@ -900,7 +900,7 @@
         21807
       ],
       "ID": [
-        37747
+        37744
       ],
       "IWorld": [
         1322
@@ -957,7 +957,7 @@
         22495
       ],
       "PrimodiumSystem": [
-        42248
+        42250
       ],
       "UnclaimedResourceComponent": [
         22892
@@ -976,7 +976,7 @@
     "src": "32:2799:147",
     "nodes": [
       {
-        "id": 37692,
+        "id": 37689,
         "nodeType": "PragmaDirective",
         "src": "32:24:147",
         "nodes": [],
@@ -988,23 +988,23 @@
         ]
       },
       {
-        "id": 37695,
+        "id": 37692,
         "nodeType": "ImportDirective",
         "src": "58:79:147",
         "nodes": [],
         "absolutePath": "src/systems/internal/PrimodiumSystem.sol",
         "file": "systems/internal/PrimodiumSystem.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
-        "sourceUnit": 42249,
+        "scope": 37853,
+        "sourceUnit": 42251,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37693,
+              "id": 37690,
               "name": "PrimodiumSystem",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "67:15:147",
               "typeDescriptions": {}
             },
@@ -1012,7 +1012,7 @@
           },
           {
             "foreign": {
-              "id": 37694,
+              "id": 37691,
               "name": "IWorld",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1026,19 +1026,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37698,
+        "id": 37695,
         "nodeType": "ImportDirective",
         "src": "138:67:147",
         "nodes": [],
         "absolutePath": "../../node_modules/@latticexyz/solecs/src/utils.sol",
         "file": "solecs/utils.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 1590,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37696,
+              "id": 37693,
               "name": "getAddressById",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1050,7 +1050,7 @@
           },
           {
             "foreign": {
-              "id": 37697,
+              "id": 37694,
               "name": "addressToEntity",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1064,19 +1064,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37701,
+        "id": 37698,
         "nodeType": "ImportDirective",
         "src": "207:108:147",
         "nodes": [],
         "absolutePath": "src/components/BuildingTypeComponent.sol",
         "file": "components/BuildingTypeComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 21749,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37699,
+              "id": 37696,
               "name": "BuildingTypeComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1088,7 +1088,7 @@
           },
           {
             "foreign": {
-              "id": 37700,
+              "id": 37697,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1103,19 +1103,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37704,
+        "id": 37701,
         "nodeType": "ImportDirective",
         "src": "316:84:147",
         "nodes": [],
         "absolutePath": "src/components/PathComponent.sol",
         "file": "components/PathComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 22485,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37702,
+              "id": 37699,
               "name": "PathComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1127,7 +1127,7 @@
           },
           {
             "foreign": {
-              "id": 37703,
+              "id": 37700,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1142,19 +1142,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37707,
+        "id": 37704,
         "nodeType": "ImportDirective",
         "src": "401:93:147",
         "nodes": [],
         "absolutePath": "src/components/OwnedByComponent.sol",
         "file": "components/OwnedByComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 22313,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37705,
+              "id": 37702,
               "name": "OwnedByComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1166,7 +1166,7 @@
           },
           {
             "foreign": {
-              "id": 37706,
+              "id": 37703,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1181,19 +1181,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37710,
+        "id": 37707,
         "nodeType": "ImportDirective",
         "src": "495:102:147",
         "nodes": [],
         "absolutePath": "src/components/MaxStorageComponent.sol",
         "file": "components/MaxStorageComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 22109,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37708,
+              "id": 37705,
               "name": "MaxStorageComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1205,7 +1205,7 @@
           },
           {
             "foreign": {
-              "id": 37709,
+              "id": 37706,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1220,19 +1220,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37713,
+        "id": 37710,
         "nodeType": "ImportDirective",
         "src": "598:126:147",
         "nodes": [],
         "absolutePath": "src/components/MaxResourceStorageComponent.sol",
         "file": "components/MaxResourceStorageComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 22085,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37711,
+              "id": 37708,
               "name": "MaxResourceStorageComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1244,7 +1244,7 @@
           },
           {
             "foreign": {
-              "id": 37712,
+              "id": 37709,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1259,19 +1259,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37716,
+        "id": 37713,
         "nodeType": "ImportDirective",
         "src": "725:120:147",
         "nodes": [],
         "absolutePath": "src/components/PlayerProductionComponent.sol",
         "file": "components/PlayerProductionComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 22509,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37714,
+              "id": 37711,
               "name": "PlayerProductionComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1283,7 +1283,7 @@
           },
           {
             "foreign": {
-              "id": 37715,
+              "id": 37712,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1298,19 +1298,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37719,
+        "id": 37716,
         "nodeType": "ImportDirective",
         "src": "846:84:147",
         "nodes": [],
         "absolutePath": "src/components/ItemComponent.sol",
         "file": "components/ItemComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 21917,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37717,
+              "id": 37714,
               "name": "ItemComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1322,7 +1322,7 @@
           },
           {
             "foreign": {
-              "id": 37718,
+              "id": 37715,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1337,19 +1337,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37722,
+        "id": 37719,
         "nodeType": "ImportDirective",
         "src": "931:111:147",
         "nodes": [],
         "absolutePath": "src/components/HasResearchedComponent.sol",
         "file": "components/HasResearchedComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 21821,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37720,
+              "id": 37717,
               "name": "HasResearchedComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1361,7 +1361,7 @@
           },
           {
             "foreign": {
-              "id": 37721,
+              "id": 37718,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1376,19 +1376,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37725,
+        "id": 37722,
         "nodeType": "ImportDirective",
         "src": "1043:123:147",
         "nodes": [],
         "absolutePath": "src/components/UnclaimedResourceComponent.sol",
         "file": "components/UnclaimedResourceComponent.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 22893,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37723,
+              "id": 37720,
               "name": "UnclaimedResourceComponent",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1400,7 +1400,7 @@
           },
           {
             "foreign": {
-              "id": 37724,
+              "id": 37721,
               "name": "ID",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1415,19 +1415,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37727,
+        "id": 37724,
         "nodeType": "ImportDirective",
         "src": "1168:48:147",
         "nodes": [],
         "absolutePath": "src/prototypes.sol",
         "file": "../prototypes.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 35046,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37726,
+              "id": 37723,
               "name": "BuildingKey",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1441,19 +1441,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37729,
+        "id": 37726,
         "nodeType": "ImportDirective",
         "src": "1218:37:147",
         "nodes": [],
         "absolutePath": "src/types.sol",
         "file": "../types.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
-        "sourceUnit": 52009,
+        "scope": 37853,
+        "sourceUnit": 52011,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37728,
+              "id": 37725,
               "name": "Coord",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1467,19 +1467,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37731,
+        "id": 37728,
         "nodeType": "ImportDirective",
         "src": "1257:57:147",
         "nodes": [],
         "absolutePath": "src/libraries/LibTerrain.sol",
         "file": "../libraries/LibTerrain.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 31332,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37730,
+              "id": 37727,
               "name": "LibTerrain",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1493,19 +1493,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37733,
+        "id": 37730,
         "nodeType": "ImportDirective",
         "src": "1315:51:147",
         "nodes": [],
         "absolutePath": "src/libraries/LibMath.sol",
         "file": "../libraries/LibMath.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 29429,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37732,
+              "id": 37729,
               "name": "LibMath",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1519,19 +1519,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37735,
+        "id": 37732,
         "nodeType": "ImportDirective",
         "src": "1367:77:147",
         "nodes": [],
         "absolutePath": "src/libraries/LibUnclaimedResource.sol",
         "file": "../libraries/LibUnclaimedResource.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 31525,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37734,
+              "id": 37731,
               "name": "LibUnclaimedResource",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1545,19 +1545,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37737,
+        "id": 37734,
         "nodeType": "ImportDirective",
         "src": "1445:55:147",
         "nodes": [],
         "absolutePath": "src/libraries/LibEncode.sol",
         "file": "../libraries/LibEncode.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 23599,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37736,
+              "id": 37733,
               "name": "LibEncode",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1571,19 +1571,19 @@
         "unitAlias": ""
       },
       {
-        "id": 37739,
+        "id": 37736,
         "nodeType": "ImportDirective",
         "src": "1501:59:147",
         "nodes": [],
         "absolutePath": "src/libraries/LibResource.sol",
         "file": "../libraries/LibResource.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 37856,
+        "scope": 37853,
         "sourceUnit": 30224,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 37738,
+              "id": 37735,
               "name": "LibResource",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
@@ -1597,7 +1597,7 @@
         "unitAlias": ""
       },
       {
-        "id": 37747,
+        "id": 37744,
         "nodeType": "VariableDeclaration",
         "src": "1561:64:147",
         "nodes": [],
@@ -1605,7 +1605,7 @@
         "mutability": "constant",
         "name": "ID",
         "nameLocation": "1578:2:147",
-        "scope": 37856,
+        "scope": 37853,
         "stateVariable": false,
         "storageLocation": "default",
         "typeDescriptions": {
@@ -1613,7 +1613,7 @@
           "typeString": "uint256"
         },
         "typeName": {
-          "id": 37740,
+          "id": 37737,
           "name": "uint256",
           "nodeType": "ElementaryTypeName",
           "src": "1561:7:147",
@@ -1628,7 +1628,7 @@
               "arguments": [
                 {
                   "hexValue": "73797374656d2e436c61696d46726f6d4d696e65",
-                  "id": 37744,
+                  "id": 37741,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -1650,7 +1650,7 @@
                     "typeString": "literal_string \"system.ClaimFromMine\""
                   }
                 ],
-                "id": 37743,
+                "id": 37740,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -1661,7 +1661,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 37745,
+              "id": 37742,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -1685,7 +1685,7 @@
                 "typeString": "bytes32"
               }
             ],
-            "id": 37742,
+            "id": 37739,
             "isConstant": false,
             "isLValue": false,
             "isPure": true,
@@ -1697,14 +1697,14 @@
               "typeString": "type(uint256)"
             },
             "typeName": {
-              "id": 37741,
+              "id": 37738,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "1583:7:147",
               "typeDescriptions": {}
             }
           },
-          "id": 37746,
+          "id": 37743,
           "isConstant": false,
           "isLValue": false,
           "isPure": true,
@@ -1723,17 +1723,17 @@
         "visibility": "internal"
       },
       {
-        "id": 37855,
+        "id": 37852,
         "nodeType": "ContractDefinition",
         "src": "1628:1202:147",
         "nodes": [
           {
-            "id": 37762,
+            "id": 37759,
             "nodeType": "FunctionDefinition",
             "src": "1680:87:147",
             "nodes": [],
             "body": {
-              "id": 37761,
+              "id": 37758,
               "nodeType": "Block",
               "src": "1765:2:147",
               "nodes": [],
@@ -1745,11 +1745,11 @@
               {
                 "arguments": [
                   {
-                    "id": 37757,
+                    "id": 37754,
                     "name": "_world",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 37752,
+                    "referencedDeclaration": 37749,
                     "src": "1744:6:147",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_IWorld_$1322",
@@ -1757,11 +1757,11 @@
                     }
                   },
                   {
-                    "id": 37758,
+                    "id": 37755,
                     "name": "_components",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 37754,
+                    "referencedDeclaration": 37751,
                     "src": "1752:11:147",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1769,16 +1769,16 @@
                     }
                   }
                 ],
-                "id": 37759,
+                "id": 37756,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 37756,
+                  "id": 37753,
                   "name": "PrimodiumSystem",
                   "nameLocations": [
                     "1728:15:147"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 42248,
+                  "referencedDeclaration": 42250,
                   "src": "1728:15:147"
                 },
                 "nodeType": "ModifierInvocation",
@@ -1788,17 +1788,17 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 37755,
+              "id": 37752,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 37752,
+                  "id": 37749,
                   "mutability": "mutable",
                   "name": "_world",
                   "nameLocation": "1699:6:147",
                   "nodeType": "VariableDeclaration",
-                  "scope": 37762,
+                  "scope": 37759,
                   "src": "1692:13:147",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1807,10 +1807,10 @@
                     "typeString": "contract IWorld"
                   },
                   "typeName": {
-                    "id": 37751,
+                    "id": 37748,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 37750,
+                      "id": 37747,
                       "name": "IWorld",
                       "nameLocations": [
                         "1692:6:147"
@@ -1830,12 +1830,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 37754,
+                  "id": 37751,
                   "mutability": "mutable",
                   "name": "_components",
                   "nameLocation": "1715:11:147",
                   "nodeType": "VariableDeclaration",
-                  "scope": 37762,
+                  "scope": 37759,
                   "src": "1707:19:147",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1844,7 +1844,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 37753,
+                    "id": 37750,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1707:7:147",
@@ -1860,40 +1860,40 @@
               "src": "1691:36:147"
             },
             "returnParameters": {
-              "id": 37760,
+              "id": 37757,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1765:0:147"
             },
-            "scope": 37855,
+            "scope": 37852,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 37838,
+            "id": 37835,
             "nodeType": "FunctionDefinition",
             "src": "1771:889:147",
             "nodes": [],
             "body": {
-              "id": 37837,
+              "id": 37834,
               "nodeType": "Block",
               "src": "1846:814:147",
               "nodes": [],
               "statements": [
                 {
                   "assignments": [
-                    37771
+                    37768
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 37771,
+                      "id": 37768,
                       "mutability": "mutable",
                       "name": "playerEntity",
                       "nameLocation": "1878:12:147",
                       "nodeType": "VariableDeclaration",
-                      "scope": 37837,
+                      "scope": 37834,
                       "src": "1870:20:147",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -1902,7 +1902,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 37770,
+                        "id": 37767,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "1870:7:147",
@@ -1914,12 +1914,12 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 37776,
+                  "id": 37773,
                   "initialValue": {
                     "arguments": [
                       {
                         "expression": {
-                          "id": 37773,
+                          "id": 37770,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -1930,7 +1930,7 @@
                             "typeString": "msg"
                           }
                         },
-                        "id": 37774,
+                        "id": 37771,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1952,7 +1952,7 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 37772,
+                      "id": 37769,
                       "name": "addressToEntity",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -1963,7 +1963,7 @@
                         "typeString": "function (address) pure returns (uint256)"
                       }
                     },
-                    "id": 37775,
+                    "id": 37772,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1984,17 +1984,17 @@
                 },
                 {
                   "assignments": [
-                    37779
+                    37776
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 37779,
+                      "id": 37776,
                       "mutability": "mutable",
                       "name": "coord",
                       "nameLocation": "1940:5:147",
                       "nodeType": "VariableDeclaration",
-                      "scope": 37837,
+                      "scope": 37834,
                       "src": "1927:18:147",
                       "stateVariable": false,
                       "storageLocation": "memory",
@@ -2003,10 +2003,10 @@
                         "typeString": "struct Coord"
                       },
                       "typeName": {
-                        "id": 37778,
+                        "id": 37775,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 37777,
+                          "id": 37774,
                           "name": "Coord",
                           "nameLocations": [
                             "1927:5:147"
@@ -2025,15 +2025,15 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 37786,
+                  "id": 37783,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 37782,
+                        "id": 37779,
                         "name": "args",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 37764,
+                        "referencedDeclaration": 37761,
                         "src": "1959:4:147",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
@@ -2043,7 +2043,7 @@
                       {
                         "components": [
                           {
-                            "id": 37783,
+                            "id": 37780,
                             "name": "Coord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -2055,7 +2055,7 @@
                             }
                           }
                         ],
-                        "id": 37784,
+                        "id": 37781,
                         "isConstant": false,
                         "isInlineArray": false,
                         "isLValue": false,
@@ -2081,7 +2081,7 @@
                         }
                       ],
                       "expression": {
-                        "id": 37780,
+                        "id": 37777,
                         "name": "abi",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -2092,7 +2092,7 @@
                           "typeString": "abi"
                         }
                       },
-                      "id": 37781,
+                      "id": 37778,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2106,7 +2106,7 @@
                         "typeString": "function () pure"
                       }
                     },
-                    "id": 37785,
+                    "id": 37782,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2127,17 +2127,17 @@
                 },
                 {
                   "assignments": [
-                    37788
+                    37785
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 37788,
+                      "id": 37785,
                       "mutability": "mutable",
                       "name": "entity",
                       "nameLocation": "2014:6:147",
                       "nodeType": "VariableDeclaration",
-                      "scope": 37837,
+                      "scope": 37834,
                       "src": "2006:14:147",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -2146,7 +2146,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 37787,
+                        "id": 37784,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "2006:7:147",
@@ -2158,15 +2158,15 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 37792,
+                  "id": 37789,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 37790,
+                        "id": 37787,
                         "name": "coord",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 37779,
+                        "referencedDeclaration": 37776,
                         "src": "2044:5:147",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Coord_$1710_memory_ptr",
@@ -2181,18 +2181,18 @@
                           "typeString": "struct Coord memory"
                         }
                       ],
-                      "id": 37789,
+                      "id": 37786,
                       "name": "getBuildingFromCoord",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 42239,
+                      "referencedDeclaration": 42241,
                       "src": "2023:20:147",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_view$_t_struct$_Coord_$1710_memory_ptr_$returns$_t_uint256_$",
                         "typeString": "function (struct Coord memory) view returns (uint256)"
                       }
                     },
-                    "id": 37791,
+                    "id": 37788,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2217,11 +2217,11 @@
                       {
                         "arguments": [
                           {
-                            "id": 37801,
+                            "id": 37798,
                             "name": "entity",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 37788,
+                            "referencedDeclaration": 37785,
                             "src": "2150:6:147",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -2241,7 +2241,7 @@
                               {
                                 "arguments": [
                                   {
-                                    "id": 37796,
+                                    "id": 37793,
                                     "name": "components",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
@@ -2253,7 +2253,7 @@
                                     }
                                   },
                                   {
-                                    "id": 37797,
+                                    "id": 37794,
                                     "name": "BuildingTypeComponentID",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
@@ -2276,7 +2276,7 @@
                                       "typeString": "uint256"
                                     }
                                   ],
-                                  "id": 37795,
+                                  "id": 37792,
                                   "name": "getAddressById",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
@@ -2287,7 +2287,7 @@
                                     "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                                   }
                                 },
-                                "id": 37798,
+                                "id": 37795,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
@@ -2311,7 +2311,7 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "id": 37794,
+                              "id": 37791,
                               "name": "BuildingTypeComponent",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
@@ -2322,7 +2322,7 @@
                                 "typeString": "type(contract BuildingTypeComponent)"
                               }
                             },
-                            "id": 37799,
+                            "id": 37796,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2338,7 +2338,7 @@
                               "typeString": "contract BuildingTypeComponent"
                             }
                           },
-                          "id": 37800,
+                          "id": 37797,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2353,7 +2353,7 @@
                             "typeString": "function (uint256) view external returns (bool)"
                           }
                         },
-                        "id": 37802,
+                        "id": 37799,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2371,7 +2371,7 @@
                       },
                       {
                         "hexValue": "5b436c61696d46726f6d4d696e6553797374656d5d2043616e6e6f7420636c61696d2066726f6d206d696e6573206f6e20616e20656d70747920636f6f7264696e617465",
-                        "id": 37803,
+                        "id": 37800,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2397,7 +2397,7 @@
                           "typeString": "literal_string \"[ClaimFromMineSystem] Cannot claim from mines on an empty coordinate\""
                         }
                       ],
-                      "id": 37793,
+                      "id": 37790,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -2411,7 +2411,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 37804,
+                    "id": 37801,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2427,23 +2427,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 37805,
+                  "id": 37802,
                   "nodeType": "ExpressionStatement",
                   "src": "2056:185:147"
                 },
                 {
                   "assignments": [
-                    37807
+                    37804
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 37807,
+                      "id": 37804,
                       "mutability": "mutable",
                       "name": "ownedEntityAtStartCoord",
                       "nameLocation": "2317:23:147",
                       "nodeType": "VariableDeclaration",
-                      "scope": 37837,
+                      "scope": 37834,
                       "src": "2309:31:147",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -2452,7 +2452,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 37806,
+                        "id": 37803,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "2309:7:147",
@@ -2464,15 +2464,15 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 37817,
+                  "id": 37814,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 37815,
+                        "id": 37812,
                         "name": "entity",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 37788,
+                        "referencedDeclaration": 37785,
                         "src": "2417:6:147",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -2492,7 +2492,7 @@
                           {
                             "arguments": [
                               {
-                                "id": 37810,
+                                "id": 37807,
                                 "name": "components",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
@@ -2504,7 +2504,7 @@
                                 }
                               },
                               {
-                                "id": 37811,
+                                "id": 37808,
                                 "name": "OwnedByComponentID",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
@@ -2527,7 +2527,7 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "id": 37809,
+                              "id": 37806,
                               "name": "getAddressById",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
@@ -2538,7 +2538,7 @@
                                 "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                               }
                             },
-                            "id": 37812,
+                            "id": 37809,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2562,7 +2562,7 @@
                               "typeString": "address"
                             }
                           ],
-                          "id": 37808,
+                          "id": 37805,
                           "name": "OwnedByComponent",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
@@ -2573,7 +2573,7 @@
                             "typeString": "type(contract OwnedByComponent)"
                           }
                         },
-                        "id": 37813,
+                        "id": 37810,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2589,7 +2589,7 @@
                           "typeString": "contract OwnedByComponent"
                         }
                       },
-                      "id": 37814,
+                      "id": 37811,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2604,7 +2604,7 @@
                         "typeString": "function (uint256) view external returns (uint256)"
                       }
                     },
-                    "id": 37816,
+                    "id": 37813,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2631,17 +2631,17 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-                        "id": 37821,
+                        "id": 37818,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
-                          "id": 37819,
+                          "id": 37816,
                           "name": "ownedEntityAtStartCoord",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 37807,
+                          "referencedDeclaration": 37804,
                           "src": "2445:23:147",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -2651,11 +2651,11 @@
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
-                          "id": 37820,
+                          "id": 37817,
                           "name": "playerEntity",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 37771,
+                          "referencedDeclaration": 37768,
                           "src": "2472:12:147",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
@@ -2670,7 +2670,7 @@
                       },
                       {
                         "hexValue": "5b436c61696d46726f6d4d696e6553797374656d5d2043616e6e6f7420636c61696d2066726f6d206d696e6573206f6e20612074696c6520796f7520646f206e6f74206f776e",
-                        "id": 37822,
+                        "id": 37819,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2696,7 +2696,7 @@
                           "typeString": "literal_string \"[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own\""
                         }
                       ],
-                      "id": 37818,
+                      "id": 37815,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -2710,7 +2710,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 37823,
+                    "id": 37820,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2726,7 +2726,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 37824,
+                  "id": 37821,
                   "nodeType": "ExpressionStatement",
                   "src": "2430:140:147"
                 },
@@ -2734,7 +2734,7 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 37828,
+                        "id": 37825,
                         "name": "world",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -2746,11 +2746,11 @@
                         }
                       },
                       {
-                        "id": 37829,
+                        "id": 37826,
                         "name": "playerEntity",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 37771,
+                        "referencedDeclaration": 37768,
                         "src": "2615:12:147",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -2770,7 +2770,7 @@
                         }
                       ],
                       "expression": {
-                        "id": 37825,
+                        "id": 37822,
                         "name": "LibResource",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -2781,7 +2781,7 @@
                           "typeString": "type(library LibResource)"
                         }
                       },
-                      "id": 37827,
+                      "id": 37824,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2796,7 +2796,7 @@
                         "typeString": "function (contract IWorld,uint256)"
                       }
                     },
-                    "id": 37830,
+                    "id": 37827,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2812,7 +2812,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 37831,
+                  "id": 37828,
                   "nodeType": "ExpressionStatement",
                   "src": "2577:51:147"
                 },
@@ -2821,7 +2821,7 @@
                     "arguments": [
                       {
                         "hexValue": "30",
-                        "id": 37834,
+                        "id": 37831,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2844,7 +2844,7 @@
                         }
                       ],
                       "expression": {
-                        "id": 37832,
+                        "id": 37829,
                         "name": "abi",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -2855,7 +2855,7 @@
                           "typeString": "abi"
                         }
                       },
-                      "id": 37833,
+                      "id": 37830,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -2869,7 +2869,7 @@
                         "typeString": "function () pure returns (bytes memory)"
                       }
                     },
-                    "id": 37835,
+                    "id": 37832,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
@@ -2885,15 +2885,15 @@
                       "typeString": "bytes memory"
                     }
                   },
-                  "functionReturnParameters": 37769,
-                  "id": 37836,
+                  "functionReturnParameters": 37766,
+                  "id": 37833,
                   "nodeType": "Return",
                   "src": "2635:20:147"
                 }
               ]
             },
             "baseFunctions": [
-              42247
+              42249
             ],
             "functionSelector": "09c5eabe",
             "implemented": true,
@@ -2902,23 +2902,23 @@
             "name": "execute",
             "nameLocation": "1780:7:147",
             "overrides": {
-              "id": 37766,
+              "id": 37763,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "1814:8:147"
             },
             "parameters": {
-              "id": 37765,
+              "id": 37762,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 37764,
+                  "id": 37761,
                   "mutability": "mutable",
                   "name": "args",
                   "nameLocation": "1801:4:147",
                   "nodeType": "VariableDeclaration",
-                  "scope": 37838,
+                  "scope": 37835,
                   "src": "1788:17:147",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -2927,7 +2927,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 37763,
+                    "id": 37760,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "1788:5:147",
@@ -2942,17 +2942,17 @@
               "src": "1787:19:147"
             },
             "returnParameters": {
-              "id": 37769,
+              "id": 37766,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 37768,
+                  "id": 37765,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 37838,
+                  "scope": 37835,
                   "src": "1832:12:147",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -2961,7 +2961,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 37767,
+                    "id": 37764,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "1832:5:147",
@@ -2975,18 +2975,18 @@
               ],
               "src": "1831:14:147"
             },
-            "scope": 37855,
+            "scope": 37852,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 37854,
+            "id": 37851,
             "nodeType": "FunctionDefinition",
             "src": "2664:164:147",
             "nodes": [],
             "body": {
-              "id": 37853,
+              "id": 37850,
               "nodeType": "Block",
               "src": "2736:92:147",
               "nodes": [],
@@ -2997,11 +2997,11 @@
                       {
                         "arguments": [
                           {
-                            "id": 37849,
+                            "id": 37846,
                             "name": "coord",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 37841,
+                            "referencedDeclaration": 37838,
                             "src": "2816:5:147",
                             "typeDescriptions": {
                               "typeIdentifier": "t_struct$_Coord_$1710_memory_ptr",
@@ -3017,7 +3017,7 @@
                             }
                           ],
                           "expression": {
-                            "id": 37847,
+                            "id": 37844,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -3028,7 +3028,7 @@
                               "typeString": "abi"
                             }
                           },
-                          "id": 37848,
+                          "id": 37845,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3042,7 +3042,7 @@
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 37850,
+                        "id": 37847,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -3066,20 +3066,20 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 37846,
+                      "id": 37843,
                       "name": "execute",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        37838
+                        37835
                       ],
-                      "referencedDeclaration": 37838,
+                      "referencedDeclaration": 37835,
                       "src": "2797:7:147",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_bytes_memory_ptr_$returns$_t_bytes_memory_ptr_$",
                         "typeString": "function (bytes memory) returns (bytes memory)"
                       }
                     },
-                    "id": 37851,
+                    "id": 37848,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3095,8 +3095,8 @@
                       "typeString": "bytes memory"
                     }
                   },
-                  "functionReturnParameters": 37845,
-                  "id": 37852,
+                  "functionReturnParameters": 37842,
+                  "id": 37849,
                   "nodeType": "Return",
                   "src": "2790:33:147"
                 }
@@ -3109,17 +3109,17 @@
             "name": "executeTyped",
             "nameLocation": "2673:12:147",
             "parameters": {
-              "id": 37842,
+              "id": 37839,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 37841,
+                  "id": 37838,
                   "mutability": "mutable",
                   "name": "coord",
                   "nameLocation": "2699:5:147",
                   "nodeType": "VariableDeclaration",
-                  "scope": 37854,
+                  "scope": 37851,
                   "src": "2686:18:147",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -3128,10 +3128,10 @@
                     "typeString": "struct Coord"
                   },
                   "typeName": {
-                    "id": 37840,
+                    "id": 37837,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 37839,
+                      "id": 37836,
                       "name": "Coord",
                       "nameLocations": [
                         "2686:5:147"
@@ -3153,17 +3153,17 @@
               "src": "2685:20:147"
             },
             "returnParameters": {
-              "id": 37845,
+              "id": 37842,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 37844,
+                  "id": 37841,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 37854,
+                  "scope": 37851,
                   "src": "2722:12:147",
                   "stateVariable": false,
                   "storageLocation": "memory",
@@ -3172,7 +3172,7 @@
                     "typeString": "bytes"
                   },
                   "typeName": {
-                    "id": 37843,
+                    "id": 37840,
                     "name": "bytes",
                     "nodeType": "ElementaryTypeName",
                     "src": "2722:5:147",
@@ -3186,7 +3186,7 @@
               ],
               "src": "2721:14:147"
             },
-            "scope": 37855,
+            "scope": 37852,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
@@ -3196,16 +3196,16 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 37748,
+              "id": 37745,
               "name": "PrimodiumSystem",
               "nameLocations": [
                 "1660:15:147"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "1660:15:147"
             },
-            "id": 37749,
+            "id": 37746,
             "nodeType": "InheritanceSpecifier",
             "src": "1660:15:147"
           }
@@ -3215,24 +3215,24 @@
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          37855,
-          42248,
+          37852,
+          42250,
           327,
-          52715,
+          52717,
           2434,
-          54568,
-          55051,
-          54444,
-          52729,
+          54570,
+          55053,
+          54446,
+          52731,
           2477,
-          54578
+          54580
         ],
         "name": "ClaimFromMineSystem",
         "nameLocation": "1637:19:147",
-        "scope": 37856,
+        "scope": 37853,
         "usedErrors": [
-          55048,
-          55050
+          55050,
+          55052
         ]
       }
     ],

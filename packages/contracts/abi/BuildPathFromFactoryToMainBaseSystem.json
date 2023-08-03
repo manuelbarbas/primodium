@@ -1002,10 +1002,10 @@
         22471
       ],
       "PrimodiumSystem": [
-        42248
+        42250
       ],
       "ResourceValue": [
-        52001
+        52003
       ],
       "addressToEntity": [
         1366
@@ -1041,7 +1041,7 @@
         "file": "systems/internal/PrimodiumSystem.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 36163,
-        "sourceUnit": 42249,
+        "sourceUnit": 42251,
         "symbolAliases": [
           {
             "foreign": {
@@ -1049,7 +1049,7 @@
               "name": "PrimodiumSystem",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "67:15:142",
               "typeDescriptions": {}
             },
@@ -1343,7 +1343,7 @@
               "name": "ResourceValue",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 52001,
+              "referencedDeclaration": 52003,
               "src": "746:13:142",
               "typeDescriptions": {}
             },
@@ -1743,7 +1743,7 @@
                     "1547:15:142"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 42248,
+                  "referencedDeclaration": 42250,
                   "src": "1547:15:142"
                 },
                 "nodeType": "ModifierInvocation",
@@ -2345,7 +2345,7 @@
                               "name": "getC",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 42199,
+                              "referencedDeclaration": 42201,
                               "src": "2018:4:142",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2612,7 +2612,7 @@
                                     "name": "getC",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 42199,
+                                    "referencedDeclaration": 42201,
                                     "src": "2181:4:142",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2802,7 +2802,7 @@
                                         "name": "getC",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 42199,
+                                        "referencedDeclaration": 42201,
                                         "src": "2338:4:142",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -2966,7 +2966,7 @@
                             "stateVariable": false,
                             "storageLocation": "memory",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                              "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                               "typeString": "struct ResourceValue"
                             },
                             "typeName": {
@@ -2979,13 +2979,13 @@
                                   "2406:13:142"
                                 ],
                                 "nodeType": "IdentifierPath",
-                                "referencedDeclaration": 52001,
+                                "referencedDeclaration": 52003,
                                 "src": "2406:13:142"
                               },
-                              "referencedDeclaration": 52001,
+                              "referencedDeclaration": 52003,
                               "src": "2406:13:142",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_ResourceValue_$52001_storage_ptr",
+                                "typeIdentifier": "t_struct$_ResourceValue_$52003_storage_ptr",
                                 "typeString": "struct ResourceValue"
                               }
                             },
@@ -3043,7 +3043,7 @@
                                     "name": "getC",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 42199,
+                                    "referencedDeclaration": 42201,
                                     "src": "2472:4:142",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -3112,7 +3112,7 @@
                             "referencedDeclaration": 21706,
                             "src": "2444:73:142",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52001_memory_ptr_$",
+                              "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_struct$_ResourceValue_$52003_memory_ptr_$",
                               "typeString": "function (uint256) view external returns (struct ResourceValue memory)"
                             }
                           },
@@ -3128,7 +3128,7 @@
                           "src": "2444:102:142",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                            "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                             "typeString": "struct ResourceValue memory"
                           }
                         },
@@ -3171,7 +3171,7 @@
                                 "referencedDeclaration": 36094,
                                 "src": "2619:14:142",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_ResourceValue_$52001_memory_ptr",
+                                  "typeIdentifier": "t_struct$_ResourceValue_$52003_memory_ptr",
                                   "typeString": "struct ResourceValue memory"
                                 }
                               },
@@ -3183,7 +3183,7 @@
                               "memberLocation": "2634:8:142",
                               "memberName": "resource",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 51998,
+                              "referencedDeclaration": 52000,
                               "src": "2619:23:142",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
@@ -3445,7 +3445,7 @@
                               "name": "getC",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 42199,
+                              "referencedDeclaration": 42201,
                               "src": "2746:4:142",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_address_$",
@@ -3611,7 +3611,7 @@
               ]
             },
             "baseFunctions": [
-              42247
+              42249
             ],
             "functionSelector": "09c5eabe",
             "implemented": true,
@@ -4015,7 +4015,7 @@
                 "1479:15:142"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 42248,
+              "referencedDeclaration": 42250,
               "src": "1479:15:142"
             },
             "id": 36000,
@@ -4029,24 +4029,24 @@
         "fullyImplemented": true,
         "linearizedBaseContracts": [
           36162,
-          42248,
+          42250,
           327,
-          52715,
+          52717,
           2434,
-          54568,
-          55051,
-          54444,
-          52729,
+          54570,
+          55053,
+          54446,
+          52731,
           2477,
-          54578,
+          54580,
           22923
         ],
         "name": "BuildPathFromFactoryToMainBaseSystem",
         "nameLocation": "1416:36:142",
         "scope": 36163,
         "usedErrors": [
-          55048,
-          55050
+          55050,
+          55052
         ]
       }
     ],
