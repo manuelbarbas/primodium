@@ -50,7 +50,10 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   const keyboard$ = new Subject<Phaser.Input.Keyboard.Key>();
 
-  const pointermove$ = fromEvent(document, "mousemove").pipe(
+  const pointermove$ = fromEvent(
+    inputPlugin.scene.scale.canvas,
+    "mousemove"
+  ).pipe(
     filter(() => enabled.current),
     map(() => {
       return { pointer: inputPlugin.manager?.activePointer };
@@ -62,7 +65,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const pointerdown$: Observable<{
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
-  }> = fromEvent(document, "pointerdown").pipe(
+  }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerdown").pipe(
     filter(() => enabled.current),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
@@ -75,7 +78,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const pointerup$: Observable<{
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
-  }> = fromEvent(document, "pointerup").pipe(
+  }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerup").pipe(
     filter(() => enabled.current),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,

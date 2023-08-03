@@ -1,5 +1,5 @@
 import { primodium } from "@game/api";
-import { KeybindActions } from "@game/constants";
+import { AsteroidMap, KeybindActions } from "@game/constants";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import HotbarBody from "./HotbarBody";
@@ -16,32 +16,30 @@ import { wrap } from "src/util/common";
 const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const keybinds = primodium.hooks.useKeybinds();
+  const {
+    hooks: { useKeybinds },
+    input: { addListener },
+  } = primodium.api(AsteroidMap.KEY)!;
+  const keybinds = useKeybinds();
   const [activeBar, setActiveBar] = useState(0);
   const activeBarRef = useRef(0);
 
   activeBarRef.current = activeBar;
 
   useEffect(() => {
-    const nextHotbar = primodium.input.addListener(
-      KeybindActions.NextHotbar,
-      () => {
-        setActiveBar(wrap(activeBarRef.current + 1, hotbarContent.length));
-        SelectedBuilding.remove();
-        SelectedAction.remove();
-      }
-    );
+    const nextHotbar = addListener(KeybindActions.NextHotbar, () => {
+      setActiveBar(wrap(activeBarRef.current + 1, hotbarContent.length));
+      SelectedBuilding.remove();
+      SelectedAction.remove();
+    });
 
-    const prevHotbar = primodium.input.addListener(
-      KeybindActions.PrevHotbar,
-      () => {
-        setActiveBar(wrap(activeBarRef.current - 1, hotbarContent.length));
-        SelectedBuilding.remove();
-        SelectedAction.remove();
-      }
-    );
+    const prevHotbar = addListener(KeybindActions.PrevHotbar, () => {
+      setActiveBar(wrap(activeBarRef.current - 1, hotbarContent.length));
+      SelectedBuilding.remove();
+      SelectedAction.remove();
+    });
 
-    const esc = primodium.input.addListener(KeybindActions.Esc, () => {
+    const esc = addListener(KeybindActions.Esc, () => {
       SelectedBuilding.remove();
       SelectedAction.remove();
     });

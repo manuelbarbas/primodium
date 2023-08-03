@@ -1,5 +1,5 @@
 {
-  "MAIN": {
+  "ASTEROID_MAP": {
     "files": [
       {
         "type": "image",
@@ -11,17 +11,31 @@
         "key": "resource-tileset",
         "url": "/assets/tilesets/resource.png"
       },
+
       {
         "type": "atlas",
         "key": "sprite-atlas",
         "textureURL": "/assets/sprites/atlas.png",
         "atlasURL": "/assets/sprites/atlas.json"
+      }
+    ]
+  },
+  "BELT_MAP": {
+    "files" : [
+      {
+        "type": "image",
+        "key": "grid-tileset",
+        "url": "/assets/tilesets/grid.png"
+      }, 
+      {
+        "type": "image",
+        "key": "asteroid-sprite",
+        "url": "/img/asteroid.png"
       },
       {
-        "type": "atlas",
-        "key": "base-atlas",
-        "textureURL": "/assets/sprites/base.png",
-        "atlasURL": "/assets/sprites/base.json"
+        "type": "image",
+        "key": "asteroid-titanium-sprite",
+        "url": "/img/asteroid-titanium.png"
       }
     ]
   }
