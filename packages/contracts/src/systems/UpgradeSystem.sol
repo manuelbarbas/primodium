@@ -15,6 +15,7 @@ import { BuildingProductionComponent, ID as BuildingProductionComponentID } from
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
+import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
 
 import { MainBaseID } from "../prototypes.sol";
@@ -27,16 +28,40 @@ import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-
+import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
 import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerResourceProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
+
+  function checkAndUpdateConnectedFactory(uint256 buildingEntity) internal {
+    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+    if (pathComponent.has(buildingEntity)) {
+      uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
+      uint256 connectedToBuildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID))
+        .getValue(connectedToBuildingEntity);
+      if (
+        !ActiveComponent(getAddressById(components, MinesComponentID)).has(connectedToBuildingEntity) &&
+        MinesComponent(getAddressById(components, MinesComponentID)).has(
+          LibEncode.hashKeyEntity(connectedToBuildingType, levelComponent.getValue(connectedToBuildingEntity))
+        )
+      ) {
+        bool isActive = abi.decode(
+          IOnEntitySubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+            msg.sender,
+            connectedToBuildingEntity
+          ),
+          (bool)
+        );
+      }
+    }
+  }
 
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
@@ -82,6 +107,11 @@ contract UpgradeSystem is PrimodiumSystem {
       );
     }
 
+    bool isActive = ActiveComponent(getAddressById(components, ActiveComponentID)).has(buildingEntity) ||
+      !MinesComponent(getAddressById(components, MinesComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
+      );
+
     uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
     levelComponent.set(buildingEntity, newLevel);
 
@@ -105,13 +135,15 @@ contract UpgradeSystem is PrimodiumSystem {
 
     //Resource Production Update
     if (
-      ActiveComponent(getAddressById(components, ActiveComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
-      ) ||
       !MinesComponent(getAddressById(components, MinesComponentID)).has(
         LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
       )
     ) {
+      IOnEntitySubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity
+      );
+    } else {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,

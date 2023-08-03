@@ -49,7 +49,6 @@ library LibResource {
     } else {
       currResourceProduction += resourceProduction.value;
     }
-    LibUnclaimedResource.updateResourceClaimed(world, playerEntity, resourceProduction.resource);
     updateResourceProduction(
       world,
       LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity),
@@ -58,7 +57,7 @@ library LibResource {
   }
 
   function updateResourceProduction(IWorld world, uint256 entity, uint32 newResourceProductionRate) internal {
-    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(
+    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
       world.getComponent(PlayerProductionComponentID)
     );
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
@@ -66,11 +65,11 @@ library LibResource {
     );
     if (newResourceProductionRate == 0) {
       lastClaimedAtComponent.remove(entity);
-      mineProductionComponent.remove(entity);
+      playerProductionComponent.remove(entity);
       return;
     }
     if (!lastClaimedAtComponent.has(entity)) lastClaimedAtComponent.set(entity, block.number);
-    mineProductionComponent.set(entity, newResourceProductionRate);
+    playerProductionComponent.set(entity, newResourceProductionRate);
   }
 
   function hasRequiredResources(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {

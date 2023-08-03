@@ -20,7 +20,7 @@ library LibUnclaimedResource {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
-    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(
+    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
       world.getComponent(PlayerProductionComponentID)
     );
 
@@ -31,7 +31,7 @@ library LibUnclaimedResource {
     } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) == block.number) {
       return;
     }
-    uint32 playerResourceProduction = LibMath.getSafe(mineProductionComponent, playerResourceProductionEntity);
+    uint32 playerResourceProduction = LibMath.getSafe(playerProductionComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return;

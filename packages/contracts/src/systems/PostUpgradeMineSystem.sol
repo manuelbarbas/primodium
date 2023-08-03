@@ -77,7 +77,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
   }
 
   function updateResourceProduction(uint256 playerResourceEntity, uint256 mineEntity) internal {
-    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(
+    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
       getAddressById(components, PlayerProductionComponentID)
     );
     BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
@@ -88,7 +88,7 @@ contract PostUpgradeMineSystem is IOnEntitySubsystem, System {
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      mineProductionComponent.getValue(playerResourceEntity) +
+      playerProductionComponent.getValue(playerResourceEntity) +
         buildingProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level)).value -
         buildingProductionComponent.getValue(LibEncode.hashKeyEntity(tile, level - 1)).value
     );

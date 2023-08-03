@@ -26,7 +26,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
       msg.sender == getAddressById(world.systems(), BuildPathSystemID),
       "PostUpgradeSystem: Only BuildSystem can call this function"
     );
-    PlayerProductionComponent mineProductionComponent = PlayerProductionComponent(getC(PlayerProductionComponentID));
+    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(getC(PlayerProductionComponentID));
     BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
       getC(BuildingProductionComponentID)
     );
@@ -51,7 +51,7 @@ contract BuildPathFromMineToMainBaseSystem is IOnTwoEntitySubsystem, PrimodiumSy
     LibResource.updateResourceProduction(
       world,
       playerResourceEntity,
-      LibMath.getSafe(mineProductionComponent, playerResourceEntity) +
+      LibMath.getSafe(playerProductionComponent, playerResourceEntity) +
         buildingProductionComponent.getValue(levelEntity).value
     );
 
