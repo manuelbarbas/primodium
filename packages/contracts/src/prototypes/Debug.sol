@@ -52,3 +52,4 @@ uint256 constant DebugSimpleTechnologyMainBaseLevelReqsID = uint256(
 
 //storage building
 uint256 constant DebugStorageBuildingID = uint256(keccak256("block.DebugStorageBuilding"));
+uint32 constant BIGNUM = 1_294_967_295;
