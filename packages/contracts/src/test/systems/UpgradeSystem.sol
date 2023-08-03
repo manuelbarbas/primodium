@@ -6,9 +6,12 @@ import { MudTest } from "std-contracts/test/MudTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
-import { DebugAcquireResourcesSystem, ID as DebugAcquireResourcesSystemID } from "../../systems/DebugAcquireResourcesSystem.sol";
+
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
+
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
 import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
+
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
@@ -115,9 +118,6 @@ contract UpgradeSystemTest is MudTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-    DebugAcquireResourcesSystem debugAcquireResourcesSystem = DebugAcquireResourcesSystem(
-      system(DebugAcquireResourcesSystemID)
-    );
 
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
@@ -131,6 +131,9 @@ contract UpgradeSystemTest is MudTest {
     assertTrue(levelComponent.has(blockEntityID), "MainBase entity id should have building component");
     assertTrue(levelComponent.getValue(blockEntityID) == 1, "MainBase entity id should be level 1");
     console.log("upgrading MainBase to level 2");
+
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(
       LibEncode.hashKeyEntity(MainBaseID, 2)
     );
@@ -140,7 +143,12 @@ contract UpgradeSystemTest is MudTest {
         requiredResources.resources[i],
         requiredResources.values[i]
       );
-      debugAcquireResourcesSystem.executeTyped(requiredResources.resources[i], requiredResources.values[i]);
+      componentDevSystem.executeTyped(
+        ItemComponentID,
+        LibEncode.hashKeyEntity(requiredResources.resources[i], addressToEntity(alice)),
+        abi.encode(requiredResources.values[i])
+      );
+
       console.log("%s of amount %s provided to player", requiredResources.resources[i], requiredResources.values[i]);
     }
     upgradeSystem.executeTyped(coord);

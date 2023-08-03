@@ -44,15 +44,11 @@ library LibResource {
 
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      uint32 resourceCost = LibMath.getSafe(
-        itemComponent,
-        LibEncode.hashKeyEntity(requiredResources.values[i], entity)
-      );
       uint32 playerResourceCount = LibMath.getSafe(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity)
       );
-      if (resourceCost > playerResourceCount) return false;
+      if (requiredResources.values[i] > playerResourceCount) return false;
     }
     return true;
   }
