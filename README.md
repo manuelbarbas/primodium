@@ -38,22 +38,27 @@ To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`. For
 
 - `LibDebugInitializer`: First, configure debug buildings and technologies in this initializer library.
 
-- `ComponentDevSystem`: Then, `ComponentDevSystem` systems to modify debug data. For example, `ComponentDevSystem` can be used to set the level of a building or the amount of a resource. See the tests in `packages/contracts/src/test/systems` for examples.
-- to set component data for an entity:
+- `ComponentDevSystem`: Then, `ComponentDevSystem` systems to modify debug data. For example, `ComponentDevSystem` can be used to set the level of a building or the amount of a resource. See below and the tests in `packages/contracts/src/test/systems` for further examples.
 
+- To set component data for an entity:
+
+```
 componentDevSystem.executeTyped(
 ItemComponentID,
 LibEncode.hashKeyEntity(requiredResources.resources[i], addressToEntity(alice)),
 abi.encode(requiredResources.values[i])
 );
+```
 
-- to remove component data for an entity:
+- To remove component data for an entity:
 
+```
 componentDevSystem.executeTyped(
 RequiredResourcesComponentID,
 LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
 abi.encode()
 );
+```
 
 # Blueprints
 
