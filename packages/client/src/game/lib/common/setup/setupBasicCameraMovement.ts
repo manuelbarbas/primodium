@@ -194,5 +194,5 @@ export const setupBasicCameraMovement = (
     doubleClickSub.unsubscribe();
     scene.input.phaserInput.off("wheel");
     scene.scriptManager.remove(handleGameTickMovement);
-  });
+  }, "game");
 };

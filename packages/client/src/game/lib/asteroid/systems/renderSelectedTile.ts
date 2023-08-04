@@ -5,6 +5,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createSelectionTile } from "../../common/factory/selectionTile";
@@ -13,6 +14,7 @@ import { SelectedTile } from "src/network/components/clientComponents";
 
 export const renderSelectedTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
+  const gameWorld = namespaceWorld(world, "game");
 
   const query = [Has(SelectedTile)];
 
@@ -50,16 +52,16 @@ export const renderSelectedTile = (scene: Scene) => {
     );
   };
 
-  defineEnterSystem(world, query, (update) => {
+  defineEnterSystem(gameWorld, query, (update) => {
     render(update);
     console.info(
       "[ENTER SYSTEM](renderSelectionTile) Selection tile has been added"
     );
   });
 
-  defineUpdateSystem(world, query, render);
+  defineUpdateSystem(gameWorld, query, render);
 
-  defineExitSystem(world, query, (update) => {
+  defineExitSystem(gameWorld, query, (update) => {
     const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
     scene.objectPool.remove(objGraphicsIndex);
 

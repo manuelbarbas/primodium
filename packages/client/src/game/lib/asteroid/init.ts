@@ -37,7 +37,6 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
   runSystems(scene);
 
   world.registerDisposer(() => {
-    chunkManager.dispose();
     game.dispose();
-  });
+  }, "game");
 };

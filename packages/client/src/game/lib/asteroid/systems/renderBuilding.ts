@@ -6,6 +6,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  namespaceWorld,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { clamp } from "lodash";
@@ -38,6 +39,7 @@ const {
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
   const { tileHeight, tileWidth } = scene.tilemap;
+  const gameWorld = namespaceWorld(world, "game");
 
   const render = ({ entity }: { entity: EntityIndex }) => {
     const entityId = world.entities[entity];
@@ -95,18 +97,18 @@ export const renderBuilding = (scene: Scene) => {
   };
 
   const positionQuery = [Has(Position), Has(BuildingType)];
-  defineEnterSystem(world, positionQuery, render);
+  defineEnterSystem(gameWorld, positionQuery, render);
 
   const updateQuery = [Has(Position), Has(BuildingType), Has(Level)];
-  defineUpdateSystem(world, updateQuery, render);
+  defineUpdateSystem(gameWorld, updateQuery, render);
 
-  defineExitSystem(world, positionQuery, ({ entity }) => {
+  defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;
     scene.objectPool.remove(renderId);
   });
 
   defineComponentSystem(
-    world,
+    gameWorld,
     SelectedBuilding,
     ({ value: [newValue, oldValue] }) => {
       if (oldValue?.value) {
