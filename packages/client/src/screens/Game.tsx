@@ -46,6 +46,7 @@ export const Game = () => {
 
     return () => {
       primodium.destroy();
+      GameReady.set({ value: false });
     };
   }, []);
 

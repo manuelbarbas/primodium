@@ -22,5 +22,5 @@ export const setupKeybinds = (scene: Scene, player: EntityID) => {
 
   world.registerDisposer(() => {
     mainbaseKeybind.dispose();
-  });
+  }, "game");
 };
