@@ -21,15 +21,18 @@ export const upgrade = async (coord: Coord, network: Network) => {
     providers,
     setNotification
   );
+
   const building = SelectedBuilding.use()?.value;
   const buildingType = BuildingType.use(building, {
     value: "-1" as EntityID,
   })?.value;
   const currLevel = Level.use(building)?.value || 0;
+
   ampli.systemUpgrade({
     buildingType: BlockIdToKey[buildingType],
     coord: [coord.x, coord.y, 0],
     currLevel: currLevel,
   });
+
   setTransactionLoading(false);
 };

@@ -29,10 +29,12 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
     value: "-1" as EntityID,
   })?.value;
   const currLevel = Level.use(building)?.value || 0;
+
   ampli.systemDestroy({
     buildingType: BlockIdToKey[buildingType],
     coord: [coord.x, coord.y, 0],
     currLevel: currLevel,
   });
+
   setTransactionLoading(false);
 };
