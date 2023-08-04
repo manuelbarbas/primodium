@@ -49,9 +49,7 @@ export const renderHoverTile = (scene: Scene) => {
 
   defineEnterSystem(world, query, (update) => {
     render(update);
-    console.info(
-      "[ENTER SYSTEM](renderSelectionTile) Hover tile has been added"
-    );
+    console.info("[ENTER SYSTEM](renderHoverTile) Hover tile has been added");
   });
 
   defineUpdateSystem(world, query, render);
@@ -59,8 +57,6 @@ export const renderHoverTile = (scene: Scene) => {
   defineExitSystem(world, query, (update) => {
     scene.objectPool.remove(objGraphicsIndex(update.entity));
 
-    console.info(
-      "[EXIT SYSTEM](renderSelectionTile) Hover tile has been removed"
-    );
+    console.info("[EXIT SYSTEM](renderHoverTile) Hover tile has been removed");
   });
 };

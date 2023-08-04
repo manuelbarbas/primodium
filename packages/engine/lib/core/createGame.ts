@@ -42,6 +42,7 @@ export const createGame = async (config: GameConfig) => {
       phaserGame,
       sceneManager,
       dispose: () => {
+        console.log(config.key + ": Disposing");
         resizer.dispose();
         phaserGame.destroy(true);
         sceneManager.dispose();

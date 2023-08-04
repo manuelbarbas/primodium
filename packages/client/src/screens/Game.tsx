@@ -46,6 +46,7 @@ export const Game = () => {
 
     return () => {
       primodium.destroy();
+      GameReady.set({ value: false });
     };
   }, []);
 
@@ -85,7 +86,13 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container">
+      <div
+        id="game-container"
+        style={{
+          backgroundSize: `75px 75px`,
+          backgroundImage: "url(/img/backgrounds/star.webp)",
+        }}
+      >
         <div id="phaser-container" className="absolute cursor-pointer" />
         {gameReady && <GameUI />}
       </div>
