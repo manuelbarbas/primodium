@@ -80,10 +80,6 @@ export default function UpgradeButton({
     );
   }, [isResearched, researchRequirement]);
 
-  const upgradeBuilding = useCallback(() => {
-    upgrade(coord, network);
-  }, []);
-
   let upgradeText: string;
   if (isUpgradeLocked) {
     upgradeText = "Research Not Met";
@@ -98,7 +94,7 @@ export default function UpgradeButton({
       <GameButton
         id={id}
         className="w-44 mt-2 text-sm"
-        onClick={upgradeBuilding}
+        onClick={() => upgrade(coord, network)}
         color={
           isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
         }
