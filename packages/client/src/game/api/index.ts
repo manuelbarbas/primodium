@@ -1,4 +1,4 @@
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
@@ -10,6 +10,7 @@ import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createFxApi } from "./fx";
+import { world } from "src/network/world";
 
 async function init(
   player: EntityID,
@@ -36,6 +37,8 @@ async function init(
     "https://twitter.com/primodiumgame"
   );
 
+  namespaceWorld(world, "game");
+
   await _init(player, network);
 
   //expose api to window for debugging
@@ -51,9 +54,13 @@ function destroy() {
   //for each instance, call game destroy
   const instances = engine.getGame();
 
-  instances.forEach((instance) => {
+  for (const [_, instance] of instances.entries()) {
+    //dispose phaser
     instance.phaserGame.destroy(true);
-  });
+  }
+
+  //dispose game logic
+  world.dispose("game");
 }
 
 function api(instance: string | Game, sceneKey: string = "MAIN") {

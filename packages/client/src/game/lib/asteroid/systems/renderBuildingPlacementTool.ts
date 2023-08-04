@@ -6,6 +6,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
@@ -21,6 +22,7 @@ import { world } from "src/network/world";
 export const renderBuildingPlacementTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objIndexSuffix = "_buildingPlacement";
+  const gameWorld = namespaceWorld(world, "game");
 
   const query = [
     Has(HoverTile),
@@ -79,7 +81,7 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
     );
   };
 
-  defineEnterSystem(world, query, (update) => {
+  defineEnterSystem(gameWorld, query, (update) => {
     render(update);
 
     console.info(
@@ -87,9 +89,9 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
     );
   });
 
-  defineUpdateSystem(world, query, render);
+  defineUpdateSystem(gameWorld, query, render);
 
-  defineExitSystem(world, query, (update) => {
+  defineExitSystem(gameWorld, query, (update) => {
     const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
     const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
 

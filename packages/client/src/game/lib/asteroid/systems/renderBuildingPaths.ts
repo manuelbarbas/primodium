@@ -1,4 +1,8 @@
-import { EntityID, defineComponentSystem } from "@latticexyz/recs";
+import {
+  EntityID,
+  defineComponentSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 import { createPath } from "../../common/factory/path";
@@ -10,9 +14,10 @@ import { Position } from "src/network/components/clientComponents";
 export const renderBuildingPaths = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_path";
+  const gameWorld = namespaceWorld(world, "game");
 
   defineComponentSystem(
-    world,
+    gameWorld,
     Path,
     (update) => {
       const entityIndex = update.entity;
