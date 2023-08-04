@@ -106,7 +106,7 @@ export const UserPanel = () => {
           {menuIndex === 0 && (
             <div className="flex justify-center">
               {mainBaseCoord !== undefined && (
-                <ClaimButton id="claim-button" coords={mainBaseCoord} />
+                <ClaimButton id="claim-button" coord={mainBaseCoord} />
               )}
             </div>
           )}

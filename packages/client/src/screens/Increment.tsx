@@ -10,7 +10,6 @@ import {
 import { getBlockTypeName } from "src/util/common";
 import { useMud } from "src/hooks";
 import { increment } from "src/util/web3";
-import { ampli } from "src/ampli";
 
 export default function Increment() {
   const network = useMud();
@@ -31,7 +30,6 @@ export default function Increment() {
         type="button"
         onClick={(event) => {
           event.preventDefault();
-          ampli.systemIncrement({ currIncrementLevel: counter?.value ?? 0 });
           increment(SingletonID, network);
         }}
       >

@@ -1,5 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
+import { Counter } from "src/network/components/chainComponents";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
@@ -16,5 +18,7 @@ export const increment = async (entity: EntityID, network: Network) => {
     providers,
     setNotification
   );
+  const counter = Counter.use();
+  ampli.systemIncrement({ currIncrementLevel: counter?.value ?? 0 });
   setTransactionLoading(false);
 };

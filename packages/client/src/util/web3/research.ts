@@ -1,8 +1,10 @@
 import { EntityID } from "@latticexyz/recs";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
+import { BlockIdToKey } from "../constants";
 
 export const research = async (item: EntityID, network: Network) => {
   const { providers, systems } = network;
@@ -16,5 +18,8 @@ export const research = async (item: EntityID, network: Network) => {
     providers,
     setNotification
   );
+  ampli.systemResearch({
+    researchType: BlockIdToKey[item],
+  });
   setTransactionLoading(false);
 };

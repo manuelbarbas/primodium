@@ -1,4 +1,5 @@
 import { Coord } from "@latticexyz/utils";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
@@ -16,5 +17,8 @@ export const claimFromMine = async (coord: Coord, network: Network) => {
     providers,
     setNotification
   );
+  ampli.systemClaimFromMine({
+    coord: [coord.x, coord.y, 0],
+  });
   setTransactionLoading(false);
 };

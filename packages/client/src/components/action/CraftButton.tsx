@@ -5,7 +5,7 @@ import { useGameStore } from "../../store/GameStore";
 import Spinner from "../shared/Spinner";
 import { craft } from "src/util/web3";
 
-export default function CraftButton({ coords }: { coords: Coord }) {
+export default function CraftButton({ coord }: { coord: Coord }) {
   const network = useMud();
   const [transactionLoading] = useGameStore((state) => [
     state.transactionLoading,
@@ -16,7 +16,7 @@ export default function CraftButton({ coords }: { coords: Coord }) {
       <button
         className="h-10 bg-yellow-800 hover:bg-yellow-900 text-sm rounded font-bold w-full"
         disabled={transactionLoading}
-        onClick={() => craft(coords, network)}
+        onClick={() => craft(coord, network)}
       >
         {transactionLoading ? <Spinner /> : "Craft from Storage"}
       </button>

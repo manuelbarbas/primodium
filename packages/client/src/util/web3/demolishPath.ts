@@ -1,4 +1,5 @@
 import { Coord } from "@latticexyz/utils";
+import { ampli } from "src/ampli";
 
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
@@ -18,5 +19,8 @@ export const demolishPath = async (pos: Coord, network: Network) => {
     providers,
     setNotification
   );
+  ampli.systemDestroyPath({
+    coord: [pos.x, pos.y, 0],
+  });
   setTransactionLoading(false);
 };

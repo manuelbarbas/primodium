@@ -1,4 +1,5 @@
 import { Coord } from "@latticexyz/utils";
+import { ampli } from "src/ampli";
 
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
@@ -19,5 +20,9 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
     providers,
     setNotification
   );
+  ampli.systemBuildPath({
+    coord: [start.x, start.y, 0],
+    endCoord: [end.x, end.y, 0],
+  });
   setTransactionLoading(false);
 };

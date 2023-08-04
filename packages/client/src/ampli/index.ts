@@ -71,7 +71,15 @@ export interface SystemBuildProperties {
    * @minItems 3
    * @maxItems 3
    */
-  coords: [number, number, number];
+  coord: [number, number, number];
+  /**
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  currLevel: number;
 }
 
 export interface SystemBuildPathProperties {
@@ -89,9 +97,9 @@ export interface SystemBuildPathProperties {
    * @minItems 3
    * @maxItems 3
    */
-  coords: [number, number, number];
+  coord: [number, number, number];
   /**
-   * Coordinates at which a path ends. The starting coordinates are recorded by the `coords` property.
+   * Coordinates at which a path ends. The starting coordinates are recorded by the `coord` property.
    *
    * | Rule | Value |
    * |---|---|
@@ -102,7 +110,7 @@ export interface SystemBuildPathProperties {
    * @minItems 3
    * @maxItems 3
    */
-  endCoords: [number, number, number];
+  endCoord: [number, number, number];
 }
 
 export interface SystemClaimFromMineProperties {
@@ -120,14 +128,10 @@ export interface SystemClaimFromMineProperties {
    * @minItems 3
    * @maxItems 3
    */
-  coords: [number, number, number];
+  coord: [number, number, number];
 }
 
-export interface SystemDestroyProperties {
-  /**
-   * Name of a building in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
-   */
-  buildingType: string;
+export interface SystemCraftProperties {
   /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
@@ -142,7 +146,39 @@ export interface SystemDestroyProperties {
    * @minItems 3
    * @maxItems 3
    */
-  coords: [number, number, number];
+  coord: [number, number, number];
+}
+
+export interface SystemDestroyProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Regex |  |
+   */
+  buildingType?: string;
+  /**
+   * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
+   *
+   * Stored in the format of \[x, y, z\].
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Min Items | 3 |
+   * | Max Items | 3 |
+   * | Item Type | number |
+   *
+   * @minItems 3
+   * @maxItems 3
+   */
+  coord: [number, number, number];
+  /**
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  currLevel: number;
 }
 
 export interface SystemDestroyPathProperties {
@@ -160,7 +196,7 @@ export interface SystemDestroyPathProperties {
    * @minItems 3
    * @maxItems 3
    */
-  coords: [number, number, number];
+  coord: [number, number, number];
 }
 
 export interface SystemIncrementProperties {
@@ -198,7 +234,7 @@ export interface SystemUpgradeProperties {
    * @minItems 3
    * @maxItems 3
    */
-  coords: [number, number, number];
+  coord: [number, number, number];
   /**
    * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
    *
@@ -245,6 +281,12 @@ export class SystemClaimFromMine implements BaseEvent {
 
 export class SystemCraft implements BaseEvent {
   event_type = 'system.Craft';
+
+  constructor(
+    public event_properties: SystemCraftProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
 }
 
 export class SystemDestroy implements BaseEvent {
@@ -434,7 +476,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. coords)
+   * @param properties The event's properties (e.g. coord)
    * @param options Amplitude event options.
    */
   systemBuildPath(
@@ -451,7 +493,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. coords)
+   * @param properties The event's properties (e.g. coord)
    * @param options Amplitude event options.
    */
   systemClaimFromMine(
@@ -468,12 +510,14 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
+   * @param properties The event's properties (e.g. coord)
    * @param options Amplitude event options.
    */
   systemCraft(
+    properties: SystemCraftProperties,
     options?: EventOptions,
   ) {
-    return this.track(new SystemCraft(), options);
+    return this.track(new SystemCraft(properties), options);
   }
 
   /**
@@ -500,7 +544,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. coords)
+   * @param properties The event's properties (e.g. coord)
    * @param options Amplitude event options.
    */
   systemDestroyPath(

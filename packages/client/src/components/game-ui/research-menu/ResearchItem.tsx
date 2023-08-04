@@ -26,7 +26,6 @@ import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
 import { useMud } from "src/hooks";
 import Spinner from "src/components/shared/Spinner";
-import { ampli } from "src/ampli";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {
@@ -101,9 +100,6 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
 
     const executeResearch = useCallback(async () => {
       setUserClickedLoading(true);
-      ampli.systemResearch({
-        researchType: BlockIdToKey[researchId],
-      });
       await research(researchId, network);
       setUserClickedLoading(false);
     }, []);

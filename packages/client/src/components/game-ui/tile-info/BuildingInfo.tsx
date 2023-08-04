@@ -79,7 +79,7 @@ export const BuildingInfo: React.FC<{
               id="upgrade"
               builtTile={buildingType ?? BlockType.Air}
               buildingEntity={building}
-              coords={coord}
+              coord={coord}
             />
           </div>
         )}

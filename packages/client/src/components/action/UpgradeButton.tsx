@@ -19,16 +19,15 @@ import {
   HasResearched,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
-import { ampli } from "src/ampli";
 
 export default function UpgradeButton({
   id,
-  coords,
+  coord,
   builtTile,
   buildingEntity,
 }: {
   id: string;
-  coords: Coord;
+  coord: Coord;
   builtTile: EntityID;
   buildingEntity: EntityID;
 }) {
@@ -82,12 +81,7 @@ export default function UpgradeButton({
   }, [isResearched, researchRequirement]);
 
   const upgradeBuilding = useCallback(() => {
-    ampli.systemUpgrade({
-      coords: [coords.x, coords.y, 0],
-      currLevel: upgradedLevel,
-      buildingType: BlockIdToKey[builtTile],
-    });
-    upgrade(coords, network);
+    upgrade(coord, network);
   }, []);
 
   let upgradeText: string;
