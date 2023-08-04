@@ -92,15 +92,10 @@ contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodium
     PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
       world.getComponent(PlayerProductionComponentID)
     );
-    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
-      world.getComponent(LastClaimedAtComponentID)
-    );
     if (newResourceProductionRate == 0) {
-      lastClaimedAtComponent.remove(entity);
       playerProductionComponent.remove(entity);
       return;
     }
-    if (!lastClaimedAtComponent.has(entity)) lastClaimedAtComponent.set(entity, block.number);
     playerProductionComponent.set(entity, newResourceProductionRate);
   }
 
