@@ -64,10 +64,13 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       if (pathComponent.has(buildingEntity)) {
         uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
         if (doesRequireMine(connectedToBuildingEntity)) {
-          IOnEntitySubsystem(getAddressById(world.systems(), ID)).executeTyped(msg.sender, connectedToBuildingEntity);
+          IOnEntitySubsystem(getAddressById(world.systems(), ID)).executeTyped(
+            playerAddress,
+            connectedToBuildingEntity
+          );
         } else {
           IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
-            msg.sender,
+            playerAddress,
             buildingEntity,
             isActive ? EActionType.Build : EActionType.Destroy
           );
@@ -77,10 +80,13 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       if (pathComponent.has(buildingEntity)) {
         uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
         if (doesRequireMine(connectedToBuildingEntity)) {
-          IOnEntitySubsystem(getAddressById(world.systems(), ID)).executeTyped(msg.sender, connectedToBuildingEntity);
+          IOnEntitySubsystem(getAddressById(world.systems(), ID)).executeTyped(
+            playerAddress,
+            connectedToBuildingEntity
+          );
         } else {
           IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
-            msg.sender,
+            playerAddress,
             buildingEntity,
             levelComponent.getValue(buildingEntity) > 1 ? EActionType.Upgrade : EActionType.Build
           );

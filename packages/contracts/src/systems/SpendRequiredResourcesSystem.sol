@@ -5,6 +5,9 @@ import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as ResearchSystemID } from "./ResearchSystem.sol";
 
+import { ID as UpdateUnclaimedResourcesSystemID } from "./UpdateUnclaimedResourcesSystem.sol";
+
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID, ResourceValues } from "../components/RequiredResourcesComponent.sol";
@@ -39,7 +42,10 @@ contract SpendRequiredResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(targetEntity);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
-      LibUnclaimedResource.updateResourceClaimed(world, playerEntity, requiredResources.resources[i]);
+      IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
+        msg.sender,
+        requiredResources.resources[i]
+      );
       uint32 currItem = LibMath.getSafe(itemComponent, playerResourceHash);
       itemComponent.set(playerResourceHash, currItem - requiredResources.values[i]);
     }

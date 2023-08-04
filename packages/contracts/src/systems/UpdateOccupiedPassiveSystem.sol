@@ -13,6 +13,7 @@ import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubs
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "../components/MaxPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "../components/PassiveProductionComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "../components/RequiredPassiveComponent.sol";
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "../components/OccupiedPassiveResourceComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
@@ -27,7 +28,7 @@ import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 uint256 constant ID = uint256(keccak256("system.UpdateOccupiedPassive"));
 
-contract UpdateOccupiedPassiveSystem is IOnEntitySubsystem, PrimodiumSystem {
+contract UpdateOccupiedPassiveSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -74,7 +75,7 @@ contract UpdateOccupiedPassiveSystem is IOnEntitySubsystem, PrimodiumSystem {
     for (uint256 i = 0; i < resourceIDs.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
       uint32 requiredAmount = requiredAmounts[i];
-      if (actionType == Upgrade) {
+      if (actionType == EActionType.Upgrade) {
         requiredAmount -= requiredPassiveComponent
           .getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1))
           .values[i];

@@ -6,7 +6,7 @@ import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { MinesComponent, ID as MinesComponentID } from "../components/MinesComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "../components/MinesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
@@ -49,18 +49,18 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
 
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
-    if (actionType = EActionType.Build) {
+    if (actionType == EActionType.Build) {
       minesComponent.set(buildingEntity, minesComponent.getValue(buildingIdNewLevel));
-    } else if (actionType = EActionType.Upgrade) {
+    } else if (actionType == EActionType.Upgrade) {
       ResourceValues memory currentMines = minesComponent.getValue(buildingEntity);
       ResourceValues memory requiredMines = minesComponent.getValue(buildingIdNewLevel);
       ResourceValues memory requiredMinesLastLevel = minesComponent.getValue(
         LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)
       );
       for (uint256 i = 0; i < requiredMines.resources.length; i++) {
-        currrentMines.values[i] += requiredMines.values[i] - requiredMinesLastLevel.values[i];
+        currentMines.values[i] += requiredMines.values[i] - requiredMinesLastLevel.values[i];
       }
-      minesComponent.set(buildingEntity, currrentMines);
+      minesComponent.set(buildingEntity, currentMines);
     } else {
       minesComponent.remove(buildingEntity);
     }

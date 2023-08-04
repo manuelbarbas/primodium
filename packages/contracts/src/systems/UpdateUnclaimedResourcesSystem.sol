@@ -5,6 +5,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 import { ID as UpdatePlayerStorageSystemID } from "systems/UpdatePlayerStorageSystem.sol";
 import { ID as UpdatePlayerResourceProductionSystemID } from "systems/UpdatePlayerResourceProductionSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "systems/SpendRequiredResourcesSystem.sol";
+import { ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
 // components
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -35,8 +36,9 @@ contract UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
     require(
       msg.sender == getAddressById(world.systems(), UpdatePlayerStorageSystemID) ||
         msg.sender == getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID) ||
-        msg.sender == getAddressById(world.systems(), SpendRequiredResourcesSystemID),
-      "UpdateUnclaimedResourcesSystem: Only UpdatePlayerStorageSystem, UpdatePlayerResourceProductionSystem, SpendRequiredResourcesSystem  can call this function"
+        msg.sender == getAddressById(world.systems(), SpendRequiredResourcesSystemID) ||
+        msg.sender == getAddressById(world.systems(), ClaimFromMineSystemID),
+      "UpdateUnclaimedResourcesSystem: Only UpdatePlayerStorageSystem, UpdatePlayerResourceProductionSystem, SpendRequiredResourcesSystem, ClaimFromMineSystemID  can call this function"
     );
 
     (address playerAddress, uint256 resourceID) = abi.decode(args, (address, uint256));

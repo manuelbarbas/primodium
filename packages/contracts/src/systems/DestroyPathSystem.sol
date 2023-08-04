@@ -19,7 +19,6 @@ import { Coord } from "../types.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 
@@ -58,7 +57,7 @@ contract DestroyPathSystem is PrimodiumSystem {
 
     uint256 toEntity = pathComponent.getValue(fromEntity);
 
-    if (MinesComponent(getC(MinesComponentID)).hasValue(toEntity)) {
+    if (MinesComponent(getC(MinesComponentID)).has(toEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
         msg.sender,
         toEntity,

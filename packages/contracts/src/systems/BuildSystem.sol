@@ -14,9 +14,15 @@ import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBas
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
-
+import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
+import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
+import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 // libraries
 import { Coord } from "../types.sol";
+import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResource } from "../libraries/LibResource.sol";
@@ -28,7 +34,10 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
-
+import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
+import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
+import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is PrimodiumSystem {
@@ -102,21 +111,10 @@ contract BuildSystem is PrimodiumSystem {
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
-
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
     //required production update
     if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Upgrade
-      );
-    }
-
-    //Resource Production Update
-    if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
-    ) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Build
@@ -128,7 +126,7 @@ contract BuildSystem is PrimodiumSystem {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
-        EActionType.Upgrade
+        EActionType.Build
       );
     }
     //Occupied Passive Update
@@ -136,13 +134,11 @@ contract BuildSystem is PrimodiumSystem {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedPassiveSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
-        EActionType.Upgrade
+        EActionType.Build
       );
     }
     //Resource Storage Update
-    if (
-      MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(LibEncode.hashKeyEntity(buildingType, 1))
-    ) {
+    if (MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
         buildingEntity,

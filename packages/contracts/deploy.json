@@ -62,8 +62,8 @@
       "name": "BuildSystem",
       "writeAccess": [
         "BuildingTypeComponent",
+        "BuildingCountComponent",
         "OwnedByComponent",
-        "ItemComponent",
         "LevelComponent",
         "MainBaseComponent",
         "ChildrenComponent"
@@ -87,21 +87,11 @@
     },
     {
       "name": "BuildPathSystem",
-      "writeAccess": []
+      "writeAccess": ["PathComponent"]
     },
     {
       "name": "DestroyPathSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "MinesComponent",
-        "BuildingProductionComponent"
-      ]
+      "writeAccess": ["PathComponent"]
     },
     {
       "name": "ClaimFromMineSystem",

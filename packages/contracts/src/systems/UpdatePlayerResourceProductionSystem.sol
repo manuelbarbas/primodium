@@ -1,5 +1,6 @@
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
+import "forge-std/console.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
@@ -51,25 +52,24 @@ contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodium
       buildingEntity
     );
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 resourceID = BuildingProductionComponent(getAddressById(world.components(), BuildingProductionComponentID))
-      .getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel))
-      .resource;
-    IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
-      msg.sender,
-      resourceID
-    );
-
     BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
       world.getComponent(BuildingProductionComponentID)
     );
+    ResourceValue memory resourceProduction = buildingProductionComponent.getValue(
+      LibEncode.hashKeyEntity(buildingType, buildingLevel)
+    );
+
+    IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
+      playerAddress,
+      resourceProduction.resource
+    );
+
     PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
       world.getComponent(PlayerProductionComponentID)
     );
 
-    ResourceValue memory resourceProduction = buildingProductionComponent.getValue(
-      LibEncode.hashKeyEntity(buildingType, buildingLevel)
-    );
-    uint32 currResourceProduction = playerProductionComponent.getValue(
+    uint32 currResourceProduction = LibMath.getSafe(
+      playerProductionComponent,
       LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity)
     );
     if (actionType == EActionType.Destroy) {
@@ -86,6 +86,10 @@ contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodium
       LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity),
       currResourceProduction
     );
+    IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
+      playerAddress,
+      resourceProduction.resource
+    );
   }
 
   function updateResourceProduction(IWorld world, uint256 entity, uint32 newResourceProductionRate) internal {
@@ -96,6 +100,7 @@ contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodium
       playerProductionComponent.remove(entity);
       return;
     }
+    console.log("resource production now at %s", newResourceProductionRate);
     playerProductionComponent.set(entity, newResourceProductionRate);
   }
 

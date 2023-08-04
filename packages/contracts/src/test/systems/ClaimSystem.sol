@@ -19,6 +19,8 @@ import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "..
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "../../components/RequiredResearchComponent.sol";
+import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../../components/MaxResourceStorageComponent.sol";
+import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
 import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -377,11 +379,21 @@ contract ClaimSystemTest is MudTest {
     console.log("built IronMineID");
     buildPathSystem.executeTyped(coord, mainBaseCoord);
     console.log("built path from IronMine to main base");
+    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
+      component(PlayerProductionComponentID)
+    );
+    uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
+    assertEq(playerProductionComponent.getValue(hashedAliceKey), 1, "Alice should have production 1 iron");
     vm.roll(10);
-
+    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
+      component(MaxResourceStorageComponentID)
+    );
+    assertTrue(maxResourceStorageComponent.has(addressToEntity(alice)), "Alice should have max resource storage");
+    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
+    assertTrue(maxStorageComponent.has(hashedAliceKey), "Alice should have Iron max storage");
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base");
-    uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
+
     assertTrue(itemComponent.has(hashedAliceKey), "Alice should have iron");
     assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 10 iron");
 

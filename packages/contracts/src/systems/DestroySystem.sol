@@ -19,10 +19,13 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 // types
 
 import { MainBaseID } from "../prototypes.sol";
 
+import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
 import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
@@ -95,7 +98,7 @@ contract DestroySystem is PrimodiumSystem {
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
       uint256 toEntity = pathComponent.getValue(buildingEntity);
-      if (MinesComponent(getC(MinesComponentID)).hasValue(toEntity)) {
+      if (MinesComponent(getC(MinesComponentID)).has(toEntity)) {
         IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
           msg.sender,
           toEntity,
@@ -122,7 +125,7 @@ contract DestroySystem is PrimodiumSystem {
       BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) - 1);
     }
-
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity));
     //required production update
     if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(

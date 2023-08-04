@@ -17,11 +17,11 @@ import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
-
+import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.BuildPath"));
@@ -117,7 +117,7 @@ contract BuildPathSystem is PrimodiumSystem {
     PathComponent(getC(PathComponentID)).set(fromEntity, toEntity);
 
     MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
-    if (minesComponent.hasValue(toEntity)) {
+    if (minesComponent.has(toEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
         msg.sender,
         toEntity,
@@ -127,7 +127,9 @@ contract BuildPathSystem is PrimodiumSystem {
 
     //Resource Production Update
     if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
+      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(
+        fromBuildingTypeLevelEntity
+      )
     ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
         msg.sender,

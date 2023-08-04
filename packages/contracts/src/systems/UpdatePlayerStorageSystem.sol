@@ -46,17 +46,17 @@ contract UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {
 
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
-    if (!maxResourceStorageComponent.has(buildingIdNewLevel)) return;
-    uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
     uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingIdNewLevel);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
 
       uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingIdNewLevel, storageResources[i]);
-      if (actionType == EActionType.Upgrade)
+      if (actionType == EActionType.Upgrade) {
+        uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
         maxStorageIncrease =
           maxStorageIncrease -
           LibStorage.getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);
+      }
       updateResourceMaxStorage(
         world,
         playerEntity,

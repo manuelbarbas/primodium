@@ -53,7 +53,6 @@ contract UpdatePassiveProductionSystem is IOnBuildingSubsystem, PrimodiumSystem 
     );
 
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    if (!passiveProductionComponent.has(buildingLevelEntity)) return;
     MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(world.getComponent(MaxPassiveComponentID));
     uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
     uint32 capacityIncrease = passiveProductionComponent.getValue(buildingLevelEntity).value;

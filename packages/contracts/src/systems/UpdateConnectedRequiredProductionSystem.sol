@@ -6,12 +6,13 @@ import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { MinesComponent, ID as MinesComponentID } from "../components/MinesComponent.sol";
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "../components/MinesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "../components/BuildingProductionComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResource } from "../libraries/LibResource.sol";
@@ -46,9 +47,12 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
 
     MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
 
+    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
+      getC(BuildingProductionComponentID)
+    );
     ResourceValues memory requiredProduction = minesComponent.getValue(buildingEntity);
     for (uint256 i = 0; i < requiredProduction.resources.length; i++) {
-      if (requiredProduction.resources[i] == buildingProductionComponent.getValue(startCoordLevelEntity).resource) {
+      if (requiredProduction.resources[i] == buildingProductionComponent.getValue(buildingIdNewLevel).resource) {
         if (actionType == EActionType.Build) {
           requiredProduction.values[i]--;
         } else if (actionType == EActionType.Destroy) {
