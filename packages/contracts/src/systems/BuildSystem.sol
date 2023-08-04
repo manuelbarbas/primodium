@@ -106,7 +106,43 @@ contract BuildSystem is PrimodiumSystem {
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);
+    //required production update
+    if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+
+    //Resource Production Update
+    if (
+      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Build
+      );
+    }
+
+    //Passive Production Update
+    if (PassiveProductionComponent(getC(PassiveProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+    //Occupied Passive Update
+    if (RequiredPassiveComponent(getC(RequiredPassiveComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedPassiveSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+    //Resource Storage Update
     if (
       MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(LibEncode.hashKeyEntity(buildingType, 1))
     ) {
@@ -115,6 +151,12 @@ contract BuildSystem is PrimodiumSystem {
         buildingEntity,
         EActionType.Build
       );
+    }
+
+    // update building count if the built building counts towards the build limit
+    if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
+      BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
+      buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) + 1);
     }
 
     return abi.encode(buildingEntity);

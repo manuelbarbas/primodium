@@ -92,20 +92,20 @@ contract DestroySystem is PrimodiumSystem {
     childrenComponent.remove(buildingEntity);
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
-      IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
+      uint256 toEntity = pathComponent.getValue(buildingEntity);
+      if (MinesComponent(getC(MinesComponentID)).hasValue(toEntity)) {
+        IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
+          msg.sender,
+          toEntity,
+          EActionType.Destroy
+        );
+      }
       pathComponent.remove(buildingEntity);
     }
 
     uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(buildingEntity);
     if (pathWithEndingTile.length > 0) {
       for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
-        IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
-          msg.sender,
-          pathWithEndingTile[i]
-        );
         pathComponent.remove(pathWithEndingTile[i]);
       }
     }
@@ -121,11 +121,45 @@ contract DestroySystem is PrimodiumSystem {
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) - 1);
     }
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);
+    //required production update
+    if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+
+    //Resource Production Update
     if (
-      MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity))
-      )
+      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+
+    //Passive Production Update
+    if (PassiveProductionComponent(getC(PassiveProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+    //Occupied Passive Update
+    if (RequiredPassiveComponent(getC(RequiredPassiveComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedPassiveSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+    //Resource Storage Update
+    if (
+      MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(LibEncode.hashKeyEntity(buildingType, 1))
     ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
@@ -133,6 +167,7 @@ contract DestroySystem is PrimodiumSystem {
         EActionType.Destroy
       );
     }
+
     levelComponent.remove(buildingEntity);
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);

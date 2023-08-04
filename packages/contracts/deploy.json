@@ -63,26 +63,10 @@
       "writeAccess": [
         "BuildingTypeComponent",
         "OwnedByComponent",
-
-        "LastClaimedAtComponent",
         "ItemComponent",
-
         "LevelComponent",
         "MainBaseComponent",
         "ChildrenComponent"
-      ]
-    },
-    {
-      "name": "PostBuildSystem",
-      "writeAccess": [
-        "ItemComponent",
-        "MaxStorageComponent",
-        "MaxResourceStorageComponent",
-        "MinesComponent",
-        "LastClaimedAtComponent",
-        "BuildingCountComponent",
-        "MaxPassiveComponent",
-        "OccupiedPassiveResourceComponent"
       ]
     },
     {
@@ -102,50 +86,8 @@
       ]
     },
     {
-      "name": "PostDestroySystem",
-      "writeAccess": [
-        "MaxStorageComponent",
-        "MaxResourceStorageComponent",
-        "ItemComponent",
-        "MaxPassiveComponent",
-        "OccupiedPassiveResourceComponent"
-      ]
-    },
-    {
       "name": "BuildPathSystem",
       "writeAccess": []
-    },
-    {
-      "name": "BuildPathFromFactoryToMainBaseSystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "BuildingProductionComponent"
-      ]
-    },
-    {
-      "name": "BuildPathFromMineToFactorySystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "MinesComponent",
-        "BuildingProductionComponent"
-      ]
-    },
-    {
-      "name": "BuildPathFromMineToMainBaseSystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent"
-      ]
     },
     {
       "name": "DestroyPathSystem",
@@ -159,18 +101,6 @@
         "ActiveComponent",
         "MinesComponent",
         "BuildingProductionComponent"
-      ]
-    },
-    {
-      "name": "PostDestroyPathSystem",
-      "writeAccess": [
-        "MaxStorageComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "BuildingProductionComponent",
-        "MinesComponent"
       ]
     },
     {
@@ -207,25 +137,6 @@
       ]
     },
     {
-      "name": "PostUpgradeMineSystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent"
-      ]
-    },
-    {
-      "name": "PostUpgradeFactorySystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "BuildingProductionComponent"
-      ]
-    },
-    {
       "name": "UpdateActiveStatusSystem",
       "writeAccess": ["ActiveComponent"]
     },
@@ -252,6 +163,10 @@
     {
       "name": "UpdatePassiveProductionSystem",
       "writeAccess": ["MaxPassiveComponent"]
+    },
+    {
+      "name": "UpdateRequiredProductionSystem",
+      "writeAccess": ["MinesComponent"]
     },
     {
       "name": "ComponentDevSystem",

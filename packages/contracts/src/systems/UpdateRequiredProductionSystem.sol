@@ -6,6 +6,7 @@ import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
+import { MinesComponent, ID as MinesComponentID } from "../components/MinesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
@@ -40,31 +41,28 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
       buildingEntity
     );
     uint256 playerEntity = addressToEntity(playerAddress);
+    MinesComponent minesComponent = MinesComponent(getAddressById(world.components(), MinesComponentID));
+
     MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
       world.getComponent(MaxResourceStorageComponentID)
     );
 
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
-    if (!maxResourceStorageComponent.has(buildingIdNewLevel)) return;
-    uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
-    uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingIdNewLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint32 playerResourceMaxStorage = LibStorage.getResourceMaxStorage(world, playerEntity, storageResources[i]);
-
-      uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingIdNewLevel, storageResources[i]);
-      if (actionType == EActionType.Upgrade)
-        maxStorageIncrease =
-          maxStorageIncrease -
-          LibStorage.getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);
-      updateResourceMaxStorage(
-        world,
-        playerEntity,
-        storageResources[i],
-        actionType == EActionType.Destroy
-          ? playerResourceMaxStorage - maxStorageIncrease
-          : playerResourceMaxStorage + maxStorageIncrease
+    if (actionType = EActionType.Build) {
+      minesComponent.set(buildingEntity, minesComponent.getValue(buildingIdNewLevel));
+    } else if (actionType = EActionType.Upgrade) {
+      ResourceValues memory currentMines = minesComponent.getValue(buildingEntity);
+      ResourceValues memory requiredMines = minesComponent.getValue(buildingIdNewLevel);
+      ResourceValues memory requiredMinesLastLevel = minesComponent.getValue(
+        LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)
       );
+      for (uint256 i = 0; i < requiredMines.resources.length; i++) {
+        currrentMines.values[i] += requiredMines.values[i] - requiredMinesLastLevel.values[i];
+      }
+      minesComponent.set(buildingEntity, currrentMines);
+    } else {
+      minesComponent.remove(buildingEntity);
     }
   }
 

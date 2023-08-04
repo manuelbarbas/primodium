@@ -44,7 +44,7 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.UpdateActiveStatus"));
 
-contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
+contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function updateActiveStatus(address playerAddress, uint256 buildingEntity, bool isActive) internal {
@@ -109,11 +109,19 @@ contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
       "UpdateActiveStatusSystem: Only BuildSystem, DestroySystem, UpgradeSystem, BuildPathSystem, DestroyPathSystem and UpdateActiveStatusSystem can call this function"
     );
 
-    (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
+    (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
+      args,
+      (address, uint256, EActionType)
+    );
     uint256 playerEntity = addressToEntity(playerAddress);
     uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
       buildingEntity
     );
+
+    if (actionType == EActionType.Destroy) {
+      updateActiveStatus(playerAddress, buildingEntity, false);
+      return "";
+    }
 
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
     //if connected to factory check if factory is functional, if it is mine upgrade has no effect so do nothing
@@ -123,13 +131,12 @@ contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
 
-    if (!pathComponent.has(buildingEntity)) updateActiveStatus(playerAddress, buildingEntity, false);
+    if (!pathComponent.has(buildingEntity)) {
+      updateActiveStatus(playerAddress, buildingEntity, false);
+    }
 
     uint256 buildingLevel = levelComponent.getValue(buildingEntity);
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    ResourceValues memory minesData = MinesComponent(getAddressById(components, MinesComponentID)).getValue(
-      buildingEntity
-    );
 
     // first check if any connected resource production buildings are not at the required level or require resource production buildings themeselves and are not active
     if (MinesComponent(getC(MinesComponentID)).has(buildingTypeLevelEntity)) {
@@ -143,7 +150,9 @@ contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
           return abi.encode(false);
         }
       }
-
+      ResourceValues memory minesData = MinesComponent(getAddressById(components, MinesComponentID)).getValue(
+        buildingEntity
+      );
       //then check if there are enough connected resource production buildings
       for (uint256 i = 0; i < minesData.values.length; i++) {
         if (minesData.values[i] > 0) {
@@ -158,7 +167,11 @@ contract UpdateActiveStatusSystem is IOnEntitySubsystem, PrimodiumSystem {
     return abi.encode(true);
   }
 
-  function executeTyped(address playerAddress, uint256 buildingEntity) public returns (bytes memory) {
-    return execute(abi.encode(playerAddress, buildingEntity));
+  function executeTyped(
+    address playerAddress,
+    uint256 buildingEntity,
+    EActionType actionType
+  ) public returns (bytes memory) {
+    return execute(abi.encode(playerAddress, buildingEntity, actionType));
   }
 }

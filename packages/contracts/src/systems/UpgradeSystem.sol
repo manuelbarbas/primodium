@@ -39,6 +39,7 @@ import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerReso
 import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
 import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
+import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is PrimodiumSystem {
@@ -117,13 +118,23 @@ contract UpgradeSystem is PrimodiumSystem {
     levelComponent.set(buildingEntity, newLevel);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, newLevel);
 
+    //required production update
+    if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+
     //Resource Production Update
     if (
       BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
     ) {
-      IOnEntitySubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
         msg.sender,
-        buildingEntity
+        buildingEntity,
+        EActionType.Upgrade
       );
     }
 
@@ -143,8 +154,9 @@ contract UpgradeSystem is PrimodiumSystem {
         EActionType.Upgrade
       );
     }
+    //Occupied Passive Update
     if (RequiredPassiveComponent(getC(RequiredPassiveComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedPassiveSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Upgrade
