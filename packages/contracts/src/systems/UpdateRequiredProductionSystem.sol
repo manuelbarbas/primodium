@@ -66,36 +66,6 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
     }
   }
 
-  function updateResourceMaxStorage(IWorld world, uint256 entity, uint256 resourceId, uint32 newMaxStorage) internal {
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(world.getComponent(MaxStorageComponentID));
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      world.getComponent(MaxResourceStorageComponentID)
-    );
-    uint256 resourceEntity = LibEncode.hashKeyEntity(resourceId, entity);
-    if (!maxStorageComponent.has(resourceEntity)) {
-      uint256[] memory storageResourceIds;
-      if (maxResourceStorageComponent.has(entity)) {
-        storageResourceIds = maxResourceStorageComponent.getValue(entity);
-        uint256[] memory updatedResourceIds = new uint256[](storageResourceIds.length + 1);
-        for (uint256 i = 0; i < storageResourceIds.length; i++) {
-          updatedResourceIds[i] = storageResourceIds[i];
-        }
-        updatedResourceIds[storageResourceIds.length] = resourceId;
-        maxResourceStorageComponent.set(entity, updatedResourceIds);
-      } else {
-        storageResourceIds = new uint256[](1);
-        storageResourceIds[0] = resourceId;
-        maxResourceStorageComponent.set(entity, storageResourceIds);
-      }
-    }
-    maxStorageComponent.set(resourceEntity, newMaxStorage);
-
-    uint32 playerResourceAmount = LibMath.getSafe(ItemComponent(world.getComponent(ItemComponentID)), resourceEntity);
-    if (playerResourceAmount > newMaxStorage) {
-      ItemComponent(world.getComponent(ItemComponentID)).set(resourceEntity, newMaxStorage);
-    }
-  }
-
   function executeTyped(
     address playerAddress,
     uint256 buildingEntity,

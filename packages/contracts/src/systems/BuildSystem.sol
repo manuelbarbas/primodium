@@ -4,9 +4,6 @@ pragma solidity >=0.8.0;
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
-
 // components
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";

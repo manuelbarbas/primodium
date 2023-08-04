@@ -149,7 +149,7 @@
       "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "PlayerProductionComponent"]
     },
     {
-      "name": "UpdateUnclaimedResourceSystem",
+      "name": "UpdateUnclaimedResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent"]
     },
     {
@@ -157,7 +157,7 @@
       "writeAccess": ["MaxResourceStorageComponent", "MaxStorageComponent", "ItemComponent"]
     },
     {
-      "name": "UpdateOccuppiedPassiveSystem",
+      "name": "UpdateOccupiedPassiveSystem",
       "writeAccess": ["OccupiedPassiveResourceComponent"]
     },
     {

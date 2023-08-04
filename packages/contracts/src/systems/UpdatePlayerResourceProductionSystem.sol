@@ -12,12 +12,13 @@ import { ID as UpdateUnclaimedResourcesSystemID } from "./UpdateUnclaimedResourc
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
+import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../components/PlayerProductionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "../components/ActiveComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "../components/MinesComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "../components/BuildingProductionComponent.sol";
+import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "../components/BuildingProductionComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResource } from "../libraries/LibResource.sol";

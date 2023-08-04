@@ -120,7 +120,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
 
     if (actionType == EActionType.Destroy) {
       updateActiveStatus(playerAddress, buildingEntity, false);
-      return "";
+      return abi.encode(false);
     }
 
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
@@ -133,6 +133,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
 
     if (!pathComponent.has(buildingEntity)) {
       updateActiveStatus(playerAddress, buildingEntity, false);
+      return abi.encode(false);
     }
 
     uint256 buildingLevel = levelComponent.getValue(buildingEntity);

@@ -13,19 +13,21 @@ import { BuildingCountComponent, ID as BuildingCountComponentID } from "componen
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
-
-// types
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
+import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+// types
 
 import { MainBaseID } from "../prototypes.sol";
 
-import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
-import { ID as PostDestroySystemID } from "./PostDestroySystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
+import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
+import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
+import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
+
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 

@@ -29,37 +29,6 @@ library LibStorage {
       );
   }
 
-  function updatePlayerStorage(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 buildingId,
-    uint32 newLevel,
-    bool isDestroy
-  ) internal {
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      world.getComponent(MaxResourceStorageComponentID)
-    );
-
-    uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingId, newLevel);
-
-    if (!maxResourceStorageComponent.has(buildingIdNewLevel)) return;
-    uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingId, newLevel - 1);
-    uint256[] memory storageResources = maxResourceStorageComponent.getValue(buildingIdNewLevel);
-    for (uint256 i = 0; i < storageResources.length; i++) {
-      uint32 playerResourceMaxStorage = getResourceMaxStorage(world, playerEntity, storageResources[i]);
-
-      uint32 maxStorageIncrease = getResourceMaxStorage(world, buildingIdNewLevel, storageResources[i]);
-      if (!isDestroy && newLevel > 1)
-        maxStorageIncrease = maxStorageIncrease - getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);
-      updateResourceMaxStorage(
-        world,
-        playerEntity,
-        storageResources[i],
-        isDestroy ? playerResourceMaxStorage - maxStorageIncrease : playerResourceMaxStorage + maxStorageIncrease
-      );
-    }
-  }
-
   function addResourceToStorage(
     IWorld world,
     uint256 resourceId,

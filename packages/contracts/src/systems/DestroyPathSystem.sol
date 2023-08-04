@@ -5,7 +5,8 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-
+import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
@@ -13,7 +14,6 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 import { BuildingKey } from "../prototypes.sol";
-import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
 import { Coord } from "../types.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -27,7 +27,7 @@ import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol
 import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 
@@ -68,7 +68,10 @@ contract DestroyPathSystem is PrimodiumSystem {
 
     if (
       BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(
-        LibEncode.hashKeyEntity(buildingTypeComponent.getValue(fromEntity), levelComponent.getValue(fromEntity))
+        LibEncode.hashKeyEntity(
+          buildingTypeComponent.getValue(fromEntity),
+          LevelComponent(getC(LevelComponentID)).getValue(fromEntity)
+        )
       )
     ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(

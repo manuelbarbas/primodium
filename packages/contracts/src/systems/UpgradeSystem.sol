@@ -31,8 +31,6 @@ import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
-import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerResourceProductionSystem.sol";
@@ -44,29 +42,6 @@ uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
-
-  function checkAndUpdateConnectedFactory(uint256 buildingEntity) internal {
-    PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
-    if (pathComponent.has(buildingEntity)) {
-      uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
-      uint256 connectedToBuildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID))
-        .getValue(connectedToBuildingEntity);
-      if (
-        !ActiveComponent(getAddressById(components, MinesComponentID)).has(connectedToBuildingEntity) &&
-        MinesComponent(getAddressById(components, MinesComponentID)).has(
-          LibEncode.hashKeyEntity(connectedToBuildingType, levelComponent.getValue(connectedToBuildingEntity))
-        )
-      ) {
-        bool isActive = abi.decode(
-          IOnEntitySubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
-            msg.sender,
-            connectedToBuildingEntity
-          ),
-          (bool)
-        );
-      }
-    }
-  }
 
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));

@@ -20,57 +20,6 @@ import { EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
-  function updatePlayerResourceProduction(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 buildingType,
-    uint32 buildingLevel,
-    EActionType actionType
-  ) internal {
-    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
-      world.getComponent(BuildingProductionComponentID)
-    );
-    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
-      world.getComponent(PlayerProductionComponentID)
-    );
-
-    ResourceValue memory resourceProduction = buildingProductionComponent.getValue(
-      LibEncode.hashKeyEntity(buildingType, buildingLevel)
-    );
-    uint32 currResourceProduction = playerProductionComponent.getValue(
-      LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity)
-    );
-    if (actionType == EActionType.Destroy) {
-      currResourceProduction -= resourceProduction.value;
-    } else if (actionType == EActionType.Upgrade) {
-      currResourceProduction +=
-        resourceProduction.value -
-        buildingProductionComponent.getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)).value;
-    } else {
-      currResourceProduction += resourceProduction.value;
-    }
-    updateResourceProduction(
-      world,
-      LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity),
-      currResourceProduction
-    );
-  }
-
-  function updateResourceProduction(IWorld world, uint256 entity, uint32 newResourceProductionRate) internal {
-    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
-      world.getComponent(PlayerProductionComponentID)
-    );
-    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
-      world.getComponent(LastClaimedAtComponentID)
-    );
-    if (newResourceProductionRate == 0) {
-      lastClaimedAtComponent.remove(entity);
-      playerProductionComponent.remove(entity);
-      return;
-    }
-    if (!lastClaimedAtComponent.has(entity)) lastClaimedAtComponent.set(entity, block.number);
-    playerProductionComponent.set(entity, newResourceProductionRate);
-  }
 
   function hasRequiredResources(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {
     RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
@@ -82,11 +31,15 @@ library LibResource {
 
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      uint32 resourceCost = LibMath.getSafe(
+        itemComponent,
+        LibEncode.hashKeyEntity(requiredResources.values[i], entity)
+      );
       uint32 playerResourceCount = LibMath.getSafe(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity)
       );
-      if (requiredResources.values[i] > playerResourceCount) return false;
+      if (resourceCost > playerResourceCount) return false;
     }
     return true;
   }

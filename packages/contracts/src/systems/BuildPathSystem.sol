@@ -21,9 +21,6 @@ import { LibFactory } from "../libraries/LibFactory.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 
 import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
-import { ID as BuildPathFromFactoryToMainBaseSystemID } from "./BuildPathFromFactoryToMainBaseSystem.sol";
-import { ID as BuildPathFromMineToMainBaseSystemID } from "./BuildPathFromMineToMainBaseSystem.sol";
-import { ID as BuildPathFromMineToFactorySystemID } from "./BuildPathFromMineToFactorySystem.sol";
 
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 
