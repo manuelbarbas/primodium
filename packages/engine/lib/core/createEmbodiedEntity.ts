@@ -67,8 +67,10 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     update && onUpdate.set(id, trackPositionUpdates(update));
 
     // Execute functions
-    if (activeGameObject && now)
+    if (activeGameObject && now) {
       await trackPositionUpdates(now)(activeGameObject, 0, 0);
+    }
+
     if (activeGameObject && once) once(activeGameObject, 0, 0);
   }
 
@@ -84,6 +86,12 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     if (activeGameObject) {
       reset(activeGameObject, stop);
       executeGameObjectFunctions(activeGameObject, onOnce.values());
+    }
+  }
+
+  async function setComponents(components: GameObjectComponent<Type>[]) {
+    for (const component of components) {
+      await setComponent(component);
     }
   }
 
@@ -157,6 +165,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
 
   return {
     setComponent,
+    setComponents,
     hasComponent,
     removeComponent,
     spawn,
@@ -173,6 +182,7 @@ function executeGameObjectFunctions<Type extends keyof GameObjectTypes>(
   functions: Iterable<GameObjectFunction<Type>>
 ) {
   if (!gameObject) return;
+
   for (const func of functions) {
     func(gameObject, 0, 0);
   }
@@ -181,6 +191,9 @@ function executeGameObjectFunctions<Type extends keyof GameObjectTypes>(
 function modifiesPosition<Type extends keyof GameObjectTypes>(
   func: GameObjectFunction<Type>
 ): Partial<PixelCoord> | undefined {
+  //TODO: SKIP FOR NOW
+  return;
+
   let newPosition: Partial<PixelCoord> | undefined = undefined;
   const gameObjectProxy = new Proxy(
     { x: undefined, y: undefined },
