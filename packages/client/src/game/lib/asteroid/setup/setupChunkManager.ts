@@ -2,17 +2,17 @@ import { AsteroidMap } from "../../../constants";
 import type { AnimatedTilemap } from "@latticexyz/phaserx";
 import { getTopLayerKeyPair } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
-import { createPerlin } from "@latticexyz/noise";
+import { Perlin, createPerlin } from "@latticexyz/noise";
 import { interval } from "rxjs";
 import { Scene } from "engine/types";
-
-const chunkCache = new CoordMap<boolean>();
-const perlin = createPerlin();
+import { world } from "src/network/world";
 
 const renderChunk = async (
   coord: Coord,
   map: AnimatedTilemap<number, string, string>,
-  chunkSize: number
+  chunkSize: number,
+  chunkCache: CoordMap<boolean>,
+  perlin: Perlin
 ) => {
   const { Tilekeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
   //don't render if already rendered
@@ -26,7 +26,7 @@ const renderChunk = async (
     ) {
       const coord = { x, y: -y };
 
-      const { terrain, resource } = getTopLayerKeyPair(coord, await perlin);
+      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
 
       //lookup and place terrain
       const terrainId = EntityIdtoTilesetId[terrain];
@@ -50,35 +50,37 @@ const renderChunk = async (
 export const setupAsteroidChunkManager = async (tilemap: Scene["tilemap"]) => {
   const { RENDER_INTERVAL } = AsteroidMap;
   const { chunks, map, chunkSize } = tilemap;
-  let chunkStream: ReturnType<typeof chunks.addedChunks$.subscribe>;
+  const chunkCache = new CoordMap<boolean>();
+  const perlin = await createPerlin();
 
   const renderInitialChunks = () => {
     for (const chunk of chunks.visibleChunks.current.coords()) {
-      renderChunk(chunk, map, chunkSize);
+      renderChunk(chunk, map, chunkSize, chunkCache, perlin);
     }
   };
 
-  const chunkQueue: Coord[] = [];
-  const interval$ = interval(RENDER_INTERVAL);
   const startChunkRenderer = () => {
-    chunkStream = chunks.addedChunks$.subscribe((chunk) => {
+    const chunkQueue: Coord[] = [];
+    const interval$ = interval(RENDER_INTERVAL);
+    const chunkStream = chunks.addedChunks$.subscribe((chunk) => {
       chunkQueue.push(chunk);
     });
 
-    interval$.subscribe(() => {
+    const chunkRenderer = interval$.subscribe(() => {
       if (chunkQueue.length === 0) return;
 
       const chunk = chunkQueue.pop()!;
 
       if (!chunks.visibleChunks.current.get(chunk)) return;
 
-      renderChunk(chunk, map, chunkSize);
+      renderChunk(chunk, map, chunkSize, chunkCache, perlin);
     });
+
+    world.registerDisposer(() => {
+      chunkStream.unsubscribe();
+      chunkRenderer.unsubscribe();
+    }, "game");
   };
 
-  const dispose = () => {
-    chunkStream.unsubscribe();
-  };
-
-  return { renderInitialChunks, startChunkRenderer, dispose };
+  return { renderInitialChunks, startChunkRenderer };
 };

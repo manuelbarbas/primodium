@@ -20,10 +20,9 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
   const removeScene = (key: string) => {
     if (!phaserGame) throw new Error("Phaser game not initialized");
 
-    scenes.get(key)?.dispose();
-
     scenes.delete(key);
     phaserGame.scene.remove(key);
+    scenes.get(key)?.dispose();
   };
 
   const transitionToScene = async (
