@@ -1,11 +1,10 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { EntityIndex, Has } from "@latticexyz/recs";
 import {
-  EntityIndex,
-  Has,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-} from "@latticexyz/recs";
+} from "src/network/systems/System";
 import { Scene } from "engine/types";
 import { createHoverTile } from "../../common/factory/createHoverTile";
 import { HoverTile } from "src/network/components/clientComponents";
@@ -47,16 +46,30 @@ export const renderHoverTile = (scene: Scene) => {
     );
   };
 
-  defineEnterSystem(world, query, (update) => {
-    render(update);
-    console.info("[ENTER SYSTEM](renderHoverTile) Hover tile has been added");
+  defineEnterSystem(
+    world,
+    query,
+    (update) => {
+      render(update);
+      console.info("[ENTER SYSTEM](renderHoverTile) Hover tile has been added");
+    },
+    { namespace: "game" }
+  );
+
+  defineUpdateSystem(world, query, render, {
+    namespace: "game",
   });
 
-  defineUpdateSystem(world, query, render);
+  defineExitSystem(
+    world,
+    query,
+    (update) => {
+      scene.objectPool.remove(objGraphicsIndex(update.entity));
 
-  defineExitSystem(world, query, (update) => {
-    scene.objectPool.remove(objGraphicsIndex(update.entity));
-
-    console.info("[EXIT SYSTEM](renderHoverTile) Hover tile has been removed");
-  });
+      console.info(
+        "[EXIT SYSTEM](renderHoverTile) Hover tile has been removed"
+      );
+    },
+    { namespace: "game" }
+  );
 };

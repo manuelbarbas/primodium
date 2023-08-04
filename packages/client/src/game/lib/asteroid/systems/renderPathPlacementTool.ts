@@ -1,12 +1,10 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { ComponentUpdate, Has, HasValue } from "@latticexyz/recs";
 import {
-  ComponentUpdate,
-  Has,
-  HasValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-} from "@latticexyz/recs";
+} from "src/network/systems/System";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
 import { createPath } from "../../common/factory/path";
@@ -94,23 +92,33 @@ export const renderPathPlacementTool = (scene: Scene) => {
     );
   };
 
-  defineEnterSystem(world, query, (update) => {
-    render(update);
+  defineEnterSystem(
+    world,
+    query,
+    (update) => {
+      render(update);
 
-    console.info(
-      "[ENTER SYSTEM](renderPathPlacementTool) Path placement tool has been added"
-    );
-  });
+      console.info(
+        "[ENTER SYSTEM](renderPathPlacementTool) Path placement tool has been added"
+      );
+    },
+    { namespace: "game" }
+  );
 
-  defineUpdateSystem(world, query, render);
+  defineUpdateSystem(world, query, render, { namespace: "game" });
 
-  defineExitSystem(world, query, (update) => {
-    const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
-    scene.objectPool.remove(objGraphicsIndex);
-    StartSelectedPath.remove();
+  defineExitSystem(
+    world,
+    query,
+    (update) => {
+      const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+      scene.objectPool.remove(objGraphicsIndex);
+      StartSelectedPath.remove();
 
-    console.info(
-      "[EXIT SYSTEM](renderPathPlacementTool) Path placement tool has been removed"
-    );
-  });
+      console.info(
+        "[EXIT SYSTEM](renderPathPlacementTool) Path placement tool has been removed"
+      );
+    },
+    { namespace: "game" }
+  );
 };

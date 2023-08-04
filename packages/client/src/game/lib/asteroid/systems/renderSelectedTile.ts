@@ -1,11 +1,10 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { ComponentUpdate, Has } from "@latticexyz/recs";
 import {
-  ComponentUpdate,
-  Has,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-} from "@latticexyz/recs";
+} from "src/network/systems/System";
 import { Scene } from "engine/types";
 import { createSelectionTile } from "../../common/factory/selectionTile";
 import { world } from "src/network/world";
@@ -50,21 +49,31 @@ export const renderSelectedTile = (scene: Scene) => {
     );
   };
 
-  defineEnterSystem(world, query, (update) => {
-    render(update);
-    console.info(
-      "[ENTER SYSTEM](renderSelectionTile) Selection tile has been added"
-    );
-  });
+  defineEnterSystem(
+    world,
+    query,
+    (update) => {
+      render(update);
+      console.info(
+        "[ENTER SYSTEM](renderSelectionTile) Selection tile has been added"
+      );
+    },
+    { namespace: "game" }
+  );
 
-  defineUpdateSystem(world, query, render);
+  defineUpdateSystem(world, query, render, { namespace: "game" });
 
-  defineExitSystem(world, query, (update) => {
-    const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
-    scene.objectPool.remove(objGraphicsIndex);
+  defineExitSystem(
+    world,
+    query,
+    (update) => {
+      const objGraphicsIndex = update.entity + "_selectionTile" + "_graphics";
+      scene.objectPool.remove(objGraphicsIndex);
 
-    console.info(
-      "[EXIT SYSTEM](renderSelectionTile) Selection tile has been removed"
-    );
-  });
+      console.info(
+        "[EXIT SYSTEM](renderSelectionTile) Selection tile has been removed"
+      );
+    },
+    { namespace: "game" }
+  );
 };

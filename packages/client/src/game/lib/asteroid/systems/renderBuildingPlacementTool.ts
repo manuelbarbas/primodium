@@ -1,12 +1,10 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { ComponentUpdate, Has, HasValue } from "@latticexyz/recs";
 import {
-  ComponentUpdate,
-  Has,
-  HasValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
-} from "@latticexyz/recs";
+} from "src/network/systems/System";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
 import { createBuilding } from "../../common/factory/building";
@@ -79,25 +77,35 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
     );
   };
 
-  defineEnterSystem(world, query, (update) => {
-    render(update);
+  defineEnterSystem(
+    world,
+    query,
+    (update) => {
+      render(update);
 
-    console.info(
-      "[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added"
-    );
-  });
+      console.info(
+        "[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added"
+      );
+    },
+    { namespace: "game" }
+  );
 
-  defineUpdateSystem(world, query, render);
+  defineUpdateSystem(world, query, render, { namespace: "game" });
 
-  defineExitSystem(world, query, (update) => {
-    const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
-    const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
+  defineExitSystem(
+    world,
+    query,
+    (update) => {
+      const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
+      const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
 
-    scene.objectPool.remove(objGraphicsIndex);
-    scene.objectPool.remove(objSpriteIndex);
+      scene.objectPool.remove(objGraphicsIndex);
+      scene.objectPool.remove(objSpriteIndex);
 
-    console.info(
-      "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
-    );
-  });
+      console.info(
+        "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
+      );
+    },
+    { namespace: "game" }
+  );
 };

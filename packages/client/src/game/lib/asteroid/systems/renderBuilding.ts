@@ -1,15 +1,7 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  EntityIndex,
-  Has,
-  defineComponentSystem,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-} from "@latticexyz/recs";
+import { EntityIndex, Has } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { clamp } from "lodash";
-
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import {
@@ -17,6 +9,12 @@ import {
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { Level, BuildingType } from "src/network/components/chainComponents";
+import {
+  defineComponentSystem,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+} from "src/network/systems/System";
 import { safeIndex } from "src/util/array";
 import { AsteroidMap } from "@game/constants";
 
@@ -96,15 +94,24 @@ export const renderBuilding = (scene: Scene) => {
 
   const positionQuery = [Has(Position), Has(BuildingType)];
 
-  defineEnterSystem(world, positionQuery, render);
+  defineEnterSystem(world, positionQuery, render, {
+    namespace: "game",
+  });
 
   const updateQuery = [Has(Position), Has(BuildingType), Has(Level)];
-  defineUpdateSystem(world, updateQuery, render);
-
-  defineExitSystem(world, positionQuery, ({ entity }) => {
-    const renderId = `${entity}_entitySprite`;
-    scene.objectPool.remove(renderId);
+  defineUpdateSystem(world, updateQuery, render, {
+    namespace: "game",
   });
+
+  defineExitSystem(
+    world,
+    positionQuery,
+    ({ entity }) => {
+      const renderId = `${entity}_entitySprite`;
+      scene.objectPool.remove(renderId);
+    },
+    { namespace: "game" }
+  );
 
   defineComponentSystem(
     world,
@@ -118,6 +125,7 @@ export const renderBuilding = (scene: Scene) => {
         const entityIndex = world.entityToIndex.get(newValue.value);
         if (entityIndex) render({ entity: entityIndex });
       }
-    }
+    },
+    { namespace: "game" }
   );
 };

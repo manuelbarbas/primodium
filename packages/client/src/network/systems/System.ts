@@ -19,6 +19,16 @@ import {
 import type { world } from "src/network/world";
 
 type World = typeof world;
+type RxOptions = {
+  namespace?: string;
+};
+type Options = RxOptions & {
+  runOnInit?: boolean;
+};
+
+type SyncOptions = Options & {
+  update?: boolean;
+};
 
 /**
  * Create a system that is called on every update of the given observable.
@@ -30,12 +40,15 @@ type World = typeof world;
  * @param world {@link World} object this system should be registered in.
  * @param observable$ Observable to react to.
  * @param system System function to run on updates of the `observable$`. System function gets passed the update events from the `observable$`.
+ * @param options Optional: {
+ * namespace: namespace to register the system in. Default global.
+ * }
  */
 export function defineRxSystem<T>(
   world: World,
   observable$: Observable<T>,
   system: (event: T) => void,
-  options = { namespace: undefined }
+  options: RxOptions = { namespace: undefined }
 ) {
   const subscription = observable$.subscribe(system);
   world.registerDisposer(
@@ -55,15 +68,20 @@ export function defineRxSystem<T>(
  * @param options Optional: {
  * runOnInit: if true, run this system for all entities matching the query when the system is created.
  * Else only run on updates after the system is created. Default true.
+ * namespace: namespace to register the system in. Default global.
  * }
  */
 export function defineUpdateSystem(
   world: World,
   query: QueryFragment[],
   system: (update: ComponentUpdate) => void,
-  options = { runOnInit: true, namespace: undefined }
+  options: Options = {}
 ) {
-  defineRxSystem(world, defineUpdateQuery(query, options), system, options);
+  const { runOnInit = true, namespace = undefined } = options;
+
+  defineRxSystem(world, defineUpdateQuery(query, { runOnInit }), system, {
+    namespace,
+  });
 }
 /**
  * Create a system that is called on every event of the given {@link defineEnterQuery enter query}.
@@ -74,15 +92,19 @@ export function defineUpdateSystem(
  * @param options Optional: {
  * runOnInit: if true, run this system for all entities matching the query when the system is created.
  * Else only run on updates after the system is created. Default true.
+ * namespace: namespace to register the system in. Default global.
  * }
  */
 export function defineEnterSystem(
   world: World,
   query: QueryFragment[],
   system: (update: ComponentUpdate) => void,
-  options = { runOnInit: true, namespace: undefined }
+  options: Options = {}
 ) {
-  defineRxSystem(world, defineEnterQuery(query, options), system, options);
+  const { runOnInit = true, namespace = undefined } = options;
+  defineRxSystem(world, defineEnterQuery(query, { runOnInit }), system, {
+    namespace,
+  });
 }
 
 /**
@@ -94,15 +116,19 @@ export function defineEnterSystem(
  * @param options Optional: {
  * runOnInit: if true, run this system for all entities matching the query when the system is created.
  * Else only run on updates after the system is created. Default true.
+ * namespace: namespace to register the system in. Default global.
  * }
  */
 export function defineExitSystem(
   world: World,
   query: QueryFragment[],
   system: (update: ComponentUpdate) => void,
-  options = { runOnInit: true, namespace: undefined }
+  options: Options = {}
 ) {
-  defineRxSystem(world, defineExitQuery(query, options), system, options);
+  const { runOnInit = true, namespace = undefined } = options;
+  defineRxSystem(world, defineExitQuery(query, { runOnInit }), system, {
+    namespace,
+  });
 }
 
 /**
@@ -113,6 +139,7 @@ export function defineExitSystem(
  * @param system System function to run when the result of the given query changes.
  * @param options Optional: {
  * runOnInit: if true, run this system for all entities matching the query when the system is created.
+ * namespace: namespace to register the system in. Default global.
  * Else only run on updates after the system is created. Default true.
  * }
  */
@@ -124,9 +151,12 @@ export function defineSystem(
       type: UpdateType;
     }
   ) => void,
-  options = { runOnInit: true, namespace: undefined }
+  options: Options = {}
 ) {
-  defineRxSystem(world, defineQuery(query, options).update$, system, options);
+  const { runOnInit = true, namespace = undefined } = options;
+  defineRxSystem(world, defineQuery(query, { runOnInit }).update$, system, {
+    namespace,
+  });
 }
 
 /**
@@ -137,6 +167,7 @@ export function defineSystem(
  * @param system System function to run when the given component is updated.
  * @param options Optional: {
  * runOnInit: if true, run this system for all entities in the component when the system is created.
+ * namespace: namespace to register the system in. Default global.
  * Else only run on updates after the system is created. Default true.
  * }
  */
@@ -144,14 +175,16 @@ export function defineComponentSystem<S extends Schema>(
   world: World,
   component: Component<S>,
   system: (update: ComponentUpdate<S>) => void,
-  options = { runOnInit: true, namespace: undefined }
+  options: Options = {}
 ) {
-  const initial$ = (
-    options === null || options === void 0 ? void 0 : options.runOnInit
-  )
+  const { runOnInit = true, namespace = undefined } = options;
+
+  const initial$ = (options === null || options === void 0 ? void 0 : runOnInit)
     ? from(getComponentEntities(component)).pipe(toUpdateStream(component))
     : EMPTY;
-  defineRxSystem(world, concat(initial$, component.update$), system, options);
+  defineRxSystem(world, concat(initial$, component.update$), system, {
+    namespace,
+  });
 }
 
 /**
@@ -167,8 +200,10 @@ export function defineSyncSystem<T extends Schema>(
   query: QueryFragment[],
   component: (entity: EntityIndex) => Component<T>,
   value: (entity: EntityIndex) => ComponentValue<T>,
-  options = { update: false, runOnInit: true, namespace: undefined }
+  options: SyncOptions = {}
 ) {
+  const { runOnInit = true, namespace = undefined, update = true } = options;
+
   defineSystem(
     world,
     query,
@@ -177,11 +212,14 @@ export function defineSyncSystem<T extends Schema>(
         setComponent(component(entity), entity, value(entity));
       if (type === UpdateType.Exit) removeComponent(component(entity), entity);
       if (
-        (options === null || options === void 0 ? void 0 : options.update) &&
+        (options === null || options === void 0 ? void 0 : update) &&
         type === UpdateType.Update
       )
         setComponent(component(entity), entity, value(entity));
     },
-    options
+    {
+      runOnInit,
+      namespace,
+    }
   );
 }

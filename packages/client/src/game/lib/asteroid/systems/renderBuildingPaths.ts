@@ -1,5 +1,6 @@
-import { EntityID, defineComponentSystem } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { defineComponentSystem } from "src/network/systems/System";
 
 import { createPath } from "../../common/factory/path";
 import { Scene } from "engine/types";
@@ -71,6 +72,6 @@ export const renderBuildingPaths = (scene: Scene) => {
         embodiedPath.setComponent(pathComponent);
       }
     },
-    { runOnInit: true }
+    { namespace: "game" }
   );
 };
