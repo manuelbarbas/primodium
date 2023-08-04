@@ -6,7 +6,7 @@ import { useMud } from "src/hooks/useMud";
 import { useGameStore } from "../../store/GameStore";
 import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../shared/Spinner";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { getRecipe } from "../../util/resource";
 import { ResourceImage } from "../../util/constants";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
