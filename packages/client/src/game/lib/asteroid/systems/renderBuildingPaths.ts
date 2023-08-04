@@ -77,16 +77,10 @@ export const renderBuildingPaths = (scene: Scene) => {
           },
           AsteroidMap.DepthLayers.Path
         ),
-        GraphicsManhattanPath(
-          {
-            x: startPixelCoord.x + tileWidth / 2,
-            y: -startPixelCoord.y + tileHeight / 2,
-          },
-          {
-            x: endPixelCoord.x + tileWidth / 2,
-            y: -endPixelCoord.y + tileHeight / 2,
-          }
-        ),
+        GraphicsManhattanPath({
+          x: endPixelCoord.x + tileWidth / 2,
+          y: -endPixelCoord.y + tileHeight / 2,
+        }),
       ]);
     },
     { runOnInit: true }

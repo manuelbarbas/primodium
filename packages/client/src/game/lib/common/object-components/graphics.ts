@@ -18,13 +18,20 @@ const drawPath = (
 };
 
 export const GraphicsManhattanPath = (
-  start: Coord,
-  end: Coord
+  desitination: Coord
 ): GameObjectComponent<"Graphics"> => {
   return {
     id: "manhattan-line",
     once: (gameObject) => {
-      drawPath(gameObject, start.x, start.y, end.x, end.y, 0xffffff, 1.5);
+      drawPath(
+        gameObject,
+        gameObject.x,
+        gameObject.y,
+        desitination.x,
+        desitination.y,
+        0xffffff,
+        1.5
+      );
     },
   };
 };
