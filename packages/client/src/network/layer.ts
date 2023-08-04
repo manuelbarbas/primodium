@@ -11,7 +11,7 @@ import { syncPositionComponent } from "./syncPositionComponent";
 import { singletonIndex, world } from "./world";
 import chainComponents, { Counter } from "./components/chainComponents";
 import { BlockNumber, DoubleCounter } from "./components/clientComponents";
-import setupDevSystems from "./setupDevSystems";
+import setupDevSystems from "./systems/setupDevSystems";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
