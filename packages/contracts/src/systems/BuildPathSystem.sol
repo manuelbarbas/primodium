@@ -120,7 +120,7 @@ contract BuildPathSystem is PrimodiumSystem {
     if (minesComponent.has(toEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
         msg.sender,
-        toEntity,
+        fromEntity,
         EActionType.Build
       );
     }

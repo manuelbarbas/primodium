@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
+
+import "forge-std/console.sol";
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
@@ -64,10 +66,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       if (pathComponent.has(buildingEntity)) {
         uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
         if (doesRequireMine(connectedToBuildingEntity)) {
-          IOnEntitySubsystem(getAddressById(world.systems(), ID)).executeTyped(
-            playerAddress,
-            connectedToBuildingEntity
-          );
+          executeTyped(playerAddress, connectedToBuildingEntity, EActionType.Build);
         } else {
           IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
             playerAddress,
@@ -80,10 +79,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       if (pathComponent.has(buildingEntity)) {
         uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
         if (doesRequireMine(connectedToBuildingEntity)) {
-          IOnEntitySubsystem(getAddressById(world.systems(), ID)).executeTyped(
-            playerAddress,
-            connectedToBuildingEntity
-          );
+          executeTyped(playerAddress, connectedToBuildingEntity, EActionType.Build);
         } else {
           IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
             playerAddress,
@@ -153,6 +149,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
           levelComponent.getValue(connectedMineEntities[i]) < buildingLevel ||
           (doesRequireMine(connectedMineEntities[i]) && !activeComponent.has(connectedMineEntities[i]))
         ) {
+          console.log("required connected condition not ok");
           updateActiveStatus(playerAddress, buildingEntity, false);
           return abi.encode(false);
         }
@@ -163,6 +160,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       //then check if there are enough connected resource production buildings
       for (uint256 i = 0; i < minesData.values.length; i++) {
         if (minesData.values[i] > 0) {
+          console.log("required count not ok");
           updateActiveStatus(playerAddress, buildingEntity, false);
           return abi.encode(false);
         }
@@ -170,6 +168,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
     }
 
     //if all conditions are met make factory functional
+    console.log("activate");
     updateActiveStatus(playerAddress, buildingEntity, true);
     return abi.encode(true);
   }

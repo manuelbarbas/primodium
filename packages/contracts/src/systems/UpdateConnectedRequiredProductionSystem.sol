@@ -1,9 +1,9 @@
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
-import { ID as BuildSystemID } from "./BuildSystem.sol";
-import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
+import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
+import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { MinesComponent, ID as MinesComponentID, ResourceValues } from "../components/MinesComponent.sol";
@@ -13,6 +13,7 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "../components/BuildingProductionComponent.sol";
+import { PathComponent, ID as PathComponentID } from "../components/PathComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResource } from "../libraries/LibResource.sol";
@@ -25,10 +26,10 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
 
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
-      msg.sender == getAddressById(world.systems(), BuildSystemID) ||
-        msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
-        msg.sender == getAddressById(world.systems(), DestroySystemID),
-      "UpdatePlayerStorageSystem: Only BuildSystem, UpgradeSystem, DestroySystem can call this function"
+      msg.sender == getAddressById(world.systems(), DestroySystemID) ||
+        msg.sender == getAddressById(world.systems(), BuildPathSystemID) ||
+        msg.sender == getAddressById(world.systems(), DestroyPathSystemID),
+      "UpdateConnectedRequiredProductionSystem: Only DestroyPathSystem, BuildPathSystem, DestroySystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
@@ -45,14 +46,18 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
 
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
+    PathComponent pathComponent = PathComponent(getAddressById(world.components(), PathComponentID));
+    uint256 toEntity = pathComponent.getValue(buildingEntity);
+
     MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
 
     BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
       getC(BuildingProductionComponentID)
     );
-    ResourceValues memory requiredProduction = minesComponent.getValue(buildingEntity);
+    ResourceValues memory requiredProduction = minesComponent.getValue(toEntity);
+    uint256 productionResourceID = buildingProductionComponent.getValue(buildingIdNewLevel).resource;
     for (uint256 i = 0; i < requiredProduction.resources.length; i++) {
-      if (requiredProduction.resources[i] == buildingProductionComponent.getValue(buildingIdNewLevel).resource) {
+      if (requiredProduction.resources[i] == productionResourceID) {
         if (actionType == EActionType.Build) {
           requiredProduction.values[i]--;
         } else if (actionType == EActionType.Destroy) {
@@ -61,6 +66,7 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
         break;
       }
     }
+    minesComponent.set(toEntity, requiredProduction);
   }
 
   function executeTyped(

@@ -279,7 +279,7 @@ library LibInitDebug {
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     ResourceValues memory requiredMines = ResourceValues(new uint256[](1), new uint32[](1));
-    requiredMines.resources[0] = DebugIronMineID;
+    requiredMines.resources[0] = IronResourceItemID;
     requiredMines.values[0] = 1;
     minesComponent.set(entity, requiredMines);
 
@@ -287,7 +287,7 @@ library LibInitDebug {
 
     //DebugIronPlateFactoryID level 2
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2);
-    requiredMines.resources[0] = DebugIronMineID;
+    requiredMines.resources[0] = IronResourceItemID;
     requiredMines.values[0] = 1;
     minesComponent.set(entity, requiredMines);
 
@@ -295,7 +295,7 @@ library LibInitDebug {
 
     //DebugIronPlateFactoryID level 3
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 3);
-    requiredMines.resources[0] = DebugIronMineID;
+    requiredMines.resources[0] = IronResourceItemID;
     requiredMines.values[0] = 2;
     minesComponent.set(entity, requiredMines);
 
@@ -319,9 +319,9 @@ library LibInitDebug {
     LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
-    requiredMines.resources[0] = DebugIronMineID;
+    requiredMines.resources[0] = IronResourceItemID;
     requiredMines.values[0] = 1;
-    requiredMines.resources[0] = DebugCopperMineID;
+    requiredMines.resources[0] = CopperResourceItemID;
     requiredMines.values[0] = 1;
 
     minesComponent.set(entity, requiredMines);
@@ -337,9 +337,9 @@ library LibInitDebug {
     LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
-    requiredMines.resources[0] = DebugLithiumMineID;
+    requiredMines.resources[0] = LithiumResourceItemID;
     requiredMines.values[0] = 1;
-    requiredMines.resources[0] = DebugCopperMineID;
+    requiredMines.resources[0] = CopperResourceItemID;
     requiredMines.values[0] = 1;
 
     minesComponent.set(entity, requiredMines);

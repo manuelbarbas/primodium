@@ -186,12 +186,13 @@ contract ClaimSystemTest is MudTest {
       abi.encode()
     );
     upgradeSystem.executeTyped(platingFactoryCoord);
+    console.log("upgraded factory");
     assertEq(
       unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
       20,
       "Alice should have 20 unclaimed IronPlates"
     );
-    console.log("upgraded factory");
+
     vm.roll(50);
     claimSystem.executeTyped(mainBaseCoord);
     claimSystem.executeTyped(mainBaseCoord);

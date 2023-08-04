@@ -45,10 +45,6 @@
       "writeAccess": ["CounterComponent"]
     },
     {
-      "name": "SpendRequiredResourcesSystem",
-      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "ItemComponent"]
-    },
-    {
       "name": "UpdatePlayerStorageSystem",
       "writeAccess": [
         "LastClaimedAtComponent",
@@ -127,6 +123,10 @@
       ]
     },
     {
+      "name": "SpendRequiredResourcesSystem",
+      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "ItemComponent"]
+    },
+    {
       "name": "UpdateActiveStatusSystem",
       "writeAccess": ["ActiveComponent"]
     },
@@ -156,6 +156,10 @@
     },
     {
       "name": "UpdateRequiredProductionSystem",
+      "writeAccess": ["MinesComponent"]
+    },
+    {
+      "name": "UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["MinesComponent"]
     },
     {
