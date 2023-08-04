@@ -6,6 +6,7 @@ import Increment from "./screens/Increment";
 import Map from "./screens/Map";
 import { Game } from "./screens/Game";
 import { LoadingState } from "./network/components/chainComponents";
+import { Landing } from "./screens/Landing";
 
 export default function AppLoadingState() {
   // setup loading component, after setting up the network layer and syncing the block state (per emojimon)
@@ -34,7 +35,8 @@ export default function AppLoadingState() {
     return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Game />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/game" element={<Game />} />
           <Route path="/increment" element={<Increment />} />
           <Route path="/map" element={<Map />} />
         </Routes>

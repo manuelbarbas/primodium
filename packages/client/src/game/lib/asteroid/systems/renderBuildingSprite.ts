@@ -65,6 +65,7 @@ export const renderBuildingSprite = (scene: Scene) => {
   };
 
   const positionQuery = [Has(Position), Has(BuildingType)];
+
   defineEnterSystem(world, positionQuery, render);
 
   const updateQuery = [Has(Position), Has(BuildingType), Has(Level)];

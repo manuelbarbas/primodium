@@ -24,7 +24,7 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
 
   const chunkManager = await setupAsteroidChunkManager(scene.tilemap);
   chunkManager.renderInitialChunks();
-  chunkManager.startChunkRenderer();
+  // chunkManager.startChunkRenderer();
 
   scene.camera.phaserCamera.fadeIn(1000);
 
@@ -35,7 +35,6 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
   runSystems(scene);
 
   world.registerDisposer(() => {
-    chunkManager.dispose();
     game.dispose();
-  });
+  }, "game");
 };

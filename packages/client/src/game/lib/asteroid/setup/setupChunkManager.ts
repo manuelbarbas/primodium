@@ -3,16 +3,17 @@ import type { AnimatedTilemap } from "@latticexyz/phaserx";
 import { getTopLayerKeyPair } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { createPerlin } from "@latticexyz/noise";
-import { interval } from "rxjs";
+// import { interval } from "rxjs";
 import { Scene } from "engine/types";
+import { world } from "src/network/world";
 
-const chunkCache = new CoordMap<boolean>();
-const perlin = createPerlin();
+const perlin = await createPerlin();
 
 const renderChunk = async (
   coord: Coord,
   map: AnimatedTilemap<number, string, string>,
-  chunkSize: number
+  chunkSize: number,
+  chunkCache: CoordMap<boolean>
 ) => {
   const { Tilekeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
   //don't render if already rendered
@@ -26,7 +27,7 @@ const renderChunk = async (
     ) {
       const coord = { x, y: -y };
 
-      const { terrain, resource } = getTopLayerKeyPair(coord, await perlin);
+      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
 
       //lookup and place terrain
       const terrainId = EntityIdtoTilesetId[terrain];
@@ -48,37 +49,41 @@ const renderChunk = async (
 };
 
 export const setupAsteroidChunkManager = async (tilemap: Scene["tilemap"]) => {
-  const { RENDER_INTERVAL } = AsteroidMap;
+  // const { RENDER_INTERVAL } = AsteroidMap;
   const { chunks, map, chunkSize } = tilemap;
-  let chunkStream: ReturnType<typeof chunks.addedChunks$.subscribe>;
+  // let chunkStream: ReturnType<typeof chunks.addedChunks$.subscribe>;
+  // let chunkRenderer: ReturnType<typeof interval$.subscribe>;
+  const chunkCache = new CoordMap<boolean>();
 
   const renderInitialChunks = () => {
     for (const chunk of chunks.visibleChunks.current.coords()) {
-      renderChunk(chunk, map, chunkSize);
+      renderChunk(chunk, map, chunkSize, chunkCache);
     }
   };
 
-  const chunkQueue: Coord[] = [];
-  const interval$ = interval(RENDER_INTERVAL);
-  const startChunkRenderer = () => {
-    chunkStream = chunks.addedChunks$.subscribe((chunk) => {
-      chunkQueue.push(chunk);
-    });
+  // const chunkQueue: Coord[] = [];
+  // const interval$ = interval(RENDER_INTERVAL);
 
-    interval$.subscribe(() => {
-      if (chunkQueue.length === 0) return;
+  // const startChunkRenderer = () => {
+  //   chunkStream = chunks.addedChunks$.subscribe((chunk) => {
+  //     chunkQueue.push(chunk);
+  //   });
 
-      const chunk = chunkQueue.pop()!;
+  //   chunkRenderer = interval$.subscribe(() => {
+  //     if (chunkQueue.length === 0) return;
 
-      if (!chunks.visibleChunks.current.get(chunk)) return;
+  //     const chunk = chunkQueue.pop()!;
 
-      renderChunk(chunk, map, chunkSize);
-    });
-  };
+  //     if (!chunks.visibleChunks.current.get(chunk)) return;
 
-  const dispose = () => {
-    chunkStream.unsubscribe();
-  };
+  //     renderChunk(chunk, map, chunkSize, chunkCache);
+  //   });
+  // };
 
-  return { renderInitialChunks, startChunkRenderer, dispose };
+  world.registerDisposer(() => {
+    // chunkStream.unsubscribe();
+    // chunkRenderer.unsubscribe();
+  }, "game");
+
+  return { renderInitialChunks };
 };

@@ -95,5 +95,5 @@ export const setupMouseInputs = (
   world.registerDisposer(() => {
     clickSub.unsubscribe();
     pointerMoveSub.unsubscribe();
-  });
+  }, "game");
 };
