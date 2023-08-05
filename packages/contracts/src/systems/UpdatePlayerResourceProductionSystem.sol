@@ -13,6 +13,7 @@ import { ID as UpdateUnclaimedResourcesSystemID } from "./UpdateUnclaimedResourc
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
+import { BuildingEntityProductionComponent, ID as BuildingEntityProductionComponentID } from "../components/BuildingEntityProductionComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../components/PlayerProductionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
@@ -72,15 +73,22 @@ contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodium
       playerProductionComponent,
       LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity)
     );
+    BuildingEntityProductionComponent buildingEntityProductionComponent = BuildingEntityProductionComponent(
+      world.getComponent(BuildingEntityProductionComponentID)
+    );
     if (actionType == EActionType.Destroy) {
-      currResourceProduction -= resourceProduction.value;
+      currResourceProduction -= buildingEntityProductionComponent.getValue(buildingEntity);
+      buildingEntityProductionComponent.remove(buildingEntity);
     } else if (actionType == EActionType.Upgrade) {
+      buildingEntityProductionComponent.set(buildingEntity, resourceProduction.value);
       currResourceProduction +=
         resourceProduction.value -
         buildingProductionComponent.getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)).value;
     } else {
+      buildingEntityProductionComponent.set(buildingEntity, resourceProduction.value);
       currResourceProduction += resourceProduction.value;
     }
+
     updateResourceProduction(
       world,
       LibEncode.hashKeyEntity(resourceProduction.resource, playerEntity),

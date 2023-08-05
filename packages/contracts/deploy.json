@@ -32,7 +32,8 @@
     "IsDebugComponent",
     "IsTechComponent",
     "MaxPassiveComponent",
-    "OccupiedPassiveResourceComponent"
+    "OccupiedPassiveResourceComponent",
+    "BuildingEntityProductionComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -43,16 +44,6 @@
     {
       "name": "IncrementSystem",
       "writeAccess": ["CounterComponent"]
-    },
-    {
-      "name": "UpdatePlayerStorageSystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "ItemComponent",
-        "MaxStorageComponent",
-        "MaxResourceStorageComponent"
-      ]
     },
     {
       "name": "BuildSystem",
@@ -70,15 +61,11 @@
       "writeAccess": [
         "BuildingTypeComponent",
         "OwnedByComponent",
-
-        "LastClaimedAtComponent",
-        "PathComponent",
-
         "MainBaseComponent",
         "ChildrenComponent",
         "LevelComponent",
         "BuildingCountComponent",
-        "ChildrenComponent"
+        "PathComponent"
       ]
     },
     {
@@ -91,36 +78,15 @@
     },
     {
       "name": "ClaimFromMineSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-
-        "LastClaimedAtComponent",
-        "ItemComponent",
-        "UnclaimedResourceComponent"
-      ]
-    },
-    {
-      "name": "CraftSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "ItemComponent"
-      ]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "UnclaimedResourceComponent"]
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": [
-        "LevelComponent",
-        "ItemComponent",
-        "MaxStorageComponent",
-        "MaxResourceStorageComponent",
-        "MaxPassiveComponent",
-        "OccupiedPassiveResourceComponent"
-      ]
+      "writeAccess": ["LevelComponent"]
+    },
+    {
+      "name": "UpdatePlayerStorageSystem",
+      "writeAccess": ["ItemComponent", "MaxStorageComponent", "MaxResourceStorageComponent"]
     },
     {
       "name": "SpendRequiredResourcesSystem",
@@ -136,7 +102,7 @@
     },
     {
       "name": "UpdatePlayerResourceProductionSystem",
-      "writeAccess": ["PlayerProductionComponent"]
+      "writeAccess": ["PlayerProductionComponent", "BuildingEntityProductionComponent"]
     },
     {
       "name": "UpdateUnclaimedResourcesSystem",

@@ -176,7 +176,6 @@ contract DestroySystem is PrimodiumSystem {
     levelComponent.remove(buildingEntity);
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
-    LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
     childrenComponent.remove(buildingEntity);
     return abi.encode(buildingEntity);
   }
