@@ -23,6 +23,38 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   let activeGameObject: GameObject<Type> | undefined;
   const cameraFilter = { current: currentCameraFilter };
 
+  function modifiesPosition<Type extends keyof GameObjectTypes>(
+    func: GameObjectFunction<Type>
+  ): Partial<PixelCoord> | undefined {
+    let newPosition: Partial<PixelCoord> | undefined = undefined;
+
+    const gameObjectProxy = new Proxy(
+      { x: undefined, y: undefined },
+      {
+        get: (_, prop) => {
+          if (prop === "setPosition")
+            return (x: number, y: number) => (newPosition = { x, y });
+          if (prop === "setX") return (x: number) => (newPosition = { x });
+          if (prop === "setY") return (y: number) => (newPosition = { y });
+          return () => void 0;
+        },
+        set: (_, prop, value) => {
+          if (prop === "x")
+            newPosition = newPosition
+              ? { ...newPosition, x: value }
+              : { x: value };
+          if (prop === "y")
+            newPosition = newPosition
+              ? { ...newPosition, y: value }
+              : { y: value };
+          return true;
+        },
+      }
+    );
+    func(gameObjectProxy as GameObject<Type>, 0, 0);
+    return newPosition;
+  }
+
   /**
    * Syncronizes updates to game object positions to the EmbodiedEntity's position
    */
@@ -89,8 +121,11 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     }
   }
 
-  async function setComponents(components: GameObjectComponent<Type>[]) {
+  async function setComponents(
+    components: (GameObjectComponent<Type> | undefined)[]
+  ) {
     for (const component of components) {
+      if (!component) continue;
       await setComponent(component);
     }
   }
@@ -104,12 +139,14 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     gameObject.cameraFilter = cameraFilter.current;
     gameObject.resetPipeline(true, true);
     gameObject.setScale(1, 1);
-    //set Origin does not exist on graphics
-    if (!isGraphics(gameObject, type)) gameObject.setOrigin(0, 0);
     gameObject.setAlpha(1);
     gameObject.setScrollFactor(1);
     gameObject.clearMask();
     gameObject.setData("objectPoolId", null);
+
+    //set Origin does not exist on graphics
+    if (!isGraphics(gameObject, type)) gameObject.setOrigin(0, 0);
+
     if (isGraphics(gameObject, type)) {
       gameObject.clear();
     }
@@ -186,38 +223,4 @@ function executeGameObjectFunctions<Type extends keyof GameObjectTypes>(
   for (const func of functions) {
     func(gameObject, 0, 0);
   }
-}
-
-function modifiesPosition<Type extends keyof GameObjectTypes>(
-  func: GameObjectFunction<Type>
-): Partial<PixelCoord> | undefined {
-  //TODO: SKIP FOR NOW
-  return;
-
-  let newPosition: Partial<PixelCoord> | undefined = undefined;
-  const gameObjectProxy = new Proxy(
-    { x: undefined, y: undefined },
-    {
-      get: (_, prop) => {
-        if (prop === "setPosition")
-          return (x: number, y: number) => (newPosition = { x, y });
-        if (prop === "setX") return (x: number) => (newPosition = { x });
-        if (prop === "setY") return (y: number) => (newPosition = { y });
-        return () => void 0;
-      },
-      set: (_, prop, value) => {
-        if (prop === "x")
-          newPosition = newPosition
-            ? { ...newPosition, x: value }
-            : { x: value };
-        if (prop === "y")
-          newPosition = newPosition
-            ? { ...newPosition, y: value }
-            : { y: value };
-        return true;
-      },
-    }
-  );
-  func(gameObjectProxy as GameObject<Type>, 0, 0);
-  return newPosition;
 }

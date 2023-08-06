@@ -9,7 +9,6 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { clamp } from "lodash";
 
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
@@ -22,9 +21,9 @@ import { safeIndex } from "src/util/array";
 import { AsteroidMap } from "@game/constants";
 
 import {
-  SpriteAnimation,
-  SpriteTexture,
-  SpriteOutline,
+  Animation,
+  Texture,
+  Outline,
 } from "../../common/object-components/sprite";
 import { ObjectPosition } from "../../common/object-components/common";
 
@@ -72,28 +71,20 @@ export const renderBuilding = (scene: Scene) => {
 
     const sprites = EntityIDtoSpriteKey[buildingType];
     const spriteKey = sprites ? safeIndex(level - 1, sprites) : SpriteKeys.Node;
+    const animations = EntityIDtoAnimationKey[buildingType];
+    const animationKey = animations
+      ? safeIndex(level - 1, animations)
+      : undefined;
 
     buildingRenderEntity.setComponents([
       ObjectPosition(
         { x: pixelCoord.x, y: -pixelCoord.y },
         DepthLayers.Building
       ),
-      SpriteTexture(Assets.SpriteAtlas, spriteKey),
+      Texture(Assets.SpriteAtlas, spriteKey),
+      animationKey ? Animation(animationKey) : undefined,
+      selected ? Outline() : undefined,
     ]);
-
-    const animations = EntityIDtoAnimationKey[buildingType];
-
-    const anim = animations
-      ? animations[clamp(level, animations.length) - 1]
-      : undefined;
-
-    animations && animations.length >= level
-      ? animations[level - 1]
-      : undefined;
-
-    if (anim) buildingRenderEntity.setComponent(SpriteAnimation(anim));
-
-    if (selected) buildingRenderEntity.setComponent(SpriteOutline());
   };
 
   const positionQuery = [Has(Position), Has(BuildingType)];

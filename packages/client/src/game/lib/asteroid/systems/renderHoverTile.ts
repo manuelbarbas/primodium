@@ -8,9 +8,10 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { createHoverTile } from "../../common/factory/createHoverTile";
 import { HoverTile } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+import { ObjectPosition } from "../../common/object-components/common";
+import { Square } from "../../common/object-components/graphics";
 
 const objGraphicsIndex = (entity: EntityIndex) =>
   `${entity}_hoverTile_graphics`;
@@ -33,20 +34,23 @@ export const renderHoverTile = (scene: Scene) => {
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
+    scene.objectPool.remove(objGraphicsIndex(entity));
+
     const hoverRenderObject = scene.objectPool.get(
       objGraphicsIndex(entity),
       "Graphics"
     );
 
-    hoverRenderObject.setComponent(
-      createHoverTile({
-        id: objGraphicsIndex(entity),
-        x: pixelCoord.x,
-        y: -pixelCoord.y,
-        tileWidth,
-        tileHeight,
-      })
-    );
+    hoverRenderObject.setComponents([
+      ObjectPosition({
+        x: Math.floor(pixelCoord.x / tileWidth) * tileWidth,
+        y: -Math.floor(pixelCoord.y / tileWidth) * tileHeight,
+      }),
+      Square(tileWidth, tileHeight, {
+        borderThickness: 0,
+        alpha: 0.2,
+      }),
+    ]);
   };
 
   defineEnterSystem(gameWorld, query, (update) => {

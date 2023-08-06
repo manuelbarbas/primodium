@@ -5,14 +5,13 @@ import {
 } from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
-import { createPath } from "../../common/factory/path";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { Path } from "src/network/components/chainComponents";
 import { Position } from "src/network/components/clientComponents";
 import { ObjectPosition } from "../../common/object-components/common";
 import { AsteroidMap } from "@game/constants";
-import { GraphicsManhattanPath } from "../../common/object-components/graphics";
+import { ManhattanPath } from "../../common/object-components/graphics";
 
 export const renderBuildingPaths = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -77,7 +76,7 @@ export const renderBuildingPaths = (scene: Scene) => {
           },
           AsteroidMap.DepthLayers.Path
         ),
-        GraphicsManhattanPath({
+        ManhattanPath({
           x: endPixelCoord.x + tileWidth / 2,
           y: -endPixelCoord.y + tileHeight / 2,
         }),

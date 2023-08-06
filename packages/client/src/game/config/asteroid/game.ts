@@ -13,7 +13,7 @@ const gameConfig: GameConfig = {
   scale: {
     mode: Phaser.Scale.NONE,
   },
-  powerPreference: "high-performance",
+  // powerPreference: "high-performance",
   // autoFocus: true,
   autoRound: true,
   transparent: true,
