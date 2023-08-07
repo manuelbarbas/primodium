@@ -10,12 +10,9 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
@@ -31,7 +28,6 @@ import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnect
 import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
 import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
 
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 import { Coord } from "../types.sol";
@@ -39,7 +35,6 @@ import { Coord } from "../types.sol";
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));

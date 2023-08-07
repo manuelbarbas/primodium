@@ -1,27 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "forge-std/console.sol";
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 
 // types
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
-import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
-import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
 import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
-import { MainBaseID } from "../prototypes.sol";
 
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 import { ID as BuildSystemID } from "./BuildSystem.sol";
@@ -34,30 +21,24 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerResourceProductionSystem.sol";
 
-import { Coord, ResourceValues } from "../types.sol";
+import { ResourceValues } from "../types.sol";
 
 // libraries
-import { LibResource } from "../libraries/LibResource.sol";
-import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.UpdateActiveStatus"));
 
 contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
+  // todo: rewrite this function to be simpler and less confusing
   function updateActiveStatus(address playerAddress, uint256 buildingEntity, bool isActive) internal {
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
-    bool previusActiveStatus = activeComponent.has(buildingEntity);
+    bool wasActive = activeComponent.has(buildingEntity);
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
-      getAddressById(components, BuildingTypeComponentID)
-    );
-    if (previusActiveStatus != isActive) {
+
+    if (wasActive != isActive) {
       if (isActive) {
         activeComponent.set(buildingEntity);
       } else {
@@ -128,18 +109,15 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       return abi.encode(false);
     }
 
-    ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
-    //if connected to factory check if factory is functional, if it is mine upgrade has no effect so do nothing
-
-    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
-    //if is not functional check if it can be made functional
-
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
 
     if (!pathComponent.has(buildingEntity)) {
       updateActiveStatus(playerAddress, buildingEntity, false);
       return abi.encode(false);
     }
+
+    ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
 
     uint256 buildingLevel = levelComponent.getValue(buildingEntity);
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
@@ -154,7 +132,6 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
           levelComponent.getValue(connectedMineEntities[i]) < buildingLevel ||
           (doesRequireMine(connectedMineEntities[i]) && !activeComponent.has(connectedMineEntities[i]))
         ) {
-          console.log("required connected condition not ok");
           updateActiveStatus(playerAddress, buildingEntity, false);
           return abi.encode(false);
         }
@@ -165,7 +142,6 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       //then check if there are enough connected resource production buildings
       for (uint256 i = 0; i < minesData.values.length; i++) {
         if (minesData.values[i] > 0) {
-          console.log("required count not ok");
           updateActiveStatus(playerAddress, buildingEntity, false);
           return abi.encode(false);
         }
@@ -173,7 +149,6 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
     }
 
     //if all conditions are met make factory functional
-    console.log("activate");
     updateActiveStatus(playerAddress, buildingEntity, true);
     return abi.encode(true);
   }

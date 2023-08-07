@@ -1,30 +1,19 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
-import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
-import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as UpdateUnclaimedResourcesSystemID } from "./UpdateUnclaimedResourcesSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "../components/MaxPassiveComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "../components/PassiveProductionComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "../components/RequiredPassiveComponent.sol";
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "../components/OccupiedPassiveResourceComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
-import { ActiveComponent, ID as ActiveComponentID } from "../components/ActiveComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "../components/RequiredConnectedProductionComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "../components/BuildingProductionComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
-import { LibResource } from "../libraries/LibResource.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
+
 uint256 constant ID = uint256(keccak256("system.UpdateOccupiedPassive"));
 
 contract UpdateOccupiedPassiveSystem is IOnBuildingSubsystem, PrimodiumSystem {

@@ -8,23 +8,13 @@ import { ID as SpendRequiredResourcesSystemID } from "systems/SpendRequiredResou
 import { ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
 // components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
-import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "components/RequiredConnectedProductionComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibResource } from "../libraries/LibResource.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 

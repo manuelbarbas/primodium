@@ -1,6 +1,6 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
-import "forge-std/console.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
@@ -17,14 +17,10 @@ import { BuildingEntityProductionComponent, ID as BuildingEntityProductionCompon
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../components/PlayerProductionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
-import { ActiveComponent, ID as ActiveComponentID } from "../components/ActiveComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "../components/RequiredConnectedProductionComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "../components/BuildingProductionComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
-import { LibResource } from "../libraries/LibResource.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
+
 uint256 constant ID = uint256(keccak256("system.UpdatePlayerResourceProduction"));
 
 contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
@@ -107,7 +103,6 @@ contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodium
       playerProductionComponent.remove(entity);
       return;
     }
-    console.log("resource production now at %s", newResourceProductionRate);
     playerProductionComponent.set(entity, newResourceProductionRate);
   }
 

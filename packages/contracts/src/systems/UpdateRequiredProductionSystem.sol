@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
@@ -7,15 +8,10 @@ import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "../components/RequiredConnectedProductionComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibMath } from "../libraries/LibMath.sol";
-import { LibResource } from "../libraries/LibResource.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
+
 uint256 constant ID = uint256(keccak256("system.UpdateRequiredProduction"));
 
 contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
@@ -39,13 +35,8 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
     uint32 buildingLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(
       buildingEntity
     );
-    uint256 playerEntity = addressToEntity(playerAddress);
     RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
       getAddressById(world.components(), RequiredConnectedProductionComponentID)
-    );
-
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      world.getComponent(MaxResourceStorageComponentID)
     );
 
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);

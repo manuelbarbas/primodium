@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
@@ -13,8 +14,8 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../compone
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
-import { LibResource } from "../libraries/LibResource.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
+
 uint256 constant ID = uint256(keccak256("system.UpdatePlayerStorage"));
 
 contract UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {

@@ -5,10 +5,6 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 import { BuildingTileKey } from "../prototypes.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
-import { ID as UpdatePlayerStorageSystemID } from "systems/UpdatePlayerStorageSystem.sol";
-import { ID as UpdatePlayerResourceProductionSystemID } from "systems/UpdatePlayerResourceProductionSystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "systems/SpendRequiredResourcesSystem.sol";
-import { ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
 // components
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
@@ -17,11 +13,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { Coord } from "../types.sol";
 
 // libraries
-import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibResource } from "../libraries/LibResource.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
