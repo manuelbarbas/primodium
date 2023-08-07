@@ -30,11 +30,6 @@ export const RawBlueprint = newComponent(
   { id: "RawBlueprint", metadata: { contractId: `${commonIdPrefix}Blueprint` } }
 );
 
-export const UnclaimedResource = newNumberComponent(world, {
-  id: "UnclaimedResource",
-  metadata: { contractId: `${commonIdPrefix}UnclaimedResource` },
-});
-
 export const SystemsRegistry = newStringComponent(world, {
   id: "SystemsRegistry",
   metadata: { contractId: "world.component.systems" },
@@ -199,7 +194,6 @@ export default {
   BuildingCount,
   Children,
   RawBlueprint,
-  UnclaimedResource,
   SystemsRegistry,
   ComponentsRegistry,
   LoadingState,

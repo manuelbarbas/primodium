@@ -16,7 +16,6 @@ import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponen
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResource } from "../libraries/LibResource.sol";
-import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.SpendRequiredResources"));
 
@@ -43,7 +42,7 @@ contract SpendRequiredResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
       IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
-        msg.sender,
+        playerAddress,
         requiredResources.resources[i]
       );
       uint32 currItem = LibMath.getSafe(itemComponent, playerResourceHash);

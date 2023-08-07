@@ -4,7 +4,6 @@ import useResourceCount from "src/hooks/useResourceCount";
 import {
   Item,
   LastClaimedAt,
-  UnclaimedResource,
   MaxStorage,
   PlayerProduction,
 } from "src/network/components/chainComponents";
@@ -38,18 +37,11 @@ export const ResourceLabel = ({
     entityIndex
   );
 
-  const unclaimedResource = useResourceCount(
-    UnclaimedResource,
-    resourceId,
-    entityIndex
-  );
-
   const resourcesToClaim = useMemo(() => {
-    const toClaim =
-      unclaimedResource + (blockNumber - lastClaimedAt) * production;
+    const toClaim = (blockNumber - lastClaimedAt) * production;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
-  }, [unclaimedResource, lastClaimedAt, blockNumber]);
+  }, [lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 

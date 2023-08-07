@@ -3,11 +3,10 @@ pragma solidity >=0.8.0;
 
 // components
 
-import { getAddressById, addressToEntity } from "solecs/utils.sol";
+import { getAddressById } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
 import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
 // libraries
@@ -43,32 +42,6 @@ library LibPassiveResource {
     return true;
   }
 
-  function updatePassiveResources(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 buildingType,
-    uint32 buildingLevel
-  ) internal {
-    RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
-      world.getComponent(RequiredPassiveComponentID)
-    );
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    if (!requiredPassiveComponent.has(buildingLevelEntity)) return;
-    OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
-      world.getComponent(OccupiedPassiveResourceComponentID)
-    );
-    uint256[] memory resourceIDs = requiredPassiveComponent.getValue(buildingLevelEntity).resources;
-    uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(buildingLevelEntity).values;
-
-    for (uint256 i = 0; i < resourceIDs.length; i++) {
-      uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
-      occupiedPassiveResourceComponent.set(
-        playerResourceEntity,
-        LibMath.getSafe(occupiedPassiveResourceComponent, playerResourceEntity) + requiredAmounts[i]
-      );
-    }
-  }
-
   function getAvailablePassiveCapacity(
     IWorld world,
     uint256 playerEntity,
@@ -81,30 +54,5 @@ library LibPassiveResource {
         OccupiedPassiveResourceComponent(world.getComponent(OccupiedPassiveResourceComponentID)),
         playerResourceEntity
       );
-  }
-
-  function updatePassiveProduction(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 buildingType,
-    uint32 buildingLevel
-  ) internal {
-    PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
-      getAddressById(world.components(), PassiveProductionComponentID)
-    );
-
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    if (!passiveProductionComponent.has(buildingLevelEntity)) return;
-    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(world.getComponent(MaxPassiveComponentID));
-    uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
-    uint32 capacityIncrease = passiveProductionComponent.getValue(buildingLevelEntity).value;
-    if (buildingLevel > 1) {
-      capacityIncrease =
-        capacityIncrease -
-        passiveProductionComponent.getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)).value;
-    }
-    uint32 newCapacity = LibMath.getSafe(maxPassiveComponent, LibEncode.hashKeyEntity(resourceId, playerEntity)) +
-      capacityIncrease;
-    maxPassiveComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), newCapacity);
   }
 }

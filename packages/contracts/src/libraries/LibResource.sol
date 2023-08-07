@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
@@ -22,16 +22,28 @@ library LibResource {
 
     if (!requiredResourcesComponent.has(entity)) return true;
 
+    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
+      world.getComponent(PlayerProductionComponentID)
+    );
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      world.getComponent(LastClaimedAtComponentID)
+    );
+
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       uint32 resourceCost = LibMath.getSafe(
         itemComponent,
         LibEncode.hashKeyEntity(requiredResources.values[i], entity)
       );
-      uint32 playerResourceCount = LibMath.getSafe(
-        itemComponent,
-        LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity)
-      );
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
+      uint32 playerResourceCount = LibMath.getSafe(itemComponent, playerResourceEntity);
+
+      if (LibMath.getSafe(playerProductionComponent, playerResourceEntity) > 0) {
+        playerResourceCount +=
+          playerProductionComponent.getValue(playerResourceEntity) *
+          uint32(block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceEntity));
+      }
+
       if (resourceCost > playerResourceCount) return false;
     }
     return true;

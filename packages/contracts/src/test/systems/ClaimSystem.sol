@@ -16,7 +16,6 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../../components/PlayerProductionComponent.sol";
-import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../../components/UnclaimedResourceComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "../../components/RequiredResearchComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../../components/MaxResourceStorageComponent.sol";
@@ -116,9 +115,7 @@ contract ClaimSystemTest is MudTest {
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
-      component(UnclaimedResourceComponentID)
-    );
+
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = Coord({ x: -5, y: 2 });
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
@@ -172,11 +169,6 @@ contract ClaimSystemTest is MudTest {
       "Alice should not have any Iron"
     );
     assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
-    assertEq(
-      unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
-      0,
-      "Alice should have 0 unclaimed IronPlates"
-    );
     vm.roll(20);
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
 
@@ -187,11 +179,7 @@ contract ClaimSystemTest is MudTest {
     );
     upgradeSystem.executeTyped(platingFactoryCoord);
     console.log("upgraded factory");
-    assertEq(
-      unclaimedResourceComponent.getValue(hashedAliceIronPlateKey),
-      20,
-      "Alice should have 20 unclaimed IronPlates"
-    );
+    assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 40, "Alice should have 40 IronPlates");
 
     vm.roll(50);
     claimSystem.executeTyped(mainBaseCoord);

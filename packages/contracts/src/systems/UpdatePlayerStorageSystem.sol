@@ -14,7 +14,6 @@ import { LevelComponent, ID as LevelComponentID } from "../components/LevelCompo
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibResource } from "../libraries/LibResource.sol";
-import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
 uint256 constant ID = uint256(keccak256("system.UpdatePlayerStorage"));
 

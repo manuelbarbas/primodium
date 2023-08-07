@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 // Production Buildings
-import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
+import { getAddressById } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 
 //components
@@ -12,8 +12,6 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
-
-import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -60,9 +58,5 @@ library LibBuilding {
     );
     if (maxBuildingsComponent.has(baseLevel)) return maxBuildingsComponent.getValue(baseLevel);
     else revert("Invalid Base Level");
-  }
-
-  function isMainBase(uint256 tileId) internal pure returns (bool) {
-    return tileId == MainBaseID;
   }
 }

@@ -21,7 +21,6 @@
     "MaxStorageComponent",
     "MaxResourceStorageComponent",
     "PlayerProductionComponent",
-    "UnclaimedResourceComponent",
     "ActiveComponent",
     "RequiredConnectedProductionComponent",
     "BuildingProductionComponent",
@@ -39,7 +38,7 @@
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["ItemComponent", "HasResearchedComponent"]
+      "writeAccess": ["HasResearchedComponent"]
     },
     {
       "name": "IncrementSystem",
@@ -69,6 +68,10 @@
       ]
     },
     {
+      "name": "InitializeMainBaseSystem",
+      "writeAccess": ["MainBaseComponent"]
+    },
+    {
       "name": "PlaceBuildingTilesSystem",
       "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
     },
@@ -82,7 +85,7 @@
     },
     {
       "name": "ClaimFromMineSystem",
-      "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "UnclaimedResourceComponent"]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
       "name": "UpgradeSystem",
@@ -94,7 +97,7 @@
     },
     {
       "name": "SpendRequiredResourcesSystem",
-      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "ItemComponent"]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
       "name": "UpdateActiveStatusSystem",
@@ -110,7 +113,7 @@
     },
     {
       "name": "UpdateUnclaimedResourcesSystem",
-      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent"]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
       "name": "UpdatePlayerStorageSystem",
@@ -131,6 +134,10 @@
     {
       "name": "UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["RequiredConnectedProductionComponent"]
+    },
+    {
+      "name": "CheckRequiredTileSystem",
+      "writeAccess": []
     },
     {
       "name": "ComponentDevSystem",

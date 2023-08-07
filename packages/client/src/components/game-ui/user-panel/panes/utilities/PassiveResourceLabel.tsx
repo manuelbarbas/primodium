@@ -6,7 +6,6 @@ import {
   MaxPassive,
   PlayerProduction,
   OccupiedPassiveResource,
-  UnclaimedResource,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { ResourceImage } from "src/util/constants";
@@ -42,19 +41,11 @@ export const PassiveResourceLabel = ({
     entityIndex
   );
 
-  const unclaimedResource = useResourceCount(
-    UnclaimedResource,
-    resourceId,
-    entityIndex
-  );
-
   const resourcesToClaim = useMemo(() => {
-    const toClaim =
-      unclaimedResource +
-      ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
+    const toClaim = ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
-  }, [unclaimedResource, lastClaimedAt, blockNumber]);
+  }, [lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 

@@ -15,7 +15,6 @@ import { Coord } from "../types.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 

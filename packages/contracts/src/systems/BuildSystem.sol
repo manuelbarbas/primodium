@@ -9,7 +9,6 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
@@ -18,6 +17,7 @@ import { BuildingCountComponent, ID as BuildingCountComponentID } from "componen
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
+
 // libraries
 import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
@@ -29,7 +29,8 @@ import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-
+import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
+import { ID as CheckRequiredTileSystemID } from "./CheckRequiredTileSystem.sol";
 import { ID as PlaceBuildingTilesSystemID } from "./PlaceBuildingTilesSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
@@ -37,6 +38,7 @@ import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProducti
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
 import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
+import { ID as InitializeMainBaseSystemID } from "./InitializeMainBaseSystem.sol";
 uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is PrimodiumSystem {
@@ -57,7 +59,17 @@ contract BuildSystem is PrimodiumSystem {
       !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
       "[BuildSystem] Building already exists here"
     );
-    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
+
+    bool canBuildOn = abi.decode(
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        buildingType
+      ),
+      (bool)
+    );
+    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
+
     require(
       LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"
@@ -76,9 +88,7 @@ contract BuildSystem is PrimodiumSystem {
 
     //check resource requirements and if ok spend required resources
 
-    if (
-      RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingTypeLevelEntity)
-    ) {
+    if (RequiredResourcesComponent(getC(RequiredResourcesComponentID)).has(buildingTypeLevelEntity)) {
       require(
         LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
         "[BuildSystem] You do not have the required resources"
@@ -98,13 +108,10 @@ contract BuildSystem is PrimodiumSystem {
 
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
-      MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
-
-      if (mainBaseComponent.has(playerEntity)) {
-        revert("[BuildSystem] Cannot build more than one main base per wallet");
-      } else {
-        mainBaseComponent.set(playerEntity, buildingEntity);
-      }
+      IOnEntitySubsystem(getAddressById(world.systems(), InitializeMainBaseSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity
+      );
     }
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
@@ -112,11 +119,7 @@ contract BuildSystem is PrimodiumSystem {
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
     //required production update
-    if (
-      RequiredConnectedProductionComponent(getAddressById(components, RequiredConnectedProductionComponentID)).has(
-        buildingLevelEntity
-      )
-    ) {
+    if (RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,

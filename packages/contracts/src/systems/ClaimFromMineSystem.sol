@@ -12,7 +12,6 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
-import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
@@ -23,7 +22,6 @@ import { BuildingKey } from "../prototypes.sol";
 import { Coord } from "../types.sol";
 
 import { LibMath } from "../libraries/LibMath.sol";
-import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
@@ -59,9 +57,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
-    UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
-      world.getComponent(UnclaimedResourceComponentID)
-    );
+
     uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
@@ -71,11 +67,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
           storageResourceIds[i]
         );
       }
-      uint32 unclaimedResourceAmount = LibMath.getSafe(unclaimedResourceComponent, playerResourceEntity);
-      if (unclaimedResourceAmount > 0)
-        LibStorage.addResourceToStorage(world, storageResourceIds[i], unclaimedResourceAmount, playerEntity);
       lastClaimedAtComponent.set(playerResourceEntity, block.number);
-      unclaimedResourceComponent.set(playerResourceEntity, 0);
     }
 
     return abi.encode(0);
