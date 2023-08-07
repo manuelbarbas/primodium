@@ -6,14 +6,13 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 // components
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
+import { MainBaseID, BuildingKey } from "../prototypes.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
@@ -31,6 +30,7 @@ import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
+import { ID as PlaceBuildingTilesSystemID } from "./PlaceBuildingTilesSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
@@ -89,13 +89,13 @@ contract BuildSystem is PrimodiumSystem {
       );
     }
 
-    int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
-    uint256[] memory tiles = new uint256[](blueprint.length / 2);
-    for (uint32 i = 0; i < blueprint.length; i += 2) {
-      Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
-      tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
-    }
-    ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
+    BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
+
+    IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
+      msg.sender,
+      buildingEntity
+    );
+
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
@@ -108,7 +108,7 @@ contract BuildSystem is PrimodiumSystem {
     }
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
-    BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
+
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
     //required production update
@@ -152,17 +152,5 @@ contract BuildSystem is PrimodiumSystem {
     }
 
     return abi.encode(buildingEntity);
-  }
-
-  function placeBuildingTile(
-    uint256 buildingEntity,
-    Coord memory baseCoord,
-    Coord memory relativeCoord
-  ) private returns (uint256 tileEntity) {
-    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
-    tileEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
-    require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
-    ownedByComponent.set(tileEntity, buildingEntity);
   }
 }
