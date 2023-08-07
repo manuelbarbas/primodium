@@ -4,8 +4,8 @@ import useResourceCount from "src/hooks/useResourceCount";
 import {
   LastClaimedAt,
   MaxPassive,
-  PlayerProduction,
   OccupiedPassiveResource,
+  PlayerProduction,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { ResourceImage } from "src/util/constants";
@@ -19,7 +19,7 @@ export const PassiveResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const blockNumber = BlockNumber.get();
+  const blockNumber = BlockNumber.get(undefined, { value: 0 }).value;
 
   const resourceCount = useResourceCount(
     OccupiedPassiveResource,
@@ -42,7 +42,7 @@ export const PassiveResourceLabel = ({
   );
 
   const resourcesToClaim = useMemo(() => {
-    const toClaim = ((blockNumber?.value ?? 0) - lastClaimedAt) * production;
+    const toClaim = (blockNumber - lastClaimedAt) * production;
     if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
     return toClaim;
   }, [lastClaimedAt, blockNumber]);
