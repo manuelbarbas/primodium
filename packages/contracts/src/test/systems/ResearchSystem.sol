@@ -19,7 +19,6 @@ import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { IronResourceItemID, CopperResourceItemID, LithiumResourceItemID, IronPlateCraftedItemID } from "../../prototypes.sol";
 
-import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { Coord } from "../../types.sol";

@@ -2,21 +2,14 @@
 pragma solidity >=0.8.0;
 
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
-import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
-import { LibUnclaimedResource } from "./LibUnclaimedResource.sol";
-import { LibStorage } from "./LibStorage.sol";
-import { ResourceValue, ResourceValues } from "../types.sol";
-import { EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
+import { ResourceValues } from "../types.sol";
 
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
@@ -42,29 +35,5 @@ library LibResource {
       if (resourceCost > playerResourceCount) return false;
     }
     return true;
-  }
-
-  function claimMineResources(IWorld world, uint256 playerEntity) internal {
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      world.getComponent(MaxResourceStorageComponentID)
-    );
-    if (!maxResourceStorageComponent.has(playerEntity)) return;
-    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
-      world.getComponent(LastClaimedAtComponentID)
-    );
-    UnclaimedResourceComponent unclaimedResourceComponent = UnclaimedResourceComponent(
-      world.getComponent(UnclaimedResourceComponentID)
-    );
-    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
-    for (uint256 i = 0; i < storageResourceIds.length; i++) {
-      uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
-      if (PlayerProductionComponent(world.getComponent(PlayerProductionComponentID)).has(playerResourceEntity))
-        LibUnclaimedResource.updateResourceClaimed(world, playerEntity, storageResourceIds[i]);
-      uint32 unclaimedResourceAmount = LibMath.getSafe(unclaimedResourceComponent, playerResourceEntity);
-      if (unclaimedResourceAmount > 0)
-        LibStorage.addResourceToStorage(world, storageResourceIds[i], unclaimedResourceAmount, playerEntity);
-      lastClaimedAtComponent.set(playerResourceEntity, block.number);
-      unclaimedResourceComponent.set(playerResourceEntity, 0);
-    }
   }
 }

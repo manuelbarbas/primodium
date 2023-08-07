@@ -4,9 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "../components/UnclaimedResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "../components/LastClaimedAtComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../components/PlayerProductionComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";

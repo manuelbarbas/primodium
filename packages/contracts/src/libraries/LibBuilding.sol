@@ -6,7 +6,6 @@ import { IWorld } from "solecs/System.sol";
 
 //components
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -18,6 +17,7 @@ import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 import { LibMath } from "libraries/LibMath.sol";
+
 import { LibTerrain } from "./LibTerrain.sol";
 
 library LibBuilding {

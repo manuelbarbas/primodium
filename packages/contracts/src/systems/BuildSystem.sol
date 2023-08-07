@@ -17,7 +17,6 @@ import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
 // libraries

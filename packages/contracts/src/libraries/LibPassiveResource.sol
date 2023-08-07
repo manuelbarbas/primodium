@@ -5,7 +5,6 @@ pragma solidity >=0.8.0;
 
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
@@ -15,7 +14,6 @@ import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/Max
 
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
 
 library LibPassiveResource {
   function checkPassiveResourceReqs(

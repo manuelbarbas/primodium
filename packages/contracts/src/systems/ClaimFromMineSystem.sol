@@ -22,7 +22,6 @@ import { BuildingKey } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
 
-import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";

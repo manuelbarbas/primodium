@@ -4,11 +4,9 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibUnclaimedResource } from "libraries/LibUnclaimedResource.sol";
 
 library LibStorage {
   function getResourceStorageSpace(IWorld world, uint256 entity, uint256 resourceId) internal view returns (uint32) {

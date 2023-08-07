@@ -26,7 +26,6 @@ import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResource } from "../libraries/LibResource.sol";
-import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
