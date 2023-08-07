@@ -10,7 +10,7 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
 import { IsTechComponent, ID as IsTechComponentID } from "components/IsTechComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BlueprintComponent as BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
@@ -250,7 +250,9 @@ library LibInitDebug {
     );
 
     MaxLevelComponent maxLevelComponent = MaxLevelComponent(world.getComponent(MaxLevelComponentID));
-    MinesComponent minesComponent = MinesComponent(world.getComponent(MinesComponentID));
+    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
+      world.getComponent(RequiredConnectedProductionComponentID)
+    );
     BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
       world.getComponent(BuildingProductionComponentID)
     );
@@ -285,26 +287,26 @@ library LibInitDebug {
     resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: ElectricityPassiveResourceID, value: 1 });
 
-    ResourceValues memory requiredMines = ResourceValues(new uint256[](1), new uint32[](1));
-    requiredMines.resources[0] = IronResourceItemID;
-    requiredMines.values[0] = 1;
-    minesComponent.set(entity, requiredMines);
+    ResourceValues memory requiredConnectedProductions = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredConnectedProductions.resources[0] = IronResourceItemID;
+    requiredConnectedProductions.values[0] = 1;
+    requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 2 }));
 
     //DebugIronPlateFactoryID level 2
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2);
-    requiredMines.resources[0] = IronResourceItemID;
-    requiredMines.values[0] = 1;
-    minesComponent.set(entity, requiredMines);
+    requiredConnectedProductions.resources[0] = IronResourceItemID;
+    requiredConnectedProductions.values[0] = 1;
+    requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 4 }));
 
     //DebugIronPlateFactoryID level 3
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 3);
-    requiredMines.resources[0] = IronResourceItemID;
-    requiredMines.values[0] = 2;
-    minesComponent.set(entity, requiredMines);
+    requiredConnectedProductions.resources[0] = IronResourceItemID;
+    requiredConnectedProductions.values[0] = 2;
+    requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 6 }));
 
@@ -325,18 +327,18 @@ library LibInitDebug {
     resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 1000 });
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
-    requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
-    requiredMines.resources[0] = IronResourceItemID;
-    requiredMines.values[0] = 1;
-    requiredMines.resources[0] = CopperResourceItemID;
-    requiredMines.values[0] = 1;
+    requiredConnectedProductions = ResourceValues(new uint256[](2), new uint32[](2));
+    requiredConnectedProductions.resources[0] = IronResourceItemID;
+    requiredConnectedProductions.values[0] = 1;
+    requiredConnectedProductions.resources[0] = CopperResourceItemID;
+    requiredConnectedProductions.values[0] = 1;
 
-    minesComponent.set(entity, requiredMines);
+    requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
-    requiredMines = ResourceValues(new uint256[](1), new uint32[](1));
-    requiredMines.resources[0] = ElectricityPassiveResourceID;
-    requiredMines.values[0] = 1;
-    requiredPassiveComponent.set(entity, requiredMines);
+    requiredConnectedProductions = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredConnectedProductions.resources[0] = ElectricityPassiveResourceID;
+    requiredConnectedProductions.values[0] = 1;
+    requiredPassiveComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: AlloyCraftedItemID, value: 1 }));
 
@@ -348,13 +350,13 @@ library LibInitDebug {
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 1000 });
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
-    requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
-    requiredMines.resources[0] = LithiumResourceItemID;
-    requiredMines.values[0] = 1;
-    requiredMines.resources[0] = CopperResourceItemID;
-    requiredMines.values[0] = 1;
+    requiredConnectedProductions = ResourceValues(new uint256[](2), new uint32[](2));
+    requiredConnectedProductions.resources[0] = LithiumResourceItemID;
+    requiredConnectedProductions.values[0] = 1;
+    requiredConnectedProductions.resources[0] = CopperResourceItemID;
+    requiredConnectedProductions.values[0] = 1;
 
-    minesComponent.set(entity, requiredMines);
+    requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2 }));
 

@@ -23,7 +23,7 @@
     "PlayerProductionComponent",
     "UnclaimedResourceComponent",
     "ActiveComponent",
-    "MinesComponent",
+    "RequiredConnectedProductionComponent",
     "BuildingProductionComponent",
     "MaxLevelComponent",
     "RequiredTileComponent",
@@ -126,11 +126,11 @@
     },
     {
       "name": "UpdateRequiredProductionSystem",
-      "writeAccess": ["MinesComponent"]
+      "writeAccess": ["RequiredConnectedProductionComponent"]
     },
     {
       "name": "UpdateConnectedRequiredProductionSystem",
-      "writeAccess": ["MinesComponent"]
+      "writeAccess": ["RequiredConnectedProductionComponent"]
     },
     {
       "name": "ComponentDevSystem",

@@ -13,7 +13,7 @@ import { PassiveProductionComponent, ID as PassiveProductionComponentID, Resourc
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
@@ -311,7 +311,7 @@ library LibInitBuildings {
     requiredResources[1] = resourceValues;
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
     // LEVEL 1
     uint256[] memory mineIds;
     uint32[] memory mineCounts;
@@ -320,13 +320,13 @@ library LibInitBuildings {
     mineCounts = new uint32[](1);
     mineIds[0] = IronResourceItemID;
     mineCounts[0] = 1;
-    requiredMines[0] = ResourceValues(mineIds, mineCounts);
+    requiredConnectedProductions[0] = ResourceValues(mineIds, mineCounts);
     // LEVEL 2
     mineIds = new uint256[](1);
     mineCounts = new uint32[](1);
     mineIds[0] = IronResourceItemID;
     mineCounts[0] = 1;
-    requiredMines[1] = ResourceValues(mineIds, mineCounts);
+    requiredConnectedProductions[1] = ResourceValues(mineIds, mineCounts);
 
     /****************** Factory Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
@@ -353,7 +353,10 @@ library LibInitBuildings {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
+      RequiredConnectedProductionComponent(world.getComponent(RequiredConnectedProductionComponentID)).set(
+        buildingLevelEntity,
+        requiredConnectedProductions[i]
+      );
       BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
         production[i]
@@ -392,7 +395,7 @@ library LibInitBuildings {
     requiredPassives[0] = ResourceValues(resourceIds, resourceAmounts);
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
     // LEVEL 1
     resourceIds = new uint256[](2);
     resourceAmounts = new uint32[](2);
@@ -400,7 +403,7 @@ library LibInitBuildings {
     resourceAmounts[0] = 1;
     resourceIds[1] = CopperResourceItemID;
     resourceAmounts[1] = 1;
-    requiredMines[0] = ResourceValues(resourceIds, resourceAmounts);
+    requiredConnectedProductions[0] = ResourceValues(resourceIds, resourceAmounts);
 
     /****************** Factory Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
@@ -420,7 +423,10 @@ library LibInitBuildings {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
+      RequiredConnectedProductionComponent(world.getComponent(RequiredConnectedProductionComponentID)).set(
+        buildingLevelEntity,
+        requiredConnectedProductions[i]
+      );
       RequiredPassiveComponent(world.getComponent(RequiredPassiveComponentID)).set(
         buildingLevelEntity,
         requiredPassives[i]
@@ -451,7 +457,7 @@ library LibInitBuildings {
     requiredResources[0] = resourceValues;
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
     uint256[] memory resourceIds = new uint256[](2);
     uint32[] memory amounts = new uint32[](2);
     // LEVEL 1
@@ -459,7 +465,7 @@ library LibInitBuildings {
     amounts[0] = 1;
     resourceIds[1] = CopperResourceItemID;
     amounts[1] = 1;
-    requiredMines[0] = ResourceValues(resourceIds, amounts);
+    requiredConnectedProductions[0] = ResourceValues(resourceIds, amounts);
 
     /****************** Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
@@ -479,7 +485,10 @@ library LibInitBuildings {
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
+      RequiredConnectedProductionComponent(world.getComponent(RequiredConnectedProductionComponentID)).set(
+        buildingLevelEntity,
+        requiredConnectedProductions[i]
+      );
       BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
         buildingLevelEntity,
         production[i]

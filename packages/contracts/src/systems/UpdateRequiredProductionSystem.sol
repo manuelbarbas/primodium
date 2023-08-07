@@ -6,7 +6,7 @@ import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { MinesComponent, ID as MinesComponentID, ResourceValues } from "../components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "../components/RequiredConnectedProductionComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
@@ -41,7 +41,9 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
       buildingEntity
     );
     uint256 playerEntity = addressToEntity(playerAddress);
-    MinesComponent minesComponent = MinesComponent(getAddressById(world.components(), MinesComponentID));
+    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
+      getAddressById(world.components(), RequiredConnectedProductionComponentID)
+    );
 
     MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
       world.getComponent(MaxResourceStorageComponentID)
@@ -50,19 +52,24 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
     if (actionType == EActionType.Build) {
-      minesComponent.set(buildingEntity, minesComponent.getValue(buildingIdNewLevel));
+      requiredConnectedProductionComponent.set(
+        buildingEntity,
+        requiredConnectedProductionComponent.getValue(buildingIdNewLevel)
+      );
     } else if (actionType == EActionType.Upgrade) {
-      ResourceValues memory currentMines = minesComponent.getValue(buildingEntity);
-      ResourceValues memory requiredMines = minesComponent.getValue(buildingIdNewLevel);
-      ResourceValues memory requiredMinesLastLevel = minesComponent.getValue(
+      ResourceValues memory currentMines = requiredConnectedProductionComponent.getValue(buildingEntity);
+      ResourceValues memory requiredConnectedProductions = requiredConnectedProductionComponent.getValue(
+        buildingIdNewLevel
+      );
+      ResourceValues memory requiredMinesLastLevel = requiredConnectedProductionComponent.getValue(
         LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)
       );
-      for (uint256 i = 0; i < requiredMines.resources.length; i++) {
-        currentMines.values[i] += requiredMines.values[i] - requiredMinesLastLevel.values[i];
+      for (uint256 i = 0; i < requiredConnectedProductions.resources.length; i++) {
+        currentMines.values[i] += requiredConnectedProductions.values[i] - requiredMinesLastLevel.values[i];
       }
-      minesComponent.set(buildingEntity, currentMines);
+      requiredConnectedProductionComponent.set(buildingEntity, currentMines);
     } else {
-      minesComponent.remove(buildingEntity);
+      requiredConnectedProductionComponent.remove(buildingEntity);
     }
   }
 

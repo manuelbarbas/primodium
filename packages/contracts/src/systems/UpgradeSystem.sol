@@ -15,7 +15,7 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { BuildingKey } from "../prototypes.sol";
@@ -93,7 +93,11 @@ contract UpgradeSystem is PrimodiumSystem {
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, newLevel);
 
     //required production update
-    if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
+    if (
+      RequiredConnectedProductionComponent(getAddressById(components, RequiredConnectedProductionComponentID)).has(
+        buildingLevelEntity
+      )
+    ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,

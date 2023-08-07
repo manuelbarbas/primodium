@@ -18,7 +18,7 @@ import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
-import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
 // types
 
@@ -99,7 +99,7 @@ contract DestroySystem is PrimodiumSystem {
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
       uint256 toEntity = pathComponent.getValue(buildingEntity);
-      if (MinesComponent(getC(MinesComponentID)).has(toEntity)) {
+      if (RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(toEntity)) {
         IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
           msg.sender,
           buildingEntity,
@@ -138,7 +138,11 @@ contract DestroySystem is PrimodiumSystem {
     }
 
     //required production update
-    if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
+    if (
+      RequiredConnectedProductionComponent(getAddressById(components, RequiredConnectedProductionComponentID)).has(
+        buildingLevelEntity
+      )
+    ) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,

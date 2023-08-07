@@ -6,7 +6,7 @@ import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { MinesComponent, ID as MinesComponentID, ResourceValues } from "../components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "../components/RequiredConnectedProductionComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 import { MaxStorageComponent, ID as MaxStorageComponentID } from "../components/MaxStorageComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../components/MaxResourceStorageComponent.sol";
@@ -49,12 +49,14 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
     PathComponent pathComponent = PathComponent(getAddressById(world.components(), PathComponentID));
     uint256 toEntity = pathComponent.getValue(buildingEntity);
 
-    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
+    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
+      getC(RequiredConnectedProductionComponentID)
+    );
 
     BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
       getC(BuildingProductionComponentID)
     );
-    ResourceValues memory requiredProduction = minesComponent.getValue(toEntity);
+    ResourceValues memory requiredProduction = requiredConnectedProductionComponent.getValue(toEntity);
     uint256 productionResourceID = buildingProductionComponent.getValue(buildingIdNewLevel).resource;
     for (uint256 i = 0; i < requiredProduction.resources.length; i++) {
       if (requiredProduction.resources[i] == productionResourceID) {
@@ -66,7 +68,7 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
         break;
       }
     }
-    minesComponent.set(toEntity, requiredProduction);
+    requiredConnectedProductionComponent.set(toEntity, requiredProduction);
   }
 
   function executeTyped(

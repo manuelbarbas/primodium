@@ -20,7 +20,7 @@ import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceVal
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
 import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
-import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { ID as DestroySystemID } from "./DestroySystem.sol";
@@ -97,7 +97,10 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
     );
     uint32 buildingLevel = LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity);
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    return MinesComponent(getAddressById(components, MinesComponentID)).has(buildingTypeLevelEntity);
+    return
+      RequiredConnectedProductionComponent(getAddressById(components, RequiredConnectedProductionComponentID)).has(
+        buildingTypeLevelEntity
+      );
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -142,7 +145,9 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
     // first check if any connected resource production buildings are not at the required level or require resource production buildings themeselves and are not active
-    if (MinesComponent(getC(MinesComponentID)).has(buildingTypeLevelEntity)) {
+    if (
+      RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(buildingTypeLevelEntity)
+    ) {
       uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(buildingEntity);
       for (uint256 i = 0; i < connectedMineEntities.length; i++) {
         if (
@@ -154,9 +159,9 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
           return abi.encode(false);
         }
       }
-      ResourceValues memory minesData = MinesComponent(getAddressById(components, MinesComponentID)).getValue(
-        buildingEntity
-      );
+      ResourceValues memory minesData = RequiredConnectedProductionComponent(
+        getAddressById(components, RequiredConnectedProductionComponentID)
+      ).getValue(buildingEntity);
       //then check if there are enough connected resource production buildings
       for (uint256 i = 0; i < minesData.values.length; i++) {
         if (minesData.values[i] > 0) {

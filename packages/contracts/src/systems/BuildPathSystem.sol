@@ -6,7 +6,7 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { MinesComponent, ID as MinesComponentID, ResourceValues } from "components/MinesComponent.sol";
+import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "components/RequiredConnectedProductionComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
@@ -39,7 +39,9 @@ contract BuildPathSystem is PrimodiumSystem {
   function canBuildPath(uint256 fromEntity, uint256 toEntity) internal returns (bool) {
     ActiveComponent activeComponent = ActiveComponent(getC(ActiveComponentID));
     LevelComponent levelComponent = LevelComponent(getC(LevelComponentID));
-    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
+    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
+      getC(RequiredConnectedProductionComponentID)
+    );
     BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
 
     uint256 fromEntityBuildingTypeLevelEntity = LibEncode.hashKeyEntity(
@@ -60,13 +62,13 @@ contract BuildPathSystem is PrimodiumSystem {
       levelComponent.getValue(toEntity)
     );
     //can only build path from production buildings to buildings that require production buildings
-    if (!minesComponent.has(toEntityBuildingTypeLevelEntity)) return false;
+    if (!requiredConnectedProductionComponent.has(toEntityBuildingTypeLevelEntity)) return false;
 
     //can not build path to a building which requires production buildinsg and is active
     if (activeComponent.has(toEntity)) return false;
 
     //check to see if there is
-    ResourceValues memory requiredProduction = minesComponent.getValue(toEntity);
+    ResourceValues memory requiredProduction = requiredConnectedProductionComponent.getValue(toEntity);
     for (uint256 i = 0; i < requiredProduction.values.length; i++) {
       if (
         requiredProduction.resources[i] ==
@@ -116,8 +118,10 @@ contract BuildPathSystem is PrimodiumSystem {
     );
     PathComponent(getC(PathComponentID)).set(fromEntity, toEntity);
 
-    MinesComponent minesComponent = MinesComponent(getC(MinesComponentID));
-    if (minesComponent.has(toEntity)) {
+    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
+      getC(RequiredConnectedProductionComponentID)
+    );
+    if (requiredConnectedProductionComponent.has(toEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
         msg.sender,
         fromEntity,
