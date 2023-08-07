@@ -69,6 +69,10 @@
       ]
     },
     {
+      "name": "PlaceBuildingTilesSystem",
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
+    },
+    {
       "name": "BuildPathSystem",
       "writeAccess": ["PathComponent"]
     },
