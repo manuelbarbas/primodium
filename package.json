@@ -14,6 +14,7 @@
     "dev:client": "yarn workspace client run dev",
     "dev:node": "yarn workspace contracts run devnode",
     "dev:contracts": "yarn workspace contracts run dev",
+    "deploy:prod": "yarn workspace contracts run deploy:prod",
     "test": "yarn workspace contracts run test"
   },
   "devDependencies": {
