@@ -22,13 +22,23 @@ export const buildBuilding = async (
 
   try {
     setTransactionLoading(true);
-    await execute(
+    const txReceipt = await execute(
       systems["system.Build"].executeTyped(BigNumber.from(blockType), coord, {
         gasLimit: 5_000_000,
       }),
       providers,
       setNotification
     );
+
+    console.log("");
+    console.log("transactionValid:", txReceipt !== undefined);
+    console.log("transactionHash:", txReceipt?.transactionHash || "");
+    console.log("transactionFrom:", txReceipt?.from || "");
+    console.log("transactionTo:", txReceipt?.to || "");
+    console.log("transactionStatus:", txReceipt?.status || 0);
+    console.log("transactionGasUsed:", txReceipt?.gasUsed?.toString() || 0);
+    console.log("");
+
     ampli.systemBuild({
       buildingType: BlockIdToKey[blockType],
       coord: [coord.x, coord.y, 0],
