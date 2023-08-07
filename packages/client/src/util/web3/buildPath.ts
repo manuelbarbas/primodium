@@ -14,7 +14,7 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
   console.log("building path", start, end);
   await execute(
     systems["system.BuildPath"].executeTyped(start, end, {
-      gasLimit: 1_500_000,
+      gasLimit: 2_500_000,
     }),
     providers,
     setNotification
