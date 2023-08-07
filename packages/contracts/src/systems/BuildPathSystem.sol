@@ -35,15 +35,11 @@ contract BuildPathSystem is PrimodiumSystem {
       ownedByComponent.getValue(toEntity) == addressToEntity(msg.sender);
   }
 
-  function canBuildPath(uint256 fromEntity, uint256 toEntity) internal returns (bool) {
-    ActiveComponent activeComponent = ActiveComponent(getC(ActiveComponentID));
+  function canBuildPath(uint256 fromEntity, uint256 toEntity) internal view returns (bool) {
     LevelComponent levelComponent = LevelComponent(getC(LevelComponentID));
-    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
-      getC(RequiredConnectedProductionComponentID)
-    );
     BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
 
-    uint256 fromEntityBuildingTypeLevelEntity = LibEncode.hashKeyEntity(
+    uint256 fromTypeLevelEntity = LibEncode.hashKeyEntity(
       buildingTypeComponent.getValue(fromEntity),
       levelComponent.getValue(fromEntity)
     );
@@ -52,31 +48,33 @@ contract BuildPathSystem is PrimodiumSystem {
       getC(BuildingProductionComponentID)
     );
     //can only build path from production buildings
-    if (!buildingProductionComponent.has(fromEntityBuildingTypeLevelEntity)) return false;
+    if (!buildingProductionComponent.has(fromTypeLevelEntity)) return false;
     //can always build path from production buildings to MainBase
     if (buildingTypeComponent.getValue(toEntity) == MainBaseID) return true;
 
-    uint256 toEntityBuildingTypeLevelEntity = LibEncode.hashKeyEntity(
+    uint256 toTypeLevelEntity = LibEncode.hashKeyEntity(
       buildingTypeComponent.getValue(toEntity),
       levelComponent.getValue(toEntity)
     );
     //can only build path from production buildings to buildings that require production buildings
-    if (!requiredConnectedProductionComponent.has(toEntityBuildingTypeLevelEntity)) return false;
+    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
+      getC(RequiredConnectedProductionComponentID)
+    );
+    if (!requiredConnectedProductionComponent.has(toTypeLevelEntity)) return false;
 
-    //can not build path to a building which requires production buildinsg and is active
+    //can not build path to an active production building
+
+    ActiveComponent activeComponent = ActiveComponent(getC(ActiveComponentID));
     if (activeComponent.has(toEntity)) return false;
 
-    //check to see if there is
+    //check to see if required production is met
     ResourceValues memory requiredProduction = requiredConnectedProductionComponent.getValue(toEntity);
     for (uint256 i = 0; i < requiredProduction.values.length; i++) {
-      if (
-        requiredProduction.resources[i] ==
-        buildingProductionComponent.getValue(fromEntityBuildingTypeLevelEntity).resource
-      ) {
-        if (requiredProduction.values[i] <= 0) return false;
-        return true;
+      if (requiredProduction.resources[i] == buildingProductionComponent.getValue(fromTypeLevelEntity).resource) {
+        return requiredProduction.values[i] > 0;
       }
     }
+    return false;
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -102,19 +100,15 @@ contract BuildPathSystem is PrimodiumSystem {
 
     require(canBuildPath(fromEntity, toEntity), "[BuildPathSystem] Cannot build path");
 
-    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
-      getAddressById(components, BuildingTypeComponentID)
+    uint256 fromBuildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
+      fromEntity
     );
-    uint256 fromBuildingType = buildingTypeComponent.getValue(fromEntity);
-    uint256 toBuildingType = buildingTypeComponent.getValue(toEntity);
+
     uint256 fromBuildingTypeLevelEntity = LibEncode.hashKeyEntity(
       fromBuildingType,
       LevelComponent(getAddressById(components, LevelComponentID)).getValue(fromEntity)
     );
-    uint256 toBuildingTypeLevelEntity = LibEncode.hashKeyEntity(
-      toBuildingType,
-      LevelComponent(getAddressById(components, LevelComponentID)).getValue(toEntity)
-    );
+
     PathComponent(getC(PathComponentID)).set(fromEntity, toEntity);
 
     RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
