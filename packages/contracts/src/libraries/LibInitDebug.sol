@@ -258,6 +258,10 @@ library LibInitDebug {
     PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
       world.getComponent(PassiveProductionComponentID)
     );
+
+    RequiredPassiveComponent requiredPassiveComponent = RequiredPassiveComponent(
+      world.getComponent(RequiredPassiveComponentID)
+    );
     //DebugIronPlateFactoryNoMineReqID
     uint256 entity = DebugIronPlateFactoryNoMineReqID;
     ignoreBuildLimitComponent.set(entity);
@@ -277,6 +281,9 @@ library LibInitDebug {
     resourceValues = new ResourceValue[](1);
     resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
+
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: ElectricityPassiveResourceID, value: 1 });
 
     ResourceValues memory requiredMines = ResourceValues(new uint256[](1), new uint32[](1));
     requiredMines.resources[0] = IronResourceItemID;
@@ -316,7 +323,7 @@ library LibInitDebug {
     //DebugAlloyFactoryID level 1
     entity = LibEncode.hashKeyEntity(DebugAlloyFactoryID, 1);
     resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 1000 });
-    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
     requiredMines.resources[0] = IronResourceItemID;
@@ -326,6 +333,11 @@ library LibInitDebug {
 
     minesComponent.set(entity, requiredMines);
 
+    requiredMines = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredMines.resources[0] = ElectricityPassiveResourceID;
+    requiredMines.values[0] = 1;
+    requiredPassiveComponent.set(entity, requiredMines);
+
     buildingProductionComponent.set(entity, ResourceValue({ resource: AlloyCraftedItemID, value: 1 }));
 
     //LithiumCopperOxideFactoryID
@@ -334,7 +346,7 @@ library LibInitDebug {
     //LithiumCopperOxideFactoryID level 1
     entity = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1);
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 1000 });
-    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
+    LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     requiredMines = ResourceValues(new uint256[](2), new uint32[](2));
     requiredMines.resources[0] = LithiumResourceItemID;
