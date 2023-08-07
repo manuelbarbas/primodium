@@ -42,6 +42,8 @@ contract BuildPathSystem is PrimodiumSystem {
   function checkOwnership(uint256 fromEntity, uint256 toEntity) internal view returns (bool) {
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     return
+      ownedByComponent.has(fromEntity) &&
+      ownedByComponent.has(toEntity) &&
       ownedByComponent.getValue(fromEntity) == addressToEntity(msg.sender) &&
       ownedByComponent.getValue(toEntity) == addressToEntity(msg.sender);
   }
