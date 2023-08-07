@@ -43,15 +43,15 @@ contract DestroyPathSystem is PrimodiumSystem {
     uint256 fromEntity = getBuildingFromCoord(coordStart);
     require(buildingTypeComponent.has(fromEntity), "[DestroyPathSystem] Cannot destroy path from an empty coordinate");
 
+    // Check that a path doesn't already start there (each tile can only be the start of one path)
+    require(ownedByComponent.has(fromEntity), "[DestroyPathSystem] Path does not exist at the selected tile");
+
     // Check that the coordinates are both owned by the msg.sender
     uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(fromEntity);
     require(
       ownedEntityAtStartCoord == addressToEntity(msg.sender),
       "[DestroyPathSystem] Cannot destroy path from a tile you do not own"
     );
-
-    // Check that a path doesn't already start there (each tile can only be the start of one path)
-    require(ownedByComponent.has(fromEntity), "[DestroyPathSystem] Path does not exist at the selected tile");
 
     uint256 toEntity = pathComponent.getValue(fromEntity);
 

@@ -29,7 +29,6 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
     );
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
-    uint256 playerEntity = addressToEntity(playerAddress);
 
     uint256 buildingType = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(buildingEntity);
     Coord memory coord = LibEncode.decodeCoordEntity(buildingEntity);
@@ -40,7 +39,6 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
     ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
-    //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
   }
 
   function placeBuildingTile(
