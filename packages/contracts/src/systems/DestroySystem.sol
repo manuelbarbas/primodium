@@ -95,11 +95,22 @@ contract DestroySystem is PrimodiumSystem {
       clearBuildingTile(ownedByComponent, children[i]);
     }
     childrenComponent.remove(buildingEntity);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity));
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
       uint256 toEntity = pathComponent.getValue(buildingEntity);
       if (MinesComponent(getC(MinesComponentID)).has(toEntity)) {
         IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
+          msg.sender,
+          buildingEntity,
+          EActionType.Destroy
+        );
+      }
+      //Resource Production Update
+      if (
+        BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
+      ) {
+        IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
           msg.sender,
           buildingEntity,
           EActionType.Destroy
@@ -125,21 +136,10 @@ contract DestroySystem is PrimodiumSystem {
       BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) - 1);
     }
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity));
+
     //required production update
     if (MinesComponent(getAddressById(components, MinesComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Destroy
-      );
-    }
-
-    //Resource Production Update
-    if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
-    ) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Destroy
