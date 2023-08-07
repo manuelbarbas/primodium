@@ -318,13 +318,13 @@ library LibInitBuildings {
 
     mineIds = new uint256[](1);
     mineCounts = new uint32[](1);
-    mineIds[0] = IronMineID;
+    mineIds[0] = IronResourceItemID;
     mineCounts[0] = 1;
     requiredMines[0] = ResourceValues(mineIds, mineCounts);
     // LEVEL 2
     mineIds = new uint256[](1);
     mineCounts = new uint32[](1);
-    mineIds[0] = IronMineID;
+    mineIds[0] = IronResourceItemID;
     mineCounts[0] = 1;
     requiredMines[1] = ResourceValues(mineIds, mineCounts);
 
@@ -396,9 +396,9 @@ library LibInitBuildings {
     // LEVEL 1
     resourceIds = new uint256[](2);
     resourceAmounts = new uint32[](2);
-    resourceIds[0] = IronMineID;
+    resourceIds[0] = IronResourceItemID;
     resourceAmounts[0] = 1;
-    resourceIds[1] = CopperMineID;
+    resourceIds[1] = CopperResourceItemID;
     resourceAmounts[1] = 1;
     requiredMines[0] = ResourceValues(resourceIds, resourceAmounts);
 
@@ -455,9 +455,9 @@ library LibInitBuildings {
     uint256[] memory resourceIds = new uint256[](2);
     uint32[] memory amounts = new uint32[](2);
     // LEVEL 1
-    resourceIds[0] = LithiumMineID;
+    resourceIds[0] = LithiumResourceItemID;
     amounts[0] = 1;
-    resourceIds[1] = CopperMineID;
+    resourceIds[1] = CopperResourceItemID;
     amounts[1] = 1;
     requiredMines[0] = ResourceValues(resourceIds, amounts);
 
