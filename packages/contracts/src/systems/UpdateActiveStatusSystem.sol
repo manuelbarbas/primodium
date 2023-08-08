@@ -101,7 +101,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       updateActiveStatus(playerAddress, buildingEntity, false);
       return abi.encode(false);
     }
-
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
     uint256 buildingLevel = levelComponent.getValue(buildingEntity);
     uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
       buildingEntity
@@ -112,7 +112,6 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
     if (
       RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(buildingTypeLevelEntity)
     ) {
-      LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
       ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
       uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(buildingEntity);
       for (uint256 i = 0; i < connectedMineEntities.length; i++) {
