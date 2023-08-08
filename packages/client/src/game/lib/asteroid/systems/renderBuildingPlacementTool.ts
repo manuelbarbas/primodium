@@ -26,8 +26,6 @@ import {
   Animation,
   Outline,
 } from "../../common/object-components/sprite";
-import { ObjectText } from "../../common/object-components/text";
-import { getBlockTypeName } from "src/util/common";
 
 const {
   EntityIDtoAnimationKey,
@@ -68,16 +66,16 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
-    scene.objectPool.removeGroup(objIndex);
+    scene.objectPool.remove(objIndex);
 
-    const buildingToolGroup = scene.objectPool.getGroup(objIndex);
+    const buildingTool = scene.objectPool.get(objIndex, "Sprite");
 
     const sprite = EntityIDtoSpriteKey[selectedBuilding][0];
     const animation = EntityIDtoAnimationKey[selectedBuilding]
       ? EntityIDtoAnimationKey[selectedBuilding][0]
       : undefined;
 
-    buildingToolGroup.add("Sprite").setComponents([
+    buildingTool.setComponents([
       ObjectPosition(
         {
           x: pixelCoord.x,
@@ -98,17 +96,6 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
         alpha: 0.9,
       }),
     ]);
-
-    buildingToolGroup.add("Text").setComponents([
-      ObjectPosition(
-        {
-          x: pixelCoord.x + tileWidth / 2,
-          y: -pixelCoord.y + tileHeight + 3,
-        },
-        DepthLayers.Marker
-      ),
-      ObjectText(getBlockTypeName(selectedBuilding)),
-    ]);
   };
 
   defineEnterSystem(gameWorld, query, (update) => {
@@ -124,7 +111,7 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
   defineExitSystem(gameWorld, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
 
-    scene.objectPool.removeGroup(objIndex);
+    scene.objectPool.remove(objIndex);
 
     console.info(
       "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
