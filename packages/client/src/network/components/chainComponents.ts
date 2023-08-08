@@ -113,9 +113,9 @@ export const P_MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
-export const PlayerProduction = newNumberComponent(world, {
-  id: "PlayerProduction",
-  metadata: { contractId: `${commonIdPrefix}PlayerProduction` },
+export const Production = newNumberComponent(world, {
+  id: "Production",
+  metadata: { contractId: `${commonIdPrefix}Production` },
   overridable: true,
 });
 
@@ -192,7 +192,7 @@ export default {
   P_MaxLevel,
   Level,
   P_MaxStorage,
-  PlayerProduction,
+  Production,
   P_MaxBuildings,
   BuildingCount,
   Children,

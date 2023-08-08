@@ -5,7 +5,7 @@ import {
   Item,
   LastClaimedAt,
   P_MaxStorage,
-  PlayerProduction,
+  Production,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { ResourceImage } from "src/util/constants";
@@ -25,11 +25,7 @@ export const ResourceLabel = ({
 
   const maxStorage = useResourceCount(P_MaxStorage, resourceId, entityIndex);
 
-  const production = useResourceCount(
-    PlayerProduction,
-    resourceId,
-    entityIndex
-  );
+  const production = useResourceCount(Production, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,
