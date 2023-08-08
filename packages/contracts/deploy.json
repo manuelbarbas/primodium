@@ -4,34 +4,32 @@
     "BuildingTypeComponent",
     "OwnedByComponent",
     "PathComponent",
-
     "LastClaimedAtComponent",
-
     "ItemComponent",
     "HasResearchedComponent",
     "MainBaseComponent",
     "LevelComponent",
-    "P_RequiredResearchComponent",
-    "P_RequiredResourcesComponent",
-    "P_MaxBuildingsComponent",
     "BuildingCountComponent",
-    "P_IgnoreBuildLimitComponent",
     "ChildrenComponent",
-    "P_BlueprintComponent",
-    "P_MaxStorageComponent",
-    "P_MaxResourceStorageComponent",
     "ProductionComponent",
     "ActiveComponent",
+    "IsDebugComponent",
+    "MaxUtilityComponent",
+    "OccupiedUtilityResourceComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
     "P_RequiredTileComponent",
     "P_RequiredUtilityComponent",
     "P_UtilityProductionComponent",
-    "IsDebugComponent",
+    "P_BlueprintComponent",
+    "P_MaxStorageComponent",
+    "P_MaxResourceStorageComponent",
     "P_IsTechComponent",
-    "MaxUtilityComponent",
-    "OccupiedUtilityResourceComponent"
+    "P_RequiredResearchComponent",
+    "P_RequiredResourcesComponent",
+    "P_MaxBuildingsComponent",
+    "P_IgnoreBuildLimitComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -68,10 +66,6 @@
       ]
     },
     {
-      "name": "S_PlaceBuildingTilesSystem",
-      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
-    },
-    {
       "name": "BuildPathSystem",
       "writeAccess": ["PathComponent"]
     },
@@ -86,6 +80,14 @@
     {
       "name": "UpgradeSystem",
       "writeAccess": ["LevelComponent"]
+    },
+    {
+      "name": "ComponentDevSystem",
+      "writeAccess": ["*"]
+    },
+    {
+      "name": "S_PlaceBuildingTilesSystem",
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
     },
     {
       "name": "S_UpdatePlayerStorageSystem",
@@ -130,10 +132,6 @@
     {
       "name": "S_CheckRequiredTileSystem",
       "writeAccess": []
-    },
-    {
-      "name": "ComponentDevSystem",
-      "writeAccess": ["*"]
     }
   ]
 }
