@@ -52,7 +52,8 @@
         "OwnedByComponent",
         "LevelComponent",
         "MainBaseComponent",
-        "ChildrenComponent"
+        "ChildrenComponent",
+        "MainBaseComponent"
       ]
     },
     {
@@ -66,10 +67,6 @@
         "BuildingCountComponent",
         "PathComponent"
       ]
-    },
-    {
-      "name": "InitializeMainBaseSystem",
-      "writeAccess": ["MainBaseComponent"]
     },
     {
       "name": "PlaceBuildingTilesSystem",
