@@ -34,7 +34,7 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
   setupBasicCameraMovement(scene);
   setupKeybinds(scene, player);
 
-  runSystems(scene);
+  runSystems(scene, player);
 
   world.registerDisposer(() => {
     game.dispose();
