@@ -24,11 +24,15 @@ Deploy the contracts on the local environment using the commands in the previous
 mud test
 ```
 
-For production deployment, Primodium is currently live on the Caldera testnet. 
-To deploy to prod, follow these steps:
-1. Add deploy-cli globally to your machine: `yarn global add dotenv-cli`
-2. Create a .env file in the contracts package and add the private key as the `DEPLOYER_PRIVATE_KEY` variable
-3. Generate deploy-live.json and deploy the contracts from the root or contracts package with `yarn deploy:prod`
+For production deployment, Primodium is currently live on the Caldera testnet. To deploy, follow these steps:
+
+1. Switch to the contracts directory with `cd packages/contracts`
+2. Generate `deploy-live.json` with `yarn gen:json`
+3. Deploy with forge:
+
+```
+mud deploy-contracts --rpc https://primodium-bedrock.calderachain.xyz/replica-http --deployerPrivateKey <testnet key> --config ./deploy-live.json
+```
 
 The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world address>` with the rpc settings to the Caldera testnet.
 

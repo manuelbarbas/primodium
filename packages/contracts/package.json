@@ -12,7 +12,6 @@
     "dev": "mud deploy-contracts --dev --watch --openUrl http://localhost:3000?dev=true",
     "deploy": "mud deploy-contracts",
     "gen:json": "node prod-json-gen.mjs",
-    "deploy:prod": "dotenv -- yarn gen:json && mud deploy-contracts --rpc https://primodium-bedrock.calderachain.xyz/replica-http --deployerPrivateKey $DEPLOYER_PRIVATE_KEY --config ./deploy-live.json",
     "lint": "yarn prettier && yarn solhint",
     "----- INTERNAL -----": "---------------------------",
     "prettier": "prettier --write 'src/**/*.sol'",
