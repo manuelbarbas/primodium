@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import ClaimButton from "src/components/action/ClaimButton";
 import { GameButton } from "src/components/shared/GameButton";
-import { useMainBaseCoord } from "src/hooks";
+import { useAccount, useMainBaseCoord } from "src/hooks";
 import { MainBase, Level } from "src/network/components/chainComponents";
 import { useGameStore } from "src/store/GameStore";
 import { PanelButton } from "./PanelButton";
@@ -16,12 +16,13 @@ import { BeltMap } from "@game/constants";
 
 export const UserPanel = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
+  const { address } = useAccount();
   const [menuIndex, setMenuIndex] = useState<number | null>(2);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
 
   const mainBaseCoord = useMainBaseCoord();
-  const mainBase = MainBase.use(undefined, { value: "-1" as EntityID }).value;
+  const mainBase = MainBase.use(address, { value: "-1" as EntityID }).value;
 
   const level = Level.use(mainBase);
 
