@@ -24,8 +24,8 @@ import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibStorage } from "../../libraries/LibStorage.sol";
 import { Coord } from "../../types.sol";
 
-contract Storage is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract Storage is PrimodiumTest {
+  constructor() PrimodiumTest() {}
 
   function setUp() public override {
     super.setUp();
@@ -41,10 +41,10 @@ contract Storage is MudTest {
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getOrigin(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -91,10 +91,10 @@ contract Storage is MudTest {
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getOrigin(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -183,10 +183,10 @@ contract Storage is MudTest {
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getOrigin(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -214,7 +214,7 @@ contract Storage is MudTest {
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
     console.log("building storage ");
-    Coord memory storageBuildingCoord = Coord({ x: 1, y: 1 });
+    Coord memory storageBuildingCoord = getCoord1(alice);
     buildSystem.executeTyped(DebugStorageBuildingID, storageBuildingCoord);
     uint256 newIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("after building storage building alice has newIronCapacity of %s", newIronCapacity);

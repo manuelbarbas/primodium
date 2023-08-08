@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { Coord } from "std-contracts/components/CoordComponent.sol";
+import { Coord } from "../types.sol";
 import { split } from "solecs/utils.sol";
 
 library LibEncode {
@@ -19,6 +19,6 @@ library LibEncode {
     sizes[0] = 4;
     sizes[1] = 4;
     bytes[] memory decoded = split(data, sizes);
-    return Coord(int32(uint32(bytes4(decoded[0]))), int32(uint32(bytes4(decoded[1]))));
+    return Coord(int32(uint32(bytes4(decoded[0]))), int32(uint32(bytes4(decoded[1]))), 0);
   }
 }

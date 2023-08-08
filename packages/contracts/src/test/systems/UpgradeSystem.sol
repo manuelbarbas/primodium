@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
-import { addressToEntity } from "solecs/utils.sol";
+import "../PrimodiumTest.t.sol";
+
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 
@@ -24,8 +22,8 @@ import { LibMath } from "../../libraries/LibMath.sol";
 import { BuildingKey } from "../../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../../types.sol";
 
-contract UpgradeSystemTest is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract UpgradeSystemTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
 
   function setUp() public override {
     super.setUp();
@@ -36,7 +34,7 @@ contract UpgradeSystemTest is MudTest {
 
   function testFailUpgradeNonUpgradableBuilding() public {
     vm.startPrank(alice);
-    Coord memory coord = Coord({ x: 0, y: 0 });
+    Coord memory coord = getOrigin(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
@@ -47,7 +45,7 @@ contract UpgradeSystemTest is MudTest {
 
   function testUpgradeToMaxLevel() public {
     vm.startPrank(alice);
-    Coord memory coord = Coord({ x: 0, y: 0 });
+    Coord memory coord = getOrigin(alice);
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
@@ -62,7 +60,7 @@ contract UpgradeSystemTest is MudTest {
 
   function testFailUpgradeMaxLevelReached() public {
     vm.startPrank(alice);
-    Coord memory coord = Coord({ x: 0, y: 0 });
+    Coord memory coord = getOrigin(alice);
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
@@ -87,13 +85,13 @@ contract UpgradeSystemTest is MudTest {
       component(OccupiedPassiveResourceComponentID)
     );
 
-    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugPassiveProductionBuilding, getOrigin(alice));
     assertEq(
       maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
-    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
+    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, getCoord1(alice));
     assertEq(
       occupiedPassiveResourceComponent.getValue(
         LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
@@ -101,7 +99,7 @@ contract UpgradeSystemTest is MudTest {
       2,
       "used up electricity should be 2"
     );
-    upgradeSystem.executeTyped(Coord({ x: 0, y: 0 }));
+    upgradeSystem.executeTyped(getOrigin(alice));
     assertEq(
       maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
       20,
@@ -114,7 +112,7 @@ contract UpgradeSystemTest is MudTest {
   function testUpgrade() public {
     vm.startPrank(alice);
 
-    Coord memory coord = Coord({ x: 0, y: 0 });
+    Coord memory coord = getOrigin(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
@@ -160,7 +158,7 @@ contract UpgradeSystemTest is MudTest {
   function testFailUpgradeResourceRequirementsNotMet() public {
     vm.startPrank(alice);
 
-    Coord memory coord = Coord({ x: 0, y: 0 });
+    Coord memory coord = getOrigin(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));

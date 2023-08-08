@@ -35,7 +35,7 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
     int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
-      Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
+      Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1], 0);
       tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
     }
     ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
@@ -47,7 +47,7 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
     Coord memory relativeCoord
   ) private returns (uint256 tileEntity) {
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
+    Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y, 0);
     tileEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
     require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
     ownedByComponent.set(tileEntity, buildingEntity);
