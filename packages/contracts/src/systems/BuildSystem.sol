@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { console } from "forge-std/console.sol";
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
@@ -56,12 +55,16 @@ contract BuildSystem is PrimodiumSystem {
     uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
     uint256 playerEntity = addressToEntity(msg.sender);
 
+    PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
-    require(
-      !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
-      "[BuildSystem] Building already exists here"
-    );
+    bool spawned = positionComponent.has(playerEntity);
+    require(spawned, "[BuildSystem] Player has not spawned");
+    require(!positionComponent.has(buildingEntity), "[BuildSystem] Building already exists");
 
+    require(
+      coord.parent == positionComponent.getValue(playerEntity).parent,
+      "[BuildSystem] Building must be built on your main asteroid"
+    );
     require(
       LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"
@@ -93,7 +96,6 @@ contract BuildSystem is PrimodiumSystem {
 
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
-    console.log("setting position for ", buildingEntity);
     PositionComponent(getC(PositionComponentID)).set(buildingEntity, coord);
     bool canBuildOn = abi.decode(
       IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
