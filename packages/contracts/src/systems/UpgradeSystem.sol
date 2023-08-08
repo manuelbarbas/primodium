@@ -6,21 +6,21 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
-import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
-import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./UpdateUtilityProductionSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./UpdateOccupiedUtilitySystem.sol";
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
+import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
@@ -43,7 +43,7 @@ contract UpgradeSystem is PrimodiumSystem {
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
-    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
+    P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(getAddressById(components, P_MaxLevelComponentID));
 
     // Check there isn't another tile there
     uint256 buildingEntity = getBuildingFromCoord(coord);
@@ -68,7 +68,7 @@ contract UpgradeSystem is PrimodiumSystem {
     );
 
     //spend required resources
-    if (RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingIdLevel)) {
+    if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(buildingIdLevel)) {
       require(
         LibResource.hasRequiredResources(world, buildingIdLevel, playerEntity),
         "[UpgradeSystem] You do not have the required resources"
@@ -86,7 +86,7 @@ contract UpgradeSystem is PrimodiumSystem {
 
     //required production update
     if (
-      RequiredConnectedProductionComponent(getAddressById(components, RequiredConnectedProductionComponentID)).has(
+      P_ProductionDependenciesComponent(getAddressById(components, P_ProductionDependenciesComponentID)).has(
         buildingLevelEntity
       )
     ) {
@@ -98,9 +98,7 @@ contract UpgradeSystem is PrimodiumSystem {
     }
 
     //Resource Production Update
-    if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(buildingLevelEntity)
-    ) {
+    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
@@ -109,24 +107,24 @@ contract UpgradeSystem is PrimodiumSystem {
     }
 
     //Storage Update
-    if (MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
+    if (P_MaxResourceStorageComponent(getC(P_MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Upgrade
       );
     }
-    //Passive Production Update
-    if (PassiveProductionComponent(getC(PassiveProductionComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
+    //Utility Production Update
+    if (P_UtilityProductionComponent(getC(P_UtilityProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateUtilityProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Upgrade
       );
     }
-    //Occupied Passive Update
-    if (RequiredPassiveComponent(getC(RequiredPassiveComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedPassiveSystemID)).executeTyped(
+    //Occupied Utility Update
+    if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Upgrade

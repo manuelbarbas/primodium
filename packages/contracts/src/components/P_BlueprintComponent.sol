@@ -2,9 +2,9 @@
 pragma solidity >=0.8.0;
 import "solecs/Component.sol";
 
-uint256 constant ID = uint256(keccak256("component.Blueprint"));
+uint256 constant ID = uint256(keccak256("component.P_Blueprint"));
 
-contract BlueprintComponent is Component {
+contract P_BlueprintComponent is Component {
   constructor(address world) Component(world, ID) {}
 
   function getSchema() public pure override returns (string[] memory keys, LibTypes.SchemaValue[] memory values) {

@@ -2,8 +2,8 @@
 pragma solidity >=0.8.0;
 import "std-contracts/components/Uint32Component.sol";
 
-uint256 constant ID = uint256(keccak256("component.PlayerProduction"));
+uint256 constant ID = uint256(keccak256("component.P_MaxStorage"));
 
-contract PlayerProductionComponent is Uint32Component {
+contract P_MaxStorageComponent is Uint32Component {
   constructor(address world) Uint32Component(world, ID) {}
 }

@@ -9,7 +9,7 @@ import { ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
 // components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
@@ -46,10 +46,8 @@ contract UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
     } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) == block.number) {
       return abi.encode(resourceID);
     }
-    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
-      world.getComponent(PlayerProductionComponentID)
-    );
-    uint32 playerResourceProduction = LibMath.getSafe(playerProductionComponent, playerResourceProductionEntity);
+    ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
+    uint32 playerResourceProduction = LibMath.getSafe(productionComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return abi.encode(resourceID);

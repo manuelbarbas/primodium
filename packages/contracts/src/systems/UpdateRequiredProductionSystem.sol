@@ -7,7 +7,7 @@ import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "../components/RequiredConnectedProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID, ResourceValues } from "../components/P_ProductionDependenciesComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -35,8 +35,8 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
     uint32 buildingLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(
       buildingEntity
     );
-    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
-      getAddressById(world.components(), RequiredConnectedProductionComponentID)
+    P_ProductionDependenciesComponent requiredConnectedProductionComponent = P_ProductionDependenciesComponent(
+      getAddressById(world.components(), P_ProductionDependenciesComponentID)
     );
 
     uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);

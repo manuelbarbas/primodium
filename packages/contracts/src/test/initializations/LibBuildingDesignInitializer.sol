@@ -3,8 +3,8 @@ pragma solidity >=0.8.0;
 
 import { Deploy } from "../Deploy.sol";
 import { MudTest } from "std-contracts/test/MudTest.t.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "../../components/RequiredResearchComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
+import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "../../components/P_RequiredResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 
 import { Coord } from "../../types.sol";
@@ -26,11 +26,11 @@ contract LibBuildingDesignInitializerTest is MudTest {
 
   function testBuildingsHaveCorrectRequirements() public {
     vm.startPrank(alice);
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      component(RequiredResourcesComponentID)
+    P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
+      component(P_RequiredResourcesComponentID)
     );
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      component(RequiredResearchComponentID)
+    P_RequiredResearchComponent requiredResearchComponent = P_RequiredResearchComponent(
+      component(P_RequiredResearchComponentID)
     );
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 

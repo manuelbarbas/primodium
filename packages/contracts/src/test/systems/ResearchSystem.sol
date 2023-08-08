@@ -12,10 +12,10 @@ import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSyste
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "../../components/HasResearchedComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { IronResourceItemID, CopperResourceItemID, LithiumResourceItemID, IronPlateCraftedItemID } from "../../prototypes.sol";
 
@@ -55,8 +55,8 @@ contract ResearchSystemTest is MudTest {
 
     HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
-    ResourceValues memory requiredResources = RequiredResourcesComponent(
-      world.getComponent(RequiredResourcesComponentID)
+    ResourceValues memory requiredResources = P_RequiredResourcesComponent(
+      world.getComponent(P_RequiredResourcesComponentID)
     ).getValue(DebugSimpleTechnologyResourceReqsID);
 
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
@@ -157,7 +157,11 @@ contract ResearchSystemTest is MudTest {
     );
     buildSystem.executeTyped(MainBaseID, Coord({ x: 0, y: 0 }));
 
-    componentDevSystem.executeTyped(RequiredResourcesComponentID, LibEncode.hashKeyEntity(MainBaseID, 2), abi.encode());
+    componentDevSystem.executeTyped(
+      P_RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(MainBaseID, 2),
+      abi.encode()
+    );
     upgradeSystem.executeTyped(Coord({ x: 0, y: 0 }));
 
     // should succeed because alice has upgraded their MainBase

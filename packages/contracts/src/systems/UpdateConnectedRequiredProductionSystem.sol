@@ -7,10 +7,10 @@ import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "../components/RequiredConnectedProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID, ResourceValues } from "../components/P_ProductionDependenciesComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "../components/BuildingProductionComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "../components/P_ProductionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../components/PathComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
@@ -42,13 +42,11 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
 
     uint256 toEntity = PathComponent(getAddressById(world.components(), PathComponentID)).getValue(buildingEntity);
 
-    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
-      getC(RequiredConnectedProductionComponentID)
+    P_ProductionDependenciesComponent requiredConnectedProductionComponent = P_ProductionDependenciesComponent(
+      getC(P_ProductionDependenciesComponentID)
     );
 
-    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
-      getC(BuildingProductionComponentID)
-    );
+    P_ProductionComponent buildingProductionComponent = P_ProductionComponent(getC(P_ProductionComponentID));
     ResourceValues memory requiredProduction = requiredConnectedProductionComponent.getValue(toEntity);
     uint256 productionResourceID = buildingProductionComponent.getValue(buildingIdNewLevel).resource;
     for (uint256 i = 0; i < requiredProduction.resources.length; i++) {

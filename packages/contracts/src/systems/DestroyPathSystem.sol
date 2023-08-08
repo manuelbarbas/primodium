@@ -5,9 +5,9 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "components/RequiredConnectedProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID, ResourceValues } from "components/P_ProductionDependenciesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { Coord } from "../types.sol";
 
@@ -47,7 +47,7 @@ contract DestroyPathSystem is PrimodiumSystem {
 
     uint256 toEntity = pathComponent.getValue(fromEntity);
 
-    if (RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(toEntity)) {
+    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(toEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
         msg.sender,
         fromEntity,
@@ -56,7 +56,7 @@ contract DestroyPathSystem is PrimodiumSystem {
     }
 
     if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(
+      P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(
         LibEncode.hashKeyEntity(
           buildingTypeComponent.getValue(fromEntity),
           LevelComponent(getC(LevelComponentID)).getValue(fromEntity)

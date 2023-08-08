@@ -6,7 +6,7 @@ import { BuildingTileKey } from "../prototypes.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
 // components
-import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
+import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -32,7 +32,7 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     uint256 buildingType = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(buildingEntity);
     Coord memory coord = LibEncode.decodeCoordEntity(buildingEntity);
-    int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
+    int32[] memory blueprint = P_BlueprintComponent(getC(P_BlueprintComponentID)).getValue(buildingType);
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
       Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);

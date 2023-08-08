@@ -4,9 +4,9 @@ import "solecs/Component.sol";
 
 import { ResourceValues } from "../types.sol";
 
-uint256 constant ID = uint256(keccak256("component.RequiredResources"));
+uint256 constant ID = uint256(keccak256("component.P_RequiredResources"));
 
-contract RequiredResourcesComponent is Component {
+contract P_RequiredResourcesComponent is Component {
   constructor(address world) Component(world, ID) {}
 
   function getSchema() public pure override returns (string[] memory keys, LibTypes.SchemaValue[] memory values) {

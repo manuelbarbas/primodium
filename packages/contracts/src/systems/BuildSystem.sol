@@ -9,14 +9,14 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
+import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
 // libraries
@@ -26,7 +26,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
-import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
+import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -37,8 +37,8 @@ import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSy
 import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
 import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
-import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./UpdateUtilityProductionSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./UpdateOccupiedUtilitySystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -83,13 +83,13 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     require(
-      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
-      "[BuildSystem] You do not have the required passive resources"
+      LibUtilityResource.checkUtilityResourceReqs(world, playerEntity, buildingType, 1),
+      "[BuildSystem] You do not have the required Utility resources"
     );
 
     //check resource requirements and if ok spend required resources
 
-    if (RequiredResourcesComponent(getC(RequiredResourcesComponentID)).has(buildingTypeLevelEntity)) {
+    if (P_RequiredResourcesComponent(getC(P_RequiredResourcesComponentID)).has(buildingTypeLevelEntity)) {
       require(
         LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
         "[BuildSystem] You do not have the required resources"
@@ -123,7 +123,7 @@ contract BuildSystem is PrimodiumSystem {
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
     //required production update
-    if (RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(buildingLevelEntity)) {
+    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
@@ -131,24 +131,24 @@ contract BuildSystem is PrimodiumSystem {
       );
     }
 
-    //Passive Production Update
-    if (PassiveProductionComponent(getC(PassiveProductionComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePassiveProductionSystemID)).executeTyped(
+    //Utility Production Update
+    if (P_UtilityProductionComponent(getC(P_UtilityProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateUtilityProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Build
       );
     }
-    //Occupied Passive Update
-    if (RequiredPassiveComponent(getC(RequiredPassiveComponentID)).has(buildingLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedPassiveSystemID)).executeTyped(
+    //Occupied Utility Update
+    if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Build
       );
     }
     //Resource Storage Update
-    if (MaxResourceStorageComponent(getC(MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
+    if (P_MaxResourceStorageComponent(getC(P_MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
@@ -157,7 +157,7 @@ contract BuildSystem is PrimodiumSystem {
     }
 
     // update building count if the built building counts towards the build limit
-    if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
+    if (!P_IgnoreBuildLimitComponent(getC(P_IgnoreBuildLimitComponentID)).has(buildingType)) {
       BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) + 1);
     }

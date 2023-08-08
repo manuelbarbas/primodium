@@ -8,8 +8,8 @@ uint256 constant DebugSimpleBuildingResearchReqsID = uint256(keccak256("block.De
 uint256 constant DebugSimpleBuildingBuildLimitReq = uint256(keccak256("block.DebugSimpleBuildingBuildLimitReq"));
 uint256 constant DebugSimpleBuildingTileReqID = uint256(keccak256("block.DebugSimpleBuildingTileReq"));
 
-uint256 constant DebugSimpleBuildingPassiveResourceRequirement = uint256(
-  keccak256("block.DebugSimpleBuildingPassiveResourceRequirement")
+uint256 constant DebugSimpleBuildingUtilityResourceRequirement = uint256(
+  keccak256("block.DebugSimpleBuildingUtilityResourceRequirement")
 );
 
 uint256 constant DebugSimpleBuildingWithUpgradeResourceReqsID = uint256(
@@ -37,7 +37,7 @@ uint256 constant DebugLithiumCopperOxideFactoryID = uint256(keccak256("block.Deb
 
 uint256 constant DebugSolarPanelID = uint256(keccak256("block.DebugSolarPanel"));
 
-uint256 constant DebugPassiveProductionBuilding = uint256(keccak256("block.DebugPassiveProductionBuilding"));
+uint256 constant DebugUtilityProductionBuilding = uint256(keccak256("block.DebugUtilityProductionBuilding"));
 
 //super buildings
 uint256 constant DebugSuperIronMineID = uint256(keccak256("block.DebugSuperIronMine"));

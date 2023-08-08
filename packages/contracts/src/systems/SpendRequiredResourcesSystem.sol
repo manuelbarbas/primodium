@@ -9,7 +9,7 @@ import { ID as UpdateUnclaimedResourcesSystemID } from "./UpdateUnclaimedResourc
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID, ResourceValues } from "../components/RequiredResourcesComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID, ResourceValues } from "../components/P_RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -31,8 +31,8 @@ contract SpendRequiredResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
     (address playerAddress, uint256 targetEntity) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
 
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      world.getComponent(RequiredResourcesComponentID)
+    P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
+      world.getComponent(P_RequiredResourcesComponentID)
     );
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
     if (!requiredResourcesComponent.has(targetEntity)) abi.encode(playerAddress, targetEntity);
