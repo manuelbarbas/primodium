@@ -6,7 +6,7 @@ import { renderBuilding } from "./renderBuilding";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderPathPlacementTool } from "./renderPathPlacementTool";
 import { renderSelectedTile } from "./renderSelectedTile";
-import { moveToPlayerMainbase } from "./moveToMainbase";
+import { focusMainbase } from "./focusMainbase";
 
 export const runSystems = (scene: Scene, player: EntityID) => {
   //Render world entity's sprites and paths
@@ -18,5 +18,5 @@ export const runSystems = (scene: Scene, player: EntityID) => {
   renderHoverTile(scene);
   renderBuildingPlacementTool(scene);
   renderPathPlacementTool(scene);
-  moveToPlayerMainbase(scene, player);
+  focusMainbase(scene, player);
 };
