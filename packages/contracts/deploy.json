@@ -11,28 +11,27 @@
     "HasResearchedComponent",
     "MainBaseComponent",
     "LevelComponent",
-    "RequiredResearchComponent",
-    "RequiredResourcesComponent",
-    "MaxBuildingsComponent",
+    "P_RequiredResearchComponent",
+    "P_RequiredResourcesComponent",
+    "P_MaxBuildingsComponent",
     "BuildingCountComponent",
-    "IgnoreBuildLimitComponent",
+    "P_IgnoreBuildLimitComponent",
     "ChildrenComponent",
-    "BlueprintComponent",
-    "MaxStorageComponent",
-    "MaxResourceStorageComponent",
-    "PlayerProductionComponent",
+    "P_BlueprintComponent",
+    "P_MaxStorageComponent",
+    "P_MaxResourceStorageComponent",
+    "ProductionComponent",
     "ActiveComponent",
-    "RequiredConnectedProductionComponent",
-    "BuildingProductionComponent",
-    "MaxLevelComponent",
-    "RequiredTileComponent",
-    "RequiredPassiveComponent",
-    "PassiveProductionComponent",
+    "P_ProductionDependenciesComponent",
+    "P_ProductionComponent",
+    "P_MaxLevelComponent",
+    "P_RequiredTileComponent",
+    "P_RequiredUtilityComponent",
+    "P_UtilityProductionComponent",
     "IsDebugComponent",
-    "IsTechComponent",
-    "MaxPassiveComponent",
-    "OccupiedPassiveResourceComponent",
-    "BuildingEntityProductionComponent"
+    "P_IsTechComponent",
+    "MaxUtilityComponent",
+    "OccupiedUtilityResourceComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -90,7 +89,7 @@
     },
     {
       "name": "UpdatePlayerStorageSystem",
-      "writeAccess": ["ItemComponent", "MaxStorageComponent", "MaxResourceStorageComponent"]
+      "writeAccess": ["ItemComponent", "P_MaxStorageComponent", "P_MaxResourceStorageComponent"]
     },
     {
       "name": "SpendRequiredResourcesSystem",
@@ -106,31 +105,27 @@
     },
     {
       "name": "UpdatePlayerResourceProductionSystem",
-      "writeAccess": ["PlayerProductionComponent", "BuildingEntityProductionComponent"]
+      "writeAccess": ["ProductionComponent", "ProductionComponent"]
     },
     {
       "name": "UpdateUnclaimedResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpdatePlayerStorageSystem",
-      "writeAccess": ["MaxResourceStorageComponent", "MaxStorageComponent", "ItemComponent"]
+      "name": "UpdateOccupiedUtilitySystem",
+      "writeAccess": ["OccupiedUtilityResourceComponent"]
     },
     {
-      "name": "UpdateOccupiedPassiveSystem",
-      "writeAccess": ["OccupiedPassiveResourceComponent"]
-    },
-    {
-      "name": "UpdatePassiveProductionSystem",
-      "writeAccess": ["MaxPassiveComponent"]
+      "name": "UpdateUtilityProductionSystem",
+      "writeAccess": ["MaxUtilityComponent"]
     },
     {
       "name": "UpdateRequiredProductionSystem",
-      "writeAccess": ["RequiredConnectedProductionComponent"]
+      "writeAccess": ["P_ProductionDependenciesComponent"]
     },
     {
       "name": "UpdateConnectedRequiredProductionSystem",
-      "writeAccess": ["RequiredConnectedProductionComponent"]
+      "writeAccess": ["P_ProductionDependenciesComponent"]
     },
     {
       "name": "CheckRequiredTileSystem",

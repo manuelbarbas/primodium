@@ -54,7 +54,7 @@ abi.encode(requiredResources.values[i])
 
 ```
 componentDevSystem.executeTyped(
-RequiredResourcesComponentID,
+P_RequiredResourcesComponentID,
 LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
 abi.encode()
 );
@@ -68,20 +68,20 @@ When a building is created, its tiles are determined based on the prototype's bl
 
 # Resource and Research Requirements
 
-The following components are used to store _metadata_ that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `MaxBuildingsComponent` stores building limit requirements.
+The following components are used to store _metadata_ that is read before a building is built by the user. `P_RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `P_RequiredResearchComponent` is a boolean that stores the required research objective. `P_MaxBuildingsComponent` stores building limit requirements.
 
 ````
 
-RequiredResearchComponent
-RequiredResourcesComponent
+P_RequiredResearchComponent
+P_RequiredResourcesComponent
 ItemComponent
-MaxBuildingsComponent
+P_MaxBuildingsComponent
 
 ```
 
 # Resource Production
 
-`PlayerProductionComponent` stores both metadata and player data.
+`ProductionComponent` stores both metadata and player data.
 
 - _Metadata_: with `hashKeyEntity(buildingId, level)` as key, stores the production rate of that resource for that level of that building per blockchain block. In `LibBuildingDesignInitializer`, the production rate is set for each level of each building that produces resources.
 - _Player Data_: with `hashKeyEntity(resourceId, playerEntity)` as key, stores the production of that resource per blockchain block.
@@ -93,7 +93,7 @@ Player resource production is updated when:
 
 `UnclaimedResourceComponent` tracks how much resource is produced but not claimed. It is updated for the player entity and resource ID before production is changed.
 
-`UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point. The unclaimed resource count will always be less than or equal to the available space for that resource in the players storage, which is stored in `MaxStorageComponent`.
+`UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point. The unclaimed resource count will always be less than or equal to the available space for that resource in the players storage, which is stored in `P_MaxStorageComponent`.
 
 # Factories
 
@@ -104,14 +104,14 @@ Factory production is similar to how mining resource production is calculated. H
 - `resources` : a list of mine building ids that has to be connected to the factory for it to be functional
 - `values`: a list of how many of each mine building that has to be connected to the factory
 
-`BuildingProductionComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two IDs:
+`P_ProductionComponent`: with `hashKeyEntity(buildingId, level)` as key, contains two IDs:
 
 - `resource` : the resource type this factory produces
 - `value` : the production of this factory per block (note for future we should modify the way this value is interpreted so it isn't per block to be able to reduce the tempo. maybe the rate can be per 100 blocks for example)
 
 `ActiveComponent`: for an existing factory entity, declares if that factory is functional. This value is updated when a player action either results in the factory becoming functional or results in it becoming non-functional.
 
-`LibFactoryDesignInitializer` writes the design data for factories for each of their levels on `MinesComponent` and `BuildingProductionComponent`.
+`LibFactoryDesignInitializer` writes the design data for factories for each of their levels on `MinesComponent` and `P_ProductionComponent`.
 
 `LibFactory` contains the core logic functions for two main purposes:
 
@@ -121,14 +121,14 @@ Factory production is similar to how mining resource production is calculated. H
 
 Each building can be upgraded to unlock more capabilities. Specifications are located [here](https://www.notion.so/palifer/abe7f4855bb441198acd4bae918b4619?v=54c17e8787e24596bc3d4f94f81761bd&p=96af4ae778304d11b40b773a94a826df&pm=s).
 
-- `MaxLevelComponent` with a building ID (e.g. DebugIronMineID) as key, indicates that that a building can be upgraded and up to what level.
+- `P_MaxLevelComponent` with a building ID (e.g. DebugIronMineID) as key, indicates that that a building can be upgraded and up to what level.
 - `LevelComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
 
 When a building is upgraded, `PostUpgradeSystem` is called to update the building's components and the player's resource production.
 
 # Building Storage
 
-In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `MaxResourceStorageComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `MaxStorageComponent`.
+In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `P_MaxResourceStorageComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `P_MaxStorageComponent`.
 
 ```
 
@@ -140,7 +140,7 @@ resourceLevelId = hashKeyEntity(resourceId, levelId)
 For example, the amount of Iron storage that is provided by a level 2 MainBase is:
 `maxStorageComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
 
-When buildings are built with, upgraded, or destroyed, `MaxStorageComponent` is updated for the player and the resources they modify the capacity for.
+When buildings are built with, upgraded, or destroyed, `P_MaxStorageComponent` is updated for the player and the resources they modify the capacity for.
 
 # Player Storage
 
@@ -153,21 +153,21 @@ HasResearchedComponent
 
 ```
 
-`Passive Resources`
+`Utility Resources`
 
-- Passive resources are resources which are not produced but act as capacity to allow buildings which require them to be built. Example:
+- Utility resources are resources which are not produced but act as capacity to allow buildings which require them to be built. Example:
 - Solar Panel increases Electricity Capacity by 4 value
 - Alloy Factory requires and occupies 2 Electricity
 
-`RequiredPassiveComponent`: for `LibHash(BuildingType, Level)` indicates what passive resources it requires and how much.
-`PassiveProductionComponent`: for `LibHash(BuildingType, Level)` indicates what passive resource and how much of it the building produces.
+`P_RequiredUtilityComponent`: for `LibHash(BuildingType, Level)` indicates what Utility resources it requires and how much.
+`P_UtilityProductionComponent`: for `LibHash(BuildingType, Level)` indicates what Utility resource and how much of it the building produces.
 
-- The total amount of `MaxPassive` the player has is stored in the `MaxStorageComponent` for `LibHash(ResourceID, PlayerEntity)`
-- The total amount of used up `MaxPassive` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
+- The total amount of `MaxUtility` the player has is stored in the `P_MaxStorageComponent` for `LibHash(ResourceID, PlayerEntity)`
+- The total amount of used up `MaxUtility` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
 
-- Passive resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.
-- The player not build a building that requires passive resources if they the total occuppied capacity for that resource will excceed the current capacity after build is complete.
-- The Player can not destroy a `BuildingType` that has `PassiveProductionComponent` if the total capacity of that resource will be less than the total occuped capacity of that resource.
+- Utility resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.
+- The player not build a building that requires Utility resources if they the total occuppied capacity for that resource will excceed the current capacity after build is complete.
+- The Player can not destroy a `BuildingType` that has `P_UtilityProductionComponent` if the total capacity of that resource will be less than the total occuped capacity of that resource.
 
 # Building Positions
 
