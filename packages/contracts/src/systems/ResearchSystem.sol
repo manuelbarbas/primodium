@@ -4,8 +4,8 @@ import { System, IWorld } from "solecs/System.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
-import { IsTechComponent, ID as IsTechComponentID } from "components/IsTechComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
+import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { LibResearch } from "libraries/LibResearch.sol";
@@ -14,7 +14,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Research"));
 
@@ -35,7 +35,7 @@ contract ResearchSystem is System {
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
 
-    IsTechComponent isTechComponent = IsTechComponent(getAddressById(components, IsTechComponentID));
+    P_IsTechComponent isTechComponent = P_IsTechComponent(getAddressById(components, P_IsTechComponentID));
 
     require(isTechComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
@@ -49,7 +49,7 @@ contract ResearchSystem is System {
       "[ResearchSystem] Research requirements not met"
     );
 
-    if (RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(researchItem)) {
+    if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(researchItem)) {
       require(
         LibResource.hasRequiredResources(world, researchItem, addressToEntity(msg.sender)),
         "[ResearchSystem] Not enough resources to research"

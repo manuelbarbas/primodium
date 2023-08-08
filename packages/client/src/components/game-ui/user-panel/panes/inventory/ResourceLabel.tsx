@@ -4,8 +4,8 @@ import useResourceCount from "src/hooks/useResourceCount";
 import {
   Item,
   LastClaimedAt,
-  MaxStorage,
-  PlayerProduction,
+  P_MaxStorage,
+  Production,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { ResourceImage } from "src/util/constants";
@@ -23,13 +23,9 @@ export const ResourceLabel = ({
 
   const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
-  const maxStorage = useResourceCount(MaxStorage, resourceId, entityIndex);
+  const maxStorage = useResourceCount(P_MaxStorage, resourceId, entityIndex);
 
-  const production = useResourceCount(
-    PlayerProduction,
-    resourceId,
-    entityIndex
-  );
+  const production = useResourceCount(Production, resourceId, entityIndex);
 
   const lastClaimedAt = useResourceCount(
     LastClaimedAt,

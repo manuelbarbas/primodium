@@ -5,11 +5,11 @@ import { getAddressById } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 
 //components
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
+import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
+import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "components/MaxBuildingsComponent.sol";
+import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "components/P_MaxBuildingsComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 
@@ -20,7 +20,7 @@ import { LibTerrain } from "./LibTerrain.sol";
 
 library LibBuilding {
   function isMaxBuildingsMet(IWorld world, uint256 playerEntity, uint256 buildingId) internal view returns (bool) {
-    if (IgnoreBuildLimitComponent(getAddressById(world.components(), IgnoreBuildLimitComponentID)).has(buildingId))
+    if (P_IgnoreBuildLimitComponent(getAddressById(world.components(), P_IgnoreBuildLimitComponentID)).has(buildingId))
       return true;
     uint32 baseLevel = getBaseLevel(world, playerEntity);
     uint32 buildCountLimit = getMaxBuildingCount(world, baseLevel);
@@ -29,8 +29,8 @@ library LibBuilding {
   }
 
   function canBuildOnTile(IWorld world, uint256 buildingEntity, Coord memory coord) internal view returns (bool) {
-    RequiredTileComponent requiredTileComponent = RequiredTileComponent(
-      getAddressById(world.components(), RequiredTileComponentID)
+    P_RequiredTileComponent requiredTileComponent = P_RequiredTileComponent(
+      getAddressById(world.components(), P_RequiredTileComponentID)
     );
     return
       !requiredTileComponent.has(buildingEntity) ||
@@ -53,8 +53,8 @@ library LibBuilding {
   }
 
   function getMaxBuildingCount(IWorld world, uint256 baseLevel) internal view returns (uint32) {
-    MaxBuildingsComponent maxBuildingsComponent = MaxBuildingsComponent(
-      getAddressById(world.components(), MaxBuildingsComponentID)
+    P_MaxBuildingsComponent maxBuildingsComponent = P_MaxBuildingsComponent(
+      getAddressById(world.components(), P_MaxBuildingsComponentID)
     );
     if (maxBuildingsComponent.has(baseLevel)) return maxBuildingsComponent.getValue(baseLevel);
     else revert("Invalid Base Level");
