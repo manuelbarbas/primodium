@@ -3,14 +3,14 @@ import engine from "engine";
 import { Network } from "../../../network/layer";
 import gameConfig from "../../config/belt/game";
 import mainSceneConfig from "../../config/belt/mainScene";
-import { AsteroidMap } from "../../constants";
+import { BeltMap } from "../../constants";
 // import { runSystems } from "./systems";
 import { EntityID } from "@latticexyz/recs";
 import { createFxApi } from "src/game/api/fx";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 
 export const initBeltView = async (_: EntityID, network: Network) => {
-  const { Scenes } = AsteroidMap;
+  const { Scenes } = BeltMap;
   const { world } = network;
   const { outline } = createFxApi();
 
@@ -41,5 +41,5 @@ export const initBeltView = async (_: EntityID, network: Network) => {
 
   world.registerDisposer(() => {
     game.dispose();
-  });
+  }, "game");
 };

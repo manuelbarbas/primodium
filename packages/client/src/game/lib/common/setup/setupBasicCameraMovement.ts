@@ -134,14 +134,6 @@ export const setupBasicCameraMovement = (
 
     if (center) handleCenter();
 
-    // if (isDown(KeybindActions.Base)) {
-    //   const mainBase = MainBase.get(player)?.value;
-    //   if (!mainBase) return;
-    //   const mainBaseCoord = Position.get(mainBase);
-
-    //   if (mainBaseCoord) pan(mainBaseCoord);
-    // }
-
     if (translateKeybind) handleTranslate(delta);
 
     if (drag) handleDrag();
@@ -202,5 +194,5 @@ export const setupBasicCameraMovement = (
     doubleClickSub.unsubscribe();
     scene.input.phaserInput.off("wheel");
     scene.scriptManager.remove(handleGameTickMovement);
-  });
+  }, "game");
 };

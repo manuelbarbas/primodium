@@ -1,18 +1,25 @@
-import { EntityID, defineComponentSystem } from "@latticexyz/recs";
+import {
+  EntityID,
+  defineComponentSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
-import { createPath } from "../../common/factory/path";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { Path } from "src/network/components/chainComponents";
 import { Position } from "src/network/components/clientComponents";
+import { ObjectPosition } from "../../common/object-components/common";
+import { AsteroidMap } from "@game/constants";
+import { ManhattanPath } from "../../common/object-components/graphics";
 
 export const renderBuildingPaths = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_path";
+  const gameWorld = namespaceWorld(world, "game");
 
   defineComponentSystem(
-    world,
+    gameWorld,
     Path,
     (update) => {
       const entityIndex = update.entity;
@@ -57,19 +64,23 @@ export const renderBuildingPaths = (scene: Scene) => {
         tileHeight
       );
 
-      if (!scene.objectPool.objects.has(objIndex)) {
-        const embodiedPath = scene.objectPool.get(objIndex, "Graphics");
+      scene.objectPool.remove(objIndex);
 
-        const pathComponent = createPath({
-          id: objIndex,
-          startX: startPixelCoord.x + tileWidth / 2,
-          startY: -startPixelCoord.y + tileHeight / 2,
-          endX: endPixelCoord.x + tileWidth / 2,
-          endY: -endPixelCoord.y + tileHeight / 2,
-        });
+      const embodiedPath = scene.objectPool.get(objIndex, "Graphics");
 
-        embodiedPath.setComponent(pathComponent);
-      }
+      embodiedPath.setComponents([
+        ObjectPosition(
+          {
+            x: startPixelCoord.x + tileWidth / 2,
+            y: -startPixelCoord.y + tileHeight / 2,
+          },
+          AsteroidMap.DepthLayers.Path
+        ),
+        ManhattanPath({
+          x: endPixelCoord.x + tileWidth / 2,
+          y: -endPixelCoord.y + tileHeight / 2,
+        }),
+      ]);
     },
     { runOnInit: true }
   );

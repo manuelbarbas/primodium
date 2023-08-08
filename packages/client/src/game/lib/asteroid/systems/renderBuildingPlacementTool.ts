@@ -6,20 +6,38 @@ import {
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
+  namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
-import { createBuilding } from "../../common/factory/building";
-import { createSelectionTile } from "../../common/factory/selectionTile";
 import {
   HoverTile,
   SelectedAction,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+import {
+  ObjectPosition,
+  SetValue,
+} from "../../common/object-components/common";
+import { AsteroidMap } from "@game/constants";
+import {
+  Texture,
+  Animation,
+  Outline,
+} from "../../common/object-components/sprite";
+
+const {
+  EntityIDtoAnimationKey,
+  EntityIDtoSpriteKey,
+  Assets,
+  SpriteKeys,
+  DepthLayers,
+} = AsteroidMap;
 
 export const renderBuildingPlacementTool = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
+  const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
 
   const query = [
@@ -31,8 +49,7 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
 
   const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
-    const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
-    const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
+    const objIndex = update.entity + objIndexSuffix;
     const selectedBuilding = SelectedBuilding.get()?.value;
 
     // Avoid updating on optimistic overrides
@@ -49,37 +66,39 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
-    const hoverTileGraphicsEmbodiedEntity = scene.objectPool.get(
-      objGraphicsIndex,
-      "Graphics"
-    );
+    scene.objectPool.remove(objIndex);
 
-    const hoverTileSpriteEmbodiedEntity = scene.objectPool.get(
-      objSpriteIndex,
-      "Sprite"
-    );
+    const buildingTool = scene.objectPool.get(objIndex, "Sprite");
 
-    hoverTileSpriteEmbodiedEntity.setComponent(
-      createBuilding({
-        x: pixelCoord.x,
-        y: -pixelCoord.y,
-        buildingType: selectedBuilding,
-      })
-    );
+    const sprite = EntityIDtoSpriteKey[selectedBuilding][0];
+    const animation = EntityIDtoAnimationKey[selectedBuilding]
+      ? EntityIDtoAnimationKey[selectedBuilding][0]
+      : undefined;
 
-    hoverTileGraphicsEmbodiedEntity.setComponent(
-      createSelectionTile({
-        id: objGraphicsIndex,
-        x: pixelCoord.x,
-        y: -pixelCoord.y,
-        tileHeight,
-        tileWidth,
-        alpha: 0,
-      })
-    );
+    buildingTool.setComponents([
+      ObjectPosition(
+        {
+          x: pixelCoord.x,
+          y: -pixelCoord.y,
+        },
+        DepthLayers.Marker
+      ),
+      Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.Node),
+      animation ? Animation(animation) : undefined,
+      Outline({
+        thickness: 3,
+        color: 0x000000,
+      }),
+      Outline({
+        thickness: 5,
+      }),
+      SetValue({
+        alpha: 0.9,
+      }),
+    ]);
   };
 
-  defineEnterSystem(world, query, (update) => {
+  defineEnterSystem(gameWorld, query, (update) => {
     render(update);
 
     console.info(
@@ -87,14 +106,12 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
     );
   });
 
-  defineUpdateSystem(world, query, render);
+  defineUpdateSystem(gameWorld, query, render);
 
-  defineExitSystem(world, query, (update) => {
-    const objGraphicsIndex = update.entity + "_graphics" + objIndexSuffix;
-    const objSpriteIndex = update.entity + "_sprite" + objIndexSuffix;
+  defineExitSystem(gameWorld, query, (update) => {
+    const objIndex = update.entity + objIndexSuffix;
 
-    scene.objectPool.remove(objGraphicsIndex);
-    scene.objectPool.remove(objSpriteIndex);
+    scene.objectPool.remove(objIndex);
 
     console.info(
       "[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed"
