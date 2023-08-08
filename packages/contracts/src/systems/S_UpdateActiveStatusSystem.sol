@@ -19,16 +19,16 @@ import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerResourceProductionSystem.sol";
+import { ID as UpdatePlayerResourceProductionSystemID } from "./S_UpdatePlayerResourceProductionSystem.sol";
 
 import { ResourceValues } from "../types.sol";
 
 // libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdateActiveStatus"));
+uint256 constant ID = uint256(keccak256("system.S_UpdateActiveStatus"));
 
-contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
+contract S_UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function updateActiveStatus(address playerAddress, uint256 buildingEntity, bool isActive) internal {
@@ -82,7 +82,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
         msg.sender == getAddressById(world.systems(), BuildPathSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroyPathSystemID) ||
         msg.sender == getAddressById(world.systems(), ID),
-      "UpdateActiveStatusSystem: Only BuildSystem, DestroySystem, UpgradeSystem, BuildPathSystem, DestroyPathSystem and UpdateActiveStatusSystem can call this function"
+      "S_UpdateActiveStatusSystem: Only BuildSystem, DestroySystem, UpgradeSystem, BuildPathSystem, DestroyPathSystem and S_UpdateActiveStatusSystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(

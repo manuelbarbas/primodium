@@ -31,14 +31,14 @@ import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
-import { ID as CheckRequiredTileSystemID } from "./CheckRequiredTileSystem.sol";
-import { ID as PlaceBuildingTilesSystemID } from "./PlaceBuildingTilesSystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
-import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
-import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as UpdateUtilityProductionSystemID } from "./UpdateUtilityProductionSystem.sol";
-import { ID as UpdateOccupiedUtilitySystemID } from "./UpdateOccupiedUtilitySystem.sol";
+import { ID as S_CheckRequiredTileSystemID } from "./S_CheckRequiredTileSystem.sol";
+import { ID as PlaceBuildingTilesSystemID } from "./S_PlaceBuildingTilesSystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
+import { ID as UpdateRequiredProductionSystemID } from "./S_UpdateRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -62,7 +62,7 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     bool canBuildOn = abi.decode(
-      IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), S_CheckRequiredTileSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         buildingType

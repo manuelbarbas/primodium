@@ -13,8 +13,8 @@ import { Coord } from "../types.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdateConnectedRequiredProductionSystemID } from "./S_UpdateConnectedRequiredProductionSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 

@@ -17,15 +17,15 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-uint256 constant ID = uint256(keccak256("system.PlaceBuildingTiles"));
+uint256 constant ID = uint256(keccak256("system.S_PlaceBuildingTiles"));
 
-contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
+contract S_PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID),
-      "PlaceBuildingTilesSystem: Only BuildSystem can call this function"
+      "S_PlaceBuildingTilesSystem: Only BuildSystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));

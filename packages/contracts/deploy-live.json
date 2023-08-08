@@ -69,7 +69,7 @@
       ]
     },
     {
-      "name": "PlaceBuildingTilesSystem",
+      "name": "S_PlaceBuildingTilesSystem",
       "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
     },
     {
@@ -89,51 +89,51 @@
       "writeAccess": ["LevelComponent"]
     },
     {
-      "name": "UpdatePlayerStorageSystem",
+      "name": "S_UpdatePlayerStorageSystem",
       "writeAccess": ["ItemComponent", "P_MaxStorageComponent", "P_MaxResourceStorageComponent"]
     },
     {
-      "name": "SpendRequiredResourcesSystem",
+      "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpdateActiveStatusSystem",
+      "name": "S_UpdateActiveStatusSystem",
       "writeAccess": ["ActiveComponent"]
     },
     {
-      "name": "SpendRequiredResourcesSystem",
+      "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["ItemComponent"]
     },
     {
-      "name": "UpdatePlayerResourceProductionSystem",
+      "name": "S_UpdatePlayerResourceProductionSystem",
       "writeAccess": ["ProductionComponent", "ProductionComponent"]
     },
     {
-      "name": "UpdateUnclaimedResourcesSystem",
+      "name": "S_UpdateUnclaimedResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpdatePlayerStorageSystem",
+      "name": "S_UpdatePlayerStorageSystem",
       "writeAccess": ["P_MaxResourceStorageComponent", "P_MaxStorageComponent", "ItemComponent"]
     },
     {
-      "name": "UpdateOccupiedUtilitySystem",
+      "name": "S_UpdateOccupiedUtilitySystem",
       "writeAccess": ["OccupiedUtilityResourceComponent"]
     },
     {
-      "name": "UpdateUtilityProductionSystem",
+      "name": "S_UpdateUtilityProductionSystem",
       "writeAccess": ["MaxUtilityComponent"]
     },
     {
-      "name": "UpdateRequiredProductionSystem",
+      "name": "S_UpdateRequiredProductionSystem",
       "writeAccess": ["P_ProductionDependenciesComponent"]
     },
     {
-      "name": "UpdateConnectedRequiredProductionSystem",
+      "name": "S_UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["P_ProductionDependenciesComponent"]
     },
     {
-      "name": "CheckRequiredTileSystem",
+      "name": "S_CheckRequiredTileSystem",
       "writeAccess": []
     },
     {

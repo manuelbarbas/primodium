@@ -3,13 +3,13 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
-import { ID as UpdatePlayerStorageSystemID } from "./UpdatePlayerStorageSystem.sol";
-import { ID as UpdateUtilityProductionSystemID } from "./UpdateUtilityProductionSystem.sol";
-import { ID as UpdateOccupiedUtilitySystemID } from "./UpdateOccupiedUtilitySystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdateRequiredProductionSystemID } from "./S_UpdateRequiredProductionSystem.sol";
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";

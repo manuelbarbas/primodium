@@ -11,7 +11,7 @@ import { ProductionComponent, ID as ProductionComponentID } from "components/Pro
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { ID as UpdateUnclaimedResourcesSystemID } from "systems/UpdateUnclaimedResourcesSystem.sol";
+import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaimedResourcesSystem.sol";
 
 import { Coord } from "../types.sol";
 

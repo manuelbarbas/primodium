@@ -14,9 +14,9 @@ import { P_ProductionComponent, ID as P_ProductionComponentID } from "../compone
 import { PathComponent, ID as PathComponentID } from "../components/PathComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdateConnectedRequiredProduction"));
+uint256 constant ID = uint256(keccak256("system.S_UpdateConnectedRequiredProduction"));
 
-contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
+contract S_UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -24,7 +24,7 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
       msg.sender == getAddressById(world.systems(), DestroySystemID) ||
         msg.sender == getAddressById(world.systems(), BuildPathSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroyPathSystemID),
-      "UpdateConnectedRequiredProductionSystem: Only DestroyPathSystem, BuildPathSystem, DestroySystem can call this function"
+      "S_UpdateConnectedRequiredProductionSystem: Only DestroyPathSystem, BuildPathSystem, DestroySystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(

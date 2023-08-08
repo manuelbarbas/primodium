@@ -14,7 +14,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Research"));
 

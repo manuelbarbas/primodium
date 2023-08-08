@@ -18,8 +18,8 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 
-import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
+import { ID as UpdateConnectedRequiredProductionSystemID } from "./S_UpdateConnectedRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 

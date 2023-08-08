@@ -7,8 +7,8 @@ import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
-import { ID as UpdateUnclaimedResourcesSystemID } from "./UpdateUnclaimedResourcesSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -21,9 +21,9 @@ import { P_ProductionComponent, ID as P_ProductionComponentID, ResourceValue } f
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdatePlayerResourceProduction"));
+uint256 constant ID = uint256(keccak256("system.S_UpdatePlayerResourceProduction"));
 
-contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
+contract S_UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -34,7 +34,7 @@ contract UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodium
         msg.sender == getAddressById(world.systems(), BuildPathSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroyPathSystemID) ||
         msg.sender == getAddressById(world.systems(), UpdateActiveStatusSystemID),
-      "UpdatePlayerResourceProductionSystem: Only BuildSystem, UpgradeSystem, DestroySystem, BuildPathSystem and DestroyPathSystem, UpdateActiveStatusSystem can call this function"
+      "S_UpdatePlayerResourceProductionSystem: Only BuildSystem, UpgradeSystem, DestroySystem, BuildPathSystem and DestroyPathSystem, S_UpdateActiveStatusSystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(

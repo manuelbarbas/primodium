@@ -12,9 +12,9 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../compone
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdateRequiredProduction"));
+uint256 constant ID = uint256(keccak256("system.S_UpdateRequiredProduction"));
 
-contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
+contract S_UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -22,7 +22,7 @@ contract UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
         msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroySystemID),
-      "UpdatePlayerStorageSystem: Only BuildSystem, UpgradeSystem, DestroySystem can call this function"
+      "S_UpdatePlayerStorageSystem: Only BuildSystem, UpgradeSystem, DestroySystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
