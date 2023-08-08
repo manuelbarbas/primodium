@@ -4,7 +4,6 @@ import {
   createChunks,
   // createDebugger,
 } from "@latticexyz/phaserx";
-import { ObjectPool } from "@latticexyz/phaserx/dist/types";
 
 import createInput from "./createInput";
 import { createPhaserScene } from "../util/createPhaserScene";
@@ -100,8 +99,8 @@ export const createScene = async (
 
   // Setup culling
   const culling = createCulling(
-    //override type since we added Graphics to the pool
-    objectPool as ObjectPool,
+    //override since we modified embodied entity
+    objectPool as any,
     camera,
     cullingChunks
   );

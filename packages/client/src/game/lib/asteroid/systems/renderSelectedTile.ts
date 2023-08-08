@@ -8,9 +8,13 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { createSelectionTile } from "../../common/factory/selectionTile";
 import { world } from "src/network/world";
 import { SelectedTile } from "src/network/components/clientComponents";
+import { ObjectPosition } from "../../common/object-components/common";
+import { Square } from "../../common/object-components/graphics";
+import { AsteroidMap } from "@game/constants";
+
+const { DepthLayers } = AsteroidMap;
 
 export const renderSelectedTile = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -36,20 +40,26 @@ export const renderSelectedTile = (scene: Scene) => {
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 
+    scene.objectPool.remove(objGraphicsIndex);
+
     const selectionTileGraphicsEmbodiedEntity = scene.objectPool.get(
       objGraphicsIndex,
       "Graphics"
     );
 
-    selectionTileGraphicsEmbodiedEntity.setComponent(
-      createSelectionTile({
-        id: objGraphicsIndex,
-        x: pixelCoord.x,
-        y: -pixelCoord.y,
-        tileWidth,
-        tileHeight,
-      })
-    );
+    selectionTileGraphicsEmbodiedEntity.setComponents([
+      ObjectPosition(
+        {
+          x: Math.floor(pixelCoord.x / tileWidth) * tileWidth,
+          y: -Math.floor(pixelCoord.y / tileWidth) * tileHeight,
+        },
+        DepthLayers.Tooltip
+      ),
+      Square(tileWidth, tileHeight, {
+        color: 0xffff00,
+        alpha: 0.2,
+      }),
+    ]);
   };
 
   defineEnterSystem(gameWorld, query, (update) => {

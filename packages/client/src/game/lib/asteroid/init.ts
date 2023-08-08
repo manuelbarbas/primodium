@@ -22,6 +22,8 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
     true
   );
 
+  scene.camera.phaserCamera.setRoundPixels(false);
+
   const chunkManager = await setupAsteroidChunkManager(scene.tilemap);
   chunkManager.renderInitialChunks();
   chunkManager.startChunkRenderer();
