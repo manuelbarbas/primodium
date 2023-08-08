@@ -14,11 +14,11 @@ import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/Co
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "../../components/PlayerProductionComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "../../components/RequiredResearchComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "../../components/MaxResourceStorageComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "../../components/ProductionComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
+import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "../../components/P_RequiredResearchComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "../../components/P_MaxResourceStorageComponent.sol";
+import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
 import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -52,13 +52,13 @@ contract ClaimSystemTest is PrimodiumTest {
     console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
       abi.encode()
     );
 
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
       abi.encode()
     );
@@ -127,13 +127,13 @@ contract ClaimSystemTest is PrimodiumTest {
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
       abi.encode()
     );
     console.log("removed resource requirements");
     console.log(
-      RequiredResourcesComponent(component(RequiredResourcesComponentID)).has(
+      P_RequiredResourcesComponent(component(P_RequiredResourcesComponentID)).has(
         LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1)
       )
     );
@@ -152,7 +152,7 @@ contract ClaimSystemTest is PrimodiumTest {
     console.log("built path from PlatingFactory to MainBase");
     console.log(
       "Iron PLate Production is %s",
-      PlayerProductionComponent(component(PlayerProductionComponentID)).getValue(
+      ProductionComponent(component(ProductionComponentID)).getValue(
         LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice))
       )
     );
@@ -172,7 +172,7 @@ contract ClaimSystemTest is PrimodiumTest {
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
 
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2),
       abi.encode()
     );
@@ -224,7 +224,7 @@ contract ClaimSystemTest is PrimodiumTest {
     console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
       abi.encode()
     );
@@ -233,7 +233,7 @@ contract ClaimSystemTest is PrimodiumTest {
     vm.roll(0);
 
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
       abi.encode()
     );
@@ -294,7 +294,7 @@ contract ClaimSystemTest is PrimodiumTest {
     console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
       abi.encode()
     );
@@ -304,7 +304,7 @@ contract ClaimSystemTest is PrimodiumTest {
     vm.roll(0);
 
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
       abi.encode()
     );
@@ -367,17 +367,15 @@ contract ClaimSystemTest is PrimodiumTest {
     console.log("built IronMineID");
     buildPathSystem.executeTyped(coord, mainBaseCoord);
     console.log("built path from IronMine to main base");
-    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
-      component(PlayerProductionComponentID)
-    );
+    ProductionComponent productionComponent = ProductionComponent(component(ProductionComponentID));
     uint256 hashedAliceKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
-    assertEq(playerProductionComponent.getValue(hashedAliceKey), 1, "Alice should have production 1 iron");
+    assertEq(productionComponent.getValue(hashedAliceKey), 1, "Alice should have production 1 iron");
     vm.roll(10);
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      component(MaxResourceStorageComponentID)
+    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
+      component(P_MaxResourceStorageComponentID)
     );
     assertTrue(maxResourceStorageComponent.has(addressToEntity(alice)), "Alice should have max resource storage");
-    MaxStorageComponent maxStorageComponent = MaxStorageComponent(component(MaxStorageComponentID));
+    P_MaxStorageComponent maxStorageComponent = P_MaxStorageComponent(component(P_MaxStorageComponentID));
     assertTrue(maxStorageComponent.has(hashedAliceKey), "Alice should have Iron max storage");
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base");
@@ -515,12 +513,12 @@ contract ClaimSystemTest is PrimodiumTest {
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronMineID, 1),
       abi.encode()
     );
     componentDevSystem.executeTyped(
-      RequiredResourcesComponentID,
+      P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugCopperMineID, 1),
       abi.encode()
     );

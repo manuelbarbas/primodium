@@ -15,7 +15,7 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/C
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
-import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
+import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
 
 import { LibBlueprint } from "libraries/LibBlueprint.sol";
 import { Coord } from "../../types.sol";
@@ -33,7 +33,7 @@ contract DestroySystemTest is PrimodiumTest {
   DestroySystem public destroySystem;
 
   OwnedByComponent public ownedByComponent;
-  BlueprintComponent public blueprintComponent;
+  P_BlueprintComponent public blueprintComponent;
   ChildrenComponent public childrenComponent;
   LevelComponent public levelComponent;
   BuildingCountComponent public buildingCountComponent;
@@ -48,7 +48,7 @@ contract DestroySystemTest is PrimodiumTest {
     destroySystem = DestroySystem(system(DestroySystemID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     // init components
-    blueprintComponent = BlueprintComponent(component(BlueprintComponentID));
+    blueprintComponent = P_BlueprintComponent(component(P_BlueprintComponentID));
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     levelComponent = LevelComponent(component(LevelComponentID));
@@ -66,7 +66,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function buildDummy() public returns (uint256) {
     vm.startPrank(alice);
-    componentDevSystem.executeTyped(BlueprintComponentID, dummyBuilding, abi.encode(blueprint));
+    componentDevSystem.executeTyped(P_BlueprintComponentID, dummyBuilding, abi.encode(blueprint));
     bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, getOrigin(alice));
     return abi.decode(rawBuilding, (uint256));
   }

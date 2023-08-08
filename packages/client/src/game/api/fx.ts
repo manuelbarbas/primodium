@@ -17,7 +17,13 @@ export const createFxApi = () => {
 
     const pipeline = gameObject.postPipelines[
       gameObject.postPipelines.length - 1
-    ] as OutlinePostFx;
+    ] as OutlinePostFx | undefined;
+
+    // We check for undefined pipeline because of how embodied entities check if positions are modified.
+    // It creates a proxy object where non relevant functions on game object are ignored thus causing
+    // intermediary steps to return undefined when its not expected to.
+    // TODO: fix modified position function so that upstream does not need to care about implmentation details.
+    if (!pipeline) return;
 
     pipeline.setThickness(thickness);
     pipeline.setOutlineColor(color);

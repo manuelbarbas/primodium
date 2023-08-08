@@ -16,8 +16,8 @@ import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/Co
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "../../components/MaxStorageComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
+import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
@@ -129,7 +129,11 @@ contract Storage is PrimodiumTest {
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
-    componentDevSystem.executeTyped(RequiredResourcesComponentID, LibEncode.hashKeyEntity(MainBaseID, 2), abi.encode());
+    componentDevSystem.executeTyped(
+      P_RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(MainBaseID, 2),
+      abi.encode()
+    );
 
     upgradeSystem.executeTyped(mainBaseCoord);
     uint256 newIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);

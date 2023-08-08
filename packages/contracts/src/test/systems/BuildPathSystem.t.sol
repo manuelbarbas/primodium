@@ -11,9 +11,9 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
-import { RequiredTileComponent, ID as RequiredTileComponentID } from "../../components/RequiredTileComponent.sol";
+import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "../../components/P_RequiredTileComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 //debug buildings
 import "../../prototypes.sol";
@@ -34,7 +34,7 @@ contract BuildPathSystemTest is PrimodiumTest {
 
   OwnedByComponent public ownedByComponent;
   PathComponent public pathComponent;
-  RequiredTileComponent public requiredTileComponent;
+  P_RequiredTileComponent public requiredTileComponent;
 
   function setUp() public override {
     super.setUp();
@@ -44,7 +44,7 @@ contract BuildPathSystemTest is PrimodiumTest {
 
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     pathComponent = PathComponent(component(PathComponentID));
-    requiredTileComponent = RequiredTileComponent(component(RequiredTileComponentID));
+    requiredTileComponent = P_RequiredTileComponent(component(P_RequiredTileComponentID));
     vm.stopPrank();
   }
 

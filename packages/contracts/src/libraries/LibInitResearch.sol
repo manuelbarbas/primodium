@@ -5,7 +5,7 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 
 // Components
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { IsTechComponent, ID as IsTechComponentID } from "components/IsTechComponent.sol";
+import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
 
 // Libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -19,7 +19,7 @@ import "../prototypes.sol";
 library LibInitResearch {
   function init(IWorld world) internal {
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-    IsTechComponent isTechComponent = IsTechComponent(world.getComponent(IsTechComponentID));
+    P_IsTechComponent isTechComponent = P_IsTechComponent(world.getComponent(P_IsTechComponentID));
 
     ResourceValue[] memory requiredResources = new ResourceValue[](1);
 

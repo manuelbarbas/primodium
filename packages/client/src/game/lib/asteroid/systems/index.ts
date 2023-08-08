@@ -1,3 +1,4 @@
+import { EntityID } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { renderBuildingPaths } from "./renderBuildingPaths";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
@@ -5,8 +6,9 @@ import { renderBuilding } from "./renderBuilding";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderPathPlacementTool } from "./renderPathPlacementTool";
 import { renderSelectedTile } from "./renderSelectedTile";
+import { focusMainbase } from "./focusMainbase";
 
-export const runSystems = (scene: Scene) => {
+export const runSystems = (scene: Scene, player: EntityID) => {
   //Render world entity's sprites and paths
   renderBuilding(scene);
   renderBuildingPaths(scene);
@@ -16,4 +18,5 @@ export const runSystems = (scene: Scene) => {
   renderHoverTile(scene);
   renderBuildingPlacementTool(scene);
   renderPathPlacementTool(scene);
+  focusMainbase(scene, player);
 };

@@ -6,12 +6,12 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { ID as UpdateUnclaimedResourcesSystemID } from "systems/UpdateUnclaimedResourcesSystem.sol";
+import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaimedResourcesSystem.sol";
 
 import { Coord } from "../types.sol";
 
@@ -41,8 +41,8 @@ contract ClaimFromMineSystem is PrimodiumSystem {
       "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
     );
 
-    MaxResourceStorageComponent maxResourceStorageComponent = MaxResourceStorageComponent(
-      world.getComponent(MaxResourceStorageComponentID)
+    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
+      world.getComponent(P_MaxResourceStorageComponentID)
     );
     if (!maxResourceStorageComponent.has(playerEntity)) return abi.encode(false);
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
@@ -52,7 +52,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
     uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
-      if (PlayerProductionComponent(world.getComponent(PlayerProductionComponentID)).has(playerResourceEntity)) {
+      if (ProductionComponent(world.getComponent(ProductionComponentID)).has(playerResourceEntity)) {
         IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
           msg.sender,
           storageResourceIds[i]
