@@ -48,7 +48,7 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
   ) private returns (uint256 tileEntity) {
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y, 0);
-    tileEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
+    tileEntity = LibEncode.hashKeyCoord(BuildingTileKey, coord);
     require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
     ownedByComponent.set(tileEntity, buildingEntity);
   }

@@ -50,11 +50,11 @@ contract UpgradeSystemTest is PrimodiumTest {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
     buildSystem.executeTyped(DebugIronMineNoTileReqID, coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 1, "building should be level 1");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 1, "building should be level 1");
     upgradeSystem.executeTyped(coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 2, "building should be level 2");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 2, "building should be level 2");
     upgradeSystem.executeTyped(coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 3, "building should be level 3");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 3, "building should be level 3");
     vm.stopPrank();
   }
 
@@ -65,11 +65,11 @@ contract UpgradeSystemTest is PrimodiumTest {
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
     buildSystem.executeTyped(DebugIronMineNoTileReqID, coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 1, "building should be level 1");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 1, "building should be level 1");
     upgradeSystem.executeTyped(coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 2, "building should be level 2");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 2, "building should be level 2");
     upgradeSystem.executeTyped(coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 3, "building should be level 3");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 3, "building should be level 3");
     upgradeSystem.executeTyped(coord);
     //should fail
     vm.stopPrank();

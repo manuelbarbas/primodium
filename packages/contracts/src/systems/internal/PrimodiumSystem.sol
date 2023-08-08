@@ -19,7 +19,7 @@ contract PrimodiumSystem is System {
 
   function getBuildingFromCoord(Coord memory coord) internal view returns (uint256) {
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    uint256 buildingTile = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
+    uint256 buildingTile = LibEncode.hashKeyCoord(BuildingTileKey, coord);
     if (!ownedByComponent.has(buildingTile)) return 0;
     return ownedByComponent.getValue(buildingTile);
   }

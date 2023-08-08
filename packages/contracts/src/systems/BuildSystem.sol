@@ -51,8 +51,7 @@ contract BuildSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
-
-    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
+    uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
     uint256 playerEntity = addressToEntity(msg.sender);
 
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
