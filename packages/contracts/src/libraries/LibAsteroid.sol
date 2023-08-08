@@ -1,6 +1,6 @@
-/ SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-// Production Buildings
+
 import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 
@@ -8,9 +8,9 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
-import { AsteroidKey, EAsteroidType } from "../prototypes.sol";
+import { AsteroidKey } from "../prototypes.sol";
 
-import { Coord, Size } from "../types.sol";
+import { Coord, EAsteroidType } from "../types.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -32,7 +32,7 @@ library LibAsteroid {
     Coord memory position = getUniqueAsteroidPosition(world, ownerEntity);
 
     positionComponent.set(asteroidEntity, position);
-    asteroidTypeComponent.set(asteroidEntity, uint256(AsteroidType.NORMAL));
+    asteroidTypeComponent.set(asteroidEntity, uint256(EAsteroidType.NORMAL));
 
     // For now, we will use this component to ensure the owner can only build on their asteroid.
     // TODO: remove this component later as it might be for temporary use.
@@ -41,7 +41,6 @@ library LibAsteroid {
 
     // Mark the asteroid's position as active in the ActiveComponent.
     ActiveComponent(world.getComponent(ActiveComponentID)).set(encodedPosition);
-    Size memory asteroidSize = Size(36, 25);
   }
 
   /**

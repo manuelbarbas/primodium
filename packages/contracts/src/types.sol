@@ -17,6 +17,12 @@ enum EActionType {
   Destroy
 }
 
+// for use when we get special asteroids
+enum EAsteroidType {
+  NONE,
+  NORMAL
+}
+
 struct Coord {
   int32 x;
   int32 y;
