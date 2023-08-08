@@ -1,5 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
-import { RequiredResources } from "src/network/components/chainComponents";
+import { P_RequiredResources } from "src/network/components/chainComponents";
 
 export type ResourceCostData = {
   name: string;
@@ -14,12 +14,12 @@ export type ResourceCostData = {
 // building a building requires resources
 // fetch directly from component data
 export function getRecipe(entityId: EntityID): ResourceCostData["resources"] {
-  const requiredResources = RequiredResources.get(entityId)?.resources;
+  const requiredResources = P_RequiredResources.get(entityId)?.resources;
 
   if (!requiredResources) return [];
   return requiredResources.map((resourceId: EntityID, index: number) => {
     // remove leading zeros due to mudv1 hashing behavior
-    const resourceCost = RequiredResources.get(entityId)?.values[index];
+    const resourceCost = P_RequiredResources.get(entityId)?.values[index];
 
     return {
       id: resourceId,

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 // Production Buildings
 
-import { BlueprintComponent } from "components/BlueprintComponent.sol";
+import { P_BlueprintComponent } from "components/P_BlueprintComponent.sol";
 
 library LibBlueprint {
   function get1x1Blueprint() internal pure returns (int32[] memory blueprint) {

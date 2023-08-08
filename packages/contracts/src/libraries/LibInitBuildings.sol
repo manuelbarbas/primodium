@@ -3,17 +3,17 @@ pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 // Production Buildings
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { RequiredTileComponent, ID as RequiredTileComponentID } from "components/RequiredTileComponent.sol";
-import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
+import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
+import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
+import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
 
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID, ResourceValue } from "components/PassiveProductionComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID } from "components/RequiredPassiveComponent.sol";
-import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
+import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID, ResourceValue } from "components/P_UtilityProductionComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
+import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
+import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
@@ -48,7 +48,7 @@ library LibInitBuildings {
     uint256 entity = MainBaseID;
     uint32 maxLevel = 6;
 
-    IgnoreBuildLimitComponent(world.getComponent(IgnoreBuildLimitComponentID)).set(MainBaseID);
+    P_IgnoreBuildLimitComponent(world.getComponent(P_IgnoreBuildLimitComponentID)).set(MainBaseID);
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
 
@@ -122,8 +122,8 @@ library LibInitBuildings {
     resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 4000 });
     storageUpgrades[5] = resourceValues;
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get3x3Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get3x3Blueprint());
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
@@ -167,19 +167,19 @@ library LibInitBuildings {
 
     /* ***********************Set Values ************************* */
 
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, IronResourceItemID);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(entity, IronResourceItemID);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
-      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(
         buildingLevelEntity,
         ResourceValue({ resource: IronResourceItemID, value: productionRates[i] })
       );
 
       if (requiredResearch[i] > 0)
-        RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+        P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
           buildingLevelEntity,
           requiredResearch[i]
         );
@@ -221,18 +221,18 @@ library LibInitBuildings {
     requiredResources[2] = resourceValues;
 
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, CopperResourceItemID);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(entity, CopperResourceItemID);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(
         buildingLevelEntity,
         ResourceValue({ resource: CopperResourceItemID, value: productionRates[i] })
       );
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
       );
@@ -267,18 +267,18 @@ library LibInitBuildings {
     requiredResources[1] = resourceValues;
 
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    RequiredTileComponent(world.getComponent(RequiredTileComponentID)).set(entity, LithiumResourceItemID);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(entity, LithiumResourceItemID);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(
         buildingLevelEntity,
         ResourceValue({ resource: LithiumResourceItemID, value: productionRates[i] })
       );
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
       );
@@ -311,22 +311,22 @@ library LibInitBuildings {
     requiredResources[1] = resourceValues;
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
     // LEVEL 1
     uint256[] memory mineIds;
     uint32[] memory mineCounts;
 
     mineIds = new uint256[](1);
     mineCounts = new uint32[](1);
-    mineIds[0] = IronMineID;
+    mineIds[0] = IronResourceItemID;
     mineCounts[0] = 1;
-    requiredMines[0] = ResourceValues(mineIds, mineCounts);
+    requiredConnectedProductions[0] = ResourceValues(mineIds, mineCounts);
     // LEVEL 2
     mineIds = new uint256[](1);
     mineCounts = new uint32[](1);
-    mineIds[0] = IronMineID;
+    mineIds[0] = IronResourceItemID;
     mineCounts[0] = 1;
-    requiredMines[1] = ResourceValues(mineIds, mineCounts);
+    requiredConnectedProductions[1] = ResourceValues(mineIds, mineCounts);
 
     /****************** Factory Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
@@ -341,23 +341,23 @@ library LibInitBuildings {
     production[1] = ResourceValue(resourceIds, rates);
 
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
-      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+      P_ProductionDependenciesComponent(world.getComponent(P_ProductionDependenciesComponentID)).set(
         buildingLevelEntity,
-        production[i]
+        requiredConnectedProductions[i]
       );
+      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
   }
 
@@ -379,28 +379,28 @@ library LibInitBuildings {
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1500 });
     requiredResources[0] = resourceValues;
 
-    /****************** Required Passive Resources *******************/
-    ResourceValues[] memory requiredPassives = new ResourceValues[](maxLevel);
+    /****************** Required Utility Resources *******************/
+    ResourceValues[] memory requiredUtilitys = new ResourceValues[](maxLevel);
     // LEVEL 1
     uint256[] memory resourceIds;
     uint32[] memory resourceAmounts;
 
     resourceIds = new uint256[](1);
     resourceAmounts = new uint32[](1);
-    resourceIds[0] = ElectricityPassiveResourceID;
+    resourceIds[0] = ElectricityUtilityResourceID;
     resourceAmounts[0] = 2;
-    requiredPassives[0] = ResourceValues(resourceIds, resourceAmounts);
+    requiredUtilitys[0] = ResourceValues(resourceIds, resourceAmounts);
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
     // LEVEL 1
     resourceIds = new uint256[](2);
     resourceAmounts = new uint32[](2);
-    resourceIds[0] = IronMineID;
+    resourceIds[0] = IronResourceItemID;
     resourceAmounts[0] = 1;
-    resourceIds[1] = CopperMineID;
+    resourceIds[1] = CopperResourceItemID;
     resourceAmounts[1] = 1;
-    requiredMines[0] = ResourceValues(resourceIds, resourceAmounts);
+    requiredConnectedProductions[0] = ResourceValues(resourceIds, resourceAmounts);
 
     /****************** Factory Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
@@ -408,27 +408,27 @@ library LibInitBuildings {
     production[0] = ResourceValue(AlloyCraftedItemID, 1);
 
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
-      RequiredPassiveComponent(world.getComponent(RequiredPassiveComponentID)).set(
+      P_ProductionDependenciesComponent(world.getComponent(P_ProductionDependenciesComponentID)).set(
         buildingLevelEntity,
-        requiredPassives[i]
+        requiredConnectedProductions[i]
       );
-      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+      P_RequiredUtilityComponent(world.getComponent(P_RequiredUtilityComponentID)).set(
         buildingLevelEntity,
-        production[i]
+        requiredUtilitys[i]
       );
+      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
   }
 
@@ -451,15 +451,15 @@ library LibInitBuildings {
     requiredResources[0] = resourceValues;
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredMines = new ResourceValues[](maxLevel);
+    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
     uint256[] memory resourceIds = new uint256[](2);
     uint32[] memory amounts = new uint32[](2);
     // LEVEL 1
-    resourceIds[0] = LithiumMineID;
+    resourceIds[0] = LithiumResourceItemID;
     amounts[0] = 1;
-    resourceIds[1] = CopperMineID;
+    resourceIds[1] = CopperResourceItemID;
     amounts[1] = 1;
-    requiredMines[0] = ResourceValues(resourceIds, amounts);
+    requiredConnectedProductions[0] = ResourceValues(resourceIds, amounts);
 
     /****************** Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
@@ -467,23 +467,23 @@ library LibInitBuildings {
     production[0] = ResourceValue(LithiumCopperOxideCraftedItemID, 1);
 
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-      MinesComponent(world.getComponent(MinesComponentID)).set(buildingLevelEntity, requiredMines[i]);
-      BuildingProductionComponent(world.getComponent(BuildingProductionComponentID)).set(
+      P_ProductionDependenciesComponent(world.getComponent(P_ProductionDependenciesComponentID)).set(
         buildingLevelEntity,
-        production[i]
+        requiredConnectedProductions[i]
       );
+      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(buildingLevelEntity, production[i]);
     }
   }
 
@@ -538,13 +538,13 @@ library LibInitBuildings {
     storageUpgrades[2] = resourceValues;
 
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
       );
@@ -569,27 +569,27 @@ library LibInitBuildings {
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
     requiredResources[0] = resourceValues;
 
-    /****************** Passive Production*******************/
-    ResourceValue[] memory passiveProduction = new ResourceValue[](1);
+    /****************** Utility Production*******************/
+    ResourceValue[] memory UtilityProduction = new ResourceValue[](1);
     // LEVEL 1
-    passiveProduction[0] = ResourceValue({ resource: ElectricityPassiveResourceID, value: 4 });
+    UtilityProduction[0] = ResourceValue({ resource: ElectricityUtilityResourceID, value: 4 });
 
     /* ***********************Set Values ************************* */
-    MaxLevelComponent(world.getComponent(MaxLevelComponentID)).set(entity, maxLevel);
-    BlueprintComponent(world.getComponent(BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
-      RequiredResearchComponent(world.getComponent(RequiredResearchComponentID)).set(
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
         buildingLevelEntity,
         requiredResearch[i]
       );
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-      PassiveProductionComponent(world.getComponent(PassiveProductionComponentID)).set(
+      P_UtilityProductionComponent(world.getComponent(P_UtilityProductionComponentID)).set(
         buildingLevelEntity,
-        passiveProduction[i]
+        UtilityProduction[i]
       );
     }
   }

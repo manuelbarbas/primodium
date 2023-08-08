@@ -5,24 +5,18 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID, ResourceValues } from "components/P_ProductionDependenciesComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { MainBaseID } from "../prototypes.sol";
-import { BuildingKey } from "../prototypes.sol";
-import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
 import { Coord } from "../types.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibFactory } from "../libraries/LibFactory.sol";
-import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
-import { LibResource } from "../libraries/LibResource.sol";
 
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdateConnectedRequiredProductionSystemID } from "./S_UpdateConnectedRequiredProductionSystem.sol";
+
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.DestroyPath"));
 
@@ -38,30 +32,46 @@ contract DestroyPathSystem is PrimodiumSystem {
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
 
     // Check that the coordinates exist tiles
-    uint256 startCoordEntity = getBuildingFromCoord(coordStart);
-    require(
-      buildingTypeComponent.has(startCoordEntity),
-      "[DestroyPathSystem] Cannot destroy path from an empty coordinate"
-    );
+    uint256 fromEntity = getBuildingFromCoord(coordStart);
+    require(buildingTypeComponent.has(fromEntity), "[DestroyPathSystem] Cannot destroy path from an empty coordinate");
+
+    // Check that a path doesn't already start there (each tile can only be the start of one path)
+    require(ownedByComponent.has(fromEntity), "[DestroyPathSystem] Path does not exist at the selected tile");
 
     // Check that the coordinates are both owned by the msg.sender
-    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(startCoordEntity);
+    uint256 ownedEntityAtStartCoord = ownedByComponent.getValue(fromEntity);
     require(
       ownedEntityAtStartCoord == addressToEntity(msg.sender),
       "[DestroyPathSystem] Cannot destroy path from a tile you do not own"
     );
 
-    // Check that a path doesn't already start there (each tile can only be the start of one path)
-    require(ownedByComponent.has(startCoordEntity), "[DestroyPathSystem] Path does not exist at the selected tile");
+    uint256 toEntity = pathComponent.getValue(fromEntity);
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
-      msg.sender,
-      startCoordEntity
-    );
+    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(toEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
+        msg.sender,
+        fromEntity,
+        EActionType.Destroy
+      );
+    }
 
-    pathComponent.remove(startCoordEntity);
+    if (
+      P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(
+        LibEncode.hashKeyEntity(
+          buildingTypeComponent.getValue(fromEntity),
+          LevelComponent(getC(LevelComponentID)).getValue(fromEntity)
+        )
+      )
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+        msg.sender,
+        fromEntity,
+        EActionType.Destroy
+      );
+    }
+    pathComponent.remove(fromEntity);
 
-    return abi.encode(startCoordEntity);
+    return abi.encode(fromEntity);
   }
 
   function executeTyped(Coord memory coordStart) public returns (bytes memory) {
