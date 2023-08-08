@@ -24,7 +24,11 @@ Deploy the contracts on the local environment using the commands in the previous
 mud test
 ```
 
-For production deployment, Primodium is currently live on the Caldera testnet. Set the `isDebug()` function to return false, then deploy the contracts with the following command in the `packages/contracts` directory.
+For production deployment, Primodium is currently live on the Caldera testnet. To deploy, follow these steps:
+
+1. Switch to the contracts directory with `cd packages/contracts`
+2. Generate `deploy-live.json` with `yarn gen:json`
+3. Deploy with forge:
 
 ```
 mud deploy-contracts --rpc https://primodium-bedrock.calderachain.xyz/replica-http --deployerPrivateKey <testnet key> --config ./deploy-live.json
