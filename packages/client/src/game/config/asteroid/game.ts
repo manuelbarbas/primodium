@@ -13,10 +13,7 @@ const gameConfig: GameConfig = {
   scale: {
     mode: Phaser.Scale.NONE,
   },
-  fps: {
-    deltaHistory: 120,
-  },
-  powerPreference: "high-performance",
+  // powerPreference: "high-performance",
   // autoFocus: true,
   autoRound: true,
   transparent: true,

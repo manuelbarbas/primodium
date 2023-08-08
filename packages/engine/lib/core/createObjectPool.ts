@@ -1,3 +1,4 @@
+import { uuid } from "@latticexyz/utils";
 import { EmbodiedEntity, GameObjectTypes } from "../../types";
 import { createEmbodiedEntity } from "./createEmbodiedEntity";
 import { observable } from "mobx";
@@ -22,6 +23,12 @@ export function createObjectPool(scene: Phaser.Scene) {
   const objects = observable(
     new Map<string, EmbodiedEntity<keyof GameObjectTypes>>()
   );
+
+  const embodiedGroups = new Map<
+    string,
+    Set<EmbodiedEntity<keyof GameObjectTypes>>
+  >();
+
   const cameraFilter = { current: 0 };
 
   function get<Type extends keyof GameObjectTypes | "Existing">(
@@ -50,10 +57,33 @@ export function createObjectPool(scene: Phaser.Scene) {
       objects.set(entity, embodiedEntity);
     }
 
-    // Don't spawn here, let culling take care of spawning
-    // embodiedEntity.spawn();
-
     return embodiedEntity as ObjectPoolReturnType<typeof type>;
+  }
+
+  //use a single id to manage multiple embodied entities ea
+  function getGroup(id: string) {
+    let group = embodiedGroups.get(id);
+
+    if (!group) {
+      group = new Set();
+      embodiedGroups.set(id, group);
+    }
+
+    function add<Type extends keyof GameObjectTypes | "Existing">(type: Type) {
+      const entityID = uuid();
+      const entity = get(entityID, type) as ObjectPoolReturnType<Type>;
+
+      if (!group || !entity) throw Error("Group or entity was not found.");
+
+      group.add(entity);
+
+      return entity;
+    }
+
+    return {
+      objects: group,
+      add,
+    };
   }
 
   function remove(entity: number | string) {
@@ -61,6 +91,18 @@ export function createObjectPool(scene: Phaser.Scene) {
     const object = objects.get(entity);
     if (object) object.despawn();
     objects.delete(entity);
+  }
+
+  function removeGroup(id: string) {
+    const group = embodiedGroups.get(id);
+
+    if (!group) return;
+
+    for (const entity of group) {
+      remove(entity.id);
+    }
+
+    embodiedGroups.delete(id);
   }
 
   function ignoreCamera(cameraId: number, ignore: boolean) {
@@ -75,5 +117,5 @@ export function createObjectPool(scene: Phaser.Scene) {
     }
   }
 
-  return { get, remove, objects, groups, ignoreCamera };
+  return { get, remove, objects, groups, ignoreCamera, getGroup, removeGroup };
 }
