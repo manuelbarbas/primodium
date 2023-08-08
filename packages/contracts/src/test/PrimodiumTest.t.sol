@@ -92,4 +92,8 @@ contract PrimodiumTest is MudTest {
     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
     return blockEntityID;
   }
+
+  function spawn(address player) internal prank(player) returns (uint256) {
+    return abi.decode(SpawnSystem(system(SpawnSystemID)).executeTyped(), (uint256));
+  }
 }

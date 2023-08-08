@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { console } from "forge-std/console.sol";
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
@@ -93,7 +92,6 @@ contract BuildSystem is PrimodiumSystem {
 
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
-    console.log("setting position for ", buildingEntity);
     PositionComponent(getC(PositionComponentID)).set(buildingEntity, coord);
     bool canBuildOn = abi.decode(
       IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
