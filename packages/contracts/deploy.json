@@ -32,7 +32,8 @@
     "IsTechComponent",
     "MaxPassiveComponent",
     "OccupiedPassiveResourceComponent",
-    "BuildingEntityProductionComponent"
+    "BuildingEntityProductionComponent",
+    "PositionComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
