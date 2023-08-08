@@ -14,7 +14,6 @@ import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubs
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { ProductionComponent, ID as ProductionComponentID } from "../components/ProductionComponent.sol";
-import { ProductionComponent, ID as ProductionComponentID } from "../components/ProductionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { P_ProductionComponent, ID as P_ProductionComponentID, ResourceValue } from "../components/P_ProductionComponent.sol";
