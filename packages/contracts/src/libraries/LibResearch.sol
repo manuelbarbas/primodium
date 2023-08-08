@@ -7,7 +7,6 @@ import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.s
 import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 
-import { LibMath } from "./LibMath.sol";
 import { LibEncode } from "./LibEncode.sol";
 
 library LibResearch {

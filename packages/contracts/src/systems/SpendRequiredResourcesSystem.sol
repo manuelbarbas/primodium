@@ -7,7 +7,6 @@ import { ID as ResearchSystemID } from "./ResearchSystem.sol";
 
 import { ID as UpdateUnclaimedResourcesSystemID } from "./UpdateUnclaimedResourcesSystem.sol";
 
-import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID, ResourceValues } from "../components/RequiredResourcesComponent.sol";
@@ -15,7 +14,6 @@ import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponen
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
-import { LibResource } from "../libraries/LibResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.SpendRequiredResources"));
 
