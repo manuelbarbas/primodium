@@ -2,22 +2,22 @@ import { EntityIndex } from "@latticexyz/recs";
 import { useMud } from "src/hooks";
 import useResourceCount from "src/hooks/useResourceCount";
 import { BlockType } from "src/util/constants";
-import { PassiveResourceLabel } from "./PassiveResourceLabel";
+import { UtilityResourceLabel } from "./UtilityResourceLabel";
 
-export const AllPassiveResourceLabels = ({
+export const AllUtilityResourceLabels = ({
   entityIndex,
 }: {
   entityIndex?: EntityIndex;
 }) => {
   const { components } = useMud();
 
-  const passiveCapacity = useResourceCount(
-    components.MaxPassive,
-    BlockType.ElectricityPassiveResource,
+  const UtilityCapacity = useResourceCount(
+    components.MaxUtility,
+    BlockType.ElectricityUtilityResource,
     entityIndex
   );
 
-  if (!passiveCapacity)
+  if (!UtilityCapacity)
     return (
       <div className="flex justify-center items-center text-lg">
         No Utilities
@@ -25,10 +25,10 @@ export const AllPassiveResourceLabels = ({
     );
   return (
     <>
-      <PassiveResourceLabel
+      <UtilityResourceLabel
         name={"Electricity"}
         entityIndex={entityIndex}
-        resourceId={BlockType.ElectricityPassiveResource}
+        resourceId={BlockType.ElectricityUtilityResource}
       />
     </>
   );

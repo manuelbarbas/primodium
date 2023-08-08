@@ -17,7 +17,7 @@ import { Action, BackgroundImage, KeyImages } from "src/util/constants";
 import { hashKeyEntityAndTrim } from "src/util/encode";
 import {
   RawBlueprint,
-  RequiredResearch,
+  P_RequiredResearch,
   HasResearched,
 } from "src/network/components/chainComponents";
 
@@ -36,7 +36,7 @@ const HotbarItem: React.FC<{
   const keybinds = useKeybinds();
   let dimensions: { width: number; height: number } | undefined;
 
-  const requiredResearch = RequiredResearch.use(blockType)?.value;
+  const requiredResearch = P_RequiredResearch.use(blockType)?.value;
 
   const entity = hashKeyEntityAndTrim(requiredResearch ?? SingletonID, address);
 

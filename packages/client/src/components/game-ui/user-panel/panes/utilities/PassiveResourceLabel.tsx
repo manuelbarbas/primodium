@@ -3,14 +3,14 @@ import { useMemo } from "react";
 import useResourceCount from "src/hooks/useResourceCount";
 import {
   LastClaimedAt,
-  MaxPassive,
-  OccupiedPassiveResource,
+  MaxUtility,
+  OccupiedUtilityResource,
   PlayerProduction,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { ResourceImage } from "src/util/constants";
 
-export const PassiveResourceLabel = ({
+export const UtilityResourceLabel = ({
   name,
   resourceId,
   entityIndex,
@@ -22,12 +22,12 @@ export const PassiveResourceLabel = ({
   const blockNumber = BlockNumber.get(undefined, { value: 0 }).value;
 
   const resourceCount = useResourceCount(
-    OccupiedPassiveResource,
+    OccupiedUtilityResource,
     resourceId,
     entityIndex
   );
 
-  const maxStorage = useResourceCount(MaxPassive, resourceId, entityIndex);
+  const maxStorage = useResourceCount(MaxUtility, resourceId, entityIndex);
 
   const production = useResourceCount(
     PlayerProduction,

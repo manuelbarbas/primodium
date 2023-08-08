@@ -13,7 +13,7 @@ import ResearchPage from "./research-menu/ResearchPage";
 import { MainMenu } from "./MainMenu";
 import {
   Level,
-  MaxBuildings,
+  P_MaxBuildings,
   BuildingCount,
 } from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
@@ -36,7 +36,7 @@ export const InfoBox = () => {
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
-  const buildLimit = MaxBuildings.use(
+  const buildLimit = P_MaxBuildings.use(
     trimEntityId(mainBaseLevel as unknown as EntityID)
   );
 
