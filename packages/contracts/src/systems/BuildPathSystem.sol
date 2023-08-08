@@ -6,9 +6,9 @@ import { PathComponent, ID as PathComponentID } from "components/PathComponent.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "components/RequiredConnectedProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID, ResourceValues } from "components/P_ProductionDependenciesComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID, ResourceValue } from "components/BuildingProductionComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID, ResourceValue } from "components/P_ProductionComponent.sol";
 import { MainBaseID } from "../prototypes.sol";
 
 import { Coord } from "../types.sol";
@@ -18,8 +18,8 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibTerrain } from "../libraries/LibTerrain.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 
-import { ID as UpdateConnectedRequiredProductionSystemID } from "./UpdateConnectedRequiredProductionSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
+import { ID as UpdateConnectedRequiredProductionSystemID } from "./S_UpdateConnectedRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 
@@ -44,9 +44,7 @@ contract BuildPathSystem is PrimodiumSystem {
       levelComponent.getValue(fromEntity)
     );
 
-    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
-      getC(BuildingProductionComponentID)
-    );
+    P_ProductionComponent buildingProductionComponent = P_ProductionComponent(getC(P_ProductionComponentID));
     //can only build path from production buildings
     if (!buildingProductionComponent.has(fromTypeLevelEntity)) return false;
     //can always build path from production buildings to MainBase
@@ -57,8 +55,8 @@ contract BuildPathSystem is PrimodiumSystem {
       levelComponent.getValue(toEntity)
     );
     //can only build path from production buildings to buildings that require production buildings
-    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
-      getC(RequiredConnectedProductionComponentID)
+    P_ProductionDependenciesComponent requiredConnectedProductionComponent = P_ProductionDependenciesComponent(
+      getC(P_ProductionDependenciesComponentID)
     );
     if (!requiredConnectedProductionComponent.has(toTypeLevelEntity)) return false;
 
@@ -111,8 +109,8 @@ contract BuildPathSystem is PrimodiumSystem {
 
     PathComponent(getC(PathComponentID)).set(fromEntity, toEntity);
 
-    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
-      getC(RequiredConnectedProductionComponentID)
+    P_ProductionDependenciesComponent requiredConnectedProductionComponent = P_ProductionDependenciesComponent(
+      getC(P_ProductionDependenciesComponentID)
     );
     if (requiredConnectedProductionComponent.has(toEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
@@ -123,11 +121,7 @@ contract BuildPathSystem is PrimodiumSystem {
     }
 
     //Resource Production Update
-    if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(
-        fromBuildingTypeLevelEntity
-      )
-    ) {
+    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(fromBuildingTypeLevelEntity)) {
       IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
         msg.sender,
         fromEntity,

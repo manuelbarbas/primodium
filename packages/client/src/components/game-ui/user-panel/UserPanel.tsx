@@ -10,7 +10,7 @@ import { PanelButton } from "./PanelButton";
 import { Starmap } from "./panes/starmap/Starmap";
 import { FullStarmap } from "./panes/starmap/FullStarmap";
 import { AllResourceLabels } from "./panes/inventory/AllResourceLabels";
-import { AllPassiveResourceLabels } from "./panes/utilities/AllPassiveResourceLabels";
+import { AllUtilityResourceLabels } from "./panes/utilities/AllUtilityResourceLabels";
 import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 
@@ -81,7 +81,7 @@ export const UserPanel = () => {
               exit={{ scale: 0 }}
               className=" bg-gray-900 z-[999] w-full border border-cyan-600 p-2 text-xs min-h-[5rem]"
             >
-              <AllPassiveResourceLabels />
+              <AllUtilityResourceLabels />
             </motion.div>
           )}
 

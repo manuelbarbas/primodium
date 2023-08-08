@@ -3,8 +3,8 @@ pragma solidity >=0.8.0;
 // Production Buildings
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-
+import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
+import { P_MaxStorageComponent, ID as MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 
@@ -22,7 +22,7 @@ library LibStorage {
   function getResourceMaxStorage(IWorld world, uint256 entity, uint256 resourceId) internal view returns (uint32) {
     return
       LibMath.getSafe(
-        MaxStorageComponent(world.getComponent(MaxStorageComponentID)),
+        P_MaxStorageComponent(world.getComponent(MaxStorageComponentID)),
         LibEncode.hashKeyEntity(resourceId, entity)
       );
   }

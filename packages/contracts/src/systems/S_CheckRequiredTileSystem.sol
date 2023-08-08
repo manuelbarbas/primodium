@@ -10,15 +10,15 @@ import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-uint256 constant ID = uint256(keccak256("system.CheckRequiredTile"));
+uint256 constant ID = uint256(keccak256("system.S_CheckRequiredTile"));
 
-contract CheckRequiredTileSystem is IOnTwoEntitySubsystem, PrimodiumSystem {
+contract S_CheckRequiredTileSystem is IOnTwoEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID),
-      "CheckRequiredTileSystem: Only BuildSystem can call this function"
+      "S_CheckRequiredTileSystem: Only BuildSystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, uint256 buildingType) = abi.decode(

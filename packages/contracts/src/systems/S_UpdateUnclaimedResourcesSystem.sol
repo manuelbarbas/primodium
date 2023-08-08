@@ -2,14 +2,14 @@
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
-import { ID as UpdatePlayerStorageSystemID } from "systems/UpdatePlayerStorageSystem.sol";
-import { ID as UpdatePlayerResourceProductionSystemID } from "systems/UpdatePlayerResourceProductionSystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "systems/SpendRequiredResourcesSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "systems/S_UpdatePlayerStorageSystem.sol";
+import { ID as UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "systems/S_SpendRequiredResourcesSystem.sol";
 import { ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
 // components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
@@ -18,9 +18,9 @@ import { LibStorage } from "../libraries/LibStorage.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdateUnclaimedResources"));
+uint256 constant ID = uint256(keccak256("system.S_UpdateUnclaimedResources"));
 
-contract UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
+contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -29,7 +29,7 @@ contract UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
         msg.sender == getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID) ||
         msg.sender == getAddressById(world.systems(), SpendRequiredResourcesSystemID) ||
         msg.sender == getAddressById(world.systems(), ClaimFromMineSystemID),
-      "UpdateUnclaimedResourcesSystem: Only UpdatePlayerStorageSystem, UpdatePlayerResourceProductionSystem, SpendRequiredResourcesSystem, ClaimFromMineSystemID  can call this function"
+      "S_UpdateUnclaimedResourcesSystem: Only S_UpdatePlayerStorageSystem, S_UpdatePlayerResourceProductionSystem, S_SpendRequiredResourcesSystem, ClaimFromMineSystemID  can call this function"
     );
 
     (address playerAddress, uint256 resourceID) = abi.decode(args, (address, uint256));
@@ -46,10 +46,8 @@ contract UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
     } else if (lastClaimedAtComponent.getValue(playerResourceProductionEntity) == block.number) {
       return abi.encode(resourceID);
     }
-    PlayerProductionComponent playerProductionComponent = PlayerProductionComponent(
-      world.getComponent(PlayerProductionComponentID)
-    );
-    uint32 playerResourceProduction = LibMath.getSafe(playerProductionComponent, playerResourceProductionEntity);
+    ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
+    uint32 playerResourceProduction = LibMath.getSafe(productionComponent, playerResourceProductionEntity);
     if (playerResourceProduction <= 0) {
       lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
       return abi.encode(resourceID);

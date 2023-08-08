@@ -7,16 +7,16 @@ import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
 import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID, ResourceValues } from "../components/RequiredConnectedProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID, ResourceValues } from "../components/P_ProductionDependenciesComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "../components/BuildingProductionComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "../components/P_ProductionComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../components/PathComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdateConnectedRequiredProduction"));
+uint256 constant ID = uint256(keccak256("system.S_UpdateConnectedRequiredProduction"));
 
-contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
+contract S_UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -24,7 +24,7 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
       msg.sender == getAddressById(world.systems(), DestroySystemID) ||
         msg.sender == getAddressById(world.systems(), BuildPathSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroyPathSystemID),
-      "UpdateConnectedRequiredProductionSystem: Only DestroyPathSystem, BuildPathSystem, DestroySystem can call this function"
+      "S_UpdateConnectedRequiredProductionSystem: Only DestroyPathSystem, BuildPathSystem, DestroySystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
@@ -42,13 +42,11 @@ contract UpdateConnectedRequiredProductionSystem is IOnBuildingSubsystem, Primod
 
     uint256 toEntity = PathComponent(getAddressById(world.components(), PathComponentID)).getValue(buildingEntity);
 
-    RequiredConnectedProductionComponent requiredConnectedProductionComponent = RequiredConnectedProductionComponent(
-      getC(RequiredConnectedProductionComponentID)
+    P_ProductionDependenciesComponent requiredConnectedProductionComponent = P_ProductionDependenciesComponent(
+      getC(P_ProductionDependenciesComponentID)
     );
 
-    BuildingProductionComponent buildingProductionComponent = BuildingProductionComponent(
-      getC(BuildingProductionComponentID)
-    );
+    P_ProductionComponent buildingProductionComponent = P_ProductionComponent(getC(P_ProductionComponentID));
     ResourceValues memory requiredProduction = requiredConnectedProductionComponent.getValue(toEntity);
     uint256 productionResourceID = buildingProductionComponent.getValue(buildingIdNewLevel).resource;
     for (uint256 i = 0; i < requiredProduction.resources.length; i++) {

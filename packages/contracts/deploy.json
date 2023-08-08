@@ -4,35 +4,32 @@
     "BuildingTypeComponent",
     "OwnedByComponent",
     "PathComponent",
-
     "LastClaimedAtComponent",
-
     "ItemComponent",
     "HasResearchedComponent",
     "MainBaseComponent",
     "LevelComponent",
-    "RequiredResearchComponent",
-    "RequiredResourcesComponent",
-    "MaxBuildingsComponent",
     "BuildingCountComponent",
-    "IgnoreBuildLimitComponent",
     "ChildrenComponent",
-    "BlueprintComponent",
-    "MaxStorageComponent",
-    "MaxResourceStorageComponent",
-    "PlayerProductionComponent",
+    "ProductionComponent",
     "ActiveComponent",
-    "RequiredConnectedProductionComponent",
-    "BuildingProductionComponent",
-    "MaxLevelComponent",
-    "RequiredTileComponent",
-    "RequiredPassiveComponent",
-    "PassiveProductionComponent",
     "IsDebugComponent",
-    "IsTechComponent",
-    "MaxPassiveComponent",
-    "OccupiedPassiveResourceComponent",
-    "BuildingEntityProductionComponent"
+    "MaxUtilityComponent",
+    "OccupiedUtilityResourceComponent",
+    "P_ProductionDependenciesComponent",
+    "P_ProductionComponent",
+    "P_MaxLevelComponent",
+    "P_RequiredTileComponent",
+    "P_RequiredUtilityComponent",
+    "P_UtilityProductionComponent",
+    "P_BlueprintComponent",
+    "P_MaxStorageComponent",
+    "P_MaxResourceStorageComponent",
+    "P_IsTechComponent",
+    "P_RequiredResearchComponent",
+    "P_RequiredResourcesComponent",
+    "P_MaxBuildingsComponent",
+    "P_IgnoreBuildLimitComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -69,10 +66,6 @@
       ]
     },
     {
-      "name": "PlaceBuildingTilesSystem",
-      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
-    },
-    {
       "name": "BuildPathSystem",
       "writeAccess": ["PathComponent"]
     },
@@ -89,56 +82,56 @@
       "writeAccess": ["LevelComponent"]
     },
     {
-      "name": "UpdatePlayerStorageSystem",
-      "writeAccess": ["ItemComponent", "MaxStorageComponent", "MaxResourceStorageComponent"]
+      "name": "ComponentDevSystem",
+      "writeAccess": ["*"]
     },
     {
-      "name": "SpendRequiredResourcesSystem",
+      "name": "S_PlaceBuildingTilesSystem",
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
+    },
+    {
+      "name": "S_UpdatePlayerStorageSystem",
+      "writeAccess": ["ItemComponent", "P_MaxStorageComponent", "P_MaxResourceStorageComponent"]
+    },
+    {
+      "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpdateActiveStatusSystem",
+      "name": "S_UpdateActiveStatusSystem",
       "writeAccess": ["ActiveComponent"]
     },
     {
-      "name": "SpendRequiredResourcesSystem",
+      "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["ItemComponent"]
     },
     {
-      "name": "UpdatePlayerResourceProductionSystem",
-      "writeAccess": ["PlayerProductionComponent", "BuildingEntityProductionComponent"]
+      "name": "S_UpdatePlayerResourceProductionSystem",
+      "writeAccess": ["ProductionComponent", "ProductionComponent"]
     },
     {
-      "name": "UpdateUnclaimedResourcesSystem",
+      "name": "S_UpdateUnclaimedResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpdatePlayerStorageSystem",
-      "writeAccess": ["MaxResourceStorageComponent", "MaxStorageComponent", "ItemComponent"]
+      "name": "S_UpdateOccupiedUtilitySystem",
+      "writeAccess": ["OccupiedUtilityResourceComponent"]
     },
     {
-      "name": "UpdateOccupiedPassiveSystem",
-      "writeAccess": ["OccupiedPassiveResourceComponent"]
+      "name": "S_UpdateUtilityProductionSystem",
+      "writeAccess": ["MaxUtilityComponent"]
     },
     {
-      "name": "UpdatePassiveProductionSystem",
-      "writeAccess": ["MaxPassiveComponent"]
+      "name": "S_UpdateRequiredProductionSystem",
+      "writeAccess": ["P_ProductionDependenciesComponent"]
     },
     {
-      "name": "UpdateRequiredProductionSystem",
-      "writeAccess": ["RequiredConnectedProductionComponent"]
+      "name": "S_UpdateConnectedRequiredProductionSystem",
+      "writeAccess": ["P_ProductionDependenciesComponent"]
     },
     {
-      "name": "UpdateConnectedRequiredProductionSystem",
-      "writeAccess": ["RequiredConnectedProductionComponent"]
-    },
-    {
-      "name": "CheckRequiredTileSystem",
+      "name": "S_CheckRequiredTileSystem",
       "writeAccess": []
-    },
-    {
-      "name": "ComponentDevSystem",
-      "writeAccess": ["*"]
     }
   ]
 }

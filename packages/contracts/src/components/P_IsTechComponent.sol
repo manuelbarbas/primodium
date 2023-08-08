@@ -2,9 +2,9 @@
 pragma solidity >=0.8.0;
 import "std-contracts/components/BoolComponent.sol";
 
-uint256 constant ID = uint256(keccak256("component.IsActiveTechnology"));
+uint256 constant ID = uint256(keccak256("component.P_IsTech"));
 
 //set for Factories to indicate that they are functional
-contract IsTechComponent is BoolComponent {
+contract P_IsTechComponent is BoolComponent {
   constructor(address world) BoolComponent(world, ID) {}
 }

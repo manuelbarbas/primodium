@@ -27,7 +27,10 @@ export const BuildingType = newComponent(
 export const RawBlueprint = newComponent(
   world,
   { value: Type.NumberArray },
-  { id: "RawBlueprint", metadata: { contractId: `${commonIdPrefix}Blueprint` } }
+  {
+    id: "RawBlueprint",
+    metadata: { contractId: `${commonIdPrefix}P_Blueprint` },
+  }
 );
 
 export const SystemsRegistry = newStringComponent(world, {
@@ -63,9 +66,9 @@ export const HasResearched = newBoolComponent(world, {
   metadata: { contractId: `${commonIdPrefix}HasResearched` },
 });
 
-export const IsActiveTechnology = newBoolComponent(world, {
-  id: "IsActiveTechnology",
-  metadata: { contractId: `${commonIdPrefix}IsActiveTechnology` },
+export const P_IsTech = newBoolComponent(world, {
+  id: "P_IsTech",
+  metadata: { contractId: `${commonIdPrefix}P_IsTech` },
 });
 
 export const MainBase = newComponent(
@@ -77,24 +80,24 @@ export const MainBase = newComponent(
   }
 );
 
-export const RequiredResearch = newNumberComponent(world, {
-  id: "RequiredResearch",
-  metadata: { contractId: `${commonIdPrefix}RequiredResearch` },
+export const P_RequiredResearch = newNumberComponent(world, {
+  id: "P_RequiredResearch",
+  metadata: { contractId: `${commonIdPrefix}P_RequiredResearch` },
 });
 
-export const RequiredResources = newComponent(
+export const P_RequiredResources = newComponent(
   world,
   { resources: Type.EntityArray, values: Type.NumberArray },
 
   {
-    id: "RequiredResources",
-    metadata: { contractId: `${commonIdPrefix}RequiredResources` },
+    id: "P_RequiredResources",
+    metadata: { contractId: `${commonIdPrefix}P_RequiredResources` },
   }
 );
 
-export const MaxLevel = newNumberComponent(world, {
-  id: "MaxLevel",
-  metadata: { contractId: `${commonIdPrefix}MaxLevel` },
+export const P_MaxLevel = newNumberComponent(world, {
+  id: "P_MaxLevel",
+  metadata: { contractId: `${commonIdPrefix}P_MaxLevel` },
   overridable: true,
 });
 
@@ -104,21 +107,21 @@ export const Level = newNumberComponent(world, {
   overridable: true,
 });
 
-export const MaxStorage = newNumberComponent(world, {
-  id: "MaxStorage",
-  metadata: { contractId: `${commonIdPrefix}MaxStorage` },
+export const P_MaxStorage = newNumberComponent(world, {
+  id: "P_MaxStorage",
+  metadata: { contractId: `${commonIdPrefix}P_MaxStorage` },
   overridable: true,
 });
 
-export const PlayerProduction = newNumberComponent(world, {
-  id: "PlayerProduction",
-  metadata: { contractId: `${commonIdPrefix}PlayerProduction` },
+export const Production = newNumberComponent(world, {
+  id: "Production",
+  metadata: { contractId: `${commonIdPrefix}Production` },
   overridable: true,
 });
 
-export const MaxBuildings = newNumberComponent(world, {
-  id: "MaxBuildings",
-  metadata: { contractId: `${commonIdPrefix}MaxBuildings` },
+export const P_MaxBuildings = newNumberComponent(world, {
+  id: "P_MaxBuildings",
+  metadata: { contractId: `${commonIdPrefix}P_MaxBuildings` },
   overridable: true,
 });
 
@@ -127,15 +130,15 @@ export const BuildingCount = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}BuildingCount` },
   overridable: true,
 });
-export const MaxPassive = newNumberComponent(world, {
-  id: "MaxPassive",
-  metadata: { contractId: `${commonIdPrefix}MaxPassive` },
+export const MaxUtility = newNumberComponent(world, {
+  id: "MaxUtility",
+  metadata: { contractId: `${commonIdPrefix}MaxUtility` },
   overridable: true,
 });
 
-export const OccupiedPassiveResource = newNumberComponent(world, {
-  id: "OccupiedPassiveResource",
-  metadata: { contractId: `${commonIdPrefix}OccupiedPassiveResource` },
+export const OccupiedUtilityResource = newNumberComponent(world, {
+  id: "OccupiedUtilityResource",
+  metadata: { contractId: `${commonIdPrefix}OccupiedUtilityResource` },
   overridable: true,
 });
 
@@ -184,19 +187,19 @@ export default {
   Item,
   HasResearched,
   MainBase,
-  RequiredResearch,
-  RequiredResources,
-  MaxLevel,
+  P_RequiredResearch,
+  P_RequiredResources,
+  P_MaxLevel,
   Level,
-  MaxStorage,
-  PlayerProduction,
-  MaxBuildings,
+  P_MaxStorage,
+  Production,
+  P_MaxBuildings,
   BuildingCount,
   Children,
   RawBlueprint,
   SystemsRegistry,
   ComponentsRegistry,
   LoadingState,
-  OccupiedPassiveResource,
-  MaxPassive,
+  OccupiedUtilityResource,
+  MaxUtility,
 };

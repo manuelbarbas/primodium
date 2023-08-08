@@ -8,7 +8,7 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 
 // types
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
-import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 import { ID as BuildSystemID } from "./BuildSystem.sol";
@@ -19,16 +19,16 @@ import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { ID as UpdatePlayerResourceProductionSystemID } from "./UpdatePlayerResourceProductionSystem.sol";
+import { ID as UpdatePlayerResourceProductionSystemID } from "./S_UpdatePlayerResourceProductionSystem.sol";
 
 import { ResourceValues } from "../types.sol";
 
 // libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdateActiveStatus"));
+uint256 constant ID = uint256(keccak256("system.S_UpdateActiveStatus"));
 
-contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
+contract S_UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function updateActiveStatus(address playerAddress, uint256 buildingEntity, bool isActive) internal {
@@ -69,7 +69,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
     uint32 buildingLevel = LevelComponent(getAddressById(components, LevelComponentID)).getValue(buildingEntity);
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
     return
-      RequiredConnectedProductionComponent(getAddressById(components, RequiredConnectedProductionComponentID)).has(
+      P_ProductionDependenciesComponent(getAddressById(components, P_ProductionDependenciesComponentID)).has(
         buildingTypeLevelEntity
       );
   }
@@ -82,7 +82,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
         msg.sender == getAddressById(world.systems(), BuildPathSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroyPathSystemID) ||
         msg.sender == getAddressById(world.systems(), ID),
-      "UpdateActiveStatusSystem: Only BuildSystem, DestroySystem, UpgradeSystem, BuildPathSystem, DestroyPathSystem and UpdateActiveStatusSystem can call this function"
+      "S_UpdateActiveStatusSystem: Only BuildSystem, DestroySystem, UpgradeSystem, BuildPathSystem, DestroyPathSystem and S_UpdateActiveStatusSystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
@@ -109,9 +109,7 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
     // first check if any connected resource production buildings are not at the required level or require resource production buildings themeselves and are not active
-    if (
-      RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(buildingTypeLevelEntity)
-    ) {
+    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingTypeLevelEntity)) {
       ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
       uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(buildingEntity);
       for (uint256 i = 0; i < connectedMineEntities.length; i++) {
@@ -123,8 +121,8 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
           return abi.encode(false);
         }
       }
-      ResourceValues memory minesData = RequiredConnectedProductionComponent(
-        getAddressById(components, RequiredConnectedProductionComponentID)
+      ResourceValues memory minesData = P_ProductionDependenciesComponent(
+        getAddressById(components, P_ProductionDependenciesComponentID)
       ).getValue(buildingEntity);
       //then check if there are enough connected resource production buildings
       for (uint256 i = 0; i < minesData.values.length; i++) {

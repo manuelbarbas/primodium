@@ -9,13 +9,13 @@ import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSyste
 
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 
-import { OccupiedPassiveResourceComponent, ID as OccupiedPassiveResourceComponentID } from "components/OccupiedPassiveResourceComponent.sol";
-import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "components/MaxPassiveComponent.sol";
+import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
+import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "../../components/RequiredResourcesComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import "../../prototypes.sol";
 import { Coord } from "../../types.sol";
@@ -77,33 +77,33 @@ contract UpgradeSystemTest is MudTest {
     vm.stopPrank();
   }
 
-  function testUpgradePassiveProduction() public {
+  function testUpgradeUtilityProduction() public {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(component(MaxPassiveComponentID));
-    OccupiedPassiveResourceComponent occupiedPassiveResourceComponent = OccupiedPassiveResourceComponent(
-      component(OccupiedPassiveResourceComponentID)
+    MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(component(MaxUtilityComponentID));
+    OccupiedUtilityResourceComponent occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
+      component(OccupiedUtilityResourceComponentID)
     );
 
-    buildSystem.executeTyped(DebugPassiveProductionBuilding, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, Coord({ x: 0, y: 0 }));
     assertEq(
-      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
-    buildSystem.executeTyped(DebugSimpleBuildingPassiveResourceRequirement, Coord({ x: 1, y: 0 }));
+    buildSystem.executeTyped(DebugSimpleBuildingUtilityResourceRequirement, Coord({ x: 1, y: 0 }));
     assertEq(
-      occupiedPassiveResourceComponent.getValue(
-        LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))
+      occupiedUtilityResourceComponent.getValue(
+        LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))
       ),
       2,
       "used up electricity should be 2"
     );
     upgradeSystem.executeTyped(Coord({ x: 0, y: 0 }));
     assertEq(
-      maxPassiveComponent.getValue(LibEncode.hashKeyEntity(ElectricityPassiveResourceID, addressToEntity(alice))),
+      maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       20,
       "Electricity Storage should be 20"
     );
@@ -120,8 +120,8 @@ contract UpgradeSystemTest is MudTest {
     UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
 
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
-    RequiredResourcesComponent requiredResourcesComponent = RequiredResourcesComponent(
-      component(RequiredResourcesComponentID)
+    P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
+      component(P_RequiredResourcesComponentID)
     );
     console.log("building MainBase");
     bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);

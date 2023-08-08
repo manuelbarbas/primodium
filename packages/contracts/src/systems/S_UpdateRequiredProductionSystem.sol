@@ -7,16 +7,14 @@ import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
-import { MaxPassiveComponent, ID as MaxPassiveComponentID } from "../components/MaxPassiveComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "../components/PassiveProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID, ResourceValues } from "../components/P_ProductionDependenciesComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibMath } from "../libraries/LibMath.sol";
 
-uint256 constant ID = uint256(keccak256("system.UpdatePassiveProduction"));
+uint256 constant ID = uint256(keccak256("system.S_UpdateRequiredProduction"));
 
-contract UpdatePassiveProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
+contract S_UpdateRequiredProductionSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -24,7 +22,7 @@ contract UpdatePassiveProductionSystem is IOnBuildingSubsystem, PrimodiumSystem 
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
         msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroySystemID),
-      "UpdatePassiveProductionSystem: Only BuildSystem, UpgradeSystem, DestroySystem can call this function"
+      "S_UpdatePlayerStorageSystem: Only BuildSystem, UpgradeSystem, DestroySystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
@@ -37,28 +35,32 @@ contract UpdatePassiveProductionSystem is IOnBuildingSubsystem, PrimodiumSystem 
     uint32 buildingLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(
       buildingEntity
     );
-    uint256 playerEntity = addressToEntity(playerAddress);
-    PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
-      getAddressById(world.components(), PassiveProductionComponentID)
+    P_ProductionDependenciesComponent requiredConnectedProductionComponent = P_ProductionDependenciesComponent(
+      getAddressById(world.components(), P_ProductionDependenciesComponentID)
     );
 
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    MaxPassiveComponent maxPassiveComponent = MaxPassiveComponent(world.getComponent(MaxPassiveComponentID));
-    uint256 resourceId = passiveProductionComponent.getValue(buildingLevelEntity).resource;
-    uint32 capacityIncrease = passiveProductionComponent.getValue(buildingLevelEntity).value;
-    if (actionType == EActionType.Upgrade) {
-      capacityIncrease =
-        capacityIncrease -
-        passiveProductionComponent.getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)).value;
-    }
+    uint256 buildingIdNewLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
-    uint32 newCapacity = LibMath.getSafe(maxPassiveComponent, LibEncode.hashKeyEntity(resourceId, playerEntity));
-    if (actionType == EActionType.Destroy) {
-      newCapacity -= capacityIncrease;
+    if (actionType == EActionType.Build) {
+      requiredConnectedProductionComponent.set(
+        buildingEntity,
+        requiredConnectedProductionComponent.getValue(buildingIdNewLevel)
+      );
+    } else if (actionType == EActionType.Upgrade) {
+      ResourceValues memory currentMines = requiredConnectedProductionComponent.getValue(buildingEntity);
+      ResourceValues memory requiredConnectedProductions = requiredConnectedProductionComponent.getValue(
+        buildingIdNewLevel
+      );
+      ResourceValues memory requiredMinesLastLevel = requiredConnectedProductionComponent.getValue(
+        LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)
+      );
+      for (uint256 i = 0; i < requiredConnectedProductions.resources.length; i++) {
+        currentMines.values[i] += requiredConnectedProductions.values[i] - requiredMinesLastLevel.values[i];
+      }
+      requiredConnectedProductionComponent.set(buildingEntity, currentMines);
     } else {
-      newCapacity += capacityIncrease;
+      requiredConnectedProductionComponent.remove(buildingEntity);
     }
-    maxPassiveComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), newCapacity);
   }
 
   function executeTyped(
