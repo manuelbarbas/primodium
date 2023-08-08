@@ -31,10 +31,11 @@ library LibPassiveResource {
     uint32[] memory requiredAmounts = requiredPassiveComponent.getValue(buildingLevelEntity).values;
     for (uint256 i = 0; i < resourceIDs.length; i++) {
       uint32 requiredAmount = requiredAmounts[i];
-      if (buildingLevel > 1)
-        requiredAmount -= requiredPassiveComponent
-          .getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1))
-          .values[i];
+      if (buildingLevel > 1) {
+        uint256 buildingPastLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
+        requiredAmount -= requiredPassiveComponent.getValue(buildingPastLevelEntity).values[i];
+      }
+
       if (getAvailablePassiveCapacity(world, playerEntity, resourceIDs[i]) < requiredAmount) {
         return false;
       }
