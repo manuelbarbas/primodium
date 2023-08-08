@@ -39,13 +39,4 @@ library LibEncode {
     // Masking with 0xFFFFFFFF gives the second int32
     coord.y = int32(uint32(encoded & 0xFFFFFFFF));
   }
-
-  function decodeCoordEntity(uint256 entity) internal pure returns (Coord memory) {
-    bytes memory data = abi.encode(bytes32(entity));
-    uint8[] memory sizes = new uint8[](2);
-    sizes[0] = 4;
-    sizes[1] = 4;
-    bytes[] memory decoded = split(data, sizes);
-    return Coord(int32(uint32(bytes4(decoded[0]))), int32(uint32(bytes4(decoded[1]))), 0);
-  }
 }

@@ -42,6 +42,7 @@ contract LibEncodeTest is PrimodiumTest {
     assertEq(clientTestFive, 0xf7eea64553e727e221059874c9505c46a9e9ec09f44b6527830b639b77cb4ddd);
   }
 
+  //todo: delete this
   function testHashKeyEntityItems() public {
     // Hashing edge cases discovered in #36 with leading zeroes (world.entityIndex on client trims leading zeroes)
     // AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
@@ -57,17 +58,16 @@ contract LibEncodeTest is PrimodiumTest {
   }
 
   function testCoordEncoding() public {
-    uint256 coordEntity = LibEncode.hashKeyCoord("test", Coord({ x: 1, y: 2, parent: 1234 }));
-    Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
-    assertEq(1, decoded.x);
-    assertEq(2, decoded.y);
+    Coord memory coord = Coord({ x: 1, y: 2, parent: 0 });
+    uint256 coordEntity = LibEncode.encodeCoord(Coord({ x: 1, y: 2, parent: 1234 }));
+    Coord memory decoded = LibEncode.decodeCoord(coordEntity);
+    assertCoordEq(coord, decoded);
   }
 
   function testFuzzCoordEncoding(int32 x, int32 y) public {
     Coord memory coord = Coord(x, y, 0);
-    uint256 coordEntity = LibEncode.hashKeyCoord("building", coord);
-    Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
-    assertEq(coord.x, decoded.x);
-    assertEq(coord.y, decoded.y);
+    uint256 coordEntity = LibEncode.encodeCoord(coord);
+    Coord memory decoded = LibEncode.decodeCoord(coordEntity);
+    assertCoordEq(coord, decoded);
   }
 }

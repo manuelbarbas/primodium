@@ -54,7 +54,8 @@
         "LevelComponent",
         "MainBaseComponent",
         "ChildrenComponent",
-        "MainBaseComponent"
+        "MainBaseComponent",
+        "PositionComponent"
       ]
     },
     {
@@ -71,7 +72,7 @@
     },
     {
       "name": "PlaceBuildingTilesSystem",
-      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent", "PositionComponent"]
     },
     {
       "name": "BuildPathSystem",

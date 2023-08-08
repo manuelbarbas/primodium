@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { console } from "forge-std/console.sol";
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 // components
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
@@ -60,16 +62,6 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] Building already exists here"
     );
 
-    bool canBuildOn = abi.decode(
-      IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        buildingType
-      ),
-      (bool)
-    );
-    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
-
     require(
       LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"
@@ -100,12 +92,19 @@ contract BuildSystem is PrimodiumSystem {
     }
 
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
-
-    IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
-      msg.sender,
-      buildingEntity
+    LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
+    console.log("setting position for ", buildingEntity);
+    PositionComponent(getC(PositionComponentID)).set(buildingEntity, coord);
+    bool canBuildOn = abi.decode(
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        buildingType
+      ),
+      (bool)
     );
 
+    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
@@ -116,8 +115,11 @@ contract BuildSystem is PrimodiumSystem {
         mainBaseComponent.set(playerEntity, buildingEntity);
       }
     }
-    //set level of building to 1
-    LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
+
+    IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
+      msg.sender,
+      buildingEntity
+    );
 
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);

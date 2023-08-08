@@ -6,6 +6,7 @@ import { BuildingTileKey } from "../prototypes.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
 // components
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
@@ -31,7 +32,7 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));
 
     uint256 buildingType = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(buildingEntity);
-    Coord memory coord = LibEncode.decodeCoordEntity(buildingEntity);
+    Coord memory coord = PositionComponent(getC(PositionComponentID)).getValue(buildingEntity);
     int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
@@ -51,6 +52,7 @@ contract PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
     tileEntity = LibEncode.hashKeyCoord(BuildingTileKey, coord);
     require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
     ownedByComponent.set(tileEntity, buildingEntity);
+    PositionComponent(getC(PositionComponentID)).set(tileEntity, coord);
   }
 
   function executeTyped(address playerAddress, uint256 buildingEntity) public returns (bytes memory) {

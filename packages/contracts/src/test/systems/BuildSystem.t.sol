@@ -12,6 +12,7 @@ import { ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { MaxBuildingsComponent, ID as MaxBuildingsComponentID } from "../../components/MaxBuildingsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BlueprintComponent, ID as BlueprintComponentID } from "../../components/BlueprintComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
@@ -59,6 +60,8 @@ contract BuildSystemTest is PrimodiumTest {
 
     // init other
   }
+
+  // todo: sort these tests. the first test should be a vanilla build system call
 
   function testFailPassiveResourceRequirementNotMet() public {
     vm.startPrank(alice);
@@ -224,16 +227,16 @@ contract BuildSystemTest is PrimodiumTest {
 
     Coord memory coord = getOrigin(alice);
 
-    bytes memory buildingEntity = buildSystem.executeTyped(MainBaseID, coord);
+    bytes memory rawBuildingEntity = buildSystem.executeTyped(MainBaseID, coord);
 
-    uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
+    uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
 
-    Coord memory position = LibEncode.decodeCoordEntity(buildingEntityID);
+    Coord memory position = PositionComponent(component(PositionComponentID)).getValue(buildingEntity);
     assertEq(position.x, coord.x);
     assertEq(position.y, coord.y);
 
-    assertTrue(ownedByComponent.has(buildingEntityID));
-    assertEq(ownedByComponent.getValue(buildingEntityID), addressToEntity(alice));
+    assertTrue(ownedByComponent.has(buildingEntity));
+    assertEq(ownedByComponent.getValue(buildingEntity), addressToEntity(alice));
 
     vm.stopPrank();
   }
@@ -244,13 +247,15 @@ contract BuildSystemTest is PrimodiumTest {
     blueprintComponent.set(MainBaseID, blueprint);
     bytes memory rawBuildingEntity = buildSystem.executeTyped(MainBaseID, getOrigin(deployer));
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
-    Coord memory position = LibEncode.decodeCoordEntity(buildingEntity);
+
+    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
+    Coord memory position = positionComponent.getValue(buildingEntity);
 
     uint256[] memory children = childrenComponent.getValue(buildingEntity);
     assertEq(blueprint.length, children.length * 2);
 
     for (uint i = 0; i < children.length; i++) {
-      position = LibEncode.decodeCoordEntity(children[i]);
+      position = positionComponent.getValue(children[i]);
       assertCoordEq(position, Coord(blueprint[i * 2], blueprint[i * 2 + 1], 0));
       assertEq(buildingEntity, ownedByComponent.getValue(children[i]));
     }
@@ -326,7 +331,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     uint256 buildingEntityID = abi.decode(buildingEntity, (uint256));
 
-    Coord memory position = LibEncode.decodeCoordEntity(buildingEntityID);
+    Coord memory position = PositionComponent(component(PositionComponentID)).getValue(buildingEntityID);
     assertCoordEq(position, ironCoord);
 
     assertTrue(ownedByComponent.has(buildingEntityID));
