@@ -59,6 +59,7 @@ contract BuildSystemTest is PrimodiumTest {
     buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
 
     // init other
+    spawn(alice);
   }
 
   // todo: sort these tests. the first test should be a vanilla build system call

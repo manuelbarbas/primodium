@@ -12,11 +12,12 @@
     "BuildingCountComponent",
     "ChildrenComponent",
     "ProductionComponent",
-    "ActiveComponent",
     "IsDebugComponent",
     "PositionComponent",
     "MaxUtilityComponent",
     "OccupiedUtilityResourceComponent",
+    "AsteroidTypeComponent",
+    "ActiveComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
@@ -41,6 +42,10 @@
     {
       "name": "IncrementSystem",
       "writeAccess": ["CounterComponent"]
+    },
+    {
+      "name": "SpawnSystem",
+      "writeAccess": ["PositionComponent", "AsteroidTypeComponent", "ActiveComponent"]
     },
     {
       "name": "BuildSystem",

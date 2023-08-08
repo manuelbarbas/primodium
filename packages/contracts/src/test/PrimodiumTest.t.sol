@@ -10,6 +10,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
+import { SpawnSystem, ID as SpawnSystemID } from "systems/SpawnSystem.sol";
 
 import "../prototypes.sol";
 
@@ -91,5 +92,9 @@ contract PrimodiumTest is MudTest {
 
     uint256 blockEntityID = abi.decode(blockEntity, (uint256));
     return blockEntityID;
+  }
+
+  function spawn(address player) internal prank(player) returns (uint256) {
+    return abi.decode(SpawnSystem(system(SpawnSystemID)).executeTyped(), (uint256));
   }
 }
