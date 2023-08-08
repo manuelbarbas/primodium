@@ -67,10 +67,7 @@
         "PathComponent"
       ]
     },
-    {
-      "name": "S_PlaceBuildingTilesSystem",
-      "writeAccess": ["ChildrenComponent", "OwnedByComponent", "PositionComponent"]
-    },
+
     {
       "name": "BuildPathSystem",
       "writeAccess": ["PathComponent"]
@@ -90,6 +87,10 @@
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
+    },
+    {
+      "name": "S_PlaceBuildingTilesSystem",
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent", "PositionComponent"]
     },
     {
       "name": "S_UpdatePlayerStorageSystem",
