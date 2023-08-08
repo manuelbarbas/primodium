@@ -31,48 +31,38 @@ uint256 constant ID = uint256(keccak256("system.UpdateActiveStatus"));
 contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  // todo: rewrite this function to be simpler and less confusing
   function updateActiveStatus(address playerAddress, uint256 buildingEntity, bool isActive) internal {
     ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
     bool wasActive = activeComponent.has(buildingEntity);
+
+    if (wasActive == isActive && !isActive) return;
+
+    if (isActive && !wasActive) {
+      activeComponent.set(buildingEntity);
+    } else if (!isActive && wasActive) {
+      activeComponent.remove(buildingEntity);
+    }
+
     PathComponent pathComponent = PathComponent(getAddressById(components, PathComponentID));
+    if (!pathComponent.has(buildingEntity)) return;
+    uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
+    if (mineRequired(connectedToBuildingEntity)) {
+      executeTyped(playerAddress, connectedToBuildingEntity, EActionType.Build);
+      return;
+    }
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
 
-    if (wasActive != isActive) {
-      if (isActive) {
-        activeComponent.set(buildingEntity);
-      } else {
-        activeComponent.remove(buildingEntity);
-      }
-      if (pathComponent.has(buildingEntity)) {
-        uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
-        if (doesRequireMine(connectedToBuildingEntity)) {
-          executeTyped(playerAddress, connectedToBuildingEntity, EActionType.Build);
-        } else {
-          IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
-            playerAddress,
-            buildingEntity,
-            isActive ? EActionType.Build : EActionType.Destroy
-          );
-        }
-      }
-    } else if (isActive) {
-      if (pathComponent.has(buildingEntity)) {
-        uint256 connectedToBuildingEntity = pathComponent.getValue(buildingEntity);
-        if (doesRequireMine(connectedToBuildingEntity)) {
-          executeTyped(playerAddress, connectedToBuildingEntity, EActionType.Build);
-        } else {
-          IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)).executeTyped(
-            playerAddress,
-            buildingEntity,
-            levelComponent.getValue(buildingEntity) > 1 ? EActionType.Upgrade : EActionType.Build
-          );
-        }
-      }
-    }
+    IOnBuildingSubsystem subsystem = IOnBuildingSubsystem(
+      getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID)
+    );
+
+    EActionType actionType;
+    if (isActive != wasActive) actionType = isActive ? EActionType.Build : EActionType.Destroy;
+    else actionType = levelComponent.getValue(buildingEntity) > 1 ? EActionType.Upgrade : EActionType.Build;
+    subsystem.executeTyped(playerAddress, buildingEntity, actionType);
   }
 
-  function doesRequireMine(uint256 buildingEntity) internal view returns (bool) {
+  function mineRequired(uint256 buildingEntity) private view returns (bool) {
     uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
       buildingEntity
     );
@@ -99,10 +89,6 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       args,
       (address, uint256, EActionType)
     );
-    uint256 playerEntity = addressToEntity(playerAddress);
-    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
-      buildingEntity
-    );
 
     if (actionType == EActionType.Destroy) {
       updateActiveStatus(playerAddress, buildingEntity, false);
@@ -116,21 +102,23 @@ contract UpdateActiveStatusSystem is IOnBuildingSubsystem, PrimodiumSystem {
       return abi.encode(false);
     }
 
-    ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
-    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
-
     uint256 buildingLevel = levelComponent.getValue(buildingEntity);
+    uint256 buildingType = BuildingTypeComponent(getAddressById(components, BuildingTypeComponentID)).getValue(
+      buildingEntity
+    );
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
 
     // first check if any connected resource production buildings are not at the required level or require resource production buildings themeselves and are not active
     if (
       RequiredConnectedProductionComponent(getC(RequiredConnectedProductionComponentID)).has(buildingTypeLevelEntity)
     ) {
+      LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
+      ActiveComponent activeComponent = ActiveComponent(getAddressById(components, ActiveComponentID));
       uint256[] memory connectedMineEntities = pathComponent.getEntitiesWithValue(buildingEntity);
       for (uint256 i = 0; i < connectedMineEntities.length; i++) {
         if (
           levelComponent.getValue(connectedMineEntities[i]) < buildingLevel ||
-          (doesRequireMine(connectedMineEntities[i]) && !activeComponent.has(connectedMineEntities[i]))
+          (mineRequired(connectedMineEntities[i]) && !activeComponent.has(connectedMineEntities[i]))
         ) {
           updateActiveStatus(playerAddress, buildingEntity, false);
           return abi.encode(false);
