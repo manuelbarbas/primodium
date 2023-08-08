@@ -11,13 +11,14 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "components/Childre
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
 import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { MainBaseID, BuildingKey } from "../prototypes.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
 import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 import { RequiredConnectedProductionComponent, ID as RequiredConnectedProductionComponentID } from "components/RequiredConnectedProductionComponent.sol";
 
+import { MainBaseID, BuildingKey } from "../prototypes.sol";
 // libraries
 import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
@@ -38,7 +39,7 @@ import { ID as UpdateRequiredProductionSystemID } from "./UpdateRequiredProducti
 import { ID as UpdateActiveStatusSystemID } from "./UpdateActiveStatusSystem.sol";
 import { ID as UpdatePassiveProductionSystemID } from "./UpdatePassiveProductionSystem.sol";
 import { ID as UpdateOccupiedPassiveSystemID } from "./UpdateOccupiedPassiveSystem.sol";
-import { ID as InitializeMainBaseSystemID } from "./InitializeMainBaseSystem.sol";
+
 uint256 constant ID = uint256(keccak256("system.Build"));
 
 contract BuildSystem is PrimodiumSystem {
@@ -108,10 +109,13 @@ contract BuildSystem is PrimodiumSystem {
 
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
-      IOnEntitySubsystem(getAddressById(world.systems(), InitializeMainBaseSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
+      MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
+
+      if (mainBaseComponent.has(playerEntity)) {
+        revert("[BuildSystem] Cannot build more than one main base per wallet");
+      } else {
+        mainBaseComponent.set(playerEntity, buildingEntity);
+      }
     }
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
