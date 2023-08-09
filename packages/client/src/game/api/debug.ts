@@ -1,7 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { BytesLike } from "ethers";
-import { Position } from "src/network/components/clientComponents";
+import { Position } from "src/network/components/chainComponents";
 import { Network } from "src/network/layer";
 import { debugComponentDevSystem } from "src/util/web3/debug";
 

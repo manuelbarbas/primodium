@@ -6,19 +6,20 @@ import {
   HasValue,
   Metadata,
   World,
-  getEntitiesWithValue,
   createEntity,
+  getEntitiesWithValue,
   removeComponent,
   runQuery,
   withValue,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Options, newStringComponent } from "./Component";
 import {
   getBuildingsOfTypeInRange,
   getTilesOfTypeInRange,
 } from "src/util/tile";
-import { Marker, Position } from "../clientComponents";
+import { Position } from "../chainComponents";
+import { Marker } from "../clientComponents";
+import { Options, newStringComponent } from "./Component";
 
 function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -32,7 +33,7 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
     if (!entities.size) {
       //create entity
       const entity = createEntity(world, [
-        withValue(Position, coord),
+        withValue(Position, { ...coord, parent: "0" as EntityID }),
         withValue(Marker, { value: type }),
       ]);
 
@@ -66,12 +67,18 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
 
     //handle terrain
     for (const tile of tiles) {
-      Position.set(addCoords(tile, offset), type);
+      Position.set(
+        { ...addCoords(tile, offset), parent: "0" as EntityID },
+        type
+      );
     }
 
     //handle buildings
     for (const building of buildings) {
-      Position.set(addCoords(building, offset), type);
+      Position.set(
+        { ...addCoords(building, offset), parent: "0" as EntityID },
+        type
+      );
     }
   };
 

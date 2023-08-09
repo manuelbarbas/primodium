@@ -1,16 +1,12 @@
 import { Type } from "@latticexyz/recs";
+import { world } from "../world";
 import newComponent, {
   newBoolComponent,
   newCoordComponent,
   newNumberComponent,
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
-import { world } from "../world";
 
-export const Position = newCoordComponent(world, {
-  id: "Position",
-  overridable: true,
-});
 export const BlockNumber = newNumberComponent(world, {
   id: "BlockNumber",
 });
@@ -37,7 +33,6 @@ export const Marker = newMarkerComponent(world, {
 });
 
 export default {
-  Position,
   BlockNumber,
   GameReady,
   DoubleCounter,

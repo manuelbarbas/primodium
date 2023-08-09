@@ -177,10 +177,48 @@ export const IsDebug = newBoolComponent(world, {
   id: "IsDebug",
   metadata: { contractId: `${commonIdPrefix}IsDebug` },
 });
+
+export const Active = newBoolComponent(world, {
+  id: "Active",
+  metadata: { contractId: `${commonIdPrefix}Active` },
+});
+
+export const AsteroidType = newStringComponent(world, {
+  id: "AsteroidType",
+  metadata: { contractId: `${commonIdPrefix}AsteroidType` },
+});
+
+export const Dimensions = newComponent(
+  world,
+  {
+    width: Type.Number,
+    height: Type.Number,
+  },
+  { id: "Dimensions", metadata: { contractId: `${commonIdPrefix}Dimensions` } }
+);
+
+export const Position = newComponent(
+  world,
+  {
+    x: Type.Number,
+    y: Type.Number,
+    parent: Type.Entity,
+  },
+  {
+    id: "Position",
+    metadata: { contractId: `${commonIdPrefix}Position` },
+    overridable: true,
+  }
+);
+
 export default {
+  Active,
+  AsteroidType,
   Counter,
+  Dimensions,
   BuildingType,
   Path,
+  Position,
   OwnedBy,
   LastClaimedAt,
   IsDebug,
