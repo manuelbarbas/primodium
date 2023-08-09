@@ -100,4 +100,8 @@ contract PrimodiumTest is MudTest {
   function spawn(address player) internal prank(player) returns (uint256) {
     return abi.decode(SpawnSystem(system(SpawnSystemID)).executeTyped(), (uint256));
   }
+
+  function spawn(address player) internal prank(player) returns (uint256) {
+    return abi.decode(SpawnSystem(system(SpawnSystemID)).executeTyped(), (uint256));
+  }
 }
