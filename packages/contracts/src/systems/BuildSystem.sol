@@ -57,14 +57,17 @@ contract BuildSystem is PrimodiumSystem {
 
     PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
+
     bool spawned = positionComponent.has(playerEntity);
     require(spawned, "[BuildSystem] Player has not spawned");
+
     require(!positionComponent.has(buildingEntity), "[BuildSystem] Building already exists");
 
     require(
       coord.parent == positionComponent.getValue(playerEntity).parent,
       "[BuildSystem] Building must be built on your main asteroid"
     );
+
     require(
       LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"

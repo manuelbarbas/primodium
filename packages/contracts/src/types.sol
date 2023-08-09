@@ -17,7 +17,7 @@ enum EActionType {
   Destroy
 }
 
-// for use when we get special asteroids
+// note: for use when we get special asteroids
 enum EAsteroidType {
   NONE,
   NORMAL
