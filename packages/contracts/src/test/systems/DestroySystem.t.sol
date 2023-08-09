@@ -59,7 +59,7 @@ contract DestroySystemTest is PrimodiumTest {
     // init other
     vm.startPrank(alice);
     playerEntity = addressToEntity(alice);
-    Coord memory mainBaseCoord = Coord({ x: -1000, y: -1000 });
+    Coord memory mainBaseCoord = Coord({ x: -1000, y: -1000, parent: 0 });
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     vm.stopPrank();
   }
@@ -67,7 +67,7 @@ contract DestroySystemTest is PrimodiumTest {
   function buildDummy() public returns (uint256) {
     vm.startPrank(alice);
     componentDevSystem.executeTyped(P_BlueprintComponentID, dummyBuilding, abi.encode(blueprint));
-    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, origin);
+    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, getOrigin(alice));
     return abi.decode(rawBuilding, (uint256));
   }
 
@@ -89,11 +89,11 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithTile() public {
     uint256 buildingEntity = buildDummy();
-    destroy(buildingEntity, Coord(blueprint[2], blueprint[3]));
+    destroy(buildingEntity, Coord(blueprint[2], blueprint[3], 0));
   }
 
   function testDestroyWithBase() public {
     uint256 buildingEntity = buildDummy();
-    destroy(buildingEntity, origin);
+    destroy(buildingEntity, getOrigin(alice));
   }
 }

@@ -35,9 +35,6 @@ contract BuildPathSystemTest is PrimodiumTest {
   PathComponent public pathComponent;
   P_RequiredTileComponent public requiredTileComponent;
 
-  Coord public startCoord = Coord({ x: -5, y: 2 });
-  Coord public endCoord = Coord({ x: 0, y: 1 });
-
   function setUp() public override {
     super.setUp();
     vm.startPrank(deployer);
@@ -53,7 +50,11 @@ contract BuildPathSystemTest is PrimodiumTest {
   function testFailBuildPathFromMainBaseToMine() public {
     vm.startPrank(alice);
 
-    assertEq(LibTerrain.getTopLayerKey(startCoord), IronID, "test should try to build IronMineID on IronID tile");
+    assertEq(
+      LibTerrain.getTopLayerKey(getIronCoord(alice)),
+      IronID,
+      "test should try to build IronMineID on IronID tile"
+    );
 
     assertTrue(requiredTileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
@@ -62,21 +63,21 @@ contract BuildPathSystemTest is PrimodiumTest {
       "IronMineID should have IronID as requireed tile type to build on"
     );
     // Build two conveyor blocks
-    bytes memory startBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
+    bytes memory startBlockEntity = buildSystem.executeTyped(MainBaseID, getCoord1(alice));
     console.log("built MainBaseID");
-    bytes memory endBlockEntity = buildSystem.executeTyped(DebugIronMineID, startCoord);
+    bytes memory endBlockEntity = buildSystem.executeTyped(DebugIronMineID, getIronCoord(alice));
     console.log("built IronMineID");
 
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
 
     Coord memory startPosition = LibEncode.decodeCoordEntity(startBlockEntityID);
-    assertEq(startPosition.x, startCoord.x);
-    assertEq(startPosition.y, startCoord.y);
+    assertEq(startPosition.x, getIronCoord(alice).x);
+    assertEq(startPosition.y, getIronCoord(alice).y);
 
     Coord memory endPosition = LibEncode.decodeCoordEntity(endBlockEntityID);
-    assertEq(endPosition.x, endCoord.x);
-    assertEq(endPosition.y, endCoord.y);
+    assertEq(endPosition.x, getCoord1(alice).x);
+    assertEq(endPosition.y, getCoord1(alice).y);
 
     assertTrue(ownedByComponent.has(startBlockEntityID));
     assertEq(ownedByComponent.getValue(startBlockEntityID), addressToEntity(alice));
@@ -85,7 +86,7 @@ contract BuildPathSystemTest is PrimodiumTest {
     assertEq(ownedByComponent.getValue(endBlockEntityID), addressToEntity(alice));
 
     // Build a path
-    buildPathSystem.executeTyped(startCoord, endCoord);
+    buildPathSystem.executeTyped(getIronCoord(alice), getCoord1(alice));
     console.log("built path");
     assertEq(
       pathComponent.getValue(startBlockEntityID),
@@ -99,7 +100,11 @@ contract BuildPathSystemTest is PrimodiumTest {
   function testInit() public {
     vm.startPrank(alice);
 
-    assertEq(LibTerrain.getTopLayerKey(startCoord), IronID, "test should try to build IronMineID on IronID tile");
+    assertEq(
+      LibTerrain.getTopLayerKey(getIronCoord(alice)),
+      IronID,
+      "test should try to build IronMineID on IronID tile"
+    );
 
     assertTrue(requiredTileComponent.has(DebugIronMineID), "IronMineID building should have tile type");
     assertEq(
@@ -114,18 +119,18 @@ contract BuildPathSystemTest is PrimodiumTest {
     // Build two conveyor blocks
 
     console.log("building base");
-    bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, endCoord);
+    bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, getCoord1(alice));
     console.log("building iron mine");
-    bytes memory startBlockEntity = buildSystem.executeTyped(DebugIronMineID, startCoord);
+    bytes memory startBlockEntity = buildSystem.executeTyped(DebugIronMineID, getIronCoord(alice));
 
     startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     endBlockEntityID = abi.decode(endBlockEntity, (uint256));
 
     Coord memory startPosition = LibEncode.decodeCoordEntity(startBlockEntityID);
-    assertCoordEq(startPosition, startCoord);
+    assertCoordEq(startPosition, getIronCoord(alice));
 
     Coord memory endPosition = LibEncode.decodeCoordEntity(endBlockEntityID);
-    assertCoordEq(endPosition, endCoord);
+    assertCoordEq(endPosition, getCoord1(alice));
 
     assertTrue(ownedByComponent.has(startBlockEntityID));
     assertEq(ownedByComponent.getValue(startBlockEntityID), addressToEntity(alice));
@@ -137,7 +142,7 @@ contract BuildPathSystemTest is PrimodiumTest {
   function testBuildPath() public {
     (uint256 startBlockEntityID, uint256 endBlockEntityID) = testBuildConveyors();
     // Build a path
-    buildPathSystem.executeTyped(startCoord, endCoord);
+    buildPathSystem.executeTyped(getIronCoord(alice), getCoord1(alice));
     console.log("built path");
     assertEq(
       pathComponent.getValue(startBlockEntityID),

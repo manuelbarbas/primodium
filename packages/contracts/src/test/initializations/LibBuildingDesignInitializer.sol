@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
+import "../PrimodiumTest.t.sol";
+
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "../../components/P_RequiredResearchComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
@@ -14,8 +14,9 @@ import { MainBaseID } from "../../prototypes.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
 
-contract LibBuildingDesignInitializerTest is MudTest {
-  constructor() MudTest(new Deploy()) {}
+//todo: make this actually test something
+contract LibBuildingDesignInitializerTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
 
   function setUp() public override {
     super.setUp();
