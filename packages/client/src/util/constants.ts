@@ -119,8 +119,8 @@ export const BlockType = {
     "item.LithiumCopperOxideCrafted"
   ) as EntityID,
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
-  ElectricityPassiveResource: keccak256(
-    "item.ElectricityPassiveResource"
+  ElectricityUtilityResource: keccak256(
+    "item.ElectricityUtilityResource"
   ) as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
@@ -527,7 +527,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.AlloyCraftedItem, "/img/crafted/iridiumdrillbit.png"],
   [BlockType.LithiumCopperOxideCraftedItem, "/img/crafted/advancedbattery.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
-  [BlockType.ElectricityPassiveResource, "/img/crafted/thermobaricwarhead.png"],
+  [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],

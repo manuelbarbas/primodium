@@ -1,7 +1,15 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { EntityIndex, Has } from "@latticexyz/recs";
+import {
+  EntityIndex,
+  Has,
+  defineComponentSystem,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { clamp } from "lodash";
+
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import {
@@ -9,19 +17,13 @@ import {
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { Level, BuildingType } from "src/network/components/chainComponents";
-import {
-  defineComponentSystem,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-} from "src/network/systems/System";
 import { safeIndex } from "src/util/array";
 import { AsteroidMap } from "@game/constants";
 
 import {
-  SpriteAnimation,
-  SpriteTexture,
-  SpriteOutline,
+  Animation,
+  Texture,
+  Outline,
 } from "../../common/object-components/sprite";
 import { ObjectPosition } from "../../common/object-components/common";
 
@@ -36,6 +38,7 @@ const {
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
   const { tileHeight, tileWidth } = scene.tilemap;
+  const gameWorld = namespaceWorld(world, "game");
 
   const render = ({ entity }: { entity: EntityIndex }) => {
     const entityId = world.entities[entity];
@@ -68,53 +71,40 @@ export const renderBuilding = (scene: Scene) => {
 
     const sprites = EntityIDtoSpriteKey[buildingType];
     const spriteKey = sprites ? safeIndex(level - 1, sprites) : SpriteKeys.Node;
+    const animations = EntityIDtoAnimationKey[buildingType];
+    const animationKey = animations
+      ? safeIndex(level - 1, animations)
+      : undefined;
 
     buildingRenderEntity.setComponents([
       ObjectPosition(
         { x: pixelCoord.x, y: -pixelCoord.y },
         DepthLayers.Building
       ),
-      SpriteTexture(Assets.SpriteAtlas, spriteKey),
+      Texture(Assets.SpriteAtlas, spriteKey),
+      animationKey ? Animation(animationKey) : undefined,
+      selected ? Outline() : undefined,
     ]);
-
-    const animations = EntityIDtoAnimationKey[buildingType];
-
-    const anim = animations
-      ? animations[clamp(level, animations.length) - 1]
-      : undefined;
-
-    animations && animations.length >= level
-      ? animations[level - 1]
-      : undefined;
-
-    if (anim) buildingRenderEntity.setComponent(SpriteAnimation(anim));
-
-    if (selected) buildingRenderEntity.setComponent(SpriteOutline());
   };
 
   const positionQuery = [Has(Position), Has(BuildingType)];
-
-  defineEnterSystem(world, positionQuery, render, {
-    namespace: "game",
-  });
+  defineEnterSystem(gameWorld, positionQuery, render);
 
   const updateQuery = [Has(Position), Has(BuildingType), Has(Level)];
-  defineUpdateSystem(world, updateQuery, render, {
-    namespace: "game",
+  defineUpdateSystem(gameWorld, updateQuery, render);
+
+  defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
+    const renderId = `${entity}_entitySprite`;
+    scene.objectPool.remove(renderId);
   });
 
-  defineExitSystem(
-    world,
-    positionQuery,
-    ({ entity }) => {
-      const renderId = `${entity}_entitySprite`;
-      scene.objectPool.remove(renderId);
-    },
-    { namespace: "game" }
-  );
+  defineExitSystem(world, positionQuery, ({ entity }) => {
+    const renderId = `${entity}_entitySprite`;
+    scene.objectPool.remove(renderId);
+  });
 
   defineComponentSystem(
-    world,
+    gameWorld,
     SelectedBuilding,
     ({ value: [newValue, oldValue] }) => {
       if (oldValue?.value) {
@@ -125,7 +115,6 @@ export const renderBuilding = (scene: Scene) => {
         const entityIndex = world.entityToIndex.get(newValue.value);
         if (entityIndex) render({ entity: entityIndex });
       }
-    },
-    { namespace: "game" }
+    }
   );
 };

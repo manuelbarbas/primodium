@@ -2,32 +2,33 @@
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
+
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdateRequiredProductionSystemID } from "./S_UpdateRequiredProductionSystem.sol";
+
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
-
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { MaxLevelComponent, ID as MaxLevelComponentID } from "components/MaxLevelComponent.sol";
-import { BuildingProductionComponent, ID as BuildingProductionComponentID } from "components/BuildingProductionComponent.sol";
-import { MinesComponent, ID as MinesComponentID } from "components/MinesComponent.sol";
-import { BuildingKey } from "../prototypes.sol";
-
-import { MainBaseID } from "../prototypes.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
+import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResource } from "../libraries/LibResource.sol";
-import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as PostUpgradeMineSystemID } from "./PostUpgradeMineSystem.sol";
-import { ID as PostUpgradeFactorySystemID } from "./PostUpgradeFactorySystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
+
 uint256 constant ID = uint256(keccak256("system.Upgrade"));
 
 contract UpgradeSystem is PrimodiumSystem {
@@ -42,7 +43,7 @@ contract UpgradeSystem is PrimodiumSystem {
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, BuildingComponentID));
 
-    MaxLevelComponent maxLevelComponent = MaxLevelComponent(getAddressById(components, MaxLevelComponentID));
+    P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(getAddressById(components, P_MaxLevelComponentID));
 
     // Check there isn't another tile there
     uint256 buildingEntity = getBuildingFromCoord(coord);
@@ -66,7 +67,8 @@ contract UpgradeSystem is PrimodiumSystem {
       "[UpgradeSystem] Cannot upgrade a building that does not meet research requirements"
     );
 
-    if (RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingIdLevel)) {
+    //spend required resources
+    if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(buildingIdLevel)) {
       require(
         LibResource.hasRequiredResources(world, buildingIdLevel, playerEntity),
         "[UpgradeSystem] You do not have the required resources"
@@ -77,34 +79,57 @@ contract UpgradeSystem is PrimodiumSystem {
       );
     }
 
+    //update building level
     uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
     levelComponent.set(buildingEntity, newLevel);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, newLevel);
 
+    //required production update
     if (
-      MinesComponent(getAddressById(components, MinesComponentID)).has(LibEncode.hashKeyEntity(buildingType, newLevel))
-    ) {
-      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeFactorySystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
-    } else if (
-      BuildingProductionComponent(getAddressById(components, BuildingProductionComponentID)).has(
-        LibEncode.hashKeyEntity(buildingType, newLevel)
+      P_ProductionDependenciesComponent(getAddressById(components, P_ProductionDependenciesComponentID)).has(
+        buildingLevelEntity
       )
     ) {
-      IOnEntitySubsystem(getAddressById(world.systems(), PostUpgradeMineSystemID)).executeTyped(
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
         msg.sender,
-        buildingEntity
+        buildingEntity,
+        EActionType.Upgrade
       );
     }
-    LibStorage.upgradePlayerStorage(
-      world,
-      playerEntity,
-      buildingTypeComponent.getValue(buildingEntity),
-      levelComponent.getValue(buildingEntity)
-    );
 
-    LibPassiveResource.updatePassiveProduction(world, playerEntity, buildingType, newLevel);
+    //Resource Production Update
+    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+
+    //Storage Update
+    if (P_MaxResourceStorageComponent(getC(P_MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+    //Utility Production Update
+    if (P_UtilityProductionComponent(getC(P_UtilityProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateUtilityProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
+    //Occupied Utility Update
+    if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Upgrade
+      );
+    }
     return abi.encode(buildingEntity);
   }
 

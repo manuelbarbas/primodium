@@ -5,24 +5,17 @@ import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { PlayerProductionComponent, ID as PlayerProductionComponentID } from "components/PlayerProductionComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
-import { UnclaimedResourceComponent, ID as UnclaimedResourceComponentID } from "components/UnclaimedResourceComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { BuildingKey } from "../prototypes.sol";
+import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaimedResourcesSystem.sol";
 
 import { Coord } from "../types.sol";
 
-import { LibTerrain } from "../libraries/LibTerrain.sol";
-import { LibMath } from "../libraries/LibMath.sol";
-import { LibUnclaimedResource } from "../libraries/LibUnclaimedResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibResource } from "../libraries/LibResource.sol";
 uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));
 
 contract ClaimFromMineSystem is PrimodiumSystem {
@@ -48,7 +41,25 @@ contract ClaimFromMineSystem is PrimodiumSystem {
       "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
     );
 
-    LibResource.claimMineResources(world, playerEntity);
+    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
+      world.getComponent(P_MaxResourceStorageComponentID)
+    );
+    if (!maxResourceStorageComponent.has(playerEntity)) return abi.encode(false);
+    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
+      world.getComponent(LastClaimedAtComponentID)
+    );
+
+    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
+    for (uint256 i = 0; i < storageResourceIds.length; i++) {
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
+      if (ProductionComponent(world.getComponent(ProductionComponentID)).has(playerResourceEntity)) {
+        IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
+          msg.sender,
+          storageResourceIds[i]
+        );
+      }
+      lastClaimedAtComponent.set(playerResourceEntity, block.number);
+    }
 
     return abi.encode(0);
   }

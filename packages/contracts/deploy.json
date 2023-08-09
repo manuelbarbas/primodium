@@ -4,75 +4,53 @@
     "BuildingTypeComponent",
     "OwnedByComponent",
     "PathComponent",
-
     "LastClaimedAtComponent",
-
     "ItemComponent",
     "HasResearchedComponent",
     "MainBaseComponent",
     "LevelComponent",
-    "RequiredResearchComponent",
-    "RequiredResourcesComponent",
-    "MaxBuildingsComponent",
     "BuildingCountComponent",
-    "IgnoreBuildLimitComponent",
     "ChildrenComponent",
-    "BlueprintComponent",
-    "MaxStorageComponent",
-    "MaxResourceStorageComponent",
-    "PlayerProductionComponent",
-    "UnclaimedResourceComponent",
+    "ProductionComponent",
     "ActiveComponent",
-    "MinesComponent",
-    "BuildingProductionComponent",
-    "MaxLevelComponent",
-    "RequiredTileComponent",
-    "RequiredPassiveComponent",
-    "PassiveProductionComponent",
     "IsDebugComponent",
-    "IsTechComponent",
-    "MaxPassiveComponent",
-    "OccupiedPassiveResourceComponent"
+    "MaxUtilityComponent",
+    "OccupiedUtilityResourceComponent",
+    "P_ProductionDependenciesComponent",
+    "P_ProductionComponent",
+    "P_MaxLevelComponent",
+    "P_RequiredTileComponent",
+    "P_RequiredUtilityComponent",
+    "P_UtilityProductionComponent",
+    "P_BlueprintComponent",
+    "P_MaxStorageComponent",
+    "P_MaxResourceStorageComponent",
+    "P_IsTechComponent",
+    "P_RequiredResearchComponent",
+    "P_RequiredResourcesComponent",
+    "P_MaxBuildingsComponent",
+    "P_IgnoreBuildLimitComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["ItemComponent", "HasResearchedComponent"]
+      "writeAccess": ["HasResearchedComponent"]
     },
     {
       "name": "IncrementSystem",
       "writeAccess": ["CounterComponent"]
     },
     {
-      "name": "SpendRequiredResourcesSystem",
-      "writeAccess": ["LastClaimedAtComponent", "UnclaimedResourceComponent", "ItemComponent"]
-    },
-    {
       "name": "BuildSystem",
       "writeAccess": [
         "BuildingTypeComponent",
+        "BuildingCountComponent",
         "OwnedByComponent",
-
-        "LastClaimedAtComponent",
-        "ItemComponent",
-
         "LevelComponent",
         "MainBaseComponent",
-        "ChildrenComponent"
-      ]
-    },
-    {
-      "name": "PostBuildSystem",
-      "writeAccess": [
-        "ItemComponent",
-        "MaxStorageComponent",
-        "MaxResourceStorageComponent",
-        "MinesComponent",
-        "LastClaimedAtComponent",
-        "BuildingCountComponent",
-        "MaxPassiveComponent",
-        "OccupiedPassiveResourceComponent"
+        "ChildrenComponent",
+        "MainBaseComponent"
       ]
     },
     {
@@ -80,144 +58,80 @@
       "writeAccess": [
         "BuildingTypeComponent",
         "OwnedByComponent",
-
-        "LastClaimedAtComponent",
-        "PathComponent",
-
         "MainBaseComponent",
         "ChildrenComponent",
         "LevelComponent",
         "BuildingCountComponent",
-        "ChildrenComponent"
-      ]
-    },
-    {
-      "name": "PostDestroySystem",
-      "writeAccess": [
-        "MaxStorageComponent",
-        "MaxResourceStorageComponent",
-        "ItemComponent",
-        "MaxPassiveComponent",
-        "OccupiedPassiveResourceComponent"
+        "PathComponent"
       ]
     },
     {
       "name": "BuildPathSystem",
-      "writeAccess": []
-    },
-    {
-      "name": "BuildPathFromFactoryToMainBaseSystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "BuildingProductionComponent"
-      ]
-    },
-    {
-      "name": "BuildPathFromMineToFactorySystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "MinesComponent",
-        "BuildingProductionComponent"
-      ]
-    },
-    {
-      "name": "BuildPathFromMineToMainBaseSystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent"
-      ]
+      "writeAccess": ["PathComponent"]
     },
     {
       "name": "DestroyPathSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "MinesComponent",
-        "BuildingProductionComponent"
-      ]
-    },
-    {
-      "name": "PostDestroyPathSystem",
-      "writeAccess": [
-        "MaxStorageComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "BuildingProductionComponent",
-        "MinesComponent"
-      ]
+      "writeAccess": ["PathComponent"]
     },
     {
       "name": "ClaimFromMineSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-
-        "LastClaimedAtComponent",
-        "ItemComponent",
-        "UnclaimedResourceComponent"
-      ]
-    },
-    {
-      "name": "CraftSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "ItemComponent"
-      ]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
       "name": "UpgradeSystem",
-      "writeAccess": [
-        "LevelComponent",
-        "ItemComponent",
-        "MaxStorageComponent",
-        "MaxResourceStorageComponent",
-        "MaxPassiveComponent",
-        "OccupiedPassiveResourceComponent"
-      ]
-    },
-    {
-      "name": "PostUpgradeMineSystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent"
-      ]
-    },
-    {
-      "name": "PostUpgradeFactorySystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "PlayerProductionComponent",
-        "ActiveComponent",
-        "BuildingProductionComponent"
-      ]
+      "writeAccess": ["LevelComponent"]
     },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
+    },
+    {
+      "name": "S_PlaceBuildingTilesSystem",
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
+    },
+    {
+      "name": "S_UpdatePlayerStorageSystem",
+      "writeAccess": ["ItemComponent", "P_MaxStorageComponent", "P_MaxResourceStorageComponent"]
+    },
+    {
+      "name": "S_SpendRequiredResourcesSystem",
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
+    },
+    {
+      "name": "S_UpdateActiveStatusSystem",
+      "writeAccess": ["ActiveComponent"]
+    },
+    {
+      "name": "S_SpendRequiredResourcesSystem",
+      "writeAccess": ["ItemComponent"]
+    },
+    {
+      "name": "S_UpdatePlayerResourceProductionSystem",
+      "writeAccess": ["ProductionComponent", "ProductionComponent"]
+    },
+    {
+      "name": "S_UpdateUnclaimedResourcesSystem",
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
+    },
+    {
+      "name": "S_UpdateOccupiedUtilitySystem",
+      "writeAccess": ["OccupiedUtilityResourceComponent"]
+    },
+    {
+      "name": "S_UpdateUtilityProductionSystem",
+      "writeAccess": ["MaxUtilityComponent"]
+    },
+    {
+      "name": "S_UpdateRequiredProductionSystem",
+      "writeAccess": ["P_ProductionDependenciesComponent"]
+    },
+    {
+      "name": "S_UpdateConnectedRequiredProductionSystem",
+      "writeAccess": ["P_ProductionDependenciesComponent"]
+    },
+    {
+      "name": "S_CheckRequiredTileSystem",
+      "writeAccess": []
     }
   ]
 }
