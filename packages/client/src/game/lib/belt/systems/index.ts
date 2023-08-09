@@ -1,3 +1,6 @@
 import { Scene } from "engine/types";
+import { renderTrajectory } from "./renderTrajectory";
 
-export const runSystems = (_: Scene) => {};
+export const runSystems = (scene: Scene) => {
+  renderTrajectory(scene);
+};
