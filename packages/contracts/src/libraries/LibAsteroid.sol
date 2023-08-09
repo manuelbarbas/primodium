@@ -8,12 +8,10 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
-import { AsteroidKey } from "../prototypes.sol";
 
 import { Coord, EAsteroidType } from "../types.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibMath } from "libraries/LibMath.sol";
 
 library LibAsteroid {
   /**

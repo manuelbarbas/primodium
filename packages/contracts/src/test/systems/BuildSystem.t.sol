@@ -296,6 +296,30 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
+  function testSameXYCanCollide() public {
+    spawn(bob);
+    vm.startPrank(bob);
+    buildMainBaseAtZero(bob);
+    vm.stopPrank();
+  }
+
+  function testFailSameXYZCannotCollide() public {
+    vm.startPrank(alice);
+    buildMainBaseAtZero(alice);
+
+    buildSystem.executeTyped(IronMineID, getOrigin(alice));
+  }
+
+  function testBuiltOnWrongAsteroid() public {
+    vm.startPrank(alice);
+    buildMainBaseAtZero(alice);
+    Coord memory coord = getCoord2(alice);
+    coord.parent = 69;
+
+    vm.expectRevert(bytes("[BuildSystem] Building must be built on your main asteroid"));
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
+  }
+
   function testBuildWithResourceReqs() public {
     vm.startPrank(alice);
 
