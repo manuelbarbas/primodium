@@ -1,11 +1,13 @@
 import { expect, test } from "vitest";
 import {
-  decodeCoordEntity,
-  encodeCoordEntity,
+  decodeCoord,
+  encodeCoord,
+  hashKeyCoord,
   hashKeyEntity,
 } from "../util/encode";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { BigNumber } from "ethers";
 
 // Outputs of LibEncode.sol's hashKeyEntity function
 // E.g. console.logBytes32(bytes32(LibEncode.hashKeyEntity(0, 0)));
@@ -43,30 +45,20 @@ const hashKeyEntityOutputs = [
 ];
 
 test("hashKeyEntity matches LibEncode outputs", () => {
-  const getPaddedHex = (n: number, pad: number): string => {
-    const hex = n.toString(16);
-    return "0x" + "0".repeat(pad - hex.length) + hex;
-  };
-
   // Check with second argument padded to 160 bits (as if address)
   for (const example of hashKeyEntityOutputs) {
     expect(example.output).eq(
       hashKeyEntity(
-        getPaddedHex(example.key, 64) as EntityID,
+        example.key,
         // 20 bytes = 160 bits
-        getPaddedHex(example.entity, 20) as EntityID
+        example.entity
       )
     );
   }
 
   // Check with second argument padded to 256 bits (as if entity)
   for (const example of hashKeyEntityOutputs) {
-    expect(example.output).eq(
-      hashKeyEntity(
-        getPaddedHex(example.key, 64) as EntityID,
-        getPaddedHex(example.entity, 64) as EntityID
-      )
-    );
+    expect(example.output).eq(hashKeyEntity(example.key, example.entity));
   }
 });
 
@@ -108,81 +100,38 @@ test("hashKeyEntity matches LibEncode outputs, additional tests", () => {
 // E.g. console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 0, y: 0 }), "primodium")));
 const encodeCoordEntityOutputs = [
   {
-    coord: { x: 0, y: 0 },
-    key: "primodium",
-    output:
-      "0x00000000000000007072696d6f6469756d000000000000000000000000000000",
+    coord: { x: 0, y: 0, z: BigNumber.from("0").toHexString() },
+    output: "0",
   },
   {
-    coord: { x: 1, y: 5 },
-    key: "building",
-    output:
-      "0x00000001000000056275696c64696e6700000000000000000000000000000000",
+    coord: { x: 1, y: 5, z: BigNumber.from(0).toHexString() },
+    output: "4294967301",
   },
   {
-    coord: { x: -1, y: 10 },
-    key: "sowm",
-    output:
-      "0xffffffff0000000a736f776d0000000000000000000000000000000000000000",
+    coord: { x: -1, y: 10, z: BigNumber.from(0).toHexString() },
+    output: "18446744069414584330",
   },
   {
-    coord: { x: 123458, y: -22324234 },
-    key: "taxcuts",
-    output:
-      "0x0001e242feab5bf6746178637574730000000000000000000000000000000000",
+    coord: { x: 123458, y: -22324234, z: BigNumber.from(0).toHexString() },
+    output: "530252345072630",
   },
   {
-    coord: { x: -929331, y: -723932 },
-    key: "smallbrain",
-    output:
-      "0xfff1d1cdfff4f424736d616c6c627261696e0000000000000000000000000000",
-  },
-  {
-    coord: { x: 239431, y: 3223932 },
-    key: "superlongprobablytruncatedstring",
-    output:
-      "0x0003a7470031317c73757065726c6f6e6770726f6261626c797472756e636174",
-  },
-  {
-    coord: { x: -110, y: -19201929 },
-    key: "testtesttesttesttesttest",
-    output:
-      "0xffffff92fedb0077746573747465737474657374746573747465737474657374",
-  },
-  {
-    coord: { x: 124123, y: 3325 },
-    key: "building",
-    output:
-      "0x0001e4db00000cfd6275696c64696e6700000000000000000000000000000000",
-  },
-  {
-    coord: { x: -12334, y: -1120 },
-    key: "sowm",
-    output:
-      "0xffffcfd2fffffba0736f776d0000000000000000000000000000000000000000",
-  },
-  {
-    coord: { x: 222233332, y: 22324234 },
-    key: "taxcuts",
-    output:
-      "0x0d3f02f40154a40a746178637574730000000000000000000000000000000000",
-  },
-  {
-    coord: { x: 2147483647, y: -2147483647 },
-    key: "smallbrain",
-    output:
-      "0x7fffffff80000001736d616c6c627261696e0000000000000000000000000000",
+    coord: { x: -929331, y: -723932, z: BigNumber.from(0).toHexString() },
+    output: "18442752631751636004",
   },
 ];
 
+function formattedString(input: string) {
+  return "0x" + BigInt(input).toString(16).padStart(64, "0");
+}
 test("encodeCoordEntity matches LibEncode outputs", () => {
   for (const example of encodeCoordEntityOutputs) {
-    expect(example.output).eq(encodeCoordEntity(example.coord, example.key));
+    expect(formattedString(example.output)).eq(encodeCoord(example.coord));
     expect(example.output).not.eq(
-      encodeCoordEntity(
-        { x: example.coord.x - 10, y: example.coord.y },
-        example.key
-      )
+      encodeCoord({
+        x: example.coord.x - 10,
+        y: example.coord.y,
+      })
     );
   }
 });
@@ -191,7 +140,54 @@ test("decodeCoordEntity matches LibEncode outputs", () => {
   const coordToKey = (coord: Coord) => `${coord.x};;${coord.y}`;
   for (const example of encodeCoordEntityOutputs) {
     expect(coordToKey(example.coord)).eq(
-      coordToKey(decodeCoordEntity(example.output as EntityID))
+      coordToKey(decodeCoord(example.output as EntityID))
+    );
+  }
+});
+
+const hashEntityCoords = [
+  {
+    coord: { x: 0, y: 0, z: BigNumber.from("0").toHexString() },
+    key: "building",
+    output:
+      "19828691625151199819925894263310015295956025344535852370549237859831322790673",
+  },
+  // {
+  //   coord: { x: 1, y: 5, z: BigNumber.from(123).toHexString() },
+  //   key: "building",
+  //   output:
+  //     "109148753008226741991702484166202944633515591219524242558445782281528478512641",
+  // },
+  {
+    coord: { x: -1, y: 10, z: BigNumber.from(0).toHexString() },
+    key: "building",
+    output:
+      "103533954559848020612050344332934577129382484874517710751975151449750747241804",
+  },
+  {
+    coord: { x: 123458, y: -22324234, z: BigNumber.from(0).toHexString() },
+    key: "building",
+    output:
+      "111518471964263571474455470130025425666986359214977074161153522376787685319637",
+  },
+  {
+    coord: { x: -929331, y: -723932, z: BigNumber.from(0).toHexString() },
+    key: "building",
+    output:
+      "32215382666935507160146267019595249092158368377584145094984290894592005171865",
+  },
+];
+
+test("hashEntityCoord", () => {
+  for (const example of hashEntityCoords) {
+    expect(formattedString(example.output)).eq(
+      hashKeyCoord(example.key, example.coord)
+    );
+    expect(example.output).not.eq(
+      encodeCoord({
+        x: example.coord.x - 10,
+        y: example.coord.y,
+      })
     );
   }
 });

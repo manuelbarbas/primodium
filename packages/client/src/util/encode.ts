@@ -4,68 +4,53 @@ import { solidityKeccak256 } from "ethers/lib/utils";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
-import { Buffer } from "buffer";
-
 // use this when you want to pass the entity to world.getEntityIndex
-export function encodeCoordEntityAndTrim(coord: Coord, key: string): EntityID {
-  return BigNumber.from(
-    encodeCoordEntity(coord, key)
-  ).toHexString() as unknown as EntityID;
+export function encodeAndTrimCoord(coord: Coord): EntityID {
+  return trim(encodeCoord(coord));
 }
 
-// Identical to encodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
-export function encodeCoordEntity(coord: Coord, key: string): EntityID {
-  function encodeCoordinate(value: number): Buffer {
-    const bytes = Buffer.alloc(4);
-    if (value >= 0) {
-      bytes.writeInt32BE(value);
-    } else {
-      // Use two's complement for negative values
-      bytes.writeUInt32BE(value >>> 0);
-    }
-    return bytes;
+// convert the following solidity function to typescript:
+export function encodeCoord(coord: Coord): EntityID {
+  let x: number = coord.x;
+  let y: number = coord.y;
+
+  // Ensure the numbers are within int32 range
+  if (x > 0x7fffffff || x < -0x80000000 || y > 0x7fffffff || y < -0x80000000) {
+    throw new Error("Coordinates out of int32 range");
   }
-  const xBytes = encodeCoordinate(coord.x);
-  const yBytes = encodeCoordinate(coord.y);
-  let keyBytes = Buffer.from(key);
-  const desiredKeyLength = 24;
-  if (keyBytes.length < desiredKeyLength) {
-    keyBytes = Buffer.concat([
-      keyBytes,
-      Buffer.alloc(desiredKeyLength - keyBytes.length),
-    ]);
-  } else if (keyBytes.length > desiredKeyLength) {
-    keyBytes = keyBytes.subarray(0, desiredKeyLength);
-  }
-  const concatenatedBytes = Buffer.concat([xBytes, yBytes, keyBytes]);
-  const encodedValue = `0x${concatenatedBytes.toString("hex")}`;
-  return encodedValue as EntityID;
+
+  // Convert to uint32
+  x = x >>> 0;
+  y = y >>> 0;
+
+  // Shift the bits of the first int32 32 bits to the left and OR it with the second int32
+  const result = (BigInt(x) << BigInt(32)) | BigInt(y);
+  return ("0x" + result.toString(16).padStart(64, "0")) as EntityID;
 }
 
-// Identical to decodeCoordEntity in packages/contracts/src/libraries/LibEncode.sol
-export function decodeCoordEntity(entity: EntityID): Coord {
-  // Utility to plit buffer data into bytes sizes
-  function split(data: Buffer, sizes: number[]): Buffer[] {
-    const result: Buffer[] = [];
-    let offset = 0;
-    for (const size of sizes) {
-      result.push(data.subarray(offset, offset + size));
-      offset += size;
-    }
-    return result;
-  }
-  // Correctly convert negative signed integers
-  function getInt32FromBuffer(buffer: Buffer): number {
-    const value = buffer.readInt32BE();
-    // If the most significant bit is set, the number is negative
-    return value >= 0x80000000 ? value - 0x100000000 : value;
-  }
-  const data = Buffer.from(padTo64Bytes(entity).slice(2), "hex");
-  const sizes = [4, 4];
-  const decoded = split(data, sizes);
-  const x = getInt32FromBuffer(decoded[0]);
-  const y = getInt32FromBuffer(decoded[1]);
-  return { x, y };
+export function decodeCoord(encodedValue: EntityID) {
+  const bigInt = BigInt(encodedValue);
+  // Extract the y value (rightmost 32 bits)
+  const y: number = Number(bigInt & BigInt(0xffffffff));
+
+  // Right shift by 32 bits to extract the x value
+  const x: number = Number(bigInt >> BigInt(32));
+
+  // Convert uint32 back to int32
+  const int32_x: number = (x << 0) >> 0;
+  const int32_y: number = (y << 0) >> 0;
+
+  return {
+    x: int32_x,
+    y: int32_y,
+  };
+}
+
+export function hashAndTrimKeyEntity(
+  key: string | EntityID | number,
+  entity: EntityID | string | number
+): EntityID {
+  return trim(hashKeyEntity(key, entity));
 }
 
 // Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
@@ -82,11 +67,23 @@ export function hashKeyEntity(
 
 // Remove leading zeros due to mudv1 hashing behavior
 // if there are leading zeroes, the key in world.entityToIndex will be trimmed
-export function hashKeyEntityAndTrim(
-  key: EntityID | string | number,
-  entity: EntityID | string | number
-): EntityID {
-  return BigNumber.from(hashKeyEntity(key, entity)).toHexString() as EntityID;
+export function trim(entity: EntityID): EntityID {
+  return BigNumber.from(entity).toHexString() as EntityID;
+}
+
+export function hashEntity(entity: EntityID) {
+  return solidityKeccak256(["uint256"], [BigNumber.from(entity)]) as EntityID;
+}
+
+export function hashAndTrimKeyCoord(key: string, coord: Coord): EntityID {
+  return trim(hashKeyCoord(key, coord));
+}
+
+export function hashKeyCoord(key: string, coord: Coord): EntityID {
+  return solidityKeccak256(
+    ["string", "int32", "int32", "uint256"],
+    [key, coord.x, coord.y, 0]
+  ) as EntityID;
 }
 
 export function trimEntityId(entityId: EntityID): EntityID {

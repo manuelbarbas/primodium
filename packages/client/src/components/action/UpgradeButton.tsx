@@ -1,6 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { hashKeyEntityAndTrim } from "src/util/encode";
 import { useAccount } from "../../hooks/useAccount";
 import { useMud } from "src/hooks/useMud";
 import { useGameStore } from "../../store/GameStore";
@@ -13,6 +12,7 @@ import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
 import { upgrade } from "src/util/web3";
+import { hashAndTrimKeyEntity } from "src/util/encode";
 import {
   Level,
   P_MaxLevel,
@@ -48,7 +48,7 @@ export default function UpgradeButton({
   }, [currLevel, maxLevel]);
 
   const buildingTypeLevel = useMemo(() => {
-    return hashKeyEntityAndTrim(
+    return hashAndTrimKeyEntity(
       builtTile,
       upgradedLevel as unknown as EntityID
     ) as EntityID;
@@ -64,7 +64,7 @@ export default function UpgradeButton({
 
   const researchOwner = useMemo(() => {
     if (!address || !researchRequirement) return SingletonID;
-    return hashKeyEntityAndTrim(
+    return hashAndTrimKeyEntity(
       researchRequirement,
       address.toString().toLowerCase()
     ) as EntityID;

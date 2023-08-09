@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
-import { encodeCoordEntityAndTrim, trimEntityId } from "src/util/encode";
+import { hashAndTrimKeyCoord, trimEntityId } from "src/util/encode";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
 import { GameButton } from "../shared/GameButton";
@@ -29,10 +29,10 @@ export const InfoBox = () => {
   const [notify, setNotify] = useState<boolean>(false);
   const { pan } = primodium.api(AsteroidMap.KEY)!.camera;
 
-  const coordEntity = encodeCoordEntityAndTrim(
-    { x: mainBaseCoord?.x ?? 0, y: mainBaseCoord?.y ?? 0 },
-    BlockType.BuildingKey
-  );
+  const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
+    x: mainBaseCoord?.x ?? 0,
+    y: mainBaseCoord?.y ?? 0,
+  });
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
