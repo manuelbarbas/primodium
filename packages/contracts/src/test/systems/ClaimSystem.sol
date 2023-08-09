@@ -475,13 +475,13 @@ contract ClaimSystemTest is PrimodiumTest {
 
     upgradeSystem.executeTyped(coord);
 
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 2, "IronMine should be level 2");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 2, "IronMine should be level 2");
     vm.roll(20);
 
     claimSystem.executeTyped(mainBaseCoord);
     assertEq(itemComponent.getValue(hashedAliceKey), 30, "Alice should have 30 iron");
     upgradeSystem.executeTyped(coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 3, "IronMine should be level 3");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 3, "IronMine should be level 3");
 
     vm.roll(30);
 

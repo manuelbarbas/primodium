@@ -4,10 +4,11 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 import { ID as BuildSystemID } from "systems/BuildSystem.sol";
 // components
-import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 
+import { Coord } from "../types.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 uint256 constant ID = uint256(keccak256("system.S_CheckRequiredTile"));
@@ -25,8 +26,9 @@ contract S_CheckRequiredTileSystem is IOnTwoEntitySubsystem, PrimodiumSystem {
       args,
       (address, uint256, uint256)
     );
+    Coord memory position = PositionComponent(getC(PositionComponentID)).getValue(buildingEntity);
 
-    return abi.encode(LibBuilding.canBuildOnTile(world, buildingType, LibEncode.decodeCoordEntity(buildingEntity)));
+    return abi.encode(LibBuilding.canBuildOnTile(world, buildingType, position));
   }
 
   function executeTyped(

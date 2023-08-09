@@ -6,6 +6,7 @@ import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
@@ -70,14 +71,12 @@ contract BuildPathSystemTest is PrimodiumTest {
 
     uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
+    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
+    Coord memory startPosition = positionComponent.getValue(startBlockEntityID);
+    assertCoordEq(startPosition, getIronCoord(alice));
 
-    Coord memory startPosition = LibEncode.decodeCoordEntity(startBlockEntityID);
-    assertEq(startPosition.x, getIronCoord(alice).x);
-    assertEq(startPosition.y, getIronCoord(alice).y);
-
-    Coord memory endPosition = LibEncode.decodeCoordEntity(endBlockEntityID);
-    assertEq(endPosition.x, getCoord1(alice).x);
-    assertEq(endPosition.y, getCoord1(alice).y);
+    Coord memory endPosition = positionComponent.getValue(endBlockEntityID);
+    assertCoordEq(endPosition, getCoord1(alice));
 
     assertTrue(ownedByComponent.has(startBlockEntityID));
     assertEq(ownedByComponent.getValue(startBlockEntityID), addressToEntity(alice));
@@ -126,10 +125,11 @@ contract BuildPathSystemTest is PrimodiumTest {
     startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     endBlockEntityID = abi.decode(endBlockEntity, (uint256));
 
-    Coord memory startPosition = LibEncode.decodeCoordEntity(startBlockEntityID);
+    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
+    Coord memory startPosition = positionComponent.getValue(startBlockEntityID);
     assertCoordEq(startPosition, getIronCoord(alice));
 
-    Coord memory endPosition = LibEncode.decodeCoordEntity(endBlockEntityID);
+    Coord memory endPosition = positionComponent.getValue(endBlockEntityID);
     assertCoordEq(endPosition, getCoord1(alice));
 
     assertTrue(ownedByComponent.has(startBlockEntityID));
