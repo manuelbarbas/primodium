@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 // external
-import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSystem.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 
