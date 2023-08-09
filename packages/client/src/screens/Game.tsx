@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import GameUI from "src/components/game-ui/GameUI";
+import AsteroidUI from "src/components/asteroid-ui/GameUI";
 import { useMud } from "src/hooks/useMud";
 import { useAccount } from "src/hooks/useAccount";
 
@@ -31,9 +31,8 @@ export const Game = () => {
           backgroundImage: "url(/img/backgrounds/star.webp)",
         }}
       >
-        <div id="phaser-container" className="absolute cursor-pointer" />
         <PhaserWrapper />
-        {gameReady && <GameUI />}
+        {gameReady && <AsteroidUI />}
       </div>
     </div>
   );

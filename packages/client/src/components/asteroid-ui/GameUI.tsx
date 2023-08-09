@@ -16,7 +16,7 @@ import { AiOutlineRotateRight } from "react-icons/ai";
 import { useOrientation } from "src/hooks/useOrientation";
 import { UserPanel } from "./user-panel/UserPanel";
 
-function GameUI() {
+function AsteroidUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
     state.showUI,
     state.toggleShowUI,
@@ -60,4 +60,4 @@ function GameUI() {
   );
 }
 
-export default GameUI;
+export default AsteroidUI;

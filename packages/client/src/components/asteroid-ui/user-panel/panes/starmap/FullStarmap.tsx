@@ -1,5 +1,6 @@
 import PortalModal from "src/components/shared/PortalModal";
 import { Starmap } from "./Starmap";
+import { StarmapUI } from "src/components/starmap-ui/StarmapUI";
 
 export const FullStarmap: React.FC<{ show: boolean; onClose: () => void }> = ({
   show,
@@ -7,8 +8,9 @@ export const FullStarmap: React.FC<{ show: boolean; onClose: () => void }> = ({
 }) => {
   return (
     <PortalModal show={show} onClose={onClose} title="Starmap" fullscreen>
-      <div className="w-full h-full">
-        {show && <Starmap id={"full-starmap"} />}
+      <div className="relative w-full h-full">
+        <Starmap id={"full-starmap"} />
+        <StarmapUI />
       </div>
     </PortalModal>
   );
