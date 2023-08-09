@@ -29,13 +29,11 @@ contract ClaimSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
-    vm.stopPrank();
+    spawn(alice);
   }
 
   function testClaimOnFactory() public {
     vm.startPrank(alice);
-
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));

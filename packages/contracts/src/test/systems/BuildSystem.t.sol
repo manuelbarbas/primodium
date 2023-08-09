@@ -59,6 +59,7 @@ contract BuildSystemTest is PrimodiumTest {
     buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
 
     // init other
+    spawn(alice);
   }
 
   // todo: sort these tests. the first test should be a vanilla build system call
@@ -123,8 +124,9 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testFailUtilityResourceRequirementMoreThenMax() public {
     vm.startPrank(alice);
+    uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
     MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(component(MaxUtilityComponentID));
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, Coord({ x: 0, y: 0, parent: 0 }));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, Coord({ x: 0, y: 0, parent: asteroid }));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
@@ -134,7 +136,7 @@ contract BuildSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < 6; i++) {
       buildSystem.executeTyped(
         DebugSimpleBuildingUtilityResourceRequirement,
-        Coord({ x: secondIncrement, y: 0, parent: 0 })
+        Coord({ x: secondIncrement, y: 0, parent: asteroid })
       );
       secondIncrement++;
     }
@@ -142,6 +144,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
+  // todo: move these tests to destroy system test
   function testDestroyUtilityProduction() public {
     vm.startPrank(alice);
 
@@ -240,7 +243,10 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  function testBuildLargeBuilding() public prank(deployer) {
+  function testBuildLargeBuilding() public {
+    spawn(deployer);
+    vm.startPrank(deployer);
+
     P_BlueprintComponent blueprintComponent = P_BlueprintComponent(component(P_BlueprintComponentID));
     int32[] memory blueprint = LibBlueprint.get3x3Blueprint();
     blueprintComponent.set(MainBaseID, blueprint);
@@ -248,14 +254,14 @@ contract BuildSystemTest is PrimodiumTest {
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
 
     PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
-    Coord memory position = positionComponent.getValue(buildingEntity);
+    Coord memory buildingPosition = positionComponent.getValue(buildingEntity);
 
     uint256[] memory children = childrenComponent.getValue(buildingEntity);
     assertEq(blueprint.length, children.length * 2);
 
     for (uint i = 0; i < children.length; i++) {
-      position = positionComponent.getValue(children[i]);
-      assertCoordEq(position, Coord(blueprint[i * 2], blueprint[i * 2 + 1], 0));
+      Coord memory tilePosition = positionComponent.getValue(children[i]);
+      assertCoordEq(tilePosition, Coord(blueprint[i * 2], blueprint[i * 2 + 1], buildingPosition.parent));
       assertEq(buildingEntity, ownedByComponent.getValue(children[i]));
     }
   }
@@ -288,6 +294,30 @@ contract BuildSystemTest is PrimodiumTest {
     buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
 
     vm.stopPrank();
+  }
+
+  function testSameXYCanCollide() public {
+    spawn(bob);
+    vm.startPrank(bob);
+    buildMainBaseAtZero(bob);
+    vm.stopPrank();
+  }
+
+  function testFailSameXYZCannotCollide() public {
+    vm.startPrank(alice);
+    buildMainBaseAtZero(alice);
+
+    buildSystem.executeTyped(IronMineID, getOrigin(alice));
+  }
+
+  function testBuiltOnWrongAsteroid() public {
+    vm.startPrank(alice);
+    buildMainBaseAtZero(alice);
+    Coord memory coord = getCoord2(alice);
+    coord.parent = 69;
+
+    vm.expectRevert(bytes("[BuildSystem] Building must be built on your main asteroid"));
+    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
   }
 
   function testBuildWithResourceReqs() public {
@@ -360,10 +390,11 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailBuildMoreThanBuildLimit() public {
     vm.startPrank(alice);
     buildMainBaseAtZero(alice);
+    uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
     uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
     int32 secondIncrement = 0;
     for (uint256 i = 0; i < buildLimit + 1; i++) {
-      Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1, parent: 0 });
+      Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1, parent: asteroid });
       buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
       secondIncrement++;
     }
@@ -373,9 +404,10 @@ contract BuildSystemTest is PrimodiumTest {
   function testBuildUpToBuildLimit() public prank(alice) {
     buildMainBaseAtZero(alice);
     uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
+    uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
-      Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1, parent: 0 });
+      Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1, parent: asteroid });
       buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
       secondIncrement++;
     }
@@ -394,7 +426,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     int32 secondIncrement = 0;
     for (uint256 i; i < buildLimit; i++) {
-      coord1 = Coord({ x: secondIncrement, y: secondIncrement, parent: 0 });
+      coord1 = Coord({ x: secondIncrement, y: secondIncrement, parent: coord1.parent });
       buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
       secondIncrement++;
     }

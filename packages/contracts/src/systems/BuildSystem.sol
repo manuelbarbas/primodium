@@ -55,10 +55,17 @@ contract BuildSystem is PrimodiumSystem {
     uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
     uint256 playerEntity = addressToEntity(msg.sender);
 
+    PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
+
+    bool spawned = positionComponent.has(playerEntity);
+    require(spawned, "[BuildSystem] Player has not spawned");
+
+    require(!positionComponent.has(buildingEntity), "[BuildSystem] Building already exists");
+
     require(
-      !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
-      "[BuildSystem] Building already exists here"
+      coord.parent == positionComponent.getValue(playerEntity).parent,
+      "[BuildSystem] Building must be built on your main asteroid"
     );
 
     require(
