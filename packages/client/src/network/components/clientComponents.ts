@@ -32,7 +32,14 @@ export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
 });
 
+export const ActiveAsteroid = newComponent(
+  world,
+  { value: Type.Entity },
+  { id: "ActiveAsteroid" }
+);
+
 export default {
+  ActiveAsteroid,
   BlockNumber,
   GameReady,
   DoubleCounter,
