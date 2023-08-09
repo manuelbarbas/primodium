@@ -17,7 +17,7 @@ import { BuildingCountComponent, ID as BuildingCountComponentID } from "componen
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
-
+import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
 // libraries
 import { Coord } from "../types.sol";
@@ -51,6 +51,11 @@ contract BuildSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
+
+    require(
+      P_IsBuildingTypeComponent(getC(P_IsBuildingTypeComponentID)).has(buildingType),
+      "[BuildSystem] Invalid building type"
+    );
 
     uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);

@@ -14,7 +14,7 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "
 import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
-
+import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
 import { LibBlueprint } from "../libraries/LibBlueprint.sol";
@@ -48,7 +48,8 @@ library LibInitBuildings {
     uint256 entity = MainBaseID;
     uint32 maxLevel = 6;
 
-    P_IgnoreBuildLimitComponent(world.getComponent(P_IgnoreBuildLimitComponentID)).set(MainBaseID);
+    P_IgnoreBuildLimitComponent(world.getComponent(P_IgnoreBuildLimitComponentID)).set(entity);
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
 
@@ -137,6 +138,7 @@ library LibInitBuildings {
 
   function initIronMine(IWorld world) internal {
     uint256 entity = IronMineID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 3;
 
     /****************** Required Research *******************/
@@ -189,6 +191,7 @@ library LibInitBuildings {
 
   function initCopperMine(IWorld world) internal {
     uint256 entity = CopperMineID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 3;
 
     /****************** Required Research *******************/
@@ -242,6 +245,7 @@ library LibInitBuildings {
 
   function initLithiumMine(IWorld world) internal {
     uint256 entity = LithiumMineID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 2;
 
     /****************** Required Research *******************/
@@ -290,6 +294,7 @@ library LibInitBuildings {
 
   function initIronPlateFactory(IWorld world) internal {
     uint256 entity = IronPlateFactoryID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 2;
 
     /****************** Required Research *******************/
@@ -363,6 +368,7 @@ library LibInitBuildings {
 
   function initAlloyFactory(IWorld world) internal {
     uint256 entity = AlloyFactoryID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 1;
 
     /****************** Required Research *******************/
@@ -435,6 +441,7 @@ library LibInitBuildings {
   // lithium copper oxide
   function initLi2CuO2Factory(IWorld world) internal {
     uint256 entity = LithiumCopperOxideFactoryID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 1;
 
     /****************** Required Research *******************/
@@ -490,6 +497,7 @@ library LibInitBuildings {
   /************************ Special Buildings ******************************** */
   function initStorageUnit(IWorld world) internal {
     uint256 entity = StorageUnitID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 3;
 
     /****************** Required Research *******************/
@@ -555,6 +563,7 @@ library LibInitBuildings {
 
   function initSolarPanel(IWorld world) internal {
     uint256 entity = SolarPanelID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 1;
 
     /****************** Required Research *******************/

@@ -60,6 +60,12 @@ contract BuildSystemTest is PrimodiumTest {
     // init other
   }
 
+  function testFailUnregisteredBuildingType() public {
+    vm.startPrank(alice);
+    buildSystem.executeTyped(uint256(12), Coord({ x: 1, y: 0 }));
+    vm.stopPrank();
+  }
+
   function testFailUtilityResourceRequirementNotMet() public {
     vm.startPrank(alice);
 
