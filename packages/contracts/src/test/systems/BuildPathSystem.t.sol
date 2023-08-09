@@ -38,14 +38,14 @@ contract BuildPathSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
     buildSystem = BuildSystem(system(BuildSystemID));
     buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
 
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     pathComponent = PathComponent(component(PathComponentID));
     requiredTileComponent = P_RequiredTileComponent(component(P_RequiredTileComponentID));
-    vm.stopPrank();
+
+    spawn(alice);
   }
 
   function testFailBuildPathFromMainBaseToMine() public {

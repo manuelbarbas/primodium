@@ -29,8 +29,7 @@ contract Storage is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
-    vm.stopPrank();
+    spawn(alice);
   }
 
   function testStorage() public {

@@ -14,9 +14,6 @@ contract BuildSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
-
-    vm.stopPrank();
   }
 
   function testTerrain() public {

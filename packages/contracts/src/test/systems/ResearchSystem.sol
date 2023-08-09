@@ -32,12 +32,11 @@ contract ResearchSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
 
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     itemComponent = ItemComponent(component(ItemComponentID));
 
-    vm.stopPrank();
+    spawn(alice);
   }
 
   function testFailResearchInvalidID() public {

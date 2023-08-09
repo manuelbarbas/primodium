@@ -27,9 +27,7 @@ contract UpgradeSystemTest is PrimodiumTest {
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
-
-    vm.stopPrank();
+    spawn(alice);
   }
 
   function testFailUpgradeNonUpgradableBuilding() public {

@@ -12,6 +12,7 @@ import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBas
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 import { SpawnSystem, ID as SpawnSystemID } from "systems/SpawnSystem.sol";
 
+import { LibEncode } from "libraries/LibEncode.sol";
 import "../prototypes.sol";
 
 // only for use privately
@@ -23,8 +24,6 @@ struct Coord2D {
 contract PrimodiumTest is MudTest {
   constructor() MudTest(new Deploy()) {}
 
-  uint256 public dummyBuilding = uint256(bytes32("dummy"));
-
   function setUp() public virtual override {
     super.setUp();
   }
@@ -35,6 +34,7 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
+  // todo: change this to assertEq
   function assertCoordEq(Coord memory coordA, Coord memory coordB) internal {
     assertEq(coordA.x, coordB.x, "[assertEq]: x doesn't match");
     assertEq(coordA.y, coordB.y, "[assertEq]: y doesn't match");
@@ -76,7 +76,10 @@ contract PrimodiumTest is MudTest {
   }
 
   function getCoord(Coord2D memory coord2D, address player) internal view returns (Coord memory coord) {
-    coord = Coord(coord2D.x, coord2D.y, 0);
+    uint256 playerEntity = addressToEntity(player);
+
+    uint256 asteroid = LibEncode.hashEntity(world, playerEntity);
+    coord = Coord(coord2D.x, coord2D.y, asteroid);
   }
 
   function assertFalse(bool input) internal {
@@ -88,10 +91,10 @@ contract PrimodiumTest is MudTest {
   }
 
   function buildMainBaseAtZero(address player) internal returns (uint256) {
-    bytes memory blockEntity = BuildSystem(system(BuildSystemID)).executeTyped(MainBaseID, getOrigin(player));
+    bytes memory rawBuildingEntity = BuildSystem(system(BuildSystemID)).executeTyped(MainBaseID, getOrigin(player));
 
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-    return blockEntityID;
+    uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
+    return buildingEntity;
   }
 
   function spawn(address player) internal prank(player) returns (uint256) {
