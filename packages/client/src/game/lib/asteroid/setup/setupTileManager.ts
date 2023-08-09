@@ -7,6 +7,8 @@ import { interval } from "rxjs";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 
+const { Tilekeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
+
 const renderChunk = async (
   coord: Coord,
   map: AnimatedTilemap<number, string, string>,
@@ -14,7 +16,6 @@ const renderChunk = async (
   chunkCache: CoordMap<boolean>,
   perlin: Perlin
 ) => {
-  const { Tilekeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
   //don't render if already rendered
   if (chunkCache.get(coord)) return;
 
@@ -47,7 +48,36 @@ const renderChunk = async (
   chunkCache.set(coord, true);
 };
 
-export const setupAsteroidChunkManager = async (tilemap: Scene["tilemap"]) => {
+const renderBounds = (
+  upperLeft: Coord,
+  bottomRight: Coord,
+  map: AnimatedTilemap<number, string, string>,
+  perlin: Perlin
+) => {
+  for (let x = upperLeft.x; x <= bottomRight.x; x++) {
+    for (let y = upperLeft.y; y <= bottomRight.y; y++) {
+      const coord = { x, y: -y };
+
+      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
+
+      //lookup and place terrain
+      const terrainId = EntityIdtoTilesetId[terrain];
+
+      if (terrainId === Tilekeys.Water) {
+        map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
+        continue;
+      }
+      //lookup and place resource
+      map.putTileAt({ x, y }, terrainId ?? Tilekeys.Alluvium, "Terrain");
+
+      if (!resource) continue;
+      const resourceId = EntityIdtoTilesetId[resource!];
+      map.putTileAt({ x, y }, resourceId, "Resource");
+    }
+  }
+};
+
+export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
   const { RENDER_INTERVAL } = AsteroidMap;
   const { chunks, map, chunkSize } = tilemap;
   const chunkCache = new CoordMap<boolean>();
@@ -57,6 +87,10 @@ export const setupAsteroidChunkManager = async (tilemap: Scene["tilemap"]) => {
     for (const chunk of chunks.visibleChunks.current.coords()) {
       renderChunk(chunk, map, chunkSize, chunkCache, perlin);
     }
+  };
+
+  const renderMapBounds = (upperLeft: Coord, bottomRight: Coord) => {
+    renderBounds(upperLeft, bottomRight, map, perlin);
   };
 
   const startChunkRenderer = () => {
@@ -82,5 +116,5 @@ export const setupAsteroidChunkManager = async (tilemap: Scene["tilemap"]) => {
     }, "game");
   };
 
-  return { renderInitialChunks, startChunkRenderer };
+  return { renderInitialChunks, startChunkRenderer, renderMapBounds };
 };

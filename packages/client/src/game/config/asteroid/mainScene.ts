@@ -4,7 +4,7 @@ import { AsteroidMap } from "../../constants";
 import { animationConfig } from "./animation";
 import { tileAnimationConfig } from "./tileAnimation";
 
-const { Assets, Scenes, Tilesets, Tilekeys } = AsteroidMap;
+const { Assets, Scenes, Tilesets } = AsteroidMap;
 
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,

@@ -5,7 +5,7 @@ import gameConfig from "../../config/asteroid/game";
 import mainSceneConfig from "../../config/asteroid/mainScene";
 import { AsteroidMap } from "../../constants";
 import { runSystems } from "./systems";
-import { setupAsteroidChunkManager } from "./setup/setupChunkManager";
+import { setupTileManager } from "./setup/setupTileManager";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { EntityID } from "@latticexyz/recs";
@@ -24,8 +24,9 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
 
   scene.camera.phaserCamera.setRoundPixels(false);
 
-  const chunkManager = await setupAsteroidChunkManager(scene.tilemap);
-  chunkManager.renderInitialChunks();
+  const tileManager = await setupTileManager(scene.tilemap);
+  tileManager.renderMapBounds({ x: -20, y: -20 }, { x: 20, y: 20 });
+  // chunkManager.renderInitialChunks();
   // chunkManager.startChunkRenderer();
 
   scene.camera.phaserCamera.fadeIn(1000);
