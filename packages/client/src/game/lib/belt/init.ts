@@ -12,7 +12,6 @@ import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMoveme
 export const initBeltView = async (_: EntityID, network: Network) => {
   const { Scenes } = BeltMap;
   const { world } = network;
-  const { outline } = createFxApi();
 
   const game = await engine.createGame(gameConfig);
   const scene = await game.sceneManager.addScene(
@@ -22,16 +21,6 @@ export const initBeltView = async (_: EntityID, network: Network) => {
   );
 
   scene.camera.phaserCamera.fadeIn(1000);
-
-  scene.phaserScene.add.sprite(0, 0, "asteroid-sprite");
-
-  outline(
-    scene.phaserScene.add.sprite(10 * 32, -10 * 32, "asteroid-titanium-sprite")
-  );
-
-  scene.phaserScene.add.text(0, 16, "[0, 0]", {
-    align: "center",
-  });
 
   setupBasicCameraMovement(scene, {
     translateKeybind: false,
