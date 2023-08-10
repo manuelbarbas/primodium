@@ -8,6 +8,7 @@ import newComponent, {
 
 const commonIdPrefix = "component.";
 
+// todo: organize these alphabetically
 export const Counter = newComponent(
   world,
   { value: Type.Number },

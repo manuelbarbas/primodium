@@ -3,11 +3,11 @@ import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { FixedSizeGrid as Grid } from "react-window";
 
 import { useMud } from "src/hooks/useMud";
-import { BuildingType, Position } from "src/network/components/chainComponents";
-import { world } from "src/network/world";
-import { getTopLayerKey } from "src/util/tile";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BlockColors } from "../util/constants";
+import { getTopLayerKey } from "src/util/tile";
+import { BuildingType, Position } from "src/network/components/chainComponents";
+import { world } from "src/network/world";
 
 export default function Map() {
   const { perlin } = useMud();

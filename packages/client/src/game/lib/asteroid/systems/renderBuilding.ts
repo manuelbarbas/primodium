@@ -10,23 +10,23 @@ import {
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 
-import { AsteroidMap } from "@game/constants";
 import { Scene } from "engine/types";
-import {
-  BuildingType,
-  Level,
-  Position,
-} from "src/network/components/chainComponents";
-import { SelectedBuilding } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
+import { SelectedBuilding } from "src/network/components/clientComponents";
+import {
+  Position,
+  Level,
+  BuildingType,
+} from "src/network/components/chainComponents";
 import { safeIndex } from "src/util/array";
+import { AsteroidMap } from "@game/constants";
 
-import { ObjectPosition } from "../../common/object-components/common";
 import {
   Animation,
-  Outline,
   Texture,
+  Outline,
 } from "../../common/object-components/sprite";
+import { ObjectPosition } from "../../common/object-components/common";
 
 const {
   Assets,

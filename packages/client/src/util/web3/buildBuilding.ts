@@ -19,6 +19,7 @@ export const buildBuilding = async (
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
 
+  // todo: find a cleaner way to extract this value in all web3 functions
   const activeAsteroid = ActiveAsteroid.get()?.value;
   if (!activeAsteroid) return;
 

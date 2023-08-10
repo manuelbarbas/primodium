@@ -7,6 +7,7 @@ import newComponent, {
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
 
+// todo: organize these alphabetically
 export const BlockNumber = newNumberComponent(world, {
   id: "BlockNumber",
 });

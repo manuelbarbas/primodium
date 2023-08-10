@@ -1,5 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { hashAndTrimKeyEntity } from "src/util/encode";
 import { useAccount } from "../../hooks/useAccount";
 import { useMud } from "src/hooks/useMud";
 import { useGameStore } from "../../store/GameStore";
@@ -12,7 +13,6 @@ import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
 import { upgrade } from "src/util/web3";
-import { hashAndTrimKeyEntity } from "src/util/encode";
 import {
   Level,
   P_MaxLevel,
