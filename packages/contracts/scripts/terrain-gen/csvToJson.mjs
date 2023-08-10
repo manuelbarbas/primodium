@@ -38,4 +38,4 @@ function csvToJsonCoords(csvUrl) {
 
 const jsonData = csvToJsonCoords(filePath);
 // console.log("json data:", jsonData);
-fs.writeFileSync("coords.json", JSON.stringify(jsonData));
+fs.writeFileSync(path.resolve(__dirname, "../coords.json"), JSON.stringify(jsonData));

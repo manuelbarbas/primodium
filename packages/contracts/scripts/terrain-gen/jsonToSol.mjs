@@ -36,7 +36,37 @@ library LibInitTerrain {
 `;
 }
 
+function testContext(jsonContent) {
+  return `// SPDX-License-Identifier: MIT
+pragma solidity >=0.8.0;
+import "forge-std/console.sol";
+
+import "../PrimodiumTest.t.sol";
+
+import { MainBaseID, WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
+
+import { LibTerrain } from "../../libraries/LibTerrain.sol";
+import { Coord } from "../../types.sol";
+
+contract BuildSystemTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
+
+  function setUp() public override {
+    super.setUp();
+  }
+
+  function testTerrain() public {
+${jsonContent
+  .map(
+    (elem) =>
+      `    assertEq(LibTerrain.getResourceByCoord(world, Coord(${elem.coord.x}, ${elem.coord.y}, 0)), ${elem.value});`
+  )
+  .join("\n")}
+  }
+}`;
+}
 const content = generateContent(rawContent);
 const finalContent = addContext(content);
 
 fs.writeFileSync(filePath, finalContent);
+fs.writeFileSync(path.resolve(__dirname, "../../../src/test/systems/TerrainSystem.sol"), testContext(rawContent));
