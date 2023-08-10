@@ -36,7 +36,7 @@
     "P_IsBuildingTypeComponent",
     "P_TerrainComponent"
   ],
-  "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
+  "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
     {
       "name": "ResearchSystem",
