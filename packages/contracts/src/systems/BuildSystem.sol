@@ -5,6 +5,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 // components
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
@@ -31,7 +32,7 @@ import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
-import { ID as S_CheckRequiredTileSystemID } from "./S_CheckRequiredTileSystem.sol";
+import { ID as CheckRequiredTileSystemID } from "./S_CheckRequiredTileSystem.sol";
 import { ID as PlaceBuildingTilesSystemID } from "./S_PlaceBuildingTilesSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
@@ -51,30 +52,26 @@ contract BuildSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
+    uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
 
     require(
       P_IsBuildingTypeComponent(getC(P_IsBuildingTypeComponentID)).has(buildingType),
       "[BuildSystem] Invalid building type"
     );
-
-    uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
 
+    PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
     uint256 buildingTypeLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
-    require(
-      !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
-      "[BuildSystem] Building already exists here"
-    );
 
-    bool canBuildOn = abi.decode(
-      IOnTwoEntitySubsystem(getAddressById(world.systems(), S_CheckRequiredTileSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        buildingType
-      ),
-      (bool)
+    bool spawned = positionComponent.has(playerEntity);
+    require(spawned, "[BuildSystem] Player has not spawned");
+
+    require(!positionComponent.has(buildingEntity), "[BuildSystem] Building already exists");
+
+    require(
+      coord.parent == positionComponent.getValue(playerEntity).parent,
+      "[BuildSystem] Building must be built on your main asteroid"
     );
-    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
 
     require(
       LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
@@ -106,12 +103,18 @@ contract BuildSystem is PrimodiumSystem {
     }
 
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
-
-    IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
-      msg.sender,
-      buildingEntity
+    LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
+    PositionComponent(getC(PositionComponentID)).set(buildingEntity, coord);
+    bool canBuildOn = abi.decode(
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        buildingType
+      ),
+      (bool)
     );
 
+    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
@@ -122,8 +125,11 @@ contract BuildSystem is PrimodiumSystem {
         mainBaseComponent.set(playerEntity, buildingEntity);
       }
     }
-    //set level of building to 1
-    LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
+
+    IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
+      msg.sender,
+      buildingEntity
+    );
 
     OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);

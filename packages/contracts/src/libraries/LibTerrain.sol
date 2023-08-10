@@ -16,7 +16,7 @@ int256 constant seed4 = 17326;
 
 library LibTerrain {
   // Terrain precision = 12, Resource precision = 8
-  function getSingleDepth(Coord memory coord, int256 perlinSeed, int256 denom) public pure returns (int128) {
+  function getSingleDepth(Coord memory coord, int256 perlinSeed, int256 denom) internal pure returns (int128) {
     int128 depth = Perlin.noise(coord.x + perlinSeed, coord.y + perlinSeed, 0, denom, 64);
     return depth;
   }
@@ -38,7 +38,7 @@ library LibTerrain {
     return avgResourceNormalizedDepth(depth1, depth2);
   }
 
-  function getResourceKey(Coord memory coord) public pure returns (uint256) {
+  function getResourceKey(Coord memory coord) internal pure returns (uint256) {
     int256 normalizedDepth = getResourceNormalizedDepth(coord);
     //base starting materials (most common)
     if (normalizedDepth >= 1800 && normalizedDepth <= 1820) return CopperID;

@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
+import "../PrimodiumTest.t.sol";
 
+import { Coord } from "../../types.sol";
 import { addressToEntity, entityToAddress } from "solecs/utils.sol";
-import { Coord } from "std-contracts/components/CoordComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 
 import { TitaniumResourceItemID } from "../../prototypes.sol";
@@ -14,8 +12,8 @@ import { IronMineID } from "../../prototypes.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
 
-contract LibEncodeTest is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract LibEncodeTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
 
   function setUp() public override {
     super.setUp();
@@ -44,6 +42,7 @@ contract LibEncodeTest is MudTest {
     assertEq(clientTestFive, 0xf7eea64553e727e221059874c9505c46a9e9ec09f44b6527830b639b77cb4ddd);
   }
 
+  //todo: delete this
   function testHashKeyEntityItems() public {
     // Hashing edge cases discovered in #36 with leading zeroes (world.entityIndex on client trims leading zeroes)
     // AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
@@ -59,33 +58,16 @@ contract LibEncodeTest is MudTest {
   }
 
   function testCoordEncoding() public {
-    uint256 coordEntity = LibEncode.encodeCoordEntity(Coord({ x: 1, y: 2 }), "test");
-    Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
-    assertEq(1, decoded.x);
-    assertEq(2, decoded.y);
-
-    // Check values used in client tests
-    bytes32 clientTestOne = bytes32(
-      LibEncode.encodeCoordEntity(Coord({ x: -110, y: -19201929 }), "testtesttesttesttesttest")
-    );
-    bytes32 clientTestTwo = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 124123, y: 3325 }), "building"));
-    bytes32 clientTestThree = bytes32(LibEncode.encodeCoordEntity(Coord({ x: -12334, y: -1120 }), "sowm"));
-    bytes32 clientTestFour = bytes32(LibEncode.encodeCoordEntity(Coord({ x: 222233332, y: 22324234 }), "taxcuts"));
-    bytes32 clientTestFive = bytes32(
-      LibEncode.encodeCoordEntity(Coord({ x: 2147483647, y: -2147483647 }), "smallbrain")
-    );
-    assertEq(clientTestOne, 0xffffff92fedb0077746573747465737474657374746573747465737474657374);
-    assertEq(clientTestTwo, 0x0001e4db00000cfd6275696c64696e6700000000000000000000000000000000);
-    assertEq(clientTestThree, 0xffffcfd2fffffba0736f776d0000000000000000000000000000000000000000);
-    assertEq(clientTestFour, 0x0d3f02f40154a40a746178637574730000000000000000000000000000000000);
-    assertEq(clientTestFive, 0x7fffffff80000001736d616c6c627261696e0000000000000000000000000000);
+    Coord memory coord = Coord({ x: 1, y: 2, parent: 0 });
+    uint256 coordEntity = LibEncode.encodeCoord(Coord({ x: 1, y: 2, parent: 1234 }));
+    Coord memory decoded = LibEncode.decodeCoord(coordEntity);
+    assertCoordEq(coord, decoded);
   }
 
   function testFuzzCoordEncoding(int32 x, int32 y) public {
-    Coord memory coord = Coord(x, y);
-    uint256 coordEntity = LibEncode.encodeCoordEntity(coord, "building");
-    Coord memory decoded = LibEncode.decodeCoordEntity(coordEntity);
-    assertEq(coord.x, decoded.x);
-    assertEq(coord.y, decoded.y);
+    Coord memory coord = Coord(x, y, 0);
+    uint256 coordEntity = LibEncode.encodeCoord(coord);
+    Coord memory decoded = LibEncode.decodeCoord(coordEntity);
+    assertCoordEq(coord, decoded);
   }
 }
