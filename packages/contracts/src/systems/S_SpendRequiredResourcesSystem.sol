@@ -8,6 +8,7 @@ import { ID as ResearchSystemID } from "./ResearchSystem.sol";
 import { ID as UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { IOnEntityCountSubsystem } from "../interfaces/IOnEntityCountSubsystem.sol";
 
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID, ResourceValues } from "../components/P_RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
@@ -17,7 +18,7 @@ import { LibMath } from "../libraries/LibMath.sol";
 
 uint256 constant ID = uint256(keccak256("system.S_SpendRequiredResources"));
 
-contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
+contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, IOnEntityCountSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
@@ -28,7 +29,7 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
       "S_SpendRequiredResourcesSystem: Only BuildSystem, UpgradeSystem, ResearchSystem can call this function"
     );
 
-    (address playerAddress, uint256 targetEntity) = abi.decode(args, (address, uint256));
+    (address playerAddress, uint256 targetEntity, uint32 count) = abi.decode(args, (address, uint256, uint32));
     uint256 playerEntity = addressToEntity(playerAddress);
 
     P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
@@ -44,13 +45,17 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, PrimodiumSystem {
         requiredResources.resources[i]
       );
       uint32 currItem = LibMath.getSafe(itemComponent, playerResourceHash);
-      itemComponent.set(playerResourceHash, currItem - requiredResources.values[i]);
+      itemComponent.set(playerResourceHash, currItem - (requiredResources.values[i] * count));
     }
 
     return abi.encode(playerAddress, targetEntity);
   }
 
   function executeTyped(address playerAddress, uint256 targetEntity) public returns (bytes memory) {
-    return execute(abi.encode(playerAddress, targetEntity));
+    return execute(abi.encode(playerAddress, targetEntity, uint32(1)));
+  }
+
+  function executeTyped(address playerAddress, uint256 targetEntity, uint32 count) public returns (bytes memory) {
+    return execute(abi.encode(playerAddress, targetEntity, count));
   }
 }

@@ -18,6 +18,9 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, Resourc
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
+import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
+
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
 // libraries
 import { Coord } from "../types.sol";
@@ -165,6 +168,10 @@ contract BuildSystem is PrimodiumSystem {
     if (!P_IgnoreBuildLimitComponent(getC(P_IgnoreBuildLimitComponentID)).has(buildingType)) {
       BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) + 1);
+    }
+
+    if (P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {
+      UnitProductionOwnedByComponent(getC(UnitProductionOwnedByComponentID)).set(buildingEntity, playerEntity);
     }
 
     return abi.encode(buildingEntity);
