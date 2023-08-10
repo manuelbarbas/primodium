@@ -23,7 +23,7 @@ library LibEncode {
   }
 
   // Function that encodes two int32 values into a single uint256
-  function encodeCoord(Coord memory coord) public pure returns (uint256) {
+  function encodeCoord(Coord memory coord) internal pure returns (uint256) {
     uint32 x = uint32(coord.x);
     uint32 y = uint32(coord.y);
 
@@ -32,7 +32,7 @@ library LibEncode {
   }
 
   // Function that decodes a uint256 into two int32 values
-  function decodeCoord(uint256 encoded) public pure returns (Coord memory coord) {
+  function decodeCoord(uint256 encoded) internal pure returns (Coord memory coord) {
     // Right shift the encoded value by 32 bits to get the first int32
     coord.x = int32(uint32(encoded >> 32));
 
