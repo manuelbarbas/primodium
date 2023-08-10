@@ -10,30 +10,13 @@ import "../../prototypes.sol";
 
 import { LibAsteroid } from "../../libraries/LibAsteroid.sol";
 
-import { Coord, Dimensions } from "src/types.sol";
+import { Coord, Dimensions } from "../../types.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   function setUp() public override {
     super.setUp();
-  }
-
-  function testAsteroidLocation() public {
-    uint256 playerEntity = 164040928692847369239986083538138986999;
-    Dimensions memory dimensions = DimensionsComponent(getAddressById(world.components(), DimensionsComponentID))
-      .getValue(SingletonID);
-    Coord memory coord = LibAsteroid.getUniqueAsteroidPosition(world, playerEntity);
-    if (coord.x < 0) {
-      console.log("test x: -", uint32(0 - coord.x));
-    } else {
-      console.log("test x:", uint32(coord.x));
-    }
-    if (coord.y < 0) {
-      console.log("test y: -", uint32(0 - coord.y));
-    } else {
-      console.log("test y:", uint32(coord.y));
-    }
   }
 
   function testFuzzAsteroidLocation(uint256 playerEntity) public {
