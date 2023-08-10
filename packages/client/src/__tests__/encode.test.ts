@@ -42,6 +42,20 @@ const hashKeyEntityOutputs = [
     output:
       "0xf7eea64553e727e221059874c9505c46a9e9ec09f44b6527830b639b77cb4ddd",
   },
+  {
+    key: "11699589371590179690663298539456535383454944084246709593455824231284844824000",
+    entity:
+      "97993341068949256531366201596922953741936964741343840392882074207030726058262",
+    output:
+      "0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924",
+  },
+  {
+    key: "29592648218955693310631313341848988444781730640864177349094518031889847668484",
+    entity:
+      "115710791415720365844662016873039814882667321015852259562238368675311117449333",
+    output:
+      "0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249",
+  },
 ];
 
 test("hashKeyEntity matches LibEncode outputs", () => {
@@ -62,61 +76,27 @@ test("hashKeyEntity matches LibEncode outputs", () => {
   }
 });
 
-// Hashing edge cases discovered in #36 with leading zeroes (world.entityIndex on client trims leading zeroes)
-// AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
-// PenetratorFactoryID 97993341068949256531366201596922953741936964741343840392882074207030726058262
-// Hash: 0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924
-
-// TitaniumResourceItemID 29592648218955693310631313341848988444781730640864177349094518031889847668484
-// ProjectileLauncherResearchID 115710791415720365844662016873039814882667321015852259562238368675311117449333
-// Hash: 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249
-
-const hashKeyResourceEntityOutputs = [
-  {
-    key: "11699589371590179690663298539456535383454944084246709593455824231284844824000",
-    entity:
-      "97993341068949256531366201596922953741936964741343840392882074207030726058262",
-    output:
-      "0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924",
-  },
-  {
-    key: "29592648218955693310631313341848988444781730640864177349094518031889847668484",
-    entity:
-      "115710791415720365844662016873039814882667321015852259562238368675311117449333",
-    output:
-      "0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249",
-  },
-];
-
-test("hashKeyEntity matches LibEncode outputs, additional tests", () => {
-  for (const example of hashKeyResourceEntityOutputs) {
-    expect(example.output).eq(
-      hashKeyEntity(example.key as EntityID, example.entity as EntityID)
-    );
-  }
-});
-
 // Outputs of LibEncode.sol's encodeCoordEntity function
 // E.g. console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 0, y: 0 }), "primodium")));
 const encodeCoordEntityOutputs = [
   {
-    coord: { x: 0, y: 0, z: BigNumber.from("0").toHexString() },
+    coord: { x: 0, y: 0, parent: BigNumber.from("0").toHexString() },
     output: "0",
   },
   {
-    coord: { x: 1, y: 5, z: BigNumber.from(0).toHexString() },
+    coord: { x: 1, y: 5, parent: BigNumber.from(0).toHexString() },
     output: "4294967301",
   },
   {
-    coord: { x: -1, y: 10, z: BigNumber.from(0).toHexString() },
+    coord: { x: -1, y: 10, parent: BigNumber.from(0).toHexString() },
     output: "18446744069414584330",
   },
   {
-    coord: { x: 123458, y: -22324234, z: BigNumber.from(0).toHexString() },
+    coord: { x: 123458, y: -22324234, parent: BigNumber.from(0).toHexString() },
     output: "530252345072630",
   },
   {
-    coord: { x: -929331, y: -723932, z: BigNumber.from(0).toHexString() },
+    coord: { x: -929331, y: -723932, parent: BigNumber.from(0).toHexString() },
     output: "18442752631751636004",
   },
 ];
@@ -147,46 +127,50 @@ test("decodeCoordEntity matches LibEncode outputs", () => {
 
 const hashEntityCoords = [
   {
-    coord: { x: 0, y: 0, z: BigNumber.from("0").toHexString() },
+    coord: { x: 0, y: 0, parent: BigNumber.from("0").toHexString() },
     key: "building",
     output:
       "19828691625151199819925894263310015295956025344535852370549237859831322790673",
   },
-  // {
-  //   coord: { x: 1, y: 5, z: BigNumber.from(123).toHexString() },
-  //   key: "building",
-  //   output:
-  //     "109148753008226741991702484166202944633515591219524242558445782281528478512641",
-  // },
   {
-    coord: { x: -1, y: 10, z: BigNumber.from(0).toHexString() },
+    coord: { x: 1, y: 5, parent: BigNumber.from(123).toHexString() },
+    key: "building",
+    output:
+      "109148753008226741991702484166202944633515591219524242558445782281528478512641",
+  },
+  {
+    coord: { x: -1, y: 10, parent: BigNumber.from(0).toHexString() },
     key: "building",
     output:
       "103533954559848020612050344332934577129382484874517710751975151449750747241804",
   },
   {
-    coord: { x: 123458, y: -22324234, z: BigNumber.from(0).toHexString() },
+    coord: { x: 123458, y: -22324234, parent: BigNumber.from(0).toHexString() },
     key: "building",
     output:
       "111518471964263571474455470130025425666986359214977074161153522376787685319637",
   },
   {
-    coord: { x: -929331, y: -723932, z: BigNumber.from(0).toHexString() },
+    coord: { x: -929331, y: -723932, parent: BigNumber.from(0).toHexString() },
     key: "building",
     output:
       "32215382666935507160146267019595249092158368377584145094984290894592005171865",
   },
 ];
 
-test("hashEntityCoord", () => {
+test("hashKeyCoord", () => {
   for (const example of hashEntityCoords) {
     expect(formattedString(example.output)).eq(
-      hashKeyCoord(example.key, example.coord)
+      hashKeyCoord(example.key, {
+        ...example.coord,
+        parent: example.coord.parent as EntityID,
+      })
     );
     expect(example.output).not.eq(
-      encodeCoord({
+      hashKeyCoord(example.key, {
         x: example.coord.x - 10,
         y: example.coord.y,
+        parent: "0" as EntityID,
       })
     );
   }

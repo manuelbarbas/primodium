@@ -3,6 +3,7 @@ import { solidityKeccak256 } from "ethers/lib/utils";
 
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { ContractCoord } from "./types";
 
 // use this when you want to pass the entity to world.getEntityIndex
 export function encodeAndTrimCoord(coord: Coord): EntityID {
@@ -75,14 +76,17 @@ export function hashEntity(entity: EntityID) {
   return solidityKeccak256(["uint256"], [BigNumber.from(entity)]) as EntityID;
 }
 
-export function hashAndTrimKeyCoord(key: string, coord: Coord): EntityID {
+export function hashAndTrimKeyCoord(
+  key: string,
+  coord: ContractCoord
+): EntityID {
   return trim(hashKeyCoord(key, coord));
 }
 
-export function hashKeyCoord(key: string, coord: Coord): EntityID {
+export function hashKeyCoord(key: string, coord: ContractCoord): EntityID {
   return solidityKeccak256(
     ["string", "int32", "int32", "uint256"],
-    [key, coord.x, coord.y, 0]
+    [key, coord.x, coord.y, coord.parent]
   ) as EntityID;
 }
 

@@ -32,6 +32,7 @@ export const InfoBox = () => {
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
     y: mainBaseCoord?.y ?? 0,
+    parent: mainBaseCoord?.parent ?? ("0" as EntityID),
   });
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
