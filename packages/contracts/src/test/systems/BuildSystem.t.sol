@@ -63,6 +63,12 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   // todo: sort these tests. the first test should be a vanilla build system call
+  function testFailUnregisteredBuildingType() public {
+    vm.startPrank(alice);
+    buildSystem.executeTyped(uint256(12), getCoord1(alice));
+    vm.stopPrank();
+  }
+
   function testFailUtilityResourceRequirementNotMet() public {
     vm.startPrank(alice);
 

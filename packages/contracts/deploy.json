@@ -32,7 +32,8 @@
     "P_RequiredResearchComponent",
     "P_RequiredResourcesComponent",
     "P_MaxBuildingsComponent",
-    "P_IgnoreBuildLimitComponent"
+    "P_IgnoreBuildLimitComponent",
+    "P_IsBuildingTypeComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [

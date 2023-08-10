@@ -8,3 +8,5 @@ deployments
 # types/
 broadcast/
 .env
+
+deploy-live.json

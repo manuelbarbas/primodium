@@ -16,7 +16,7 @@ import { BuildingCountComponent, ID as BuildingCountComponentID } from "componen
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
-
+import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
 import { LibBlueprint } from "libraries/LibBlueprint.sol";
 import { Coord } from "../../types.sol";
 import { MainBaseID } from "../../prototypes.sol";
@@ -69,6 +69,7 @@ contract DestroySystemTest is PrimodiumTest {
   function buildDummy() private returns (uint256) {
     vm.startPrank(alice);
     componentDevSystem.executeTyped(P_BlueprintComponentID, dummyBuilding, abi.encode(blueprint));
+    componentDevSystem.executeTyped(P_IsBuildingTypeComponentID, dummyBuilding, abi.encode(true));
     bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, getOrigin(alice));
     return abi.decode(rawBuilding, (uint256));
   }
