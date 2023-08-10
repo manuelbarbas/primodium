@@ -8,10 +8,12 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
+import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
-import { Coord, EAsteroidType } from "../types.sol";
+import { Coord, Dimensions, EAsteroidType } from "../types.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibMath } from "libraries/LibMath.sol";
 
 library LibAsteroid {
   /**
@@ -51,10 +53,17 @@ library LibAsteroid {
     // Get the ActiveComponent to check for active positions.
     ActiveComponent activeComponent = ActiveComponent(world.getComponent(ActiveComponentID));
     // This ensures no overflow when nonce increases by 1.
+    Dimensions memory beltDimensions = DimensionsComponent(world.getComponent(DimensionsComponentID)).getValue(
+      SingletonID
+    );
+
     uint256 nonce = uint32(playerEntity);
     bool found = false;
     do {
       position = LibEncode.decodeCoord(LibEncode.hashEntity(nonce));
+      // note: this will always be positive because the
+      position.x = LibMath.abs(position.x % beltDimensions.x);
+      position.y = LibMath.abs(position.y % beltDimensions.y);
 
       if (!activeComponent.has(LibEncode.encodeCoord(position))) {
         found = true;

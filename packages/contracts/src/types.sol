@@ -28,3 +28,9 @@ struct Coord {
   int32 y;
   uint256 parent;
 }
+
+// note: dimensions will always be positive, but are int32s so they work with coords
+struct Dimensions {
+  int32 x;
+  int32 y;
+}

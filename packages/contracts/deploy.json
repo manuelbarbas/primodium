@@ -18,6 +18,7 @@
     "OccupiedUtilityResourceComponent",
     "AsteroidTypeComponent",
     "ActiveComponent",
+    "DimensionsComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
