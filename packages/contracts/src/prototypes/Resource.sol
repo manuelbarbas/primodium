@@ -15,6 +15,7 @@ uint256 constant BedrockID = uint256(keccak256("block.Bedrock"));
 uint256 constant LithiumID = uint256(keccak256("block.Lithium"));
 uint256 constant IronID = uint256(keccak256("block.Iron"));
 uint256 constant CopperID = uint256(keccak256("block.Copper"));
+uint256 constant SulfurID = uint256(keccak256("block.Sulfur"));
 uint256 constant TitaniumID = uint256(keccak256("block.Titanium"));
 uint256 constant IridiumID = uint256(keccak256("block.Iridium"));
 uint256 constant OsmiumID = uint256(keccak256("block.Osmium"));

@@ -1,0 +1,42 @@
+import fs from "fs";
+import rawContent from "./coords.json" assert { type: "json" };
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = fileURLToPath(import.meta.url);
+const filePath = path.resolve(__dirname, "../../../src/libraries/LibInitTerrain.sol");
+
+function generateContent(jsonContent) {
+  // terrainComponent.set(LibEncode.hashKeyCoord(TerrainKey, Coord(0, 0, 0)), uint256(1));
+  return jsonContent
+    .map(
+      (elem) =>
+        `terrainComponent.set(LibEncode.hashKeyCoord(TerrainKey, Coord(${elem.coord.x}, ${elem.coord.y}, 0)), ${elem.value});`
+    )
+    .join("\n");
+}
+
+function addContext(str) {
+  return `// SPDX-License-Identifier: MIT
+pragma solidity >=0.8.0;
+
+import { IWorld } from "solecs/interfaces/IWorld.sol";
+
+import { P_TerrainComponent, ID as P_TerrainComponentID } from "components/P_TerrainComponent.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { Coord } from "src/types.sol";
+import "src/prototypes.sol";
+
+library LibInitTerrain {
+  function init(IWorld world) internal {
+    P_TerrainComponent terrainComponent = P_TerrainComponent(world.getComponent(P_TerrainComponentID));
+    ${str}
+  }
+}
+`;
+}
+
+const content = generateContent(rawContent);
+const finalContent = addContext(content);
+
+fs.writeFileSync(filePath, finalContent);
