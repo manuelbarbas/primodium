@@ -52,7 +52,7 @@ contract BuildPathSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     assertEq(
-      LibTerrain.getTopLayerKey(getIronCoord(alice)),
+      LibTerrain.getResourceByCoord(world, getIronCoord(alice)),
       IronID,
       "test should try to build IronMineID on IronID tile"
     );
@@ -100,7 +100,7 @@ contract BuildPathSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     assertEq(
-      LibTerrain.getTopLayerKey(getIronCoord(alice)),
+      LibTerrain.getResourceByCoord(world, getIronCoord(alice)),
       IronID,
       "test should try to build IronMineID on IronID tile"
     );

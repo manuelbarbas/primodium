@@ -41,7 +41,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
@@ -115,7 +115,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
@@ -213,7 +213,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
@@ -283,7 +283,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
@@ -352,7 +352,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
 
@@ -403,7 +403,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
 
@@ -450,7 +450,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
 
@@ -503,8 +503,8 @@ contract ClaimSystemTest is PrimodiumTest {
     // TEMP: current generation seed
     Coord memory IronCoord = getIronCoord(alice);
     Coord memory CopperCoord = getCopperCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID, "Tile should have iron");
-    assertEq(LibTerrain.getTopLayerKey(CopperCoord), CopperID, "Tile should have copper");
+    assertEq(LibTerrain.getResourceByCoord(world, IronCoord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, CopperCoord), CopperID, "Tile should have copper");
 
     Coord memory mainBaseCoord = getCoord2(alice);
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);

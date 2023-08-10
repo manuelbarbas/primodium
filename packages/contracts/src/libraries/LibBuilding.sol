@@ -34,7 +34,7 @@ library LibBuilding {
     );
     return
       !requiredTileComponent.has(buildingEntity) ||
-      requiredTileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
+      requiredTileComponent.getValue(buildingEntity) == LibTerrain.getResourceByCoord(world, coord);
   }
 
   function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint32) {
