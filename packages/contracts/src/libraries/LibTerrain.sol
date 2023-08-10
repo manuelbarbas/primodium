@@ -9,6 +9,10 @@ import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol
 
 int128 constant _4 = 4 * 2 ** 64;
 int128 constant _5 = 5 * 2 ** 64;
+int256 constant seed1 = 60194;
+int256 constant seed2 = 74037;
+int256 constant seed3 = 53092;
+int256 constant seed4 = 17326;
 
 library LibTerrain {
   // Terrain precision = 12, Resource precision = 8
@@ -17,60 +21,10 @@ library LibTerrain {
     return depth;
   }
 
-  // TODO: randomize perlinSeed
-  function getPerlinSeed1() public pure returns (int256) {
-    return 60194;
-  }
-
-  function getPerlinSeed2() public pure returns (int256) {
-    return 74037;
-  }
-
-  function getPerlinSeed3() public pure returns (int256) {
-    return 53092;
-  }
-
-  function getPerlinSeed4() public pure returns (int256) {
-    return 17326;
-  }
-
   // multiply depth and convert to readable number
+  // todo: move to test
   function mulDepthBy10000(int128 depth) internal pure returns (int256) {
     return Math.muli(depth, 10000);
-  }
-
-  function getTerrainDepth(Coord memory coord) internal pure returns (int128) {
-    int128 terrainKey = getSingleDepth(coord, 0, 8);
-    return terrainKey;
-  }
-
-  function avgTerrainNormalizedDepth(
-    int128 depth1,
-    int128 depth2,
-    int128 depth3,
-    int128 depth4
-  ) public pure returns (int256) {
-    int128 terrainDepthSum = Math.add(Math.add(Math.add(depth1, depth2), depth3), depth4);
-    return Math.muli(Math.div(terrainDepthSum, _5), 100);
-  }
-
-  function getTerrainNormalizedDepth(Coord memory coord) public pure returns (int256) {
-    int128 depth1 = getSingleDepth(coord, getPerlinSeed1(), 12);
-    int128 depth2 = getSingleDepth(coord, getPerlinSeed2(), 12);
-    int128 depth3 = getSingleDepth(coord, getPerlinSeed3(), 12);
-    int128 depth4 = getSingleDepth(coord, getPerlinSeed4(), 12);
-    return avgTerrainNormalizedDepth(depth1, depth2, depth3, depth4);
-  }
-
-  function getTerrainKey(Coord memory coord) public pure returns (uint256) {
-    int256 normalizedDepth = getTerrainNormalizedDepth(coord);
-    if (normalizedDepth <= 29) return WaterID;
-    if (normalizedDepth <= 32) return BiofilmID;
-    if (normalizedDepth <= 35) return AlluviumID;
-    if (normalizedDepth <= 39) return SandstoneID;
-    if (normalizedDepth <= 48) return RegolithID;
-    if (normalizedDepth <= 51) return BedrockID;
-    return BedrockID;
   }
 
   function avgResourceNormalizedDepth(int128 depth1, int128 depth2) public pure returns (int256) {
@@ -79,8 +33,8 @@ library LibTerrain {
   }
 
   function getResourceNormalizedDepth(Coord memory coord) public pure returns (int256) {
-    int128 depth1 = getSingleDepth(coord, getPerlinSeed1(), 8);
-    int128 depth2 = getSingleDepth(coord, getPerlinSeed2(), 8);
+    int128 depth1 = getSingleDepth(coord, seed1, 8);
+    int128 depth2 = getSingleDepth(coord, seed2, 8);
     return avgResourceNormalizedDepth(depth1, depth2);
   }
 
@@ -106,16 +60,6 @@ library LibTerrain {
   }
 
   function getTopLayerKey(Coord memory coord) internal pure returns (uint256) {
-    // return 0;
-    // temp: doesn't call perlin mud library until compilation error is fixed
-    // see https://github.com/latticexyz/mud/issues/439
-    uint256 terrainKey = getTerrainKey(coord);
-    uint256 resourceKey = getResourceKey(coord);
-
-    if (resourceKey == AirID || terrainKey == WaterID) {
-      return terrainKey;
-    } else {
-      return resourceKey;
-    }
+    return getResourceKey(coord);
   }
 }
