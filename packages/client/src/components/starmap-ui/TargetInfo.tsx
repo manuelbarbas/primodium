@@ -1,7 +1,9 @@
+import { UnitBreakdown } from "./UnitBreakdown";
+
 export const TargetInfo: React.FC = () => {
   return (
     <div className="absolute top-0 left-0 pointer-events-auto">
-      <div className="relative flex bg-slate-900/90 pixel-images h-32">
+      <div className="relative flex pixel-images h-32 w-fit bg-slate-900/90">
         <div className="relative">
           <img
             src="/img/asteroid-titanium.png"
@@ -26,9 +28,7 @@ export const TargetInfo: React.FC = () => {
           </div>
         </div>
       </div>
-      <p className="flex gap-1 items-center absolute -bottom-5 right-0 text-xs bg-slate-900/90">
-        + view unit breakdown
-      </p>
+      <UnitBreakdown />
     </div>
   );
 };
