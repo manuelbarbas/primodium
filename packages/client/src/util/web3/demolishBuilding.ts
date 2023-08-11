@@ -15,8 +15,14 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
-
   setTransactionLoading(true);
+
+  const building = SelectedBuilding.use()?.value;
+  const buildingType = BuildingType.use(building, {
+    value: "-1" as EntityID,
+  })?.value;
+  const currLevel = Level.use(building)?.value || 0;
+
   const receipt = await execute(
     systems["system.Destroy"].executeTyped(coord, {
       gasLimit: 3_000_000,
@@ -24,12 +30,6 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
     providers,
     setNotification
   );
-
-  const building = SelectedBuilding.use()?.value;
-  const buildingType = BuildingType.use(building, {
-    value: "-1" as EntityID,
-  })?.value;
-  const currLevel = Level.use(building)?.value || 0;
 
   ampli.systemDestroy({
     buildingType: BlockIdToKey[buildingType],

@@ -16,6 +16,12 @@ export const upgrade = async (coord: Coord, network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
+  const building = SelectedBuilding.use()?.value;
+  const buildingType = BuildingType.use(building, {
+    value: "-1" as EntityID,
+  })?.value;
+  const currLevel = Level.use(building)?.value || 0;
+
   const receipt = await execute(
     systems["system.Upgrade"].executeTyped(coord, {
       gasLimit: 5_000_000,
@@ -23,12 +29,6 @@ export const upgrade = async (coord: Coord, network: Network) => {
     providers,
     setNotification
   );
-
-  const building = SelectedBuilding.use()?.value;
-  const buildingType = BuildingType.use(building, {
-    value: "-1" as EntityID,
-  })?.value;
-  const currLevel = Level.use(building)?.value || 0;
 
   ampli.systemUpgrade({
     buildingType: BlockIdToKey[buildingType],

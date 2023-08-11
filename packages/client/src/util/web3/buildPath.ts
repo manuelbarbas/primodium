@@ -12,7 +12,6 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
-  console.log("building path", start, end);
 
   const receipt = await execute(
     systems["system.BuildPath"].executeTyped(start, end, {

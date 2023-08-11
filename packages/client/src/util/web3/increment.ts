@@ -11,8 +11,9 @@ export const increment = async (entity: EntityID, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
-
   setTransactionLoading(true);
+
+  const counter = Counter.use();
 
   const receipt = await execute(
     systems["system.Increment"].executeTyped(entity, {
@@ -21,8 +22,6 @@ export const increment = async (entity: EntityID, network: Network) => {
     providers,
     setNotification
   );
-
-  const counter = Counter.use();
 
   ampli.systemIncrement({
     currIncrementLevel: counter?.value ?? 0,
