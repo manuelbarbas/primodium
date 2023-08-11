@@ -1,7 +1,10 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
-import { BuildingType, OwnedBy } from "src/network/components/chainComponents";
-import { Position } from "src/network/components/clientComponents";
+import {
+  BuildingType,
+  OwnedBy,
+  Position,
+} from "src/network/components/chainComponents";
 import { singletonIndex } from "src/network/world";
 
 // Component overrides

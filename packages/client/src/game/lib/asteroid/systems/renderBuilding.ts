@@ -12,11 +12,12 @@ import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
+import { SelectedBuilding } from "src/network/components/clientComponents";
 import {
   Position,
-  SelectedBuilding,
-} from "src/network/components/clientComponents";
-import { Level, BuildingType } from "src/network/components/chainComponents";
+  Level,
+  BuildingType,
+} from "src/network/components/chainComponents";
 import { safeIndex } from "src/util/array";
 import { AsteroidMap } from "@game/constants";
 

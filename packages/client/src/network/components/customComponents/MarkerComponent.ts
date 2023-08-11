@@ -6,30 +6,30 @@ import {
   HasValue,
   Metadata,
   World,
-  getEntitiesWithValue,
   createEntity,
   removeComponent,
   runQuery,
   withValue,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Options, newStringComponent } from "./Component";
 import {
   getBuildingsOfTypeInRange,
   getTilesOfTypeInRange,
 } from "src/util/tile";
-import { Marker, Position } from "../clientComponents";
+import { Position } from "../chainComponents";
+import { Marker } from "../clientComponents";
+import { Options, newStringComponent } from "./Component";
+import { ContractCoord } from "src/util/types";
 
 function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
   options?: Options<Overridable, M>
 ) {
   const component = newStringComponent(world, options);
-  const setWithCoord = (coord: Coord, type: EntityID) => {
-    const entities = getEntitiesWithValue(Position, coord);
-
+  const setWithCoord = (coord: ContractCoord, type: EntityID) => {
+    const entities = Position.getAllWith(coord);
     //check if there is an entity with given coord, if not create one and add position
-    if (!entities.size) {
+    if (entities.length == 0) {
       //create entity
       const entity = createEntity(world, [
         withValue(Position, coord),
@@ -49,7 +49,7 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
     perlin: Perlin,
     tile: EntityID,
     type: EntityID,
-    origin: Coord,
+    origin: ContractCoord,
     range: number,
     excludeRange: number = 0,
     offset: Coord = { x: 0, y: 0 }
@@ -66,12 +66,15 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
 
     //handle terrain
     for (const tile of tiles) {
-      Position.set(addCoords(tile, offset), type);
+      Position.set({ ...addCoords(tile, offset), parent: origin.parent }, type);
     }
 
     //handle buildings
     for (const building of buildings) {
-      Position.set(addCoords(building, offset), type);
+      Position.set(
+        { ...addCoords(building, offset), parent: origin.parent },
+        type
+      );
     }
   };
 

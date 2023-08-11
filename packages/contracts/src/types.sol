@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import { VoxelCoord } from "std-contracts/components/VoxelCoordComponent.sol";
-import { Coord } from "std-contracts/components/CoordComponent.sol";
 
 struct ResourceValue {
   uint256 resource;
@@ -17,4 +15,22 @@ enum EActionType {
   Build,
   Upgrade,
   Destroy
+}
+
+// note: for use when we get special asteroids
+enum EAsteroidType {
+  NONE,
+  NORMAL
+}
+
+struct Coord {
+  int32 x;
+  int32 y;
+  uint256 parent;
+}
+
+// note: dimensions will always be positive, but are int32s so they work with coords
+struct Dimensions {
+  int32 x;
+  int32 y;
 }

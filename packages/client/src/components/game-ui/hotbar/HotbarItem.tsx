@@ -14,7 +14,7 @@ import { useAccount } from "src/hooks/useAccount";
 import { calcDims, convertToCoords } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { Action, BackgroundImage, KeyImages } from "src/util/constants";
-import { hashKeyEntityAndTrim } from "src/util/encode";
+import { hashAndTrimKeyEntity } from "src/util/encode";
 import {
   RawBlueprint,
   P_RequiredResearch,
@@ -38,7 +38,7 @@ const HotbarItem: React.FC<{
 
   const requiredResearch = P_RequiredResearch.use(blockType)?.value;
 
-  const entity = hashKeyEntityAndTrim(requiredResearch ?? SingletonID, address);
+  const entity = hashAndTrimKeyEntity(requiredResearch ?? SingletonID, address);
 
   const researched = HasResearched.get(entity)?.value;
 
