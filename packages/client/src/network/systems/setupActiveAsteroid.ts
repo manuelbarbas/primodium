@@ -5,8 +5,8 @@ import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 export const setupActiveAsteroid = (player: EntityID) => {
   // todo: move this to an initialize function @NAB5
-  const asteroid = Position.get(player)?.parent;
-  if (asteroid) ActiveAsteroid.set({ value: asteroid });
+  // const asteroid = Position.get(player)?.parent;
+  // if (asteroid) ActiveAsteroid.set({ value: asteroid });
 
   defineComponentSystem(world, Position, ({ entity, value }) => {
     if (world.entities[entity] !== player) return;

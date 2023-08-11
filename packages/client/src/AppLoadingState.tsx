@@ -7,8 +7,14 @@ import Map from "./screens/Map";
 import { Game } from "./screens/Game";
 import { LoadingState } from "./network/components/chainComponents";
 import { Landing } from "./screens/Landing";
+import { useInit } from "./hooks/useInit";
+import { ActiveAsteroid } from "./network/components/clientComponents";
 
 export default function AppLoadingState() {
+  //initialize global components
+  useInit();
+  const activeAsteroid = ActiveAsteroid.use()?.value;
+
   // setup loading component, after setting up the network layer and syncing the block state (per emojimon)
   // Loading state component needs to be below the mud context
 
@@ -36,7 +42,10 @@ export default function AppLoadingState() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/game" element={<Game />} />
+          <Route
+            path="/game"
+            element={activeAsteroid ? <Game /> : <Landing />}
+          />
           <Route path="/increment" element={<Increment />} />
           <Route path="/map" element={<Map />} />
         </Routes>

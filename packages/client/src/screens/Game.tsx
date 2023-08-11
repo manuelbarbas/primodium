@@ -61,7 +61,7 @@ const PhaserWrapper = () => {
       primodium.destroy();
       GameReady.set({ value: false });
     };
-  }, []);
+  }, [network]);
 
   return <div id="phaser-container" className="absolute cursor-pointer" />;
 };
