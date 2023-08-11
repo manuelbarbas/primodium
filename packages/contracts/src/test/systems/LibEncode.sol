@@ -42,26 +42,56 @@ contract LibEncodeTest is PrimodiumTest {
     assertEq(clientTestFive, 0xf7eea64553e727e221059874c9505c46a9e9ec09f44b6527830b639b77cb4ddd);
   }
 
-  //todo: delete this
-  function testHashKeyEntityItems() public {
-    // Hashing edge cases discovered in #36 with leading zeroes (world.entityIndex on client trims leading zeroes)
-    // AdvancedPowerSourceCraftedItemID 11699589371590179690663298539456535383454944084246709593455824231284844824000
-    // PenetratorFactoryID 97993341068949256531366201596922953741936964741343840392882074207030726058262
-    // Hash: 0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924
-    // TitaniumResourceItemID 29592648218955693310631313341848988444781730640864177349094518031889847668484
-    // ProjectileLauncherResearchID 115710791415720365844662016873039814882667321015852259562238368675311117449333
-    // Hash: 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249
-    // bytes32 clientTestOne = bytes32(LibEncode.hashKeyEntity(AdvancedPowerSourceCraftedItemID, PenetratorFactoryID));
-    // assertEq(clientTestOne, 0x000af0440d92c89680faa8b8c174a3d9e85853d832be6c58b4aa6d745554b924);
-    // bytes32 clientTestTwo = bytes32(LibEncode.hashKeyEntity(TitaniumResourceItemID, ProjectileLauncherResearchID));
-    // assertEq(clientTestTwo, 0x001cb5c6e893b51d92e512213945e99c9341f84f69f9128a2184c70b4e196249);
+  struct CoordOutput {
+    Coord coord;
+    string key;
+    uint256 output;
   }
 
-  function testCoordEncoding() public {
-    Coord memory coord = Coord({ x: 1, y: 2, parent: 0 });
-    uint256 coordEntity = LibEncode.encodeCoord(Coord({ x: 1, y: 2, parent: 1234 }));
-    Coord memory decoded = LibEncode.decodeCoord(coordEntity);
-    assertCoordEq(coord, decoded);
+  function getCoordOutputs() internal pure returns (CoordOutput[] memory coordOutputs) {
+    coordOutputs = new CoordOutput[](5);
+    coordOutputs[0] = CoordOutput(
+      Coord(0, 0, 0),
+      "building",
+      19828691625151199819925894263310015295956025344535852370549237859831322790673
+    );
+    coordOutputs[1] = CoordOutput(
+      Coord(1, 5, 123),
+      "building",
+      109148753008226741991702484166202944633515591219524242558445782281528478512641
+    );
+    coordOutputs[2] = CoordOutput(
+      Coord(-1, 10, 0),
+      "building",
+      103533954559848020612050344332934577129382484874517710751975151449750747241804
+    );
+    coordOutputs[3] = CoordOutput(
+      Coord(123458, -22324234, 0),
+      "building",
+      111518471964263571474455470130025425666986359214977074161153522376787685319637
+    );
+    coordOutputs[4] = CoordOutput(
+      Coord(-929331, -723932, 0),
+      "building",
+      32215382666935507160146267019595249092158368377584145094984290894592005171865
+    );
+  }
+
+  //todo: delete this
+  function testPrintHashKeyEntityItems() public view {
+    console.log(LibEncode.hashKeyCoord("building", Coord(0, 0, 0)));
+    console.log(LibEncode.hashKeyCoord("building", Coord(1, 5, 123)));
+    console.log(LibEncode.hashKeyCoord("building", Coord(-1, 10, 0)));
+    console.log(LibEncode.hashKeyCoord("building", Coord(123458, -22324234, 0)));
+    console.log(LibEncode.hashKeyCoord("building", Coord(-929331, -723932, 0)));
+  }
+
+  function testHashKeyCoord() public {
+    CoordOutput[] memory coordOutputs = getCoordOutputs();
+    for (uint256 i = 0; i < coordOutputs.length; i++) {
+      CoordOutput memory coordOutput = coordOutputs[i];
+      assertEq(LibEncode.hashKeyCoord(coordOutput.key, coordOutput.coord), coordOutput.output);
+    }
   }
 
   function testFuzzCoordEncoding(int32 x, int32 y) public {

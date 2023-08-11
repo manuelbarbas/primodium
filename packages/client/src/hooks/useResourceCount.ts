@@ -1,7 +1,7 @@
 import { EntityID, EntityIndex } from "@latticexyz/recs";
 
 import { useAccount } from "../hooks/useAccount";
-import { hashKeyEntityAndTrim } from "../util/encode";
+import { hashAndTrimKeyEntity } from "../util/encode";
 import { NewNumberComponent } from "src/network/components/customComponents/Component";
 import { world } from "src/network/world";
 
@@ -16,13 +16,13 @@ export default function useResourceCount(
   // else try to use wallet, otherwise use default index
   let resourceKey: EntityID | undefined = undefined;
   if (entityIndex && world.entities.length > entityIndex) {
-    const encodedEntityId = hashKeyEntityAndTrim(
+    const encodedEntityId = hashAndTrimKeyEntity(
       resourceId,
       world.entities[entityIndex]
     ) as EntityID;
     resourceKey = encodedEntityId;
   } else if (address) {
-    const encodedEntityId = hashKeyEntityAndTrim(
+    const encodedEntityId = hashAndTrimKeyEntity(
       resourceId,
       address
     ) as EntityID;

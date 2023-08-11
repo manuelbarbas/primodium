@@ -5,7 +5,6 @@ import { useMud } from "src/hooks/useMud";
 import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
 import Header from "./Header";
 import UpgradeButton from "src/components/action/UpgradeButton";
-import { decodeCoordEntity } from "src/util/encode";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
 import { demolishBuilding, demolishPath } from "src/util/web3";
@@ -14,6 +13,7 @@ import {
   Level,
   BuildingType,
   OwnedBy,
+  Position,
 } from "src/network/components/chainComponents";
 import { clampedIndex, toRomanNumeral } from "src/util/common";
 
@@ -38,7 +38,7 @@ export const BuildingInfo: React.FC<{
     : owner
     ? owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4)
     : "Unknown";
-  const coord = decodeCoordEntity(building);
+  const coord = Position.use(building);
 
   const buildingName = useMemo(() => {
     if (!buildingType) return;
@@ -62,7 +62,8 @@ export const BuildingInfo: React.FC<{
     ];
   }, [buildingType, currLevel]);
 
-  if (!buildingName || !buildingType || owner == undefined) return null;
+  if (!buildingName || !buildingType || !coord || owner == undefined)
+    return null;
   return (
     <>
       <Header content={`${ownerName}`} />

@@ -10,8 +10,7 @@ import { Scene } from "engine/types";
 
 import { world } from "src/network/world";
 
-import { MainBase } from "src/network/components/chainComponents";
-import { decodeCoordEntity } from "src/util/encode";
+import { MainBase, Position } from "src/network/components/chainComponents";
 import { createCameraApi } from "src/game/api/camera";
 import {
   SelectedBuilding,
@@ -32,8 +31,8 @@ export const focusMainbase = (scene: Scene, player: EntityID) => {
 
     if (!mainBase) return;
 
-    const mainBaseCoord = decodeCoordEntity(mainBase);
-
+    const mainBaseCoord = Position.get(mainBase);
+    if (!mainBaseCoord) return;
     pan(mainBaseCoord);
     SelectedBuilding.set({ value: mainBase });
     SelectedTile.remove();
