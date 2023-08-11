@@ -6,6 +6,7 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 export const buildBuilding = async (
   pos: Coord,
@@ -18,13 +19,23 @@ export const buildBuilding = async (
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
 
+  // todo: find a cleaner way to extract this value in all web3 functions
+  const activeAsteroid = ActiveAsteroid.get()?.value;
+  if (!activeAsteroid) return;
+
+  const position = { ...pos, parent: activeAsteroid };
+
   try {
     setTransactionLoading(true);
     console.log("building ", pos);
     await execute(
-      systems["system.Build"].executeTyped(BigNumber.from(blockType), pos, {
-        gasLimit: 5_000_000,
-      }),
+      systems["system.Build"].executeTyped(
+        BigNumber.from(blockType),
+        position,
+        {
+          gasLimit: 8_000_000,
+        }
+      ),
       providers,
       setNotification
     );

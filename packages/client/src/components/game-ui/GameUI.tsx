@@ -15,6 +15,7 @@ import { BrandingLabel } from "./BrandingLabel";
 import { AiOutlineRotateRight } from "react-icons/ai";
 import { useOrientation } from "src/hooks/useOrientation";
 import { UserPanel } from "./user-panel/UserPanel";
+import TempSpawn from "./TempSpawn";
 
 function GameUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -49,6 +50,7 @@ function GameUI() {
             <motion.div>
               <Hotbar />
               <TileInfo />
+              <TempSpawn />
               <InfoBox />
               <NotificationBox />
               <UserPanel />
