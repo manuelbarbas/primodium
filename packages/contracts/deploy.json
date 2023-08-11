@@ -131,6 +131,10 @@
       "writeAccess": ["P_ProductionDependenciesComponent"]
     },
     {
+      "name": "S_ClaimUnitsSystem",
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent"]
+    },
+    {
       "name": "S_CheckRequiredTileSystem",
       "writeAccess": []
     }

@@ -18,7 +18,10 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, Resourc
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
-import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID } from "components/UnitProductionQueueComponent.sol";
+import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID, ResourceValue } from "components/UnitProductionQueueComponent.sol";
+import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "../components/LastClaimedAtComponent.sol";
+
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
 import { HousingUtilityResourceID } from "../prototypes/Resource.sol";
 // libraries
@@ -36,7 +39,9 @@ import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubs
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnEntityCountSubsystem } from "../interfaces/IOnEntityCountSubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
+import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
 import { ID as S_CheckRequiredTileSystemID } from "./S_CheckRequiredTileSystem.sol";
+import { ID as S_ClaimUnitsSystem } from "./S_ClaimUnitsSystem.sol";
 import { ID as PlaceBuildingTilesSystemID } from "./S_PlaceBuildingTilesSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
@@ -86,16 +91,27 @@ contract TrainUnitsSystem is PrimodiumSystem {
     //Occupied Utility Update
     if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(unitTypeLevelEntity)) {
       //todo update occupied utility
-      IOnBuildingCountSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
-        msg.sender,
-        unitTypeLevelEntity,
-        EActionType.Build,
-        count
-      );
+      LibUnits.updateOccuppiedUtilityResources(world, playerEntity, unitType, count, true);
     }
-    ItemComponent itemComponent = ItemComponent(getC(ItemComponentID));
-    unitPlayerEntity = LibEncode.hashKeyEntity(unitType, playerEntity);
-    itemComponent.set(unitPlayerEntity, LibMath.getSafe(itemComponent, unitPlayerEntity) + count);
+    UnitProductionQueueIndexComponent unitProductionQueueIndexComponent = UnitProductionQueueIndexComponent(
+      getC(UnitProductionQueueIndexComponentID)
+    );
+
+    uint32 queueIndex = 0;
+
+    if (unitProductionQueueIndexComponent.has(buildingEntity)) {
+      IOnSubsystem(getAddressById(world.systems(), S_ClaimUnitsSystem)).executeTyped(msg.sender);
+      queueIndex = unitProductionQueueIndexComponent.getValue(buildingEntity) + 1;
+    } else LastClaimedAtComponent(getC(LastClaimedAtComponentID)).set(buildingEntity, block.timestamp);
+
+    unitProductionQueueIndexComponent.set(buildingEntity, queueIndex);
+    uint256 buildingQueueEntity = LibEncode.hashKeyEntity(buildingEntity, queueIndex);
+
+    UnitProductionQueueComponent(getC(UnitProductionQueueComponentID)).set(
+      buildingQueueEntity,
+      ResourceValue({ resource: unitType, value: count })
+    );
+
     return abi.encode(buildingEntity);
   }
 }
