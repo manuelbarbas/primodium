@@ -2,8 +2,7 @@
 pragma solidity >=0.8.0;
 import "forge-std/console.sol";
 
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
+import "../PrimodiumTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
@@ -25,20 +24,19 @@ import { Coord } from "../../types.sol";
 import "../../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../../types.sol";
 
-contract ResearchSystemTest is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract ResearchSystemTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
 
   ComponentDevSystem public componentDevSystem;
   ItemComponent public itemComponent;
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
 
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     itemComponent = ItemComponent(component(ItemComponentID));
 
-    vm.stopPrank();
+    spawn(alice);
   }
 
   function testFailResearchInvalidID() public {
@@ -155,14 +153,14 @@ contract ResearchSystemTest is MudTest {
       ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
-    buildSystem.executeTyped(MainBaseID, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(MainBaseID, 2),
       abi.encode()
     );
-    upgradeSystem.executeTyped(Coord({ x: 0, y: 0 }));
+    upgradeSystem.executeTyped(getOrigin(alice));
 
     // should succeed because alice has upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);
@@ -191,7 +189,7 @@ contract ResearchSystemTest is MudTest {
       ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
-    buildSystem.executeTyped(MainBaseID, Coord({ x: 0, y: 0 }));
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     // should fail because alice has not upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);

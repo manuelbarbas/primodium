@@ -9,6 +9,7 @@ import { useNotificationStore } from "src/store/NotificationStore";
 import { ampli } from "src/ampli";
 import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 export const buildBuilding = async (
   coord: Coord,
@@ -22,18 +23,28 @@ export const buildBuilding = async (
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
+  // todo: find a cleaner way to extract this value in all web3 functions
+  const activeAsteroid = ActiveAsteroid.get()?.value;
+  if (!activeAsteroid) return;
+
+  const position = { ...coord, parent: activeAsteroid };
+
   try {
     const receipt = await execute(
-      systems["system.Build"].executeTyped(BigNumber.from(blockType), coord, {
-        gasLimit: 5_000_000,
-      }),
+      systems["system.Build"].executeTyped(
+        BigNumber.from(blockType),
+        position,
+        {
+          gasLimit: 8_000_000,
+        }
+      ),
       providers,
       setNotification
     );
 
     ampli.systemBuild({
       buildingType: BlockIdToKey[blockType],
-      coord: [coord.x, coord.y, 0],
+      coord: [coord.x, coord.y, BigNumber.from(activeAsteroid).toNumber()],
       currLevel: 0,
       ...parseReceipt(receipt),
     });

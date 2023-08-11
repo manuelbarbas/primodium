@@ -2,8 +2,11 @@ import { Perlin } from "@latticexyz/noise";
 import { EntityID, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { BlockType, DisplayKeyPair } from "./constants";
-import { Position } from "src/network/components/clientComponents";
-import { BuildingType, OwnedBy } from "src/network/components/chainComponents";
+import {
+  Position,
+  BuildingType,
+  OwnedBy,
+} from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 
 // TODO: randomize perlinSeed

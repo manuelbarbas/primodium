@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 // Building key
 string constant BuildingKey = "building";
 string constant BuildingTileKey = "building.tile";
+string constant AsteroidKey = "asteroid";
 
 // buildings
 uint256 constant MainBaseID = uint256(keccak256("block.MainBase"));

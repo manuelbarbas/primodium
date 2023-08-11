@@ -3,8 +3,7 @@ import { EntityID } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createCameraApi } from "src/game/api/camera";
 import { createInputApi } from "src/game/api/input";
-import { MainBase } from "src/network/components/chainComponents";
-import { Position } from "src/network/components/clientComponents";
+import { Position, MainBase } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 
 export const setupKeybinds = (scene: Scene, player: EntityID) => {

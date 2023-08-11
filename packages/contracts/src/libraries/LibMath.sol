@@ -11,4 +11,8 @@ library LibMath {
   function getSafe(Uint32Component component, uint256 entity) internal view returns (uint32) {
     return component.has(entity) ? component.getValue(entity) : 0;
   }
+
+  function abs(int32 input) internal pure returns (int32) {
+    return input < 0 ? -input : input;
+  }
 }

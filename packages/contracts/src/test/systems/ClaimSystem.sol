@@ -2,8 +2,7 @@
 pragma solidity >=0.8.0;
 import "forge-std/console.sol";
 
-import { Deploy } from "../Deploy.sol";
-import { MudTest } from "std-contracts/test/MudTest.t.sol";
+import "../PrimodiumTest.t.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
@@ -25,29 +24,27 @@ import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { Coord } from "../../types.sol";
 
-contract ClaimSystemTest is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract ClaimSystemTest is PrimodiumTest {
+  constructor() PrimodiumTest() {}
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
-    vm.stopPrank();
+    spawn(alice);
   }
 
   function testClaimOnFactory() public {
     vm.startPrank(alice);
-
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
-    Coord memory platingFactoryCoord = Coord({ x: 1, y: 1 });
+    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory platingFactoryCoord = getCoord1(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -117,11 +114,11 @@ contract ClaimSystemTest is MudTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
-    Coord memory platingFactoryCoord = Coord({ x: 1, y: 1 });
+    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory platingFactoryCoord = getCoord1(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -215,11 +212,11 @@ contract ClaimSystemTest is MudTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
-    Coord memory platingFactoryCoord = Coord({ x: 1, y: 1 });
+    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory platingFactoryCoord = getCoord1(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -285,11 +282,11 @@ contract ClaimSystemTest is MudTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
-    Coord memory platingFactoryCoord = Coord({ x: 1, y: 1 });
+    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory platingFactoryCoord = getCoord1(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -354,10 +351,10 @@ contract ClaimSystemTest is MudTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getOrigin(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -405,10 +402,10 @@ contract ClaimSystemTest is MudTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getOrigin(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -452,10 +449,10 @@ contract ClaimSystemTest is MudTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
+    Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getOrigin(alice);
 
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
@@ -476,13 +473,13 @@ contract ClaimSystemTest is MudTest {
 
     upgradeSystem.executeTyped(coord);
 
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 2, "IronMine should be level 2");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 2, "IronMine should be level 2");
     vm.roll(20);
 
     claimSystem.executeTyped(mainBaseCoord);
     assertEq(itemComponent.getValue(hashedAliceKey), 30, "Alice should have 30 iron");
     upgradeSystem.executeTyped(coord);
-    assertEq(levelComponent.getValue(LibEncode.encodeCoordEntity(coord, BuildingKey)), 3, "IronMine should be level 3");
+    assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 3, "IronMine should be level 3");
 
     vm.roll(30);
 
@@ -504,12 +501,12 @@ contract ClaimSystemTest is MudTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: current generation seed
-    Coord memory IronCoord = Coord({ x: -5, y: 2 });
-    Coord memory CopperCoord = Coord({ x: -10, y: -4 });
+    Coord memory IronCoord = getIronCoord(alice);
+    Coord memory CopperCoord = getCopperCoord(alice);
     assertEq(LibTerrain.getTopLayerKey(IronCoord), IronID, "Tile should have iron");
     assertEq(LibTerrain.getTopLayerKey(CopperCoord), CopperID, "Tile should have copper");
 
-    Coord memory mainBaseCoord = Coord({ x: -5, y: -4 });
+    Coord memory mainBaseCoord = getCoord2(alice);
     buildSystem.executeTyped(MainBaseID, mainBaseCoord);
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
