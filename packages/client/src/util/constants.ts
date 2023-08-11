@@ -214,8 +214,14 @@ export const BlockType = {
   HousingUnit3Research: keccak256("research.HousingUnit3") as EntityID,
 
   BuildingKey: "building" as EntityID,
-
   ArrowMarker: keccak256("marker.Arrow") as EntityID,
+
+  // Units
+  HammerLightDrone: keccak256("unit.HammerLightDrone") as EntityID,
+  StingerDrone: keccak256("unit.StingerDrone") as EntityID,
+  AnvilLightDrone: keccak256("unit.AnvilLightDrone") as EntityID,
+  AegisDrone: keccak256("unit.AegisDrone") as EntityID,
+  MiningVessel: keccak256("unit.MiningVessel") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{

@@ -6,7 +6,6 @@ import mainSceneConfig from "../../config/belt/mainScene";
 import { BeltMap } from "../../constants";
 import { runSystems } from "./systems";
 import { EntityID } from "@latticexyz/recs";
-import { createFxApi } from "src/game/api/fx";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 
 export const initBeltView = async (_: EntityID, network: Network) => {
