@@ -4,6 +4,7 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
+import { parseReceipt } from "../analytics/parseReceipt";
 
 export const demolishPath = async (pos: Coord, network: Network) => {
   const { providers, systems } = network;
@@ -11,15 +12,19 @@ export const demolishPath = async (pos: Coord, network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
-  await execute(
+
+  const receipt = await execute(
     systems["system.DestroyPath"].executeTyped(pos, {
       gasLimit: 2_000_000,
     }),
     providers,
     setNotification
   );
+
   ampli.systemDestroyPath({
     coord: [pos.x, pos.y, 0],
+    ...parseReceipt(receipt),
   });
+
   setTransactionLoading(false);
 };

@@ -8,13 +8,15 @@ import { SelectedBuilding } from "src/network/components/clientComponents";
 import { BuildingType, Level } from "src/network/components/chainComponents";
 import { EntityID } from "@latticexyz/recs";
 import { BlockIdToKey } from "../constants";
+import { parseReceipt } from "../analytics/parseReceipt";
 
 export const upgrade = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
-  await execute(
+
+  const receipt = await execute(
     systems["system.Upgrade"].executeTyped(coord, {
       gasLimit: 5_000_000,
     }),
@@ -32,6 +34,7 @@ export const upgrade = async (coord: Coord, network: Network) => {
     buildingType: BlockIdToKey[buildingType],
     coord: [coord.x, coord.y, 0],
     currLevel: currLevel,
+    ...parseReceipt(receipt),
   });
 
   setTransactionLoading(false);

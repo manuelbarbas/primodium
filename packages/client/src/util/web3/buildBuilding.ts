@@ -8,6 +8,7 @@ import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 import { ampli } from "src/ampli";
 import { BlockIdToKey } from "../constants";
+import { parseReceipt } from "../analytics/parseReceipt";
 
 export const buildBuilding = async (
   coord: Coord,
@@ -19,10 +20,10 @@ export const buildBuilding = async (
   const { tempPositionId } = addTileOverride(coord, blockType, address);
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
+  setTransactionLoading(true);
 
   try {
-    setTransactionLoading(true);
-    const txReceipt = await execute(
+    const receipt = await execute(
       systems["system.Build"].executeTyped(BigNumber.from(blockType), coord, {
         gasLimit: 5_000_000,
       }),
@@ -30,19 +31,11 @@ export const buildBuilding = async (
       setNotification
     );
 
-    console.log("");
-    console.log("transactionValid:", txReceipt !== undefined);
-    console.log("transactionHash:", txReceipt?.transactionHash || "");
-    console.log("transactionFrom:", txReceipt?.from || "");
-    console.log("transactionTo:", txReceipt?.to || "");
-    console.log("transactionStatus:", txReceipt?.status || 0);
-    console.log("transactionGasUsed:", txReceipt?.gasUsed?.toString() || 0);
-    console.log("");
-
     ampli.systemBuild({
       buildingType: BlockIdToKey[blockType],
       coord: [coord.x, coord.y, 0],
       currLevel: 0,
+      ...parseReceipt(receipt),
     });
   } finally {
     removeTileOverride(tempPositionId);

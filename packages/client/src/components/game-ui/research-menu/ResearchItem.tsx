@@ -101,6 +101,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     const executeResearch = useCallback(async () => {
       setUserClickedLoading(true);
       await research(researchId, network);
+
       setUserClickedLoading(false);
     }, []);
 

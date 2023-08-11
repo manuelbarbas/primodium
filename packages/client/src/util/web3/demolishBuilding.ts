@@ -8,6 +8,7 @@ import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 import { BlockIdToKey } from "../constants";
 import { ampli } from "src/ampli";
+import { parseReceipt } from "../analytics/parseReceipt";
 
 export const demolishBuilding = async (coord: Coord, network: Network) => {
   console.log("demolishing", coord);
@@ -16,7 +17,7 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
-  await execute(
+  const receipt = await execute(
     systems["system.Destroy"].executeTyped(coord, {
       gasLimit: 3_000_000,
     }),
@@ -34,6 +35,7 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
     buildingType: BlockIdToKey[buildingType],
     coord: [coord.x, coord.y, 0],
     currLevel: currLevel,
+    ...parseReceipt(receipt),
   });
 
   setTransactionLoading(false);
