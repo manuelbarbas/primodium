@@ -13,9 +13,6 @@ const gameConfig: GameConfig = {
   scale: {
     mode: Phaser.Scale.NONE,
   },
-  fps: {
-    limit: 60,
-  },
   autoRound: true,
   transparent: true,
   pixelArt: true,

@@ -86,6 +86,9 @@ export type GameObjectFunction<Type extends keyof GameObjectTypes> = (
 
 export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
   setComponent: (component: GameObjectComponent<Type>) => void;
+  setComponents: (
+    components: (GameObjectComponent<Type> | undefined)[]
+  ) => void;
   hasComponent: (id: string) => boolean;
   removeComponent: (id: string, stop?: boolean) => void;
   spawn: () => void;

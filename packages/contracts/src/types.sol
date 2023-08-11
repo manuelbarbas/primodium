@@ -12,3 +12,9 @@ struct ResourceValues {
   uint256[] resources;
   uint32[] values;
 }
+
+enum EActionType {
+  Build,
+  Upgrade,
+  Destroy
+}

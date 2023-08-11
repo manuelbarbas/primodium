@@ -58,5 +58,6 @@ export const getBlockTypeName = (blockType: EntityID | undefined) => {
 
   return BlockIdToKey[blockType]
     .replace(/([A-Z]+)/g, "$1")
-    .replace(/([A-Z][a-z])/g, " $1");
+    .replace(/([A-Z][a-z])/g, " $1")
+    .trimStart();
 };

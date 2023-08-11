@@ -8,41 +8,43 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
+import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
-
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 // types
-import { MaxStorageComponent, ID as MaxStorageComponentID } from "components/MaxStorageComponent.sol";
-import { MaxResourceStorageComponent, ID as MaxResourceStorageComponentID } from "components/MaxResourceStorageComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredPassiveComponent, ID as RequiredPassiveComponentID, ResourceValues } from "components/RequiredPassiveComponent.sol";
-import { PassiveProductionComponent, ID as PassiveProductionComponentID } from "components/PassiveProductionComponent.sol";
 
 import { MainBaseID } from "../prototypes.sol";
 
-import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
-import { ID as PostDestroySystemID } from "./PostDestroySystem.sol";
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as UpdateRequiredProductionSystemID } from "./S_UpdateRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
+import { ID as UpdateConnectedRequiredProductionSystemID } from "./S_UpdateConnectedRequiredProductionSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
+
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 import { Coord } from "../types.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
+import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
 contract DestroySystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function checkPassiveResourceReqsMetAfterDestroy(uint256 buildingEntity) internal view returns (bool) {
-    PassiveProductionComponent passiveProductionComponent = PassiveProductionComponent(
-      getAddressById(components, PassiveProductionComponentID)
+  function checkUtilityResourceReqsMetAfterDestroy(uint256 buildingEntity) internal view returns (bool) {
+    P_UtilityProductionComponent UtilityProductionComponent = P_UtilityProductionComponent(
+      getAddressById(components, P_UtilityProductionComponentID)
     );
     BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
       getAddressById(components, BuildingTypeComponentID)
@@ -53,13 +55,13 @@ contract DestroySystem is PrimodiumSystem {
       buildingTypeComponent.getValue(buildingEntity),
       levelComponent.getValue(buildingEntity)
     );
-    if (passiveProductionComponent.has(buildingLevelEntity)) {
+    if (UtilityProductionComponent.has(buildingLevelEntity)) {
       return
-        LibPassiveResource.getAvailablePassiveCapacity(
+        LibUtilityResource.getAvailableUtilityCapacity(
           world,
           addressToEntity(msg.sender),
-          passiveProductionComponent.getValue(buildingLevelEntity).resource
-        ) >= passiveProductionComponent.getValue(buildingLevelEntity).value;
+          UtilityProductionComponent.getValue(buildingLevelEntity).resource
+        ) >= UtilityProductionComponent.getValue(buildingLevelEntity).value;
     }
     return true;
   }
@@ -76,8 +78,8 @@ contract DestroySystem is PrimodiumSystem {
     uint256 playerEntity = addressToEntity(msg.sender);
     uint256 buildingType = buildingTypeComponent.getValue(buildingEntity);
     require(
-      checkPassiveResourceReqsMetAfterDestroy(buildingEntity),
-      "[DestroySystem] can not destory passive resource production building if requirements are not met, destroy passive resource consumers first or increase passive resource production"
+      checkUtilityResourceReqsMetAfterDestroy(buildingEntity),
+      "[DestroySystem] can not destory Utility resource production building if requirements are not met, destroy Utility resource consumers first or increase Utility resource production"
     );
 
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
@@ -88,22 +90,31 @@ contract DestroySystem is PrimodiumSystem {
       clearBuildingTile(ownedByComponent, children[i]);
     }
     childrenComponent.remove(buildingEntity);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity));
     // for node tiles, check for paths that start or end at the current location and destroy associated paths
     if (pathComponent.has(buildingEntity)) {
-      IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
+      uint256 toEntity = pathComponent.getValue(buildingEntity);
+      if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(toEntity)) {
+        IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
+          msg.sender,
+          buildingEntity,
+          EActionType.Destroy
+        );
+      }
+      //Resource Production Update
+      if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(buildingLevelEntity)) {
+        IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+          msg.sender,
+          buildingEntity,
+          EActionType.Destroy
+        );
+      }
       pathComponent.remove(buildingEntity);
     }
 
     uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(buildingEntity);
     if (pathWithEndingTile.length > 0) {
       for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
-        IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
-          msg.sender,
-          pathWithEndingTile[i]
-        );
         pathComponent.remove(pathWithEndingTile[i]);
       }
     }
@@ -114,17 +125,54 @@ contract DestroySystem is PrimodiumSystem {
       mainBaseComponent.remove(playerEntity);
     }
 
-    if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
+    if (!P_IgnoreBuildLimitComponent(getC(P_IgnoreBuildLimitComponentID)).has(buildingType)) {
       BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) - 1);
     }
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);
+    //required production update
+    if (
+      P_ProductionDependenciesComponent(getAddressById(components, P_ProductionDependenciesComponentID)).has(
+        buildingLevelEntity
+      )
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+
+    //Utility Production Update
+    if (P_UtilityProductionComponent(getC(P_UtilityProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateUtilityProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+    //Occupied Utility Update
+    if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+    //Resource Storage Update
+    if (
+      P_MaxResourceStorageComponent(getC(P_MaxResourceStorageComponentID)).has(LibEncode.hashKeyEntity(buildingType, 1))
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
 
     levelComponent.remove(buildingEntity);
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
-    LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
     childrenComponent.remove(buildingEntity);
     return abi.encode(buildingEntity);
   }

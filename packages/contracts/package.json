@@ -11,6 +11,7 @@
     "types": "mud types",
     "dev": "mud deploy-contracts --dev --watch --openUrl http://localhost:3000?dev=true",
     "deploy": "mud deploy-contracts",
+    "gen:json": "node prod-json-gen.mjs",
     "lint": "yarn prettier && yarn solhint",
     "----- INTERNAL -----": "---------------------------",
     "prettier": "prettier --write 'src/**/*.sol'",

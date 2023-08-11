@@ -41,10 +41,13 @@ export const BuildingInfo: React.FC<{
   const coord = decodeCoordEntity(building);
 
   const buildingName = useMemo(() => {
-    if (!buildingType) return undefined;
-    return BlockIdToKey[buildingType]
-      .replace(/([A-Z]+)/g, " $1")
-      .replace(/([A-Z][a-z])/g, " $1");
+    if (!buildingType) return;
+
+    const key = BlockIdToKey[buildingType];
+
+    if (!key) return;
+
+    return key.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
   }, [buildingType]);
 
   const imageURI = useMemo(() => {

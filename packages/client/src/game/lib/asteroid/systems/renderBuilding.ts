@@ -1,6 +1,5 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
-  EntityID,
   EntityIndex,
   Has,
   defineComponentSystem,
@@ -9,17 +8,32 @@ import {
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
-
 import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
-import { createBuilding } from "../../common/factory/building";
 import { world } from "src/network/world";
 import {
   Position,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { Level, BuildingType } from "src/network/components/chainComponents";
+import { safeIndex } from "src/util/array";
+import { AsteroidMap } from "@game/constants";
+
+import {
+  Animation,
+  Texture,
+  Outline,
+} from "../../common/object-components/sprite";
+import { ObjectPosition } from "../../common/object-components/common";
+
+const {
+  Assets,
+  SpriteKeys,
+  DepthLayers,
+  EntityIDtoAnimationKey,
+  EntityIDtoSpriteKey,
+} = AsteroidMap;
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
@@ -31,7 +45,9 @@ export const renderBuilding = (scene: Scene) => {
     const renderId = `${entity}_entitySprite`;
     const tilePosition = Position.get(entityId);
     const buildingType = BuildingType.get(entityId)?.value;
-    const level = Level.get(entityId)?.value;
+    const level = Level.get(entityId)?.value
+      ? parseInt(Level.get(entityId)!.value.toString())
+      : 1;
 
     if (!buildingType || !tilePosition) return;
 
@@ -51,19 +67,24 @@ export const renderBuilding = (scene: Scene) => {
     );
 
     scene.objectPool.remove(renderId);
-
     const buildingRenderEntity = scene.objectPool.get(renderId, "Sprite");
 
-    buildingRenderEntity.setComponent(
-      createBuilding({
-        renderId,
-        x: pixelCoord.x,
-        y: -pixelCoord.y,
-        buildingType: buildingType as EntityID,
-        selected,
-        level: parseInt(level ? level.toString() : "1"),
-      })
-    );
+    const sprites = EntityIDtoSpriteKey[buildingType];
+    const spriteKey = sprites ? safeIndex(level - 1, sprites) : SpriteKeys.Node;
+    const animations = EntityIDtoAnimationKey[buildingType];
+    const animationKey = animations
+      ? safeIndex(level - 1, animations)
+      : undefined;
+
+    buildingRenderEntity.setComponents([
+      ObjectPosition(
+        { x: pixelCoord.x, y: -pixelCoord.y },
+        DepthLayers.Building
+      ),
+      Texture(Assets.SpriteAtlas, spriteKey),
+      animationKey ? Animation(animationKey) : undefined,
+      selected ? Outline() : undefined,
+    ]);
   };
 
   const positionQuery = [Has(Position), Has(BuildingType)];

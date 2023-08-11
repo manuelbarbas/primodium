@@ -4,30 +4,41 @@ pragma solidity >=0.8.0;
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as PostBuildSystemID } from "systems/PostBuildSystem.sol";
-
 // components
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { BlueprintComponent, ID as BlueprintComponentID } from "components/BlueprintComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
-import { RequiredResourcesComponent, ID as RequiredResourcesComponentID } from "components/RequiredResourcesComponent.sol";
-
-import { MainBaseID, BuildingTileKey, BuildingKey } from "../prototypes.sol";
-
+import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
+import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
+import { MainBaseID, BuildingKey } from "../prototypes.sol";
 // libraries
 import { Coord } from "../types.sol";
+import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
-import { LibPassiveResource } from "../libraries/LibPassiveResource.sol";
+import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { ID as SpendRequiredResourcesSystemID } from "./SpendRequiredResourcesSystem.sol";
+import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
+import { ID as S_CheckRequiredTileSystemID } from "./S_CheckRequiredTileSystem.sol";
+import { ID as PlaceBuildingTilesSystemID } from "./S_PlaceBuildingTilesSystem.sol";
+import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
+import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
+import { ID as UpdateRequiredProductionSystemID } from "./S_UpdateRequiredProductionSystem.sol";
+import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.Build"));
 
@@ -41,6 +52,11 @@ contract BuildSystem is PrimodiumSystem {
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 buildingType, Coord memory coord) = abi.decode(args, (uint256, Coord));
 
+    require(
+      P_IsBuildingTypeComponent(getC(P_IsBuildingTypeComponentID)).has(buildingType),
+      "[BuildSystem] Invalid building type"
+    );
+
     uint256 buildingEntity = LibEncode.encodeCoordEntity(coord, BuildingKey);
     uint256 playerEntity = addressToEntity(msg.sender);
 
@@ -49,7 +65,17 @@ contract BuildSystem is PrimodiumSystem {
       !ChildrenComponent(getC(ChildrenComponentID)).has(buildingEntity),
       "[BuildSystem] Building already exists here"
     );
-    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
+
+    bool canBuildOn = abi.decode(
+      IOnTwoEntitySubsystem(getAddressById(world.systems(), S_CheckRequiredTileSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        buildingType
+      ),
+      (bool)
+    );
+    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
+
     require(
       LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"
@@ -62,15 +88,13 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     require(
-      LibPassiveResource.checkPassiveResourceReqs(world, playerEntity, buildingType, 1),
-      "[BuildSystem] You do not have the required passive resources"
+      LibUtilityResource.checkUtilityResourceReqs(world, playerEntity, buildingType, 1),
+      "[BuildSystem] You do not have the required Utility resources"
     );
 
     //check resource requirements and if ok spend required resources
 
-    if (
-      RequiredResourcesComponent(getAddressById(components, RequiredResourcesComponentID)).has(buildingTypeLevelEntity)
-    ) {
+    if (P_RequiredResourcesComponent(getC(P_RequiredResourcesComponentID)).has(buildingTypeLevelEntity)) {
       require(
         LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
         "[BuildSystem] You do not have the required resources"
@@ -81,13 +105,13 @@ contract BuildSystem is PrimodiumSystem {
       );
     }
 
-    int32[] memory blueprint = BlueprintComponent(getC(BlueprintComponentID)).getValue(buildingType);
-    uint256[] memory tiles = new uint256[](blueprint.length / 2);
-    for (uint32 i = 0; i < blueprint.length; i += 2) {
-      Coord memory relativeCoord = Coord(blueprint[i], blueprint[i + 1]);
-      tiles[i / 2] = placeBuildingTile(buildingEntity, coord, relativeCoord);
-    }
-    ChildrenComponent(getC(ChildrenComponentID)).set(buildingEntity, tiles);
+    BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
+
+    IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
+      msg.sender,
+      buildingEntity
+    );
+
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
@@ -100,23 +124,49 @@ contract BuildSystem is PrimodiumSystem {
     }
     //set level of building to 1
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
-    BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
-    OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
 
-    IOnEntitySubsystem(getAddressById(world.systems(), PostBuildSystemID)).executeTyped(msg.sender, buildingEntity);
+    OwnedByComponent(getC(OwnedByComponentID)).set(buildingEntity, playerEntity);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
+    //required production update
+    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Build
+      );
+    }
+
+    //Utility Production Update
+    if (P_UtilityProductionComponent(getC(P_UtilityProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateUtilityProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Build
+      );
+    }
+    //Occupied Utility Update
+    if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Build
+      );
+    }
+    //Resource Storage Update
+    if (P_MaxResourceStorageComponent(getC(P_MaxResourceStorageComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Build
+      );
+    }
+
+    // update building count if the built building counts towards the build limit
+    if (!P_IgnoreBuildLimitComponent(getC(P_IgnoreBuildLimitComponentID)).has(buildingType)) {
+      BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
+      buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) + 1);
+    }
 
     return abi.encode(buildingEntity);
-  }
-
-  function placeBuildingTile(
-    uint256 buildingEntity,
-    Coord memory baseCoord,
-    Coord memory relativeCoord
-  ) private returns (uint256 tileEntity) {
-    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    Coord memory coord = Coord(baseCoord.x + relativeCoord.x, baseCoord.y + relativeCoord.y);
-    tileEntity = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
-    require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
-    ownedByComponent.set(tileEntity, buildingEntity);
   }
 }

@@ -15,7 +15,7 @@ import { GameButton } from "../shared/GameButton";
 import { upgrade } from "src/util/web3";
 import {
   Level,
-  MaxLevel,
+  P_MaxLevel,
   HasResearched,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
@@ -38,7 +38,7 @@ export default function UpgradeButton({
   ]);
 
   const currLevel = Level.use(buildingEntity);
-  const maxLevel = MaxLevel.use(builtTile);
+  const maxLevel = P_MaxLevel.use(builtTile);
   const upgradedLevel = useMemo(() => {
     return parseInt(currLevel?.value.toString() ?? "0") + 1;
   }, [currLevel]);
