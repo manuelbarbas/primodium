@@ -13,7 +13,6 @@ export enum Action {
 
 export const BlockType = {
   // Landscape blocks
-  Water: keccak256("block.Water") as EntityID,
   Sandstone: keccak256("block.Sandstone") as EntityID,
   Biofilm: keccak256("block.Biofilm") as EntityID,
   Alluvium: keccak256("block.Alluvium") as EntityID,
@@ -22,11 +21,13 @@ export const BlockType = {
   Air: keccak256("block.Air") as EntityID,
 
   // Ores
+  Water: keccak256("block.Water") as EntityID,
   Lithium: keccak256("block.Lithium") as EntityID,
   Iron: keccak256("block.Iron") as EntityID,
   Copper: keccak256("block.Copper") as EntityID,
   Titanium: keccak256("block.Titanium") as EntityID,
   Iridium: keccak256("block.Iridium") as EntityID,
+  Sulfur: keccak256("block.Sulfur") as EntityID,
   Osmium: keccak256("block.Osmium") as EntityID,
   Tungsten: keccak256("block.Tungsten") as EntityID,
   Kimberlite: keccak256("block.Kimberlite") as EntityID,

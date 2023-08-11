@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 // Terrain blocks
-uint256 constant WaterID = uint256(keccak256("block.Water"));
 uint256 constant AirID = uint256(keccak256("block.Air"));
 
 uint256 constant SandstoneID = uint256(keccak256("block.Sandstone"));
@@ -12,6 +11,7 @@ uint256 constant RegolithID = uint256(keccak256("block.Regolith"));
 uint256 constant BedrockID = uint256(keccak256("block.Bedrock"));
 
 // Resource blocks: matching with research and item IDs
+uint256 constant WaterID = uint256(keccak256("block.Water"));
 uint256 constant LithiumID = uint256(keccak256("block.Lithium"));
 uint256 constant IronID = uint256(keccak256("block.Iron"));
 uint256 constant CopperID = uint256(keccak256("block.Copper"));

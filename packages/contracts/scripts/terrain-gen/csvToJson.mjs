@@ -27,7 +27,7 @@ function csvToJsonCoords(csvUrl) {
       const value = numberBase[currentLine[j]];
       if (!value) throw new Error(`Invalid value ${currentLine[j]} at line ${i}, column ${j}`);
       result.push({
-        coord: { x: i, y: j },
+        coord: { x: j, y: i },
         value: value,
       });
     }
