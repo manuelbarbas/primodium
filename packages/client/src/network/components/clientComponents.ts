@@ -1,17 +1,14 @@
 import { Type } from "@latticexyz/recs";
+import { world } from "../world";
 import newComponent, {
   newBoolComponent,
   newCoordComponent,
   newNumberComponent,
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
-import { world } from "../world";
 import newFleetComponent from "./customComponents/FleetComponent";
 
-export const Position = newCoordComponent(world, {
-  id: "Position",
-  overridable: true,
-});
+// todo: organize these alphabetically
 export const BlockNumber = newNumberComponent(world, {
   id: "BlockNumber",
 });
@@ -41,8 +38,14 @@ export const Fleet = newFleetComponent(world, {
   id: "Fleet",
 });
 
+export const ActiveAsteroid = newComponent(
+  world,
+  { value: Type.Entity },
+  { id: "ActiveAsteroid" }
+);
+
 export default {
-  Position,
+  ActiveAsteroid,
   BlockNumber,
   GameReady,
   DoubleCounter,

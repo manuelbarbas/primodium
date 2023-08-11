@@ -10,6 +10,7 @@ import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMoveme
 import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { EntityID } from "@latticexyz/recs";
 import { setupKeybinds } from "./setup/setupKeybinds";
+import { setupActiveAsteroid } from "./setup/setupActiveAsteroid";
 
 export const initAsteroidView = async (player: EntityID, network: Network) => {
   const { Scenes } = AsteroidMap;
@@ -34,6 +35,7 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
   setupMouseInputs(scene, network, player);
   setupBasicCameraMovement(scene);
   setupKeybinds(scene, player);
+  setupActiveAsteroid(player);
 
   runSystems(scene, player);
 

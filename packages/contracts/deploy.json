@@ -12,10 +12,13 @@
     "BuildingCountComponent",
     "ChildrenComponent",
     "ProductionComponent",
-    "ActiveComponent",
     "IsDebugComponent",
+    "PositionComponent",
     "MaxUtilityComponent",
     "OccupiedUtilityResourceComponent",
+    "AsteroidTypeComponent",
+    "ActiveComponent",
+    "DimensionsComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
@@ -29,7 +32,8 @@
     "P_RequiredResearchComponent",
     "P_RequiredResourcesComponent",
     "P_MaxBuildingsComponent",
-    "P_IgnoreBuildLimitComponent"
+    "P_IgnoreBuildLimitComponent",
+    "P_IsBuildingTypeComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -42,6 +46,10 @@
       "writeAccess": ["CounterComponent"]
     },
     {
+      "name": "SpawnSystem",
+      "writeAccess": ["PositionComponent", "AsteroidTypeComponent", "ActiveComponent"]
+    },
+    {
       "name": "BuildSystem",
       "writeAccess": [
         "BuildingTypeComponent",
@@ -50,7 +58,8 @@
         "LevelComponent",
         "MainBaseComponent",
         "ChildrenComponent",
-        "MainBaseComponent"
+        "MainBaseComponent",
+        "PositionComponent"
       ]
     },
     {
@@ -65,6 +74,7 @@
         "PathComponent"
       ]
     },
+
     {
       "name": "BuildPathSystem",
       "writeAccess": ["PathComponent"]
@@ -87,7 +97,7 @@
     },
     {
       "name": "S_PlaceBuildingTilesSystem",
-      "writeAccess": ["ChildrenComponent", "OwnedByComponent"]
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent", "PositionComponent"]
     },
     {
       "name": "S_UpdatePlayerStorageSystem",

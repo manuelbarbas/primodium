@@ -30,14 +30,19 @@ import type {
 export type CoordStruct = {
   x: PromiseOrValue<BigNumberish>;
   y: PromiseOrValue<BigNumberish>;
+  parent: PromiseOrValue<BigNumberish>;
 };
 
-export type CoordStructOutput = [number, number] & { x: number; y: number };
+export type CoordStructOutput = [number, number, BigNumber] & {
+  x: number;
+  y: number;
+  parent: BigNumber;
+};
 
 export interface UpgradeSystemInterface extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
-    "executeTyped((int32,int32))": FunctionFragment;
+    "executeTyped((int32,int32,uint256))": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };

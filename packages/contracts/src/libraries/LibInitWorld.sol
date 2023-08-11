@@ -2,11 +2,16 @@
 pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/interfaces/IWorld.sol";
+import { SingletonID } from "solecs/SingletonID.sol";
 
 import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "components/P_MaxBuildingsComponent.sol";
+import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
+
+import { Dimensions } from "../types.sol";
 
 library LibInitWorld {
   function init(IWorld world) internal {
+    DimensionsComponent(world.getComponent(DimensionsComponentID)).set(SingletonID, Dimensions(100, 100));
     initMaxBuildings(world);
   }
 

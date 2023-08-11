@@ -1,16 +1,15 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   EntityID,
   defineComponentSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
-import { Scene } from "engine/types";
-import { world } from "src/network/world";
-import { Path } from "src/network/components/chainComponents";
-import { Position } from "src/network/components/clientComponents";
-import { ObjectPosition } from "../../common/object-components/common";
 import { AsteroidMap } from "@game/constants";
+import { Scene } from "engine/types";
+import { Path, Position } from "src/network/components/chainComponents";
+import { world } from "src/network/world";
+import { ObjectPosition } from "../../common/object-components/common";
 import { ManhattanPath } from "../../common/object-components/graphics";
 
 export const renderBuildingPaths = (scene: Scene) => {

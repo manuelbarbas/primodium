@@ -7,7 +7,6 @@ import { createPerlin } from "@latticexyz/noise";
 import { NetworkConfig } from "src/util/types";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
-import { syncPositionComponent } from "./syncPositionComponent";
 import { singletonIndex, world } from "./world";
 import chainComponents, { Counter } from "./components/chainComponents";
 import { BlockNumber, DoubleCounter } from "./components/clientComponents";
@@ -104,9 +103,6 @@ export async function createNetworkLayer(config: NetworkConfig) {
   };
 
   startSync();
-
-  // TODO: move this functionality into syncComponents helper
-  syncPositionComponent();
 
   // TODO: move this functionality into runSystems()
   const blockNumber = (await network.providers.get().ws?.getBlockNumber()) ?? 0;

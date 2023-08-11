@@ -18,6 +18,7 @@ import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_M
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
+import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 import "../prototypes.sol";
@@ -36,6 +37,7 @@ library LibInitDebug {
     IsDebugComponent(world.getComponent(IsDebugComponentID)).set(SingletonID);
 
     initBlueprints(world);
+    registerBuildingTypes(world);
     initializeSimpleBuildings(world);
 
     initializeMines(world);
@@ -45,6 +47,41 @@ library LibInitDebug {
     initializeTechnologies(world);
 
     initializeStorageBuildings(world);
+  }
+
+  function registerBuildingTypes(IWorld world) internal {
+    P_IsBuildingTypeComponent isBuildingTypeComponent = P_IsBuildingTypeComponent(
+      world.getComponent(P_IsBuildingTypeComponentID)
+    );
+    isBuildingTypeComponent.set(DebugSimpleBuildingNoReqsID);
+    isBuildingTypeComponent.set(DebugSimpleBuildingResourceReqsID);
+    isBuildingTypeComponent.set(DebugSimpleBuildingResearchReqsID);
+    isBuildingTypeComponent.set(DebugSimpleBuildingBuildLimitReq);
+    isBuildingTypeComponent.set(DebugSimpleBuildingTileReqID);
+    isBuildingTypeComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID);
+    isBuildingTypeComponent.set(DebugSimpleBuildingWithUpgradeResearchReqsID);
+    isBuildingTypeComponent.set(DebugSimpleBuilding3x3);
+
+    isBuildingTypeComponent.set(DebugIronMineID);
+    isBuildingTypeComponent.set(DebugCopperMineID);
+    isBuildingTypeComponent.set(DebugIronMineWithBuildLimitID);
+    isBuildingTypeComponent.set(DebugIronMineNoTileReqID);
+    isBuildingTypeComponent.set(DebugIronPlateFactoryNoMineReqID);
+    isBuildingTypeComponent.set(DebugIronPlateFactoryID);
+    isBuildingTypeComponent.set(DebugSuperIronMineID);
+    isBuildingTypeComponent.set(DebugSuperIronPlateFactoryID);
+    isBuildingTypeComponent.set(DebugSimpleTechnologyNoReqsID);
+    isBuildingTypeComponent.set(DebugSimpleTechnologyResourceReqsID);
+    isBuildingTypeComponent.set(DebugSimpleTechnologyResearchReqsID);
+    isBuildingTypeComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
+    isBuildingTypeComponent.set(DebugStorageBuildingID);
+
+    isBuildingTypeComponent.set(DebugUtilityProductionBuilding);
+    isBuildingTypeComponent.set(DebugSimpleBuildingUtilityResourceRequirement);
+    isBuildingTypeComponent.set(DebugLithiumMineID);
+    isBuildingTypeComponent.set(DebugAlloyFactoryID);
+    isBuildingTypeComponent.set(DebugLithiumCopperOxideFactoryID);
+    isBuildingTypeComponent.set(DebugSolarPanelID);
   }
 
   function initBlueprints(IWorld world) internal {
