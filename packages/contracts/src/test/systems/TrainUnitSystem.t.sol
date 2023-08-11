@@ -84,6 +84,98 @@ contract TrainUnitSystem is PrimodiumTest {
     vm.stopPrank();
   }
 
+  function testTrainUnitsMultipleBuildings() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = Coord({ x: -1, y: -1 });
+    buildSystem.executeTyped(MainBaseID, coord1);
+
+    coord1 = Coord({ x: 1, y: 2 });
+    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+
+    coord2 = Coord({ x: 2, y: 2 });
+    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
+    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+
+    Coord memory coord3 = Coord({ x: 2, y: 3 });
+    buildSystem.executeTyped(DebugUnitProductionBuilding, coord3);
+    uint256 unitProductionBuildingEntity2 = LibEncode.encodeCoordEntity(coord3, BuildingKey);
+
+    vm.roll(10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity2, DebugUnit, 5);
+    vm.roll(20);
+    s_claimUnitsSystem.executeTyped(alice);
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
+    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
+    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+
+    vm.stopPrank();
+  }
+
+  function testTrainUnitsQueue() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = Coord({ x: -1, y: -1 });
+    buildSystem.executeTyped(MainBaseID, coord1);
+
+    coord1 = Coord({ x: 1, y: 2 });
+    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+
+    coord2 = Coord({ x: 2, y: 2 });
+
+    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
+    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+
+    vm.roll(10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 1);
+    vm.roll(30);
+    s_claimUnitsSystem.executeTyped(alice);
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
+    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
+    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+
+    vm.stopPrank();
+  }
+
+  function testTrainUnitsMidQueue() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = Coord({ x: -1, y: -1 });
+    buildSystem.executeTyped(MainBaseID, coord1);
+
+    coord1 = Coord({ x: 1, y: 2 });
+    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+
+    coord2 = Coord({ x: 2, y: 2 });
+
+    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
+    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+
+    vm.roll(10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 1);
+    vm.roll(20);
+    s_claimUnitsSystem.executeTyped(alice);
+    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
+    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
+    assertEq(itemComponent.getValue(playerUnitEntity), 5, "player should have 5 units");
+    vm.roll(30);
+    s_claimUnitsSystem.executeTyped(alice);
+    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
+    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+
+    vm.stopPrank();
+  }
+
   function testTrainUnitsMidProduction() public {
     vm.startPrank(alice);
 
