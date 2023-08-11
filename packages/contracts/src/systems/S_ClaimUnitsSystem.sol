@@ -1,9 +1,7 @@
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
-import { ID as BuildSystemID } from "./BuildSystem.sol";
-import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
-import { ID as ResearchSystemID } from "./ResearchSystem.sol";
+import { ID as TrainUnitsSystemID } from "./TrainUnitsSystem.sol";
 
 import { ID as UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
 
@@ -28,19 +26,23 @@ contract S_ClaimUnitsSystem is IOnSubsystem, PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
+    address playerAddress = abi.decode(args, (address));
     require(
-      msg.sender == getAddressById(world.systems(), BuildSystemID) ||
-        msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
-        msg.sender == getAddressById(world.systems(), ResearchSystemID),
-      "S_SpendRequiredResourcesSystem: Only BuildSystem, UpgradeSystem, ResearchSystem can call this function"
+      msg.sender == getAddressById(world.systems(), TrainUnitsSystemID) || msg.sender == playerAddress,
+      "S_ClaimUnitsSystem: Only TrainUnitsSystem, or the player themself can call this function"
     );
 
-    address playerAddress = abi.decode(args, (address));
     uint256 playerEntity = addressToEntity(playerAddress);
     uint256[] memory unitProductionBuildingEntities = UnitProductionOwnedByComponent(
       world.getComponent(UnitProductionOwnedByComponentID)
     ).getEntitiesWithValue(playerEntity);
 
+    for (uint32 i = 0; i < unitProductionBuildingEntities.length; i++) {
+      claimUnitsFromBuilding(unitProductionBuildingEntities[i], playerEntity);
+    }
+  }
+
+  function claimUnitsFromBuilding(uint256 unitProductionBuildingEntity, uint256 playerEntity) internal {
     UnitProductionQueueComponent unitProductionQueueComponent = UnitProductionQueueComponent(
       world.getComponent(UnitProductionQueueComponentID)
     );
@@ -51,55 +53,52 @@ contract S_ClaimUnitsSystem is IOnSubsystem, PrimodiumSystem {
       world.getComponent(LastClaimedAtComponentID)
     );
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    for (uint32 i = 0; i < unitProductionBuildingEntities.length; i++) {
-      uint256 unitProductionBuildingEntity = unitProductionBuildingEntities[i];
 
-      bool isStillClaiming = unitProductionQueueIndexComponent.has(unitProductionBuildingEntity);
-      uint32 queueIndex = LibMath.getSafe(unitProductionQueueIndexComponent, unitProductionBuildingEntity);
-      while (isStillClaiming) {
-        uint256 buildingQueueEntity = LibEncode.hashKeyEntity(unitProductionBuildingEntity, queueIndex);
-        ResourceValue memory unitProductionQueue = unitProductionQueueComponent.getValue(buildingQueueEntity);
+    bool isStillClaiming = unitProductionQueueIndexComponent.has(unitProductionBuildingEntity);
+    uint32 queueIndex = LibMath.getSafe(unitProductionQueueIndexComponent, unitProductionBuildingEntity);
+    while (isStillClaiming) {
+      uint256 buildingQueueEntity = LibEncode.hashKeyEntity(unitProductionBuildingEntity, queueIndex);
+      ResourceValue memory unitProductionQueue = unitProductionQueueComponent.getValue(buildingQueueEntity);
 
-        uint32 unitTrainingTimeForBuilding = LibUnits.getBuildingBuildTimeForUnit(
-          world,
-          playerEntity,
-          unitProductionBuildingEntity,
-          unitProductionQueue.resource
-        );
-        uint256 lastClaimedAt = lastClaimedAtComponent.getValue(unitProductionBuildingEntity);
-        uint32 trainedUnitsCount = uint32(block.number - lastClaimedAt) / unitTrainingTimeForBuilding;
+      uint32 unitTrainingTimeForBuilding = LibUnits.getBuildingBuildTimeForUnit(
+        world,
+        playerEntity,
+        unitProductionBuildingEntity,
+        unitProductionQueue.resource
+      );
+      uint256 lastClaimedAt = lastClaimedAtComponent.getValue(unitProductionBuildingEntity);
+      uint32 trainedUnitsCount = uint32(block.number - lastClaimedAt) / unitTrainingTimeForBuilding;
 
-        uint256 playerUnitTypeEntity = LibEncode.hashKeyEntity(unitProductionQueue.resource, playerEntity);
-        if (trainedUnitsCount > 0) {
-          if (trainedUnitsCount > unitProductionQueue.value) {
-            trainedUnitsCount = unitProductionQueue.value;
-            if (queueIndex > 0) unitProductionQueueIndexComponent.set(unitProductionBuildingEntity, queueIndex - 1);
-            else {
-              unitProductionQueueIndexComponent.remove(unitProductionBuildingEntity);
-              isStillClaiming = false;
-            }
-          } else {
+      uint256 playerUnitTypeEntity = LibEncode.hashKeyEntity(unitProductionQueue.resource, playerEntity);
+      if (trainedUnitsCount > 0) {
+        if (trainedUnitsCount > unitProductionQueue.value) {
+          trainedUnitsCount = unitProductionQueue.value;
+          if (queueIndex > 0) unitProductionQueueIndexComponent.set(unitProductionBuildingEntity, queueIndex - 1);
+          else {
+            unitProductionQueueIndexComponent.remove(unitProductionBuildingEntity);
             isStillClaiming = false;
-            if (unitProductionQueue.value > trainedUnitsCount) {
-              unitProductionQueue.value -= trainedUnitsCount;
-              unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
-            } else {
-              unitProductionQueueComponent.remove(buildingQueueEntity);
-              if (queueIndex > 0) unitProductionQueueIndexComponent.set(unitProductionBuildingEntity, queueIndex - 1);
-              else unitProductionQueueIndexComponent.remove(unitProductionBuildingEntity);
-            }
           }
-          lastClaimedAtComponent.set(
-            unitProductionBuildingEntity,
-            lastClaimedAt + (trainedUnitsCount * unitTrainingTimeForBuilding)
-          );
-          itemComponent.set(
-            playerUnitTypeEntity,
-            LibMath.getSafe(itemComponent, playerUnitTypeEntity) + trainedUnitsCount
-          );
         } else {
           isStillClaiming = false;
+          if (unitProductionQueue.value > trainedUnitsCount) {
+            unitProductionQueue.value -= trainedUnitsCount;
+            unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
+          } else {
+            unitProductionQueueComponent.remove(buildingQueueEntity);
+            if (queueIndex > 0) unitProductionQueueIndexComponent.set(unitProductionBuildingEntity, queueIndex - 1);
+            else unitProductionQueueIndexComponent.remove(unitProductionBuildingEntity);
+          }
         }
+        lastClaimedAtComponent.set(
+          unitProductionBuildingEntity,
+          lastClaimedAt + (trainedUnitsCount * unitTrainingTimeForBuilding)
+        );
+        itemComponent.set(
+          playerUnitTypeEntity,
+          LibMath.getSafe(itemComponent, playerUnitTypeEntity) + trainedUnitsCount
+        );
+      } else {
+        isStillClaiming = false;
       }
     }
   }

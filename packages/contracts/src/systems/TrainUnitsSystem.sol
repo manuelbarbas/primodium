@@ -90,19 +90,21 @@ contract TrainUnitsSystem is PrimodiumSystem {
 
     //Occupied Utility Update
     if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(unitTypeLevelEntity)) {
-      //todo update occupied utility
+      // update occupied utility
       LibUnits.updateOccuppiedUtilityResources(world, playerEntity, unitType, count, true);
     }
     UnitProductionQueueIndexComponent unitProductionQueueIndexComponent = UnitProductionQueueIndexComponent(
       getC(UnitProductionQueueIndexComponentID)
     );
 
-    uint32 queueIndex = 0;
-
-    if (unitProductionQueueIndexComponent.has(buildingEntity)) {
+    if (unitProductionQueueIndexComponent.has(buildingEntity))
       IOnSubsystem(getAddressById(world.systems(), S_ClaimUnitsSystem)).executeTyped(msg.sender);
+    else LastClaimedAtComponent(getC(LastClaimedAtComponentID)).set(buildingEntity, block.number);
+
+    uint32 queueIndex = 0;
+    if (unitProductionQueueIndexComponent.has(buildingEntity)) {
       queueIndex = unitProductionQueueIndexComponent.getValue(buildingEntity) + 1;
-    } else LastClaimedAtComponent(getC(LastClaimedAtComponentID)).set(buildingEntity, block.timestamp);
+    }
 
     unitProductionQueueIndexComponent.set(buildingEntity, queueIndex);
     uint256 buildingQueueEntity = LibEncode.hashKeyEntity(buildingEntity, queueIndex);

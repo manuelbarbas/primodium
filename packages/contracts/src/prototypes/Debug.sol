@@ -39,6 +39,12 @@ uint256 constant DebugSolarPanelID = uint256(keccak256("block.DebugSolarPanel"))
 
 uint256 constant DebugUtilityProductionBuilding = uint256(keccak256("block.DebugUtilityProductionBuilding"));
 
+uint256 constant DebugHousingBuilding = uint256(keccak256("block.DebugHousingBuilding"));
+uint256 constant DebugUnitProductionBuilding = uint256(keccak256("block.DebugUnitProductionBuilding"));
+
+uint256 constant DebugUnit = uint256(keccak256("block.DebugUnit"));
+uint256 constant DebugUnit2 = uint256(keccak256("block.DebugUnit2"));
+
 //super buildings
 uint256 constant DebugSuperIronMineID = uint256(keccak256("block.DebugSuperIronMine"));
 uint256 constant DebugSuperIronPlateFactoryID = uint256(keccak256("block.DebugSuperIronPlateFactory"));

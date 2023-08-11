@@ -16,6 +16,10 @@
     "IsDebugComponent",
     "MaxUtilityComponent",
     "OccupiedUtilityResourceComponent",
+    "UnitProductionOwnedByComponent",
+    "UnitProductionQueueComponent",
+    "UnitProductionQueueIndexComponent",
+
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
@@ -30,7 +34,14 @@
     "P_RequiredResourcesComponent",
     "P_MaxBuildingsComponent",
     "P_IgnoreBuildLimitComponent",
-    "P_IsBuildingTypeComponent"
+    "P_IsBuildingTypeComponent",
+    "P_UnitAttackComponent",
+    "P_UnitCargoComponent",
+    "P_UnitDefenceComponent",
+    "P_UnitMiningComponent",
+    "P_UnitProductionMultiplierComponent",
+    "P_UnitProductionTypesComponent",
+    "P_UnitTrainingTimeComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -51,7 +62,8 @@
         "LevelComponent",
         "MainBaseComponent",
         "ChildrenComponent",
-        "MainBaseComponent"
+        "MainBaseComponent",
+        "UnitProductionOwnedByComponent"
       ]
     },
     {
@@ -63,7 +75,8 @@
         "ChildrenComponent",
         "LevelComponent",
         "BuildingCountComponent",
-        "PathComponent"
+        "PathComponent",
+        "UnitProductionOwnedByComponent"
       ]
     },
     {
@@ -81,6 +94,10 @@
     {
       "name": "UpgradeSystem",
       "writeAccess": ["LevelComponent"]
+    },
+    {
+      "name": "TrainUnitsSystem",
+      "writeAccess": ["UnitProductionQueueComponent", "UnitProductionQueueIndexComponent", "LastClaimedAtComponent"]
     },
     {
       "name": "ComponentDevSystem",
@@ -132,7 +149,12 @@
     },
     {
       "name": "S_ClaimUnitsSystem",
-      "writeAccess": ["ItemComponent", "LastClaimedAtComponent"]
+      "writeAccess": [
+        "ItemComponent",
+        "LastClaimedAtComponent",
+        "UnitProductionQueueComponent",
+        "UnitProductionQueueIndexComponent"
+      ]
     },
     {
       "name": "S_CheckRequiredTileSystem",
