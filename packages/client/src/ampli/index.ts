@@ -527,6 +527,48 @@ export interface SystemResearchProperties {
   transactionValid: boolean;
 }
 
+export interface SystemSpawnProperties {
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
 export interface SystemUpgradeProperties {
   /**
    * Name of a building in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
@@ -671,6 +713,16 @@ export class SystemResearch implements BaseEvent {
 
   constructor(
     public event_properties: SystemResearchProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemSpawn implements BaseEvent {
+  event_type = 'system.Spawn';
+
+  constructor(
+    public event_properties: SystemSpawnProperties,
   ) {
     this.event_properties = event_properties;
   }
@@ -918,6 +970,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemResearch(properties), options);
+  }
+
+  /**
+   * system.Spawn
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.Spawn)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. transactionFrom)
+   * @param options Amplitude event options.
+   */
+  systemSpawn(
+    properties: SystemSpawnProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemSpawn(properties), options);
   }
 
   /**
