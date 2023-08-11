@@ -6,6 +6,7 @@ import newComponent, {
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
 import { world } from "../world";
+import newFleetComponent from "./customComponents/FleetComponent";
 
 export const Position = newCoordComponent(world, {
   id: "Position",
@@ -36,6 +37,10 @@ export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
 });
 
+export const Fleet = newFleetComponent(world, {
+  id: "Fleet",
+});
+
 export default {
   Position,
   BlockNumber,
@@ -47,4 +52,5 @@ export default {
   SelectedAction,
   StartSelectedPath,
   Marker,
+  Fleet,
 };

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { getBlockTypeName } from "src/util/common";
 import { useState } from "react";
 import { EntityID } from "@latticexyz/recs";
+import { Fleet } from "src/network/components/clientComponents";
 
 const unitStats = [
   {
@@ -113,7 +114,14 @@ export const UnitPane: React.FC<{
       </div>
       <p className="opacity-50 text-xs">max. {maximum}</p>
 
-      <button className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold">
+      <button
+        className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold"
+        onClick={() => {
+          if (count === "") return;
+
+          Fleet.setUnitCount(unit, count);
+        }}
+      >
         Add to Fleet
       </button>
       <button
