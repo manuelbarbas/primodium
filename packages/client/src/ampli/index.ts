@@ -80,6 +80,13 @@ export interface SystemBuildProperties {
    * | Type | number |
    */
   currLevel: number;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
 }
 
 export interface SystemBuildPathProperties {
@@ -243,10 +250,6 @@ export interface SystemUpgradeProperties {
    * | Type | number |
    */
   currLevel: number;
-}
-
-export class NavigateAppLoading implements BaseEvent {
-  event_type = 'navigate.AppLoading';
 }
 
 export class SystemBuild implements BaseEvent {
@@ -435,21 +438,6 @@ export class Ampli {
     }
 
     return this.amplitude!.track(event, undefined, options);
-  }
-
-  /**
-   * navigate.AppLoading
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/navigate.AppLoading)
-   *
-   * Event has no description in tracking plan.
-   *
-   * @param options Amplitude event options.
-   */
-  navigateAppLoading(
-    options?: EventOptions,
-  ) {
-    return this.track(new NavigateAppLoading(), options);
   }
 
   /**
