@@ -212,7 +212,19 @@ export const Position = newComponent(
   }
 );
 
+export const P_Terrain = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_Terrain",
+    metadata: { contractId: `${commonIdPrefix}P_Terrain` },
+  }
+);
+
 export default {
+  P_Terrain,
   Active,
   AsteroidType,
   Counter,

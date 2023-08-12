@@ -33,9 +33,10 @@
     "P_RequiredResourcesComponent",
     "P_MaxBuildingsComponent",
     "P_IgnoreBuildLimitComponent",
-    "P_IsBuildingTypeComponent"
+    "P_IsBuildingTypeComponent",
+    "P_TerrainComponent"
   ],
-  "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
+  "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
     {
       "name": "ResearchSystem",
