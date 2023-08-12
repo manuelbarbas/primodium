@@ -28,6 +28,8 @@ contract DestroySystemTest is PrimodiumTest {
   uint256 public playerEntity;
   int32[] public blueprint = LibBlueprint.get2x2Blueprint();
 
+  uint256 public dummyBuilding = uint256(bytes32("dummy"));
+
   ComponentDevSystem public componentDevSystem;
   BuildSystem public buildSystem;
   DestroySystem public destroySystem;
@@ -57,18 +59,18 @@ contract DestroySystemTest is PrimodiumTest {
     buildingCountComponent = BuildingCountComponent(component(BuildingCountComponentID));
 
     // init other
+    spawn(alice);
     vm.startPrank(alice);
     playerEntity = addressToEntity(alice);
-    Coord memory mainBaseCoord = Coord({ x: -1000, y: -1000 });
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+    buildSystem.executeTyped(MainBaseID, getCoord2(alice));
     vm.stopPrank();
   }
 
-  function buildDummy() public returns (uint256) {
+  function buildDummy() private returns (uint256) {
     vm.startPrank(alice);
     componentDevSystem.executeTyped(P_BlueprintComponentID, dummyBuilding, abi.encode(blueprint));
     componentDevSystem.executeTyped(P_IsBuildingTypeComponentID, dummyBuilding, abi.encode(true));
-    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, origin);
+    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, getOrigin(alice));
     return abi.decode(rawBuilding, (uint256));
   }
 
@@ -88,13 +90,14 @@ contract DestroySystemTest is PrimodiumTest {
     assertEq(buildingCountComponent.getValue(playerEntity), buildingCount - 1, "wrong limit");
   }
 
-  function testDestroyWithTile() public {
+  function testDestroyWithBuildingOrigin() public {
     uint256 buildingEntity = buildDummy();
-    destroy(buildingEntity, Coord(blueprint[2], blueprint[3]));
+    destroy(buildingEntity, getOrigin(alice));
   }
 
-  function testDestroyWithBase() public {
+  function testDestroyWithTile() public {
     uint256 buildingEntity = buildDummy();
-    destroy(buildingEntity, origin);
+    uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
+    destroy(buildingEntity, Coord(blueprint[2], blueprint[3], asteroid));
   }
 }

@@ -54,25 +54,24 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
     s_claimUnitsSystem = S_ClaimUnitsSystem(system(S_ClaimUnitsSystemID));
     upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    spawn(alice);
     // init other
   }
 
   function testTrainUnits() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
-    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
-    coord1 = Coord({ x: 1, y: 2 });
-    buildSystem.executeTyped(DebugHousingBuilding, coord1);
-
-    coord2 = Coord({ x: 2, y: 2 });
-
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord3(alice));
 
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(30);
     s_claimUnitsSystem.executeTyped(alice);
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
@@ -86,23 +85,25 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnitsMultipleBuildings() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
-    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
-    coord1 = Coord({ x: 1, y: 2 });
-    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
-    coord2 = Coord({ x: 2, y: 2 });
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
-    Coord memory coord3 = Coord({ x: 2, y: 3 });
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord3);
-    uint256 unitProductionBuildingEntity2 = LibEncode.encodeCoordEntity(coord3, BuildingKey);
+    bytes memory unitProductionBuildingEntity2 = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getCopperCoord(alice)
+    );
+    uint256 unitProductionBuildingEntity2ID = abi.decode(unitProductionBuildingEntity2, (uint256));
 
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 5);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity2, DebugUnit, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity2ID, DebugUnit, 5);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
@@ -116,22 +117,21 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnitsQueue() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
-    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
-    coord1 = Coord({ x: 1, y: 2 });
-    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
-    coord2 = Coord({ x: 2, y: 2 });
-
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 1);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 1);
     vm.roll(30);
     s_claimUnitsSystem.executeTyped(alice);
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
@@ -145,22 +145,21 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnitsMidQueue() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
-    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
-    coord1 = Coord({ x: 1, y: 2 });
-    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
-    coord2 = Coord({ x: 2, y: 2 });
-
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 3);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 1);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 1);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
@@ -178,19 +177,20 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnitsMidProduction() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
-    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
-    coord1 = Coord({ x: 1, y: 2 });
-    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
-    coord2 = Coord({ x: 2, y: 2 });
+    Coord memory coord2 = getCoord2(alice);
 
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
@@ -212,19 +212,19 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnitsUpgradeUnitProduction() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
-    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
-    coord1 = Coord({ x: 1, y: 2 });
-    buildSystem.executeTyped(DebugHousingBuilding, coord1);
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
-    coord2 = Coord({ x: 2, y: 2 });
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
-    upgradeSystem.executeTyped(coord2);
+    upgradeSystem.executeTyped(getIronCoord(alice));
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
@@ -238,23 +238,23 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainDifferentUnitTypesQueue() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
-    buildSystem.executeTyped(MainBaseID, coord1);
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
-    buildSystem.executeTyped(DebugHousingBuilding, Coord({ x: 1, y: 2 }));
-    buildSystem.executeTyped(DebugHousingBuilding, Coord({ x: 2, y: 3 }));
-    buildSystem.executeTyped(DebugHousingBuilding, Coord({ x: 3, y: 3 }));
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord2(alice));
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord3(alice));
 
-    coord2 = Coord({ x: 2, y: 2 });
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
-    upgradeSystem.executeTyped(coord2);
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
+    upgradeSystem.executeTyped(getIronCoord(alice));
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 5);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit2, 5);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit2, 5);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit2, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit2, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(15);
     s_claimUnitsSystem.executeTyped(alice);
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
@@ -278,27 +278,23 @@ contract TrainUnitSystem is PrimodiumTest {
   function testFailTrainUnitsHousing() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = Coord({ x: -1, y: -1 });
+    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
+
+    Coord memory coord1 = getCoord1(alice);
     buildSystem.executeTyped(MainBaseID, coord1);
 
-    coord1 = Coord({ x: 1, y: 2 });
+    coord1 = getCoord1(alice);
     buildSystem.executeTyped(DebugHousingBuilding, coord1);
 
-    coord2 = Coord({ x: 2, y: 2 });
+    bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
+      DebugUnitProductionBuilding,
+      getIronCoord(alice)
+    );
+    uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
-    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
-    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
-    upgradeSystem.executeTyped(coord2);
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 11);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 11);
 
     vm.stopPrank();
-  }
-
-  function buildMainBaseAtZero() internal returns (uint256) {
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
-    bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-    return blockEntityID;
   }
 }

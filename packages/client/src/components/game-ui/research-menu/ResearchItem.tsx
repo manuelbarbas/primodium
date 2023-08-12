@@ -8,7 +8,7 @@ import {
   ResourceImage,
 } from "../../../util/constants";
 import { useAccount } from "../../../hooks/useAccount";
-import { hashKeyEntityAndTrim } from "../../../util/encode";
+import { hashAndTrimKeyEntity } from "../../../util/encode";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import {
   getBuildingResearchRequirement,
@@ -37,7 +37,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     //we assume the order of this loop will never change. TODO: pull out into component since this is a nono
     useObservableValue(HasResearched.update$);
     const levelsResearched = levels.map(({ id }) => {
-      const entity = hashKeyEntityAndTrim(id, address);
+      const entity = hashAndTrimKeyEntity(id, address);
       const isResearched = HasResearched.get(entity);
       return isResearched?.value ?? false;
     });
@@ -60,7 +60,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
 
     const researchOwner = useMemo(() => {
       if (address == null || researchRequirement == null) return SingletonID;
-      return hashKeyEntityAndTrim(researchRequirement as EntityID, address);
+      return hashAndTrimKeyEntity(researchRequirement as EntityID, address);
     }, [researchRequirement, address]);
 
     const isResearchRequirementsMet = useMemo(

@@ -6,9 +6,8 @@ import { useMud } from "src/hooks/useMud";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BlockColors } from "../util/constants";
 import { getTopLayerKey } from "src/util/tile";
-import { BuildingType } from "src/network/components/chainComponents";
+import { BuildingType, Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { Position } from "src/network/components/clientComponents";
 
 export default function Map() {
   const { perlin } = useMud();
