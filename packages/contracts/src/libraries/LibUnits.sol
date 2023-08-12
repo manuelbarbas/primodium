@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
+
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -81,15 +81,12 @@ library LibUnits {
     uint32 buildingLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(buildingEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
     if (!unitProductionTypesComponent.has(buildingLevelEntity)) return false;
-    console.log("building has unit production types");
     uint256[] memory unitTypes = unitProductionTypesComponent.getValue(buildingLevelEntity);
     for (uint256 i = 0; i < unitTypes.length; i++) {
       if (unitTypes[i] == unitType) {
-        console.log("building can produce unit type");
         return true;
       }
     }
-    console.log("building doesnth have unit type");
     return false;
   }
 

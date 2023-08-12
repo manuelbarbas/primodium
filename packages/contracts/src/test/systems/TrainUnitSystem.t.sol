@@ -17,7 +17,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/Own
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "../../components/P_BlueprintComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
+import { UnitsComponent, ID as UnitsComponentID } from "../../components/UnitsComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
@@ -76,10 +76,10 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
     vm.roll(30);
     s_claimUnitsSystem.executeTyped(alice);
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
-    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
 
     vm.stopPrank();
   }
@@ -106,10 +106,10 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntity2, DebugUnit, 5);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
-    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
 
     vm.stopPrank();
   }
@@ -135,10 +135,10 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 1);
     vm.roll(30);
     s_claimUnitsSystem.executeTyped(alice);
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
-    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
 
     vm.stopPrank();
   }
@@ -164,14 +164,14 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 1);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
-    assertEq(itemComponent.getValue(playerUnitEntity), 5, "player should have 5 units");
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 5, "player should have 5 units");
     vm.roll(30);
     s_claimUnitsSystem.executeTyped(alice);
-    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
-    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
 
     vm.stopPrank();
   }
@@ -194,18 +194,18 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
-    assertEq(itemComponent.getValue(playerUnitEntity), 5, "player should have 5 units");
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 5, "player should have 5 units");
     vm.roll(30);
 
     s_claimUnitsSystem.executeTyped(alice);
-    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
 
     vm.roll(40);
     s_claimUnitsSystem.executeTyped(alice);
-    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
 
     vm.stopPrank();
   }
@@ -228,11 +228,51 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
     vm.roll(20);
     s_claimUnitsSystem.executeTyped(alice);
-    ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
+    UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    assertTrue(itemComponent.has(playerUnitEntity), "player should have units");
-    assertEq(itemComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have units");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 10, "player should have 10 units");
 
+    vm.stopPrank();
+  }
+
+  function testTrainDifferentUnitTypesQueue() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = Coord({ x: -1, y: -1 });
+    buildSystem.executeTyped(MainBaseID, coord1);
+
+    buildSystem.executeTyped(DebugHousingBuilding, Coord({ x: 1, y: 2 }));
+    buildSystem.executeTyped(DebugHousingBuilding, Coord({ x: 2, y: 3 }));
+    buildSystem.executeTyped(DebugHousingBuilding, Coord({ x: 3, y: 3 }));
+
+    coord2 = Coord({ x: 2, y: 2 });
+    buildSystem.executeTyped(DebugUnitProductionBuilding, coord2);
+
+    uint256 unitProductionBuildingEntity = LibEncode.encodeCoordEntity(coord2, BuildingKey);
+    upgradeSystem.executeTyped(coord2);
+    vm.roll(10);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit2, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit2, 5);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntity, DebugUnit, 10);
+    vm.roll(15);
+    s_claimUnitsSystem.executeTyped(alice);
+    UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
+    uint256 playerUnitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
+    assertTrue(unitsComponent.has(playerUnitEntity), "player should have DebugUnit");
+    assertEq(unitsComponent.getValue(playerUnitEntity), 5, "player should have 5 DebugUnit");
+    vm.roll(25);
+    s_claimUnitsSystem.executeTyped(alice);
+    uint256 playerUnit2Entity = LibEncode.hashKeyEntity(DebugUnit2, addressToEntity(alice));
+    assertTrue(unitsComponent.has(playerUnit2Entity), "player should have DebugUnit2");
+    assertEq(unitsComponent.getValue(playerUnit2Entity), 5, "player should have 5 DebugUnit2");
+    vm.roll(35);
+    s_claimUnitsSystem.executeTyped(alice);
+    assertEq(unitsComponent.getValue(playerUnit2Entity), 10, "player should have 10 DebugUnit2");
+    vm.roll(45);
+    s_claimUnitsSystem.executeTyped(alice);
+    assertEq(unitsComponent.getValue(playerUnitEntity), 15, "player should have 15 DebugUnit");
     vm.stopPrank();
   }
 

@@ -20,6 +20,7 @@ import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesCompon
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
 import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID, ResourceValue } from "components/UnitProductionQueueComponent.sol";
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
+import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "../components/LastClaimedAtComponent.sol";
 
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
@@ -93,6 +94,10 @@ contract TrainUnitsSystem is PrimodiumSystem {
       // update occupied utility
       LibUnits.updateOccuppiedUtilityResources(world, playerEntity, unitType, count, true);
     }
+
+    UnitProductionLastQueueIndexComponent unitProductionLastQueueIndexComponent = UnitProductionLastQueueIndexComponent(
+      getC(UnitProductionLastQueueIndexComponentID)
+    );
     UnitProductionQueueIndexComponent unitProductionQueueIndexComponent = UnitProductionQueueIndexComponent(
       getC(UnitProductionQueueIndexComponentID)
     );
@@ -103,10 +108,12 @@ contract TrainUnitsSystem is PrimodiumSystem {
 
     uint32 queueIndex = 0;
     if (unitProductionQueueIndexComponent.has(buildingEntity)) {
-      queueIndex = unitProductionQueueIndexComponent.getValue(buildingEntity) + 1;
+      queueIndex = unitProductionLastQueueIndexComponent.getValue(buildingEntity) + 1;
+    } else {
+      unitProductionQueueIndexComponent.set(buildingEntity, queueIndex);
     }
 
-    unitProductionQueueIndexComponent.set(buildingEntity, queueIndex);
+    unitProductionLastQueueIndexComponent.set(buildingEntity, queueIndex);
     uint256 buildingQueueEntity = LibEncode.hashKeyEntity(buildingEntity, queueIndex);
 
     UnitProductionQueueComponent(getC(UnitProductionQueueComponentID)).set(

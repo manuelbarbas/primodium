@@ -544,7 +544,7 @@ library LibInitDebug {
 
     //DebugUnit2
     entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
-    unitTrainingTimeComponent.set(entity, 5);
+    unitTrainingTimeComponent.set(entity, 4);
 
     requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
     requiredUtility.resources[0] = HousingUtilityResourceID;

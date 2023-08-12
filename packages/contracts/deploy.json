@@ -19,6 +19,8 @@
     "UnitProductionOwnedByComponent",
     "UnitProductionQueueComponent",
     "UnitProductionQueueIndexComponent",
+    "UnitProductionLastQueueIndexComponent",
+    "UnitsComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
@@ -98,7 +100,12 @@
     },
     {
       "name": "TrainUnitsSystem",
-      "writeAccess": ["UnitProductionQueueComponent", "UnitProductionQueueIndexComponent", "LastClaimedAtComponent"]
+      "writeAccess": [
+        "UnitProductionQueueComponent",
+        "UnitProductionQueueIndexComponent",
+        "UnitProductionLastQueueIndexComponent",
+        "LastClaimedAtComponent"
+      ]
     },
     {
       "name": "ComponentDevSystem",
@@ -151,7 +158,7 @@
     {
       "name": "S_ClaimUnitsSystem",
       "writeAccess": [
-        "ItemComponent",
+        "UnitsComponent",
         "LastClaimedAtComponent",
         "UnitProductionQueueComponent",
         "UnitProductionQueueIndexComponent"
