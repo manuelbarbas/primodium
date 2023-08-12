@@ -41,7 +41,8 @@
     "P_UnitMiningComponent",
     "P_UnitProductionMultiplierComponent",
     "P_UnitProductionTypesComponent",
-    "P_UnitTrainingTimeComponent"
+    "P_UnitTrainingTimeComponent",
+    "P_UnitTravelSpeedComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
