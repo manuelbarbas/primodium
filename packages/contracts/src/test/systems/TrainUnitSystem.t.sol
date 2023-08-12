@@ -10,7 +10,6 @@ import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySyste
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 
-import { ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "../../components/P_MaxBuildingsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";

@@ -3,13 +3,8 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 import { ID as TrainUnitsSystemID } from "./TrainUnitsSystem.sol";
 
-import { ID as UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
-
 import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { IOnEntityCountSubsystem } from "../interfaces/IOnEntityCountSubsystem.sol";
 
-import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID, ResourceValues } from "../components/P_RequiredResourcesComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "../components/UnitsComponent.sol";
 import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "../components/UnitProductionOwnedByComponent.sol";
 import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID, ResourceValue } from "../components/UnitProductionQueueComponent.sol";
