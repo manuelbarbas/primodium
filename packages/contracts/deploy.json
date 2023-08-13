@@ -47,9 +47,10 @@
     "P_UnitProductionMultiplierComponent",
     "P_UnitProductionTypesComponent",
     "P_UnitTrainingTimeComponent",
-    "P_UnitTravelSpeedComponent"
+    "P_UnitTravelSpeedComponent",
+    "P_TerrainComponent"
   ],
-  "initializers": ["LibInitWorld", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
+  "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
     {
       "name": "ResearchSystem",

@@ -277,7 +277,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     // TEMP: tile -6, 2 does not have iron according to current generation seed
     Coord memory nonIronCoord = getNonIronCoord(alice);
-    assertTrue(LibTerrain.getTopLayerKey(nonIronCoord) != IronID, "Tile should not have iron");
+    assertTrue(LibTerrain.getResourceByCoord(world, nonIronCoord) != IronID, "Tile should not have iron");
 
     buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
 
@@ -292,7 +292,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     // TEMP: tile -6, 2 does not have iron according to current generation seed
     Coord memory nonIronCoord = getNonIronCoord(alice);
-    assertTrue(LibTerrain.getTopLayerKey(nonIronCoord) != IronID, "Tile should not have iron");
+    assertTrue(LibTerrain.getResourceByCoord(world, nonIronCoord) != IronID, "Tile should not have iron");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
 
     componentDevSystem.executeTyped(P_MaxBuildingsComponentID, 1, abi.encode(BIGNUM));

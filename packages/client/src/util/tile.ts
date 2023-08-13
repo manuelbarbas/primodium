@@ -6,8 +6,10 @@ import {
   Position,
   BuildingType,
   OwnedBy,
+  P_Terrain,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
+import { hashKeyCoord } from "./encode";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -39,53 +41,30 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
 
 export function getTerrainKey(coord: Coord, perlin: Perlin) {
   const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
-  if (normalizedDepth <= 29) return BlockType.Water;
   if (normalizedDepth <= 32) return BlockType.Biofilm;
   if (normalizedDepth <= 35) return BlockType.Alluvium;
   if (normalizedDepth <= 39) return BlockType.Sandstone;
   if (normalizedDepth <= 48) return BlockType.Regolith;
-  if (normalizedDepth <= 51) return BlockType.Bedrock;
 
   return BlockType.Bedrock;
 }
 
-//resource blocks terrain gen
-export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
-  const denom = 8;
-  const depth1 = getSingleDepth(coord, perlin, perlinSeed1, denom);
-  const depth2 = getSingleDepth(coord, perlin, perlinSeed2, denom);
+export function getResourceKey(coord: Coord) {
+  const coordEntity = hashKeyCoord("terrain", {
+    ...coord,
+    parent: "0" as EntityID,
+  });
+  const resource = P_Terrain.get(coordEntity, { value: BlockType.Air })?.value;
 
-  const normalizedDepth = ((depth1 + depth2) / 4) * 10000;
-  return Math.floor(normalizedDepth);
-}
-
-export function getResourceKey(coord: Coord, perlin: Perlin) {
-  const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
-  //base starting materials (most common)
-  if (normalizedDepth >= 1800 && normalizedDepth <= 1820)
-    return BlockType.Copper;
-  if (normalizedDepth >= 2000 && normalizedDepth <= 2006)
-    return BlockType.Lithium;
-  if (normalizedDepth >= 2400 && normalizedDepth <= 2418) return BlockType.Iron;
-
-  //mid game items
-  if (normalizedDepth <= 1350) return BlockType.Titanium;
-  if (normalizedDepth >= 2600 && normalizedDepth <= 2602)
-    return BlockType.Iridium;
-  if (normalizedDepth >= 3095 && normalizedDepth <= 3100)
+  // temp: until we have the sprites in the game
+  if (resource == BlockType.Water) {
     return BlockType.Osmium;
-  if (normalizedDepth >= 3400 && normalizedDepth <= 3430)
-    return BlockType.Tungsten;
+  }
 
-  //late game (rarer) items
-  if (normalizedDepth >= 2720 && normalizedDepth <= 2721)
-    return BlockType.Kimberlite;
-  if (normalizedDepth >= 3220 && normalizedDepth <= 3222)
-    return BlockType.Uraninite;
-  if (normalizedDepth >= 3620 && normalizedDepth <= 3622)
-    return BlockType.Bolutite;
-
-  return BlockType.Air;
+  if (resource == BlockType.Sulfur) {
+    return BlockType.Titanium;
+  }
+  return resource;
 }
 const topLayerKeys = new Map<string, EntityID>();
 
@@ -95,7 +74,7 @@ export function getTopLayerKey(coord: Coord, perlin: Perlin) {
   if (topLayerKeys.has(coordKey)) return topLayerKeys.get(coordKey);
 
   const terrainKey = getTerrainKey(coord, perlin);
-  const resourceKey = getResourceKey(coord, perlin);
+  const resourceKey = getResourceKey(coord);
   let result;
 
   if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
@@ -112,8 +91,19 @@ export function getTopLayerKeyPair(
   coord: Coord,
   perlin: Perlin
 ): DisplayKeyPair {
+  // todo: pull this from the Dimensions component
+  const asteroidDimensions = { width: 37, length: 25 };
+  if (
+    coord.x < 0 ||
+    coord.x > asteroidDimensions.width ||
+    coord.y < 0 ||
+    coord.y > asteroidDimensions.length
+  ) {
+    // temp: using the water sprite for now
+    return { terrain: BlockType.Water, resource: null };
+  }
   const terrainKey = getTerrainKey(coord, perlin);
-  const resourceKey = getResourceKey(coord, perlin);
+  const resourceKey = getResourceKey(coord);
 
   if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
     return { terrain: terrainKey, resource: null };
