@@ -139,10 +139,6 @@
     {
       "name": "S_UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["P_ProductionDependenciesComponent"]
-    },
-    {
-      "name": "S_CheckRequiredTileSystem",
-      "writeAccess": []
     }
   ]
 }
