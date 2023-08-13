@@ -32,7 +32,6 @@ import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
-import { ID as CheckRequiredTileSystemID } from "./S_CheckRequiredTileSystem.sol";
 import { ID as PlaceBuildingTilesSystemID } from "./S_PlaceBuildingTilesSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
@@ -101,20 +100,12 @@ contract BuildSystem is PrimodiumSystem {
         buildingTypeLevelEntity
       );
     }
+    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
 
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
     PositionComponent(getC(PositionComponentID)).set(buildingEntity, coord);
-    bool canBuildOn = abi.decode(
-      IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        buildingType
-      ),
-      (bool)
-    );
 
-    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
