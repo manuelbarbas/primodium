@@ -22,8 +22,10 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 
 import { IOnEntityCountSubsystem } from "../interfaces/IOnEntityCountSubsystem.sol";
 import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { ID as S_ClaimUnitsSystem } from "./S_ClaimUnitsSystem.sol";
+import { ID as S_ClaimUnitsSystemID } from "./S_ClaimUnitsSystem.sol";
+import { ID as S_ClaimUnitsFromBuildingSystemID } from "./S_ClaimUnitsFromBuildingSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.TrainUnits"));
@@ -78,7 +80,10 @@ contract TrainUnitsSystem is PrimodiumSystem {
     );
 
     if (unitProductionQueueIndexComponent.has(buildingEntity))
-      IOnSubsystem(getAddressById(world.systems(), S_ClaimUnitsSystem)).executeTyped(msg.sender);
+      IOnEntitySubsystem(getAddressById(world.systems(), S_ClaimUnitsFromBuildingSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity
+      );
     else LastClaimedAtComponent(getC(LastClaimedAtComponentID)).set(buildingEntity, block.number);
 
     uint32 queueIndex = 0;

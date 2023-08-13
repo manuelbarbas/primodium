@@ -175,6 +175,15 @@
       ]
     },
     {
+      "name": "S_ClaimUnitsFromBuildingSystem",
+      "writeAccess": [
+        "UnitsComponent",
+        "LastClaimedAtComponent",
+        "UnitProductionQueueComponent",
+        "UnitProductionQueueIndexComponent"
+      ]
+    },
+    {
       "name": "S_CheckRequiredTileSystem",
       "writeAccess": []
     }
