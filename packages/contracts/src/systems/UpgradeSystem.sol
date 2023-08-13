@@ -70,7 +70,7 @@ contract UpgradeSystem is PrimodiumSystem {
     //spend required resources
     if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(buildingIdLevel)) {
       require(
-        LibResource.hasRequiredResources(world, buildingIdLevel, playerEntity),
+        LibResource.hasRequiredResources(world, playerEntity, buildingIdLevel, 1),
         "[UpgradeSystem] You do not have the required resources"
       );
       IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(

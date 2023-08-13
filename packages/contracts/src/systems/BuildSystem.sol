@@ -96,7 +96,7 @@ contract BuildSystem is PrimodiumSystem {
 
     if (P_RequiredResourcesComponent(getC(P_RequiredResourcesComponentID)).has(buildingTypeLevelEntity)) {
       require(
-        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
+        LibResource.hasRequiredResources(world, playerEntity, buildingTypeLevelEntity, 1),
         "[BuildSystem] You do not have the required resources"
       );
       IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(

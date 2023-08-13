@@ -16,6 +16,7 @@ import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "../compo
 
 import { HousingUtilityResourceID } from "../prototypes/Resource.sol";
 // libraries
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibUnits } from "../libraries/LibUnits.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 
@@ -53,7 +54,7 @@ contract TrainUnitsSystem is PrimodiumSystem {
     //check resource requirements and if ok spend required resources
     if (P_RequiredResourcesComponent(getC(P_RequiredResourcesComponentID)).has(unitTypeLevelEntity)) {
       require(
-        LibUnits.hasRequiredResources(world, playerEntity, unitType, count),
+        LibResource.hasRequiredResources(world, playerEntity, unitTypeLevelEntity, count),
         "[TrainUnitsSystem] You do not have the required resources"
       );
       IOnEntityCountSubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
