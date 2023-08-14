@@ -5,14 +5,11 @@ import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // components
-import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
-import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "components/P_MaxBuildingsComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
@@ -46,14 +43,6 @@ import { ID as UpdateRequiredProductionSystemID } from "systems/S_UpdateRequired
 import { ID as UpdateUtilityProductionSystemID } from "systems/S_UpdateUtilityProductionSystem.sol";
 
 library LibBuilding {
-  function isMaxBuildingsMet(IWorld world, uint256 playerEntity, uint256 buildingId) internal view returns (bool) {
-    if (P_IgnoreBuildLimitComponent(world.getComponent(P_IgnoreBuildLimitComponentID)).has(buildingId)) return true;
-    uint32 baseLevel = getBaseLevel(world, playerEntity);
-    uint32 buildCountLimit = getMaxBuildingCount(world, baseLevel);
-    uint32 buildingCount = getBuildingCount(world, playerEntity);
-    return buildingCount < buildCountLimit;
-  }
-
   function canBuildOnTile(IWorld world, uint256 buildingType, Coord memory coord) internal view returns (bool) {
     P_RequiredTileComponent requiredTileComponent = P_RequiredTileComponent(
       world.getComponent(P_RequiredTileComponentID)
@@ -69,11 +58,6 @@ library LibBuilding {
     if (!mainBaseComponent.has(playerEntity)) return 0;
     uint256 mainBase = mainBaseComponent.getValue(playerEntity);
     return LevelComponent(world.getComponent(LevelComponentID)).getValue(mainBase);
-  }
-
-  function getBuildingCount(IWorld world, uint256 playerEntity) internal view returns (uint32) {
-    BuildingCountComponent maxBuildingsComponent = BuildingCountComponent(world.getComponent(BuildingCountComponentID));
-    return LibMath.getSafe(maxBuildingsComponent, playerEntity);
   }
 
   function getPlayerBounds(IWorld world, uint256 playerEntity) internal view returns (Bounds memory bounds) {
@@ -92,14 +76,6 @@ library LibBuilding {
         minX: (asteroidDims.x - range.x) / 2,
         minY: (asteroidDims.y - range.y) / 2
       });
-  }
-
-  function getMaxBuildingCount(IWorld world, uint256 baseLevel) internal view returns (uint32) {
-    P_MaxBuildingsComponent maxBuildingsComponent = P_MaxBuildingsComponent(
-      world.getComponent(P_MaxBuildingsComponentID)
-    );
-    if (maxBuildingsComponent.has(baseLevel)) return maxBuildingsComponent.getValue(baseLevel);
-    else revert("Invalid Base Level");
   }
 
   function build(IWorld world, uint256 buildingType, Coord memory coord) internal {
@@ -165,14 +141,6 @@ library LibBuilding {
         buildingEntity,
         EActionType.Build
       );
-    }
-
-    // update building count if the built building counts towards the build limit
-    if (!P_IgnoreBuildLimitComponent(world.getComponent(P_IgnoreBuildLimitComponentID)).has(buildingType)) {
-      BuildingCountComponent buildingCountComponent = BuildingCountComponent(
-        world.getComponent(BuildingCountComponentID)
-      );
-      buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) + 1);
     }
 
     if (P_UnitProductionTypesComponent(world.getComponent(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {

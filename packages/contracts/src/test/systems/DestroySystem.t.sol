@@ -12,7 +12,6 @@ import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/Co
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
-import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
@@ -38,7 +37,6 @@ contract DestroySystemTest is PrimodiumTest {
   P_BlueprintComponent public blueprintComponent;
   ChildrenComponent public childrenComponent;
   LevelComponent public levelComponent;
-  BuildingCountComponent public buildingCountComponent;
   BuildingTypeComponent public buildingTypeComponent;
   MainBaseComponent public mainBaseComponent;
 
@@ -56,7 +54,6 @@ contract DestroySystemTest is PrimodiumTest {
     levelComponent = LevelComponent(component(LevelComponentID));
     buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
     mainBaseComponent = MainBaseComponent(component(MainBaseComponentID));
-    buildingCountComponent = BuildingCountComponent(component(BuildingCountComponentID));
 
     // init other
     spawn(alice);
@@ -69,13 +66,12 @@ contract DestroySystemTest is PrimodiumTest {
     vm.startPrank(alice);
     componentDevSystem.executeTyped(P_BlueprintComponentID, dummyBuilding, abi.encode(blueprint));
     componentDevSystem.executeTyped(P_IsBuildingTypeComponentID, dummyBuilding, abi.encode(true));
-    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, getOrigin(alice));
+    bytes memory rawBuilding = buildSystem.executeTyped(dummyBuilding, getCoord1(alice));
     return abi.decode(rawBuilding, (uint256));
   }
 
   function destroy(uint256 buildingEntity, Coord memory _coord) public {
     uint256[] memory children = childrenComponent.getValue(buildingEntity);
-    uint256 buildingCount = buildingCountComponent.getValue(playerEntity);
     destroySystem.executeTyped(_coord);
 
     for (uint256 i = 0; i < children.length; i++) {
@@ -86,12 +82,11 @@ contract DestroySystemTest is PrimodiumTest {
     assertFalse(ownedByComponent.has(buildingEntity), "has ownedby");
     assertFalse(buildingTypeComponent.has(buildingEntity), "has tile");
     assertFalse(levelComponent.has(buildingEntity), "has level");
-    assertEq(buildingCountComponent.getValue(playerEntity), buildingCount - 1, "wrong limit");
   }
 
   function testDestroyWithBuildingOrigin() public {
     uint256 buildingEntity = buildDummy();
-    destroy(buildingEntity, getOrigin(alice));
+    destroy(buildingEntity, getCoord1(alice));
   }
 
   function testDestroyWithTile() public {

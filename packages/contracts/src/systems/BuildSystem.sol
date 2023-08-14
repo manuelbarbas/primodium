@@ -56,12 +56,6 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] You have not researched the required technology"
     );
 
-    //check build limit
-    require(
-      LibBuilding.isMaxBuildingsMet(world, playerEntity, buildingType),
-      "[BuildSystem] build limit reached. Upgrade main base or destroy buildings"
-    );
-
     require(
       LibUtilityResource.checkUtilityResourceReqs(world, playerEntity, buildingType, 1),
       "[BuildSystem] You do not have the required Utility resources"
