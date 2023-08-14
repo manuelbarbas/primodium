@@ -8,6 +8,7 @@ import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSy
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -37,15 +38,15 @@ contract SpawnSystem is PrimodiumSystem {
     require(!spawned, "[SpawnSystem] Player already spawned");
     uint256 asteroid = LibAsteroid.createAsteroid(world, playerEntity);
 
-    DimensionsComponent dimensionsComponent = DimensionsComponent(world.getComponent(DimensionsComponentID));
-    Dimensions memory dimensions = dimensionsComponent.getValue(LibEncode.hashKeyEntity(ExpansionResearch, 1));
-    dimensionsComponent.set(playerEntity, dimensions);
-
     Coord memory coord = positionComponent.getValue(MainBaseID);
     coord.parent = asteroid;
     uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
+
     MainBaseComponent(getC(MainBaseComponentID)).set(playerEntity, buildingEntity);
+    LevelComponent(getC(LevelComponentID)).set(playerEntity, 1);
+
     LibBuilding.build(world, MainBaseID, coord);
-    return abi.encode(buildingEntity);
+
+    return abi.encode(asteroid);
   }
 }

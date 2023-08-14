@@ -3,9 +3,11 @@ pragma solidity >=0.8.0;
 
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
+import { SingletonID } from "solecs/SingletonID.sol";
 // components
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
+import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -28,8 +30,8 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibTerrain } from "libraries/LibTerrain.sol";
 
 // types
-import { BuildingKey } from "../prototypes.sol";
-import { Coord } from "src/types.sol";
+import { BuildingKey, ExpansionResearch } from "../prototypes.sol";
+import { Coord, Bounds, Dimensions } from "src/types.sol";
 
 // Subsystems
 import { EActionType, IOnBuildingSubsystem } from "../interfaces/IOnBuildingSubsystem.sol";
@@ -84,12 +86,12 @@ library LibBuilding {
     Dimensions memory asteroidDims = dimensionsComponent.getValue(SingletonID);
     Dimensions memory range = dimensionsComponent.getValue(researchLevelEntity);
     return
-      Bounds(
-        (asteroidDims.x + range.x) / 2,
-        (asteroidDims.y + range.y) / 2,
-        (asteroidDims.x - range.x) / 2,
-        (asteroidDims.y - range.y) / 2
-      );
+      Bounds({
+        maxX: (asteroidDims.x + range.x) / 2,
+        maxY: (asteroidDims.y + range.y) / 2,
+        minX: (asteroidDims.x - range.x) / 2,
+        minY: (asteroidDims.y - range.y) / 2
+      });
   }
 
   function getMaxBuildingCount(IWorld world, uint256 baseLevel) internal view returns (uint32) {

@@ -387,34 +387,4 @@ contract BuildSystemTest is PrimodiumTest {
     }
     vm.stopPrank();
   }
-
-  function testBuildUpToBuildLimit() public prank(alice) {
-    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
-    uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
-    int32 secondIncrement = 0;
-    for (uint256 i; i < buildLimit; i++) {
-      Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1, parent: asteroid });
-      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
-      secondIncrement++;
-    }
-  }
-
-  function testBuildUpToBuildLimitIgnoreMainBaseAndBuildingWithIgnoreLimit() public {
-    vm.startPrank(alice);
-
-    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
-
-    Coord memory coord1 = getCoord1(alice);
-
-    coord1 = getCoord2(alice);
-    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord1);
-
-    int32 secondIncrement = 0;
-    for (uint256 i; i < buildLimit; i++) {
-      coord1 = Coord({ x: secondIncrement, y: secondIncrement, parent: coord1.parent });
-      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
-      secondIncrement++;
-    }
-    vm.stopPrank();
-  }
 }

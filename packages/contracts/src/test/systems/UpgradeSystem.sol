@@ -122,6 +122,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     console.log("upgrading MainBase to level 2");
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
 
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(
       LibEncode.hashKeyEntity(MainBaseID, 2)

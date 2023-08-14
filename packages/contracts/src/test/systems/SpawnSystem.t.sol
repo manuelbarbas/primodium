@@ -7,8 +7,13 @@ import { SpawnSystem, ID as SpawnSystemID } from "systems/SpawnSystem.sol";
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
+
+import { EAsteroidType } from "../../types.sol";
+import { Bounds } from "../../types.sol";
 
 import { EAsteroidType } from "../../types.sol";
 
@@ -44,6 +49,16 @@ contract SpawnSystemTest is PrimodiumTest {
       uint256(EAsteroidType.NORMAL),
       "Asteroid should be a normal asteroid"
     );
+    assertEq(
+      LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(playerEntity),
+      1,
+      "Player should have level 1"
+    );
+    Bounds memory bounds = LibBuilding.getPlayerBounds(world, playerEntity);
+    console.log(uint32(bounds.minX));
+    console.log(uint32(bounds.maxX));
+    console.log(uint32(bounds.minY));
+    console.log(uint32(bounds.maxY));
   }
 
   function testSpawnTwice() public prank(alice) {
