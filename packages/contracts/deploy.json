@@ -16,9 +16,15 @@
     "PositionComponent",
     "MaxUtilityComponent",
     "OccupiedUtilityResourceComponent",
+    "UnitProductionOwnedByComponent",
+    "UnitProductionQueueComponent",
+    "UnitProductionQueueIndexComponent",
+    "UnitProductionLastQueueIndexComponent",
+    "UnitsComponent",
     "AsteroidTypeComponent",
     "ActiveComponent",
     "DimensionsComponent",
+
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
@@ -34,6 +40,14 @@
     "P_MaxBuildingsComponent",
     "P_IgnoreBuildLimitComponent",
     "P_IsBuildingTypeComponent",
+    "P_UnitAttackComponent",
+    "P_UnitCargoComponent",
+    "P_UnitDefenceComponent",
+    "P_UnitMiningComponent",
+    "P_UnitProductionMultiplierComponent",
+    "P_UnitProductionTypesComponent",
+    "P_UnitTrainingTimeComponent",
+    "P_UnitTravelSpeedComponent",
     "P_TerrainComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
@@ -60,7 +74,8 @@
         "MainBaseComponent",
         "ChildrenComponent",
         "MainBaseComponent",
-        "PositionComponent"
+        "PositionComponent",
+        "UnitProductionOwnedByComponent"
       ]
     },
     {
@@ -72,7 +87,8 @@
         "ChildrenComponent",
         "LevelComponent",
         "BuildingCountComponent",
-        "PathComponent"
+        "PathComponent",
+        "UnitProductionOwnedByComponent"
       ]
     },
 
@@ -91,6 +107,15 @@
     {
       "name": "UpgradeSystem",
       "writeAccess": ["LevelComponent"]
+    },
+    {
+      "name": "TrainUnitsSystem",
+      "writeAccess": [
+        "UnitProductionQueueComponent",
+        "UnitProductionQueueIndexComponent",
+        "UnitProductionLastQueueIndexComponent",
+        "LastClaimedAtComponent"
+      ]
     },
     {
       "name": "ComponentDevSystem",
@@ -139,6 +164,24 @@
     {
       "name": "S_UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["P_ProductionDependenciesComponent"]
+    },
+    {
+      "name": "S_ClaimUnitsSystem",
+      "writeAccess": [
+        "UnitsComponent",
+        "LastClaimedAtComponent",
+        "UnitProductionQueueComponent",
+        "UnitProductionQueueIndexComponent"
+      ]
+    },
+    {
+      "name": "S_ClaimUnitsFromBuildingSystem",
+      "writeAccess": [
+        "UnitsComponent",
+        "LastClaimedAtComponent",
+        "UnitProductionQueueComponent",
+        "UnitProductionQueueIndexComponent"
+      ]
     }
   ]
 }

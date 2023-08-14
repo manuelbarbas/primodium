@@ -17,6 +17,8 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, Resourc
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
+import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
 // types
 
 import { MainBaseID } from "../prototypes.sol";
@@ -168,6 +170,9 @@ contract DestroySystem is PrimodiumSystem {
         buildingEntity,
         EActionType.Destroy
       );
+    }
+    if (P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {
+      UnitProductionOwnedByComponent(getC(UnitProductionOwnedByComponentID)).remove(buildingEntity);
     }
 
     levelComponent.remove(buildingEntity);

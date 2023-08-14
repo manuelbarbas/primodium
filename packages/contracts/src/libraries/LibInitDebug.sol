@@ -19,6 +19,13 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
+
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
+import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
+
+import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from "components/P_UnitTrainingTimeComponent.sol";
+import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
+
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 import "../prototypes.sol";
@@ -47,6 +54,12 @@ library LibInitDebug {
     initializeTechnologies(world);
 
     initializeStorageBuildings(world);
+
+    initUtilityBuildings(world);
+
+    initializeUnitProductionBuildings(world);
+
+    initializeUnits(world);
   }
 
   function registerBuildingTypes(IWorld world) internal {
@@ -82,6 +95,9 @@ library LibInitDebug {
     isBuildingTypeComponent.set(DebugAlloyFactoryID);
     isBuildingTypeComponent.set(DebugLithiumCopperOxideFactoryID);
     isBuildingTypeComponent.set(DebugSolarPanelID);
+
+    isBuildingTypeComponent.set(DebugUnitProductionBuilding);
+    isBuildingTypeComponent.set(DebugHousingBuilding);
   }
 
   function initBlueprints(IWorld world) internal {
@@ -116,6 +132,9 @@ library LibInitDebug {
     blueprintComponent.set(DebugAlloyFactoryID, coords);
     blueprintComponent.set(DebugLithiumCopperOxideFactoryID, coords);
     blueprintComponent.set(DebugSolarPanelID, coords);
+
+    blueprintComponent.set(DebugUnitProductionBuilding, coords);
+    blueprintComponent.set(DebugHousingBuilding, coords);
   }
 
   function initializeSimpleBuildings(IWorld world) internal {
@@ -400,11 +419,6 @@ library LibInitDebug {
     requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2 }));
-
-    //DebugSolarPanelID
-    ignoreBuildLimitComponent.set(DebugSolarPanelID);
-    entity = LibEncode.hashKeyEntity(DebugSolarPanelID, 1);
-    UtilityProductionComponent.set(entity, ResourceValue(ElectricityUtilityResourceID, 10));
   }
 
   function initializeTechnologies(IWorld world) internal {
@@ -456,5 +470,85 @@ library LibInitDebug {
 
     buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 2);
     LibSetBuildingReqs.setStorageUpgrades(world, buildingIdLevel, resourceValues);
+  }
+
+  function initUtilityBuildings(IWorld world) internal {
+    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
+      world.getComponent(P_IgnoreBuildLimitComponentID)
+    );
+
+    P_UtilityProductionComponent UtilityProductionComponent = P_UtilityProductionComponent(
+      world.getComponent(P_UtilityProductionComponentID)
+    );
+
+    //DebugSolarPanelID
+    uint256 entity = LibEncode.hashKeyEntity(DebugSolarPanelID, 1);
+    ignoreBuildLimitComponent.set(DebugSolarPanelID);
+    UtilityProductionComponent.set(entity, ResourceValue(ElectricityUtilityResourceID, 10));
+
+    //DebugHousingBuilding
+    entity = LibEncode.hashKeyEntity(DebugHousingBuilding, 1);
+    ignoreBuildLimitComponent.set(DebugHousingBuilding);
+    UtilityProductionComponent.set(entity, ResourceValue(HousingUtilityResourceID, 10));
+  }
+
+  function initializeUnitProductionBuildings(IWorld world) internal {
+    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
+      world.getComponent(P_IgnoreBuildLimitComponentID)
+    );
+
+    P_UnitProductionMultiplierComponent unitProductionMultiplierComponent = P_UnitProductionMultiplierComponent(
+      world.getComponent(P_UnitProductionMultiplierComponentID)
+    );
+
+    P_UnitProductionTypesComponent unitProductionTypesComponent = P_UnitProductionTypesComponent(
+      world.getComponent(P_UnitProductionTypesComponentID)
+    );
+    P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
+
+    //DebugUnitProductionBuilding
+    ignoreBuildLimitComponent.set(DebugUnitProductionBuilding);
+    maxLevelComponent.set(DebugUnitProductionBuilding, 2);
+    uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
+
+    uint256[] memory unitTypes = new uint256[](1);
+    unitTypes[0] = DebugUnit;
+    unitProductionTypesComponent.set(entity, unitTypes);
+    unitProductionMultiplierComponent.set(entity, 100);
+
+    entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 2);
+    unitTypes = new uint256[](2);
+    unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit2;
+    unitProductionTypesComponent.set(entity, unitTypes);
+    unitProductionMultiplierComponent.set(entity, 200);
+  }
+
+  function initializeUnits(IWorld world) internal {
+    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
+    P_UnitTrainingTimeComponent unitTrainingTimeComponent = P_UnitTrainingTimeComponent(
+      world.getComponent(P_UnitTrainingTimeComponentID)
+    );
+    P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
+      world.getComponent(P_RequiredUtilityComponentID)
+    );
+
+    //DebugUnit
+    uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
+    unitTrainingTimeComponent.set(entity, 2);
+
+    ResourceValues memory requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtility.resources[0] = HousingUtilityResourceID;
+    requiredUtility.values[0] = 1;
+    requiredUtilityComponent.set(entity, requiredUtility);
+
+    //DebugUnit2
+    entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
+    unitTrainingTimeComponent.set(entity, 4);
+
+    requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtility.resources[0] = HousingUtilityResourceID;
+    requiredUtility.values[0] = 1;
+    requiredUtilityComponent.set(entity, requiredUtility);
   }
 }

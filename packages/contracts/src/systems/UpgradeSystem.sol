@@ -21,7 +21,7 @@ import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_M
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
-
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { Coord } from "../types.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -70,7 +70,7 @@ contract UpgradeSystem is PrimodiumSystem {
     //spend required resources
     if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(buildingIdLevel)) {
       require(
-        LibResource.hasRequiredResources(world, buildingIdLevel, playerEntity),
+        LibResource.hasRequiredResources(world, playerEntity, buildingIdLevel, 1),
         "[UpgradeSystem] You do not have the required resources"
       );
       IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
@@ -130,6 +130,19 @@ contract UpgradeSystem is PrimodiumSystem {
         EActionType.Upgrade
       );
     }
+
+    if (P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {
+      uint256[] memory unitTypes = P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).getValue(
+        buildingLevelEntity
+      );
+      for (uint256 i = 0; i < unitTypes.length; i++) {
+        uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitTypes[i], playerEntity);
+        if (!levelComponent.has(playerUnitEntity)) {
+          levelComponent.set(playerUnitEntity, 1);
+        }
+      }
+    }
+
     return abi.encode(buildingEntity);
   }
 
