@@ -5,6 +5,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 import { BuildingTileKey } from "../prototypes.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
+import { ID as SpawnSystemID } from "./SpawnSystem.sol";
 // components
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
@@ -25,8 +26,9 @@ contract S_PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
-      msg.sender == getAddressById(world.systems(), BuildSystemID),
-      "S_PlaceBuildingTilesSystem: Only BuildSystem can call this function"
+      msg.sender == getAddressById(world.systems(), BuildSystemID) ||
+        msg.sender == getAddressById(world.systems(), SpawnSystemID),
+      "S_PlaceBuildingTilesSystem: Only BuildSystem and SpawnSystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity) = abi.decode(args, (address, uint256));

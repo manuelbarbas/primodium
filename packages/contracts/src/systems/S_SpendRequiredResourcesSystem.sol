@@ -2,6 +2,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
+import { ID as SpawnSystemID } from "./SpawnSystem.sol";
 import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as ResearchSystemID } from "./ResearchSystem.sol";
 
@@ -25,7 +26,8 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, IOnEntityCountSub
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
         msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
-        msg.sender == getAddressById(world.systems(), ResearchSystemID),
+        msg.sender == getAddressById(world.systems(), ResearchSystemID) ||
+        msg.sender == getAddressById(world.systems(), SpawnSystemID),
       "S_SpendRequiredResourcesSystem: Only BuildSystem, UpgradeSystem, ResearchSystem can call this function"
     );
 
