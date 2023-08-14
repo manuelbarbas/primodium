@@ -153,14 +153,13 @@ contract ResearchSystemTest is PrimodiumTest {
       ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(MainBaseID, 2),
       abi.encode()
     );
-    upgradeBuildingSystem.executeTyped(getOrigin(alice));
+    upgradeBuildingSystem.executeTyped(getMainBaseCoord(alice));
 
     // should succeed because alice has upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);
@@ -189,7 +188,7 @@ contract ResearchSystemTest is PrimodiumTest {
       ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
+    buildSystem.executeTyped(MainBaseID, getMainBaseCoord(alice));
 
     // should fail because alice has not upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);

@@ -43,10 +43,8 @@ contract Storage is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
@@ -93,10 +91,8 @@ contract Storage is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     uint256 ironCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
     // START CLAIMING
@@ -189,10 +185,8 @@ contract Storage is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     uint256 ironCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
     // START CLAIMING

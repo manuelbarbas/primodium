@@ -110,22 +110,15 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   function testUpgrade() public {
     vm.startPrank(alice);
 
-    Coord memory coord = getOrigin(alice);
-
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
-
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
       component(P_RequiredResourcesComponentID)
     );
-    console.log("building MainBase");
-    bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
-    console.log("MainBase built");
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-    console.log("get built MainBase entity id ");
-    assertTrue(levelComponent.has(blockEntityID), "MainBase entity id should have building component");
-    assertTrue(levelComponent.getValue(blockEntityID) == 1, "MainBase entity id should be level 1");
+
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
+    uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, mainBaseCoord);
+    assertTrue(levelComponent.has(buildingEntity), "MainBase entity id should have building component");
+    assertTrue(levelComponent.getValue(buildingEntity) == 1, "MainBase entity id should be level 1");
     console.log("upgrading MainBase to level 2");
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
@@ -147,8 +140,8 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
       console.log("%s of amount %s provided to player", requiredResources.resources[i], requiredResources.values[i]);
     }
-    upgradeBuildingSystem.executeTyped(coord);
-    assertTrue(levelComponent.getValue(blockEntityID) == 2);
+    upgradeBuildingSystem.executeTyped(mainBaseCoord);
+    assertTrue(levelComponent.getValue(buildingEntity) == 2);
 
     vm.stopPrank();
   }
@@ -156,16 +149,14 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   function testFailUpgradeResourceRequirementsNotMet() public {
     vm.startPrank(alice);
 
-    Coord memory coord = getOrigin(alice);
+    Coord memory coord = getMainBaseCoord(alice);
+    uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
 
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
 
-    bytes memory blockEntity = buildSystem.executeTyped(MainBaseID, coord);
-    uint256 blockEntityID = abi.decode(blockEntity, (uint256));
-    assertTrue(levelComponent.has(blockEntityID));
-    assertTrue(levelComponent.getValue(blockEntityID) == 1);
+    assertTrue(levelComponent.has(buildingEntity));
+    assertTrue(levelComponent.getValue(buildingEntity) == 1);
 
     upgradeBuildingSystem.executeTyped(coord);
     vm.stopPrank();

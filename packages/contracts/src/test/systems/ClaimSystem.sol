@@ -43,10 +43,9 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
@@ -117,11 +116,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
-
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
@@ -215,11 +211,9 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
@@ -285,11 +279,9 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
@@ -354,10 +346,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
@@ -405,10 +395,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
@@ -452,10 +440,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
@@ -506,8 +492,7 @@ contract ClaimSystemTest is PrimodiumTest {
     assertEq(LibTerrain.getResourceByCoord(world, IronCoord), IronID, "Tile should have iron");
     assertEq(LibTerrain.getResourceByCoord(world, CopperCoord), CopperID, "Tile should have copper");
 
-    Coord memory mainBaseCoord = getCoord2(alice);
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(

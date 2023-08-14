@@ -62,7 +62,19 @@
     },
     {
       "name": "SpawnSystem",
-      "writeAccess": ["PositionComponent", "AsteroidTypeComponent", "ActiveComponent"]
+      "writeAccess": [
+        "PositionComponent",
+        "AsteroidTypeComponent",
+        "ActiveComponent",
+        "BuildingTypeComponent",
+        "BuildingCountComponent",
+        "OwnedByComponent",
+        "LevelComponent",
+        "MainBaseComponent",
+        "ChildrenComponent",
+        "MainBaseComponent",
+        "UnitProductionOwnedByComponent"
+      ]
     },
     {
       "name": "BuildSystem",

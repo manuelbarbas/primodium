@@ -61,8 +61,6 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnits() public {
     vm.startPrank(alice);
 
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
-
     bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
       DebugUnitProductionBuilding,
       getIronCoord(alice)
@@ -84,8 +82,6 @@ contract TrainUnitSystem is PrimodiumTest {
 
   function testTrainUnitsMultipleBuildings() public {
     vm.startPrank(alice);
-
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
@@ -117,8 +113,6 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnitsQueue() public {
     vm.startPrank(alice);
 
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
-
     buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
     bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
@@ -144,8 +138,6 @@ contract TrainUnitSystem is PrimodiumTest {
 
   function testTrainUnitsMidQueue() public {
     vm.startPrank(alice);
-
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
@@ -176,8 +168,6 @@ contract TrainUnitSystem is PrimodiumTest {
 
   function testTrainUnitsMidProduction() public {
     vm.startPrank(alice);
-
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
@@ -212,8 +202,6 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainUnitsUpgradeUnitProduction() public {
     vm.startPrank(alice);
 
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
-
     buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
 
     bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
@@ -237,8 +225,6 @@ contract TrainUnitSystem is PrimodiumTest {
 
   function testTrainDifferentUnitTypesQueue() public {
     vm.startPrank(alice);
-
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     buildSystem.executeTyped(DebugHousingBuilding, getCoord1(alice));
     buildSystem.executeTyped(DebugHousingBuilding, getCoord2(alice));
@@ -278,12 +264,7 @@ contract TrainUnitSystem is PrimodiumTest {
   function testFailTrainUnitsHousing() public {
     vm.startPrank(alice);
 
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
-
     Coord memory coord1 = getCoord1(alice);
-    buildSystem.executeTyped(MainBaseID, coord1);
-
-    coord1 = getCoord1(alice);
     buildSystem.executeTyped(DebugHousingBuilding, coord1);
 
     bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
