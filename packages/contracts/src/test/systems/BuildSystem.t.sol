@@ -88,7 +88,7 @@ contract BuildSystemTest is PrimodiumTest {
       10,
       "Electricity Storage should be 10"
     );
-    buildSystem.executeTyped(DebugSimpleBuildingUtilityResourceRequirement, getCoord1(alice));
+    buildSystem.executeTyped(DebugSimpleBuildingUtilityResourceRequirement, getCoord2(alice));
     assertEq(
       occupiedUtilityResourceComponent.getValue(
         LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))
@@ -112,7 +112,7 @@ contract BuildSystemTest is PrimodiumTest {
       10,
       "Electricity Storage should be 10"
     );
-    Coord memory coord2 = getCoord2(alice);
+    Coord memory coord2 = getCoord3(alice);
     for (uint256 i = 0; i < 5; i++) {
       buildSystem.executeTyped(DebugSimpleBuildingUtilityResourceRequirement, coord2);
       assertEq(
@@ -176,7 +176,7 @@ contract BuildSystemTest is PrimodiumTest {
     OccupiedUtilityResourceComponent occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       component(OccupiedUtilityResourceComponentID)
     );
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord1(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord2(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,

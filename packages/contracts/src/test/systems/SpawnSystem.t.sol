@@ -78,7 +78,9 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testBuildMainBase() public {
-    uint256 buildingEntity = spawn(alice);
+    uint256 asteroid = spawn(alice);
+    Dimensions memory maxRange = Dimensions(37, 25);
+    uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, Coord(maxRange.x / 2, maxRange.y / 2, asteroid));
 
     Coord memory position = PositionComponent(component(PositionComponentID)).getValue(buildingEntity);
     Coord memory coord = PositionComponent(component(PositionComponentID)).getValue(MainBaseID);

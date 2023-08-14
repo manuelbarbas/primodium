@@ -27,7 +27,7 @@ contract DestroySystemTest is PrimodiumTest {
   uint256 public playerEntity;
   int32[] public blueprint = LibBlueprint.get2x2Blueprint();
 
-  uint256 public dummyBuilding = uint256(bytes32("dummy"));
+  uint256 public dummyBuilding = DebugSimpleBuildingNoReqsID;
 
   ComponentDevSystem public componentDevSystem;
   BuildSystem public buildSystem;
@@ -91,7 +91,8 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithTile() public {
     uint256 buildingEntity = buildDummy();
+    Coord memory coord = getCoord1(alice);
     uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
-    destroy(buildingEntity, Coord(blueprint[2], blueprint[3], asteroid));
+    destroy(buildingEntity, Coord(blueprint[2] + coord.x, blueprint[3] + coord.y, asteroid));
   }
 }

@@ -32,7 +32,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testFailUpgradeNonUpgradableBuilding() public {
     vm.startPrank(alice);
-    Coord memory coord = getOrigin(alice);
+    Coord memory coord = getCoord3(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
@@ -43,7 +43,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testUpgradeToMaxLevel() public {
     vm.startPrank(alice);
-    Coord memory coord = getOrigin(alice);
+    Coord memory coord = getCoord1(alice);
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
@@ -58,7 +58,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testFailUpgradeMaxLevelReached() public {
     vm.startPrank(alice);
-    Coord memory coord = getOrigin(alice);
+    Coord memory coord = getCoord3(alice);
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
@@ -83,7 +83,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
       component(OccupiedUtilityResourceComponentID)
     );
 
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getOrigin(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord3(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
@@ -97,7 +97,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
       2,
       "used up electricity should be 2"
     );
-    upgradeBuildingSystem.executeTyped(getOrigin(alice));
+    upgradeBuildingSystem.executeTyped(getCoord3(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       20,
