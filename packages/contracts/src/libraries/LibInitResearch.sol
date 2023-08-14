@@ -136,5 +136,40 @@ library LibInitResearch {
     requiredResources[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1500 });
     LibSetBuildingReqs.setResourceReqs(world, SolarPanelResearchID, requiredResources);
     isTechComponent.set(SolarPanelResearchID);
+
+    // Expansion
+
+    // Expansion Level II: 1000 iron
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch2, requiredResources);
+    isTechComponent.set(ExpansionResearch2);
+
+    // Expansion III: 2000 copper
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: CopperResourceItemID, value: 2000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch3, requiredResources);
+    isTechComponent.set(ExpansionResearch3);
+
+    // Expansion IV: 3000 iron plates
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 3000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch4, requiredResources);
+    isTechComponent.set(ExpansionResearch4);
+
+    // Expansion V: 4000 lithium, main base level V
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 4000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch5, requiredResources);
+    isTechComponent.set(ExpansionResearch5);
+    levelComponent.set(ExpansionResearch5, 5);
+
+    // Expansion VI: 5000 lithium, 2000 iron plates, main base level VI
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 5000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch6, requiredResources);
+    isTechComponent.set(ExpansionResearch6);
+    levelComponent.set(ExpansionResearch6, 6);
   }
 }
