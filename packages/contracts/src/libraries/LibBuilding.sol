@@ -28,13 +28,13 @@ library LibBuilding {
     return buildingCount < buildCountLimit;
   }
 
-  function canBuildOnTile(IWorld world, uint256 buildingEntity, Coord memory coord) internal view returns (bool) {
+  function canBuildOnTile(IWorld world, uint256 buildingType, Coord memory coord) internal view returns (bool) {
     P_RequiredTileComponent requiredTileComponent = P_RequiredTileComponent(
       getAddressById(world.components(), P_RequiredTileComponentID)
     );
     return
-      !requiredTileComponent.has(buildingEntity) ||
-      requiredTileComponent.getValue(buildingEntity) == LibTerrain.getTopLayerKey(coord);
+      !requiredTileComponent.has(buildingType) ||
+      requiredTileComponent.getValue(buildingType) == LibTerrain.getResourceByCoord(world, coord);
   }
 
   function getBaseLevel(IWorld world, uint256 playerEntity) internal view returns (uint32) {

@@ -41,7 +41,7 @@ contract Storage is PrimodiumTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
 
@@ -91,7 +91,7 @@ contract Storage is PrimodiumTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
 
@@ -187,7 +187,7 @@ contract Storage is PrimodiumTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
     Coord memory coord = getIronCoord(alice);
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
     Coord memory mainBaseCoord = getOrigin(alice);
 

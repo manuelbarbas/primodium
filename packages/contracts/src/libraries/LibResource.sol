@@ -14,7 +14,12 @@ import { ResourceValues } from "../types.sol";
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
 
-  function hasRequiredResources(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {
+  function hasRequiredResources(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entity,
+    uint32 count
+  ) internal view returns (bool) {
     P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
       world.getComponent(P_RequiredResourcesComponentID)
     );
@@ -29,10 +34,7 @@ library LibResource {
 
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      uint32 resourceCost = LibMath.getSafe(
-        itemComponent,
-        LibEncode.hashKeyEntity(requiredResources.values[i], entity)
-      );
+      uint32 resourceCost = requiredResources.values[i] * count;
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
       uint32 playerResourceCount = LibMath.getSafe(itemComponent, playerResourceEntity);
 

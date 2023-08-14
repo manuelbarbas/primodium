@@ -86,12 +86,8 @@ export function hashAndTrimKeyCoord(
 export function hashKeyCoord(key: string, coord: ContractCoord): EntityID {
   return solidityKeccak256(
     ["string", "int32", "int32", "uint256"],
-    [key, coord.x, coord.y, coord.parent]
+    [key, coord.x, coord.y, trim(coord.parent)]
   ) as EntityID;
-}
-
-export function trimEntityId(entityId: EntityID): EntityID {
-  return BigNumber.from(entityId).toHexString() as EntityID;
 }
 
 export function padTo64Bytes(hex: string): string {

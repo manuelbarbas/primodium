@@ -19,6 +19,9 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, Resourc
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
+import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
+
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
 // libraries
 import { Coord } from "../types.sol";
@@ -32,7 +35,6 @@ import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
-import { ID as CheckRequiredTileSystemID } from "./S_CheckRequiredTileSystem.sol";
 import { ID as PlaceBuildingTilesSystemID } from "./S_PlaceBuildingTilesSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
@@ -93,7 +95,7 @@ contract BuildSystem is PrimodiumSystem {
 
     if (P_RequiredResourcesComponent(getC(P_RequiredResourcesComponentID)).has(buildingTypeLevelEntity)) {
       require(
-        LibResource.hasRequiredResources(world, buildingTypeLevelEntity, playerEntity),
+        LibResource.hasRequiredResources(world, playerEntity, buildingTypeLevelEntity, 1),
         "[BuildSystem] You do not have the required resources"
       );
       IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
@@ -101,20 +103,12 @@ contract BuildSystem is PrimodiumSystem {
         buildingTypeLevelEntity
       );
     }
+    require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
 
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
     PositionComponent(getC(PositionComponentID)).set(buildingEntity, coord);
-    bool canBuildOn = abi.decode(
-      IOnTwoEntitySubsystem(getAddressById(world.systems(), CheckRequiredTileSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        buildingType
-      ),
-      (bool)
-    );
 
-    require(canBuildOn, "[BuildSystem] Cannot build on this tile");
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
       MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
@@ -171,6 +165,20 @@ contract BuildSystem is PrimodiumSystem {
     if (!P_IgnoreBuildLimitComponent(getC(P_IgnoreBuildLimitComponentID)).has(buildingType)) {
       BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
       buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) + 1);
+    }
+
+    if (P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {
+      UnitProductionOwnedByComponent(getC(UnitProductionOwnedByComponentID)).set(buildingEntity, playerEntity);
+      uint256[] memory unitTypes = P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).getValue(
+        buildingLevelEntity
+      );
+      LevelComponent levelComponent = LevelComponent(getC(LevelComponentID));
+      for (uint256 i = 0; i < unitTypes.length; i++) {
+        uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitTypes[i], playerEntity);
+        if (!levelComponent.has(playerUnitEntity)) {
+          levelComponent.set(playerUnitEntity, 1);
+        }
+      }
     }
 
     return abi.encode(buildingEntity);

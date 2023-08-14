@@ -32,3 +32,6 @@ dist-ssr
 .env.production.local
 .env
 .firebase
+
+# scripts 
+coords.json
