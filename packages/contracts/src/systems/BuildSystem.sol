@@ -107,7 +107,7 @@ contract BuildSystem is PrimodiumSystem {
 
     BuildingTypeComponent(getC(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     LevelComponent(getC(LevelComponentID)).set(buildingEntity, 1);
-    PositionComponent(getC(PositionComponentID)).set(buildingEntity, coord);
+    positionComponent.set(buildingEntity, coord);
 
     //  MainBaseID has a special condition called MainBase, so that each wallet only has one MainBase
     if (buildingType == MainBaseID) {
