@@ -2,6 +2,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   EntityIndex,
   Has,
+  HasValue,
   defineComponentSystem,
   defineEnterSystem,
   defineExitSystem,
@@ -12,7 +13,10 @@ import { Coord } from "@latticexyz/utils";
 
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
-import { SelectedBuilding } from "src/network/components/clientComponents";
+import {
+  ActiveAsteroid,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
 import {
   Position,
   Level,
@@ -88,10 +92,16 @@ export const renderBuilding = (scene: Scene) => {
     ]);
   };
 
-  const positionQuery = [Has(Position), Has(BuildingType)];
+  const positionQuery = [
+    HasValue(Position, {
+      parent: ActiveAsteroid.get()?.value,
+    }),
+    Has(BuildingType),
+  ];
+
   defineEnterSystem(gameWorld, positionQuery, render);
 
-  const updateQuery = [Has(Position), Has(BuildingType), Has(Level)];
+  const updateQuery = [...positionQuery, Has(Level)];
   defineUpdateSystem(gameWorld, updateQuery, render);
 
   defineExitSystem(gameWorld, positionQuery, ({ entity }) => {

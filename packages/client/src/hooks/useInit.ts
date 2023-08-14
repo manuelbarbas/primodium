@@ -1,12 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAccount } from "./useAccount";
 import { useMud } from "./useMud";
 import { setupActiveAsteroid } from "src/network/systems/setupActiveAsteroid";
-import { BlockNumber } from "src/network/components/clientComponents";
+import {
+  ActiveAsteroid,
+  BlockNumber,
+} from "src/network/components/clientComponents";
 
 export const useInit = () => {
   const { world, blockNumber$ } = useMud();
   const { address } = useAccount();
+  const activeAsteroid = ActiveAsteroid.use()?.value;
+
+  const initialized = useMemo(() => {
+    if (!address) return false;
+
+    return !!activeAsteroid;
+  }, [address, activeAsteroid]);
 
   useEffect(() => {
     if (address) {
@@ -21,4 +31,6 @@ export const useInit = () => {
       world.registerDisposer(() => blockListener.unsubscribe());
     };
   }, [address]);
+
+  return initialized;
 };

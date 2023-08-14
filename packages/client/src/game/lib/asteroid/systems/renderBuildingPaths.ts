@@ -1,7 +1,12 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
+  ComponentUpdate,
   EntityID,
-  defineComponentSystem,
+  Has,
+  HasValue,
+  defineEnterSystem,
+  defineExitSystem,
+  defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 
@@ -11,13 +16,14 @@ import { Path, Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { ManhattanPath } from "../../common/object-components/graphics";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 export const renderBuildingPaths = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const objSuffix = "_path";
   const gameWorld = namespaceWorld(world, "game");
 
-  defineComponentSystem(gameWorld, Path, (update) => {
+  const render = (update: ComponentUpdate) => {
     const entityIndex = update.entity;
     const entity = world.entities[entityIndex];
     const objIndex = entityIndex + objSuffix;
@@ -38,7 +44,7 @@ export const renderBuildingPaths = (scene: Scene) => {
 
     const startCoord = Position.get(entity);
 
-    const endEntityId = update.value[0]?.value.toString() as EntityID;
+    const endEntityId = update.value[0]?.value?.toString() as EntityID;
 
     //if path has no end tile, don't draw it
     if (!endEntityId) return;
@@ -77,5 +83,21 @@ export const renderBuildingPaths = (scene: Scene) => {
         y: -endPixelCoord.y + tileHeight / 2,
       }),
     ]);
+  };
+
+  const pathQuery = [
+    Has(Path),
+    HasValue(Position, {
+      parent: ActiveAsteroid.get()?.value,
+    }),
+  ];
+
+  defineEnterSystem(gameWorld, pathQuery, render);
+
+  defineUpdateSystem(gameWorld, pathQuery, render);
+
+  defineExitSystem(gameWorld, pathQuery, ({ entity }) => {
+    const renderId = `${entity}${objSuffix}`;
+    scene.objectPool.remove(renderId);
   });
 };

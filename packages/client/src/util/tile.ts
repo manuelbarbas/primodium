@@ -8,6 +8,7 @@ import {
   OwnedBy,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -191,7 +192,14 @@ export const getEntityTileAtCoord = (coord: Coord) => {
 };
 
 export const getBuildingAtCoord = (coord: Coord) => {
-  const entities = runQuery([HasValue(Position, coord), Not(BuildingType)]);
+  const entities = runQuery([
+    HasValue(Position, {
+      x: coord.x,
+      y: coord.y,
+      parent: ActiveAsteroid.get()?.value,
+    }),
+    Not(BuildingType),
+  ]);
 
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];
