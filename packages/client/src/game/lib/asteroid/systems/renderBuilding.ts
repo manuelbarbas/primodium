@@ -109,11 +109,6 @@ export const renderBuilding = (scene: Scene) => {
     scene.objectPool.remove(renderId);
   });
 
-  defineExitSystem(world, positionQuery, ({ entity }) => {
-    const renderId = `${entity}_entitySprite`;
-    scene.objectPool.remove(renderId);
-  });
-
   defineComponentSystem(
     gameWorld,
     SelectedBuilding,

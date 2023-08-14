@@ -100,8 +100,7 @@ export function getTopLayerKeyPair(
     coord.y < 0 ||
     coord.y > asteroidDimensions.length
   ) {
-    // temp: using the water sprite for now
-    return { terrain: BlockType.Water, resource: null };
+    return { terrain: null, resource: null };
   }
   const terrainKey = getTerrainKey(coord, perlin);
   const resourceKey = getResourceKey(coord);

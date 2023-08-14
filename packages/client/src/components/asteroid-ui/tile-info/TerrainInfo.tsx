@@ -8,6 +8,10 @@ export const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
   const { perlin } = useMud();
   const terrainPair = getTopLayerKeyPair(coord, perlin);
 
+  if (!terrainPair.terrain) {
+    return <></>;
+  }
+
   return (
     <>
       <Header content={`(${coord.x}, ${coord.y})`} />

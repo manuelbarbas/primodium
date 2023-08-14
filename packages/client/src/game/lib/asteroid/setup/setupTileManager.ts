@@ -29,6 +29,7 @@ const renderChunk = async (
 
       const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
 
+      if (!terrain) continue;
       //lookup and place terrain
       const terrainId = EntityIdtoTilesetId[terrain];
 
@@ -60,6 +61,7 @@ const renderBounds = (
 
       const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
 
+      if (!terrain) return;
       //lookup and place terrain
       const terrainId = EntityIdtoTilesetId[terrain];
 

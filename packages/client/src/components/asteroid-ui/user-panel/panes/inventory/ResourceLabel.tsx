@@ -60,15 +60,13 @@ export const ResourceLabel = ({
         >
           <div
             className="h-full bg-cyan-600"
-            style={{ width: `${(resourceCount / maxStorage) * 100}%` }}
-          />
-
-          <div
-            className="h-full bg-cyan-800"
             style={{
-              width: `${(resourcesToClaim / maxStorage) * 100}%`,
+              width: `${
+                ((resourceCount + resourcesToClaim) / maxStorage) * 100
+              }%`,
             }}
           />
+
           <div
             className="h-full bg-gray-900"
             style={{
@@ -80,12 +78,7 @@ export const ResourceLabel = ({
           />
         </div>
         <div className="flex justify-between">
-          <p>
-            {resourceCount}{" "}
-            {resourcesToClaim > 0 && (
-              <span className="opacity-50">(+{resourcesToClaim})</span>
-            )}
-          </p>
+          <p>{resourceCount + resourcesToClaim}</p>
           <b>{maxStorage}</b>
         </div>
       </div>

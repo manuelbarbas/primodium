@@ -541,7 +541,7 @@ export const ResourceImage = new Map<EntityID, string>([
 ]);
 
 export type DisplayKeyPair = {
-  terrain: EntityID;
+  terrain: EntityID | null;
   resource: EntityID | null;
 };
 

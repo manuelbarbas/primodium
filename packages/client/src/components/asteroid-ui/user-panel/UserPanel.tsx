@@ -104,14 +104,6 @@ export const UserPanel = () => {
             </motion.div>
           )}
 
-          {menuIndex === 0 && (
-            <div className="flex justify-center">
-              {mainBaseCoord !== undefined && (
-                <ClaimButton id="claim-button" coords={mainBaseCoord} />
-              )}
-            </div>
-          )}
-
           {menuIndex === 2 && (
             <GameButton
               className="m-2"
