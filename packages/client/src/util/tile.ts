@@ -95,9 +95,9 @@ export function getTopLayerKeyPair(
   const asteroidDimensions = { width: 37, length: 25 };
   if (
     coord.x < 0 ||
-    coord.x > asteroidDimensions.width ||
+    coord.x >= asteroidDimensions.width ||
     coord.y < 0 ||
-    coord.y > asteroidDimensions.length
+    coord.y >= asteroidDimensions.length
   ) {
     // temp: using the water sprite for now
     return { terrain: BlockType.Water, resource: null };

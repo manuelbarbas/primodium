@@ -16,7 +16,7 @@ library LibInitWorld {
     // todo: make the universe the correct size
     DimensionsComponent(world.getComponent(DimensionsComponentID)).set(SingletonID, Dimensions(100, 100));
     initMaxBuildings(world);
-    PositionComponent(world.getComponent(PositionComponentID)).set(MainBaseID, Coord(17, 11, 0));
+    PositionComponent(world.getComponent(PositionComponentID)).set(MainBaseID, Coord(17, 13, 0));
   }
 
   function initMaxBuildings(IWorld world) internal {
