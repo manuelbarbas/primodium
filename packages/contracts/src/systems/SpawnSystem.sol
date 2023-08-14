@@ -38,6 +38,6 @@ contract SpawnSystem is PrimodiumSystem {
     uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
     MainBaseComponent(getC(MainBaseComponentID)).set(playerEntity, buildingEntity);
     LibBuilding.build(world, MainBaseID, coord);
-    return abi.encode(asteroid);
+    return abi.encode(buildingEntity);
   }
 }
