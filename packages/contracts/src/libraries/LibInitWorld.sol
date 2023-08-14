@@ -11,6 +11,7 @@ import { Dimensions } from "../types.sol";
 
 library LibInitWorld {
   function init(IWorld world) internal {
+    // todo: make the universe the correct size
     DimensionsComponent(world.getComponent(DimensionsComponentID)).set(SingletonID, Dimensions(100, 100));
     initMaxBuildings(world);
   }

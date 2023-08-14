@@ -12,6 +12,7 @@
     "dev": "mud deploy-contracts --dev --watch --openUrl http://localhost:3000?dev=true",
     "deploy": "mud deploy-contracts",
     "gen:json": "node prod-json-gen.mjs",
+    "gen:terrain": "node scripts/terrain-gen/csvToJson.mjs && node scripts/terrain-gen/jsonToSol.mjs",
     "lint": "yarn prettier && yarn solhint",
     "----- INTERNAL -----": "---------------------------",
     "prettier": "prettier --write 'src/**/*.sol'",

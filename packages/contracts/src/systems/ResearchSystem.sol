@@ -34,24 +34,25 @@ contract ResearchSystem is System {
 
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
+    uint256 playerEntity = addressToEntity(msg.sender);
 
     P_IsTechComponent isTechComponent = P_IsTechComponent(getAddressById(components, P_IsTechComponentID));
 
     require(isTechComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
     require(
-      checkMainBaseLevelRequirement(world, addressToEntity(msg.sender), researchItem),
+      checkMainBaseLevelRequirement(world, playerEntity, researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
 
     require(
-      LibResearch.hasResearched(world, researchItem, addressToEntity(msg.sender)),
+      LibResearch.hasResearched(world, researchItem, playerEntity),
       "[ResearchSystem] Research requirements not met"
     );
 
     if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(researchItem)) {
       require(
-        LibResource.hasRequiredResources(world, researchItem, addressToEntity(msg.sender)),
+        LibResource.hasRequiredResources(world, playerEntity, researchItem, 1),
         "[ResearchSystem] Not enough resources to research"
       );
       IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
@@ -61,7 +62,7 @@ contract ResearchSystem is System {
     }
 
     HasResearchedComponent(getAddressById(components, HasResearchedComponentID)).set(
-      LibEncode.hashKeyEntity(researchItem, addressToEntity(msg.sender))
+      LibEncode.hashKeyEntity(researchItem, playerEntity)
     );
     return abi.encode(true);
   }
