@@ -10,7 +10,7 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "../../systems/DestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
@@ -125,7 +125,7 @@ contract Storage is PrimodiumTest {
     console.log("claimed from main base after capacity full %s", itemComponent.getValue(hashedAliceKey));
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
@@ -134,7 +134,7 @@ contract Storage is PrimodiumTest {
       abi.encode()
     );
 
-    upgradeSystem.executeTyped(mainBaseCoord);
+    upgradeBuildingSystem.executeTyped(mainBaseCoord);
     uint256 newIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("alice has newIronCapacity of %s", newIronCapacity);
     currBlockNum += 10;

@@ -119,7 +119,7 @@ Each building can be upgraded to unlock more capabilities. Specifications are lo
 - `P_MaxLevelComponent` with a building ID (e.g. DebugIronMineID) as key, indicates that that a building can be upgraded and up to what level.
 - `LevelComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
 
-When a building is upgraded, `PostUpgradeSystem` is called to update the building's components and the player's resource production.
+When a building is upgraded, `PostUpgradeBuildingSystem` is called to update the building's components and the player's resource production.
 
 # Building Storage
 

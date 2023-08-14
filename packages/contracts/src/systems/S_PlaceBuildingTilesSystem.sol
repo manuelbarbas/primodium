@@ -15,7 +15,7 @@ import { Coord, Bounds } from "../types.sol";
 
 // libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibResearch } from "../libraries/LibResearch.sol";
+import { LibBuilding } from "../libraries/LibBuilding.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
@@ -35,7 +35,7 @@ contract S_PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
     uint256 buildingType = BuildingTypeComponent(getC(BuildingTypeComponentID)).getValue(buildingEntity);
     Coord memory coord = PositionComponent(getC(PositionComponentID)).getValue(buildingEntity);
     int32[] memory blueprint = P_BlueprintComponent(getC(P_BlueprintComponentID)).getValue(buildingType);
-    Bounds memory bounds = LibResearch.getPlayerBounds(world, addressToEntity(playerAddress));
+    Bounds memory bounds = LibBuilding.getPlayerBounds(world, addressToEntity(playerAddress));
 
     uint256[] memory tiles = new uint256[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {

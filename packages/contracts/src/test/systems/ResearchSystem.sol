@@ -7,7 +7,7 @@ import { addressToEntity } from "solecs/utils.sol";
 
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
@@ -144,7 +144,7 @@ contract ResearchSystemTest is PrimodiumTest {
     HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
 
     // alice researches DebugSimpleTechnologyResourceReqsID
     assertTrue(
@@ -160,7 +160,7 @@ contract ResearchSystemTest is PrimodiumTest {
       LibEncode.hashKeyEntity(MainBaseID, 2),
       abi.encode()
     );
-    upgradeSystem.executeTyped(getOrigin(alice));
+    upgradeBuildingSystem.executeTyped(getOrigin(alice));
 
     // should succeed because alice has upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);

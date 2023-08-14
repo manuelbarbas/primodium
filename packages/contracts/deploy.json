@@ -105,7 +105,11 @@
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpgradeSystem",
+      "name": "UpgradeBuildingSystem",
+      "writeAccess": ["LevelComponent"]
+    },
+    {
+      "name": "UpgradeRangeSystem",
       "writeAccess": ["LevelComponent"]
     },
     {

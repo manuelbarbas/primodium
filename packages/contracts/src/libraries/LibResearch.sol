@@ -11,14 +11,13 @@ import { DimensionsComponent, ID as DimensionsComponentID } from "components/Dim
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 
 import { Bounds, Dimensions } from "src/types.sol";
 import { ExpansionResearch } from "src/prototypes.sol";
 
 library LibResearch {
-  // ###########################################################################
   // Check that the user has researched a given component
-
   function hasResearched(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {
     P_RequiredResearchComponent requiredResearchComponent = P_RequiredResearchComponent(
       getAddressById(world.components(), P_RequiredResearchComponentID)
@@ -33,21 +32,14 @@ library LibResearch {
       hasResearchedComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
   }
 
-  function getPlayerBounds(IWorld world, uint256 playerEntity) internal view returns (Bounds memory bounds) {
-    uint32 playerLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(playerEntity);
-    uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionResearch, playerLevel);
-
-    DimensionsComponent dimensionsComponent = DimensionsComponent(
-      getAddressById(world.components(), DimensionsComponentID)
-    );
-    Dimensions memory asteroidDims = dimensionsComponent.getValue(SingletonID);
-    Dimensions memory range = dimensionsComponent.getValue(researchLevelEntity);
-    return
-      Bounds(
-        (asteroidDims.x + range.x) / 2,
-        (asteroidDims.y + range.y) / 2,
-        (asteroidDims.x - range.x) / 2,
-        (asteroidDims.y - range.y) / 2
-      );
+  function checkMainBaseLevelRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    LevelComponent levelComponent = LevelComponent(getAddressById(world.components(), LevelComponentID));
+    if (!levelComponent.has(entity)) return true;
+    uint256 mainLevel = LibBuilding.getBaseLevel(world, playerEntity);
+    return mainLevel >= levelComponent.getValue(entity);
   }
 }

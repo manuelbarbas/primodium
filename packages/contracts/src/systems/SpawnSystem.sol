@@ -8,6 +8,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
 
 import { Dimensions } from "../types.sol";
 import { ExpansionResearch } from "../prototypes.sol";
@@ -21,14 +22,14 @@ contract SpawnSystem is PrimodiumSystem {
     return execute("");
   }
 
-  function execute(bytes memory args) public override returns (bytes memory) {
+  function execute(bytes memory) public override returns (bytes memory) {
     uint256 playerEntity = addressToEntity(msg.sender);
     bool spawned = PositionComponent(world.getComponent(PositionComponentID)).has(playerEntity);
     require(!spawned, "[SpawnSystem] Player already spawned");
     uint256 asteroid = LibAsteroid.createAsteroid(world, playerEntity);
 
     DimensionsComponent dimensionsComponent = DimensionsComponent(world.getComponent(DimensionsComponentID));
-    Dimensions memory dimensions = dimensionsComponent.getValue(ExpansionResearch);
+    Dimensions memory dimensions = dimensionsComponent.getValue(LibEncode.hashKeyEntity(ExpansionResearch, 1));
     dimensionsComponent.set(playerEntity, dimensions);
 
     return abi.encode(asteroid);

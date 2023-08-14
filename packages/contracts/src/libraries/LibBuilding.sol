@@ -1,22 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-// Production Buildings
+
 import { getAddressById } from "solecs/utils.sol";
+import { SingletonID } from "solecs/SingletonID.sol";
 import { IWorld } from "solecs/System.sol";
 
 //components
 import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
 import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
-
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "components/P_MaxBuildingsComponent.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
+import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
-import { Coord } from "../types.sol";
 import { LibMath } from "libraries/LibMath.sol";
-
 import { LibTerrain } from "./LibTerrain.sol";
+import { LibEncode } from "./LibEncode.sol";
+
+import { Coord, Bounds, Dimensions } from "../types.sol";
+import { ExpansionResearch } from "src/prototypes.sol";
 
 library LibBuilding {
   function isMaxBuildingsMet(IWorld world, uint256 playerEntity, uint256 buildingId) internal view returns (bool) {
@@ -50,6 +53,24 @@ library LibBuilding {
       getAddressById(world.components(), BuildingCountComponentID)
     );
     return LibMath.getSafe(maxBuildingsComponent, playerEntity);
+  }
+
+  function getPlayerBounds(IWorld world, uint256 playerEntity) internal view returns (Bounds memory bounds) {
+    uint32 playerLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(playerEntity);
+    uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionResearch, playerLevel);
+
+    DimensionsComponent dimensionsComponent = DimensionsComponent(
+      getAddressById(world.components(), DimensionsComponentID)
+    );
+    Dimensions memory asteroidDims = dimensionsComponent.getValue(SingletonID);
+    Dimensions memory range = dimensionsComponent.getValue(researchLevelEntity);
+    return
+      Bounds(
+        (asteroidDims.x + range.x) / 2,
+        (asteroidDims.y + range.y) / 2,
+        (asteroidDims.x - range.x) / 2,
+        (asteroidDims.y - range.y) / 2
+      );
   }
 
   function getMaxBuildingCount(IWorld world, uint256 baseLevel) internal view returns (uint32) {

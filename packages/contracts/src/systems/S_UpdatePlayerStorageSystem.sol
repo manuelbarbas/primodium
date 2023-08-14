@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
-import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
+import { ID as UpgradeBuildingSystemID } from "./UpgradeBuildingSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
@@ -25,9 +25,9 @@ contract S_UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
-        msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
+        msg.sender == getAddressById(world.systems(), UpgradeBuildingSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroySystemID),
-      "S_UpdatePlayerStorageSystem: Only BuildSystem, UpgradeSystem, DestroySystem can call this function"
+      "S_UpdatePlayerStorageSystem: Only BuildSystem, UpgradeBuildingSystem, DestroySystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(
