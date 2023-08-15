@@ -28,7 +28,8 @@ export const demolishPath = async (coord: Coord, network: Network) => {
   );
 
   ampli.systemDestroyPath({
-    coord: [coord.x, coord.y, BigNumber.from(activeAsteroid).toNumber()],
+    asteroidCoord: BigNumber.from(activeAsteroid).toString(),
+    coord: [coord.x, coord.y],
     ...parseReceipt(receipt),
   });
 

@@ -30,8 +30,9 @@ export const buildPath = async (start: Coord, end: Coord, network: Network) => {
   );
 
   ampli.systemBuildPath({
-    coord: [start.x, start.y, BigNumber.from(activeAsteroid).toNumber()],
-    endCoord: [end.x, end.y, BigNumber.from(activeAsteroid).toNumber()],
+    asteroidCoord: BigNumber.from(activeAsteroid).toString(),
+    coord: [start.x, start.y],
+    endCoord: [end.x, end.y],
     ...parseReceipt(receipt),
   });
 

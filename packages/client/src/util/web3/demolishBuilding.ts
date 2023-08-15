@@ -38,8 +38,9 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
   );
 
   ampli.systemDestroy({
+    asteroidCoord: BigNumber.from(activeAsteroid).toString(),
     buildingType: BlockIdToKey[buildingType],
-    coord: [coord.x, coord.y, BigNumber.from(activeAsteroid).toNumber()],
+    coord: [coord.x, coord.y],
     currLevel: currLevel,
     ...parseReceipt(receipt),
   });

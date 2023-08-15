@@ -43,8 +43,9 @@ export const buildBuilding = async (
     );
 
     ampli.systemBuild({
+      asteroidCoord: BigNumber.from(activeAsteroid).toString(),
       buildingType: BlockIdToKey[blockType],
-      coord: [coord.x, coord.y, BigNumber.from(activeAsteroid).toNumber()],
+      coord: [coord.x, coord.y],
       currLevel: 0,
       ...parseReceipt(receipt),
     });

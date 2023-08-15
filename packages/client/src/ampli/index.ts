@@ -54,24 +54,28 @@ export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | L
 
 export interface SystemBuildProperties {
   /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
    * Name of a building in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
    */
   buildingType: string;
   /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
-   * Stored in the format of \[x, y, z\].
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  coord: [number, number, number];
+  coord: [number, number];
   /**
    * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
    *
@@ -123,33 +127,37 @@ export interface SystemBuildProperties {
 
 export interface SystemBuildPathProperties {
   /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
-   * Stored in the format of \[x, y, z\].
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  coord: [number, number, number];
+  coord: [number, number];
   /**
    * Coordinates at which a path ends. The starting coordinates are recorded by the `coord` property.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  endCoord: [number, number, number];
+  endCoord: [number, number];
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -193,20 +201,24 @@ export interface SystemBuildPathProperties {
 
 export interface SystemClaimFromMineProperties {
   /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
-   * Stored in the format of \[x, y, z\].
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  coord: [number, number, number];
+  coord: [number, number];
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -250,20 +262,24 @@ export interface SystemClaimFromMineProperties {
 
 export interface SystemCraftProperties {
   /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
-   * Stored in the format of \[x, y, z\].
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  coord: [number, number, number];
+  coord: [number, number];
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -307,6 +323,10 @@ export interface SystemCraftProperties {
 
 export interface SystemDestroyProperties {
   /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
    * | Rule | Value |
    * |---|---|
    * | Regex |  |
@@ -315,18 +335,18 @@ export interface SystemDestroyProperties {
   /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
-   * Stored in the format of \[x, y, z\].
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  coord: [number, number, number];
+  coord: [number, number];
   /**
    * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
    *
@@ -378,20 +398,24 @@ export interface SystemDestroyProperties {
 
 export interface SystemDestroyPathProperties {
   /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
-   * Stored in the format of \[x, y, z\].
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  coord: [number, number, number];
+  coord: [number, number];
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -571,24 +595,28 @@ export interface SystemSpawnProperties {
 
 export interface SystemUpgradeProperties {
   /**
+   * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
+   */
+  asteroidCoord: string;
+  /**
    * Name of a building in plaintext, as returned by `BlockIdToKey` in `constants.ts` when passing in an EntityID.
    */
   buildingType: string;
   /**
    * Most systems take a coordinate as a parameter and read the specific building and related metadata during contract execution. Even though such metadata (eg building type and level) aren't passed into the system, we fetch them manually and pass them into Amplitude properties for easier analysis.
    *
-   * Stored in the format of \[x, y, z\].
+   * Stored in the format of \[x, y\]. The \[z\] element that represents the asteroid location is stored in `asteroidCoord`.
    *
    * | Rule | Value |
    * |---|---|
-   * | Min Items | 3 |
-   * | Max Items | 3 |
+   * | Min Items | 2 |
+   * | Max Items | 2 |
    * | Item Type | number |
    *
-   * @minItems 3
-   * @maxItems 3
+   * @minItems 2
+   * @maxItems 2
    */
-  coord: [number, number, number];
+  coord: [number, number];
   /**
    * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
    *
@@ -843,7 +871,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. buildingType)
+   * @param properties The event's properties (e.g. asteroidCoord)
    * @param options Amplitude event options.
    */
   systemBuild(
@@ -860,7 +888,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. coord)
+   * @param properties The event's properties (e.g. asteroidCoord)
    * @param options Amplitude event options.
    */
   systemBuildPath(
@@ -877,7 +905,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. coord)
+   * @param properties The event's properties (e.g. asteroidCoord)
    * @param options Amplitude event options.
    */
   systemClaimFromMine(
@@ -894,7 +922,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. coord)
+   * @param properties The event's properties (e.g. asteroidCoord)
    * @param options Amplitude event options.
    */
   systemCraft(
@@ -911,7 +939,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. buildingType)
+   * @param properties The event's properties (e.g. asteroidCoord)
    * @param options Amplitude event options.
    */
   systemDestroy(
@@ -928,7 +956,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. coord)
+   * @param properties The event's properties (e.g. asteroidCoord)
    * @param options Amplitude event options.
    */
   systemDestroyPath(
@@ -996,7 +1024,7 @@ export class Ampli {
    *
    * Event has no description in tracking plan.
    *
-   * @param properties The event's properties (e.g. buildingType)
+   * @param properties The event's properties (e.g. asteroidCoord)
    * @param options Amplitude event options.
    */
   systemUpgrade(

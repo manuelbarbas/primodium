@@ -38,8 +38,9 @@ export const upgrade = async (coord: Coord, network: Network) => {
   );
 
   ampli.systemUpgrade({
+    asteroidCoord: BigNumber.from(activeAsteroid).toString(),
     buildingType: BlockIdToKey[buildingType],
-    coord: [coord.x, coord.y, BigNumber.from(activeAsteroid).toNumber()],
+    coord: [coord.x, coord.y],
     currLevel: currLevel,
     ...parseReceipt(receipt),
   });

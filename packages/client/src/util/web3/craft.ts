@@ -26,7 +26,8 @@ export const craft = async (coord: Coord, network: Network) => {
   );
 
   ampli.systemCraft({
-    coord: [coord.x, coord.y, BigNumber.from(activeAsteroid).toNumber()],
+    asteroidCoord: BigNumber.from(activeAsteroid).toString(),
+    coord: [coord.x, coord.y],
     ...parseReceipt(receipt),
   });
 
