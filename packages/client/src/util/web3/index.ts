@@ -8,3 +8,4 @@ export * from "./increment";
 export * from "./override";
 export * from "./research";
 export * from "./upgradeBuilding";
+export * from "./upgradeRange";

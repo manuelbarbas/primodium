@@ -195,3 +195,56 @@ export const ResearchTree: ResearchTreeType = [
     ],
   },
 ];
+
+// duplicate above but for ExpansionResearch, up to level 7
+export const ExpansionResearchTree: ResearchItemType = {
+  name: "Expand Range",
+  id: BlockType.ExpansionResearch1,
+  description:
+    "Unlocks expansion research — allows you to start expanding your base.",
+
+  levels: [
+    {
+      id: BlockType.ExpansionResearch1,
+      subtitle: "Level 1",
+      description:
+        "Unlocks expansion research — allows you to start expanding your base.",
+    },
+    {
+      id: BlockType.ExpansionResearch2,
+      subtitle: "Level 2",
+      description:
+        "Unlocks expansion research — allows you to start expanding your base.",
+    },
+    {
+      id: BlockType.ExpansionResearch3,
+      subtitle: "Level 3",
+      description:
+        "Unlocks expansion research — allows you to start expanding your base.",
+    },
+    {
+      id: BlockType.ExpansionResearch3,
+      subtitle: "Level 4",
+      description:
+        "Unlocks expansion research — allows you to start expanding your base.",
+    },
+    {
+      id: BlockType.ExpansionResearch3,
+      subtitle: "Level 5",
+      description:
+        "Unlocks expansion research — allows you to start expanding your base.",
+    },
+    {
+      id: BlockType.ExpansionResearch3,
+      subtitle: "Level 6",
+      description:
+        "Unlocks expansion research — allows you to start expanding your base.",
+    },
+    {
+      id: BlockType.ExpansionResearch3,
+      subtitle: "Level 7",
+      description:
+        "Unlocks expansion research — allows you to start expanding your base.",
+    },
+  ],
+};

@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
 
 import { EntityID } from "@latticexyz/recs";
@@ -65,7 +65,17 @@ export function hashKeyEntity(
     [BigNumber.from(key), BigNumber.from(entity)]
   ) as EntityID;
 }
-
+// Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
+export function hashStringEntity(
+  key: string,
+  entity: EntityID | string | number
+): EntityID {
+  // Compute the Keccak-256 hash of the concatenated key and entity
+  return solidityKeccak256(
+    ["bytes", "uint256"],
+    [utils.toUtf8Bytes(key), BigNumber.from(entity)]
+  ) as EntityID;
+}
 // Remove leading zeros due to mudv1 hashing behavior
 // if there are leading zeroes, the key in world.entityToIndex will be trimmed
 export function trim(entity: EntityID): EntityID {
