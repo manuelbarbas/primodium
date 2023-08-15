@@ -33,19 +33,15 @@ export const UpgradeRangeItem = React.memo(() => {
   const { name, description, levels } = ExpansionResearchTree;
 
   const level = Level.get(address, { value: 0 }).value;
-  console.log("level", level);
 
   const isResearched = level === levels.length;
   const researchId = levels[isResearched ? level - 1 : level].id;
   const subtitle = levels[isResearched ? level - 1 : level].subtitle;
 
-  console.log("researchId", researchId);
-  console.log("subtitle", subtitle);
   const researchRequirement = useMemo(() => {
     return getBuildingResearchRequirement(researchId);
   }, [researchId]);
 
-  console.log("req", researchRequirement);
   const researchOwner = useMemo(() => {
     if (address == null || researchRequirement == null) return SingletonID;
     return hashAndTrimKeyEntity(researchRequirement as EntityID, address);
@@ -93,7 +89,6 @@ export const UpgradeRangeItem = React.memo(() => {
   }, []);
 
   const recipe = getRecipe(researchId);
-  console.log("recipe:", recipe);
 
   return (
     <div className="relative min-w-64 border border-cyan-600 mb-3 mr-3 bg-slate-900">

@@ -73,10 +73,10 @@ library LibBuilding {
     console.log(uint32(range.x), uint32(range.y));
     return
       Bounds({
-        maxX: (asteroidDims.x / 2 + range.x / 2) - 1,
-        maxY: (asteroidDims.y / 2 + range.y / 2) - 1,
-        minX: (asteroidDims.x / 2 - range.x / 2),
-        minY: (asteroidDims.y / 2 - range.y / 2)
+        maxX: (asteroidDims.x + range.x) / 2 - 1,
+        maxY: (asteroidDims.y + range.y) / 2 - 1,
+        minX: (asteroidDims.x - range.x) / 2,
+        minY: (asteroidDims.y - range.y) / 2
       });
   }
 

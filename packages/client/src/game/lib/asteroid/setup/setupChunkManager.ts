@@ -15,12 +15,14 @@ const renderChunk = async (
   map: AnimatedTilemap<number, string, string>,
   chunkSize: number,
   chunkCache: CoordMap<boolean>,
-  perlin: Perlin
+  perlin: Perlin,
+  ignoreCache?: boolean
 ) => {
   const { Tilekeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
   //don't render if already rendered
-  if (chunkCache.get(coord)) return;
+  if (!ignoreCache && chunkCache.get(coord)) return;
 
+  // console.log("updating chunks");
   for (let x = coord.x * chunkSize; x < coord.x * chunkSize + chunkSize; x++) {
     for (
       let y = coord.y * chunkSize;
@@ -31,7 +33,7 @@ const renderChunk = async (
 
       const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
 
-      const tint = outOfBounds(player, coord) ? 0xff0000 : undefined;
+      const tint = outOfBounds(player, coord) ? 0x696969 : undefined;
       //lookup and place terrain
       const terrainId = EntityIdtoTilesetId[terrain];
 
@@ -60,9 +62,17 @@ export const setupAsteroidChunkManager = async (
   const chunkCache = new CoordMap<boolean>();
   const perlin = await createPerlin();
 
-  const renderInitialChunks = () => {
+  const renderInitialChunks = (ignoreCache?: boolean) => {
     for (const chunk of chunks.visibleChunks.current.coords()) {
-      renderChunk(player, chunk, map, chunkSize, chunkCache, perlin);
+      renderChunk(
+        player,
+        chunk,
+        map,
+        chunkSize,
+        chunkCache,
+        perlin,
+        ignoreCache
+      );
     }
   };
 
