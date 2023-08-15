@@ -62,7 +62,6 @@ contract DestroySystemTest is PrimodiumTest {
     spawn(alice);
     vm.startPrank(alice);
     playerEntity = addressToEntity(alice);
-    buildSystem.executeTyped(MainBaseID, getCoord2(alice));
     vm.stopPrank();
   }
 

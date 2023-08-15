@@ -41,6 +41,11 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
   }
 
+  function getMainBaseCoord(address player) internal view returns (Coord memory) {
+    Coord memory position = PositionComponent(component(PositionComponentID)).getValue(MainBaseID);
+    return getCoord(Coord2D(position.x, position.y), player);
+  }
+
   function getOrigin(address player) internal view returns (Coord memory) {
     Coord2D memory origin = Coord2D(0, 0);
     return getCoord(origin, player);
