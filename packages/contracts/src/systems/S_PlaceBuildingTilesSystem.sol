@@ -57,7 +57,7 @@ contract S_PlaceBuildingTilesSystem is IOnEntitySubsystem, PrimodiumSystem {
     tileEntity = LibEncode.hashKeyCoord(BuildingTileKey, coord);
     require(!ownedByComponent.has(tileEntity), "[BuildSystem] Cannot build tile on a non-empty coordinate");
     require(
-      bounds.minX < coord.x && bounds.minY < coord.y && bounds.maxX > coord.x && bounds.maxY > coord.y,
+      bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,
       "[BuildSystem] Building out of bounds"
     );
     ownedByComponent.set(tileEntity, buildingEntity);

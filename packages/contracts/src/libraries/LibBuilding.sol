@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { console } from "forge-std/console.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
@@ -27,7 +28,7 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibTerrain } from "libraries/LibTerrain.sol";
 
 // types
-import { BuildingKey, ExpansionResearch } from "../prototypes.sol";
+import { BuildingKey, ExpansionKey } from "../prototypes.sol";
 import { Coord, Bounds, Dimensions } from "src/types.sol";
 
 // Subsystems
@@ -62,19 +63,20 @@ library LibBuilding {
 
   function getPlayerBounds(IWorld world, uint256 playerEntity) internal view returns (Bounds memory bounds) {
     uint32 playerLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(playerEntity);
-    uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionResearch, playerLevel);
+    uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionKey, playerLevel);
 
     DimensionsComponent dimensionsComponent = DimensionsComponent(
       getAddressById(world.components(), DimensionsComponentID)
     );
     Dimensions memory asteroidDims = dimensionsComponent.getValue(SingletonID);
     Dimensions memory range = dimensionsComponent.getValue(researchLevelEntity);
+    console.log(uint32(range.x), uint32(range.y));
     return
       Bounds({
-        maxX: (asteroidDims.x + range.x) / 2,
-        maxY: (asteroidDims.y + range.y) / 2,
-        minX: (asteroidDims.x - range.x) / 2,
-        minY: (asteroidDims.y - range.y) / 2
+        maxX: (asteroidDims.x / 2 + range.x / 2) - 1,
+        maxY: (asteroidDims.y / 2 + range.y / 2) - 1,
+        minX: (asteroidDims.x / 2 - range.x / 2),
+        minY: (asteroidDims.y / 2 - range.y / 2)
       });
   }
 

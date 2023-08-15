@@ -14,7 +14,7 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
-import { Expansion } from "src/prototypes.sol";
+import { ExpansionKey } from "src/prototypes.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 
@@ -27,7 +27,7 @@ contract UpgradeRangeSystem is PrimodiumSystem {
     uint256 playerEntity = addressToEntity(msg.sender);
 
     uint32 playerLevel = LevelComponent(getC(LevelComponentID)).getValue(playerEntity);
-    uint256 researchItem = LibEncode.hashKeyEntity(Expansion, playerLevel + 1);
+    uint256 researchItem = LibEncode.hashKeyEntity(ExpansionKey, playerLevel + 1);
     P_IsTechComponent isTechComponent = P_IsTechComponent(getAddressById(components, P_IsTechComponentID));
 
     require(isTechComponent.has(researchItem), "[UpgradeRangeSystem] Technology not registered");

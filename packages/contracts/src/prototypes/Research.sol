@@ -55,12 +55,12 @@ uint256 constant HousingUnitResearchID = uint256(keccak256("research.HousingUnit
 uint256 constant HousingUnit2ResearchID = uint256(keccak256("research.HousingUnit2"));
 uint256 constant HousingUnit3ResearchID = uint256(keccak256("research.HousingUnit3"));
 
-string constant Expansion = "research.Expansion";
+string constant ExpansionKey = "research.Expansion";
 // this behavior is identical to LibEncode.hashKeyEntity
-uint256 constant ExpansionResearch = uint256(keccak256(abi.encodePacked(Expansion, uint256(1))));
-uint256 constant ExpansionResearch2 = uint256(keccak256(abi.encodePacked(Expansion, uint256(2))));
-uint256 constant ExpansionResearch3 = uint256(keccak256(abi.encodePacked(Expansion, uint256(3))));
-uint256 constant ExpansionResearch4 = uint256(keccak256(abi.encodePacked(Expansion, uint256(4))));
-uint256 constant ExpansionResearch5 = uint256(keccak256(abi.encodePacked(Expansion, uint256(5))));
-uint256 constant ExpansionResearch6 = uint256(keccak256(abi.encodePacked(Expansion, uint256(6))));
-uint256 constant ExpansionResearch7 = uint256(keccak256(abi.encodePacked(Expansion, uint256(7))));
+uint256 constant ExpansionResearch = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(1))));
+uint256 constant ExpansionResearch2 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(2))));
+uint256 constant ExpansionResearch3 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(3))));
+uint256 constant ExpansionResearch4 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(4))));
+uint256 constant ExpansionResearch5 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(5))));
+uint256 constant ExpansionResearch6 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(6))));
+uint256 constant ExpansionResearch7 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(7))));

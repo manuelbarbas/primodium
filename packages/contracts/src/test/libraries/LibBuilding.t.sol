@@ -33,15 +33,32 @@ contract LibBuildingTest is PrimodiumTest {
 
     uint256 playerEntity = addressToEntity(alice);
     uint32 playerLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(playerEntity);
-    uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionResearch, playerLevel);
+    uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionKey, playerLevel);
 
     Dimensions memory curr = Dimensions(5, 5);
     componentDevSystem.executeTyped(DimensionsComponentID, researchLevelEntity, abi.encode(curr));
     Bounds memory bounds = LibBuilding.getPlayerBounds(world, playerEntity);
+    console.log("maxX", uint32(bounds.maxX));
+    console.log("maxY", uint32(bounds.maxY));
+    console.log("minX", uint32(bounds.minX));
+    console.log("minY", uint32(bounds.minY));
 
-    assertEq(bounds.minX, (max.x - curr.x) / 2);
-    assertEq(bounds.maxX, (max.x + curr.x) / 2);
-    assertEq(bounds.minY, (max.y - curr.y) / 2);
-    assertEq(bounds.maxY, (max.y + curr.y) / 2);
+    assertEq(bounds.minX, max.x / 2 - curr.x / 2);
+    assertEq(bounds.maxX, max.x / 2 + curr.x / 2);
+    assertEq(bounds.minY, max.y / 2 - curr.y / 2);
+    assertEq(bounds.maxY, max.y / 2 + curr.y / 2);
+  }
+
+  function testGetActualBounds() public {
+    spawn(alice);
+    vm.startPrank(alice);
+
+    uint256 playerEntity = addressToEntity(alice);
+
+    Bounds memory bounds = LibBuilding.getPlayerBounds(world, playerEntity);
+    console.log("maxX", uint32(bounds.maxX));
+    console.log("maxY", uint32(bounds.maxY));
+    console.log("minX", uint32(bounds.minX));
+    console.log("minY", uint32(bounds.minY));
   }
 }
