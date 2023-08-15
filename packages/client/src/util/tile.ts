@@ -194,6 +194,5 @@ export const getBuildingAtCoord = (coord: Coord) => {
   const tileEntity = [...entities][0];
 
   const entity = OwnedBy.get(world.entities[tileEntity])?.value;
-  console.log(entities);
   return entity;
 };

@@ -16,7 +16,7 @@ import {
 } from "../../../util/research";
 import { GameButton } from "src/components/shared/GameButton";
 import React from "react";
-import { research, upgradeRange } from "src/util/web3";
+import { upgradeRange } from "src/util/web3";
 import {
   Level,
   MainBase,

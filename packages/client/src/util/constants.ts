@@ -1,8 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
-import { AbiCoder, defaultAbiCoder } from "ethers/lib/utils.js";
-import { hashKeyEntity, hashStringEntity } from "./encode";
+import { hashStringEntity } from "./encode";
 
 export enum Action {
   DemolishBuilding,

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { console } from "forge-std/console.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
@@ -70,7 +69,6 @@ library LibBuilding {
     );
     Dimensions memory asteroidDims = dimensionsComponent.getValue(SingletonID);
     Dimensions memory range = dimensionsComponent.getValue(researchLevelEntity);
-    console.log(uint32(range.x), uint32(range.y));
     return
       Bounds({
         maxX: (asteroidDims.x + range.x) / 2 - 1,

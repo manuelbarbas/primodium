@@ -22,7 +22,6 @@ const renderChunk = async (
   //don't render if already rendered
   if (!ignoreCache && chunkCache.get(coord)) return;
 
-  // console.log("updating chunks");
   for (let x = coord.x * chunkSize; x < coord.x * chunkSize + chunkSize; x++) {
     for (
       let y = coord.y * chunkSize;

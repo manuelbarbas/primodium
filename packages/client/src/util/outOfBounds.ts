@@ -15,14 +15,12 @@ export function outOfBounds(player: EntityID, coord: Coord) {
 
 export function getPlayerBounds(player: EntityID) {
   const level = Level.get(player, { value: 1 }).value;
-  console.log("player level:", level);
   const researchLevelEntity = trim(
     hashStringEntity("research.Expansion", level)
   );
 
   const asteroidDims = Dimensions.get();
   const range = Dimensions.get(researchLevelEntity);
-  console.log("range:", range);
   if (!asteroidDims || !range)
     throw new Error("Asteroid dimensions or range not found");
   return {

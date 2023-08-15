@@ -65,7 +65,7 @@ export function hashKeyEntity(
     [BigNumber.from(key), BigNumber.from(entity)]
   ) as EntityID;
 }
-// Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
+// Identical to hashKeyEntity (with string param) in packages/contracts/src/libraries/LibEncode.sol
 export function hashStringEntity(
   key: string,
   entity: EntityID | string | number
