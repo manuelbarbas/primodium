@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 // components
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -179,6 +180,7 @@ contract DestroySystem is PrimodiumSystem {
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
     childrenComponent.remove(buildingEntity);
+    PositionComponent(getC(PositionComponentID)).remove(buildingEntity);
     return abi.encode(buildingEntity);
   }
 
