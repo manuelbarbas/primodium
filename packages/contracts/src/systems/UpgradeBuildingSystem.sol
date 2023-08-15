@@ -28,7 +28,7 @@ import { LibResource } from "../libraries/LibResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
-uint256 constant ID = uint256(keccak256("system.Upgrade"));
+uint256 constant ID = uint256(keccak256("system.UpgradeBuilding"));
 
 contract UpgradeBuildingSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}

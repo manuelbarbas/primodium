@@ -7,4 +7,4 @@ export * from "./demolishPath";
 export * from "./increment";
 export * from "./override";
 export * from "./research";
-export * from "./upgrade";
+export * from "./upgradeBuilding";

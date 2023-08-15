@@ -12,7 +12,7 @@ import { ResourceImage } from "../../util/constants";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
 import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
-import { upgrade } from "src/util/web3";
+import { upgradeBuilding } from "src/util/web3";
 import {
   Level,
   P_MaxLevel,
@@ -20,7 +20,7 @@ import {
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
 
-export default function UpgradeButton({
+export default function UpgradeBuildingButton({
   id,
   coords,
   builtTile,
@@ -94,7 +94,7 @@ export default function UpgradeButton({
       <GameButton
         id={id}
         className="w-44 mt-2 text-sm"
-        onClick={() => upgrade(coords, network)}
+        onClick={() => upgradeBuilding(coords, network)}
         color={
           isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
         }
