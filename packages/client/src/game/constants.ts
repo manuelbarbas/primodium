@@ -1,3 +1,4 @@
+import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "../util/constants";
 
 export const ASSET_PACK = "/assets/pack.json";
@@ -55,7 +56,7 @@ export namespace AsteroidMap {
     Uraninite,
   }
 
-  export const Tilekeys = { ...TerrainTilekeys, ...ResourceTilekeys };
+  export const TileKeys = { ...TerrainTilekeys, ...ResourceTilekeys };
 
   export enum TileAnimationKeys {
     Water = "Water",
@@ -157,22 +158,33 @@ export namespace AsteroidMap {
   }
 
   export const EntityIdtoTilesetId = {
-    [BlockType.Air]: Tilekeys.Air,
-    [BlockType.Iron]: Tilekeys.Iron,
-    [BlockType.Biofilm]: Tilekeys.Biofilm,
-    [BlockType.Sandstone]: Tilekeys.Sandstone,
-    [BlockType.Water]: Tilekeys.Water,
-    [BlockType.Bedrock]: Tilekeys.Bedrock,
-    [BlockType.Regolith]: Tilekeys.Regolith,
-    [BlockType.Copper]: Tilekeys.Copper,
-    [BlockType.Lithium]: Tilekeys.Lithium,
-    [BlockType.Titanium]: Tilekeys.Titanium,
-    [BlockType.Osmium]: Tilekeys.Osmium,
-    [BlockType.Tungsten]: Tilekeys.Tungsten,
-    [BlockType.Iridium]: Tilekeys.Iridium,
-    [BlockType.Kimberlite]: Tilekeys.Kimberlite,
-    [BlockType.Uraninite]: Tilekeys.Uraninite,
-    [BlockType.Bolutite]: Tilekeys.Bolutite,
+    [BlockType.Air]: TileKeys.Air,
+    [BlockType.Iron]: TileKeys.Iron,
+    [BlockType.Biofilm]: TileKeys.Biofilm,
+    [BlockType.Sandstone]: TileKeys.Sandstone,
+    [BlockType.Water]: TileKeys.Water,
+    [BlockType.Bedrock]: TileKeys.Bedrock,
+    [BlockType.Regolith]: TileKeys.Regolith,
+    [BlockType.Copper]: TileKeys.Copper,
+    [BlockType.Lithium]: TileKeys.Lithium,
+    [BlockType.Titanium]: TileKeys.Titanium,
+    [BlockType.Osmium]: TileKeys.Osmium,
+    [BlockType.Tungsten]: TileKeys.Tungsten,
+    [BlockType.Iridium]: TileKeys.Iridium,
+    [BlockType.Kimberlite]: TileKeys.Kimberlite,
+    [BlockType.Uraninite]: TileKeys.Uraninite,
+    [BlockType.Bolutite]: TileKeys.Bolutite,
+  };
+
+  export const TerrainTilesetIdToEntityId: {
+    [key: number]: EntityID;
+  } = {
+    [TileKeys.Air]: BlockType.Air,
+    [TileKeys.Biofilm]: BlockType.Biofilm,
+    [TileKeys.Sandstone]: BlockType.Sandstone,
+    [TileKeys.Water]: BlockType.Water,
+    [TileKeys.Bedrock]: BlockType.Bedrock,
+    [TileKeys.Regolith]: BlockType.Regolith,
   };
 
   export const EntityIDtoSpriteKey = {

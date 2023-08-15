@@ -1,7 +1,7 @@
 import { TileAnimation } from "engine/types";
 import { AsteroidMap } from "../../constants";
 
-const { Tilekeys, TileAnimationKeys } = AsteroidMap;
+const { TileKeys: Tilekeys, TileAnimationKeys } = AsteroidMap;
 
 const generateTileFrames = (tile: number, length: number) => {
   const frames = [];

@@ -25,7 +25,6 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
   scene.camera.phaserCamera.setRoundPixels(false);
 
   const tileManager = await setupTileManager(scene.tilemap);
-  // tileManager.renderMapBounds({ x: -20, y: -20 }, { x: 20, y: 20 });
   tileManager.renderInitialChunks();
   tileManager.startChunkRenderer();
 

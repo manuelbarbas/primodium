@@ -2,19 +2,17 @@ import { AsteroidMap } from "../../../constants";
 import type { AnimatedTilemap } from "@latticexyz/phaserx";
 import { getTopLayerKeyPair } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
-import { Perlin, createPerlin } from "@latticexyz/noise";
 import { interval } from "rxjs";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 
-const { Tilekeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
+const { TileKeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
 
 const renderChunk = async (
   coord: Coord,
   map: AnimatedTilemap<number, string, string>,
   chunkSize: number,
-  chunkCache: CoordMap<boolean>,
-  perlin: Perlin
+  chunkCache: CoordMap<boolean>
 ) => {
   //don't render if already rendered
   if (chunkCache.get(coord)) return;
@@ -27,18 +25,19 @@ const renderChunk = async (
     ) {
       const coord = { x, y: -y };
 
-      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
+      const { terrain, resource } = getTopLayerKeyPair(coord);
 
       if (!terrain) continue;
+
       //lookup and place terrain
       const terrainId = EntityIdtoTilesetId[terrain];
 
-      if (terrainId === Tilekeys.Water) {
+      if (terrainId === TileKeys.Water) {
         map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
         continue;
       }
       //lookup and place resource
-      map.putTileAt({ x, y }, terrainId ?? Tilekeys.Alluvium, "Terrain");
+      map.putTileAt({ x, y }, terrainId ?? TileKeys.Alluvium, "Terrain");
 
       if (!resource) continue;
       const resourceId = EntityIdtoTilesetId[resource!];
@@ -52,25 +51,24 @@ const renderChunk = async (
 const renderBounds = (
   upperLeft: Coord,
   bottomRight: Coord,
-  map: AnimatedTilemap<number, string, string>,
-  perlin: Perlin
+  map: AnimatedTilemap<number, string, string>
 ) => {
   for (let x = upperLeft.x; x <= bottomRight.x; x++) {
     for (let y = upperLeft.y; y <= bottomRight.y; y++) {
       const coord = { x, y: -y };
 
-      const { terrain, resource } = getTopLayerKeyPair(coord, perlin);
+      const { terrain, resource } = getTopLayerKeyPair(coord);
 
       if (!terrain) return;
       //lookup and place terrain
       const terrainId = EntityIdtoTilesetId[terrain];
 
-      if (terrainId === Tilekeys.Water) {
+      if (terrainId === TileKeys.Water) {
         map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
         continue;
       }
       //lookup and place resource
-      map.putTileAt({ x, y }, terrainId ?? Tilekeys.Alluvium, "Terrain");
+      map.putTileAt({ x, y }, terrainId ?? TileKeys.Alluvium, "Terrain");
 
       if (!resource) continue;
       const resourceId = EntityIdtoTilesetId[resource!];
@@ -83,16 +81,15 @@ export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
   const { RENDER_INTERVAL } = AsteroidMap;
   const { chunks, map, chunkSize } = tilemap;
   const chunkCache = new CoordMap<boolean>();
-  const perlin = await createPerlin();
 
   const renderInitialChunks = () => {
     for (const chunk of chunks.visibleChunks.current.coords()) {
-      renderChunk(chunk, map, chunkSize, chunkCache, perlin);
+      renderChunk(chunk, map, chunkSize, chunkCache);
     }
   };
 
   const renderMapBounds = (upperLeft: Coord, bottomRight: Coord) => {
-    renderBounds(upperLeft, bottomRight, map, perlin);
+    renderBounds(upperLeft, bottomRight, map);
   };
 
   const startChunkRenderer = () => {
@@ -109,7 +106,7 @@ export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
 
       if (!chunks.visibleChunks.current.get(chunk)) return;
 
-      renderChunk(chunk, map, chunkSize, chunkCache, perlin);
+      renderChunk(chunk, map, chunkSize, chunkCache);
     });
 
     world.registerDisposer(() => {
