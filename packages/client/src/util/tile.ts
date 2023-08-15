@@ -171,8 +171,11 @@ export function getBuildingsOfTypeInRange(
 }
 
 export const getEntityTileAtCoord = (coord: Coord) => {
-  const entities = runQuery([HasValue(Position, coord), Has(BuildingType)]);
-
+  const entities = runQuery([
+    Has(BuildingType),
+    Has(OwnedBy),
+    HasValue(Position, coord),
+  ]);
   if (!entities.size) return undefined;
 
   const tileEntityID = entities.values().next().value;
@@ -181,10 +184,16 @@ export const getEntityTileAtCoord = (coord: Coord) => {
 };
 
 export const getBuildingAtCoord = (coord: Coord) => {
-  const entities = runQuery([HasValue(Position, coord), Not(BuildingType)]);
+  const entities = runQuery([
+    HasValue(Position, coord),
+    Has(OwnedBy),
+    Not(BuildingType),
+  ]);
 
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];
 
-  return OwnedBy.get(world.entities[tileEntity])?.value;
+  const entity = OwnedBy.get(world.entities[tileEntity])?.value;
+  console.log(entities);
+  return entity;
 };
