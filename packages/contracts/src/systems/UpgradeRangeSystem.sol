@@ -14,7 +14,7 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
-import { ExpansionResearch } from "src/prototypes.sol";
+import { Expansion } from "src/prototypes.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 
@@ -27,25 +27,20 @@ contract UpgradeRangeSystem is PrimodiumSystem {
     uint256 playerEntity = addressToEntity(msg.sender);
 
     uint32 playerLevel = LevelComponent(getC(LevelComponentID)).getValue(playerEntity);
-    uint256 researchItem = LibEncode.hashKeyEntity(ExpansionResearch, playerLevel + 1);
+    uint256 researchItem = LibEncode.hashKeyEntity(Expansion, playerLevel + 1);
     P_IsTechComponent isTechComponent = P_IsTechComponent(getAddressById(components, P_IsTechComponentID));
 
-    require(isTechComponent.has(researchItem), "[ResearchSystem] Technology not registered");
+    require(isTechComponent.has(researchItem), "[UpgradeRangeSystem] Technology not registered");
 
     require(
       LibResearch.checkMainBaseLevelRequirement(world, playerEntity, researchItem),
-      "[ResearchSystem] MainBase level requirement not met"
-    );
-
-    require(
-      LibResearch.hasResearched(world, researchItem, playerEntity),
-      "[ResearchSystem] Research requirements not met"
+      "[UpgradeRangeSystem] MainBase level requirement not met"
     );
 
     if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(researchItem)) {
       require(
         LibResource.hasRequiredResources(world, playerEntity, researchItem, 1),
-        "[ResearchSystem] Not enough resources to research"
+        "[UpgradeRangeSystem] Not enough resources to research"
       );
       IOnEntitySubsystem(getAddressById(world.systems(), SpendRequiredResourcesSystemID)).executeTyped(
         msg.sender,

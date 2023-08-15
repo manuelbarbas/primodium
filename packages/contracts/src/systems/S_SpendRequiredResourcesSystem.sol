@@ -4,6 +4,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as UpgradeBuildingSystemID } from "./UpgradeBuildingSystem.sol";
+import { ID as UpgradeRangeSystemID } from "./UpgradeRangeSystem.sol";
 import { ID as SpawnSystemID } from "./SpawnSystem.sol";
 import { ID as ResearchSystemID } from "./ResearchSystem.sol";
 
@@ -27,6 +28,7 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, IOnEntityCountSub
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
         msg.sender == getAddressById(world.systems(), UpgradeBuildingSystemID) ||
+        msg.sender == getAddressById(world.systems(), UpgradeRangeSystemID) ||
         msg.sender == getAddressById(world.systems(), ResearchSystemID) ||
         msg.sender == getAddressById(world.systems(), SpawnSystemID),
       "S_SpendRequiredResourcesSystem: Only BuildSystem, UpgradeBuildingSystem, ResearchSystem can call this function"
