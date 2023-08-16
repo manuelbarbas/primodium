@@ -11,8 +11,6 @@ export const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
     return <></>;
   }
 
-  console.log(getBlockTypeName(terrainPair.terrain));
-
   return (
     <>
       <Header content={`(${coord.x}, ${coord.y})`} />

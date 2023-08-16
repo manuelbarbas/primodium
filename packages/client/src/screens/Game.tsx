@@ -27,8 +27,8 @@ export const Game = () => {
       <div
         id="game-container"
         style={{
-          backgroundSize: `75px 75px`,
-          backgroundImage: "url(/img/backgrounds/star.webp)",
+          // backgroundSize: `75px 75px`,
+          backgroundImage: "url(/img/backgrounds/star.png)",
         }}
       >
         <PhaserWrapper />
