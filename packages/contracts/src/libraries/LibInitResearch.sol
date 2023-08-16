@@ -6,18 +6,24 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 // Components
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
+import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
 // Libraries
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
 // Items
-import { ResourceValue } from "../types.sol";
+import { ResourceValue, Dimensions } from "../types.sol";
 
 // Research
 import "../prototypes.sol";
 
 library LibInitResearch {
   function init(IWorld world) internal {
+    initResearch(world);
+    initExpansion(world);
+  }
+
+  function initResearch(IWorld world) internal {
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     P_IsTechComponent isTechComponent = P_IsTechComponent(world.getComponent(P_IsTechComponentID));
 
@@ -136,5 +142,52 @@ library LibInitResearch {
     requiredResources[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1500 });
     LibSetBuildingReqs.setResourceReqs(world, SolarPanelResearchID, requiredResources);
     isTechComponent.set(SolarPanelResearchID);
+  }
+
+  function initExpansion(IWorld world) internal {
+    Dimensions memory maxRange = Dimensions(37, 25);
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    P_IsTechComponent isTechComponent = P_IsTechComponent(world.getComponent(P_IsTechComponentID));
+    DimensionsComponent dimensionsComponent = DimensionsComponent(world.getComponent(DimensionsComponentID));
+    dimensionsComponent.set(ExpansionResearch, Dimensions(13, 11));
+    ResourceValue[] memory requiredResources = new ResourceValue[](1);
+
+    // Expansion Level II: 1000 iron
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 1000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch2, requiredResources);
+    isTechComponent.set(ExpansionResearch2);
+    dimensionsComponent.set(ExpansionResearch2, Dimensions(17, 13));
+
+    // Expansion III: 2000 copper
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: CopperResourceItemID, value: 2000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch3, requiredResources);
+    isTechComponent.set(ExpansionResearch3);
+    dimensionsComponent.set(ExpansionResearch3, Dimensions(21, 15));
+
+    // Expansion IV: 3000 iron plates
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 3000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch4, requiredResources);
+    isTechComponent.set(ExpansionResearch4);
+    dimensionsComponent.set(ExpansionResearch4, Dimensions(25, 17));
+
+    // Expansion V: 4000 lithium, main base level V
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 4000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch5, requiredResources);
+    isTechComponent.set(ExpansionResearch5);
+    levelComponent.set(ExpansionResearch5, 5);
+    dimensionsComponent.set(ExpansionResearch5, Dimensions(33, 23));
+
+    // Expansion VI: 5000 lithium, 2000 iron plates, main base level VI
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 5000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch6, requiredResources);
+    isTechComponent.set(ExpansionResearch6);
+    levelComponent.set(ExpansionResearch6, 6);
+    dimensionsComponent.set(ExpansionResearch6, maxRange);
   }
 }

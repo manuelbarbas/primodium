@@ -31,6 +31,7 @@ import {
   Outline,
 } from "../../common/object-components/sprite";
 import { ObjectPosition } from "../../common/object-components/common";
+import { getBuildingTopLeftCoord } from "src/util/building";
 
 const {
   Assets,
@@ -48,7 +49,7 @@ export const renderBuilding = (scene: Scene) => {
   const render = ({ entity }: { entity: EntityIndex }) => {
     const entityId = world.entities[entity];
     const renderId = `${entity}_entitySprite`;
-    const tilePosition = Position.get(entityId);
+    const tilePosition = getBuildingTopLeftCoord(entityId);
     const buildingType = BuildingType.get(entityId)?.value;
     const level = Level.get(entityId)?.value
       ? parseInt(Level.get(entityId)!.value.toString())

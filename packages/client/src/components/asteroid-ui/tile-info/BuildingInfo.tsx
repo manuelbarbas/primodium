@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import { useMud } from "src/hooks/useMud";
 import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
 import Header from "./Header";
-import UpgradeButton from "src/components/action/UpgradeButton";
+import UpgradeBuildingButton from "src/components/action/UpgradeBuildingButton";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
 import { demolishBuilding, demolishPath } from "src/util/web3";
@@ -79,8 +79,8 @@ export const BuildingInfo: React.FC<{
         </div>
         {isOwner && (
           <div className="relative">
-            <UpgradeButton
-              id="upgrade"
+            <UpgradeBuildingButton
+              id="upgrade-building"
               builtTile={buildingType ?? BlockType.Air}
               buildingEntity={building}
               coords={coord}

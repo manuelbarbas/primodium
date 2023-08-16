@@ -7,7 +7,7 @@ import { addressToEntity } from "solecs/utils.sol";
 
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { ResearchSystem, ID as ResearchSystemID } from "../../systems/ResearchSystem.sol";
@@ -144,7 +144,7 @@ contract ResearchSystemTest is PrimodiumTest {
     HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
 
     // alice researches DebugSimpleTechnologyResourceReqsID
     assertTrue(
@@ -153,14 +153,13 @@ contract ResearchSystemTest is PrimodiumTest {
       ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(MainBaseID, 2),
       abi.encode()
     );
-    upgradeSystem.executeTyped(getOrigin(alice));
+    upgradeBuildingSystem.executeTyped(getMainBaseCoord(alice));
 
     // should succeed because alice has upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);
@@ -189,7 +188,7 @@ contract ResearchSystemTest is PrimodiumTest {
       ),
       "alice should not have researched DebugSimpleTechnologyMainBaseLevelReqsID yet"
     );
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
+    buildSystem.executeTyped(MainBaseID, getMainBaseCoord(alice));
 
     // should fail because alice has not upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);

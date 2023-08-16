@@ -9,7 +9,8 @@ export const systemToId = {
   DestroySystem: "system.Destroy",
   IncrementSystem: "system.Increment",
   ResearchSystem: "system.Research",
-  S_CheckRequiredTileSystem: "system.S_CheckRequiredTile",
+  S_ClaimUnitsFromBuildingSystem: "system.S_ClaimUnitsFromBuilding",
+  S_ClaimUnitsSystem: "system.S_ClaimUnits",
   S_PlaceBuildingTilesSystem: "system.S_PlaceBuildingTiles",
   S_SpendRequiredResourcesSystem: "system.S_SpendRequiredResources",
   S_UpdateActiveStatusSystem: "system.S_UpdateActiveStatus",
@@ -21,7 +22,9 @@ export const systemToId = {
   S_UpdateUnclaimedResourcesSystem: "system.S_UpdateUnclaimedResources",
   S_UpdateUtilityProductionSystem: "system.S_UpdateUtilityProduction",
   SpawnSystem: "system.Spawn",
-  UpgradeSystem: "system.Upgrade",
+  TrainUnitsSystem: "system.TrainUnits",
+  UpgradeBuildingSystem: "system.UpgradeBuilding",
+  UpgradeRangeSystem: "system.UpgradeRange",
 };
 
 export const idToSystem = {
@@ -34,7 +37,8 @@ export const idToSystem = {
   "system.Destroy": "DestroySystem",
   "system.Increment": "IncrementSystem",
   "system.Research": "ResearchSystem",
-  "system.S_CheckRequiredTile": "S_CheckRequiredTileSystem",
+  "system.S_ClaimUnitsFromBuilding": "S_ClaimUnitsFromBuildingSystem",
+  "system.S_ClaimUnits": "S_ClaimUnitsSystem",
   "system.S_PlaceBuildingTiles": "S_PlaceBuildingTilesSystem",
   "system.S_SpendRequiredResources": "S_SpendRequiredResourcesSystem",
   "system.S_UpdateActiveStatus": "S_UpdateActiveStatusSystem",
@@ -46,6 +50,8 @@ export const idToSystem = {
   "system.S_UpdateUnclaimedResources": "S_UpdateUnclaimedResourcesSystem",
   "system.S_UpdateUtilityProduction": "S_UpdateUtilityProductionSystem",
   "system.Spawn": "SpawnSystem",
-  "system.Upgrade": "UpgradeSystem",
+  "system.TrainUnits": "TrainUnitsSystem",
+  "system.UpgradeBuilding": "UpgradeBuildingSystem",
+  "system.UpgradeRange": "UpgradeRangeSystem",
 };
   

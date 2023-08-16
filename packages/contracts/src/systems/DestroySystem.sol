@@ -4,12 +4,11 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 // components
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
-import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
@@ -127,11 +126,6 @@ contract DestroySystem is PrimodiumSystem {
       mainBaseComponent.remove(playerEntity);
     }
 
-    if (!P_IgnoreBuildLimitComponent(getC(P_IgnoreBuildLimitComponentID)).has(buildingType)) {
-      BuildingCountComponent buildingCountComponent = BuildingCountComponent(getC(BuildingCountComponentID));
-      buildingCountComponent.set(playerEntity, LibMath.getSafe(buildingCountComponent, playerEntity) - 1);
-    }
-
     //required production update
     if (
       P_ProductionDependenciesComponent(getAddressById(components, P_ProductionDependenciesComponentID)).has(
@@ -179,6 +173,7 @@ contract DestroySystem is PrimodiumSystem {
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
     childrenComponent.remove(buildingEntity);
+    PositionComponent(getC(PositionComponentID)).remove(buildingEntity);
     return abi.encode(buildingEntity);
   }
 

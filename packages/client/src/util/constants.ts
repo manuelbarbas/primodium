@@ -1,6 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
+import { hashStringEntity } from "./encode";
 
 export enum Action {
   DemolishBuilding,
@@ -156,6 +157,14 @@ export const BlockType = {
   KimberliteCrystalCatalystCrafted: keccak256(
     "item.KimberliteCrystalCatalystCrafted"
   ) as EntityID,
+
+  ExpansionResearch1: hashStringEntity("research.Expansion", 1),
+  ExpansionResearch2: hashStringEntity("research.Expansion", 2),
+  ExpansionResearch3: hashStringEntity("research.Expansion", 3),
+  ExpansionResearch4: hashStringEntity("research.Expansion", 4),
+  ExpansionResearch5: hashStringEntity("research.Expansion", 5),
+  ExpansionResearch6: hashStringEntity("research.Expansion", 6),
+  ExpansionResearch7: hashStringEntity("research.Expansion", 7),
 
   IronMine2Research: keccak256("research.IronMine2") as EntityID,
   IronMine3Research: keccak256("research.IronMine3") as EntityID,

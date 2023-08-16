@@ -9,7 +9,7 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "../../systems/DestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
@@ -43,10 +43,9 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
     console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
@@ -117,11 +116,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
-
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
@@ -167,14 +163,14 @@ contract ClaimSystemTest is PrimodiumTest {
     );
     assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
     vm.roll(20);
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
 
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2),
       abi.encode()
     );
-    upgradeSystem.executeTyped(platingFactoryCoord);
+    upgradeBuildingSystem.executeTyped(platingFactoryCoord);
     console.log("upgraded factory");
     assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 40, "Alice should have 40 IronPlates");
 
@@ -187,7 +183,7 @@ contract ClaimSystemTest is PrimodiumTest {
       !itemComponent.has(hashedAliceIronKey) || itemComponent.getValue(hashedAliceIronKey) <= 0,
       "Alice should not have any Iron"
     );
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     console.log("upgraded mine");
     vm.roll(100);
     claimSystem.executeTyped(mainBaseCoord);
@@ -215,11 +211,9 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
@@ -285,11 +279,9 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
     Coord memory platingFactoryCoord = getCoord1(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
       P_RequiredResourcesComponentID,
@@ -354,10 +346,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
@@ -405,10 +395,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
@@ -444,7 +432,7 @@ contract ClaimSystemTest is PrimodiumTest {
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
@@ -452,10 +440,8 @@ contract ClaimSystemTest is PrimodiumTest {
     Coord memory coord = getIronCoord(alice);
     assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = getOrigin(alice);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
@@ -471,14 +457,14 @@ contract ClaimSystemTest is PrimodiumTest {
     assertTrue(itemComponent.has(hashedAliceKey), "Alice should have iron");
     assertEq(itemComponent.getValue(hashedAliceKey), 10, "Alice should have 10 iron");
 
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
 
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 2, "IronMine should be level 2");
     vm.roll(20);
 
     claimSystem.executeTyped(mainBaseCoord);
     assertEq(itemComponent.getValue(hashedAliceKey), 30, "Alice should have 30 iron");
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 3, "IronMine should be level 3");
 
     vm.roll(30);
@@ -506,8 +492,7 @@ contract ClaimSystemTest is PrimodiumTest {
     assertEq(LibTerrain.getResourceByCoord(world, IronCoord), IronID, "Tile should have iron");
     assertEq(LibTerrain.getResourceByCoord(world, CopperCoord), CopperID, "Tile should have copper");
 
-    Coord memory mainBaseCoord = getCoord2(alice);
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     componentDevSystem.executeTyped(
