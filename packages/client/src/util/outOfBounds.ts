@@ -3,8 +3,8 @@ import { Coord } from "@latticexyz/utils";
 import { Dimensions, Level } from "src/network/components/chainComponents";
 import { hashStringEntity, trim } from "./encode";
 
-export function outOfBounds(player: EntityID, coord: Coord) {
-  const bounds = getPlayerBounds(player);
+export function outOfBounds(coord: Coord, player?: EntityID) {
+  const bounds = player ? getPlayerBounds(player) : getAsteroidBounds();
   return (
     coord.x > bounds.maxX ||
     coord.x < bounds.minX ||
