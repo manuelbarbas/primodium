@@ -29,13 +29,7 @@ contract S_ClaimUnitsSystem is IOnSubsystem, PrimodiumSystem {
     );
 
     uint256 playerEntity = addressToEntity(playerAddress);
-    uint256[] memory unitProductionBuildingEntities = UnitProductionOwnedByComponent(
-      world.getComponent(UnitProductionOwnedByComponentID)
-    ).getEntitiesWithValue(playerEntity);
-
-    for (uint32 i = 0; i < unitProductionBuildingEntities.length; i++) {
-      LibUnits.claimUnitsFromBuilding(world, unitProductionBuildingEntities[i], playerEntity);
-    }
+    LibUnits.claimUnits(world, playerEntity);
   }
 
   function executeTyped(address playerAddress) public returns (bytes memory) {

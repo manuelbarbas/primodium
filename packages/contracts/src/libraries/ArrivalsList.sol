@@ -37,7 +37,7 @@ library ArrivalsList {
     return ArrivalComponent(world.getComponent(ArrivalComponentID)).getValue(arrivalKey);
   }
 
-  function getArrivalTime(IWorld world, uint256 listId, uint256 index) internal view returns (uint256) {
+  function getArrivalBlock(IWorld world, uint256 listId, uint256 index) internal view returns (uint256) {
     return get(world, listId, index).arrivalBlock;
   }
 
@@ -56,6 +56,8 @@ library ArrivalsList {
     uint256 key = arrivalsIndexComponent.getValue(listIndex);
 
     arrivalsIndexComponent.set(listIndex, lastKey);
+    arrivalsIndexComponent.remove(finalListIndex);
+
     ArrivalComponent(world.getComponent(ArrivalComponentID)).remove(key);
     arrivalsSizeComponent.set(listId, size - 1);
   }

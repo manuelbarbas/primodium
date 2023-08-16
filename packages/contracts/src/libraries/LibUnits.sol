@@ -14,6 +14,7 @@ import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
 import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID } from "components/UnitProductionQueueComponent.sol";
+import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
@@ -199,14 +200,24 @@ library LibUnits {
           unitProductionBuildingEntity,
           trainedUnitsCount * unitTrainingTimeForBuilding
         );
-
-        unitsComponent.set(
-          playerUnitTypeEntity,
-          LibMath.getSafe(unitsComponent, playerUnitTypeEntity) + trainedUnitsCount
-        );
+        LibMath.add(unitsComponent, playerUnitTypeEntity, trainedUnitsCount);
       } else {
         isStillClaiming = false;
       }
+    }
+  }
+
+  function claimUnits(IWorld world, uint256 playerEntity) internal {
+    claimUnits(world, playerEntity, block.number);
+  }
+
+  function claimUnits(IWorld world, uint256 playerEntity, uint256 blockNumber) internal {
+    uint256[] memory unitProductionBuildingEntities = UnitProductionOwnedByComponent(
+      world.getComponent(UnitProductionOwnedByComponentID)
+    ).getEntitiesWithValue(playerEntity);
+
+    for (uint32 i = 0; i < unitProductionBuildingEntities.length; i++) {
+      claimUnitsFromBuilding(world, unitProductionBuildingEntities[i], playerEntity, blockNumber);
     }
   }
 
