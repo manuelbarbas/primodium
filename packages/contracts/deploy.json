@@ -1,5 +1,6 @@
 {
   "components": [
+    "AsteroidCountComponent",
     "CounterComponent",
     "BuildingTypeComponent",
     "OwnedByComponent",
@@ -61,7 +62,7 @@
       "name": "SpawnSystem",
       "writeAccess": [
         "PositionComponent",
-        "AsteroidTypeComponent",
+        "AsteroidCountComponent",
         "ActiveComponent",
         "BuildingTypeComponent",
         "OwnedByComponent",
