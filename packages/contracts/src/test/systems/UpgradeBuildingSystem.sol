@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 import "../PrimodiumTest.t.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 
@@ -22,7 +22,7 @@ import { LibMath } from "../../libraries/LibMath.sol";
 import { BuildingKey } from "../../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../../types.sol";
 
-contract UpgradeSystemTest is PrimodiumTest {
+contract UpgradeBuildingSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   function setUp() public override {
@@ -32,43 +32,43 @@ contract UpgradeSystemTest is PrimodiumTest {
 
   function testFailUpgradeNonUpgradableBuilding() public {
     vm.startPrank(alice);
-    Coord memory coord = getOrigin(alice);
+    Coord memory coord = getCoord3(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     vm.stopPrank();
   }
 
   function testUpgradeToMaxLevel() public {
     vm.startPrank(alice);
-    Coord memory coord = getOrigin(alice);
+    Coord memory coord = getCoord1(alice);
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     buildSystem.executeTyped(DebugIronMineNoTileReqID, coord);
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 1, "building should be level 1");
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 2, "building should be level 2");
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 3, "building should be level 3");
     vm.stopPrank();
   }
 
   function testFailUpgradeMaxLevelReached() public {
     vm.startPrank(alice);
-    Coord memory coord = getOrigin(alice);
+    Coord memory coord = getCoord3(alice);
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     buildSystem.executeTyped(DebugIronMineNoTileReqID, coord);
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 1, "building should be level 1");
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 2, "building should be level 2");
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     assertEq(levelComponent.getValue(LibEncode.hashKeyCoord(BuildingKey, coord)), 3, "building should be level 3");
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     //should fail
     vm.stopPrank();
   }
@@ -77,13 +77,13 @@ contract UpgradeSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(component(MaxUtilityComponentID));
     OccupiedUtilityResourceComponent occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       component(OccupiedUtilityResourceComponentID)
     );
 
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getOrigin(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord3(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
@@ -97,7 +97,7 @@ contract UpgradeSystemTest is PrimodiumTest {
       2,
       "used up electricity should be 2"
     );
-    upgradeSystem.executeTyped(getOrigin(alice));
+    upgradeBuildingSystem.executeTyped(getCoord3(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       20,
@@ -109,8 +109,6 @@ contract UpgradeSystemTest is PrimodiumTest {
 
   function testUpgrade() public {
     vm.startPrank(alice);
-
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
 
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
     P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
@@ -124,6 +122,7 @@ contract UpgradeSystemTest is PrimodiumTest {
     console.log("upgrading MainBase to level 2");
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
 
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(
       LibEncode.hashKeyEntity(MainBaseID, 2)
@@ -142,7 +141,7 @@ contract UpgradeSystemTest is PrimodiumTest {
 
       console.log("%s of amount %s provided to player", requiredResources.resources[i], requiredResources.values[i]);
     }
-    upgradeSystem.executeTyped(mainBaseCoord);
+    upgradeBuildingSystem.executeTyped(mainBaseCoord);
     assertTrue(levelComponent.getValue(buildingEntity) == 2);
 
     vm.stopPrank();
@@ -154,13 +153,13 @@ contract UpgradeSystemTest is PrimodiumTest {
     Coord memory coord = getMainBaseCoord(alice);
     uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
 
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     LevelComponent levelComponent = LevelComponent(component(BuildingComponentID));
 
     assertTrue(levelComponent.has(buildingEntity));
     assertTrue(levelComponent.getValue(buildingEntity) == 1);
 
-    upgradeSystem.executeTyped(coord);
+    upgradeBuildingSystem.executeTyped(coord);
     vm.stopPrank();
   }
 }

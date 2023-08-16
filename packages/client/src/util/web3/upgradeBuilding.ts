@@ -5,7 +5,7 @@ import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 
-export const upgrade = async (coord: Coord, network: Network) => {
+export const upgradeBuilding = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
@@ -17,7 +17,7 @@ export const upgrade = async (coord: Coord, network: Network) => {
   const position = { ...coord, parent: activeAsteroid };
 
   await execute(
-    systems["system.Upgrade"].executeTyped(position, {
+    systems["system.UpgradeBuilding"].executeTyped(position, {
       gasLimit: 5_000_000,
     }),
     providers,

@@ -4,7 +4,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as SpawnSystemID } from "./SpawnSystem.sol";
-import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
+import { ID as UpgradeBuildingSystemID } from "./UpgradeBuildingSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
@@ -27,9 +27,9 @@ contract S_UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
         msg.sender == getAddressById(world.systems(), SpawnSystemID) ||
-        msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
+        msg.sender == getAddressById(world.systems(), UpgradeBuildingSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroySystemID),
-      "S_UpdatePlayerStorageSystem: Only BuildSystem, SpawnSystem, UpgradeSystem, DestroySystem can call this function"
+      "S_UpdatePlayerStorageSystem: Only BuildSystem, SpawnSystem, UpgradeBuildingSystem, DestroySystem can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(

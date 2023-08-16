@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { LibEncode } from "libraries/LibEncode.sol";
 import { BolutiteID, CopperID, IridiumID, IronID, KimberliteID, LithiumID, OsmiumID, TitaniumID, TungstenID, UraniniteID } from "../prototypes/Resource.sol";
 
 // Research IDs, match up with Tiles and Item IDs
@@ -53,3 +54,13 @@ uint256 constant SolarPanel3ResearchID = uint256(keccak256("research.SolarPanel3
 uint256 constant HousingUnitResearchID = uint256(keccak256("research.HousingUnit"));
 uint256 constant HousingUnit2ResearchID = uint256(keccak256("research.HousingUnit2"));
 uint256 constant HousingUnit3ResearchID = uint256(keccak256("research.HousingUnit3"));
+
+string constant ExpansionKey = "research.Expansion";
+// this behavior is identical to LibEncode.hashKeyEntity
+uint256 constant ExpansionResearch = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(1))));
+uint256 constant ExpansionResearch2 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(2))));
+uint256 constant ExpansionResearch3 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(3))));
+uint256 constant ExpansionResearch4 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(4))));
+uint256 constant ExpansionResearch5 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(5))));
+uint256 constant ExpansionResearch6 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(6))));
+uint256 constant ExpansionResearch7 = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(7))));

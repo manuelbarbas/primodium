@@ -8,10 +8,9 @@ import { S_ClaimUnitsSystem, ID as S_ClaimUnitsSystemID } from "../../systems/S_
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "../../systems/TrainUnitsSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
-import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "../../components/P_MaxBuildingsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "../../components/P_BlueprintComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
@@ -44,7 +43,7 @@ contract TrainUnitSystem is PrimodiumTest {
   BuildSystem public buildSystem;
   TrainUnitsSystem public trainUnitsSystem;
   S_ClaimUnitsSystem public s_claimUnitsSystem;
-  UpgradeSystem public upgradeSystem;
+  UpgradeBuildingSystem public upgradeBuildingSystem;
 
   function setUp() public override {
     super.setUp();
@@ -53,7 +52,7 @@ contract TrainUnitSystem is PrimodiumTest {
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
     s_claimUnitsSystem = S_ClaimUnitsSystem(system(S_ClaimUnitsSystemID));
-    upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     spawn(alice);
     // init other
   }
@@ -210,7 +209,7 @@ contract TrainUnitSystem is PrimodiumTest {
     );
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
-    upgradeSystem.executeTyped(getIronCoord(alice));
+    upgradeBuildingSystem.executeTyped(getIronCoord(alice));
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(20);
@@ -235,7 +234,7 @@ contract TrainUnitSystem is PrimodiumTest {
       getIronCoord(alice)
     );
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
-    upgradeSystem.executeTyped(getIronCoord(alice));
+    upgradeBuildingSystem.executeTyped(getIronCoord(alice));
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 5);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit2, 5);

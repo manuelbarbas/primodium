@@ -9,7 +9,6 @@
     "HasResearchedComponent",
     "MainBaseComponent",
     "LevelComponent",
-    "BuildingCountComponent",
     "ChildrenComponent",
     "ProductionComponent",
     "IsDebugComponent",
@@ -37,8 +36,6 @@
     "P_IsTechComponent",
     "P_RequiredResearchComponent",
     "P_RequiredResourcesComponent",
-    "P_MaxBuildingsComponent",
-    "P_IgnoreBuildLimitComponent",
     "P_IsBuildingTypeComponent",
     "P_UnitAttackComponent",
     "P_UnitCargoComponent",
@@ -67,7 +64,6 @@
         "AsteroidTypeComponent",
         "ActiveComponent",
         "BuildingTypeComponent",
-        "BuildingCountComponent",
         "OwnedByComponent",
         "LevelComponent",
         "MainBaseComponent",
@@ -80,7 +76,6 @@
       "name": "BuildSystem",
       "writeAccess": [
         "BuildingTypeComponent",
-        "BuildingCountComponent",
         "OwnedByComponent",
         "LevelComponent",
         "MainBaseComponent",
@@ -98,7 +93,6 @@
         "MainBaseComponent",
         "ChildrenComponent",
         "LevelComponent",
-        "BuildingCountComponent",
         "PathComponent",
         "PositionComponent",
         "UnitProductionOwnedByComponent"
@@ -118,7 +112,11 @@
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpgradeSystem",
+      "name": "UpgradeBuildingSystem",
+      "writeAccess": ["LevelComponent"]
+    },
+    {
+      "name": "UpgradeRangeSystem",
       "writeAccess": ["LevelComponent"]
     },
     {
