@@ -39,7 +39,7 @@ export type CoordStructOutput = [number, number, BigNumber] & {
   parent: BigNumber;
 };
 
-export interface UpgradeSystemInterface extends utils.Interface {
+export interface UpgradeBuildingSystemInterface extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
     "executeTyped((int32,int32,uint256))": FunctionFragment;
@@ -99,12 +99,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface UpgradeSystem extends BaseContract {
+export interface UpgradeBuildingSystem extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: UpgradeSystemInterface;
+  interface: UpgradeBuildingSystemInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

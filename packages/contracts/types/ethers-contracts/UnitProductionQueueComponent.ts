@@ -27,11 +27,21 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
+export type ResourceValueStruct = {
+  resource: PromiseOrValue<BigNumberish>;
+  value: PromiseOrValue<BigNumberish>;
+};
+
+export type ResourceValueStructOutput = [BigNumber, number] & {
+  resource: BigNumber;
+  value: number;
+};
+
+export interface UnitProductionQueueComponentInterface extends utils.Interface {
   functions: {
     "authorizeWriter(address)": FunctionFragment;
     "getEntities()": FunctionFragment;
-    "getEntitiesWithValue(bool)": FunctionFragment;
+    "getEntitiesWithValue((uint256,uint32))": FunctionFragment;
     "getEntitiesWithValue(bytes)": FunctionFragment;
     "getRawValue(uint256)": FunctionFragment;
     "getSchema()": FunctionFragment;
@@ -42,8 +52,8 @@ export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
     "registerIndexer(address)": FunctionFragment;
     "registerWorld(address)": FunctionFragment;
     "remove(uint256)": FunctionFragment;
-    "set(uint256)": FunctionFragment;
     "set(uint256,bytes)": FunctionFragment;
+    "set(uint256,(uint256,uint32))": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unauthorizeWriter(address)": FunctionFragment;
     "world()": FunctionFragment;
@@ -54,7 +64,7 @@ export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "authorizeWriter"
       | "getEntities"
-      | "getEntitiesWithValue(bool)"
+      | "getEntitiesWithValue((uint256,uint32))"
       | "getEntitiesWithValue(bytes)"
       | "getRawValue"
       | "getSchema"
@@ -65,8 +75,8 @@ export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
       | "registerIndexer"
       | "registerWorld"
       | "remove"
-      | "set(uint256)"
       | "set(uint256,bytes)"
+      | "set(uint256,(uint256,uint32))"
       | "transferOwnership"
       | "unauthorizeWriter"
       | "world"
@@ -82,8 +92,8 @@ export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getEntitiesWithValue(bool)",
-    values: [PromiseOrValue<boolean>]
+    functionFragment: "getEntitiesWithValue((uint256,uint32))",
+    values: [ResourceValueStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "getEntitiesWithValue(bytes)",
@@ -117,12 +127,12 @@ export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "set(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "set(uint256,bytes)",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "set(uint256,(uint256,uint32))",
+    values: [PromiseOrValue<BigNumberish>, ResourceValueStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -147,7 +157,7 @@ export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getEntitiesWithValue(bool)",
+    functionFragment: "getEntitiesWithValue((uint256,uint32))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -173,11 +183,11 @@ export interface P_IgnoreBuildLimitComponentInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "remove", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256)",
+    functionFragment: "set(uint256,bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "set(uint256,bytes)",
+    functionFragment: "set(uint256,(uint256,uint32))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -213,12 +223,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface P_IgnoreBuildLimitComponent extends BaseContract {
+export interface UnitProductionQueueComponent extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: P_IgnoreBuildLimitComponentInterface;
+  interface: UnitProductionQueueComponentInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -247,8 +257,8 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue((uint256,uint32))"(
+      factoryProductionData: ResourceValueStruct,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
@@ -269,7 +279,7 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[ResourceValueStructOutput]>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -295,14 +305,15 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "set(uint256,(uint256,uint32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: ResourceValueStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -331,8 +342,8 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
 
   getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  "getEntitiesWithValue(bool)"(
-    value: PromiseOrValue<boolean>,
+  "getEntitiesWithValue((uint256,uint32))"(
+    factoryProductionData: ResourceValueStruct,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
@@ -353,7 +364,7 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
   getValue(
     entity: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<ResourceValueStructOutput>;
 
   has(
     entity: PromiseOrValue<BigNumberish>,
@@ -379,14 +390,15 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "set(uint256)"(
-    entity: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   "set(uint256,bytes)"(
     entity: PromiseOrValue<BigNumberish>,
     value: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "set(uint256,(uint256,uint32))"(
+    entity: PromiseOrValue<BigNumberish>,
+    value: ResourceValueStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -415,8 +427,8 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber[]>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue((uint256,uint32))"(
+      factoryProductionData: ResourceValueStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
@@ -437,7 +449,7 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
     getValue(
       entity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<ResourceValueStructOutput>;
 
     has(
       entity: PromiseOrValue<BigNumberish>,
@@ -463,14 +475,15 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "set(uint256,(uint256,uint32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: ResourceValueStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -511,8 +524,8 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<BigNumber>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue((uint256,uint32))"(
+      factoryProductionData: ResourceValueStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -557,14 +570,15 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "set(uint256,(uint256,uint32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: ResourceValueStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -594,8 +608,8 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
 
     getEntities(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    "getEntitiesWithValue(bool)"(
-      value: PromiseOrValue<boolean>,
+    "getEntitiesWithValue((uint256,uint32))"(
+      factoryProductionData: ResourceValueStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -640,14 +654,15 @@ export interface P_IgnoreBuildLimitComponent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "set(uint256)"(
-      entity: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     "set(uint256,bytes)"(
       entity: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "set(uint256,(uint256,uint32))"(
+      entity: PromiseOrValue<BigNumberish>,
+      value: ResourceValueStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

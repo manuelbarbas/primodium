@@ -27,7 +27,8 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface BuildingCountComponentInterface extends utils.Interface {
+export interface UnitProductionLastQueueIndexComponentInterface
+  extends utils.Interface {
   functions: {
     "authorizeWriter(address)": FunctionFragment;
     "getEntities()": FunctionFragment;
@@ -213,12 +214,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface BuildingCountComponent extends BaseContract {
+export interface UnitProductionLastQueueIndexComponent extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: BuildingCountComponentInterface;
+  interface: UnitProductionLastQueueIndexComponentInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

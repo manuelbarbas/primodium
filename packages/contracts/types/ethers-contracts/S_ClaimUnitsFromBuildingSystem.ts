@@ -27,10 +27,11 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface S_CheckRequiredTileSystemInterface extends utils.Interface {
+export interface S_ClaimUnitsFromBuildingSystemInterface
+  extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
-    "executeTyped(address,uint256,uint256)": FunctionFragment;
+    "executeTyped(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -49,11 +50,7 @@ export interface S_CheckRequiredTileSystemInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "executeTyped",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -91,12 +88,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface S_CheckRequiredTileSystem extends BaseContract {
+export interface S_ClaimUnitsFromBuildingSystem extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: S_CheckRequiredTileSystemInterface;
+  interface: S_ClaimUnitsFromBuildingSystemInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -126,7 +123,6 @@ export interface S_CheckRequiredTileSystem extends BaseContract {
     executeTyped(
       playerAddress: PromiseOrValue<string>,
       buildingEntity: PromiseOrValue<BigNumberish>,
-      buildingType: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -146,7 +142,6 @@ export interface S_CheckRequiredTileSystem extends BaseContract {
   executeTyped(
     playerAddress: PromiseOrValue<string>,
     buildingEntity: PromiseOrValue<BigNumberish>,
-    buildingType: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -166,7 +161,6 @@ export interface S_CheckRequiredTileSystem extends BaseContract {
     executeTyped(
       playerAddress: PromiseOrValue<string>,
       buildingEntity: PromiseOrValue<BigNumberish>,
-      buildingType: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -198,7 +192,6 @@ export interface S_CheckRequiredTileSystem extends BaseContract {
     executeTyped(
       playerAddress: PromiseOrValue<string>,
       buildingEntity: PromiseOrValue<BigNumberish>,
-      buildingType: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -219,7 +212,6 @@ export interface S_CheckRequiredTileSystem extends BaseContract {
     executeTyped(
       playerAddress: PromiseOrValue<string>,
       buildingEntity: PromiseOrValue<BigNumberish>,
-      buildingType: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

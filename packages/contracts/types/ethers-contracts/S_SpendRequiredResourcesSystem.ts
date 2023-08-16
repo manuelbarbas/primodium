@@ -32,6 +32,7 @@ export interface S_SpendRequiredResourcesSystemInterface
   functions: {
     "execute(bytes)": FunctionFragment;
     "executeTyped(address,uint256)": FunctionFragment;
+    "executeTyped(address,uint256,uint32)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -39,7 +40,8 @@ export interface S_SpendRequiredResourcesSystemInterface
   getFunction(
     nameOrSignatureOrTopic:
       | "execute"
-      | "executeTyped"
+      | "executeTyped(address,uint256)"
+      | "executeTyped(address,uint256,uint32)"
       | "owner"
       | "transferOwnership"
   ): FunctionFragment;
@@ -49,8 +51,16 @@ export interface S_SpendRequiredResourcesSystemInterface
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "executeTyped",
+    functionFragment: "executeTyped(address,uint256)",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "executeTyped(address,uint256,uint32)",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -60,7 +70,11 @@ export interface S_SpendRequiredResourcesSystemInterface
 
   decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "executeTyped",
+    functionFragment: "executeTyped(address,uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "executeTyped(address,uint256,uint32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -120,9 +134,16 @@ export interface S_SpendRequiredResourcesSystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    executeTyped(
+    "executeTyped(address,uint256)"(
       playerAddress: PromiseOrValue<string>,
       targetEntity: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "executeTyped(address,uint256,uint32)"(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
+      count: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -139,9 +160,16 @@ export interface S_SpendRequiredResourcesSystem extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  executeTyped(
+  "executeTyped(address,uint256)"(
     playerAddress: PromiseOrValue<string>,
     targetEntity: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  "executeTyped(address,uint256,uint32)"(
+    playerAddress: PromiseOrValue<string>,
+    targetEntity: PromiseOrValue<BigNumberish>,
+    count: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -158,9 +186,16 @@ export interface S_SpendRequiredResourcesSystem extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    executeTyped(
+    "executeTyped(address,uint256)"(
       playerAddress: PromiseOrValue<string>,
       targetEntity: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "executeTyped(address,uint256,uint32)"(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
+      count: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -189,9 +224,16 @@ export interface S_SpendRequiredResourcesSystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    executeTyped(
+    "executeTyped(address,uint256)"(
       playerAddress: PromiseOrValue<string>,
       targetEntity: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "executeTyped(address,uint256,uint32)"(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
+      count: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -209,9 +251,16 @@ export interface S_SpendRequiredResourcesSystem extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    executeTyped(
+    "executeTyped(address,uint256)"(
       playerAddress: PromiseOrValue<string>,
       targetEntity: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "executeTyped(address,uint256,uint32)"(
+      playerAddress: PromiseOrValue<string>,
+      targetEntity: PromiseOrValue<BigNumberish>,
+      count: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

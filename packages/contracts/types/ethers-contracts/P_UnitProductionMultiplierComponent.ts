@@ -27,7 +27,8 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface P_MaxBuildingsComponentInterface extends utils.Interface {
+export interface P_UnitProductionMultiplierComponentInterface
+  extends utils.Interface {
   functions: {
     "authorizeWriter(address)": FunctionFragment;
     "getEntities()": FunctionFragment;
@@ -213,12 +214,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface P_MaxBuildingsComponent extends BaseContract {
+export interface P_UnitProductionMultiplierComponent extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: P_MaxBuildingsComponentInterface;
+  interface: P_UnitProductionMultiplierComponentInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
