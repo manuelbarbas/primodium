@@ -18,11 +18,13 @@ export namespace AsteroidMap {
     SpriteAtlas = "sprite-atlas",
     ResourceTileset = "resource-tileset",
     TerrainTileset = "terrain-tileset",
+    FogTileset = "fog-tileset",
   }
 
   export enum Tilesets {
     Terrain = "Terrain",
     Resource = "Resource",
+    Fog = "Fog",
   }
 
   export enum DepthLayers {

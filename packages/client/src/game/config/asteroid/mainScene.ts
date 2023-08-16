@@ -33,6 +33,12 @@ const mainSceneConfig: SceneConfig = {
         tileHeight: 16,
         tileWidth: 16,
       },
+      [Tilesets.Fog]: {
+        key: Assets.FogTileset,
+        tileHeight: 16,
+        tileWidth: 16,
+        extrusion: 1,
+      },
     },
     layerConfig: {
       layers: {
@@ -42,6 +48,9 @@ const mainSceneConfig: SceneConfig = {
         Resource: {
           tilesets: [Tilesets.Resource, Tilesets.Resource],
         },
+        // Fog: {
+        //   tilesets: [Tilesets.Resource],
+        // },
       },
       defaultLayer: Tilesets.Terrain,
     },

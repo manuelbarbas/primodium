@@ -11,12 +11,16 @@
         "key": "resource-tileset",
         "url": "/assets/tilesets/resource.png"
       },
-
       {
         "type": "atlas",
         "key": "sprite-atlas",
         "textureURL": "/assets/sprites/atlas.png",
         "atlasURL": "/assets/sprites/atlas.json"
+      },
+      {
+        "type": "image",
+        "key": "fog-tileset",
+        "url": "/assets/tilesets/fog.png"
       }
     ]
   },

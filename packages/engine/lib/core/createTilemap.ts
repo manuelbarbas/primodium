@@ -1,6 +1,7 @@
-import { createAnimatedTilemap, createChunks } from "@latticexyz/phaserx";
+import { createChunks } from "@latticexyz/phaserx";
 import type { createCamera } from "@latticexyz/phaserx";
 import { SceneConfig, TileAnimation, TilesetConfig } from "../../types";
+import { createAnimatedTilemap } from "./tilemap/createAnimatedTilemap";
 
 export const createTilemap = (
   scene: Phaser.Scene,
@@ -22,6 +23,7 @@ export const createTilemap = (
 
   const generatedTilesets: Record<string, Phaser.Tilemaps.Tileset> = {};
   for (const [key, value] of Object.entries(tilesets)) {
+    console.log(key, value);
     try {
       generatedTilesets[key] = emptyMap.addTilesetImage(
         key,
