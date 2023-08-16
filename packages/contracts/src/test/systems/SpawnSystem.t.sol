@@ -71,7 +71,6 @@ contract SpawnSystemTest is PrimodiumTest {
     uint256 playerEntity = addressToEntity(alice);
     Coord memory position = LibAsteroid.getUniqueAsteroidPosition(69);
     spawn(alice);
-    vm.startPrank(alice);
     uint256 asteroid = positionComponent.getValue(playerEntity).parent;
     Coord memory retrievedPosition = positionComponent.getValue(asteroid);
     assertCoordEq(position, retrievedPosition);
@@ -90,7 +89,5 @@ contract SpawnSystemTest is PrimodiumTest {
     OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     assertTrue(ownedByComponent.has(buildingEntity));
     assertEq(ownedByComponent.getValue(buildingEntity), addressToEntity(alice));
-
-    vm.stopPrank();
   }
 }
