@@ -30,3 +30,14 @@ export function getPlayerBounds(player: EntityID) {
     maxY: Math.floor(asteroidDims.height + range.height) / 2 - 1,
   };
 }
+
+export function getAsteroidBounds() {
+  const asteroidDims = Dimensions.get();
+  if (!asteroidDims) throw new Error("Asteroid dimensions not found");
+  return {
+    minX: 0,
+    minY: 0,
+    maxX: asteroidDims?.width,
+    maxY: asteroidDims?.height,
+  };
+}

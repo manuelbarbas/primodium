@@ -58,6 +58,19 @@ export namespace AsteroidMap {
     Uraninite,
   }
 
+  export enum FogTilekeys {
+    Empty,
+    BottomRight,
+    TopLeft,
+    Top,
+    TopRight,
+    Left,
+    Right,
+    BottomLeft,
+    Bottom,
+    Base,
+  }
+
   export const TileKeys = { ...TerrainTilekeys, ...ResourceTilekeys };
 
   export enum TileAnimationKeys {
