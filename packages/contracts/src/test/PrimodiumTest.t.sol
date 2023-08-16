@@ -3,7 +3,6 @@ pragma solidity >=0.8.0;
 
 import "std-contracts/test/MudTest.t.sol";
 import { Deploy } from "./Deploy.sol";
-import { Coord } from "../types.sol";
 import { addressToEntity, getAddressById } from "systems/internal/PrimodiumSystem.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
@@ -14,6 +13,7 @@ import { SpawnSystem, ID as SpawnSystemID } from "systems/SpawnSystem.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
 import "../prototypes.sol";
+import "../types.sol";
 
 // only for use privately
 struct Coord2D {

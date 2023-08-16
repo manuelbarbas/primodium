@@ -6,6 +6,7 @@ import { SingletonID } from "solecs/SingletonID.sol";
 
 //components
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
@@ -41,6 +42,7 @@ library LibAsteroid {
 
     // Mark the asteroid's position as active in the ActiveComponent.
     ActiveComponent(world.getComponent(ActiveComponentID)).set(encodedPosition);
+    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(asteroidEntity, ownerEntity);
   }
 
   /**

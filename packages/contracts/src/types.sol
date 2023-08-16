@@ -34,3 +34,33 @@ struct Dimensions {
   int32 x;
   int32 y;
 }
+
+enum EUnitType {
+  HAMMER,
+  ANVIL,
+  STINGER,
+  AEGIS,
+  MINING_VESSEL
+}
+
+// Arrivals
+
+enum ESendType {
+  INVADE,
+  REINFORCE
+}
+
+struct ArrivalUnit {
+  EUnitType unitType;
+  uint32 count;
+}
+
+struct Arrival {
+  ESendType sendType;
+  ArrivalUnit[] units;
+  uint256 arrivalBlock;
+  uint256 from;
+  uint256 to;
+  uint256 origin;
+  uint256 destination;
+}

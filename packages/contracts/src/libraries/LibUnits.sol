@@ -144,36 +144,16 @@ library LibUnits {
     return P_RequiredResourcesComponent(world.getComponent(P_RequiredResourcesComponentID)).getValue(unitLevelEntity);
   }
 
-  function hasRequiredResources(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 unitType,
-    uint32 count
-  ) internal view returns (bool) {
-    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
-    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
-      world.getComponent(LastClaimedAtComponentID)
-    );
-    ResourceValues memory requiredResources = getUnitResourceCosts(world, unitType, playerEntity);
-
-    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      uint32 resourceCost = requiredResources.values[i] * count;
-      uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
-      uint32 playerResourceCount = LibMath.getSafe(itemComponent, playerResourceEntity);
-
-      if (LibMath.getSafe(productionComponent, playerResourceEntity) > 0) {
-        playerResourceCount +=
-          productionComponent.getValue(playerResourceEntity) *
-          uint32(block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceEntity));
-      }
-
-      if (resourceCost > playerResourceCount) return false;
-    }
-    return true;
+  function claimUnitsFromBuilding(IWorld world, uint256 unitProductionBuildingEntity, uint256 playerEntity) internal {
+    claimUnitsFromBuilding(world, unitProductionBuildingEntity, playerEntity, block.number);
   }
 
-  function claimUnitsFromBuilding(IWorld world, uint256 unitProductionBuildingEntity, uint256 playerEntity) internal {
+  function claimUnitsFromBuilding(
+    IWorld world,
+    uint256 unitProductionBuildingEntity,
+    uint256 playerEntity,
+    uint256 blockNumber
+  ) internal {
     UnitProductionQueueComponent unitProductionQueueComponent = UnitProductionQueueComponent(
       world.getComponent(UnitProductionQueueComponentID)
     );
@@ -198,8 +178,8 @@ library LibUnits {
         unitProductionBuildingEntity,
         unitProductionQueue.resource
       );
-      uint256 lastClaimedAt = lastClaimedAtComponent.getValue(unitProductionBuildingEntity);
-      uint32 trainedUnitsCount = uint32(block.number - lastClaimedAt) / unitTrainingTimeForBuilding;
+      uint32 trainedUnitsCount = uint32(blockNumber - lastClaimedAtComponent.getValue(unitProductionBuildingEntity)) /
+        unitTrainingTimeForBuilding;
 
       uint256 playerUnitTypeEntity = LibEncode.hashKeyEntity(unitProductionQueue.resource, playerEntity);
       if (trainedUnitsCount > 0) {
@@ -214,10 +194,12 @@ library LibUnits {
           unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
         }
 
-        lastClaimedAtComponent.set(
+        LibMath.add(
+          lastClaimedAtComponent,
           unitProductionBuildingEntity,
-          lastClaimedAt + (trainedUnitsCount * unitTrainingTimeForBuilding)
+          trainedUnitsCount * unitTrainingTimeForBuilding
         );
+
         unitsComponent.set(
           playerUnitTypeEntity,
           LibMath.getSafe(unitsComponent, playerUnitTypeEntity) + trainedUnitsCount
