@@ -4,6 +4,12 @@ import { Uint32Component } from "std-contracts/components/Uint32Component.sol";
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 
 library LibMath {
+  function increment(Uint32Component component, uint256 entity) internal returns (uint32) {
+    uint32 value = getSafe(component, entity) + 1;
+    component.set(entity, value);
+    return value;
+  }
+
   function getSafe(Uint256Component component, uint256 entity) internal view returns (uint256) {
     return component.has(entity) ? component.getValue(entity) : 0;
   }

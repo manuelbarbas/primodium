@@ -4,11 +4,14 @@ pragma solidity >=0.8.0;
 import "../PrimodiumTest.t.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
+import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
 import "../../prototypes.sol";
 
 import { LibAsteroid } from "../../libraries/LibAsteroid.sol";
+import { LibMath } from "../../libraries/LibMath.sol";
 
 import { Coord, Dimensions } from "../../types.sol";
 
@@ -19,13 +22,19 @@ contract LibAsteroidTest is PrimodiumTest {
     super.setUp();
   }
 
-  function testFuzzAsteroidLocation(uint256 playerEntity) public {
-    Dimensions memory dimensions = DimensionsComponent(getAddressById(world.components(), DimensionsComponentID))
-      .getValue(SingletonID);
-    Coord memory coord = LibAsteroid.getUniqueAsteroidPosition(world, playerEntity);
-    assertGe(uint32(coord.x), 0);
-    assertGe(uint32(coord.y), 0);
-    assertLe(uint32(coord.x), uint32(dimensions.x), "x is too big");
-    assertLe(uint32(coord.y), uint32(dimensions.y), "y is too big");
+  function testAsteroidLocation() public {
+    AsteroidCountComponent asteroidCountComponent = AsteroidCountComponent(
+      world.getComponent(AsteroidCountComponentID)
+    );
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+
+    for (uint32 i = 0; i < 30; i++) {
+      vm.roll(456);
+      uint32 count = LibMath.getSafe(asteroidCountComponent, SingletonID);
+      Coord memory coord = LibAsteroid.getUniqueAsteroidPosition(addressToEntity(alice), count);
+      componentDevSystem.executeTyped(AsteroidCountComponentID, SingletonID, abi.encode(count + 1));
+      logCoord(coord);
+      vm.roll(block.number + 1);
+    }
   }
 }
