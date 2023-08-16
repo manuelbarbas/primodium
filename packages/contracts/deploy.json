@@ -62,7 +62,9 @@
       "name": "SpawnSystem",
       "writeAccess": [
         "PositionComponent",
+        "ActiveComponent",
         "AsteroidCountComponent",
+        "AsteroidTypeComponent",
         "ActiveComponent",
         "BuildingTypeComponent",
         "OwnedByComponent",
