@@ -5,7 +5,7 @@ import "../PrimodiumTest.t.sol";
 import "forge-std/console.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
-import { BattleSystem, ID as BattleSystemID } from "../../systems/BattleSystem.sol";
+import { S_BattleSystem, ID as S_BattleSystemID } from "../../systems/S_BattleSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 
 import { BattleParticipant } from "../../types.sol";
@@ -18,11 +18,11 @@ import { BIGNUM } from "../../prototypes/Debug.sol";
 //debug buildings
 import "../../prototypes.sol";
 
-contract BattleSystemTest is PrimodiumTest {
+contract S_BattleSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   ComponentDevSystem public componentDevSystem;
-  BattleSystem public battleSystem;
+  S_BattleSystem public S_BattleSystem;
   LevelComponent public levelComponent;
   BattleResultComponent public battleResultComponent;
 
@@ -32,7 +32,7 @@ contract BattleSystemTest is PrimodiumTest {
     //components
     battleResultComponent = BattleResultComponent(component(BattleResultComponentID));
     // init systems
-    battleSystem = BattleSystem(system(BattleSystemID));
+    S_BattleSystem = S_BattleSystem(system(S_BattleSystemID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     spawn(alice);
     // init other
@@ -40,7 +40,7 @@ contract BattleSystemTest is PrimodiumTest {
 
   function testBattle() public {
     vm.startPrank(alice);
-    uint256 battleEntity = LibEncode.hashKeyEntity(BattleSystemID, 0);
+    uint256 battleEntity = LibEncode.hashKeyEntity(S_BattleSystemID, 0);
 
     //alice
     uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
@@ -79,7 +79,7 @@ contract BattleSystemTest is PrimodiumTest {
       abi.encode(defender.playerAddress, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
 
-    battleSystem.executeTyped(alice, battleEntity);
+    S_BattleSystem.executeTyped(alice, battleEntity);
     require(battleResultComponent.has(battleEntity), "battle result not found");
     BattleResult memory result = battleResultComponent.getValue(battleEntity);
     for (uint256 i = 0; i < result.attackerUnitsLeft.length; i++) {

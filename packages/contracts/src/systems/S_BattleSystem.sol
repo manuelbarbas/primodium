@@ -7,15 +7,15 @@ import { BattleResultComponent, ID as BattleResultComponentID, BattleResult } fr
 import { LibBattle } from "../libraries/LibBattle.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-uint256 constant ID = uint256(keccak256("system.Battle"));
+uint256 constant ID = uint256(keccak256("system.S_Battle"));
 
-contract BattleSystem is PrimodiumSystem, IOnEntitySubsystem {
+contract S_BattleSystem is PrimodiumSystem, IOnEntitySubsystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
     (address playerAddress, uint256 battleEntity) = abi.decode(args, (address, uint256));
     BattleResultComponent battleResultComponent = BattleResultComponent(getC(BattleResultComponentID));
-    require(!battleResultComponent.has(battleEntity), "BattleSystem: battle already resolved");
+    require(!battleResultComponent.has(battleEntity), "S_BattleSystem: battle already resolved");
 
     BattleResult memory battleResult = LibBattle.resolveBattle(world, battleEntity);
     battleResultComponent.set(battleEntity, battleResult);
