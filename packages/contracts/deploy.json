@@ -121,13 +121,18 @@
         "LastClaimedAtComponent"
       ]
     },
+
+    {
+      "name": "ComponentDevSystem",
+      "writeAccess": ["*"]
+    },
     {
       "name": "S_BattleSystem",
       "writeAccess": ["BattleResultComponent"]
     },
     {
-      "name": "ComponentDevSystem",
-      "writeAccess": ["*"]
+      "name": "S_RaidSystem",
+      "writeAccess": ["ItemComponent"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",

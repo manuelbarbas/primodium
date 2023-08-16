@@ -6,6 +6,7 @@ import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } fr
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
@@ -47,5 +48,24 @@ library LibResource {
       if (resourceCost > playerResourceCount) return false;
     }
     return true;
+  }
+
+  function getTotalResources(
+    IWorld world,
+    uint256 playerEntity
+  ) internal view returns (uint32 totalResources, uint32[] memory resources) {
+    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
+    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
+      world.getComponent(P_MaxResourceStorageComponentID)
+    );
+    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
+    resources = new uint32[](storageResourceIds.length);
+    totalResources = 0;
+    for (uint256 i = 0; i < storageResourceIds.length; i++) {
+      uint256 resourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
+      resources[i] = LibMath.getSafe(itemComponent, resourceEntity);
+      totalResources += resources[i];
+    }
+    return (totalResources, resources);
   }
 }
