@@ -1,5 +1,8 @@
 {
   "components": [
+    "ArrivalComponent",
+    "ArrivalsIndexComponent",
+    "ArrivalsSizeComponent",
     "CounterComponent",
     "BuildingTypeComponent",
     "OwnedByComponent",
