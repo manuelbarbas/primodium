@@ -43,14 +43,17 @@ const mainSceneConfig: SceneConfig = {
     layerConfig: {
       layers: {
         Terrain: {
-          tilesets: [Tilesets.Terrain, Tilesets.Terrain],
+          tilesets: [Tilesets.Terrain],
+          hasHueTintShader: false,
         },
         Resource: {
-          tilesets: [Tilesets.Resource, Tilesets.Resource],
+          tilesets: [Tilesets.Resource],
+          hasHueTintShader: false,
         },
-        // Fog: {
-        //   tilesets: [Tilesets.Resource],
-        // },
+        Fog: {
+          tilesets: [Tilesets.Fog],
+          hasHueTintShader: false,
+        },
       },
       defaultLayer: Tilesets.Terrain,
     },

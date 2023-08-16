@@ -23,7 +23,6 @@ export const createTilemap = (
 
   const generatedTilesets: Record<string, Phaser.Tilemaps.Tileset> = {};
   for (const [key, value] of Object.entries(tilesets)) {
-    console.log(key, value);
     try {
       generatedTilesets[key] = emptyMap.addTilesetImage(
         key,

@@ -11,6 +11,6 @@
   "dependencies": {
     "@latticexyz/phaserx": "^1.43.0",
     "@use-gesture/vanilla": "^10.2.27",
-    "phaser": "3.60.0-beta.14"
+    "phaser": "3.61.0-beta.1"
   }
 }

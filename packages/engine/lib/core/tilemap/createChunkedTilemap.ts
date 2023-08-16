@@ -115,6 +115,7 @@ export function createChunkedTilemap<
         width,
         height
       );
+
       if (!tilemapLayer) {
         console.error(`Adding tilemap layer ${key} failed.`);
         continue;
@@ -154,6 +155,7 @@ export function createChunkedTilemap<
       chunkTileSize.x,
       chunkTileSize.y
     );
+
     map.setLayer(defaultLayer);
     maps.set(chunkCoord, map);
     return map;
@@ -186,19 +188,39 @@ export function createChunkedTilemap<
     layer?: string,
     tint?: number
   ) {
-    if (!visible.current) return;
     const map = getMapAtTileCoord(coord);
-    const putTile = map.putTileAt(
-      tile,
-      mod(coord.x, chunkTileSize.x),
-      mod(coord.y, chunkTileSize.y),
-      undefined,
-      layer
+
+    const chunkCoord = tileCoordToChunkCoord(
+      coord,
+      tileWidth,
+      tileHeight,
+      chunks.chunkSize
     );
-    if (putTile == null) {
-      throw new Error("putTileAt failed");
+
+    const topLeftCoord = chunkCoordToTileCoord(
+      chunkCoord,
+      tileWidth,
+      tileHeight,
+      chunks.chunkSize
+    );
+
+    const tileLayer = map.getLayer(layer || layerConfig.defaultLayer);
+
+    if (!tileLayer) {
+      console.error(
+        `Layer ${layer} does not exist in tilemap. Cannot put tile.`
+      );
+      return;
     }
 
+    const putTile =
+      tileLayer.data[coord.y - topLeftCoord.y][coord.x - topLeftCoord.x];
+
+    if (!putTile) {
+      return;
+    }
+
+    putTile.index = tile;
     putTile.width = map.tileWidth;
     putTile.height = map.tileHeight;
 

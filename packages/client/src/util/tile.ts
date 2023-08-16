@@ -11,7 +11,7 @@ import {
 import { world } from "src/network/world";
 import { ActiveAsteroid } from "src/network/components/clientComponents";
 import { hashKeyCoord } from "./encode";
-import AsteroidTiledMap from "../../public/maps/asteroid_0.7.json";
+import AsteroidTiledMap from "../maps/asteroid_0.7.json";
 import { AsteroidMap } from "@game/constants";
 
 const { TerrainTilesetIdToEntityId } = AsteroidMap;
@@ -49,7 +49,7 @@ export function getTerrainKey(coord: Coord) {
     coord.x < 0 ||
     coord.x > AsteroidTiledMap.width - 1 ||
     coord.y < 0 ||
-    coord.y > AsteroidTiledMap.height - 1
+    coord.y > AsteroidTiledMap.height
   ) {
     return null;
   }
