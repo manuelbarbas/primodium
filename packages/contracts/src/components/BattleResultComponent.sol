@@ -29,7 +29,7 @@ contract BattleResultComponent is Component {
 
   function set(
     uint256 entity,
-    uint256 winner,
+    address winner,
     uint32[] memory attackerUnitsLeft,
     uint32[] memory defenderUnitsLeft
   ) public virtual {
@@ -37,11 +37,11 @@ contract BattleResultComponent is Component {
   }
 
   function getValue(uint256 entity) public view virtual returns (BattleResult memory) {
-    (uint256 winner, uint32[] memory attackerUnitsLeft, uint32[] memory defenderUnitsLeft) = abi.decode(
+    (address winnerAddress, uint32[] memory attackerUnitsLeft, uint32[] memory defenderUnitsLeft) = abi.decode(
       getRawValue(entity),
-      (uint256, uint32[], uint32[])
+      (address, uint32[], uint32[])
     );
-    return BattleResult(winner, attackerUnitsLeft, defenderUnitsLeft);
+    return BattleResult(winnerAddress, attackerUnitsLeft, defenderUnitsLeft);
   }
 
   function getEntitiesWithValue(BattleResult calldata result) public view virtual returns (uint256[] memory) {

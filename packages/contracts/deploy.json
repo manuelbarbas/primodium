@@ -132,7 +132,7 @@
     },
     {
       "name": "S_RaidSystem",
-      "writeAccess": ["ItemComponent"]
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",

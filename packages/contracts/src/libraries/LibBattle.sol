@@ -56,7 +56,84 @@ library LibBattle {
         battleResult.defenderUnitsLeft[j] += (defenderUnitCounts[j] * attackPercentage * battleRatio) / 10000;
       }
     }
+
+    battleResult.winnerAddress = getWinner(world, battleEntity, battleResult);
+
     return battleResult;
+  }
+
+  function getWinner(
+    IWorld world,
+    uint256 battleEntity,
+    BattleResult memory battleResult
+  ) internal view returns (address winner) {
+    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
+      world.getComponent(BattleAttackerComponentID)
+    );
+    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
+      world.getComponent(BattleDefenderComponentID)
+    );
+
+    BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
+    BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
+
+    if (
+      getTotalRemainingAttack(world, battleEntity, battleResult.attackerUnitsLeft) >
+      getTotalRemainingDefence(world, battleEntity, battleResult.defenderUnitsLeft)
+    ) {
+      winner = attacker.playerAddress;
+    } else {
+      winner = defender.playerAddress;
+    }
+    return winner;
+  }
+
+  function getTotalRemainingAttack(
+    IWorld world,
+    uint256 battleEntity,
+    uint32[] memory attackerUnitsLeft
+  ) internal view returns (uint32) {
+    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
+    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
+      world.getComponent(BattleAttackerComponentID)
+    );
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+
+    BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
+    uint256 attackerEntity = addressToEntity(attacker.playerAddress);
+    uint32 totalAttackValue = 0;
+    for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attackerEntity);
+      uint32 level = levelComponent.getValue(playerUnitEntity);
+      totalAttackValue +=
+        attackerUnitsLeft[i] *
+        unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
+    }
+    return totalAttackValue;
+  }
+
+  function getTotalRemainingDefence(
+    IWorld world,
+    uint256 battleEntity,
+    uint32[] memory defenderUnitsLeft
+  ) internal view returns (uint32) {
+    P_UnitDefenceComponent unitDefenceComponent = P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID));
+    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
+      world.getComponent(BattleDefenderComponentID)
+    );
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+
+    BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
+    uint256 defenderEntity = addressToEntity(defender.playerAddress);
+    uint32 totalAttackValue = 0;
+    for (uint256 i = 0; i < defender.unitTypes.length; i++) {
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defenderEntity);
+      uint32 level = levelComponent.getValue(playerUnitEntity);
+      totalAttackValue +=
+        defenderUnitsLeft[i] *
+        unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
+    }
+    return totalAttackValue;
   }
 
   function getTotalDefenceValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalDefenceValue) {
@@ -83,7 +160,7 @@ library LibBattle {
     uint256 battleEntity
   ) internal view returns (uint32[] memory attackValues, uint32 totalAttackValue) {
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
+    P_UnitAttackComponent unitDefenceComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
     );
@@ -97,7 +174,7 @@ library LibBattle {
 
       attackValues[i] =
         attacker.unitCounts[i] *
-        unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
+        unitDefenceComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
       totalAttackValue += attackValues[i];
     }
 
@@ -133,6 +210,8 @@ library LibBattle {
   function resolveRaid(IWorld world, uint256 battleEntity) internal {
     uint32 totalCargo = getTotalCargoValue(world, battleEntity);
 
+    if (totalCargo == 0) return;
+
     BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
       battleEntity
     );
@@ -143,6 +222,19 @@ library LibBattle {
       addressToEntity(defender.playerAddress)
     );
     if (totalResources == 0) return;
+
+    LibResource.claimAllResources(
+      world,
+      addressToEntity(
+        BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(battleEntity).playerAddress
+      )
+    );
+    LibResource.claimAllResources(
+      world,
+      addressToEntity(
+        BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).playerAddress
+      )
+    );
 
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity

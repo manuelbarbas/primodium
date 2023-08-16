@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
-
+import { addressToEntity } from "solecs/utils.sol";
 import { BattleResultComponent, ID as BattleResultComponentID, BattleResult } from "../components/BattleResultComponent.sol";
-
+import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "../components/BattleAttackerComponent.sol";
+import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "../components/BattleDefenderComponent.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibBattle } from "../libraries/LibBattle.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 

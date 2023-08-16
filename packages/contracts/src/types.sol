@@ -36,7 +36,7 @@ struct Dimensions {
 }
 
 struct BattleResult {
-  uint256 winnerAddress;
+  address winnerAddress;
   uint32[] attackerUnitsLeft;
   uint32[] defenderUnitsLeft;
 }
