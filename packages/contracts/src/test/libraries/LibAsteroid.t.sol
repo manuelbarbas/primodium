@@ -22,16 +22,22 @@ contract LibAsteroidTest is PrimodiumTest {
     super.setUp();
   }
 
+  function testAsteroidDistance() public view {
+    for (uint32 i = 0; i < 10; i++) {
+      console.log(LibAsteroid.getDistance(i));
+    }
+  }
+
   function testAsteroidLocation() public {
     AsteroidCountComponent asteroidCountComponent = AsteroidCountComponent(
       world.getComponent(AsteroidCountComponentID)
     );
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
 
-    for (uint32 i = 0; i < 30; i++) {
+    for (uint32 i = 0; i < 10; i++) {
       vm.roll(456);
       uint32 count = LibMath.getSafe(asteroidCountComponent, SingletonID);
-      Coord memory coord = LibAsteroid.getUniqueAsteroidPosition(addressToEntity(alice), count);
+      Coord memory coord = LibAsteroid.getUniqueAsteroidPosition(count);
       componentDevSystem.executeTyped(AsteroidCountComponentID, SingletonID, abi.encode(count + 1));
       logCoord(coord);
       vm.roll(block.number + 1);

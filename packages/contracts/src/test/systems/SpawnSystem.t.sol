@@ -54,7 +54,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testUniqueAsteroidPosition() public {
     uint256 playerEntity = addressToEntity(alice);
-    Coord memory position = LibAsteroid.getUniqueAsteroidPosition(playerEntity, 69);
+    Coord memory position = LibAsteroid.getUniqueAsteroidPosition(69);
     spawn(alice);
     vm.startPrank(alice);
     uint256 asteroid = positionComponent.getValue(playerEntity).parent;

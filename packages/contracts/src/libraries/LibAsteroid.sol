@@ -16,6 +16,7 @@ import { Coord, Dimensions, EAsteroidType } from "../types.sol";
 import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 
 library LibAsteroid {
   /**
@@ -35,7 +36,7 @@ library LibAsteroid {
     uint32 asteroidCount = LibMath.increment(asteroidCountComponent, SingletonID);
     require(!asteroidTypeComponent.has(asteroidEntity), "[LibAsteroid] asteroid already exists");
 
-    Coord memory position = getUniqueAsteroidPosition(ownerEntity, asteroidCount);
+    Coord memory position = getUniqueAsteroidPosition(asteroidCount);
 
     positionComponent.set(asteroidEntity, position);
     asteroidTypeComponent.set(asteroidEntity, uint256(EAsteroidType.NORMAL));
@@ -53,19 +54,19 @@ library LibAsteroid {
 
   /**
    * @dev Gets a unique asteroid position for the player in the given world.
-   * @param playerEntity The entity ID of the player.
    * @return position The unique position (Coord) for the asteroid.
    */
-  function getUniqueAsteroidPosition(
-    uint256 playerEntity,
-    uint32 asteroidCount
-  ) internal view returns (Coord memory position) {
-    // Get the ActiveComponent to check for active positions.
 
-    uint32 distance = asteroidCount * 2 + 5;
-    position = getPositionByVector(distance, getDirection(asteroidCount, playerEntity));
+  function getUniqueAsteroidPosition(uint32 asteroidCount) internal pure returns (Coord memory position) {
+    position = getPositionByVector(getDistance(asteroidCount), getDirection(asteroidCount));
   }
 
+  /**
+   * @dev Calculates the position (x, y) based on a given distance and direction.
+   * @param _distance The distance to be moved.
+   * @param direction The direction angle in degrees.
+   * @return Coord Returns a struct containing x and y coordinates.
+   */
   function getPositionByVector(uint32 _distance, uint32 direction) internal pure returns (Coord memory) {
     uint32 angleDegs = (direction) % 360;
 
@@ -83,11 +84,29 @@ library LibAsteroid {
     return Coord({ x: finalX, y: finalY, parent: 0 });
   }
 
-  function getDirection(uint32 asteroidCount, uint256 playerEntity) internal view returns (uint32) {
-    uint32 rng = uint32(uint256(keccak256(abi.encode(asteroidCount, playerEntity, block.number))));
-    uint32 rng2 = rng % 17;
-    rng = rng % 3;
+  /**
+   * @dev Calculates the distance based on the given asteroid count.
+   *      The equation is 260 * ln((asteroidCount + 105) / 10) - 580
+   * @param asteroidCount Number of asteroids.
+   * @return uint32 Returns the calculated distance.
+   */
+  function getDistance(uint32 asteroidCount) public pure returns (uint32) {
+    int128 value = Math.add(Math.fromUInt(asteroidCount), Math.fromUInt(105));
+    value = Math.div(value, Math.fromUInt(10));
+    value = Math.ln(value);
+    uint256 integer = Math.mulu(value, 260);
+    return uint32(integer - 580);
+  }
+
+  /**
+   * @dev Determines the general direction based on the given asteroid count.
+   * @param asteroidCount Number of asteroids.
+   * @return uint32 Returns the calculated direction.
+   */
+  function getDirection(uint32 asteroidCount) internal pure returns (uint32) {
+    uint32 countMod27 = asteroidCount % 27;
+    uint32 countMod3 = asteroidCount % 3;
     uint32 generalDirection = asteroidCount % 4;
-    return generalDirection * 90 + rng * 30 + rng2;
+    return generalDirection * 90 + countMod3 * 30 + countMod27;
   }
 }
