@@ -34,3 +34,16 @@ struct Dimensions {
   int32 x;
   int32 y;
 }
+
+struct BattleResult {
+  uint256 winnerAddress;
+  uint32[] attackerUnitsLeft;
+  uint32[] defenderUnitsLeft;
+}
+
+struct BattleParticipant {
+  address playerAddress;
+  uint256[] unitTypes;
+  uint32[] unitLevels;
+  uint32[] unitCounts;
+}

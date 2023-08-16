@@ -25,6 +25,7 @@ import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierCo
 
 import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from "components/P_UnitTrainingTimeComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
+import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 
@@ -526,6 +527,7 @@ library LibInitDebug {
 
   function initializeUnits(IWorld world) internal {
     P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
+    P_UnitDefenceComponent unitDefenceComponent = P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID));
     P_UnitTrainingTimeComponent unitTrainingTimeComponent = P_UnitTrainingTimeComponent(
       world.getComponent(P_UnitTrainingTimeComponentID)
     );
@@ -542,6 +544,9 @@ library LibInitDebug {
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
 
+    unitAttackComponent.set(entity, 5);
+    unitDefenceComponent.set(entity, 3);
+
     //DebugUnit2
     entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
     unitTrainingTimeComponent.set(entity, 4);
@@ -550,5 +555,22 @@ library LibInitDebug {
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
+
+    unitAttackComponent.set(entity, 20);
+    unitDefenceComponent.set(entity, 10);
+
+    //DebugUnitBattle1
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle1, 1);
+    unitTrainingTimeComponent.set(entity, 0);
+
+    unitAttackComponent.set(entity, 10);
+    unitDefenceComponent.set(entity, 5);
+
+    //DebugUnitBattle2
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle2, 1);
+    unitTrainingTimeComponent.set(entity, 0);
+
+    unitAttackComponent.set(entity, 5);
+    unitDefenceComponent.set(entity, 10);
   }
 }

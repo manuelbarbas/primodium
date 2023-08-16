@@ -24,6 +24,9 @@
     "AsteroidTypeComponent",
     "ActiveComponent",
     "DimensionsComponent",
+    "BattleAttackerComponent",
+    "BattleDefenderComponent",
+    "BattleResultComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
@@ -117,6 +120,10 @@
         "UnitProductionLastQueueIndexComponent",
         "LastClaimedAtComponent"
       ]
+    },
+    {
+      "name": "BattleSystem",
+      "writeAccess": ["BattleResultComponent"]
     },
     {
       "name": "ComponentDevSystem",
