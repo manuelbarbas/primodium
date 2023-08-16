@@ -1,5 +1,6 @@
 {
   "components": [
+    "AsteroidCountComponent",
     "CounterComponent",
     "BuildingTypeComponent",
     "OwnedByComponent",
@@ -9,7 +10,6 @@
     "HasResearchedComponent",
     "MainBaseComponent",
     "LevelComponent",
-    "BuildingCountComponent",
     "ChildrenComponent",
     "ProductionComponent",
     "IsDebugComponent",
@@ -40,8 +40,6 @@
     "P_IsTechComponent",
     "P_RequiredResearchComponent",
     "P_RequiredResourcesComponent",
-    "P_MaxBuildingsComponent",
-    "P_IgnoreBuildLimitComponent",
     "P_IsBuildingTypeComponent",
     "P_UnitAttackComponent",
     "P_UnitCargoComponent",
@@ -65,13 +63,23 @@
     },
     {
       "name": "SpawnSystem",
-      "writeAccess": ["PositionComponent", "AsteroidTypeComponent", "ActiveComponent"]
+      "writeAccess": [
+        "PositionComponent",
+        "AsteroidCountComponent",
+        "ActiveComponent",
+        "BuildingTypeComponent",
+        "OwnedByComponent",
+        "LevelComponent",
+        "MainBaseComponent",
+        "ChildrenComponent",
+        "MainBaseComponent",
+        "UnitProductionOwnedByComponent"
+      ]
     },
     {
       "name": "BuildSystem",
       "writeAccess": [
         "BuildingTypeComponent",
-        "BuildingCountComponent",
         "OwnedByComponent",
         "LevelComponent",
         "MainBaseComponent",
@@ -89,7 +97,6 @@
         "MainBaseComponent",
         "ChildrenComponent",
         "LevelComponent",
-        "BuildingCountComponent",
         "PathComponent",
         "PositionComponent",
         "UnitProductionOwnedByComponent"
@@ -109,7 +116,11 @@
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "UpgradeSystem",
+      "name": "UpgradeBuildingSystem",
+      "writeAccess": ["LevelComponent"]
+    },
+    {
+      "name": "UpgradeRangeSystem",
       "writeAccess": ["LevelComponent"]
     },
     {

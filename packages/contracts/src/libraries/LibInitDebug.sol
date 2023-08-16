@@ -9,7 +9,6 @@ import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "compon
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
-import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
@@ -143,9 +142,7 @@ library LibInitDebug {
     P_RequiredResearchComponent requiredResearchComponent = P_RequiredResearchComponent(
       world.getComponent(P_RequiredResearchComponentID)
     );
-    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
-      world.getComponent(P_IgnoreBuildLimitComponentID)
-    );
+
     P_RequiredTileComponent requiredTileComponent = P_RequiredTileComponent(
       world.getComponent(P_RequiredTileComponentID)
     );
@@ -156,7 +153,6 @@ library LibInitDebug {
     );
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
     // DebugSimpleBuildingNoReqsID
-    ignoreBuildLimitComponent.set(DebugSimpleBuildingNoReqsID);
 
     // DebugSimpleBuildingResourceReqsID
     uint256 entity = LibEncode.hashKeyEntity(DebugSimpleBuildingResourceReqsID, 1);
@@ -164,16 +160,13 @@ library LibInitDebug {
     LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
 
     // DebugSimpleBuildingResearchReqsID
-    ignoreBuildLimitComponent.set(DebugSimpleBuildingResourceReqsID);
     entity = LibEncode.hashKeyEntity(DebugSimpleBuildingResearchReqsID, 1);
     requiredResearchComponent.set(entity, DebugSimpleTechnologyNoReqsID);
 
     // DebugSimpleBuildingTileReqID
-    ignoreBuildLimitComponent.set(DebugSimpleBuildingTileReqID);
     requiredTileComponent.set(DebugSimpleBuildingTileReqID, IronID);
 
     //DebugSimpleBuildingWithUpgradeResourceReqsID
-    ignoreBuildLimitComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID);
     maxLevelComponent.set(DebugSimpleBuildingWithUpgradeResourceReqsID, 4);
     //DebugSimpleBuildingWithUpgradeResourceReqsID level 2
     entity = LibEncode.hashKeyEntity(DebugSimpleBuildingWithUpgradeResourceReqsID, 2);
@@ -210,7 +203,6 @@ library LibInitDebug {
     requiredResearchComponent.set(buildingIdLevel, DebugSimpleTechnologyNoReqsID);
 
     //DebugSimpleBuildingUtilityResourceRequirement
-    ignoreBuildLimitComponent.set(DebugSimpleBuildingUtilityResourceRequirement);
     // LEVEL 1
     entity = LibEncode.hashKeyEntity(DebugSimpleBuildingUtilityResourceRequirement, 1);
     ResourceValues memory requiredUtilityData = ResourceValues(new uint256[](1), new uint32[](1));
@@ -219,13 +211,9 @@ library LibInitDebug {
     requiredUtilityComponent.set(entity, requiredUtilityData);
 
     //DebugSimpleBuilding3x3
-    ignoreBuildLimitComponent.set(DebugSimpleBuilding3x3);
   }
 
   function initializeMines(IWorld world) internal {
-    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
-      world.getComponent(P_IgnoreBuildLimitComponentID)
-    );
     P_RequiredTileComponent requiredTileComponent = P_RequiredTileComponent(
       world.getComponent(P_RequiredTileComponentID)
     );
@@ -236,7 +224,6 @@ library LibInitDebug {
     P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
 
     // DebugIronMineID
-    ignoreBuildLimitComponent.set(DebugIronMineID);
     requiredTileComponent.set(DebugIronMineID, IronID);
     maxLevelComponent.set(DebugIronMineID, 3);
 
@@ -248,7 +235,6 @@ library LibInitDebug {
     entity = LibEncode.hashKeyEntity(DebugIronMineID, 3);
     buildingProductionComponent.set(entity, ResourceValue({ resource: IronResourceItemID, value: 3 }));
     // DebugIronMineNoTileReqID
-    ignoreBuildLimitComponent.set(DebugIronMineNoTileReqID);
     maxLevelComponent.set(DebugIronMineNoTileReqID, 3);
     entity = LibEncode.hashKeyEntity(DebugIronMineNoTileReqID, 1);
     buildingProductionComponent.set(entity, ResourceValue({ resource: IronResourceItemID, value: 5 }));
@@ -275,7 +261,6 @@ library LibInitDebug {
     //DebugCopperMineID
     maxLevelComponent.set(DebugCopperMineID, 3);
     requiredTileComponent.set(DebugCopperMineID, CopperID);
-    ignoreBuildLimitComponent.set(DebugCopperMineID);
 
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
 
@@ -292,7 +277,6 @@ library LibInitDebug {
 
     maxLevelComponent.set(DebugLithiumMineID, 3);
     requiredTileComponent.set(DebugLithiumMineID, LithiumID);
-    ignoreBuildLimitComponent.set(DebugLithiumMineID);
 
     entity = LibEncode.hashKeyEntity(DebugLithiumMineID, 1);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1000 });
@@ -307,10 +291,6 @@ library LibInitDebug {
   }
 
   function initializeFactories(IWorld world) internal {
-    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
-      world.getComponent(P_IgnoreBuildLimitComponentID)
-    );
-
     P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
     P_ProductionDependenciesComponent requiredConnectedProductionComponent = P_ProductionDependenciesComponent(
       world.getComponent(P_ProductionDependenciesComponentID)
@@ -328,7 +308,6 @@ library LibInitDebug {
     );
     //DebugIronPlateFactoryNoMineReqID
     uint256 entity = DebugIronPlateFactoryNoMineReqID;
-    ignoreBuildLimitComponent.set(entity);
 
     //set a storage amount for IronPlateCraftedItemID to stream line usage
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryNoMineReqID, 1);
@@ -338,7 +317,6 @@ library LibInitDebug {
 
     //DebugIronPlateFactoryID
 
-    ignoreBuildLimitComponent.set(DebugIronPlateFactoryID);
     maxLevelComponent.set(DebugIronPlateFactoryID, 3);
     //DebugIronPlateFactoryID level 1
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1);
@@ -375,14 +353,12 @@ library LibInitDebug {
     //DebugUtilityProductionBuilding level 1
     entity = LibEncode.hashKeyEntity(DebugUtilityProductionBuilding, 1);
     maxLevelComponent.set(DebugUtilityProductionBuilding, 2);
-    ignoreBuildLimitComponent.set(DebugUtilityProductionBuilding);
     UtilityProductionComponent.set(entity, ResourceValue(ElectricityUtilityResourceID, 10));
     //level 2
     entity = LibEncode.hashKeyEntity(DebugUtilityProductionBuilding, 2);
     UtilityProductionComponent.set(entity, ResourceValue(ElectricityUtilityResourceID, 20));
 
     //DebugAlloyFactoryID
-    ignoreBuildLimitComponent.set(DebugAlloyFactoryID);
 
     //DebugAlloyFactoryID level 1
     entity = LibEncode.hashKeyEntity(DebugAlloyFactoryID, 1);
@@ -406,7 +382,6 @@ library LibInitDebug {
 
     //LithiumCopperOxideFactoryID
 
-    ignoreBuildLimitComponent.set(LithiumCopperOxideFactoryID);
     //LithiumCopperOxideFactoryID level 1
     entity = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1);
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 1000 });
@@ -450,12 +425,8 @@ library LibInitDebug {
   }
 
   function initializeStorageBuildings(IWorld world) internal {
-    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
-      world.getComponent(P_IgnoreBuildLimitComponentID)
-    );
     P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
     //DebugStorageBuildingID
-    ignoreBuildLimitComponent.set(DebugStorageBuildingID);
     maxLevelComponent.set(DebugStorageBuildingID, 2);
     //DebugStorageBuildingID level 1
     uint256 buildingIdLevel = LibEncode.hashKeyEntity(DebugStorageBuildingID, 1);
@@ -475,30 +446,20 @@ library LibInitDebug {
   }
 
   function initUtilityBuildings(IWorld world) internal {
-    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
-      world.getComponent(P_IgnoreBuildLimitComponentID)
-    );
-
     P_UtilityProductionComponent UtilityProductionComponent = P_UtilityProductionComponent(
       world.getComponent(P_UtilityProductionComponentID)
     );
 
     //DebugSolarPanelID
     uint256 entity = LibEncode.hashKeyEntity(DebugSolarPanelID, 1);
-    ignoreBuildLimitComponent.set(DebugSolarPanelID);
     UtilityProductionComponent.set(entity, ResourceValue(ElectricityUtilityResourceID, 10));
 
     //DebugHousingBuilding
     entity = LibEncode.hashKeyEntity(DebugHousingBuilding, 1);
-    ignoreBuildLimitComponent.set(DebugHousingBuilding);
     UtilityProductionComponent.set(entity, ResourceValue(HousingUtilityResourceID, 10));
   }
 
   function initializeUnitProductionBuildings(IWorld world) internal {
-    P_IgnoreBuildLimitComponent ignoreBuildLimitComponent = P_IgnoreBuildLimitComponent(
-      world.getComponent(P_IgnoreBuildLimitComponentID)
-    );
-
     P_UnitProductionMultiplierComponent unitProductionMultiplierComponent = P_UnitProductionMultiplierComponent(
       world.getComponent(P_UnitProductionMultiplierComponentID)
     );
@@ -509,7 +470,6 @@ library LibInitDebug {
     P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
 
     //DebugUnitProductionBuilding
-    ignoreBuildLimitComponent.set(DebugUnitProductionBuilding);
     maxLevelComponent.set(DebugUnitProductionBuilding, 2);
     uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
 

@@ -120,17 +120,6 @@ export const Production = newNumberComponent(world, {
   overridable: true,
 });
 
-export const P_MaxBuildings = newNumberComponent(world, {
-  id: "P_MaxBuildings",
-  metadata: { contractId: `${commonIdPrefix}P_MaxBuildings` },
-  overridable: true,
-});
-
-export const BuildingCount = newNumberComponent(world, {
-  id: "BuildingCount",
-  metadata: { contractId: `${commonIdPrefix}BuildingCount` },
-  overridable: true,
-});
 export const MaxUtility = newNumberComponent(world, {
   id: "MaxUtility",
   metadata: { contractId: `${commonIdPrefix}MaxUtility` },
@@ -244,8 +233,6 @@ export default {
   Level,
   P_MaxStorage,
   Production,
-  P_MaxBuildings,
-  BuildingCount,
   Children,
   RawBlueprint,
   SystemsRegistry,

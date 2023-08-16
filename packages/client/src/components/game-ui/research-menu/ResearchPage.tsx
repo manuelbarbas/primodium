@@ -1,9 +1,11 @@
 import { ResearchTree } from "../../../util/research";
 import { ResearchItem } from "./ResearchItem";
+import { UpgradeRangeItem } from "./UpgradeRangeItem";
 
 function ResearchPage() {
   return (
-    <div className="">
+    <div className="text-md text-white font-bold space-y-2">
+      <UpgradeRangeItem />
       {ResearchTree.map(({ category, data }) => {
         return (
           <div

@@ -64,12 +64,12 @@ contract BuildPathSystemTest is PrimodiumTest {
       "IronMineID should have IronID as requireed tile type to build on"
     );
     // Build two conveyor blocks
-    bytes memory startBlockEntity = buildSystem.executeTyped(MainBaseID, getCoord1(alice));
-    console.log("built MainBaseID");
+    Coord memory coord = getMainBaseCoord(alice);
+    uint256 startBlockEntityID = LibEncode.hashKeyCoord(BuildingKey, coord);
+
     bytes memory endBlockEntity = buildSystem.executeTyped(DebugIronMineID, getIronCoord(alice));
     console.log("built IronMineID");
 
-    uint256 startBlockEntityID = abi.decode(startBlockEntity, (uint256));
     uint256 endBlockEntityID = abi.decode(endBlockEntity, (uint256));
     PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
     Coord memory startPosition = positionComponent.getValue(startBlockEntityID);
@@ -113,41 +113,42 @@ contract BuildPathSystemTest is PrimodiumTest {
     );
   }
 
-  function testBuildConveyors() public returns (uint256 startBlockEntityID, uint256 endBlockEntityID) {
+  function testBuildConveyors() public returns (uint256 startBlockEntity, uint256 endBlockEntity) {
     testInit();
     // Build two conveyor blocks
 
-    console.log("building base");
-    bytes memory endBlockEntity = buildSystem.executeTyped(MainBaseID, getCoord1(alice));
     console.log("building iron mine");
-    bytes memory startBlockEntity = buildSystem.executeTyped(DebugIronMineID, getIronCoord(alice));
+    bytes memory rawStartBlockEntity = buildSystem.executeTyped(DebugIronMineID, getIronCoord(alice));
+    Coord memory coord = getMainBaseCoord(alice);
 
-    startBlockEntityID = abi.decode(startBlockEntity, (uint256));
-    endBlockEntityID = abi.decode(endBlockEntity, (uint256));
+    endBlockEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
+    startBlockEntity = abi.decode(rawStartBlockEntity, (uint256));
 
     PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
-    Coord memory startPosition = positionComponent.getValue(startBlockEntityID);
+    Coord memory startPosition = positionComponent.getValue(startBlockEntity);
     assertCoordEq(startPosition, getIronCoord(alice));
 
-    Coord memory endPosition = positionComponent.getValue(endBlockEntityID);
-    assertCoordEq(endPosition, getCoord1(alice));
+    Coord memory endPosition = positionComponent.getValue(endBlockEntity);
+    assertCoordEq(endPosition, coord);
 
-    assertTrue(ownedByComponent.has(startBlockEntityID));
-    assertEq(ownedByComponent.getValue(startBlockEntityID), addressToEntity(alice));
+    assertTrue(ownedByComponent.has(startBlockEntity));
+    assertEq(ownedByComponent.getValue(startBlockEntity), addressToEntity(alice));
 
-    assertTrue(ownedByComponent.has(endBlockEntityID));
-    assertEq(ownedByComponent.getValue(endBlockEntityID), addressToEntity(alice));
+    assertTrue(ownedByComponent.has(endBlockEntity));
+    assertEq(ownedByComponent.getValue(endBlockEntity), addressToEntity(alice));
   }
 
   function testBuildPath() public {
-    (uint256 startBlockEntityID, uint256 endBlockEntityID) = testBuildConveyors();
+    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
+    (uint256 startBlockEntity, uint256 endBlockEntity) = testBuildConveyors();
     // Build a path
-    buildPathSystem.executeTyped(getIronCoord(alice), getCoord1(alice));
-    console.log("built path");
+    Coord memory startCoord = positionComponent.getValue(startBlockEntity);
+    Coord memory endCoord = positionComponent.getValue(endBlockEntity);
+    buildPathSystem.executeTyped(startCoord, endCoord);
     assertEq(
-      pathComponent.getValue(startBlockEntityID),
-      endBlockEntityID,
-      "startBlockEntityID should have path to endBlockEntityID"
+      pathComponent.getValue(startBlockEntity),
+      endBlockEntity,
+      "startBlockEntity should have path to endBlockEntity"
     );
   }
 }

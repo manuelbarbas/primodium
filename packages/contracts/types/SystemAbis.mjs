@@ -8,7 +8,8 @@ import DestroyPathSystem from "../abi/DestroyPathSystem.json";
 import DestroySystem from "../abi/DestroySystem.json";
 import IncrementSystem from "../abi/IncrementSystem.json";
 import ResearchSystem from "../abi/ResearchSystem.json";
-import S_CheckRequiredTileSystem from "../abi/S_CheckRequiredTileSystem.json";
+import S_ClaimUnitsFromBuildingSystem from "../abi/S_ClaimUnitsFromBuildingSystem.json";
+import S_ClaimUnitsSystem from "../abi/S_ClaimUnitsSystem.json";
 import S_PlaceBuildingTilesSystem from "../abi/S_PlaceBuildingTilesSystem.json";
 import S_SpendRequiredResourcesSystem from "../abi/S_SpendRequiredResourcesSystem.json";
 import S_UpdateActiveStatusSystem from "../abi/S_UpdateActiveStatusSystem.json";
@@ -20,7 +21,9 @@ import S_UpdateRequiredProductionSystem from "../abi/S_UpdateRequiredProductionS
 import S_UpdateUnclaimedResourcesSystem from "../abi/S_UpdateUnclaimedResourcesSystem.json";
 import S_UpdateUtilityProductionSystem from "../abi/S_UpdateUtilityProductionSystem.json";
 import SpawnSystem from "../abi/SpawnSystem.json";
-import UpgradeSystem from "../abi/UpgradeSystem.json";
+import TrainUnitsSystem from "../abi/TrainUnitsSystem.json";
+import UpgradeBuildingSystem from "../abi/UpgradeBuildingSystem.json";
+import UpgradeRangeSystem from "../abi/UpgradeRangeSystem.json";
 
 export const SystemAbis = {
   "system.BuildPath": BuildPathSystem.abi,
@@ -32,7 +35,8 @@ export const SystemAbis = {
   "system.Destroy": DestroySystem.abi,
   "system.Increment": IncrementSystem.abi,
   "system.Research": ResearchSystem.abi,
-  "system.S_CheckRequiredTile": S_CheckRequiredTileSystem.abi,
+  "system.S_ClaimUnitsFromBuilding": S_ClaimUnitsFromBuildingSystem.abi,
+  "system.S_ClaimUnits": S_ClaimUnitsSystem.abi,
   "system.S_PlaceBuildingTiles": S_PlaceBuildingTilesSystem.abi,
   "system.S_SpendRequiredResources": S_SpendRequiredResourcesSystem.abi,
   "system.S_UpdateActiveStatus": S_UpdateActiveStatusSystem.abi,
@@ -44,5 +48,7 @@ export const SystemAbis = {
   "system.S_UpdateUnclaimedResources": S_UpdateUnclaimedResourcesSystem.abi,
   "system.S_UpdateUtilityProduction": S_UpdateUtilityProductionSystem.abi,
   "system.Spawn": SpawnSystem.abi,
-  "system.Upgrade": UpgradeSystem.abi,
+  "system.TrainUnits": TrainUnitsSystem.abi,
+  "system.UpgradeBuilding": UpgradeBuildingSystem.abi,
+  "system.UpgradeRange": UpgradeRangeSystem.abi,
 };
