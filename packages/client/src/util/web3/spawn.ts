@@ -11,9 +11,8 @@ export const spawn = async (network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
-
   const receipt = await execute(
-    systems["system.Spawn"].executeTyped(),
+    systems["system.Spawn"].executeTyped({ gasLimit: 10_000_000 }),
     providers,
     setNotification
   );

@@ -10,7 +10,6 @@ import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPat
 
 import { ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
-import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "../../components/P_MaxBuildingsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "../../components/P_BlueprintComponent.sol";
@@ -83,13 +82,13 @@ contract BuildSystemTest is PrimodiumTest {
       component(OccupiedUtilityResourceComponentID)
     );
 
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getOrigin(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord1(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
-    buildSystem.executeTyped(DebugSimpleBuildingUtilityResourceRequirement, getCoord1(alice));
+    buildSystem.executeTyped(DebugSimpleBuildingUtilityResourceRequirement, getCoord2(alice));
     assertEq(
       occupiedUtilityResourceComponent.getValue(
         LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))
@@ -107,13 +106,13 @@ contract BuildSystemTest is PrimodiumTest {
       component(OccupiedUtilityResourceComponentID)
     );
 
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getOrigin(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord1(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
-    Coord memory coord2 = getCoord2(alice);
+    Coord memory coord2 = getCoord3(alice);
     for (uint256 i = 0; i < 5; i++) {
       buildSystem.executeTyped(DebugSimpleBuildingUtilityResourceRequirement, coord2);
       assertEq(
@@ -156,13 +155,13 @@ contract BuildSystemTest is PrimodiumTest {
 
     MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(component(MaxUtilityComponentID));
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getOrigin(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord1(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
       "Electricity Storage should be 10"
     );
-    destroySystem.executeTyped(getOrigin(alice));
+    destroySystem.executeTyped(getCoord1(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       0,
@@ -177,7 +176,7 @@ contract BuildSystemTest is PrimodiumTest {
     OccupiedUtilityResourceComponent occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       component(OccupiedUtilityResourceComponentID)
     );
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getOrigin(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord2(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
@@ -211,7 +210,7 @@ contract BuildSystemTest is PrimodiumTest {
     OccupiedUtilityResourceComponent occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
       component(OccupiedUtilityResourceComponentID)
     );
-    buildSystem.executeTyped(DebugUtilityProductionBuilding, getOrigin(alice));
+    buildSystem.executeTyped(DebugUtilityProductionBuilding, getCoord1(alice));
     assertEq(
       maxUtilityComponent.getValue(LibEncode.hashKeyEntity(ElectricityUtilityResourceID, addressToEntity(alice))),
       10,
@@ -226,26 +225,7 @@ contract BuildSystemTest is PrimodiumTest {
       "used up electricity should be 2"
     );
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
-    destroySystem.executeTyped(getOrigin(alice));
-    vm.stopPrank();
-  }
-
-  function testBuildMainBase() public {
-    vm.startPrank(alice);
-
-    Coord memory coord = getOrigin(alice);
-
-    bytes memory rawBuildingEntity = buildSystem.executeTyped(MainBaseID, coord);
-
-    uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
-
-    Coord memory position = PositionComponent(component(PositionComponentID)).getValue(buildingEntity);
-    assertEq(position.x, coord.x);
-    assertEq(position.y, coord.y);
-
-    assertTrue(ownedByComponent.has(buildingEntity));
-    assertEq(ownedByComponent.getValue(buildingEntity), addressToEntity(alice));
-
+    destroySystem.executeTyped(getCoord1(alice));
     vm.stopPrank();
   }
 
@@ -254,9 +234,9 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(deployer);
 
     P_BlueprintComponent blueprintComponent = P_BlueprintComponent(component(P_BlueprintComponentID));
-    int32[] memory blueprint = LibBlueprint.get3x3Blueprint();
-    blueprintComponent.set(MainBaseID, blueprint);
-    bytes memory rawBuildingEntity = buildSystem.executeTyped(MainBaseID, getOrigin(deployer));
+    int32[] memory blueprint = LibBlueprint.get2x2Blueprint();
+    blueprintComponent.set(IronMineID, blueprint);
+    bytes memory rawBuildingEntity = buildSystem.executeTyped(IronMineID, getIronCoord(deployer));
     uint256 buildingEntity = abi.decode(rawBuildingEntity, (uint256));
 
     PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
@@ -267,7 +247,10 @@ contract BuildSystemTest is PrimodiumTest {
 
     for (uint i = 0; i < children.length; i++) {
       Coord memory tilePosition = positionComponent.getValue(children[i]);
-      assertCoordEq(tilePosition, Coord(blueprint[i * 2], blueprint[i * 2 + 1], buildingPosition.parent));
+      assertCoordEq(
+        tilePosition,
+        Coord(blueprint[i * 2] + buildingPosition.x, blueprint[i * 2 + 1] + buildingPosition.y, buildingPosition.parent)
+      );
       assertEq(buildingEntity, ownedByComponent.getValue(children[i]));
     }
   }
@@ -287,15 +270,9 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailIronMineOnNonIron() public {
     vm.startPrank(alice);
 
-    //build main base
-    buildMainBaseAtZero(alice);
-
     // TEMP: tile -6, 2 does not have iron according to current generation seed
     Coord memory nonIronCoord = getNonIronCoord(alice);
     assertTrue(LibTerrain.getResourceByCoord(world, nonIronCoord) != IronID, "Tile should not have iron");
-    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
-
-    componentDevSystem.executeTyped(P_MaxBuildingsComponentID, 1, abi.encode(BIGNUM));
 
     buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
 
@@ -303,22 +280,26 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testSameXYCanCollide() public {
+    vm.startPrank(alice);
+    Coord memory ironCoord = getIronCoord(alice);
+    buildSystem.executeTyped(IronMineID, ironCoord);
+    vm.stopPrank();
     spawn(bob);
     vm.startPrank(bob);
-    buildMainBaseAtZero(bob);
+    ironCoord = getIronCoord(bob);
+    buildSystem.executeTyped(IronMineID, ironCoord);
+
     vm.stopPrank();
   }
 
   function testFailSameXYZCannotCollide() public {
     vm.startPrank(alice);
-    buildMainBaseAtZero(alice);
-
-    buildSystem.executeTyped(IronMineID, getOrigin(alice));
+    buildSystem.executeTyped(IronMineID, getCoord1(alice));
+    buildSystem.executeTyped(DebugIronMineID, getCoord1(alice));
   }
 
   function testBuiltOnWrongAsteroid() public {
     vm.startPrank(alice);
-    buildMainBaseAtZero(alice);
     Coord memory coord = getCoord2(alice);
     coord.parent = 69;
 
@@ -330,7 +311,6 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
-    buildMainBaseAtZero(alice);
 
     P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
       component(P_RequiredResourcesComponentID)
@@ -376,7 +356,6 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testFailBuildTwiceSameCoord() public prank(alice) {
-    buildMainBaseAtZero(alice);
     Coord memory coord = getCoord1(alice);
     buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
     buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
@@ -385,57 +364,8 @@ contract BuildSystemTest is PrimodiumTest {
   function testFailBuildTwiceMainBase() public {
     vm.startPrank(alice);
 
-    Coord memory coord1 = getOrigin(alice);
-    Coord memory coord2 = getCoord1(alice);
-
+    Coord memory coord1 = getCoord3(alice);
     buildSystem.executeTyped(MainBaseID, coord1);
-    buildSystem.executeTyped(MainBaseID, coord2);
-    vm.stopPrank();
-  }
-
-  function testFailBuildMoreThanBuildLimit() public {
-    vm.startPrank(alice);
-    buildMainBaseAtZero(alice);
-    uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
-    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
-    int32 secondIncrement = 0;
-    for (uint256 i = 0; i < buildLimit + 1; i++) {
-      Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1, parent: asteroid });
-      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
-      secondIncrement++;
-    }
-    vm.stopPrank();
-  }
-
-  function testBuildUpToBuildLimit() public prank(alice) {
-    buildMainBaseAtZero(alice);
-    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
-    uint256 asteroid = PositionComponent(component(PositionComponentID)).getValue(addressToEntity(alice)).parent;
-    int32 secondIncrement = 0;
-    for (uint256 i; i < buildLimit; i++) {
-      Coord memory coord1 = Coord({ x: secondIncrement + 1, y: secondIncrement + 1, parent: asteroid });
-      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
-      secondIncrement++;
-    }
-  }
-
-  function testBuildUpToBuildLimitIgnoreMainBaseAndBuildingWithIgnoreLimit() public {
-    vm.startPrank(alice);
-
-    uint256 buildLimit = LibBuilding.getMaxBuildingCount(world, 1);
-
-    Coord memory coord1 = getCoord1(alice);
-    buildSystem.executeTyped(MainBaseID, coord1);
-
-    coord1 = getCoord2(alice);
-    buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord1);
-
-    int32 secondIncrement = 0;
-    for (uint256 i; i < buildLimit; i++) {
-      coord1 = Coord({ x: secondIncrement, y: secondIncrement, parent: coord1.parent });
-      buildSystem.executeTyped(DebugSimpleBuildingBuildLimitReq, coord1);
-      secondIncrement++;
-    }
     vm.stopPrank();
   }
 }

@@ -8,7 +8,8 @@ import { DestroyPathSystem } from "./ethers-contracts/DestroyPathSystem";
 import { DestroySystem } from "./ethers-contracts/DestroySystem";
 import { IncrementSystem } from "./ethers-contracts/IncrementSystem";
 import { ResearchSystem } from "./ethers-contracts/ResearchSystem";
-import { S_CheckRequiredTileSystem } from "./ethers-contracts/S_CheckRequiredTileSystem";
+import { S_ClaimUnitsFromBuildingSystem } from "./ethers-contracts/S_ClaimUnitsFromBuildingSystem";
+import { S_ClaimUnitsSystem } from "./ethers-contracts/S_ClaimUnitsSystem";
 import { S_PlaceBuildingTilesSystem } from "./ethers-contracts/S_PlaceBuildingTilesSystem";
 import { S_SpendRequiredResourcesSystem } from "./ethers-contracts/S_SpendRequiredResourcesSystem";
 import { S_UpdateActiveStatusSystem } from "./ethers-contracts/S_UpdateActiveStatusSystem";
@@ -20,7 +21,9 @@ import { S_UpdateRequiredProductionSystem } from "./ethers-contracts/S_UpdateReq
 import { S_UpdateUnclaimedResourcesSystem } from "./ethers-contracts/S_UpdateUnclaimedResourcesSystem";
 import { S_UpdateUtilityProductionSystem } from "./ethers-contracts/S_UpdateUtilityProductionSystem";
 import { SpawnSystem } from "./ethers-contracts/SpawnSystem";
-import { UpgradeSystem } from "./ethers-contracts/UpgradeSystem";
+import { TrainUnitsSystem } from "./ethers-contracts/TrainUnitsSystem";
+import { UpgradeBuildingSystem } from "./ethers-contracts/UpgradeBuildingSystem";
+import { UpgradeRangeSystem } from "./ethers-contracts/UpgradeRangeSystem";
  
 export type SystemTypes = {
   "system.BuildPath": BuildPathSystem;
@@ -32,7 +35,8 @@ export type SystemTypes = {
   "system.Destroy": DestroySystem;
   "system.Increment": IncrementSystem;
   "system.Research": ResearchSystem;
-  "system.S_CheckRequiredTile": S_CheckRequiredTileSystem;
+  "system.S_ClaimUnitsFromBuilding": S_ClaimUnitsFromBuildingSystem;
+  "system.S_ClaimUnits": S_ClaimUnitsSystem;
   "system.S_PlaceBuildingTiles": S_PlaceBuildingTilesSystem;
   "system.S_SpendRequiredResources": S_SpendRequiredResourcesSystem;
   "system.S_UpdateActiveStatus": S_UpdateActiveStatusSystem;
@@ -44,5 +48,7 @@ export type SystemTypes = {
   "system.S_UpdateUnclaimedResources": S_UpdateUnclaimedResourcesSystem;
   "system.S_UpdateUtilityProduction": S_UpdateUtilityProductionSystem;
   "system.Spawn": SpawnSystem;
-  "system.Upgrade": UpgradeSystem;
+  "system.TrainUnits": TrainUnitsSystem;
+  "system.UpgradeBuilding": UpgradeBuildingSystem;
+  "system.UpgradeRange": UpgradeRangeSystem;
 };

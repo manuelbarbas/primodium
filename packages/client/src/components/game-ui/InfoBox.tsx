@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
-import { EntityID } from "@latticexyz/recs";
-import { hashAndTrimKeyCoord, trim } from "src/util/encode";
+import { EntityID, HasValue } from "@latticexyz/recs";
+import { hashAndTrimKeyCoord } from "src/util/encode";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
 import { GameButton } from "../shared/GameButton";
@@ -11,13 +11,10 @@ import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
 import { MainMenu } from "./MainMenu";
-import {
-  Level,
-  P_MaxBuildings,
-  BuildingCount,
-} from "src/network/components/chainComponents";
+import { Level, OwnedBy } from "src/network/components/chainComponents";
 import { primodium } from "@game/api";
 import { AsteroidMap } from "@game/constants";
+import { useEntityQuery } from "@latticexyz/react";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -37,15 +34,6 @@ export const InfoBox = () => {
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
-  const buildLimit = P_MaxBuildings.use(
-    trim(mainBaseLevel as unknown as EntityID)
-  );
-
-  const playerBuildingCount = BuildingCount.use(address);
-  const buildLimitNumber = parseInt(buildLimit?.value.toString() ?? "0");
-  const playerBuildingCountNumber = parseInt(
-    playerBuildingCount?.value.toString() ?? "0"
-  );
 
   useEffect(() => {
     if (mainBaseLevel === undefined) return;
@@ -57,6 +45,9 @@ export const InfoBox = () => {
     setNotify(true);
   }, [mainBaseLevel]);
 
+  const buildingCount = useEntityQuery([
+    HasValue(OwnedBy, { value: address }),
+  ]).length;
   return (
     <div>
       <div
@@ -90,30 +81,7 @@ export const InfoBox = () => {
                     </p>
                   )}
                   <div>
-                    <p>
-                      {" "}
-                      Buildings: {playerBuildingCountNumber}/
-                      <b>{buildLimitNumber}</b>
-                    </p>
-                    <div className="flex items-center bottom-0 left-1/2 -translate-x-1/2 w-full h-2 ring-2 ring-slate-700/50 crt mt-1 ">
-                      <div
-                        className="h-full bg-cyan-600"
-                        style={{
-                          width: `${
-                            (playerBuildingCountNumber / buildLimitNumber) * 100
-                          }%`,
-                        }}
-                      />
-                      <div
-                        className="h-full bg-gray-900"
-                        style={{
-                          width: `${
-                            (1 - playerBuildingCountNumber / buildLimitNumber) *
-                            100
-                          }%`,
-                        }}
-                      />
-                    </div>
+                    <p>Buildings: {buildingCount}</p>
                   </div>
                   {mainBaseCoord !== undefined && (
                     <div className="flex justify-center w-full">

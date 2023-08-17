@@ -36,7 +36,7 @@ library LibBlueprint {
     blueprint[3] = -1;
 
     blueprint[4] = 0;
-    blueprint[5] = -2;
+    blueprint[5] = 1;
 
     blueprint[6] = 1;
     blueprint[7] = 0;
@@ -45,15 +45,15 @@ library LibBlueprint {
     blueprint[9] = -1;
 
     blueprint[10] = 1;
-    blueprint[11] = -2;
+    blueprint[11] = 1;
 
-    blueprint[12] = 2;
+    blueprint[12] = -1;
     blueprint[13] = 0;
 
-    blueprint[14] = 2;
+    blueprint[14] = -1;
     blueprint[15] = -1;
 
-    blueprint[16] = 2;
-    blueprint[17] = -2;
+    blueprint[16] = -1;
+    blueprint[17] = 1;
   }
 }

@@ -8,9 +8,10 @@ import { runSystems } from "./systems";
 import { setupAsteroidChunkManager } from "./setup/setupChunkManager";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
-import { EntityID } from "@latticexyz/recs";
+import { EntityID, defineComponentSystem } from "@latticexyz/recs";
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { setupActiveAsteroid } from "./setup/setupActiveAsteroid";
+import { Level } from "src/network/components/chainComponents";
 
 export const initAsteroidView = async (player: EntityID, network: Network) => {
   const { Scenes } = AsteroidMap;
@@ -25,9 +26,14 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
 
   scene.camera.phaserCamera.setRoundPixels(false);
 
-  const chunkManager = await setupAsteroidChunkManager(scene.tilemap);
+  const chunkManager = await setupAsteroidChunkManager(player, scene.tilemap);
   chunkManager.renderInitialChunks();
   chunkManager.startChunkRenderer();
+
+  defineComponentSystem(world, Level, ({ entity }) => {
+    if (world.entities[entity] != player) return;
+    chunkManager.renderInitialChunks(true);
+  });
 
   scene.camera.phaserCamera.fadeIn(1000);
 

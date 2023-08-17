@@ -25,13 +25,17 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
-import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
 import { IsDebugComponent, ID as IsDebugComponentID } from "components/IsDebugComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
+import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
+import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID } from "components/UnitProductionQueueComponent.sol";
+import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
+import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
+import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
@@ -47,9 +51,16 @@ import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } 
 import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
-import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "components/P_MaxBuildingsComponent.sol";
-import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
+import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
+import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
+import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
+import { P_UnitMiningComponent, ID as P_UnitMiningComponentID } from "components/P_UnitMiningComponent.sol";
+import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
+import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from "components/P_UnitTrainingTimeComponent.sol";
+import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
+import { P_TerrainComponent, ID as P_TerrainComponentID } from "components/P_TerrainComponent.sol";
 
 // Systems (requires 'systems=...' remapping in project's remappings.txt)
 import { ResearchSystem, ID as ResearchSystemID } from "systems/ResearchSystem.sol";
@@ -60,7 +71,9 @@ import { DestroySystem, ID as DestroySystemID } from "systems/DestroySystem.sol"
 import { BuildPathSystem, ID as BuildPathSystemID } from "systems/BuildPathSystem.sol";
 import { DestroyPathSystem, ID as DestroyPathSystemID } from "systems/DestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "systems/UpgradeBuildingSystem.sol";
+import { UpgradeRangeSystem, ID as UpgradeRangeSystemID } from "systems/UpgradeRangeSystem.sol";
+import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "systems/ComponentDevSystem.sol";
 import { S_PlaceBuildingTilesSystem, ID as S_PlaceBuildingTilesSystemID } from "systems/S_PlaceBuildingTilesSystem.sol";
 import { S_UpdatePlayerStorageSystem, ID as S_UpdatePlayerStorageSystemID } from "systems/S_UpdatePlayerStorageSystem.sol";
@@ -73,10 +86,12 @@ import { S_UpdateOccupiedUtilitySystem, ID as S_UpdateOccupiedUtilitySystemID } 
 import { S_UpdateUtilityProductionSystem, ID as S_UpdateUtilityProductionSystemID } from "systems/S_UpdateUtilityProductionSystem.sol";
 import { S_UpdateRequiredProductionSystem, ID as S_UpdateRequiredProductionSystemID } from "systems/S_UpdateRequiredProductionSystem.sol";
 import { S_UpdateConnectedRequiredProductionSystem, ID as S_UpdateConnectedRequiredProductionSystemID } from "systems/S_UpdateConnectedRequiredProductionSystem.sol";
-import { S_CheckRequiredTileSystem, ID as S_CheckRequiredTileSystemID } from "systems/S_CheckRequiredTileSystem.sol";
+import { S_ClaimUnitsSystem, ID as S_ClaimUnitsSystemID } from "systems/S_ClaimUnitsSystem.sol";
+import { S_ClaimUnitsFromBuildingSystem, ID as S_ClaimUnitsFromBuildingSystemID } from "systems/S_ClaimUnitsFromBuildingSystem.sol";
 
 // Initializer libraries (requires 'libraries=...' remapping in project's remappings.txt)
 import { LibInitWorld } from "libraries/LibInitWorld.sol";
+import { LibInitTerrain } from "libraries/LibInitTerrain.sol";
 import { LibInitBuildings } from "libraries/LibInitBuildings.sol";
 import { LibInitResearch } from "libraries/LibInitResearch.sol";
 import { LibInitDebug } from "libraries/LibInitDebug.sol";
@@ -142,10 +157,6 @@ library LibDeploy {
       comp = new LevelComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying BuildingCountComponent");
-      comp = new BuildingCountComponent(address(result.world));
-      console.log(address(comp));
-
       console.log("Deploying ChildrenComponent");
       comp = new ChildrenComponent(address(result.world));
       console.log(address(comp));
@@ -168,6 +179,26 @@ library LibDeploy {
 
       console.log("Deploying OccupiedUtilityResourceComponent");
       comp = new OccupiedUtilityResourceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying UnitProductionOwnedByComponent");
+      comp = new UnitProductionOwnedByComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying UnitProductionQueueComponent");
+      comp = new UnitProductionQueueComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying UnitProductionQueueIndexComponent");
+      comp = new UnitProductionQueueIndexComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying UnitProductionLastQueueIndexComponent");
+      comp = new UnitProductionLastQueueIndexComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying UnitsComponent");
+      comp = new UnitsComponent(address(result.world));
       console.log(address(comp));
 
       console.log("Deploying AsteroidTypeComponent");
@@ -230,16 +261,44 @@ library LibDeploy {
       comp = new P_RequiredResourcesComponent(address(result.world));
       console.log(address(comp));
 
-      console.log("Deploying P_MaxBuildingsComponent");
-      comp = new P_MaxBuildingsComponent(address(result.world));
-      console.log(address(comp));
-
-      console.log("Deploying P_IgnoreBuildLimitComponent");
-      comp = new P_IgnoreBuildLimitComponent(address(result.world));
-      console.log(address(comp));
-
       console.log("Deploying P_IsBuildingTypeComponent");
       comp = new P_IsBuildingTypeComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitAttackComponent");
+      comp = new P_UnitAttackComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitCargoComponent");
+      comp = new P_UnitCargoComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitDefenceComponent");
+      comp = new P_UnitDefenceComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitMiningComponent");
+      comp = new P_UnitMiningComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitProductionMultiplierComponent");
+      comp = new P_UnitProductionMultiplierComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitProductionTypesComponent");
+      comp = new P_UnitProductionTypesComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitTrainingTimeComponent");
+      comp = new P_UnitTrainingTimeComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_UnitTravelSpeedComponent");
+      comp = new P_UnitTravelSpeedComponent(address(result.world));
+      console.log(address(comp));
+
+      console.log("Deploying P_TerrainComponent");
+      comp = new P_TerrainComponent(address(result.world));
       console.log(address(comp));
     } 
     
@@ -252,6 +311,7 @@ library LibDeploy {
       SystemStorage.init(result.world, result.world.components());
 
       LibInitWorld.init(result.world);
+      LibInitTerrain.init(result.world);
       LibInitBuildings.init(result.world);
       LibInitResearch.init(result.world);
       LibInitDebug.init(result.world);
@@ -297,19 +357,26 @@ library LibDeploy {
     authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, AsteroidTypeComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
+    authorizeWriter(components, BuildingTypeComponentID, address(system));
+    authorizeWriter(components, OwnedByComponentID, address(system));
+    authorizeWriter(components, LevelComponentID, address(system));
+    authorizeWriter(components, MainBaseComponentID, address(system));
+    authorizeWriter(components, ChildrenComponentID, address(system));
+    authorizeWriter(components, MainBaseComponentID, address(system));
+    authorizeWriter(components, UnitProductionOwnedByComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildSystem");
     system = new BuildSystem(world, address(components));
     world.registerSystem(address(system), BuildSystemID);
     authorizeWriter(components, BuildingTypeComponentID, address(system));
-    authorizeWriter(components, BuildingCountComponentID, address(system));
     authorizeWriter(components, OwnedByComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
     authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, ChildrenComponentID, address(system));
     authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, PositionComponentID, address(system));
+    authorizeWriter(components, UnitProductionOwnedByComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying DestroySystem");
@@ -320,8 +387,9 @@ library LibDeploy {
     authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, ChildrenComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
-    authorizeWriter(components, BuildingCountComponentID, address(system));
     authorizeWriter(components, PathComponentID, address(system));
+    authorizeWriter(components, PositionComponentID, address(system));
+    authorizeWriter(components, UnitProductionOwnedByComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying BuildPathSystem");
@@ -343,10 +411,25 @@ library LibDeploy {
     authorizeWriter(components, ItemComponentID, address(system));
     console.log(address(system));
 
-    console.log("Deploying UpgradeSystem");
-    system = new UpgradeSystem(world, address(components));
-    world.registerSystem(address(system), UpgradeSystemID);
+    console.log("Deploying UpgradeBuildingSystem");
+    system = new UpgradeBuildingSystem(world, address(components));
+    world.registerSystem(address(system), UpgradeBuildingSystemID);
     authorizeWriter(components, LevelComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying UpgradeRangeSystem");
+    system = new UpgradeRangeSystem(world, address(components));
+    world.registerSystem(address(system), UpgradeRangeSystemID);
+    authorizeWriter(components, LevelComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying TrainUnitsSystem");
+    system = new TrainUnitsSystem(world, address(components));
+    world.registerSystem(address(system), TrainUnitsSystemID);
+    authorizeWriter(components, UnitProductionQueueComponentID, address(system));
+    authorizeWriter(components, UnitProductionQueueIndexComponentID, address(system));
+    authorizeWriter(components, UnitProductionLastQueueIndexComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying ComponentDevSystem");
@@ -361,13 +444,17 @@ library LibDeploy {
     authorizeWriter(components, HasResearchedComponentID, address(system));
     authorizeWriter(components, MainBaseComponentID, address(system));
     authorizeWriter(components, LevelComponentID, address(system));
-    authorizeWriter(components, BuildingCountComponentID, address(system));
     authorizeWriter(components, ChildrenComponentID, address(system));
     authorizeWriter(components, ProductionComponentID, address(system));
     authorizeWriter(components, IsDebugComponentID, address(system));
     authorizeWriter(components, PositionComponentID, address(system));
     authorizeWriter(components, MaxUtilityComponentID, address(system));
     authorizeWriter(components, OccupiedUtilityResourceComponentID, address(system));
+    authorizeWriter(components, UnitProductionOwnedByComponentID, address(system));
+    authorizeWriter(components, UnitProductionQueueComponentID, address(system));
+    authorizeWriter(components, UnitProductionQueueIndexComponentID, address(system));
+    authorizeWriter(components, UnitProductionLastQueueIndexComponentID, address(system));
+    authorizeWriter(components, UnitsComponentID, address(system));
     authorizeWriter(components, AsteroidTypeComponentID, address(system));
     authorizeWriter(components, ActiveComponentID, address(system));
     authorizeWriter(components, DimensionsComponentID, address(system));
@@ -383,9 +470,16 @@ library LibDeploy {
     authorizeWriter(components, P_IsTechComponentID, address(system));
     authorizeWriter(components, P_RequiredResearchComponentID, address(system));
     authorizeWriter(components, P_RequiredResourcesComponentID, address(system));
-    authorizeWriter(components, P_MaxBuildingsComponentID, address(system));
-    authorizeWriter(components, P_IgnoreBuildLimitComponentID, address(system));
     authorizeWriter(components, P_IsBuildingTypeComponentID, address(system));
+    authorizeWriter(components, P_UnitAttackComponentID, address(system));
+    authorizeWriter(components, P_UnitCargoComponentID, address(system));
+    authorizeWriter(components, P_UnitDefenceComponentID, address(system));
+    authorizeWriter(components, P_UnitMiningComponentID, address(system));
+    authorizeWriter(components, P_UnitProductionMultiplierComponentID, address(system));
+    authorizeWriter(components, P_UnitProductionTypesComponentID, address(system));
+    authorizeWriter(components, P_UnitTrainingTimeComponentID, address(system));
+    authorizeWriter(components, P_UnitTravelSpeedComponentID, address(system));
+    authorizeWriter(components, P_TerrainComponentID, address(system));
     console.log(address(system));
 
     console.log("Deploying S_PlaceBuildingTilesSystem");
@@ -461,9 +555,22 @@ library LibDeploy {
     authorizeWriter(components, P_ProductionDependenciesComponentID, address(system));
     console.log(address(system));
 
-    console.log("Deploying S_CheckRequiredTileSystem");
-    system = new S_CheckRequiredTileSystem(world, address(components));
-    world.registerSystem(address(system), S_CheckRequiredTileSystemID);
+    console.log("Deploying S_ClaimUnitsSystem");
+    system = new S_ClaimUnitsSystem(world, address(components));
+    world.registerSystem(address(system), S_ClaimUnitsSystemID);
+    authorizeWriter(components, UnitsComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, UnitProductionQueueComponentID, address(system));
+    authorizeWriter(components, UnitProductionQueueIndexComponentID, address(system));
+    console.log(address(system));
+
+    console.log("Deploying S_ClaimUnitsFromBuildingSystem");
+    system = new S_ClaimUnitsFromBuildingSystem(world, address(components));
+    world.registerSystem(address(system), S_ClaimUnitsFromBuildingSystemID);
+    authorizeWriter(components, UnitsComponentID, address(system));
+    authorizeWriter(components, LastClaimedAtComponentID, address(system));
+    authorizeWriter(components, UnitProductionQueueComponentID, address(system));
+    authorizeWriter(components, UnitProductionQueueIndexComponentID, address(system));
     console.log(address(system));
   }
 }
