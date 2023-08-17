@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
@@ -525,13 +526,13 @@ library LibInitDebug {
   }
 
   function initializeUnits(IWorld world) internal {
-    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
     P_UnitTrainingTimeComponent unitTrainingTimeComponent = P_UnitTrainingTimeComponent(
       world.getComponent(P_UnitTrainingTimeComponentID)
     );
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       world.getComponent(P_RequiredUtilityComponentID)
     );
+    SpeedComponent speedComponent = SpeedComponent(world.getComponent(SpeedComponentID));
 
     //DebugUnit
     uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
@@ -541,7 +542,7 @@ library LibInitDebug {
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
-
+    speedComponent.set(entity, 100);
     //DebugUnit2
     entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
     unitTrainingTimeComponent.set(entity, 4);
@@ -550,5 +551,7 @@ library LibInitDebug {
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
+    speedComponent.set(entity, 200);
+    //DebugUnit2
   }
 }
