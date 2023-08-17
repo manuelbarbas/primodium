@@ -102,12 +102,7 @@ contract S_BattleSystemTest is PrimodiumTest {
   }
 
   function testBattleRaid() public {
-    vm.startPrank(bob);
-    buildSystem.executeTyped(MainBaseID, getOrigin(bob));
-    vm.stopPrank();
-
     vm.startPrank(alice);
-    buildSystem.executeTyped(MainBaseID, getOrigin(alice));
 
     uint256 battleEntity = LibEncode.hashKeyEntity(S_BattleSystemID, 0);
 
