@@ -17,14 +17,25 @@ import { Dimensions, Bounds } from "../../types.sol";
 contract LibBuildingTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
-  ComponentDevSystem componentDevSystem;
+  ComponentDevSystem internal componentDevSystem;
 
   function setUp() public override {
     super.setUp();
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
   }
 
-  function testGetPlayerBounds() public {
+  function testGetPlayerBounds(int32 maxX, int32 maxY, int32 currX, int32 currY) public {
+    // Bound fuzzy parameters to eliminate overflow errors when testing
+    vm.assume(currX > 0);
+    vm.assume(currY > 0);
+    vm.assume(maxX >= currX);
+    vm.assume(maxY >= currY);
+
+    maxX = maxX % 10000;
+    maxY = maxY % 10000;
+    currX = currX % 10000;
+    currY = currY % 10000;
+
     spawn(alice);
     vm.startPrank(alice);
 
