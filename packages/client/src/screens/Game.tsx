@@ -15,22 +15,15 @@ export const Game = () => {
   return (
     <div>
       {!gameReady && (
-        <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
+        <div className="flex items-center justify-center h-screen text-white font-mono">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Primodium</h1>
             <p className="text-lg">Initializing Game World...</p>
           </div>
         </div>
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div
-        id="game-container"
-        style={{
-          // backgroundSize: `75px 75px`,
-          backgroundImage: "url(/img/backgrounds/star.png)",
-        }}
-      >
+      <div id="game-container">
         <PhaserWrapper />
         {gameReady && <AsteroidUI />}
       </div>

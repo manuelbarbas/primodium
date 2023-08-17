@@ -22,29 +22,41 @@ export default function AppLoadingState() {
     percentage: 0,
   });
 
-  if (loadingState.state !== SyncState.LIVE) {
-    return (
-      <>
-        <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Primodium</h1>
+  return (
+    <div
+      style={{
+        backgroundImage: "url(/img/backgrounds/star.png)",
+      }}
+    >
+      {loadingState.state !== SyncState.LIVE && (
+        <div className="flex items-center justify-center h-screen text-white font-mono">
+          <div className="flex flex-col items-center">
+            {/* <h1 className="text-4xl font-bold mb-4">Primodium</h1> */}
+            <div className="w-72 ring-2 ring-cyan-400 h-4 relative mb-4">
+              <div
+                style={{ width: `${loadingState.percentage}%` }}
+                className="absolute top-0 left-0 bg-cyan-700 h-4"
+              />
+            </div>
             <p className="text-lg">
               {loadingState.msg} ({Math.floor(loadingState.percentage)}%)
             </p>
           </div>
         </div>
-      </>
-    );
-  } else {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/game" element={initialized ? <Game /> : <Landing />} />
-          <Route path="/increment" element={<Increment />} />
-          <Route path="/map" element={<Map />} />
-        </Routes>
-      </BrowserRouter>
-    );
-  }
+      )}
+      {loadingState.state === SyncState.LIVE && (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route
+              path="/game"
+              element={initialized ? <Game /> : <Landing />}
+            />
+            <Route path="/increment" element={<Increment />} />
+            <Route path="/map" element={<Map />} />
+          </Routes>
+        </BrowserRouter>
+      )}
+    </div>
+  );
 }
