@@ -47,6 +47,69 @@ contract S_BattleSystemTest is PrimodiumTest {
     // init other
   }
 
+  function testBattleMultipleUnitTypes() public {
+    vm.startPrank(alice);
+    uint256 battleEntity = LibEncode.hashKeyEntity(S_BattleSystemID, 0);
+
+    //alice
+    uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    unitEntity = LibEncode.hashKeyEntity(DebugUnit2, addressToEntity(alice));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+
+    uint256[] memory unitTypes = new uint256[](2);
+    unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit2;
+    uint32[] memory unitLevels = new uint32[](2);
+    unitLevels[0] = 1;
+    unitLevels[1] = 1;
+    uint32[] memory unitCounts = new uint32[](2);
+    unitCounts[0] = 300;
+    unitCounts[1] = 100;
+    BattleParticipant memory attacker = BattleParticipant(alice, unitTypes, unitLevels, unitCounts);
+    componentDevSystem.executeTyped(
+      BattleAttackerComponentID,
+      battleEntity,
+      abi.encode(attacker.playerAddress, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
+    );
+    BattleParticipant memory getAttacker = BattleAttackerComponent(component(BattleAttackerComponentID)).getValue(
+      battleEntity
+    );
+    console.log("attacker: %s", getAttacker.playerAddress);
+    //bob
+    unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    unitEntity = LibEncode.hashKeyEntity(DebugUnit2, addressToEntity(bob));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    unitTypes = new uint256[](2);
+    unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit2;
+    unitLevels = new uint32[](2);
+    unitLevels[0] = 1;
+    unitLevels[1] = 1;
+    unitCounts = new uint32[](2);
+    unitCounts[0] = 300;
+    unitCounts[1] = 300;
+    BattleParticipant memory defender = BattleParticipant(bob, unitTypes, unitLevels, unitCounts);
+    componentDevSystem.executeTyped(
+      BattleDefenderComponentID,
+      battleEntity,
+      abi.encode(defender.playerAddress, defender.unitTypes, defender.unitLevels, defender.unitCounts)
+    );
+
+    battleSystem.executeTyped(alice, battleEntity);
+    assertTrue(battleResultComponent.has(battleEntity), "battle result not found");
+    BattleResult memory result = battleResultComponent.getValue(battleEntity);
+    for (uint256 i = 0; i < result.attackerUnitsLeft.length; i++) {
+      console.log("attacker units left: %s", result.attackerUnitsLeft[i]);
+    }
+    for (uint256 i = 0; i < result.defenderUnitsLeft.length; i++) {
+      console.log("defender units left: %s", result.defenderUnitsLeft[i]);
+    }
+    assertEq(result.winnerAddress, bob, "winner is not bob");
+    vm.stopPrank();
+  }
+
   function testBattle() public {
     vm.startPrank(alice);
     uint256 battleEntity = LibEncode.hashKeyEntity(S_BattleSystemID, 0);
@@ -97,6 +160,7 @@ contract S_BattleSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < result.defenderUnitsLeft.length; i++) {
       console.log("defender units left: %s", result.defenderUnitsLeft[i]);
     }
+    assertEq(result.winnerAddress, alice, "winner is not alice");
 
     vm.stopPrank();
   }
