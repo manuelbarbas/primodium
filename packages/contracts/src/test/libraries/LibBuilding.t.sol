@@ -43,10 +43,14 @@ contract LibBuildingTest is PrimodiumTest {
     console.log("minX", uint32(bounds.minX));
     console.log("minY", uint32(bounds.minY));
 
-    assertEq(bounds.minX, max.x / 2 - curr.x / 2);
-    assertEq(bounds.maxX, max.x / 2 + curr.x / 2);
-    assertEq(bounds.minY, max.y / 2 - curr.y / 2);
-    assertEq(bounds.maxY, max.y / 2 + curr.y / 2);
+    assertEq(bounds.minX, (max.x - curr.x) / 2);
+    assertEq(bounds.maxX, (max.x + curr.x) / 2 - 1);
+    assertEq(bounds.minY, (max.y - curr.y) / 2);
+    assertEq(bounds.maxY, (max.y + curr.y) / 2 - 1);
+
+    // Check that the bound size matches with the current player dimensions
+    assertEq(curr.x, bounds.maxX - bounds.minX + 1);
+    assertEq(curr.y, bounds.maxY - bounds.minY + 1);
   }
 
   function testGetActualBounds() public {
