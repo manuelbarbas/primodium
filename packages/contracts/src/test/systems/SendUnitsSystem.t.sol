@@ -96,10 +96,14 @@ contract SendUnitsTest is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, entity, 10);
   }
 
-  function testInvadeu() public returns (Arrival memory) {
+  function testInvade() public returns (Arrival memory) {
     vm.startPrank(alice);
+    invade();
+  }
+
+  function invade() public returns (Arrival memory) {
     setupInvasion(DebugUnit);
-    uint32 attackNumber = 10;
+    uint32 attackNumber = 4;
     vm.roll(100);
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, attackNumber);
@@ -140,14 +144,16 @@ contract SendUnitsTest is PrimodiumTest {
   // Arrival resolution
 
   function testArrivalTooSoon() public {
-    Arrival memory arrival = testInvadeu();
+    vm.startPrank(alice);
+    Arrival memory arrival = invade();
     vm.roll(arrival.arrivalBlock - 1);
     updateSystem.executeTyped(bob, arrival.destination);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
   }
 
   function testArrivalExecuted() public {
-    Arrival memory arrival = testInvadeu();
+    vm.startPrank(alice);
+    Arrival memory arrival = invade();
     vm.roll(arrival.arrivalBlock);
     updateSystem.executeTyped(bob, arrival.destination);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 0);
@@ -155,9 +161,19 @@ contract SendUnitsTest is PrimodiumTest {
 
   // testTwoArrivals
   function testOneArrivedOneDidntYet() public {
-    Arrival memory arrival = testInvadeu();
+    vm.startPrank(alice);
+    Arrival memory arrival = invade();
     vm.roll(block.number + 10);
-    testInvadeu();
+    ArrivalUnit[] memory units = new ArrivalUnit[](1);
+    units[0] = ArrivalUnit(DebugUnit, 5);
+
+    bytes memory rawArrival = sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      bob
+    );
     vm.roll(arrival.arrivalBlock);
     updateSystem.executeTyped(bob, arrival.destination);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
