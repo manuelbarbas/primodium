@@ -487,10 +487,10 @@ contract ClaimSystemTest is PrimodiumTest {
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
 
     // TEMP: current generation seed
-    Coord memory IronCoord = getIronCoord(alice);
-    Coord memory CopperCoord = getCopperCoord(alice);
-    assertEq(LibTerrain.getResourceByCoord(world, IronCoord), IronID, "Tile should have iron");
-    assertEq(LibTerrain.getResourceByCoord(world, CopperCoord), CopperID, "Tile should have copper");
+    Coord memory ironCoord = getIronCoord(alice);
+    Coord memory copperCoord = getCopperCoord(alice);
+    assertEq(LibTerrain.getResourceByCoord(world, ironCoord), IronID, "Tile should have iron");
+    assertEq(LibTerrain.getResourceByCoord(world, copperCoord), CopperID, "Tile should have copper");
 
     Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
@@ -507,15 +507,15 @@ contract ClaimSystemTest is PrimodiumTest {
     );
 
     //gain capacity for all resources so can store copper
-    buildSystem.executeTyped(DebugIronMineID, IronCoord);
+    buildSystem.executeTyped(DebugIronMineID, ironCoord);
 
-    buildSystem.executeTyped(DebugCopperMineID, CopperCoord);
+    buildSystem.executeTyped(DebugCopperMineID, copperCoord);
 
     vm.roll(0);
     // Iron to main base
-    buildPathSystem.executeTyped(IronCoord, mainBaseCoord);
+    buildPathSystem.executeTyped(ironCoord, mainBaseCoord);
     // Copper to main base
-    buildPathSystem.executeTyped(CopperCoord, mainBaseCoord);
+    buildPathSystem.executeTyped(copperCoord, mainBaseCoord);
     // START CLAIMING
 
     vm.roll(20);
