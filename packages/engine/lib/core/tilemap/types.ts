@@ -10,7 +10,8 @@ export interface ChunkedTilemap<
     coord: WorldCoord,
     tile: TileKeys,
     layer?: LayerKeys,
-    tint?: number
+    tint?: number,
+    alpha?: number
   ) => void;
   dispose: () => void;
   setVisible: (visible: boolean) => void;
@@ -23,7 +24,7 @@ export interface VirtualTilemap<
   TileKeys extends number,
   LayerKeys extends string
 > extends ChunkedTilemap<TileKeys, LayerKeys> {
-  tiles: { [key in LayerKeys]: CoordMap<number> };
+  tiles: { [key in LayerKeys]: CoordMap<Tile> };
 }
 
 export interface AnimatedTilemap<
@@ -34,7 +35,8 @@ export interface AnimatedTilemap<
   putAnimationAt: (
     coord: WorldCoord,
     animationKey: AnimationKeys,
-    layer?: LayerKeys
+    layer?: LayerKeys,
+    alpha?: number
   ) => void;
   removeAnimationAt: (coord: WorldCoord, layer?: LayerKeys) => void;
   pauseAnimationAt: (coord: WorldCoord, layer?: LayerKeys) => void;
@@ -44,5 +46,11 @@ export interface AnimatedTilemap<
     frames: TileAnimation<TileKeys>
   ) => void;
 }
+
+export type Tile = {
+  index: number;
+  tint?: number;
+  alpha?: number;
+};
 
 export type TileAnimation<TileKeys extends number> = TileKeys[];

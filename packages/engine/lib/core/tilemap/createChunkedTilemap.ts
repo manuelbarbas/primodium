@@ -9,11 +9,9 @@ import { CoordMap } from "@latticexyz/utils";
 import { MultiHueTintPipeline } from "@latticexyz/phaserx";
 import { pickRandom } from "@latticexyz/utils";
 import { Chunks, WorldCoord, ChunkCoord } from "@latticexyz/phaserx/dist/types";
+import { Tile } from "./types";
 
-export type ChunkedTilemapConfig<
-  TileKeys extends number,
-  LayerKeys extends string
-> = {
+export type ChunkedTilemapConfig<Tile, LayerKeys extends string> = {
   scene: Phaser.Scene;
   tilesets: { [key: string]: Phaser.Tilemaps.Tileset };
   layerConfig: {
@@ -24,7 +22,7 @@ export type ChunkedTilemapConfig<
   };
   chunks: Chunks;
   backgroundTile: [number, ...number[]];
-  tiles: { [layer in LayerKeys]: CoordMap<TileKeys> };
+  tiles: { [layer in LayerKeys]: CoordMap<Tile> };
   tileWidth: number;
   tileHeight: number;
 };
@@ -33,7 +31,7 @@ export function createChunkedTilemap<
   TileKeys extends number,
   LayerKeys extends string
 >(
-  params: ChunkedTilemapConfig<TileKeys, LayerKeys>
+  params: ChunkedTilemapConfig<Tile, LayerKeys>
 ): ChunkedTilemap<TileKeys, LayerKeys> {
   const {
     scene,
@@ -186,7 +184,8 @@ export function createChunkedTilemap<
     coord: WorldCoord,
     tile: number,
     layer?: string,
-    tint?: number
+    tint?: number,
+    alpha?: number
   ) {
     const map = getMapAtTileCoord(coord);
 
@@ -227,6 +226,10 @@ export function createChunkedTilemap<
     if (tint) {
       putTile.tint = tint;
     }
+
+    if (alpha) {
+      putTile.alpha = alpha;
+    }
   }
 
   function renderChunk(chunkCoord: ChunkCoord) {
@@ -250,7 +253,16 @@ export function createChunkedTilemap<
             layer === layerConfig.defaultLayer
               ? pickRandom(backgroundTile)
               : -1;
-          const index = tiles[layer as LayerKeys].get(coord) || defaultIndex;
+          const storedTile = tiles[layer as LayerKeys].get(coord);
+          const index = storedTile?.index ?? defaultIndex;
+
+          if (storedTile) {
+            tile.index = storedTile.index;
+            if (storedTile.tint) tile.tint = storedTile.tint;
+            tile.alpha = storedTile.alpha ?? 1;
+            return;
+          }
+
           tile.index = index;
         },
         undefined,

@@ -24,7 +24,6 @@ export function renderFog(scene: Scene, player: EntityID) {
 
   defineComponentSystem(gameWorld, Level, ({ entity }) => {
     if (world.entities[entity] !== player) return;
-    console.log("rendering rectange with cutout");
     const bounds = getPlayerBounds(player);
     const asteroidBounds = getAsteroidBounds();
     console.log("bounds:", bounds);
@@ -34,7 +33,6 @@ export function renderFog(scene: Scene, player: EntityID) {
     if (scene.objectPool.objects.has(objIndex)) {
       scene.objectPool.remove(objIndex);
     }
-    // const fog = scene.objectPool.get(objIndex, "Graphics");
 
     // Add 1 tile margin for transition tiles
     for (let x = bounds.minX - 1; x <= bounds.maxX + 1; x++) {
@@ -58,36 +56,5 @@ export function renderFog(scene: Scene, player: EntityID) {
         scene.tilemap.map.putTileAt({ x, y: -y }, index, "Fog");
       }
     }
-
-    // fog.setComponent({
-    //   id: `square_with_cutout_${uuid()}`,
-    //   once: (gameObject) => {
-    //     gameObject.fillStyle(0x000000, 0.8);
-
-    //     gameObject.fillRect(
-    //       asteroidBounds.minX * tileWidth,
-    //       -asteroidBounds.minY * tileHeight,
-    //       asteroidBounds.maxX * tileWidth,
-    //       -asteroidBounds.maxY * tileHeight
-    //     );
-    //     const maskGraphics = scene.phaserScene.make.graphics({ x: 0, y: 0 });
-
-    //     maskGraphics.fillStyle(0xffffff);
-    //     maskGraphics.fillRect(
-    //       bounds.minX * tileWidth,
-    //       -bounds.minY * tileHeight,
-    //       bounds.maxX * tileWidth,
-    //       -bounds.maxY * tileHeight
-    //     );
-
-    //     const mask = new Phaser.Display.Masks.BitmapMask(
-    //       scene.phaserScene,
-    //       maskGraphics
-    //     );
-    //     mask.invertAlpha = true;
-
-    //     gameObject.setMask(mask);
-    //   },
-    // });
   });
 }

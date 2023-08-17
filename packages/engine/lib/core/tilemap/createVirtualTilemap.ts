@@ -1,4 +1,4 @@
-import { VirtualTilemap } from "./types";
+import { Tile, VirtualTilemap } from "./types";
 import { CoordMap } from "@latticexyz/utils";
 import {
   ChunkedTilemapConfig,
@@ -20,10 +20,12 @@ export function createVirtualTilemap<
     tileHeight,
   } = config;
 
-  const tiles: { [key in LayerKeys]: CoordMap<TileKeys> } = {} as never;
+  const tiles: {
+    [key in LayerKeys]: CoordMap<Tile>;
+  } = {} as never;
 
   for (const layerKey of Object.keys(layers)) {
-    tiles[layerKey as LayerKeys] = new CoordMap<TileKeys>();
+    tiles[layerKey as LayerKeys] = new CoordMap<Tile>();
   }
 
   const chunkedTilemap = createChunkedTilemap({ ...config, tiles });
@@ -32,10 +34,15 @@ export function createVirtualTilemap<
     coord: WorldCoord,
     tile: TileKeys,
     layer?: LayerKeys,
-    tint?: number
+    tint?: number,
+    alpha?: number
   ) {
     // Update virtual tilemap
-    tiles[layer || defaultLayer].set(coord, tile);
+    tiles[layer || defaultLayer].set(coord, {
+      index: tile,
+      tint,
+      alpha,
+    });
 
     // Immediately update the physical tile if the chunk is in view
     const chunk = tileCoordToChunkCoord(
@@ -45,7 +52,7 @@ export function createVirtualTilemap<
       chunks.chunkSize
     );
     if (chunkedTilemap.visible && chunks.visibleChunks.current.get(chunk)) {
-      chunkedTilemap.putTileAt(coord, tile, layer, tint);
+      chunkedTilemap.putTileAt(coord, tile, layer, tint, alpha);
     }
   }
 
