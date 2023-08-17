@@ -12,7 +12,6 @@ import { LevelComponent, ID as LevelComponentID } from "components/LevelComponen
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
-import { EAsteroidType } from "../../types.sol";
 import { Bounds } from "../../types.sol";
 
 import { ESpaceRockType } from "../../types.sol";

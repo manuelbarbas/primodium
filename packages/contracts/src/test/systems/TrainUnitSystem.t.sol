@@ -59,7 +59,6 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
     upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     updateSystem = S_UpdatePlayerSpaceRockSystem(system(S_UpdatePlayerSpaceRockSystemID));
-    spawn(alice);
     // init other
     spawn(alice);
   }
