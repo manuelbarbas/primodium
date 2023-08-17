@@ -31,6 +31,25 @@ export function getPlayerBounds(player: EntityID) {
   };
 }
 
+export function getPlayerNextBounds(player: EntityID) {
+  const level = Level.get(player, { value: 1 }).value;
+  const researchLevelEntity = trim(
+    hashStringEntity("research.Expansion", level + 1)
+  );
+
+  const range = Dimensions.get(researchLevelEntity) ?? Dimensions.get();
+  const asteroidDims = Dimensions.get();
+  if (!asteroidDims || !range)
+    throw new Error("Asteroid dimensions or range not found");
+
+  return {
+    minX: Math.floor(asteroidDims.width - range.width) / 2,
+    minY: Math.floor(asteroidDims.height - range.height) / 2,
+    maxX: Math.floor(asteroidDims.width + range.width) / 2 - 1,
+    maxY: Math.floor(asteroidDims.height + range.height) / 2 - 1,
+  };
+}
+
 export function getAsteroidBounds() {
   const asteroidDims = Dimensions.get();
   if (!asteroidDims) throw new Error("Asteroid dimensions not found");
