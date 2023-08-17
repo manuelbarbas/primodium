@@ -68,21 +68,17 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testUniqueAsteroidPosition() public {
-    // Asteroid Count is incremented before created in createAsteroid(), so the asteroid index starts at one.
-    // Here, we create two asteroids consecutively and check if their assigned coordinates match the expected coordinates based on their order of creation.
-    uint256 playerEntity = addressToEntity(alice);
-    Coord memory position = LibAsteroid.getUniqueAsteroidPosition(1);
-    spawn(alice);
-    uint256 asteroid = positionComponent.getValue(playerEntity).parent;
-    Coord memory retrievedPosition = positionComponent.getValue(asteroid);
-    assertCoordEq(position, retrievedPosition);
-
-    uint256 playerEntity2 = addressToEntity(bob);
-    Coord memory position2 = LibAsteroid.getUniqueAsteroidPosition(2);
-    spawn(bob);
-    uint256 asteroid2 = positionComponent.getValue(playerEntity2).parent;
-    Coord memory retrievedPosition2 = positionComponent.getValue(asteroid2);
-    assertCoordEq(position2, retrievedPosition2);
+    // Asteroid Count is incremented before creation in createAsteroid(), so the asteroid index starts at one.
+    // We create ten asteroids consecutively and check if their assigned coordinates match the expected coordinates based on their order of creation.
+    for (uint32 i = 1; i <= 10; i++) {
+      address newAddress = address(uint160(uint256(keccak256(abi.encodePacked(i)))));
+      uint256 playerEntity = addressToEntity(newAddress);
+      Coord memory position = LibAsteroid.getUniqueAsteroidPosition(i);
+      spawn(newAddress);
+      uint256 asteroid = positionComponent.getValue(playerEntity).parent;
+      Coord memory retrievedPosition = positionComponent.getValue(asteroid);
+      assertCoordEq(position, retrievedPosition);
+    }
   }
 
   function testBuildMainBase() public {
