@@ -7,6 +7,7 @@ import { IWorld } from "solecs/System.sol";
 import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { P_IgnoreBuildLimitComponent, ID as P_IgnoreBuildLimitComponentID } from "components/P_IgnoreBuildLimitComponent.sol";
@@ -90,6 +91,7 @@ library LibBuilding {
     BuildingTypeComponent(world.getComponent(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     LevelComponent(world.getComponent(LevelComponentID)).set(buildingEntity, 1);
     PositionComponent(world.getComponent(PositionComponentID)).set(buildingEntity, coord);
+    LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(buildingEntity, block.number);
 
     IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
       msg.sender,

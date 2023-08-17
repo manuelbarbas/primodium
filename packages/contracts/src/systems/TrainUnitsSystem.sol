@@ -83,8 +83,6 @@ contract TrainUnitsSystem is PrimodiumSystem {
       getC(UnitProductionQueueIndexComponentID)
     );
 
-    // note: removed setting last claimed to block.number here
-
     uint32 queueIndex = 0;
     if (unitProductionQueueIndexComponent.has(buildingEntity)) {
       queueIndex = unitProductionLastQueueIndexComponent.getValue(buildingEntity) + 1;

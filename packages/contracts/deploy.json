@@ -76,7 +76,8 @@
         "MainBaseComponent",
         "ChildrenComponent",
         "MainBaseComponent",
-        "UnitProductionOwnedByComponent"
+        "UnitProductionOwnedByComponent",
+        "LastClaimedAtComponent"
       ]
     },
     {
@@ -90,7 +91,8 @@
         "ChildrenComponent",
         "MainBaseComponent",
         "PositionComponent",
-        "UnitProductionOwnedByComponent"
+        "UnitProductionOwnedByComponent",
+        "LastClaimedAtComponent"
       ]
     },
     {
@@ -157,6 +159,7 @@
       "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["ItemComponent"]
     },
+    { "name": "S_UpdatePlayerSpaceRockSystem", "writeAccess": ["*"] },
     {
       "name": "S_UpdatePlayerResourceProductionSystem",
       "writeAccess": ["ProductionComponent", "ProductionComponent"]

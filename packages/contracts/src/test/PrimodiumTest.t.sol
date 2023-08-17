@@ -56,6 +56,10 @@ contract PrimodiumTest is MudTest {
     }
   }
 
+  function getHomeAsteroid(address player) public view returns (uint256) {
+    return PositionComponent(component(PositionComponentID)).getValue(addressToEntity(player)).parent;
+  }
+
   function getMainBaseCoord(address player) internal view returns (Coord memory) {
     Coord memory position = PositionComponent(component(PositionComponentID)).getValue(MainBaseID);
     return getCoord(Coord2D(position.x, position.y), player);

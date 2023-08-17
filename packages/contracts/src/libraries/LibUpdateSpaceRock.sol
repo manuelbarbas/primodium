@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0;
 
 // external
+import { console } from "forge-std/console.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
@@ -128,6 +129,7 @@ library LibUpdateSpaceRock {
         isStillClaiming = false;
       }
     }
+    lastClaimedAtComponent.set(unitProductionBuildingEntity, blockNumber);
   }
 
   function addPlayerUnitsToAsteroid(IWorld world, uint256 playerEntity, uint256 unitType, uint32 unitCount) internal {
@@ -141,6 +143,7 @@ library LibUpdateSpaceRock {
     uint256[] memory unitProductionBuildingEntities = UnitProductionOwnedByComponent(
       world.getComponent(UnitProductionOwnedByComponentID)
     ).getEntitiesWithValue(playerEntity);
+    console.log("buildings", unitProductionBuildingEntities.length);
 
     for (uint32 i = 0; i < unitProductionBuildingEntities.length; i++) {
       claimUnitsFromBuilding(world, unitProductionBuildingEntities[i], playerEntity, blockNumber);
