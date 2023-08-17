@@ -23,7 +23,7 @@ import { ESendType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
 
 library LibSend {
   function sendUnits(IWorld world, Arrival memory arrival) internal {
-    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(arrival.from, arrival.destination);
+    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(arrival.to, arrival.destination);
     ArrivalsList.add(world, playerAsteroidEntity, arrival);
   }
 

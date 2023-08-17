@@ -124,7 +124,6 @@ library LibUnits {
     return unitTrainingTimeComponent.getValue(LibEncode.hashKeyEntity(unitType, unitTypeLevel));
   }
 
-  //checks all required conditions for a factory to be functional and updates factory is functional status
   function getPlayerUnitTypeLevel(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitType, playerEntity);
     return LibMath.getSafe(LevelComponent(world.getComponent(LevelComponentID)), playerUnitEntity);

@@ -12,7 +12,7 @@ import "../../prototypes.sol";
 contract ArrivalsListTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
-  uint256 planet = 69;
+  uint256 public planet = 69;
 
   function getArrival(uint256 id) public pure returns (Arrival memory) {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);

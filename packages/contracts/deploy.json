@@ -135,6 +135,7 @@
         "LastClaimedAtComponent"
       ]
     },
+    { "name": "SendUnitsSystem", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]

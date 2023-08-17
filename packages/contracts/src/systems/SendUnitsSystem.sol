@@ -58,7 +58,7 @@ contract SendUnitsSystem is PrimodiumSystem {
       units: arrivalUnits,
       sendType: sendType,
       arrivalBlock: block.number +
-        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * MOVE_SPEED) / 100),
+        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * MOVE_SPEED) / 100 / 100),
       from: playerEntity,
       to: addressToEntity(to),
       origin: origin,

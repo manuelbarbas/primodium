@@ -22,8 +22,8 @@ contract LibSendtest is PrimodiumTest {
 
   function testSpeed() public {
     SpeedComponent speedComponent = SpeedComponent(world.getComponent(SpeedComponentID));
-    uint256 unit1 = LibEncode.hashKeyEntity(DebugUnit, 1);
-    uint256 unit2 = LibEncode.hashKeyEntity(DebugUnit2, 1);
+    uint256 unit1 = DebugUnit;
+    uint256 unit2 = DebugUnit2;
     uint32 speed1 = speedComponent.getValue(unit1);
     uint32 speed2 = speedComponent.getValue(unit2);
     uint32 slowest = LibMath.min(speed1, speed2);
@@ -31,7 +31,6 @@ contract LibSendtest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](2);
     units[0] = ArrivalUnit(unit1, 10);
     units[1] = ArrivalUnit(unit2, 10);
-    console.log("speed:", LibSend.getSlowestUnitSpeed(world, units));
     assertEq(slowest, LibSend.getSlowestUnitSpeed(world, units));
   }
 }

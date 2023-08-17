@@ -535,6 +535,7 @@ library LibInitDebug {
     SpeedComponent speedComponent = SpeedComponent(world.getComponent(SpeedComponentID));
 
     //DebugUnit
+    speedComponent.set(DebugUnit, 100);
     uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
     unitTrainingTimeComponent.set(entity, 2);
 
@@ -542,8 +543,9 @@ library LibInitDebug {
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
-    speedComponent.set(entity, 100);
     //DebugUnit2
+
+    speedComponent.set(DebugUnit2, 200);
     entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
     unitTrainingTimeComponent.set(entity, 4);
 
@@ -551,7 +553,5 @@ library LibInitDebug {
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
-    speedComponent.set(entity, 200);
-    //DebugUnit2
   }
 }
