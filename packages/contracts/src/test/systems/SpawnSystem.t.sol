@@ -68,13 +68,17 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testUniqueAsteroidPosition() public {
-    uint256 playerEntity = addressToEntity(alice);
-    Coord memory position = LibAsteroid.getUniqueAsteroidPosition(69);
-    spawn(alice);
-    vm.startPrank(alice);
-    uint256 asteroid = positionComponent.getValue(playerEntity).parent;
-    Coord memory retrievedPosition = positionComponent.getValue(asteroid);
-    assertCoordEq(position, retrievedPosition);
+    // Asteroid Count is incremented before creation in createAsteroid(), so the asteroid index starts at one.
+    // We create ten asteroids consecutively and check if their assigned coordinates match the expected coordinates based on their order of creation.
+    for (uint32 i = 1; i <= 10; i++) {
+      address newAddress = address(uint160(uint256(keccak256(abi.encodePacked(i)))));
+      uint256 playerEntity = addressToEntity(newAddress);
+      Coord memory position = LibAsteroid.getUniqueAsteroidPosition(i);
+      spawn(newAddress);
+      uint256 asteroid = positionComponent.getValue(playerEntity).parent;
+      Coord memory retrievedPosition = positionComponent.getValue(asteroid);
+      assertCoordEq(position, retrievedPosition);
+    }
   }
 
   function testBuildMainBase() public {
@@ -90,7 +94,5 @@ contract SpawnSystemTest is PrimodiumTest {
     OwnedByComponent ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     assertTrue(ownedByComponent.has(buildingEntity));
     assertEq(ownedByComponent.getValue(buildingEntity), addressToEntity(alice));
-
-    vm.stopPrank();
   }
 }
