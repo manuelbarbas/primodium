@@ -94,11 +94,7 @@ export default function UpgradeBuildingButton({
       <GameButton
         id={id}
         className="w-44 mt-2 text-sm"
-<<<<<<< HEAD:packages/client/src/components/action/UpgradeButton.tsx
-        onClick={() => upgrade(coord, network)}
-=======
-        onClick={() => upgradeBuilding(coords, network)}
->>>>>>> b874cea10f3d738c466b1cbd74219ba5839fc216:packages/client/src/components/action/UpgradeBuildingButton.tsx
+        onClick={() => upgradeBuilding(coord, network)}
         color={
           isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
         }
