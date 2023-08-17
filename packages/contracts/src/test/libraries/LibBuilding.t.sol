@@ -26,6 +26,7 @@ contract LibBuildingTest is PrimodiumTest {
 
   function testGetPlayerBounds(int32 maxX, int32 maxY, int32 currX, int32 currY) public {
     // Bound fuzzy parameters to eliminate overflow errors when testing
+    // Modulus operator on currX and currY before vm.assume results in a "rejected too many inputs" error
     vm.assume(currX > 0);
     vm.assume(currY > 0);
     vm.assume(maxX >= currX);
