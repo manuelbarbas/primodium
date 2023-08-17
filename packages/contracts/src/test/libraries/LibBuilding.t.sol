@@ -38,6 +38,10 @@ contract LibBuildingTest is PrimodiumTest {
     Dimensions memory curr = Dimensions(5, 5);
     componentDevSystem.executeTyped(DimensionsComponentID, researchLevelEntity, abi.encode(curr));
     Bounds memory bounds = LibBuilding.getPlayerBounds(world, playerEntity);
+    console.log("maxX", uint32(bounds.maxX));
+    console.log("maxY", uint32(bounds.maxY));
+    console.log("minX", uint32(bounds.minX));
+    console.log("minY", uint32(bounds.minY));
 
     assertEq(bounds.minX, (max.x - curr.x) / 2);
     assertEq(bounds.maxX, (max.x + curr.x) / 2 - 1);

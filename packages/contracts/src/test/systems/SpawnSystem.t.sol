@@ -68,6 +68,8 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testUniqueAsteroidPosition() public {
+    // Asteroid Count is incremented before created in createAsteroid(), so the asteroid index starts at 1.
+
     uint256 playerEntity = addressToEntity(alice);
     Coord memory position = LibAsteroid.getUniqueAsteroidPosition(1);
     spawn(alice);
