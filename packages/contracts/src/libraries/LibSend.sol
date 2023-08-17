@@ -3,23 +3,18 @@ pragma solidity >=0.8.0;
 
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-import { addressToEntity } from "solecs/utils.sol";
 
 // comps
 
-import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibMath } from "libraries/LibMath.sol";
-import { LibUnits } from "libraries/LibUnits.sol";
 import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 
 // types
-import { ESendType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
+import { Coord, Arrival, ArrivalUnit } from "src/types.sol";
 
 library LibSend {
   function sendUnits(IWorld world, Arrival memory arrival) internal {

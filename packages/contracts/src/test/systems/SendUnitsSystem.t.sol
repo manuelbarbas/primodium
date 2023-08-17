@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "../PrimodiumTest.t.sol";
-import { SingletonID } from "solecs/SingletonID.sol";
 
 import { SendUnitsSystem, ID as SendUnitsSystemID } from "systems/SendUnitsSystem.sol";
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
@@ -16,8 +15,6 @@ import { LibSend } from "libraries/LibSend.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 
 import { MOVE_SPEED } from "src/constants.sol";
-import "src/prototypes.sol";
-import "src/types.sol";
 
 contract SendUnitsTest is PrimodiumTest {
   constructor() PrimodiumTest() {}

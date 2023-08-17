@@ -3,13 +3,11 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "solecs/System.sol";
 import { addressToEntity, getAddressById } from "solecs/utils.sol";
-import { console } from "forge-std/console.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as S_UpdatePlayerSpaceRockSystem } from "./S_UpdatePlayerSpaceRockSystem.sol";
@@ -48,7 +46,6 @@ contract SendUnitsSystem is PrimodiumSystem {
         playerEntity,
         origin
       );
-      console.log("send system entity: ", unitPlayerAsteroidEntity);
       LibMath.subtract(unitsComponent, unitPlayerAsteroidEntity, arrivalUnits[i].count);
     }
 

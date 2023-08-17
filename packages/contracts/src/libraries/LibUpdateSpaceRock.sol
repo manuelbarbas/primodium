@@ -3,14 +3,11 @@ pragma solidity >=0.8.0;
 
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-import { addressToEntity } from "solecs/utils.sol";
-import { console } from "forge-std/console.sol";
 
 // comps
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
 import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID } from "components/UnitProductionQueueComponent.sol";
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
@@ -22,14 +19,12 @@ import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
-import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 
 // types
 import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue } from "src/types.sol";
 
 library LibUpdateSpaceRock {
   function updateSpaceRock(IWorld world, uint256 playerEntity, uint256 spaceRock) internal {
-    console.log("block number:", block.number);
     bool rockOwnedByPlayer = OwnedByComponent(world.getComponent(OwnedByComponentID)).getValue(spaceRock) ==
       playerEntity;
     uint256 playerSpaceRockEntity = LibEncode.hashKeyEntity(playerEntity, spaceRock);
@@ -44,7 +39,6 @@ library LibUpdateSpaceRock {
       // get earliest event
       for (uint256 i = 0; i < listSize; i++) {
         uint256 arrivalBlock = ArrivalsList.getArrivalBlock(world, playerSpaceRockEntity, i);
-        console.log("arrival block:", arrivalBlock);
         if (arrivalBlock <= earliestEventBlock) {
           earliestEventBlock = arrivalBlock;
           earliestEventIndex = i;
@@ -56,14 +50,12 @@ library LibUpdateSpaceRock {
       if (rockOwnedByPlayer) claimUnits(world, playerEntity, earliestEventBlock);
       // apply arrival
       applyArrival(world, ArrivalsList.get(world, playerSpaceRockEntity, earliestEventIndex));
-      console.log("earliest event index:", earliestEventIndex);
       ArrivalsList.remove(world, playerSpaceRockEntity, earliestEventIndex);
     } while (earliestEventBlock < block.number);
     if (rockOwnedByPlayer) claimUnits(world, playerEntity, block.number);
   }
 
   function applyArrival(IWorld world, Arrival memory arrival) public view {
-    console.log("applying arrival");
     return;
   }
 

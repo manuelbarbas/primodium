@@ -5,13 +5,8 @@ import "../PrimodiumTest.t.sol";
 
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 
-import "../../prototypes.sol";
-
-import { LibMath } from "../../libraries/LibMath.sol";
-import { LibSend } from "../../libraries/LibSend.sol";
-import { LibEncode } from "../../libraries/LibEncode.sol";
-
-import { Coord, Dimensions, ArrivalUnit } from "../../types.sol";
+import { LibMath } from "libraries/LibMath.sol";
+import { LibSend } from "libraries/LibSend.sol";
 
 contract LibSendtest is PrimodiumTest {
   constructor() PrimodiumTest() {}

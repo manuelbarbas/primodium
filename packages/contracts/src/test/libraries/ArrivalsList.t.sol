@@ -4,10 +4,7 @@ pragma solidity >=0.8.0;
 import "../PrimodiumTest.t.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 
-import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
-
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
-import "../../prototypes.sol";
 
 contract ArrivalsListTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
