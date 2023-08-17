@@ -18,9 +18,10 @@ enum EActionType {
 }
 
 // note: for use when we get special asteroids
-enum EAsteroidType {
+enum ESpaceRockType {
   NONE,
-  NORMAL
+  ASTEROID,
+  MOTHERLODE
 }
 
 struct Coord {

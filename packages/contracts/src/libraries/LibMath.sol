@@ -24,11 +24,15 @@ library LibMath {
 
   function subtract(Uint32Component component, uint256 entity, uint32 subtractor) internal {
     uint32 value = getSafe(component, entity);
-    require(value > subtractor, "not enough value to subtract");
+    require(value >= subtractor, "not enough value to subtract");
     component.set(entity, value - subtractor);
   }
 
   function abs(int32 input) internal pure returns (int32) {
     return input < 0 ? -input : input;
+  }
+
+  function min(uint32 x, uint32 y) internal pure returns (uint32) {
+    return x < y ? x : y;
   }
 }

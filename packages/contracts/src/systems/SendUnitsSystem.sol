@@ -3,8 +3,10 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "solecs/System.sol";
 import { addressToEntity, getAddressById } from "solecs/utils.sol";
+import { console } from "forge-std/console.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
@@ -16,7 +18,8 @@ import { LibSend } from "libraries/LibSend.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 
-import { ESendType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
+import { MOVE_SPEED } from "src/constants.sol";
+import { ESendType, ESpaceRockType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
 
 uint256 constant ID = uint256(keccak256("system.SendUnits"));
 
@@ -24,43 +27,29 @@ contract SendUnitsSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
-    (
-      ArrivalUnit[] memory arrivalUnits,
-      ESendType sendType,
-      Coord memory origin,
-      Coord memory destination,
-      address to
-    ) = abi.decode(args, (ArrivalUnit[], ESendType, Coord, Coord, address));
-    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    uint256 playerEntity = addressToEntity(msg.sender);
-    // make sure the asteroid exists on the coord
-    Coord memory asteroidPosition = PositionComponent(getC(PositionComponentID)).getValue(origin.parent);
-    IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(
-      msg.sender,
-      origin.parent
-    );
-    // either the origin or destination must be owned by the player
-    require(
-      ownedByComponent.getValue(origin.parent) == playerEntity ||
-        ownedByComponent.getValue(destination.parent) == playerEntity,
-      "must own origin or destination"
-    );
+    (ArrivalUnit[] memory arrivalUnits, ESendType sendType, uint256 origin, uint256 destination, address to) = abi
+      .decode(args, (ArrivalUnit[], ESendType, uint256, uint256, address));
 
-    require(asteroidPosition.x == origin.x && asteroidPosition.y == origin.y, "space rock not found at origin");
-    // make sure an asteroid exists at the destination
-    require(
-      ActiveComponent(getC(ActiveComponentID)).has(LibEncode.encodeCoord(Coord(destination.x, destination.y, 0))),
-      "destination has no space rock"
-    );
+    IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
+    uint256 playerEntity = addressToEntity(msg.sender);
+    if (sendType == ESendType.INVADE) require(playerEntity != addressToEntity(to), "you cannot invade yourself");
+
+    checkMovementRules(origin, destination, playerEntity);
+
+    PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
+    Coord memory originPosition = positionComponent.getValue(origin);
+    Coord memory destinationPosition = positionComponent.getValue(destination);
 
     // make sure the troop count at the planet is leq the one given and subtract from planet total
     UnitsComponent unitsComponent = UnitsComponent(getC(UnitsComponentID));
     for (uint256 i = 0; i < arrivalUnits.length; i++) {
+      require(arrivalUnits[i].count > 0, "unit count must be positive");
       uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(
         uint256(arrivalUnits[i].unitType),
         playerEntity,
-        origin.parent
+        origin
       );
+      console.log("send system entity: ", unitPlayerAsteroidEntity);
       LibMath.subtract(unitsComponent, unitPlayerAsteroidEntity, arrivalUnits[i].count);
     }
 
@@ -68,22 +57,49 @@ contract SendUnitsSystem is PrimodiumSystem {
     Arrival memory arrival = Arrival({
       units: arrivalUnits,
       sendType: sendType,
-      arrivalBlock: block.number + ((LibSend.distance(origin, destination) * moveSpeed) / 100),
+      arrivalBlock: block.number +
+        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * MOVE_SPEED) / 100),
       from: playerEntity,
       to: addressToEntity(to),
-      origin: origin.parent,
-      destination: destination.parent
+      origin: origin,
+      destination: destination
     });
 
     LibSend.sendUnits(world, arrival);
-    return "";
+    return abi.encode(arrival);
+  }
+
+  function checkMovementRules(uint256 origin, uint256 destination, uint256 playerEntity) internal view {
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
+    AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(getC(AsteroidTypeComponentID));
+    /*
+    Space rock movement rules:
+      1. You can only move from an asteroid if it is yours. 
+      2. You can only move from a motherlode to your asteroid. 
+      3. You cannot move between motherlodes.
+    */
+    ESpaceRockType originType = ESpaceRockType(asteroidTypeComponent.getValue(origin));
+    ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
+
+    require(origin != destination, "origin and destination cannot be the same");
+    if (originType == ESpaceRockType.ASTEROID) {
+      require(ownedByComponent.getValue(origin) == playerEntity, "you can only move from an asteroid you own");
+    }
+
+    if (destinationType == ESpaceRockType.MOTHERLODE) {
+      require(originType != ESpaceRockType.MOTHERLODE, "you cannot move between motherlodes");
+      require(
+        ownedByComponent.getValue(destination) == playerEntity,
+        "you can only move to your asteroid from a motherlode"
+      );
+    }
   }
 
   function executeTyped(
     ArrivalUnit[] calldata arrivalUnits,
     ESendType sendType,
-    Coord memory origin,
-    Coord memory destination,
+    uint256 origin,
+    uint256 destination,
     address to
   ) public returns (bytes memory) {
     return execute(abi.encode(arrivalUnits, sendType, origin, destination, to));

@@ -11,7 +11,7 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
-import { Coord, Dimensions, EAsteroidType } from "../types.sol";
+import { Coord, Dimensions, ESpaceRockType } from "../types.sol";
 
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -33,7 +33,7 @@ library LibAsteroid {
     Coord memory position = getUniqueAsteroidPosition(world, ownerEntity);
 
     positionComponent.set(asteroidEntity, position);
-    asteroidTypeComponent.set(asteroidEntity, uint256(EAsteroidType.NORMAL));
+    asteroidTypeComponent.set(asteroidEntity, uint256(ESpaceRockType.ASTEROID));
 
     // For now, we will use this component to ensure the owner can only build on their asteroid.
     // TODO: remove this component later as it might be for temporary use.

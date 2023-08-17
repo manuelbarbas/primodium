@@ -10,7 +10,7 @@ import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
-import { EAsteroidType } from "../../types.sol";
+import { ESpaceRockType } from "../../types.sol";
 
 contract SpawnSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
@@ -41,7 +41,7 @@ contract SpawnSystemTest is PrimodiumTest {
     );
     assertEq(
       asteroidTypeComponent.getValue(asteroidEntity),
-      uint256(EAsteroidType.NORMAL),
+      uint256(ESpaceRockType.ASTEROID),
       "Asteroid should be a normal asteroid"
     );
   }
