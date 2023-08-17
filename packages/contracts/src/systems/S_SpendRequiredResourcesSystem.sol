@@ -1,9 +1,11 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
 import { ID as BuildSystemID } from "./BuildSystem.sol";
+import { ID as UpgradeBuildingSystemID } from "./UpgradeBuildingSystem.sol";
+import { ID as UpgradeRangeSystemID } from "./UpgradeRangeSystem.sol";
 import { ID as SpawnSystemID } from "./SpawnSystem.sol";
-import { ID as UpgradeSystemID } from "./UpgradeSystem.sol";
 import { ID as ResearchSystemID } from "./ResearchSystem.sol";
 
 import { ID as UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
@@ -25,10 +27,11 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, IOnEntityCountSub
   function execute(bytes memory args) public override returns (bytes memory) {
     require(
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
-        msg.sender == getAddressById(world.systems(), UpgradeSystemID) ||
+        msg.sender == getAddressById(world.systems(), UpgradeBuildingSystemID) ||
+        msg.sender == getAddressById(world.systems(), UpgradeRangeSystemID) ||
         msg.sender == getAddressById(world.systems(), ResearchSystemID) ||
         msg.sender == getAddressById(world.systems(), SpawnSystemID),
-      "S_SpendRequiredResourcesSystem: Only BuildSystem, UpgradeSystem, ResearchSystem can call this function"
+      "S_SpendRequiredResourcesSystem: Only BuildSystem, UpgradeBuildingSystem, ResearchSystem can call this function"
     );
 
     (address playerAddress, uint256 targetEntity, uint32 count) = abi.decode(args, (address, uint256, uint32));

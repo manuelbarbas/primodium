@@ -6,11 +6,16 @@ import { PrimodiumSystem, IWorld, addressToEntity } from "./internal/PrimodiumSy
 
 // components
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+
+import { Dimensions } from "../types.sol";
+import { ExpansionResearch } from "../prototypes.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
 // types
@@ -26,7 +31,7 @@ contract SpawnSystem is PrimodiumSystem {
     return execute("");
   }
 
-  function execute(bytes memory args) public override returns (bytes memory) {
+  function execute(bytes memory) public override returns (bytes memory) {
     uint256 playerEntity = addressToEntity(msg.sender);
     PositionComponent positionComponent = PositionComponent(world.getComponent(PositionComponentID));
     bool spawned = positionComponent.has(playerEntity);
@@ -36,8 +41,12 @@ contract SpawnSystem is PrimodiumSystem {
     Coord memory coord = positionComponent.getValue(MainBaseID);
     coord.parent = asteroid;
     uint256 buildingEntity = LibEncode.hashKeyCoord(BuildingKey, coord);
+
     MainBaseComponent(getC(MainBaseComponentID)).set(playerEntity, buildingEntity);
+    LevelComponent(getC(LevelComponentID)).set(playerEntity, 1);
+
     LibBuilding.build(world, MainBaseID, coord);
-    return abi.encode(buildingEntity);
+
+    return abi.encode(asteroid);
   }
 }

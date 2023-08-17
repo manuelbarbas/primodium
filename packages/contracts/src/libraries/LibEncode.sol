@@ -22,6 +22,10 @@ library LibEncode {
     return uint256(keccak256(abi.encode(entity1, entity2, entity3)));
   }
 
+  function hashKeyEntity(string memory key, uint256 entity) internal pure returns (uint256) {
+    return uint256(keccak256(abi.encodePacked(key, entity)));
+  }
+
   function hashKeyCoord(string memory key, Coord memory coord) internal pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(key, coord.x, coord.y, coord.parent)));
   }

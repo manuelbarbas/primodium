@@ -7,8 +7,6 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "../../systems/TrainUnitsSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
 
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 
@@ -16,7 +14,9 @@ import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID, Res
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { S_UpdatePlayerSpaceRockSystem, ID as S_UpdatePlayerSpaceRockSystemID } from "../../systems/S_UpdatePlayerSpaceRockSystem.sol";
-import { P_MaxBuildingsComponent, ID as P_MaxBuildingsComponentID } from "../../components/P_MaxBuildingsComponent.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
+
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { P_BlueprintComponent, ID as P_BlueprintComponentID } from "../../components/P_BlueprintComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/ChildrenComponent.sol";
@@ -48,7 +48,7 @@ contract TrainUnitSystem is PrimodiumTest {
 
   BuildSystem public buildSystem;
   TrainUnitsSystem public trainUnitsSystem;
-  UpgradeSystem public upgradeSystem;
+  UpgradeBuildingSystem public upgradeBuildingSystem;
   S_UpdatePlayerSpaceRockSystem public updateSystem;
 
   function setUp() public override {
@@ -57,8 +57,9 @@ contract TrainUnitSystem is PrimodiumTest {
     // init systems
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
-    upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
+    upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     updateSystem = S_UpdatePlayerSpaceRockSystem(system(S_UpdatePlayerSpaceRockSystemID));
+    spawn(alice);
     // init other
     spawn(alice);
   }
@@ -251,7 +252,7 @@ contract TrainUnitSystem is PrimodiumTest {
     );
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
 
-    upgradeSystem.executeTyped(getIronCoord(alice));
+    upgradeBuildingSystem.executeTyped(getIronCoord(alice));
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(20);
@@ -280,7 +281,7 @@ contract TrainUnitSystem is PrimodiumTest {
       getIronCoord(alice)
     );
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
-    upgradeSystem.executeTyped(getIronCoord(alice));
+    upgradeBuildingSystem.executeTyped(getIronCoord(alice));
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 5);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit2, 5);

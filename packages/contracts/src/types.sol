@@ -36,8 +36,14 @@ struct Dimensions {
   int32 y;
 }
 
-// Arrivals
+struct Bounds {
+  int32 minX;
+  int32 minY;
+  int32 maxX;
+  int32 maxY;
+}
 
+// Arrivals
 enum ESendType {
   INVADE,
   REINFORCE

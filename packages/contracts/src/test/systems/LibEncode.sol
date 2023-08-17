@@ -84,6 +84,7 @@ contract LibEncodeTest is PrimodiumTest {
     console.log(LibEncode.hashKeyCoord("building", Coord(-1, 10, 0)));
     console.log(LibEncode.hashKeyCoord("building", Coord(123458, -22324234, 0)));
     console.log(LibEncode.hashKeyCoord("building", Coord(-929331, -723932, 0)));
+    console.log("expansion research:", ExpansionResearch2);
   }
 
   function testHashKeyCoord() public {
