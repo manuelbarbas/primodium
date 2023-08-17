@@ -180,24 +180,6 @@
     {
       "name": "S_UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["P_ProductionDependenciesComponent"]
-    },
-    {
-      "name": "S_ClaimUnitsSystem",
-      "writeAccess": [
-        "UnitsComponent",
-        "LastClaimedAtComponent",
-        "UnitProductionQueueComponent",
-        "UnitProductionQueueIndexComponent"
-      ]
-    },
-    {
-      "name": "S_ClaimUnitsFromBuildingSystem",
-      "writeAccess": [
-        "UnitsComponent",
-        "LastClaimedAtComponent",
-        "UnitProductionQueueComponent",
-        "UnitProductionQueueIndexComponent"
-      ]
     }
   ]
 }

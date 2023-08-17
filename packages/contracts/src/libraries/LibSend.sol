@@ -9,6 +9,7 @@ import { addressToEntity } from "solecs/utils.sol";
 
 import { ArrivalComponent, ID as ArrivalComponentID } from "components/ArrivalComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 
 // libs
@@ -46,49 +47,6 @@ library LibSend {
       if (currSpeed < slowestSpeed) {
         slowestSpeed = currSpeed;
       }
-    }
-  }
-
-  function updatePlayerSpaceRock(IWorld world, uint256 playerEntity, uint256 spaceRock) internal {
-    uint256 playerSpaceRockEntity = LibEncode.hashKeyEntity(playerEntity, spaceRock);
-    uint256 earliestEventBlock = block.number;
-    uint256 earliestEventIndex = 0;
-    do {
-      earliestEventIndex = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
-      uint256 listSize = ArrivalsList.length(world, playerSpaceRockEntity);
-      if (listSize == 0) break;
-
-      // get earliest event
-      for (uint256 i = 0; i < listSize; i++) {
-        uint256 arrivalBlock = ArrivalsList.getArrivalBlock(world, playerSpaceRockEntity, i);
-        if (arrivalBlock < earliestEventBlock) {
-          earliestEventBlock = arrivalBlock;
-          earliestEventIndex = i;
-        }
-      }
-
-      if (earliestEventBlock >= block.number) break;
-      // claim units
-      LibUnits.claimUnits(world, playerEntity, earliestEventBlock);
-      // apply arrival
-      applyArrival(world, ArrivalsList.get(world, playerSpaceRockEntity, earliestEventIndex));
-      ArrivalsList.remove(world, playerSpaceRockEntity, earliestEventIndex);
-    } while (earliestEventBlock < block.number);
-  }
-
-  function applyArrival(IWorld world, Arrival memory arrival) public {
-    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
-    if (arrival.sendType == ESendType.REINFORCE) {
-      for (uint i = 0; i < arrival.units.length; i++) {
-        uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(
-          uint256(arrival.units[i].unitType),
-          arrival.to,
-          arrival.destination
-        );
-        LibMath.add(unitsComponent, unitPlayerSpaceRockEntity, arrival.units[i].count);
-      }
-    } else {
-      revert("LibSend: unimplemented");
     }
   }
 }
