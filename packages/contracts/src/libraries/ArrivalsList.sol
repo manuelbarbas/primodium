@@ -14,16 +14,18 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { Arrival } from "src/types.sol";
 
 library ArrivalsList {
-  function add(IWorld world, uint256 listId, Arrival memory arrival) internal {
+  function add(IWorld world, uint256 listId, Arrival memory arrival) internal returns (uint256 arrivalKey) {
     ArrivalsSizeComponent arrivalsSizeComponent = ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID));
 
     uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
 
     uint256 listSizeIndex = LibEncode.hashKeyEntity(listId, size);
+    arrivalKey = uint256(keccak256(abi.encode(arrival)));
     ArrivalsIndexComponent(world.getComponent(ArrivalsIndexComponentID)).set(
       listSizeIndex,
       uint256(keccak256(abi.encode(arrival)))
     );
+    ArrivalComponent(world.getComponent(ArrivalComponentID)).set(arrivalKey, arrival);
     arrivalsSizeComponent.set(listId, size + 1);
   }
 

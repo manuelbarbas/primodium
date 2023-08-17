@@ -6,7 +6,6 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { addressToEntity } from "solecs/utils.sol";
 
 // comps
-import { ArrivalComponent, ID as ArrivalComponentID } from "components/ArrivalComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -124,18 +123,18 @@ library LibUpdateSpaceRock {
           unitProductionBuildingEntity,
           trainedUnitsCount * unitTrainingTimeForBuilding
         );
-
-        uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(
-          unitProductionQueue.resource,
-          playerEntity,
-          PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent
-        );
-
-        LibMath.add(UnitsComponent(world.getComponent(UnitsComponentID)), unitPlayerSpaceRockEntity, trainedUnitsCount);
+        addPlayerUnitsToAsteroid(world, playerEntity, unitProductionQueue.resource, trainedUnitsCount);
       } else {
         isStillClaiming = false;
       }
     }
+  }
+
+  function addPlayerUnitsToAsteroid(IWorld world, uint256 playerEntity, uint256 unitType, uint32 unitCount) internal {
+    uint256 asteroid = PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroid);
+
+    LibMath.add(UnitsComponent(world.getComponent(UnitsComponentID)), unitPlayerSpaceRockEntity, unitCount);
   }
 
   function claimUnits(IWorld world, uint256 playerEntity, uint256 blockNumber) internal {

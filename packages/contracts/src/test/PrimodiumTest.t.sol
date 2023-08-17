@@ -41,6 +41,21 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
   }
 
+  function assertEq(Arrival memory arrivalA, Arrival memory arrivalB) internal {
+    assertEq(uint8(arrivalA.sendType), uint8(arrivalB.sendType), "[assertArrivalEq]: sendType doesn't match");
+    assertEq(arrivalA.arrivalBlock, arrivalB.arrivalBlock, "[assertArrivalEq]: arrivalBlock doesn't match");
+    assertEq(arrivalA.from, arrivalB.from, "[assertArrivalEq]: from doesn't match");
+    assertEq(arrivalA.to, arrivalB.to, "[assertArrivalEq]: to doesn't match");
+    assertEq(arrivalA.origin, arrivalB.origin, "[assertArrivalEq]: origin doesn't match");
+    assertEq(arrivalA.destination, arrivalB.destination, "[assertArrivalEq]: destination doesn't match");
+    assertEq(arrivalA.units.length, arrivalB.units.length, "[assertArrivalEq]: units length doesn't match");
+
+    for (uint256 i = 0; i < arrivalA.units.length; i++) {
+      assertEq(arrivalA.units[i].unitType, arrivalB.units[i].unitType, "[assertArrivalEq]: unitType doesn't match");
+      assertEq(arrivalA.units[i].count, arrivalB.units[i].count, "[assertArrivalEq]: count doesn't match");
+    }
+  }
+
   function getMainBaseCoord(address player) internal view returns (Coord memory) {
     Coord memory position = PositionComponent(component(PositionComponentID)).getValue(MainBaseID);
     return getCoord(Coord2D(position.x, position.y), player);

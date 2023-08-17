@@ -7,7 +7,6 @@ import { addressToEntity } from "solecs/utils.sol";
 
 // comps
 
-import { ArrivalComponent, ID as ArrivalComponentID } from "components/ArrivalComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";

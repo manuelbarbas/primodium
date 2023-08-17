@@ -35,14 +35,6 @@ struct Dimensions {
   int32 y;
 }
 
-enum EUnitType {
-  HAMMER,
-  ANVIL,
-  STINGER,
-  AEGIS,
-  MINING_VESSEL
-}
-
 // Arrivals
 
 enum ESendType {
@@ -51,7 +43,7 @@ enum ESendType {
 }
 
 struct ArrivalUnit {
-  EUnitType unitType;
+  uint256 unitType;
   uint32 count;
 }
 

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 import "solecs/Component.sol";
 
-import { Arrival, ArrivalUnit, EUnitType, ESendType } from "../types.sol";
+import { Arrival, ArrivalUnit, ESendType } from "../types.sol";
 
 uint256 constant ID = uint256(keccak256("component.Arrival"));
 
@@ -74,7 +74,7 @@ contract ArrivalComponent is Component {
     ) = abi.decode(getRawValue(entity), (ESendType, uint32[], uint256[], uint256, uint256, uint256, uint256, uint256));
     ArrivalUnit[] memory arrivalUnits = new ArrivalUnit[](unitCounts.length);
     for (uint256 i = 0; i < unitCounts.length; i++) {
-      arrivalUnits[i] = ArrivalUnit({ count: unitCounts[i], unitType: EUnitType(unitTypes[i]) });
+      arrivalUnits[i] = ArrivalUnit({ count: unitCounts[i], unitType: uint256(unitTypes[i]) });
     }
     return
       Arrival({
