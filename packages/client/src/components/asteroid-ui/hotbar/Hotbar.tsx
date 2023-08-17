@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
-import HotbarPagination from "./HotbarPagination";
 import { useHotbarContent } from "./useHotbarContent";
 import { useGameStore } from "src/store/GameStore";
 import {
@@ -69,7 +68,7 @@ const Hotbar: React.FC = () => {
           initial={{ opacity: 0, scale: 0, y: 200 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0, y: 200 }}
-          className="flex flex-col items-center relative mb-10"
+          className="flex flex-col items-center relative mb-5"
         >
           <HotbarLabel
             icon={hotbarContent[activeBar].icon}
@@ -79,17 +78,6 @@ const Hotbar: React.FC = () => {
             activeBar={activeBarRef.current}
             setActiveBar={setActiveBar}
           />
-          {hotbarContent.length > 1 && (
-            <HotbarPagination
-              index={activeBar}
-              className="absolute -bottom-40 left-1/2 -translate-x-1/2"
-              onClick={() =>
-                setActiveBar(
-                  wrap(activeBarRef.current + 1, hotbarContent.length)
-                )
-              }
-            />
-          )}
         </motion.div>
       </div>
     </div>

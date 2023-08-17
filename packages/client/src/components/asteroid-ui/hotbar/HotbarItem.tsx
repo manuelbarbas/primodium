@@ -136,7 +136,7 @@ const HotbarItem: React.FC<{
               : undefined
           }
           onClick={handleSelectBuilding}
-          className={`w-16 h-16 pixel-images border border-cyan-700
+          className={`w-14 h-14 pixel-images border border-cyan-700
           ${
             selectedBuilding === blockType
               ? " ring-4 ring-amber-400 transistion-all duration-100"

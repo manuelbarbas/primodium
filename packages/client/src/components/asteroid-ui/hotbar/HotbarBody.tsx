@@ -46,7 +46,7 @@ const HotbarBody: React.FC<{
         </div>
       )}
       <div
-        className={`flex space-x-3 relative bg-slate-900/90 border-2 p-3 border-cyan-600 crt`}
+        className={`flex space-x-2 relative bg-slate-900/90 border-2 p-3 border-cyan-600 crt`}
       >
         {hotbarContent[activeBar].items.map((item, index) => {
           return (
