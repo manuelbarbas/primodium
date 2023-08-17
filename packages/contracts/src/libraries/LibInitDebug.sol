@@ -512,8 +512,9 @@ library LibInitDebug {
     maxLevelComponent.set(DebugUnitProductionBuilding, 2);
     uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
 
-    uint256[] memory unitTypes = new uint256[](1);
+    uint256[] memory unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit3;
     unitProductionTypesComponent.set(entity, unitTypes);
     unitProductionMultiplierComponent.set(entity, 100);
 
@@ -547,6 +548,16 @@ library LibInitDebug {
 
     speedComponent.set(DebugUnit2, 200);
     entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
+    unitTrainingTimeComponent.set(entity, 4);
+
+    requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtility.resources[0] = HousingUtilityResourceID;
+    requiredUtility.values[0] = 1;
+    requiredUtilityComponent.set(entity, requiredUtility);
+
+    // debuguint3
+    speedComponent.set(DebugUnit3, 50);
+    entity = LibEncode.hashKeyEntity(DebugUnit3, 1);
     unitTrainingTimeComponent.set(entity, 4);
 
     requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));

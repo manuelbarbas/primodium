@@ -32,9 +32,8 @@ contract SendUnitsSystem is PrimodiumSystem {
 
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
     uint256 playerEntity = addressToEntity(msg.sender);
-    if (sendType == ESendType.INVADE) require(playerEntity != addressToEntity(to), "you cannot invade yourself");
 
-    checkMovementRules(origin, destination, playerEntity);
+    checkMovementRules(origin, destination, playerEntity, to, sendType);
 
     PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
     Coord memory originPosition = positionComponent.getValue(origin);
@@ -69,7 +68,13 @@ contract SendUnitsSystem is PrimodiumSystem {
     return abi.encode(arrival);
   }
 
-  function checkMovementRules(uint256 origin, uint256 destination, uint256 playerEntity) internal view {
+  function checkMovementRules(
+    uint256 origin,
+    uint256 destination,
+    uint256 playerEntity,
+    address to,
+    ESendType sendType
+  ) internal view {
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(getC(AsteroidTypeComponentID));
     /*
@@ -77,6 +82,8 @@ contract SendUnitsSystem is PrimodiumSystem {
       1. You can only move from an asteroid if it is yours. 
       2. You can only move from a motherlode to your asteroid. 
       3. You cannot move between motherlodes.
+      4. You can only invade an enemy.
+      5. You can only reinforce yourself on a motherlode.
     */
     ESpaceRockType originType = ESpaceRockType(asteroidTypeComponent.getValue(origin));
     ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
@@ -93,6 +100,13 @@ contract SendUnitsSystem is PrimodiumSystem {
         "you can only move to your asteroid from a motherlode"
       );
     }
+
+    if (sendType == ESendType.INVADE) require(playerEntity != addressToEntity(to), "you cannot invade yourself");
+    if (sendType == ESendType.REINFORCE)
+      require(
+        destinationType == ESpaceRockType.MOTHERLODE && playerEntity == addressToEntity(to),
+        "you can only reinforce yourself on a motherlode"
+      );
   }
 
   function executeTyped(

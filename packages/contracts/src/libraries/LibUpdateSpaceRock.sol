@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { addressToEntity } from "solecs/utils.sol";
+import { console } from "forge-std/console.sol";
 
 // comps
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
@@ -28,10 +29,11 @@ import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue } from "src/types
 
 library LibUpdateSpaceRock {
   function updateSpaceRock(IWorld world, uint256 playerEntity, uint256 spaceRock) internal {
+    console.log("block number:", block.number);
     bool rockOwnedByPlayer = OwnedByComponent(world.getComponent(OwnedByComponentID)).getValue(spaceRock) ==
       playerEntity;
     uint256 playerSpaceRockEntity = LibEncode.hashKeyEntity(playerEntity, spaceRock);
-    uint256 earliestEventBlock = block.number;
+    uint256 earliestEventBlock = block.number + 1;
     uint256 earliestEventIndex = 0;
     do {
       // max int
@@ -42,36 +44,27 @@ library LibUpdateSpaceRock {
       // get earliest event
       for (uint256 i = 0; i < listSize; i++) {
         uint256 arrivalBlock = ArrivalsList.getArrivalBlock(world, playerSpaceRockEntity, i);
-        if (arrivalBlock < earliestEventBlock) {
+        console.log("arrival block:", arrivalBlock);
+        if (arrivalBlock <= earliestEventBlock) {
           earliestEventBlock = arrivalBlock;
           earliestEventIndex = i;
         }
       }
 
-      if (earliestEventBlock >= block.number) break;
+      if (earliestEventBlock > block.number) break;
       // claim units
       if (rockOwnedByPlayer) claimUnits(world, playerEntity, earliestEventBlock);
       // apply arrival
       applyArrival(world, ArrivalsList.get(world, playerSpaceRockEntity, earliestEventIndex));
+      console.log("earliest event index:", earliestEventIndex);
       ArrivalsList.remove(world, playerSpaceRockEntity, earliestEventIndex);
     } while (earliestEventBlock < block.number);
     if (rockOwnedByPlayer) claimUnits(world, playerEntity, block.number);
   }
 
-  function applyArrival(IWorld world, Arrival memory arrival) public {
-    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
-    if (arrival.sendType == ESendType.REINFORCE) {
-      for (uint i = 0; i < arrival.units.length; i++) {
-        uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(
-          uint256(arrival.units[i].unitType),
-          arrival.to,
-          arrival.destination
-        );
-        LibMath.add(unitsComponent, unitPlayerSpaceRockEntity, arrival.units[i].count);
-      }
-    } else {
-      revert("LibSend: unimplemented");
-    }
+  function applyArrival(IWorld world, Arrival memory arrival) public view {
+    console.log("applying arrival");
+    return;
   }
 
   function claimUnitsFromBuilding(
