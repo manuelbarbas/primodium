@@ -42,12 +42,10 @@ library LibMotherlode {
   }
 
   function initMotherlode(IWorld world, Coord memory position, uint256 motherlodeEntity) internal {
-    (uint8 size, uint8 motherlodeType, uint256 waitBlocks, uint256 lifespan) = getMotherlodeRawPrototype(
-      motherlodeEntity
-    );
+    (uint8 size, uint8 motherlodeType, uint256 cooldownBlocks) = getMotherlodeRawPrototype(motherlodeEntity);
     P_MotherlodeComponent(world.getComponent(P_MotherlodeComponentID)).set(
       motherlodeEntity,
-      Motherlode(getSize(size), getMotherlodeType(motherlodeType), waitBlocks, lifespan)
+      Motherlode(getSize(size), getMotherlodeType(motherlodeType), cooldownBlocks)
     );
     uint256 encodedPosition = LibEncode.encodeCoord(position);
     PositionComponent(world.getComponent(PositionComponentID)).set(motherlodeEntity, position);
@@ -60,16 +58,13 @@ library LibMotherlode {
 
   function getMotherlodeRawPrototype(
     uint256 entity
-  ) internal pure returns (uint8 size, uint8 motherlodeType, uint256 waitBlocks, uint256 lifespan) {
+  ) internal pure returns (uint8 size, uint8 motherlodeType, uint256 cooldownBlocks) {
     // 0-31 size
     size = uint8(LibEncode.getByteUInt(entity, 5, 0));
     // 0-31 motherlodeType
     motherlodeType = uint8(LibEncode.getByteUInt(entity, 5, 5));
     // 0-63 blocks to wait
-    waitBlocks = LibEncode.getByteUInt(entity, 6, 10);
-
-    // 100_000 - 1_148_576 lifespan
-    lifespan = LibEncode.getByteUInt(entity, 20, 16) + 100_000;
+    cooldownBlocks = LibEncode.getByteUInt(entity, 6, 10);
   }
 
   function getCoord(uint256 i) internal pure returns (Coord memory) {

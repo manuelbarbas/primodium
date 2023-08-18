@@ -34,14 +34,10 @@ contract LibAsteroidTest is PrimodiumTest {
   }
 
   function testFuzzMotherlodePrototype(uint256 entity) public {
-    (uint8 size, uint8 motherlodeType, uint256 waitBlocks, uint256 lifespan) = LibMotherlode.getMotherlodeRawPrototype(
-      entity
-    );
+    (uint8 size, uint8 motherlodeType, uint256 cooldownBlocks) = LibMotherlode.getMotherlodeRawPrototype(entity);
     assertLt(uint256(size), 32);
     assertLt(uint256(motherlodeType), 32);
-    assertLt(waitBlocks, 64);
-    assertLe(lifespan, 1_148_576);
-    assertGe(lifespan, 100_000);
+    assertLt(cooldownBlocks, 64);
   }
 
   function findMotherlode() public returns (uint256, Coord memory) {
@@ -85,7 +81,7 @@ contract LibAsteroidTest is PrimodiumTest {
     );
     P_MotherlodeComponent motherlodeComponent = P_MotherlodeComponent(world.getComponent(P_MotherlodeComponentID));
 
-    (uint8 size, uint8 motherlodeType, uint256 waitBlocks, uint256 lifespan) = LibMotherlode.getMotherlodeRawPrototype(
+    (uint8 size, uint8 motherlodeType, uint256 cooldownBlocks) = LibMotherlode.getMotherlodeRawPrototype(
       motherlodeEntity
     );
     assertCoordEq(positionComponent.getValue(motherlodeEntity), position);
@@ -95,8 +91,7 @@ contract LibAsteroidTest is PrimodiumTest {
     Motherlode memory motherlode = motherlodeComponent.getValue(motherlodeEntity);
     assertEq(uint256(motherlode.size), uint256(LibMotherlode.getSize(size)));
     assertEq(uint256(motherlode.motherlodeType), uint256(LibMotherlode.getMotherlodeType(motherlodeType)));
-    assertEq(motherlode.waitBlocks, waitBlocks);
-    assertEq(motherlode.lifespanBlocks, lifespan);
+    assertEq(motherlode.cooldownBlocks, cooldownBlocks);
   }
 
   function testFailNoMotherlodeNoSource() public {

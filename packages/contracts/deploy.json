@@ -53,7 +53,14 @@
     "P_UnitTravelSpeedComponent",
     "P_TerrainComponent"
   ],
-  "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
+  "initializers": [
+    "LibInitWorld",
+    "LibInitTerrain",
+    "LibInitBuildings",
+    "LibInitResearch",
+    "LibInitDebug",
+    "LibInitMotherlode"
+  ],
   "systems": [
     {
       "name": "ResearchSystem",

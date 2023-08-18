@@ -81,6 +81,5 @@ enum EMotherlodeType {
 struct Motherlode {
   EMotherlodeSize size;
   EMotherlodeType motherlodeType;
-  uint256 waitBlocks;
-  uint256 lifespanBlocks;
+  uint256 cooldownBlocks;
 }
