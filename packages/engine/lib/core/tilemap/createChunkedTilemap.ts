@@ -118,6 +118,8 @@ export function createChunkedTilemap<
         console.error(`Adding tilemap layer ${key} failed.`);
         continue;
       }
+
+      // tilemapLayer.setPipeline("Light2D");
       layers[key] = tilemapLayer;
       const renderer = scene.game
         .renderer as Phaser.Renderer.WebGL.WebGLRenderer;

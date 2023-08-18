@@ -30,7 +30,8 @@ export const createTilemap = (
         value.tileWidth,
         value.tileHeight,
         value.extrusion ?? 0,
-        value.extrusion ? value.extrusion * 2 : 0
+        value.extrusion ? value.extrusion * 2 : 0,
+        value.gid ?? 0
       )!;
     } catch (e) {
       throw new Error("Failed to load tileset: " + key + "/" + value);

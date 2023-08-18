@@ -24,6 +24,25 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
 
   scene.camera.phaserCamera.setRoundPixels(false);
 
+  // const light = scene.phaserScene.lights.addLight(
+  //   18 * 16,
+  //   -10 * 16,
+  //   10000,
+  //   undefined
+  // );
+  // scene.phaserScene.lights.enable();
+
+  // scene.camera.phaserCamera.postFX.addGradient(
+  //   0x0000ff,
+  //   undefined,
+  //   0.9,
+  //   undefined,
+  //   undefined,
+  //   undefined,
+  //   undefined,
+  //   50
+  // );
+
   const tileManager = await setupTileManager(scene.tilemap);
   tileManager.renderInitialChunks();
   tileManager.startChunkRenderer();

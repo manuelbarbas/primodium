@@ -78,7 +78,7 @@ export namespace AsteroidMap {
   }
 
   export enum SpriteKeys {
-    Mainbase1 = "sprites/mainbase/level1/bigmainbase-level1-0.png",
+    Mainbase1 = "sprites/sprites/mainbase/level1/Main_Base_LVL1_1.png",
     Mainbase2 = "sprites/mainbase/level2/bigmainbase-level2-0.png",
     Mainbase3 = "sprites/mainbase/level3/bigmainbase-level3-0.png",
     Mainbase4 = "sprites/mainbase/level4/bigmainbase-level4-0.png",
@@ -136,6 +136,8 @@ export namespace AsteroidMap {
   }
 
   export enum AnimationKeys {
+    Mainbase1 = "mainbase/level1",
+
     IronMine1 = "ironmine/level1",
     IronMine2 = "ironmine/level2",
 
@@ -269,6 +271,7 @@ export namespace AsteroidMap {
 
   // Array index corresponds to lvl
   export const EntityIDtoAnimationKey = {
+    [BlockType.MainBase]: [AnimationKeys.Mainbase1],
     [BlockType.Node]: [AnimationKeys.Node],
     [BlockType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2],
     [BlockType.CopperMine]: [

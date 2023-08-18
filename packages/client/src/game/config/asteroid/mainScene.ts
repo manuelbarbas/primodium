@@ -1,61 +1,57 @@
 // import { SceneConfig } from "../../types";
-import { SceneConfig } from "engine/types";
+import { SceneConfig, TilesetConfig } from "engine/types";
 import { AsteroidMap } from "../../constants";
 import { animationConfig } from "./animation";
 import { tileAnimationConfig } from "./tileAnimation";
+import asteroidMap from "../../../maps/asteroid_0.7.json";
+import { LayerConfig } from "@latticexyz/phaserx/dist/types";
 
-const { Assets, Scenes, Tilesets } = AsteroidMap;
+const { Scenes } = AsteroidMap;
+
+let tilesets: TilesetConfig = {};
+let tilesetNames = [];
+let layers: LayerConfig<any, any> = {};
+
+for (const tileset of asteroidMap.tilesets) {
+  tilesets[tileset.name] = {
+    key: tileset.name,
+    tileHeight: tileset.tileheight,
+    tileWidth: tileset.tilewidth,
+    extrusion: 1,
+    gid: tileset.firstgid,
+  };
+
+  tilesetNames.push(tileset.name);
+}
+
+for (const layer of asteroidMap.layers) {
+  layers[layer.name] = {
+    tilesets: tilesetNames,
+    hasHueTintShader: false,
+  };
+}
 
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
   camera: {
     minZoom: Math.max(1, window.devicePixelRatio),
     maxZoom: window.devicePixelRatio * 5,
-    defaultZoom: window.devicePixelRatio * 3,
+    defaultZoom: window.devicePixelRatio * 1,
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },
   animations: animationConfig,
   cullingChunkSize: 64,
   tilemap: {
-    tileWidth: 16,
-    tileHeight: 16,
+    tileWidth: asteroidMap.tilewidth,
+    tileHeight: asteroidMap.tileheight,
     chunkSize: 32,
     tilesets: {
-      [Tilesets.Terrain]: {
-        key: Assets.TerrainTileset,
-        tileHeight: 16,
-        tileWidth: 16,
-        extrusion: 1,
-      },
-      [Tilesets.Resource]: {
-        key: Assets.ResourceTileset,
-        tileHeight: 16,
-        tileWidth: 16,
-      },
-      [Tilesets.Fog]: {
-        key: Assets.FogTileset,
-        tileHeight: 16,
-        tileWidth: 16,
-        extrusion: 1,
-      },
+      ...tilesets,
     },
     layerConfig: {
-      layers: {
-        Terrain: {
-          tilesets: [Tilesets.Terrain],
-          hasHueTintShader: false,
-        },
-        Resource: {
-          tilesets: [Tilesets.Resource],
-          hasHueTintShader: false,
-        },
-        Fog: {
-          tilesets: [Tilesets.Fog],
-          hasHueTintShader: false,
-        },
-      },
-      defaultLayer: Tilesets.Terrain,
+      layers: { ...layers },
+      defaultLayer: "Base",
     },
     tileAnimations: tileAnimationConfig,
     animationInterval: 200,

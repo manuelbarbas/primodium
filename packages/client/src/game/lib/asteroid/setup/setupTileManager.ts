@@ -5,6 +5,7 @@ import { Coord, CoordMap } from "@latticexyz/utils";
 import { interval } from "rxjs";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
+import AsteroidTiledMap from "../../../../maps/asteroid_0.7.json";
 
 const { TileKeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
 
@@ -23,25 +24,54 @@ const renderChunk = async (
       y < coord.y * chunkSize + chunkSize;
       y++
     ) {
-      const coord = { x, y: -y };
+      //get map offset from tiled properties, [0] = x offset, [1] = y offset
+      const tileCoord = {
+        x: x + AsteroidTiledMap.properties[0].value,
+        y: y + AsteroidTiledMap.properties[1].value,
+      };
 
-      const { terrain, resource } = getTopLayerKeyPair(coord);
-
-      if (!terrain) continue;
-
-      //lookup and place terrain
-      const terrainId = EntityIdtoTilesetId[terrain];
-
-      if (terrainId === TileKeys.Water) {
-        map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
+      if (
+        tileCoord.x < 0 ||
+        tileCoord.x > AsteroidTiledMap.width - 1 ||
+        tileCoord.y < 0 ||
+        tileCoord.y > AsteroidTiledMap.height
+      )
         continue;
-      }
-      //lookup and place resource
-      map.putTileAt({ x, y }, terrainId ?? TileKeys.Alluvium, "Terrain");
 
-      if (!resource) continue;
-      const resourceId = EntityIdtoTilesetId[resource!];
-      map.putTileAt({ x, y }, resourceId, "Resource");
+      for (let i = AsteroidTiledMap.layers.length - 1; i >= 0; i--) {
+        const layer = AsteroidTiledMap.layers[i];
+
+        //   // if (layer.name !== "Base") continue;
+        //   // y * mapWidth + x
+
+        const tile =
+          layer.data[tileCoord.x + tileCoord.y * AsteroidTiledMap.width];
+
+        if (tile > 0) {
+          map.putTileAt({ x, y }, tile, layer.name);
+        }
+
+        //   // if (tile > 0) return TerrainTilesetIdToEntityId[tile - 1];
+        // }
+
+        // const { terrain, resource } = getTopLayerKeyPair(coord);
+
+        // if (!terrain) continue;
+
+        //lookup and place terrain
+        // const terrainId = EntityIdtoTilesetId[terrain];
+
+        // if (terrainId === TileKeys.Water) {
+        //   // map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
+        //   continue;
+        // }
+        //lookup and place resource
+        // map.putTileAt({ x, y }, terrainId ?? TileKeys.Alluvium, "Terrain");
+
+        // if (!resource) continue;
+        // const resourceId = EntityIdtoTilesetId[resource!];
+        // map.putTileAt({ x, y }, resourceId, "Resource");
+      }
     }
   }
 

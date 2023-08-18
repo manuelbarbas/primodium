@@ -33,6 +33,7 @@ export type TilesetConfig = {
     tileWidth: number;
     tileHeight: number;
     extrusion?: number;
+    gid?: number;
   };
 };
 

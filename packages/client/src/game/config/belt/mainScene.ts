@@ -20,7 +20,7 @@ const mainSceneConfig: SceneConfig = {
   tilemap: {
     tileWidth: 32,
     tileHeight: 32,
-    chunkSize: 32,
+    chunkSize: 64,
     tilesets: {
       [Tilesets.Grid]: {
         key: Assets.GridTileset,

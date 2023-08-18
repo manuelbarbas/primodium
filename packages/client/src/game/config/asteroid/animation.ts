@@ -2,6 +2,16 @@ import { Animation } from "@latticexyz/phaserx/dist/types";
 
 export const animationConfig: Animation<any>[] = [
   {
+    key: "mainbase/level1",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 10,
+    repeat: -1,
+    prefix: "sprites/mainbase/level1/Main_Base_LVL1_",
+    suffix: ".png",
+  },
+  {
     key: "ironmine/level1",
     assetKey: "sprite-atlas",
     frameRate: 4,
