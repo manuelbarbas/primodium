@@ -27,6 +27,7 @@
     "AsteroidTypeComponent",
     "ActiveComponent",
     "DimensionsComponent",
+    "ReversePositionComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",

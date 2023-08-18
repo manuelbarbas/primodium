@@ -4,7 +4,8 @@ import "std-contracts/components/Uint256Component.sol";
 
 uint256 constant ID = uint256(keccak256("component.AsteroidType"));
 
-// Tracks the type of an asteroid
+// Tracks the type of a space rock
+// todo: rename to SpaceRockType
 contract AsteroidTypeComponent is Uint256Component {
   constructor(address world) Uint256Component(world, ID) {}
 }

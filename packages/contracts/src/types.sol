@@ -63,3 +63,24 @@ struct Arrival {
   uint256 origin;
   uint256 destination;
 }
+
+// Motherlode
+enum EMotherlodeSize {
+  SMALL,
+  MEDIUM,
+  LARGE
+}
+
+enum EMotherlodeType {
+  TITANIUM,
+  IRIDIUM,
+  PLATINUM,
+  KIMBERLITE
+}
+
+struct Motherlode {
+  EMotherlodeSize size;
+  EMotherlodeType motherlodeType;
+  uint256 waitBlocks;
+  uint256 lifespanBlocks;
+}

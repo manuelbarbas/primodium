@@ -5,7 +5,7 @@ import { IWorld } from "solecs/System.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 
 //components
-import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
+import { ReversePositionComponent, ID as ReversePositionComponentID } from "components/ReversePositionComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
@@ -37,7 +37,7 @@ library LibAsteroid {
     uint32 asteroidCount = LibMath.increment(asteroidCountComponent, SingletonID);
     require(!asteroidTypeComponent.has(asteroidEntity), "[LibAsteroid] asteroid already exists");
 
-    Coord memory position = getUniqueAsteroidPosition(asteroidCount);
+    Coord memory position = getUniqueAsteroidPosition(world, asteroidCount);
 
     positionComponent.set(asteroidEntity, position);
     asteroidTypeComponent.set(asteroidEntity, uint256(ESpaceRockType.ASTEROID));
@@ -47,8 +47,8 @@ library LibAsteroid {
     positionComponent.set(ownerEntity, 0, 0, asteroidEntity);
     uint256 encodedPosition = LibEncode.encodeCoord(position);
 
-    // Mark the asteroid's position as active in the ActiveComponent.
-    ActiveComponent(world.getComponent(ActiveComponentID)).set(encodedPosition);
+    // Mark the asteroid's position as active in the ReversePositionComponent.
+    ReversePositionComponent(world.getComponent(ReversePositionComponentID)).set(encodedPosition, asteroidEntity);
     OwnedByComponent(world.getComponent(OwnedByComponentID)).set(asteroidEntity, ownerEntity);
 
     asteroidCountComponent.set(SingletonID, asteroidCount);
@@ -59,8 +59,14 @@ library LibAsteroid {
    * @return position The unique position (Coord) for the asteroid.
    */
 
-  function getUniqueAsteroidPosition(uint32 asteroidCount) internal pure returns (Coord memory position) {
+  function getUniqueAsteroidPosition(IWorld world, uint32 asteroidCount) internal view returns (Coord memory position) {
     position = getPositionByVector(getDistance(asteroidCount), getDirection(asteroidCount));
+    ReversePositionComponent reversePositionComponent = ReversePositionComponent(
+      world.getComponent(ReversePositionComponentID)
+    );
+    while (reversePositionComponent.has(LibEncode.encodeCoord(position))) {
+      position.y += 5;
+    }
   }
 
   /**

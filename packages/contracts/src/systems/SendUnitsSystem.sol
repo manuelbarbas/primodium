@@ -15,6 +15,7 @@ import { ID as S_UpdatePlayerSpaceRockSystem } from "./S_UpdatePlayerSpaceRockSy
 import { LibSend } from "libraries/LibSend.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibMotherlode } from "libraries/LibMotherlode.sol";
 
 import { MOVE_SPEED } from "src/constants.sol";
 import { ESendType, ESpaceRockType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
@@ -31,11 +32,15 @@ contract SendUnitsSystem is PrimodiumSystem {
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
     uint256 playerEntity = addressToEntity(msg.sender);
 
-    checkMovementRules(origin, destination, playerEntity, to, sendType);
-
     PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
     Coord memory originPosition = positionComponent.getValue(origin);
     Coord memory destinationPosition = positionComponent.getValue(destination);
+
+    if (!AsteroidTypeComponent(getC(AsteroidTypeComponentID)).has(destination)) {
+      LibMotherlode.createMotherlode(world, destinationPosition);
+    }
+
+    checkMovementRules(origin, destination, playerEntity, to, sendType);
 
     // make sure the troop count at the planet is leq the one given and subtract from planet total
     UnitsComponent unitsComponent = UnitsComponent(getC(UnitsComponentID));
@@ -82,6 +87,10 @@ contract SendUnitsSystem is PrimodiumSystem {
       4. You can only invade an enemy.
       5. You can only reinforce yourself on a motherlode.
     */
+    require(
+      asteroidTypeComponent.has(origin) && asteroidTypeComponent.has(destination),
+      "must travel between space rocks"
+    );
     ESpaceRockType originType = ESpaceRockType(asteroidTypeComponent.getValue(origin));
     ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
 
