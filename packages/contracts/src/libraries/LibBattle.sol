@@ -200,7 +200,7 @@ library LibBattle {
         unitCargoComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
     }
 
-    return (totalCargoValue);
+    return totalCargoValue;
   }
 
   function max(uint32 num1, uint32 num2) internal pure returns (uint32) {
