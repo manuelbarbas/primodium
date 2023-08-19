@@ -66,16 +66,16 @@ contract S_BattleSystemTest is PrimodiumTest {
     uint32[] memory unitCounts = new uint32[](2);
     unitCounts[0] = 300;
     unitCounts[1] = 100;
-    BattleParticipant memory attacker = BattleParticipant(alice, unitTypes, unitLevels, unitCounts);
+    BattleParticipant memory attacker = BattleParticipant(addressToEntity(alice), unitTypes, unitLevels, unitCounts);
     componentDevSystem.executeTyped(
       BattleAttackerComponentID,
       battleEntity,
-      abi.encode(attacker.playerAddress, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
+      abi.encode(attacker.participantEntity, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
     );
     BattleParticipant memory getAttacker = BattleAttackerComponent(component(BattleAttackerComponentID)).getValue(
       battleEntity
     );
-    console.log("attacker: %s", getAttacker.playerAddress);
+    console.log("attacker: %s", getAttacker.participantEntity);
     //bob
     unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob));
     componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
@@ -90,11 +90,11 @@ contract S_BattleSystemTest is PrimodiumTest {
     unitCounts = new uint32[](2);
     unitCounts[0] = 300;
     unitCounts[1] = 300;
-    BattleParticipant memory defender = BattleParticipant(bob, unitTypes, unitLevels, unitCounts);
+    BattleParticipant memory defender = BattleParticipant(addressToEntity(bob), unitTypes, unitLevels, unitCounts);
     componentDevSystem.executeTyped(
       BattleDefenderComponentID,
       battleEntity,
-      abi.encode(defender.playerAddress, defender.unitTypes, defender.unitLevels, defender.unitCounts)
+      abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
 
     battleSystem.executeTyped(alice, battleEntity);
@@ -106,7 +106,7 @@ contract S_BattleSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < result.defenderUnitsLeft.length; i++) {
       console.log("defender units left: %s", result.defenderUnitsLeft[i]);
     }
-    assertEq(result.winnerAddress, bob, "winner is not bob");
+    assertEq(result.winnerEntity, addressToEntity(bob), "winner is not bob");
     vm.stopPrank();
   }
 
@@ -124,16 +124,16 @@ contract S_BattleSystemTest is PrimodiumTest {
     unitLevels[0] = 1;
     uint32[] memory unitCounts = new uint32[](1);
     unitCounts[0] = 100;
-    BattleParticipant memory attacker = BattleParticipant(alice, unitTypes, unitLevels, unitCounts);
+    BattleParticipant memory attacker = BattleParticipant(addressToEntity(alice), unitTypes, unitLevels, unitCounts);
     componentDevSystem.executeTyped(
       BattleAttackerComponentID,
       battleEntity,
-      abi.encode(attacker.playerAddress, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
+      abi.encode(attacker.participantEntity, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
     );
     BattleParticipant memory getAttacker = BattleAttackerComponent(component(BattleAttackerComponentID)).getValue(
       battleEntity
     );
-    console.log("attacker: %s", getAttacker.playerAddress);
+    console.log("attacker: %s", getAttacker.participantEntity);
     //bob
     unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob));
     componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
@@ -144,11 +144,11 @@ contract S_BattleSystemTest is PrimodiumTest {
     unitLevels[0] = 1;
     unitCounts = new uint32[](1);
     unitCounts[0] = 100;
-    BattleParticipant memory defender = BattleParticipant(bob, unitTypes, unitLevels, unitCounts);
+    BattleParticipant memory defender = BattleParticipant(addressToEntity(bob), unitTypes, unitLevels, unitCounts);
     componentDevSystem.executeTyped(
       BattleDefenderComponentID,
       battleEntity,
-      abi.encode(defender.playerAddress, defender.unitTypes, defender.unitLevels, defender.unitCounts)
+      abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
 
     battleSystem.executeTyped(alice, battleEntity);
@@ -160,7 +160,7 @@ contract S_BattleSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < result.defenderUnitsLeft.length; i++) {
       console.log("defender units left: %s", result.defenderUnitsLeft[i]);
     }
-    assertEq(result.winnerAddress, alice, "winner is not alice");
+    assertEq(result.winnerEntity, addressToEntity(alice), "winner is not alice");
 
     vm.stopPrank();
   }
@@ -180,16 +180,16 @@ contract S_BattleSystemTest is PrimodiumTest {
     unitLevels[0] = 1;
     uint32[] memory unitCounts = new uint32[](1);
     unitCounts[0] = 100;
-    BattleParticipant memory attacker = BattleParticipant(alice, unitTypes, unitLevels, unitCounts);
+    BattleParticipant memory attacker = BattleParticipant(addressToEntity(alice), unitTypes, unitLevels, unitCounts);
     componentDevSystem.executeTyped(
       BattleAttackerComponentID,
       battleEntity,
-      abi.encode(attacker.playerAddress, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
+      abi.encode(attacker.participantEntity, attacker.unitTypes, attacker.unitLevels, attacker.unitCounts)
     );
     BattleParticipant memory getAttacker = BattleAttackerComponent(component(BattleAttackerComponentID)).getValue(
       battleEntity
     );
-    console.log("attacker: %s", getAttacker.playerAddress);
+    console.log("attacker: %s", getAttacker.participantEntity);
     //bob
     unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob));
 
@@ -207,11 +207,11 @@ contract S_BattleSystemTest is PrimodiumTest {
     unitLevels[0] = 1;
     unitCounts = new uint32[](1);
     unitCounts[0] = 100;
-    BattleParticipant memory defender = BattleParticipant(bob, unitTypes, unitLevels, unitCounts);
+    BattleParticipant memory defender = BattleParticipant(addressToEntity(bob), unitTypes, unitLevels, unitCounts);
     componentDevSystem.executeTyped(
       BattleDefenderComponentID,
       battleEntity,
-      abi.encode(defender.playerAddress, defender.unitTypes, defender.unitLevels, defender.unitCounts)
+      abi.encode(defender.participantEntity, defender.unitTypes, defender.unitLevels, defender.unitCounts)
     );
 
     battleSystem.executeTyped(alice, battleEntity);

@@ -14,7 +14,7 @@ contract BattleResultComponent is Component {
     values = new LibTypes.SchemaValue[](3);
 
     keys[0] = "winner";
-    values[0] = LibTypes.SchemaValue.ADDRESS;
+    values[0] = LibTypes.SchemaValue.UINT256;
 
     keys[1] = "attackerUnitsLeft";
     values[1] = LibTypes.SchemaValue.UINT32_ARRAY;
@@ -24,24 +24,24 @@ contract BattleResultComponent is Component {
   }
 
   function set(uint256 entity, BattleResult calldata value) public virtual {
-    set(entity, abi.encode(value.winnerAddress, value.attackerUnitsLeft, value.defenderUnitsLeft));
+    set(entity, abi.encode(value.winnerEntity, value.attackerUnitsLeft, value.defenderUnitsLeft));
   }
 
   function set(
     uint256 entity,
-    address winner,
+    uint256 winnerEntity,
     uint32[] memory attackerUnitsLeft,
     uint32[] memory defenderUnitsLeft
   ) public virtual {
-    set(entity, abi.encode(winner, attackerUnitsLeft, defenderUnitsLeft));
+    set(entity, abi.encode(winnerEntity, attackerUnitsLeft, defenderUnitsLeft));
   }
 
   function getValue(uint256 entity) public view virtual returns (BattleResult memory) {
-    (address winnerAddress, uint32[] memory attackerUnitsLeft, uint32[] memory defenderUnitsLeft) = abi.decode(
+    (uint256 winnerEntity, uint32[] memory attackerUnitsLeft, uint32[] memory defenderUnitsLeft) = abi.decode(
       getRawValue(entity),
-      (address, uint32[], uint32[])
+      (uint256, uint32[], uint32[])
     );
-    return BattleResult(winnerAddress, attackerUnitsLeft, defenderUnitsLeft);
+    return BattleResult(winnerEntity, attackerUnitsLeft, defenderUnitsLeft);
   }
 
   function getEntitiesWithValue(BattleResult calldata result) public view virtual returns (uint256[] memory) {

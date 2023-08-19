@@ -57,7 +57,7 @@ library LibBattle {
       }
     }
 
-    battleResult.winnerAddress = getWinner(world, battleEntity, battleResult);
+    battleResult.winnerEntity = getWinner(world, battleEntity, battleResult);
 
     return battleResult;
   }
@@ -66,7 +66,7 @@ library LibBattle {
     IWorld world,
     uint256 battleEntity,
     BattleResult memory battleResult
-  ) internal view returns (address winner) {
+  ) internal view returns (uint256 winner) {
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
     );
@@ -81,9 +81,9 @@ library LibBattle {
       getTotalRemainingAttack(world, battleEntity, battleResult.attackerUnitsLeft) >
       getTotalRemainingDefence(world, battleEntity, battleResult.defenderUnitsLeft)
     ) {
-      winner = attacker.playerAddress;
+      winner = attacker.participantEntity;
     } else {
-      winner = defender.playerAddress;
+      winner = defender.participantEntity;
     }
     return winner;
   }
@@ -100,10 +100,9 @@ library LibBattle {
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
 
     BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-    uint256 attackerEntity = addressToEntity(attacker.playerAddress);
     uint32 totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attackerEntity);
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
       totalAttackValue +=
         attackerUnitsLeft[i] *
@@ -124,10 +123,9 @@ library LibBattle {
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
 
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
-    uint256 defenderEntity = addressToEntity(defender.playerAddress);
     uint32 totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defenderEntity);
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
       totalDefenceValue +=
         defenderUnitsLeft[i] *
@@ -143,10 +141,9 @@ library LibBattle {
       world.getComponent(BattleDefenderComponentID)
     );
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
-    uint256 defenderEntity = addressToEntity(defender.playerAddress);
     totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defenderEntity);
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
       totalDefenceValue +=
         defender.unitCounts[i] *
@@ -165,11 +162,10 @@ library LibBattle {
       world.getComponent(BattleAttackerComponentID)
     );
     BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-    uint256 attackerEntity = addressToEntity(attacker.playerAddress);
     attackValues = new uint32[](attacker.unitTypes.length);
     totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attackerEntity);
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
 
       attackValues[i] =
@@ -188,11 +184,10 @@ library LibBattle {
       world.getComponent(BattleAttackerComponentID)
     );
     BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-    uint256 attackerEntity = addressToEntity(attacker.playerAddress);
 
     totalCargoValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attackerEntity);
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
 
       totalCargoValue +=
@@ -213,35 +208,31 @@ library LibBattle {
     BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
       battleEntity
     );
-    uint256 defenderEntity = addressToEntity(defender.playerAddress);
 
     (uint32 totalResources, uint32[] memory resources) = LibResource.getTotalResources(
       world,
-      addressToEntity(defender.playerAddress)
+      defender.participantEntity
     );
     if (totalResources == 0) return;
 
     LibResource.claimAllResources(
       world,
-      addressToEntity(
-        BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(battleEntity).playerAddress
-      )
+      BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(battleEntity).participantEntity
     );
     LibResource.claimAllResources(
       world,
-      addressToEntity(
-        BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).playerAddress
-      )
+      
+        BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).participantEntity
+      
     );
 
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
-    uint256 attackerEntity = addressToEntity(attacker.playerAddress);
 
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
     uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
-      .getValue(defenderEntity);
+      .getValue(defender.participantEntity);
 
     for (uint256 i = 0; i < resources.length; i++) {
       uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
@@ -251,9 +242,9 @@ library LibBattle {
         raidAmount = resources[i];
         resources[i] = 0;
       }
-      LibStorage.addResourceToStorage(world, resourceIds[i], raidAmount, attackerEntity);
+      LibStorage.addResourceToStorage(world, resourceIds[i], raidAmount, attacker.participantEntity);
 
-      itemComponent.set(LibEncode.hashKeyEntity(resourceIds[i], defenderEntity), resources[i]);
+      itemComponent.set(LibEncode.hashKeyEntity(resourceIds[i], defender.participantEntity), resources[i]);
     }
   }
 }

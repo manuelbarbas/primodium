@@ -43,13 +43,13 @@ struct Bounds {
 }
 
 struct BattleResult {
-  address winnerAddress;
+  uint256 winnerEntity;
   uint32[] attackerUnitsLeft;
   uint32[] defenderUnitsLeft;
 }
 
 struct BattleParticipant {
-  address playerAddress;
+  uint256 participantEntity;
   uint256[] unitTypes;
   uint32[] unitLevels;
   uint32[] unitCounts;

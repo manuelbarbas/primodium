@@ -11,8 +11,8 @@ abstract contract BattleParticipantComponent is Component {
     keys = new string[](4);
     values = new LibTypes.SchemaValue[](4);
 
-    keys[0] = "participantAddress";
-    values[0] = LibTypes.SchemaValue.ADDRESS;
+    keys[0] = "participantEntity";
+    values[0] = LibTypes.SchemaValue.UINT256;
 
     keys[1] = "unitTypes";
     values[1] = LibTypes.SchemaValue.UINT256_ARRAY;
@@ -25,27 +25,27 @@ abstract contract BattleParticipantComponent is Component {
   }
 
   function set(uint256 entity, BattleParticipant calldata value) public virtual {
-    set(entity, abi.encode(value.playerAddress, value.unitTypes, value.unitLevels, value.unitCounts));
+    set(entity, abi.encode(value.participantEntity, value.unitTypes, value.unitLevels, value.unitCounts));
   }
 
   function set(
     uint256 entity,
-    address participantAddress,
+    uint256 participantEntity,
     uint256[] memory unitTypes,
     uint32[] memory unitLevels,
     uint32[] memory unitCounts
   ) public virtual {
-    set(entity, abi.encode(participantAddress, unitTypes, unitLevels, unitCounts));
+    set(entity, abi.encode(participantEntity, unitTypes, unitLevels, unitCounts));
   }
 
   function getValue(uint256 entity) public view virtual returns (BattleParticipant memory) {
     (
-      address participantAddress,
+      uint256 participantEntity,
       uint256[] memory unitTypes,
       uint32[] memory unitLevels,
       uint32[] memory unitCounts
-    ) = abi.decode(getRawValue(entity), (address, uint256[], uint32[], uint32[]));
-    return BattleParticipant(participantAddress, unitTypes, unitLevels, unitCounts);
+    ) = abi.decode(getRawValue(entity), (uint256, uint256[], uint32[], uint32[]));
+    return BattleParticipant(participantEntity, unitTypes, unitLevels, unitCounts);
   }
 
   function getEntitiesWithValue(BattleParticipant calldata result) public view virtual returns (uint256[] memory) {
