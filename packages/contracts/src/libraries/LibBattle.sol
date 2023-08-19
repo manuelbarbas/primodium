@@ -125,15 +125,15 @@ library LibBattle {
 
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
     uint256 defenderEntity = addressToEntity(defender.playerAddress);
-    uint32 totalAttackValue = 0;
+    uint32 totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
       uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defenderEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
-      totalAttackValue +=
+      totalDefenceValue +=
         defenderUnitsLeft[i] *
         unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
     }
-    return totalAttackValue;
+    return totalDefenceValue;
   }
 
   function getTotalDefenceValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalDefenceValue) {
