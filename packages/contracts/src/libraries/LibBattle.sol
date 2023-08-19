@@ -203,9 +203,7 @@ library LibBattle {
     return totalCargoValue;
   }
 
-  function max(uint32 num1, uint32 num2) internal pure returns (uint32) {
-    return num1 > num2 ? num1 : num2;
-  }
+  
 
   function resolveRaid(IWorld world, uint256 battleEntity) internal {
     uint32 totalCargo = getTotalCargoValue(world, battleEntity);
