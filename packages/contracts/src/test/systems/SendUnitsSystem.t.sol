@@ -6,12 +6,12 @@ import "../PrimodiumTest.t.sol";
 import { SendUnitsSystem, ID as SendUnitsSystemID } from "systems/SendUnitsSystem.sol";
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
-import { S_UpdatePlayerSpaceRockSystem, ID as S_UpdatePlayerSpaceRockSystemID } from "systems/S_UpdatePlayerSpaceRockSystem.sol";
 
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 
 import { LibSend } from "libraries/LibSend.sol";
+import { LibArrival } from "libraries/LibArrival.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 
 import { MOVE_SPEED } from "src/constants.sol";
@@ -22,7 +22,6 @@ contract SendUnitsTest is PrimodiumTest {
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
   BuildSystem public buildSystem;
-  S_UpdatePlayerSpaceRockSystem public updateSystem;
 
   function setUp() public override {
     super.setUp();
@@ -30,7 +29,6 @@ contract SendUnitsTest is PrimodiumTest {
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
-    updateSystem = S_UpdatePlayerSpaceRockSystem(system(S_UpdatePlayerSpaceRockSystemID));
     spawn(alice);
     spawn(bob);
     spawn(deployer);
@@ -96,7 +94,7 @@ contract SendUnitsTest is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, entity, 10);
   }
 
-  function testInvade() public returns (Arrival memory) {
+  function testInvade() public {
     vm.startPrank(alice);
     invade();
   }
@@ -147,7 +145,9 @@ contract SendUnitsTest is PrimodiumTest {
     vm.startPrank(alice);
     Arrival memory arrival = invade();
     vm.roll(arrival.arrivalBlock - 1);
-    updateSystem.executeTyped(bob, arrival.destination);
+    vm.stopPrank();
+    vm.startPrank(deployer);
+    LibArrival.applyArrivals(world, addressToEntity(bob), getHomeAsteroid(bob));
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
   }
 
@@ -155,7 +155,9 @@ contract SendUnitsTest is PrimodiumTest {
     vm.startPrank(alice);
     Arrival memory arrival = invade();
     vm.roll(arrival.arrivalBlock);
-    updateSystem.executeTyped(bob, arrival.destination);
+    vm.stopPrank();
+    vm.startPrank(deployer);
+    LibArrival.applyArrivals(world, addressToEntity(bob), getHomeAsteroid(bob));
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 0);
   }
 
@@ -167,15 +169,12 @@ contract SendUnitsTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 5);
 
-    bytes memory rawArrival = sendUnitsSystem.executeTyped(
-      units,
-      ESendType.INVADE,
-      getHomeAsteroid(alice),
-      getHomeAsteroid(bob),
-      bob
-    );
+    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
     vm.roll(arrival.arrivalBlock);
-    updateSystem.executeTyped(bob, arrival.destination);
+    vm.stopPrank();
+    vm.startPrank(deployer);
+    LibArrival.applyArrivals(world, addressToEntity(bob), arrival.destination);
+
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
   }
 
@@ -201,7 +200,9 @@ contract SendUnitsTest is PrimodiumTest {
       (Arrival)
     );
     vm.roll(arrival2.arrivalBlock);
-    updateSystem.executeTyped(bob, arrival2.destination);
+    vm.stopPrank();
+    vm.startPrank(deployer);
+    LibArrival.applyArrivals(world, addressToEntity(bob), arrival2.destination);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
     assertEq(
       ArrivalsList.get(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob)), 0),

@@ -25,38 +25,7 @@ import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue } from "src/types
 
 library LibUpdateSpaceRock {
   function updateSpaceRock(IWorld world, uint256 playerEntity, uint256 spaceRock) internal {
-    bool rockOwnedByPlayer = OwnedByComponent(world.getComponent(OwnedByComponentID)).getValue(spaceRock) ==
-      playerEntity;
-    uint256 playerSpaceRockEntity = LibEncode.hashKeyEntity(playerEntity, spaceRock);
-    uint256 earliestEventBlock = block.number + 1;
-    uint256 earliestEventIndex = 0;
-    do {
-      // max int
-      earliestEventIndex = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
-      uint256 listSize = ArrivalsList.length(world, playerSpaceRockEntity);
-      if (listSize == 0) break;
-
-      // get earliest event
-      for (uint256 i = 0; i < listSize; i++) {
-        uint256 arrivalBlock = ArrivalsList.getArrivalBlock(world, playerSpaceRockEntity, i);
-        if (arrivalBlock <= earliestEventBlock) {
-          earliestEventBlock = arrivalBlock;
-          earliestEventIndex = i;
-        }
-      }
-
-      if (earliestEventBlock > block.number) break;
-      // claim units
-      if (rockOwnedByPlayer) claimUnits(world, playerEntity, earliestEventBlock);
-      // apply arrival
-      applyArrival(world, ArrivalsList.get(world, playerSpaceRockEntity, earliestEventIndex));
-      ArrivalsList.remove(world, playerSpaceRockEntity, earliestEventIndex);
-    } while (earliestEventBlock < block.number);
-    if (rockOwnedByPlayer) claimUnits(world, playerEntity, block.number);
-  }
-
-  function applyArrival(IWorld world, Arrival memory arrival) public view {
-    return;
+    claimUnits(world, playerEntity, block.number);
   }
 
   function claimUnitsFromBuilding(
