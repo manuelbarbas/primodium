@@ -11,6 +11,8 @@ import { ProductionComponent, ID as ProductionComponentID } from "components/Pro
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
+import { LibResource } from "../libraries/LibResource.sol";
+
 import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaimedResourcesSystem.sol";
 
 import { Coord } from "../types.sol";
@@ -41,25 +43,7 @@ contract ClaimFromMineSystem is PrimodiumSystem {
       "[ClaimFromMineSystem] Cannot claim from mines on a tile you do not own"
     );
 
-    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
-      world.getComponent(P_MaxResourceStorageComponentID)
-    );
-    if (!maxResourceStorageComponent.has(playerEntity)) return abi.encode(false);
-    LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
-      world.getComponent(LastClaimedAtComponentID)
-    );
-
-    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
-    for (uint256 i = 0; i < storageResourceIds.length; i++) {
-      uint256 playerResourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
-      if (ProductionComponent(world.getComponent(ProductionComponentID)).has(playerResourceEntity)) {
-        IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
-          msg.sender,
-          storageResourceIds[i]
-        );
-      }
-      lastClaimedAtComponent.set(playerResourceEntity, block.number);
-    }
+    LibResource.claimAllResources(world, playerEntity);
 
     return abi.encode(0);
   }

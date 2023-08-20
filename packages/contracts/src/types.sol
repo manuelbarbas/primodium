@@ -41,3 +41,16 @@ struct Bounds {
   int32 maxX;
   int32 maxY;
 }
+
+struct BattleResult {
+  uint256 winnerEntity;
+  uint32[] attackerUnitsLeft;
+  uint32[] defenderUnitsLeft;
+}
+
+struct BattleParticipant {
+  uint256 participantEntity;
+  uint256[] unitTypes;
+  uint32[] unitLevels;
+  uint32[] unitCounts;
+}
