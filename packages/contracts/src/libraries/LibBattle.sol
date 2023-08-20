@@ -198,8 +198,6 @@ library LibBattle {
     return totalCargoValue;
   }
 
-  
-
   function resolveRaid(IWorld world, uint256 battleEntity) internal {
     uint32 totalCargo = getTotalCargoValue(world, battleEntity);
 
@@ -221,9 +219,7 @@ library LibBattle {
     );
     LibResource.claimAllResources(
       world,
-      
-        BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).participantEntity
-      
+      BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).participantEntity
     );
 
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(

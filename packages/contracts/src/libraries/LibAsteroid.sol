@@ -92,7 +92,7 @@ library LibAsteroid {
    * @param asteroidCount Number of asteroids.
    * @return uint32 Returns the calculated distance.
    */
-  function getDistance(uint32 asteroidCount) public pure returns (uint32) {
+  function getDistance(uint32 asteroidCount) internal pure returns (uint32) {
     int128 value = Math.add(Math.fromUInt(asteroidCount), Math.fromUInt(105));
     value = Math.div(value, Math.fromUInt(10));
     value = Math.ln(value);

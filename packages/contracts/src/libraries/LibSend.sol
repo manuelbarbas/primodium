@@ -22,7 +22,7 @@ library LibSend {
     ArrivalsList.add(world, playerAsteroidEntity, arrival);
   }
 
-  function distance(Coord memory a, Coord memory b) public pure returns (uint32) {
+  function distance(Coord memory a, Coord memory b) internal pure returns (uint32) {
     int128 distanceSquared = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
     return uint32(Math.toUInt(Math.sqrt(Math.fromInt(distanceSquared))));
   }

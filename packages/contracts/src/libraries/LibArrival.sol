@@ -40,7 +40,7 @@ library LibArrival {
     } while (earliestEventBlock < block.number);
   }
 
-  function applyArrival(IWorld world, Arrival memory arrival) public pure {
+  function applyArrival(IWorld world, Arrival memory arrival) internal pure {
     return;
   }
 }

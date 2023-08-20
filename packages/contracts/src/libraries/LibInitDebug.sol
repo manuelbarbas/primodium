@@ -525,6 +525,9 @@ library LibInitDebug {
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
 
+    unitAttackComponent.set(entity, 20);
+    unitDefenceComponent.set(entity, 10);
+    unitCargoComponent.set(entity, 20);
     // debuguint3
     speedComponent.set(DebugUnit3, 50);
     entity = LibEncode.hashKeyEntity(DebugUnit3, 1);
