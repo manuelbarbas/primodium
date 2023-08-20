@@ -145,7 +145,7 @@
       "writeAccess": ["*"]
     },
     {
-      "name": "S_BattleSystem",
+      "name": "S_ResolveBattleSystem",
       "writeAccess": ["BattleResultComponent"]
     },
     {
