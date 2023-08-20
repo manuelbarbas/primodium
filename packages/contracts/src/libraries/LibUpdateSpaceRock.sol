@@ -87,8 +87,17 @@ library LibUpdateSpaceRock {
 
   function addPlayerUnitsToAsteroid(IWorld world, uint256 playerEntity, uint256 unitType, uint32 unitCount) internal {
     uint256 asteroid = PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
-    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroid);
+    addUnitsToAsteroid(world, playerEntity, asteroid, unitType, unitCount);
+  }
 
+  function addUnitsToAsteroid(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 asteroidEntity,
+    uint256 unitType,
+    uint32 unitCount
+  ) internal {
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
     LibMath.add(UnitsComponent(world.getComponent(UnitsComponentID)), unitPlayerSpaceRockEntity, unitCount);
   }
 

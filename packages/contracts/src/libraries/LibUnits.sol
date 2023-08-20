@@ -18,6 +18,7 @@ import { LibUtilityResource } from "./LibUtilityResource.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { ResourceValues, ResourceValue } from "../types.sol";
+import { BIGNUM } from "../prototypes/Debug.sol";
 
 library LibUnits {
   function updateOccuppiedUtilityResources(
@@ -114,6 +115,29 @@ library LibUnits {
       }
     }
     return true;
+  }
+
+  function stationUnits(IWorld world, uint256 asteroidEntity, uint256 unitType, uint32 count) internal {}
+
+  function howManyUnitsCanAdd(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {
+    uint32 min = BIGNUM;
+    P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
+      world.getComponent(P_RequiredUtilityComponentID)
+    );
+    uint32 unitLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(
+      LibEncode.hashKeyEntity(unitType, playerEntity)
+    );
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
+    if (!requiredUtilityComponent.has(buildingLevelEntity)) return min; //this should be subtracted by current count of the unit type
+
+    uint256[] memory resourceIDs = requiredUtilityComponent.getValue(buildingLevelEntity).resources;
+    uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(buildingLevelEntity).values;
+    for (uint256 i = 0; i < resourceIDs.length; i++) {
+      uint32 count = LibUtilityResource.getAvailableUtilityCapacity(world, playerEntity, resourceIDs[i]) /
+        requiredAmounts[i];
+      if (count < min) min = count;
+    }
+    return min;
   }
 
   function getUnitTrainingTime(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {

@@ -29,6 +29,16 @@ library ArrivalsList {
     arrivalsSizeComponent.set(listId, size + 1);
   }
 
+  function set(IWorld world, uint256 listId, uint256 index, Arrival memory arrival) internal {
+    ArrivalsSizeComponent arrivalsSizeComponent = ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID));
+    uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
+    require(index < size, "Index out of bounds");
+
+    uint256 listIndex = LibEncode.hashKeyEntity(listId, index);
+    uint256 arrivalKey = ArrivalsIndexComponent(world.getComponent(ArrivalsIndexComponentID)).getValue(listIndex);
+    ArrivalComponent(world.getComponent(ArrivalComponentID)).set(arrivalKey, arrival);
+  }
+
   function get(IWorld world, uint256 listId, uint256 index) internal view returns (Arrival memory) {
     ArrivalsSizeComponent arrivalsSizeComponent = ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID));
     uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
