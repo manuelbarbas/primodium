@@ -17,25 +17,31 @@ import { Dimensions, Bounds } from "../../types.sol";
 contract LibBuildingTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
-  ComponentDevSystem componentDevSystem;
+  ComponentDevSystem internal componentDevSystem;
 
   function setUp() public override {
     super.setUp();
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
   }
 
-  function testGetPlayerBounds() public {
+  function testGetPlayerBounds(int16 maxX, int16 maxY, int16 currX, int16 currY) public {
+    // Bound fuzzy parameters to int16 to eliminate overflow errors when testing
+    vm.assume(currX > 0);
+    vm.assume(currY > 0);
+    vm.assume(maxX >= currX);
+    vm.assume(maxY >= currY);
+
     spawn(alice);
     vm.startPrank(alice);
 
-    Dimensions memory max = Dimensions(10, 10);
+    Dimensions memory max = Dimensions(int32(maxX), int32(maxY));
     componentDevSystem.executeTyped(DimensionsComponentID, SingletonID, abi.encode(max));
 
     uint256 playerEntity = addressToEntity(alice);
     uint32 playerLevel = LevelComponent(getAddressById(world.components(), LevelComponentID)).getValue(playerEntity);
     uint256 researchLevelEntity = LibEncode.hashKeyEntity(ExpansionKey, playerLevel);
 
-    Dimensions memory curr = Dimensions(5, 5);
+    Dimensions memory curr = Dimensions(int32(currX), int32(currY));
     componentDevSystem.executeTyped(DimensionsComponentID, researchLevelEntity, abi.encode(curr));
     Bounds memory bounds = LibBuilding.getPlayerBounds(world, playerEntity);
     console.log("maxX", uint32(bounds.maxX));

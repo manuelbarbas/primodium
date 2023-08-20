@@ -77,7 +77,6 @@ contract LibEncodeTest is PrimodiumTest {
     );
   }
 
-  //todo: delete this
   function testPrintHashKeyEntityItems() public view {
     console.log(LibEncode.hashKeyCoord("building", Coord(0, 0, 0)));
     console.log(LibEncode.hashKeyCoord("building", Coord(1, 5, 123)));

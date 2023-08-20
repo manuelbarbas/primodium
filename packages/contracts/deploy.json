@@ -27,6 +27,9 @@
     "AsteroidTypeComponent",
     "ActiveComponent",
     "DimensionsComponent",
+    "BattleAttackerComponent",
+    "BattleDefenderComponent",
+    "BattleResultComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
@@ -140,6 +143,14 @@
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
+    },
+    {
+      "name": "S_BattleSystem",
+      "writeAccess": ["BattleResultComponent"]
+    },
+    {
+      "name": "S_RaidSystem",
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",

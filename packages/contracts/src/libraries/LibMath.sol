@@ -38,7 +38,11 @@ library LibMath {
     return input < 0 ? -input : input;
   }
 
-  function min(uint32 x, uint32 y) internal pure returns (uint32) {
-    return x < y ? x : y;
+  function min(uint32 num1, uint32 num2) internal pure returns (uint32) {
+    return num1 < num2 ? num1 : num2;
+  }
+
+  function max(uint32 num1, uint32 num2) internal pure returns (uint32) {
+    return num1 > num2 ? num1 : num2;
   }
 }

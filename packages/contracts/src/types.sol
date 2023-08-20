@@ -63,3 +63,16 @@ struct Arrival {
   uint256 origin;
   uint256 destination;
 }
+
+struct BattleResult {
+  uint256 winnerEntity;
+  uint32[] attackerUnitsLeft;
+  uint32[] defenderUnitsLeft;
+}
+
+struct BattleParticipant {
+  uint256 participantEntity;
+  uint256[] unitTypes;
+  uint32[] unitLevels;
+  uint32[] unitCounts;
+}
