@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
@@ -473,8 +474,9 @@ library LibInitDebug {
     maxLevelComponent.set(DebugUnitProductionBuilding, 2);
     uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
 
-    uint256[] memory unitTypes = new uint256[](1);
+    uint256[] memory unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit3;
     unitProductionTypesComponent.set(entity, unitTypes);
     unitProductionMultiplierComponent.set(entity, 100);
 
@@ -496,9 +498,11 @@ library LibInitDebug {
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       world.getComponent(P_RequiredUtilityComponentID)
     );
+    SpeedComponent speedComponent = SpeedComponent(world.getComponent(SpeedComponentID));
     P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
 
     //DebugUnit
+    speedComponent.set(DebugUnit, 100);
     uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
     unitTrainingTimeComponent.set(entity, 2);
 
@@ -511,6 +515,8 @@ library LibInitDebug {
     unitDefenceComponent.set(entity, 3);
     unitCargoComponent.set(entity, 10);
     //DebugUnit2
+
+    speedComponent.set(DebugUnit2, 200);
     entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
     unitTrainingTimeComponent.set(entity, 4);
 
@@ -519,6 +525,18 @@ library LibInitDebug {
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
 
+    unitAttackComponent.set(entity, 20);
+    unitDefenceComponent.set(entity, 10);
+    unitCargoComponent.set(entity, 20);
+    // debuguint3
+    speedComponent.set(DebugUnit3, 50);
+    entity = LibEncode.hashKeyEntity(DebugUnit3, 1);
+    unitTrainingTimeComponent.set(entity, 4);
+
+    requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtility.resources[0] = HousingUtilityResourceID;
+    requiredUtility.values[0] = 1;
+    requiredUtilityComponent.set(entity, requiredUtility);
     unitAttackComponent.set(entity, 20);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);

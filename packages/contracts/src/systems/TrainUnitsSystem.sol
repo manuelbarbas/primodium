@@ -7,6 +7,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 // components
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
 import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID, ResourceValue } from "components/UnitProductionQueueComponent.sol";
@@ -14,7 +15,6 @@ import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexCompon
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "../components/LastClaimedAtComponent.sol";
 
-import { HousingUtilityResourceID } from "../prototypes/Resource.sol";
 // libraries
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibUnits } from "../libraries/LibUnits.sol";
@@ -24,8 +24,7 @@ import { IOnEntityCountSubsystem } from "../interfaces/IOnEntityCountSubsystem.s
 import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
-import { ID as S_ClaimUnitsSystemID } from "./S_ClaimUnitsSystem.sol";
-import { ID as S_ClaimUnitsFromBuildingSystemID } from "./S_ClaimUnitsFromBuildingSystem.sol";
+import { ID as S_UpdatePlayerSpaceRockSystem } from "./S_UpdatePlayerSpaceRockSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.TrainUnits"));
@@ -43,6 +42,11 @@ contract TrainUnitsSystem is PrimodiumSystem {
     uint256 playerEntity = addressToEntity(msg.sender);
 
     uint256 unitTypeLevelEntity = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
+
+    IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(
+      msg.sender,
+      PositionComponent(getC(PositionComponentID)).getValue(buildingEntity).parent
+    );
     require(
       LibUnits.canBuildingProduceUnit(world, buildingEntity, unitType),
       "[TrainUnitsSystem] Building cannot produce unit"
@@ -78,13 +82,6 @@ contract TrainUnitsSystem is PrimodiumSystem {
     UnitProductionQueueIndexComponent unitProductionQueueIndexComponent = UnitProductionQueueIndexComponent(
       getC(UnitProductionQueueIndexComponentID)
     );
-
-    if (unitProductionQueueIndexComponent.has(buildingEntity))
-      IOnEntitySubsystem(getAddressById(world.systems(), S_ClaimUnitsFromBuildingSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
-    else LastClaimedAtComponent(getC(LastClaimedAtComponentID)).set(buildingEntity, block.number);
 
     uint32 queueIndex = 0;
     if (unitProductionQueueIndexComponent.has(buildingEntity)) {

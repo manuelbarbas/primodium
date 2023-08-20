@@ -8,6 +8,7 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
@@ -86,6 +87,7 @@ library LibBuilding {
     BuildingTypeComponent(world.getComponent(BuildingTypeComponentID)).set(buildingEntity, buildingType);
     LevelComponent(world.getComponent(LevelComponentID)).set(buildingEntity, 1);
     PositionComponent(world.getComponent(PositionComponentID)).set(buildingEntity, coord);
+    LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(buildingEntity, block.number);
 
     IOnEntitySubsystem(getAddressById(world.systems(), PlaceBuildingTilesSystemID)).executeTyped(
       msg.sender,

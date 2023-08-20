@@ -6,12 +6,13 @@ import { SingletonID } from "solecs/SingletonID.sol";
 
 //components
 import { ActiveComponent, ID as ActiveComponentID } from "components/ActiveComponent.sol";
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
-import { Coord, Dimensions, EAsteroidType } from "../types.sol";
+import { Coord, Dimensions, ESpaceRockType } from "../types.sol";
 
 import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -39,7 +40,7 @@ library LibAsteroid {
     Coord memory position = getUniqueAsteroidPosition(asteroidCount);
 
     positionComponent.set(asteroidEntity, position);
-    asteroidTypeComponent.set(asteroidEntity, uint256(EAsteroidType.NORMAL));
+    asteroidTypeComponent.set(asteroidEntity, uint256(ESpaceRockType.ASTEROID));
 
     // For now, we will use this component to ensure the owner can only build on their asteroid.
     // TODO: remove this component later as it might be for temporary use.
@@ -48,6 +49,7 @@ library LibAsteroid {
 
     // Mark the asteroid's position as active in the ActiveComponent.
     ActiveComponent(world.getComponent(ActiveComponentID)).set(encodedPosition);
+    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(asteroidEntity, ownerEntity);
 
     asteroidCountComponent.set(SingletonID, asteroidCount);
   }
@@ -90,7 +92,7 @@ library LibAsteroid {
    * @param asteroidCount Number of asteroids.
    * @return uint32 Returns the calculated distance.
    */
-  function getDistance(uint32 asteroidCount) public pure returns (uint32) {
+  function getDistance(uint32 asteroidCount) internal pure returns (uint32) {
     int128 value = Math.add(Math.fromUInt(asteroidCount), Math.fromUInt(105));
     value = Math.div(value, Math.fromUInt(10));
     value = Math.ln(value);
