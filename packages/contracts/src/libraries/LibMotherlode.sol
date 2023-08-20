@@ -8,7 +8,10 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { ReversePositionComponent, ID as ReversePositionComponentID } from "components/ReversePositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
+import { MineableAtComponent, ID as MineableAtComponentID } from "components/MineableAtComponent.sol";
+import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { P_MotherlodeComponent, ID as P_MotherlodeComponentID } from "components/P_MotherlodeComponent.sol";
+import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 
@@ -53,6 +56,16 @@ library LibMotherlode {
     AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).set(
       motherlodeEntity,
       uint256(ESpaceRockType.MOTHERLODE)
+    );
+    MineableAtComponent(world.getComponent(MineableAtComponentID)).set(motherlodeEntity, block.number);
+
+    uint256 resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
+      .getValue(LibEncode.hashKeyEntity(uint256(size), uint256(motherlodeType)))
+      .resource;
+
+    MotherlodeResourceComponent(world.getComponent(MotherlodeResourceComponentID)).set(
+      LibEncode.hashKeyEntity(motherlodeEntity, resource),
+      0
     );
   }
 
