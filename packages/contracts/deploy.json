@@ -30,7 +30,9 @@
     "BattleAttackerComponent",
     "BattleDefenderComponent",
     "BattleResultComponent",
+    "MaxMovesComponent",
 
+    "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
@@ -66,48 +68,15 @@
     },
     {
       "name": "SpawnSystem",
-      "writeAccess": [
-        "PositionComponent",
-        "ActiveComponent",
-        "AsteroidCountComponent",
-        "AsteroidTypeComponent",
-        "ActiveComponent",
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "LevelComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "MainBaseComponent",
-        "UnitProductionOwnedByComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["*"]
     },
     {
       "name": "BuildSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "LevelComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "MainBaseComponent",
-        "PositionComponent",
-        "UnitProductionOwnedByComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["*"]
     },
     {
       "name": "DestroySystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "LevelComponent",
-        "PathComponent",
-        "PositionComponent",
-        "UnitProductionOwnedByComponent"
-      ]
+      "writeAccess": ["*"]
     },
 
     {

@@ -11,6 +11,7 @@ import { P_ProductionComponent, ID as P_ProductionComponentID } from "components
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID, ResourceValue } from "components/P_UtilityProductionComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
+import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
@@ -41,6 +42,7 @@ library LibInitBuildings {
     // special
     initStorageUnit(world);
     initSolarPanel(world);
+    initStarmapper(world);
   }
 
   function initMainBase(IWorld world) internal {
@@ -598,6 +600,60 @@ library LibInitBuildings {
         buildingLevelEntity,
         UtilityProduction[i]
       );
+    }
+  }
+
+  function initStarmapper(IWorld world) internal {
+    uint256 entity = StarmapperID;
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
+    uint32 maxLevel = 3;
+
+    /****************** Required Research *******************/
+    uint256[] memory requiredResearch = new uint256[](maxLevel);
+    // LEVEL 1
+    requiredResearch[0] = StarmapperResearchID;
+    // LEVEL 2
+    requiredResearch[1] = Starmapper2ResearchID;
+    // LEVEL 3
+    requiredResearch[2] = Starmapper3ResearchID;
+    /****************** Required Resources *******************/
+    ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
+    ResourceValue[] memory resourceValues = new ResourceValue[](1);
+    // LEVEL 1
+    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    requiredResources[0] = resourceValues;
+    // LEVEL 2
+    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    requiredResources[1] = resourceValues;
+
+    // LEVEL 3
+    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    requiredResources[2] = resourceValues;
+
+    /* -------------------------------- Max Moves ------------------------------- */
+    // note: each value here must be geq its predecessor (obviously).
+    uint32[] memory maxMoves = new uint32[](maxLevel);
+    // LEVEL 1
+    maxMoves[0] = 2;
+    // LEVEL 2
+    maxMoves[1] = 4;
+    // LEVEL 3
+    maxMoves[2] = 6;
+
+    /* ***********************Set Values ************************* */
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+
+    for (uint256 i = 0; i < maxLevel; i++) {
+      uint256 level = i + 1;
+      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
+
+      P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).set(buildingLevelEntity, maxMoves[i]);
+      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
+        buildingLevelEntity,
+        requiredResearch[i]
+      );
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
     }
   }
 }

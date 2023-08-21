@@ -17,7 +17,7 @@ library ArrivalsList {
   function add(IWorld world, uint256 listId, Arrival memory arrival) internal returns (uint256 arrivalKey) {
     ArrivalsSizeComponent arrivalsSizeComponent = ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID));
 
-    uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
+    uint32 size = LibMath.getSafe(arrivalsSizeComponent, listId);
 
     uint256 listSizeIndex = LibEncode.hashKeyEntity(listId, size);
     arrivalKey = uint256(keccak256(abi.encode(arrival)));
@@ -48,7 +48,7 @@ library ArrivalsList {
     ArrivalsIndexComponent arrivalsIndexComponent = ArrivalsIndexComponent(
       world.getComponent(ArrivalsIndexComponentID)
     );
-    uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
+    uint32 size = LibMath.getSafe(arrivalsSizeComponent, listId);
 
     require(index < size, "Index out of bounds");
 
