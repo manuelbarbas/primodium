@@ -31,20 +31,20 @@ library LibInitMotherlode {
 
     // TITANIUM
     // SMALL
-    ResourceValue memory ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ResourceValue memory ore = ResourceValue({ resource: TitaniumID, value: 5000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.TITANIUM), uint256(EMotherlodeSize.SMALL)),
       ore
     );
 
     // MEDIUM
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: TitaniumID, value: 12000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.TITANIUM), uint256(EMotherlodeSize.MEDIUM)),
       ore
     );
     // LARGE
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: TitaniumID, value: 25000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.TITANIUM), uint256(EMotherlodeSize.LARGE)),
       ore
@@ -52,57 +52,57 @@ library LibInitMotherlode {
     // IRIDIUM
 
     // SMALL
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: IridiumID, value: 5000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.IRIDIUM), uint256(EMotherlodeSize.SMALL)),
       ore
     );
     // MEDIUM
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: IridiumID, value: 12000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.IRIDIUM), uint256(EMotherlodeSize.MEDIUM)),
       ore
     );
     // LARGE
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: IridiumID, value: 25000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.IRIDIUM), uint256(EMotherlodeSize.LARGE)),
       ore
     );
     // PLATINUM
     // SMALL
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: PlatinumID, value: 5000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.PLATINUM), uint256(EMotherlodeSize.SMALL)),
       ore
     );
     // MEDIUM
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: PlatinumID, value: 12000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.PLATINUM), uint256(EMotherlodeSize.MEDIUM)),
       ore
     );
     // LARGE
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: PlatinumID, value: 25000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.PLATINUM), uint256(EMotherlodeSize.LARGE)),
       ore
     );
     // KIMBERLITE
     // SMALL
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: KimberliteID, value: 5000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.KIMBERLITE), uint256(EMotherlodeSize.SMALL)),
       ore
     );
     // MEDIUM
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: KimberliteID, value: 12000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.KIMBERLITE), uint256(EMotherlodeSize.MEDIUM)),
       ore
     );
     // LARGE
-    ore = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    ore = ResourceValue({ resource: KimberliteID, value: 25000 });
     motherlodeResourceComponent.set(
       LibEncode.hashKeyEntity(uint256(EMotherlodeType.KIMBERLITE), uint256(EMotherlodeSize.LARGE)),
       ore

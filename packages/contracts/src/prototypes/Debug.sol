@@ -46,6 +46,9 @@ uint256 constant DebugUnit = uint256(keccak256("block.DebugUnit"));
 uint256 constant DebugUnit2 = uint256(keccak256("block.DebugUnit2"));
 uint256 constant DebugUnit3 = uint256(keccak256("block.DebugUnit3"));
 
+uint256 constant DebugUnitMiner = uint256(keccak256("unit.DebugUnitMiner"));
+uint256 constant DebugUnitMiner2 = uint256(keccak256("unit.DebugUnitMiner2"));
+
 uint256 constant DebugUnitBattle1 = uint256(keccak256("unit.DebugUnitBattle1"));
 uint256 constant DebugUnitBattle2 = uint256(keccak256("unit.DebugUnitBattle2"));
 

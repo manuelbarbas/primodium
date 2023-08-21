@@ -27,6 +27,7 @@ import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
 import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
 import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
+import { P_UnitMiningComponent, ID as P_UnitMiningComponentID } from "components/P_UnitMiningComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 
@@ -500,6 +501,7 @@ library LibInitDebug {
     );
     SpeedComponent speedComponent = SpeedComponent(world.getComponent(SpeedComponentID));
     P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
+    P_UnitMiningComponent unitMiningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
 
     //DebugUnit
     speedComponent.set(DebugUnit, 100);
@@ -540,6 +542,13 @@ library LibInitDebug {
     unitAttackComponent.set(entity, 20);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
+
+    // DebugUnitMiner
+    entity = DebugUnitMiner;
+    unitMiningComponent.set(entity, 100);
+
+    entity = DebugUnitMiner2;
+    unitMiningComponent.set(entity, 47);
 
     //DebugUnitBattle1
     entity = LibEncode.hashKeyEntity(DebugUnitBattle1, 1);

@@ -138,6 +138,7 @@ library LibUpdateSpaceRock {
     uint256 blockNumber
   ) internal {
     MineableAtComponent mineableAtComponent = MineableAtComponent(world.getComponent(MineableAtComponentID));
+    // cannot claim during cooldown
     bool isCooldown = blockNumber < mineableAtComponent.getValue(motherlodeEntity);
     if (isCooldown) return;
 
@@ -145,6 +146,7 @@ library LibUpdateSpaceRock {
       blockNumber - LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity)
     );
 
+    // cannot claim if no mining power
     uint32 miningPower = getMiningPower(world, playerEntity, motherlodeEntity);
     if (miningPower == 0) return;
 
@@ -157,16 +159,18 @@ library LibUpdateSpaceRock {
     ResourceValue memory resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
       .getValue(LibEncode.hashKeyEntity(uint256(motherlode.motherlodeType), uint256(motherlode.size)));
 
+    uint32 prevMotherlodeResources = LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity);
+
+    // cannot claim if resources are maxed out
+    if (resource.value == prevMotherlodeResources) return;
     uint256 resourcePlayerEntity = LibEncode.hashKeyEntity(resource.resource, playerEntity);
-    uint32 prevMotherlodeResources = motherlodeResourceComponent.getValue(resourcePlayerEntity);
+
+    // get the amount of resources that have been mined
     uint32 rawIncrease = miningPower * blocksSinceLastClaim;
     if (rawIncrease + prevMotherlodeResources > resource.value) {
       rawIncrease = resource.value - prevMotherlodeResources;
-      mineableAtComponent.set(motherlodeEntity, blockNumber + motherlode.cooldownBlocks);
-      motherlodeResourceComponent.set(resourcePlayerEntity, 0);
-    } else {
-      motherlodeResourceComponent.set(resourcePlayerEntity, rawIncrease + prevMotherlodeResources);
     }
+    motherlodeResourceComponent.set(motherlodeEntity, rawIncrease + prevMotherlodeResources);
     LibMath.add(ItemComponent(world.getComponent(ItemComponentID)), resourcePlayerEntity, rawIncrease);
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, blockNumber);
   }

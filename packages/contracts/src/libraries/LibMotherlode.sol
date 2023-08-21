@@ -12,14 +12,13 @@ import { MineableAtComponent, ID as MineableAtComponentID } from "components/Min
 import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
 import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
-import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 
 // types
-import { Coord, ESpaceRockType, Motherlode, EMotherlodeSize, EMotherlodeType } from "src/types.sol";
+import { Coord, ESpaceRockType, Motherlode, EMotherlodeSize, EMotherlodeType, ResourceValue } from "src/types.sol";
 import { TitaniumID, IridiumID, PlatinumID, KimberliteID } from "src/prototypes.sol";
 
 library LibMotherlode {
@@ -104,5 +103,21 @@ library LibMotherlode {
     if (motherlodeType < 21) return EMotherlodeType.IRIDIUM;
     if (motherlodeType < 27) return EMotherlodeType.PLATINUM;
     return EMotherlodeType.KIMBERLITE;
+  }
+
+  function getMaxMotherlodeResource(
+    IWorld world,
+    uint256 motherlodeEntity
+  ) internal view returns (ResourceValue memory) {
+    Motherlode memory motherlode = MotherlodeComponent(world.getComponent(MotherlodeComponentID)).getValue(
+      motherlodeEntity
+    );
+    P_MotherlodeResourceComponent motherlodeResourceComponent = P_MotherlodeResourceComponent(
+      world.getComponent(P_MotherlodeResourceComponentID)
+    );
+    return
+      motherlodeResourceComponent.getValue(
+        LibEncode.hashKeyEntity(uint256(motherlode.motherlodeType), uint256(motherlode.size))
+      );
   }
 }
