@@ -99,9 +99,14 @@ export function renderFog(scene: Scene, player: EntityID) {
         originY: -0.5,
         alpha: 0.7,
       }),
-      ObjectText("+ NEXT EXPANSION", {
-        color: "cyan",
-      }),
+      ObjectText(
+        bounds.maxX !== nextBounds.maxX
+          ? "+ NEXT EXPANSION"
+          : "FINAL EXPANSION",
+        {
+          color: "cyan",
+        }
+      ),
     ]);
 
     // clear fog from expansion area
@@ -115,14 +120,16 @@ export function renderFog(scene: Scene, player: EntityID) {
 
         let index = FogTilekeys.Empty;
 
-        if (maxLeft && maxTop) index = FogTilekeys.TopLeft;
-        else if (maxLeft && maxBottom) index = FogTilekeys.BottomLeft;
-        else if (maxRight && maxTop) index = FogTilekeys.TopRight;
-        else if (maxRight && maxBottom) index = FogTilekeys.BottomRight;
-        else if (maxLeft) index = FogTilekeys.Left;
-        else if (maxRight) index = FogTilekeys.Right;
-        else if (maxTop) index = FogTilekeys.Top;
-        else if (maxBottom) index = FogTilekeys.Bottom;
+        if (bounds.maxX !== nextBounds.maxX) {
+          if (maxLeft && maxTop) index = FogTilekeys.TopLeft;
+          else if (maxLeft && maxBottom) index = FogTilekeys.BottomLeft;
+          else if (maxRight && maxTop) index = FogTilekeys.TopRight;
+          else if (maxRight && maxBottom) index = FogTilekeys.BottomRight;
+          else if (maxLeft) index = FogTilekeys.Left;
+          else if (maxRight) index = FogTilekeys.Right;
+          else if (maxTop) index = FogTilekeys.Top;
+          else if (maxBottom) index = FogTilekeys.Bottom;
+        }
 
         scene.tilemap.map.putTileAt({ x, y: -y }, index, "GameFog");
       }

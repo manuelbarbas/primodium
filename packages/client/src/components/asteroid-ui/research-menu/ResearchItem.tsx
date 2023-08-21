@@ -108,7 +108,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     const recipe = getRecipe(researchId);
 
     return (
-      <div className="relative min-w-64 border border-cyan-600 mb-3 mr-3 bg-slate-900">
+      <div className="relative min-w-64 border border-cyan-600 mb-3 mr-3 bg-slate-700 bg-gradient-to-b from-transparent to-slate-900/20 rounded-md">
         <div className="flex flex-col justify-between h-full">
           <div>
             <div className="flex flex-col w-full border-b border-cyan-600 pb-4">
@@ -117,7 +117,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
                   return (
                     <div
                       key={index}
-                      className={`m-1 w-2 h-2 ${
+                      className={`m-1 w-2 h-2 rounded-full ${
                         isResearched ? "bg-green-600" : "bg-slate-500"
                       }`}
                     />
@@ -158,7 +158,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
               )}
             </div>
 
-            <div className="text-xs text-center bg-slate-900 py-4 px-1 italic ">
+            <div className="text-xs text-center bg-slate-800 py-4 px-1 italic border-b border-cyan-700 ">
               {description}
             </div>
           </div>

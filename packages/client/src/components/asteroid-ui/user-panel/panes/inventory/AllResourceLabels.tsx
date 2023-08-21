@@ -8,7 +8,7 @@ export const AllResourceLabels = ({
   entityIndex?: EntityIndex;
 }) => {
   return (
-    <>
+    <div className="grid gap-2 min-h-fit max-h-56 overflow-y-auto">
       <ResourceLabel
         name={"Iron"}
         entityIndex={entityIndex}
@@ -144,6 +144,6 @@ export const AllResourceLabels = ({
         entityIndex={entityIndex}
         resourceId={BlockType.LithiumCopperOxideCraftedItem}
       />
-    </>
+    </div>
   );
 };

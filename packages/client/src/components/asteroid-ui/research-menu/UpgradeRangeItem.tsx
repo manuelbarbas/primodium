@@ -91,7 +91,7 @@ export const UpgradeRangeItem = React.memo(() => {
   const recipe = getRecipe(researchId);
 
   return (
-    <div className="relative min-w-64 border border-cyan-600 mb-3 mr-3 bg-slate-900">
+    <div className="relative min-w-64 border-4 border-slate-200 mb-3 mr-3 bg-slate-700 bg-gradient-to-b from-transparent to-slate-900/20 rounded-md">
       <div className="flex flex-col justify-between h-full">
         <div>
           <div className="flex flex-col w-full border-b border-cyan-600 pb-4">
@@ -101,7 +101,7 @@ export const UpgradeRangeItem = React.memo(() => {
                 return (
                   <div
                     key={index}
-                    className={`m-1 w-2 h-2 ${
+                    className={`m-1 w-2 h-2 rounded-full ${
                       isResearched ? "bg-green-600" : "bg-slate-500"
                     }`}
                   />
@@ -119,7 +119,7 @@ export const UpgradeRangeItem = React.memo(() => {
               {subtitle}
             </div>
             {!isResearched && (
-              <div className="mt-2 flex justify-center items-center text-sm">
+              <div className="flex justify-center items-center text-sm">
                 {recipe.map((resource) => {
                   const resourceImage = ResourceImage.get(resource.id)!;
                   const resourceName = BlockIdToKey[resource.id];
@@ -142,19 +142,19 @@ export const UpgradeRangeItem = React.memo(() => {
             )}
           </div>
 
-          <div className="text-xs text-center bg-slate-900 py-4 px-1 italic ">
+          <div className="text-xs text-center bg-slate-800 py-4 px-1 italic border-b border-cyan-700">
             {description}
           </div>
         </div>
 
         <div className="my-4">
           {isResearched && (
-            <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+            <GameButton className=" bg-slate-400 text-sm w-1/2" disable>
               <p className="px-2 py-1"> Researched </p>
             </GameButton>
           )}
           {isLocked && (
-            <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+            <GameButton className=" bg-slate-400 text-sm w-1/2" disable>
               <p className="px-2 py-1">
                 Lvl. {requiredMainBaseLevel} Base Required
               </p>
@@ -164,7 +164,7 @@ export const UpgradeRangeItem = React.memo(() => {
             <GameButton
               id={`${name}-research`}
               onClick={executeResearch}
-              className=" bg-cyan-600 text-sm w-3/4"
+              className=" bg-cyan-600 text-sm w-1/2"
             >
               <div className="px-2 py-1">
                 {userClickedLoading ? <Spinner /> : "Research"}

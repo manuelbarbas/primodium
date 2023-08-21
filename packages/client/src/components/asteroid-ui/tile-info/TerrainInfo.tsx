@@ -1,43 +1,47 @@
 import { Coord } from "@latticexyz/utils";
-import { BackgroundImage } from "src/util/constants";
-import { getTopLayerKeyPair } from "src/util/tile";
-import Header from "./Header";
+import { BackgroundImage, BlockType } from "src/util/constants";
+import { getResourceKey } from "src/util/tile";
 import { getBlockTypeName } from "src/util/common";
+import { useMemo } from "react";
 
 export const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
-  const terrainPair = getTopLayerKeyPair(coord);
+  const resource = getResourceKey(coord);
 
-  if (!terrainPair.terrain) {
-    return <></>;
-  }
+  const name = useMemo(() => {
+    if (!resource) return "Asteroid";
+
+    const name = getBlockTypeName(resource);
+
+    if (name === "Air") return "Asteroid";
+
+    return name;
+  }, [resource]);
 
   return (
-    <>
-      <Header content={`(${coord.x}, ${coord.y})`} />
-
-      <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-gray-800 crt">
-        <img
-          src={
-            BackgroundImage.get(terrainPair.terrain) !== null
-              ? BackgroundImage.get(terrainPair.terrain)![0]
-              : undefined
-          }
-          className="w-16 h-16 pixel-images"
-        />
-        {terrainPair.resource && (
+    <div className="flex flex-col w-fit">
+      <div className="flex flex-col justify-center items-center w-full border border-slate-200 ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
+        <div className="relative flex items-center gap-2">
           <img
-            src={
-              BackgroundImage.get(terrainPair.resource) !== null
-                ? BackgroundImage.get(terrainPair.resource)![0]
-                : undefined
-            }
-            className="absolute top-0 w-16 h-16 pixel-images"
+            src={BackgroundImage.get(BlockType.Regolith)![0]}
+            className="w-16 h-16 pixel-images border-2 border-cyan-700 rounded-md"
           />
-        )}
-        <div className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 border border-cyan-600 px-1 crt">
-          <p>{getBlockTypeName(terrainPair.resource ?? terrainPair.terrain)}</p>
+          {resource && (
+            <img
+              src={
+                BackgroundImage.has(resource)
+                  ? BackgroundImage.get(resource)![0]
+                  : undefined
+              }
+              className="absolute top-0 w-16 h-16 pixel-images"
+            />
+          )}
+          <div>
+            <p className="flex items-center text-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm ">
+              <b>{name}</b>
+            </p>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

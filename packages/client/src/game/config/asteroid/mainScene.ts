@@ -38,7 +38,7 @@ const mainSceneConfig: SceneConfig = {
   camera: {
     minZoom: Math.max(1, window.devicePixelRatio),
     maxZoom: window.devicePixelRatio * 5,
-    defaultZoom: window.devicePixelRatio,
+    defaultZoom: Math.max(1, window.devicePixelRatio),
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },

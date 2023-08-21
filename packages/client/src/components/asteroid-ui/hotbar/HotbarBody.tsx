@@ -28,14 +28,14 @@ const HotbarBody: React.FC<{
     <motion.div className="flex items-center space-x-2">
       {prevKeyImage && hotbarContent.length > 1 && (
         <div
-          className="relative cursor-pointer crt scale-x-[-1] w-8"
+          className="relative cursor-pointer scale-x-[-1] w-8"
           onClick={() =>
             setActiveBar(wrap(activeBar - 1, hotbarContent.length))
           }
         >
           <img
             src="/img/buttons/chevron.png"
-            className="pixel-images w-8 border border-cyan-400 "
+            className="pixel-images w-8 border border-cyan-400 ring ring-cyan-900 rounded-md"
           />
           {!isMobile && (
             <img
@@ -46,7 +46,7 @@ const HotbarBody: React.FC<{
         </div>
       )}
       <div
-        className={`flex space-x-2 relative bg-slate-900/90 border-2 p-3 border-cyan-600 crt`}
+        className={`flex gap-1 p-2 relative bg-slate-900/90 border-2 border-cyan-600 rounded-md ring ring-cyan-900`}
       >
         {hotbarContent[activeBar].items.map((item, index) => {
           return (
@@ -61,14 +61,14 @@ const HotbarBody: React.FC<{
       </div>
       {nextKeyImage && hotbarContent.length > 1 && (
         <div
-          className="relative cursor-pointer crt w-8"
+          className="relative cursor-pointer w-8"
           onClick={() =>
             setActiveBar(wrap(activeBar + 1, hotbarContent.length))
           }
         >
           <img
             src="/img/buttons/chevron.png"
-            className="pixel-images w-8 border border-cyan-600"
+            className="pixel-images w-8 border border-cyan-400 ring ring-cyan-900 rounded-md"
           />
           {!isMobile && (
             <img src={nextKeyImage} className="absolute w-8 h-8 pixel-images" />

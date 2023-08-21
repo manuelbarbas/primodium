@@ -3,7 +3,6 @@ import React, { useMemo, useState } from "react";
 
 import { useMud } from "src/hooks/useMud";
 import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
-import Header from "./Header";
 import UpgradeBuildingButton from "src/components/action/UpgradeBuildingButton";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
@@ -16,6 +15,7 @@ import {
   Position,
 } from "src/network/components/chainComponents";
 import { clampedIndex, toRomanNumeral } from "src/util/common";
+import { FaTrash } from "react-icons/fa";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -33,11 +33,11 @@ export const BuildingInfo: React.FC<{
 
   const isOwner = owner === address.toLowerCase();
 
-  const ownerName = isOwner
-    ? "You"
-    : owner
-    ? owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4)
-    : "Unknown";
+  // const ownerName = isOwner
+  //   ? "You"
+  //   : owner
+  //   ? owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4)
+  //   : "Unknown";
   const coord = Position.use(building);
 
   const buildingName = useMemo(() => {
@@ -65,39 +65,44 @@ export const BuildingInfo: React.FC<{
   if (!buildingName || !buildingType || !coord || owner == undefined)
     return null;
   return (
-    <>
-      <Header content={`${ownerName}`} />
-      <div className="flex flex-col items-center space-y-6">
-        <div className="relative border-4 border-t-yellow-400 border-x-yellow-500 border-b-yellow-600 ring-4 ring-slate-900/90 w-fit crt">
-          <img src={imageURI} className="w-16 h-16 pixel-images" />
-
-          <p className="absolute flex items-center -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-900 border border-cyan-600 px-1 crt">
+    <div className="flex flex-col w-fit">
+      {/* <Header content={`${ownerName}`} /> */}
+      <div className="relative flex flex-col justify-center items-center w-full border border-yellow-400 ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
+        <div className="relative flex items-center gap-2">
+          <img
+            src={imageURI}
+            className="w-16 h-16 pixel-images border-2 border-cyan-700 rounded-md"
+          />
+          <p className="flex items-center text-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm ">
             <b>
               {buildingName} {toRomanNumeral(currLevel ?? 1)}
             </b>
           </p>
         </div>
+
         {isOwner && (
-          <div className="relative">
+          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2">
+            <GameButton
+              className="bg-rose-700 text-xs"
+              depth={2}
+              onClick={() => setShowDestroyModal(true)}
+            >
+              <p className="flex w-full h-full items-center justify-center font-bold gap-2 py-1 px-2">
+                <FaTrash />
+              </p>
+            </GameButton>
+          </div>
+        )}
+      </div>
+      <div>
+        {isOwner && (
+          <div className="relative p-2">
             <UpgradeBuildingButton
               id="upgrade-building"
               builtTile={buildingType ?? BlockType.Air}
               buildingEntity={building}
               coords={coord}
             />
-          </div>
-        )}
-        {isOwner && (
-          <div className="absolute top-2 right-10">
-            <GameButton
-              className="bg-rose-700 text-xs"
-              depth={2}
-              onClick={() => setShowDestroyModal(true)}
-            >
-              <p className="flex w-full h-full items-center px-1 justify-center font-bold">
-                x
-              </p>
-            </GameButton>
           </div>
         )}
       </div>
@@ -141,6 +146,6 @@ export const BuildingInfo: React.FC<{
           </div>
         </div>
       </PortalModal>
-    </>
+    </div>
   );
 };

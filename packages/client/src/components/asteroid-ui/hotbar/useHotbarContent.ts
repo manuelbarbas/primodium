@@ -41,21 +41,28 @@ const buildingHotbar: Hotbar = {
       blockType: BlockType.StorageUnit,
       keybind: KeybindActions.Hotbar4,
     },
+  ],
+};
+
+const advancedBuildingHotbar: Hotbar = {
+  name: "Advanced Buildings",
+  icon: "/img/icons/weaponryicon.png",
+  items: [
     {
       blockType: BlockType.IronPlateFactory,
-      keybind: KeybindActions.Hotbar5,
+      keybind: KeybindActions.Hotbar0,
     },
     {
       blockType: BlockType.AlloyFactory,
-      keybind: KeybindActions.Hotbar6,
+      keybind: KeybindActions.Hotbar1,
     },
     {
       blockType: BlockType.PhotovoltaicCellFactory,
-      keybind: KeybindActions.Hotbar7,
+      keybind: KeybindActions.Hotbar2,
     },
     {
       blockType: BlockType.SolarPanel,
-      keybind: KeybindActions.Hotbar8,
+      keybind: KeybindActions.Hotbar3,
     },
   ],
 };
@@ -118,7 +125,8 @@ export const useHotbarContent = () => {
   useEffect(() => {
     setHotbarContent(
       [
-        mainBase ? buildingHotbar : mainBaseHotbar,
+        buildingHotbar,
+        advancedBuildingHotbar,
         IsDebug.get() ? debugHotbar : undefined,
       ].filter(Boolean) as Hotbar[]
     );

@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import HotbarBody from "./HotbarBody";
 import HotbarLabel from "./HotbarLabel";
 import { useHotbarContent } from "./useHotbarContent";
-import { useGameStore } from "src/store/GameStore";
+
 import {
   SelectedAction,
   SelectedBuilding,
@@ -14,7 +14,6 @@ import { wrap } from "src/util/common";
 
 const Hotbar: React.FC = () => {
   const hotbarContent = useHotbarContent();
-  const crtEffect = useGameStore((state) => state.crtEffect);
   const {
     hooks: { useKeybinds },
     input: { addListener },
@@ -52,28 +51,27 @@ const Hotbar: React.FC = () => {
   }, [keybinds, hotbarContent]);
 
   return (
-    <div className=" z-[1000] viewport-container fixed bottom-0 left-1/2 -translate-x-1/2 flex justify-center text-white drop-shadow-xl font-mono select-none">
-      <div
-        style={
-          crtEffect
-            ? {
-                filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))",
-                transform: "perspective(500px) rotateX(-10deg)",
-                backfaceVisibility: "hidden",
-              }
-            : {}
-        }
-      >
+    <div className=" z-[1000] viewport-container fixed bottom-0 left-1/2 -translate-x-1/2 flex justify-center text-white font-mono select-none">
+      <div>
         <motion.div
           initial={{ opacity: 0, scale: 0, y: 200 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0, y: 200 }}
           className="flex flex-col items-center relative mb-5"
         >
-          <HotbarLabel
-            icon={hotbarContent[activeBar].icon}
-            name={hotbarContent[activeBar].name}
-          />
+          <div className="flex gap-1 mb-1 ">
+            {hotbarContent.map((item, index) => {
+              return (
+                <HotbarLabel
+                  key={index}
+                  icon={item.icon}
+                  name={item.name}
+                  onClick={() => setActiveBar(index)}
+                  active={item.name === hotbarContent[activeBar].name}
+                />
+              );
+            })}
+          </div>
           <HotbarBody
             activeBar={activeBarRef.current}
             setActiveBar={setActiveBar}

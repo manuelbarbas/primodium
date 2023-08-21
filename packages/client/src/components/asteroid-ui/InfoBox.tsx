@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useAccount } from "src/hooks/useAccount";
 import { BlockType } from "src/util/constants";
-import { EntityID, HasValue } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { hashAndTrimKeyCoord } from "src/util/encode";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
@@ -11,20 +10,22 @@ import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
 import { MainMenu } from "./MainMenu";
-import { Level, OwnedBy } from "src/network/components/chainComponents";
+import { Level } from "src/network/components/chainComponents";
+import { Starmap } from "./user-panel/panes/starmap/Starmap";
+import { TileInfo } from "./tile-info/TileInfo";
 import { primodium } from "@game/api";
-import { AsteroidMap } from "@game/constants";
-import { useEntityQuery } from "@latticexyz/react";
+import { BeltMap } from "@game/constants";
+import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
-  const { address } = useAccount();
   const [minimized] = useState<boolean>(false);
   const mainBaseCoord = useMainBaseCoord();
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
+  const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
+  const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
-  const { pan } = primodium.api(AsteroidMap.KEY)!.camera;
 
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
@@ -45,22 +46,16 @@ export const InfoBox = () => {
     setNotify(true);
   }, [mainBaseLevel]);
 
-  const buildingCount = useEntityQuery([
-    HasValue(OwnedBy, { value: address }),
-  ]).length;
   return (
     <div>
-      <div
-        style={{ filter: "drop-shadow(2px 2px 0 rgb(20 184 166 / 0.4))" }}
-        className="flex fixed top-8 left-8 items-center font-mono text-white crt "
-      >
+      <div className="flex fixed top-8 left-8 items-center font-mono text-white crt ">
         <motion.div
           initial={{ opacity: 0, scale: 0, x: -200 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           exit={{ opacity: 0, scale: 0, x: -200 }}
         >
           <div
-            className={`flex flex-col items-center justify-center ${
+            className={`flex gap-2 items-start ${
               crtEffect ? "skew-x-1 skew-y-1" : ""
             }`}
           >
@@ -69,51 +64,26 @@ export const InfoBox = () => {
                 initial={{ scaleY: 0 }}
                 animate={{ scaleY: 1 }}
                 exit={{ scale: 0 }}
-                className=" bg-gray-900 z-[999]"
+                className="relative bg-gray-900 z-[999] w-56 md:w-80 h-44 md:h-56 rounded-md border-2 border-cyan-400 ring ring-cyan-900  overflow-hidden"
               >
-                <div className="text-sm px-2 border border-cyan-600 border-b-cyan-300">
-                  Base Information
-                </div>
-                <div className="text-sm px-2 border border-t-0 border-cyan-600 p-2">
-                  {mainBaseCoord && (
-                    <p>
-                      Location: [{mainBaseCoord.x}, {mainBaseCoord.y}]
-                    </p>
-                  )}
-                  <div>
-                    <p>Buildings: {buildingCount}</p>
-                  </div>
-                  {mainBaseCoord !== undefined && (
-                    <div className="flex justify-center w-full">
-                      <button
-                        id="goto-mainbase"
-                        className="mt-3 text-sm border border-cyan-600 active:bg-cyan-600 outline-none"
-                        onClick={() => pan(mainBaseCoord)}
-                      >
-                        <div className="flex m-1 items-center gap-2 px-1 h-4">
-                          Go to Mainbase
-                        </div>
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <Starmap id="starmap" />
+                <FullStarmap
+                  show={showFullStarmap}
+                  onClose={() => {
+                    setShowFullStarmap(false);
+                    setTarget("starmap");
+                  }}
+                />
+                <button
+                  className="absolute bottom-1 right-1 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
+                  onClick={() => setShowFullStarmap(true)}
+                >
+                  Open Starmap
+                </button>
               </motion.div>
             )}
 
-            <div className="flex gap-2">
-              <div className="relative">
-                <GameButton
-                  id="research"
-                  className="mt-2 ml-1 text-sm"
-                  onClick={() => setShowMenuModal(true)}
-                  color="bg-gray-700"
-                  depth={6}
-                >
-                  <div className="flex m-1 items-center gap-2 px-1 h-4">
-                    <IoSettings />
-                  </div>
-                </GameButton>
-              </div>
+            <div className="flex flex-col items-start justify-start h-full">
               <div className="relative">
                 <GameButton
                   id="research"
@@ -124,16 +94,31 @@ export const InfoBox = () => {
                   }}
                   depth={6}
                 >
-                  <div className="flex m-1 items-center gap-2 px-1 h-4">
-                    <IoFlaskSharp /> <p className="">Research</p>
+                  <div className="flex m-1 items-center gap-2 px-1">
+                    <IoFlaskSharp size={18} />
                   </div>
                 </GameButton>
                 {notify && (
-                  <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse" />
+                  <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse rounded-full" />
                 )}
+              </div>
+              <div className="relative">
+                <GameButton
+                  id="research"
+                  className="mt-2 ml-1 text-sm"
+                  onClick={() => setShowMenuModal(true)}
+                  color="bg-gray-700"
+                  depth={6}
+                >
+                  <div className="flex m-1 items-center gap-2 px-1 h-4">
+                    <IoSettings size={18} />
+                  </div>
+                </GameButton>
               </div>
             </div>
           </div>
+
+          <TileInfo />
         </motion.div>
       </div>
       <Modal

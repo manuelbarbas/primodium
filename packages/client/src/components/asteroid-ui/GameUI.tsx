@@ -7,9 +7,9 @@ import { AsteroidMap, KeybindActions } from "@game/constants";
 
 import { useGameStore } from "../../store/GameStore";
 import { InfoBox } from "./InfoBox";
-import { Camera } from "./Camera";
+
 import Hotbar from "./hotbar/Hotbar";
-import { TileInfo } from "./tile-info/TileInfo";
+// import { TileInfo } from "./tile-info/TileInfo";
 import NotificationBox from "./NotificationBox";
 import { BrandingLabel } from "./BrandingLabel";
 import { AiOutlineRotateRight } from "react-icons/ai";
@@ -41,14 +41,12 @@ function AsteroidUI() {
             <p> Please play in landscape </p>
           </div>
         )}
-        <div className="fixed top-0 bottom-0 screen-container pointer-events-none vignette opacity-20 mix-blend-overlay" />
         <BrandingLabel />
-        <Camera />
         <AnimatePresence>
           {showUI && (
             <motion.div>
               <Hotbar />
-              <TileInfo />
+              {/* <TileInfo /> */}
               <InfoBox />
               <NotificationBox />
               <UserPanel />
