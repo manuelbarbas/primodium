@@ -17,7 +17,7 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 // types
-import { Coord, Arrival, ArrivalUnit } from "src/types.sol";
+import { Coord, Arrival, ArrivalUnit, ESendType } from "src/types.sol";
 
 library LibReinforce {
   function receiveReinforcements(IWorld world, uint256 receiver, uint256 rockEntity) internal {
@@ -36,6 +36,7 @@ library LibReinforce {
     uint256 index = 0;
     while (index < size) {
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
+      if (arrival.sendType == ESendType.REINFORCE) continue;
       if (arrival.to != receiver) continue;
       if (arrival.arrivalBlock <= block.number) {
         if (!receiveReinforcementsFromArrival(world, index, receiver, rockEntity)) index++;
