@@ -1,5 +1,6 @@
 // ASTEROID MAP ENTRY POINT
 import engine from "engine";
+import { resizePhaserGame } from "engine/lib/util/resizePhaserGame";
 import { Network } from "../../../network/layer";
 import gameConfig from "../../config/asteroid/game";
 import mainSceneConfig from "../../config/asteroid/mainScene";
@@ -21,6 +22,8 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
     mainSceneConfig,
     true
   );
+
+  const resize = resizePhaserGame(game.phaserGame);
 
   scene.camera.phaserCamera.setRoundPixels(false);
 
@@ -53,5 +56,6 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
 
   world.registerDisposer(() => {
     game.dispose();
+    resize.dispose();
   }, "game");
 };

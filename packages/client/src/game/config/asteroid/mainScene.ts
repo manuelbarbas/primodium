@@ -47,7 +47,7 @@ const mainSceneConfig: SceneConfig = {
   tilemap: {
     tileWidth: asteroidMap.tilewidth,
     tileHeight: asteroidMap.tileheight,
-    chunkSize: 32,
+    chunkSize: 64,
     tilesets: {
       ...tilesets,
       [AsteroidMap.Tilesets.Resource]: {

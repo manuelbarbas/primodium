@@ -13,11 +13,16 @@ export const resizePhaserGame = (game: Phaser.Game) => {
           game.scale.height
         );
 
+        const currentCenterX = scene.cameras.main.scrollX + game.scale.width;
+        const currentCenterY = scene.cameras.main.scrollY + game.scale.height;
+
+        scene.cameras.main.centerOn(currentCenterX, currentCenterY);
+
         // Re-center the camera
-        scene.cameras.main.setScroll(
-          -game.scale.width / 2,
-          -game.scale.height / 2
-        );
+        // scene.cameras.main.setScroll(
+        //   -game.scale.width / 2,
+        //   -game.scale.height / 2
+        // );
       }
     }
   };

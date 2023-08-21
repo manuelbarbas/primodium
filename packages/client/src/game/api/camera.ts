@@ -16,10 +16,7 @@ export const createCameraApi = (targetScene: Scene) => {
       tilemap.tileHeight
     );
 
-    const scroll = camera.phaserCamera.getScroll(
-      pixelCoord.x + tilemap.tileWidth / 2,
-      -pixelCoord.y + tilemap.tileWidth / 2
-    );
+    const scroll = camera.phaserCamera.getScroll(pixelCoord.x, -pixelCoord.y);
 
     //we want new tween to be active for responsive behavior. New tween are created if on new end coord.
     if (phaserScene.tweens.getTweensOf(camera.phaserCamera).length) {

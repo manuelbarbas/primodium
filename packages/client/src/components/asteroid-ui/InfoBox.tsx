@@ -26,6 +26,7 @@ export const InfoBox = () => {
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
+  const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
 
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
@@ -72,11 +73,17 @@ export const InfoBox = () => {
                   onClose={() => {
                     setShowFullStarmap(false);
                     setTarget("starmap");
+                    const position = getPosition();
+                    pan(position, 0);
                   }}
                 />
                 <button
                   className="absolute bottom-1 right-1 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
-                  onClick={() => setShowFullStarmap(true)}
+                  onClick={() => {
+                    setShowFullStarmap(true);
+                    const position = getPosition();
+                    requestAnimationFrame(() => pan(position, 0));
+                  }}
                 >
                   Open Starmap
                 </button>
