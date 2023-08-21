@@ -55,7 +55,7 @@ library LibEncode {
    * @param   shift  starting position of mask
    * @return  _byteUInt masked bit string
    */
-  function getByteUInt(uint256 _b, uint256 length, uint256 shift) public pure returns (uint256 _byteUInt) {
+  function getByteUInt(uint256 _b, uint256 length, uint256 shift) internal pure returns (uint256 _byteUInt) {
     uint256 mask = ((1 << length) - 1) << shift;
     _byteUInt = (_b & mask) >> shift;
   }
