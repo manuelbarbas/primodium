@@ -17,7 +17,6 @@ enum EActionType {
   Destroy
 }
 
-// note: for use when we get special asteroids
 enum ESpaceRockType {
   NONE,
   ASTEROID,
@@ -82,4 +81,18 @@ struct Motherlode {
   EMotherlodeSize size;
   EMotherlodeType motherlodeType;
   uint256 cooldownBlocks;
+}
+
+// Battle
+struct BattleResult {
+  uint256 winnerEntity;
+  uint32[] attackerUnitsLeft;
+  uint32[] defenderUnitsLeft;
+}
+
+struct BattleParticipant {
+  uint256 participantEntity;
+  uint256[] unitTypes;
+  uint32[] unitLevels;
+  uint32[] unitCounts;
 }

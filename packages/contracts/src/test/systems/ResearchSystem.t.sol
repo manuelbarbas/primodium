@@ -143,7 +143,6 @@ contract ResearchSystemTest is PrimodiumTest {
 
     HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
     ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
-    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
     UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
 
     // alice researches DebugSimpleTechnologyResourceReqsID

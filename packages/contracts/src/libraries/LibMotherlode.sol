@@ -11,7 +11,9 @@ import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components
 import { MineableAtComponent, ID as MineableAtComponentID } from "components/MineableAtComponent.sol";
 import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { P_MotherlodeComponent, ID as P_MotherlodeComponentID } from "components/P_MotherlodeComponent.sol";
-import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
+import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
+import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 
@@ -38,7 +40,7 @@ library LibMotherlode {
     revert("no motherlode found");
   }
 
-  // 1/6 chance of motherlode
+  // a bit more than 1/6 chance of motherlode
   function isMotherlode(uint256 entity) internal pure returns (bool) {
     uint256 motherlodeType = LibEncode.getByteUInt(entity, 6, 128);
     return motherlodeType % 6 == 1;
@@ -58,6 +60,7 @@ library LibMotherlode {
       uint256(ESpaceRockType.MOTHERLODE)
     );
     MineableAtComponent(world.getComponent(MineableAtComponentID)).set(motherlodeEntity, block.number);
+    LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, block.number);
 
     uint256 resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
       .getValue(LibEncode.hashKeyEntity(uint256(size), uint256(motherlodeType)))
