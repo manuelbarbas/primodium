@@ -30,6 +30,7 @@
     "BattleAttackerComponent",
     "BattleDefenderComponent",
     "BattleResultComponent",
+    "BattleSpaceRockComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
