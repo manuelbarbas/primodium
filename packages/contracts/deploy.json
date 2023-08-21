@@ -1,5 +1,9 @@
 {
   "components": [
+    "ArrivalComponent",
+    "ArrivalsIndexComponent",
+    "ArrivalsSizeComponent",
+    "AsteroidCountComponent",
     "CounterComponent",
     "BuildingTypeComponent",
     "OwnedByComponent",
@@ -23,6 +27,9 @@
     "AsteroidTypeComponent",
     "ActiveComponent",
     "DimensionsComponent",
+    "BattleAttackerComponent",
+    "BattleDefenderComponent",
+    "BattleResultComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
@@ -61,6 +68,8 @@
       "name": "SpawnSystem",
       "writeAccess": [
         "PositionComponent",
+        "ActiveComponent",
+        "AsteroidCountComponent",
         "AsteroidTypeComponent",
         "ActiveComponent",
         "BuildingTypeComponent",
@@ -69,7 +78,8 @@
         "MainBaseComponent",
         "ChildrenComponent",
         "MainBaseComponent",
-        "UnitProductionOwnedByComponent"
+        "UnitProductionOwnedByComponent",
+        "LastClaimedAtComponent"
       ]
     },
     {
@@ -82,7 +92,8 @@
         "ChildrenComponent",
         "MainBaseComponent",
         "PositionComponent",
-        "UnitProductionOwnedByComponent"
+        "UnitProductionOwnedByComponent",
+        "LastClaimedAtComponent"
       ]
     },
     {
@@ -128,9 +139,18 @@
         "LastClaimedAtComponent"
       ]
     },
+    { "name": "SendUnitsSystem", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
+    },
+    {
+      "name": "S_BattleSystem",
+      "writeAccess": ["BattleResultComponent"]
+    },
+    {
+      "name": "S_RaidSystem",
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",
@@ -152,6 +172,7 @@
       "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["ItemComponent"]
     },
+    { "name": "S_UpdatePlayerSpaceRockSystem", "writeAccess": ["*"] },
     {
       "name": "S_UpdatePlayerResourceProductionSystem",
       "writeAccess": ["ProductionComponent", "ProductionComponent"]
@@ -175,24 +196,6 @@
     {
       "name": "S_UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["P_ProductionDependenciesComponent"]
-    },
-    {
-      "name": "S_ClaimUnitsSystem",
-      "writeAccess": [
-        "UnitsComponent",
-        "LastClaimedAtComponent",
-        "UnitProductionQueueComponent",
-        "UnitProductionQueueIndexComponent"
-      ]
-    },
-    {
-      "name": "S_ClaimUnitsFromBuildingSystem",
-      "writeAccess": [
-        "UnitsComponent",
-        "LastClaimedAtComponent",
-        "UnitProductionQueueComponent",
-        "UnitProductionQueueIndexComponent"
-      ]
     }
   ]
 }
