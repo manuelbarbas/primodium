@@ -29,6 +29,7 @@ import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
+import { LibReinforce } from "libraries/LibReinforce.sol";
 // types
 import { Coord, Arrival, ArrivalUnit, BattleParticipant, ESendType, BattleResult } from "src/types.sol";
 
@@ -63,7 +64,13 @@ library LibInvade {
     );
 
     updatePlayerUnitsAfterBattle(world, battleEntity, rockEntity);
-
+    uint256 winnerEntity = BattleResultComponent(world.getComponent(BattleResultComponentID))
+      .getValue(battleEntity)
+      .winnerEntity;
+    if (ownedByComponent.has(rockEntity) && ownedByComponent.getValue(rockEntity) != winnerEntity) {
+      LibReinforce.recallAllReinforcements(world, rockEntity);
+    }
+    ownedByComponent.set(rockEntity, winnerEntity);
     //ArrivalsList.get(world, playerAsteroidEntity, arrival);
   }
 
@@ -98,11 +105,17 @@ library LibInvade {
       attacker.unitLevels[i] = LibUnits.getPlayerUnitTypeLevel(world, attackerEntity, attacker.unitTypes[i]);
     }
     uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(attackerEntity, spaceRock);
-    uint256 size = LibMath.getSafe(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), attackerEntity);
+    uint256 size = LibMath.getSafe(
+      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
+      playerAsteroidEntity
+    );
     uint256 index = 0;
     while (index < size) {
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
-      if (arrival.sendType != ESendType.INVADE) continue;
+      if (arrival.sendType != ESendType.INVADE) {
+        index++;
+        continue;
+      }
       if (arrival.arrivalBlock <= block.number) {
         for (uint i = 0; i < arrival.units.length; i++) {
           attacker.unitCounts[i] += arrival.units[i].count;

@@ -32,11 +32,14 @@ library LibReinforce {
       "[Reinforcement]: only the owner of a rock can receive reinforcements"
     );
 
-    uint256 size = LibMath.getSafe(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), receiver);
+    uint256 size = LibMath.getSafe(
+      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
+      playerAsteroidEntity
+    );
     uint256 index = 0;
     while (index < size) {
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
-      if (arrival.sendType == ESendType.REINFORCE) continue;
+      if (arrival.sendType != ESendType.REINFORCE) continue;
       if (arrival.to != receiver) continue;
       if (arrival.arrivalBlock <= block.number) {
         if (!receiveReinforcementsFromArrival(world, index, receiver, rockEntity)) index++;
@@ -77,6 +80,74 @@ library LibReinforce {
     } else {
       ArrivalsList.set(world, playerAsteroidEntity, arrivalIndex, arrival);
       return false;
+    }
+  }
+
+  function recallReinforcements(IWorld world, uint256 recallerEntity, uint256 rockEntity) internal {
+    OwnedByComponent ownedByComponent = OwnedByComponent(world.getComponent(OwnedByComponentID));
+    require(
+      ownedByComponent.has(rockEntity),
+      "[Reinforcement]: request reinforcement can not be done on a rock that is not owned"
+    );
+    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(ownedByComponent.getValue(rockEntity), rockEntity);
+    uint256 size = LibMath.getSafe(
+      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
+      playerAsteroidEntity
+    );
+    uint256 index = 0;
+    uint256 homeAsteroidEntity = LibEncode.hashEntity(world, recallerEntity);
+    while (index < size) {
+      Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
+      if (
+        arrival.sendType != ESendType.REINFORCE || arrival.from != recallerEntity || arrival.arrivalBlock > block.number
+      ) {
+        index++;
+        continue;
+      }
+      for (uint i = 0; i < arrival.units.length; i++) {
+        if (arrival.units[i].count == 0) continue;
+        LibUpdateSpaceRock.addUnitsToAsteroid(
+          world,
+          recallerEntity,
+          homeAsteroidEntity,
+          arrival.units[i].unitType,
+          arrival.units[i].count
+        );
+      }
+      ArrivalsList.remove(world, playerAsteroidEntity, index);
+      size -= 1;
+    }
+  }
+
+  function recallAllReinforcements(IWorld world, uint256 rockEntity) internal {
+    OwnedByComponent ownedByComponent = OwnedByComponent(world.getComponent(OwnedByComponentID));
+    if (!ownedByComponent.has(rockEntity)) return;
+    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(ownedByComponent.getValue(rockEntity), rockEntity);
+    uint256 size = LibMath.getSafe(
+      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
+      playerAsteroidEntity
+    );
+    uint256 index = 0;
+
+    while (index < size) {
+      Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
+      if (arrival.sendType != ESendType.REINFORCE) {
+        index++;
+        continue;
+      }
+      uint256 homeAsteroidEntity = LibEncode.hashEntity(world, arrival.from);
+      for (uint i = 0; i < arrival.units.length; i++) {
+        if (arrival.units[i].count == 0) continue;
+        LibUpdateSpaceRock.addUnitsToAsteroid(
+          world,
+          arrival.from,
+          homeAsteroidEntity,
+          arrival.units[i].unitType,
+          arrival.units[i].count
+        );
+      }
+      ArrivalsList.remove(world, playerAsteroidEntity, index);
+      size -= 1;
     }
   }
 
