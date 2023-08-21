@@ -10,6 +10,7 @@ import { ReversePositionComponent, ID as ReversePositionComponentID } from "comp
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { MineableAtComponent, ID as MineableAtComponentID } from "components/MineableAtComponent.sol";
 import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
+import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
 import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
 import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
@@ -61,8 +62,12 @@ library LibMotherlode {
     MineableAtComponent(world.getComponent(MineableAtComponentID)).set(motherlodeEntity, block.number);
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, block.number);
 
-    P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID)).set(
-      LibEncode.hashKeyEntity(getMotherlodeResource(motherlodeType), motherlodeEntity),
+    uint256 resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
+      .getValue(LibEncode.hashKeyEntity(rawMotherlodeType, size))
+      .resource;
+
+    MotherlodeResourceComponent(world.getComponent(MotherlodeResourceComponentID)).set(
+      LibEncode.hashKeyEntity(resource, motherlodeEntity),
       0
     );
   }
@@ -98,24 +103,5 @@ library LibMotherlode {
     if (motherlodeType < 21) return EMotherlodeType.IRIDIUM;
     if (motherlodeType < 27) return EMotherlodeType.PLATINUM;
     return EMotherlodeType.KIMBERLITE;
-  }
-
-  function getMotherlodeResource(EMotherlodeType motherlodeType) internal pure returns (uint256) {
-    if (motherlodeType == EMotherlodeType.TITANIUM) return uint256(TitaniumID);
-    if (motherlodeType == EMotherlodeType.IRIDIUM) return uint256(IridiumID);
-    if (motherlodeType == EMotherlodeType.PLATINUM) return uint256(PlatinumID);
-    return uint256(KimberliteID);
-  }
-
-  function getMotherlodeMaxResource(EMotherlodeSize size) internal pure returns (uint32 amount) {
-    if (size == EMotherlodeSize.SMALL) return 1000;
-    if (size == EMotherlodeSize.MEDIUM) return 5000;
-    if (size == EMotherlodeSize.LARGE) return 10000;
-  }
-
-  function getMotherlodeMaxResource(uint256 motherlodeEntity) internal pure returns (uint256 resource, uint32 amount) {
-    (uint8 size, uint8 motherlodeType, ) = getMotherlodeRawPrototype(motherlodeEntity);
-    resource = getMotherlodeResource(getMotherlodeType(motherlodeType));
-    amount = getMotherlodeMaxResource(getSize(size));
   }
 }
