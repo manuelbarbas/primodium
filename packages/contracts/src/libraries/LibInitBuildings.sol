@@ -620,29 +620,30 @@ library LibInitBuildings {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
     // LEVEL 1
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
     requiredResources[0] = resourceValues;
+
     // LEVEL 2
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
     requiredResources[1] = resourceValues;
 
     // LEVEL 3
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
     requiredResources[2] = resourceValues;
 
     /* -------------------------------- Max Moves ------------------------------- */
     // note: each value here must be geq its predecessor (obviously).
     uint32[] memory maxMoves = new uint32[](maxLevel);
     // LEVEL 1
-    maxMoves[0] = 2;
+    maxMoves[0] = 1;
     // LEVEL 2
-    maxMoves[1] = 4;
+    maxMoves[1] = 2;
     // LEVEL 3
-    maxMoves[2] = 6;
+    maxMoves[2] = 3;
 
     /* ***********************Set Values ************************* */
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
-    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get3x3Blueprint());
 
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
