@@ -40,7 +40,7 @@ library LibAsteroid {
     Coord memory position = getUniqueAsteroidPosition(world, asteroidCount);
 
     positionComponent.set(asteroidEntity, position);
-    asteroidTypeComponent.set(asteroidEntity, uint256(ESpaceRockType.ASTEROID));
+    asteroidTypeComponent.set(asteroidEntity, ESpaceRockType.ASTEROID);
 
     // For now, we will use this component to ensure the owner can only build on their asteroid.
     // TODO: remove this component later as it might be for temporary use.

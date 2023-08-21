@@ -1,11 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "std-contracts/components/Uint256Component.sol";
+
+import "solecs/Component.sol";
+import { ESpaceRockType } from "src/types.sol";
 
 uint256 constant ID = uint256(keccak256("component.AsteroidType"));
 
-// Tracks the type of a space rock
-// todo: rename to SpaceRockType
-contract AsteroidTypeComponent is Uint256Component {
-  constructor(address world) Uint256Component(world, ID) {}
+contract AsteroidTypeComponent is Component {
+  constructor(address world, uint256 id) Component(world, id) {}
+
+  function getSchema() public pure override returns (string[] memory keys, LibTypes.SchemaValue[] memory values) {
+    keys = new string[](1);
+    values = new LibTypes.SchemaValue[](1);
+
+    keys[0] = "value";
+    values[0] = LibTypes.SchemaValue.UINT256;
+  }
+
+  function set(uint256 entity, ESpaceRockType value) public {
+    set(entity, abi.encode(value));
+  }
+
+  function getValue(uint256 entity) public view virtual returns (ESpaceRockType) {
+    uint256 value = abi.decode(getRawValue(entity), (uint256));
+    return ESpaceRockType(value);
+  }
+
+  function getEntitiesWithValue(ESpaceRockType value) public view returns (uint256[] memory) {
+    return getEntitiesWithValue(abi.encode(uint256(value)));
+  }
 }

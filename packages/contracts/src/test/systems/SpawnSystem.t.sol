@@ -45,7 +45,7 @@ contract SpawnSystemTest is PrimodiumTest {
     );
     assertEq(
       asteroidTypeComponent.getValue(asteroidEntity),
-      uint256(ESpaceRockType.ASTEROID),
+      ESpaceRockType.ASTEROID,
       "Asteroid should be a normal asteroid"
     );
     assertEq(

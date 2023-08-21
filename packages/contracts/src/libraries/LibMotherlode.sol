@@ -10,8 +10,8 @@ import { ReversePositionComponent, ID as ReversePositionComponentID } from "comp
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { MineableAtComponent, ID as MineableAtComponentID } from "components/MineableAtComponent.sol";
 import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
-import { P_MotherlodeComponent, ID as P_MotherlodeComponentID } from "components/P_MotherlodeComponent.sol";
-import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
+import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
+import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
 // libs
@@ -19,6 +19,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 
 // types
 import { Coord, ESpaceRockType, Motherlode, EMotherlodeSize, EMotherlodeType } from "src/types.sol";
+import { TitaniumID, IridiumID, PlatinumID, KimberliteID } from "src/prototypes.sol";
 
 library LibMotherlode {
   function createMotherlode(IWorld world, Coord memory position) internal returns (uint256) {
@@ -31,7 +32,7 @@ library LibMotherlode {
       );
       if (!activeComponent.has(sourceEncodedPos)) continue;
       uint256 sourceAsteroid = activeComponent.getValue(sourceEncodedPos);
-      if (asteroidTypeComponent.getValue(sourceAsteroid) == uint256(ESpaceRockType.MOTHERLODE)) continue;
+      if (asteroidTypeComponent.getValue(sourceAsteroid) == ESpaceRockType.MOTHERLODE) continue;
       uint256 motherlodeSeed = uint256(keccak256(abi.encode(sourceAsteroid, "motherlode", position)));
       if (!isMotherlode(motherlodeSeed)) continue;
       initMotherlode(world, position, motherlodeSeed);
@@ -47,27 +48,21 @@ library LibMotherlode {
   }
 
   function initMotherlode(IWorld world, Coord memory position, uint256 motherlodeEntity) internal {
-    (uint8 size, uint8 motherlodeType, uint256 cooldownBlocks) = getMotherlodeRawPrototype(motherlodeEntity);
-    P_MotherlodeComponent(world.getComponent(P_MotherlodeComponentID)).set(
+    (uint8 size, uint8 rawMotherlodeType, uint256 cooldownBlocks) = getMotherlodeRawPrototype(motherlodeEntity);
+    EMotherlodeType motherlodeType = getMotherlodeType(rawMotherlodeType);
+    MotherlodeComponent(world.getComponent(MotherlodeComponentID)).set(
       motherlodeEntity,
-      Motherlode(getSize(size), getMotherlodeType(motherlodeType), cooldownBlocks)
+      Motherlode(getSize(size), motherlodeType, cooldownBlocks)
     );
     uint256 encodedPosition = LibEncode.encodeCoord(position);
     PositionComponent(world.getComponent(PositionComponentID)).set(motherlodeEntity, position);
     ReversePositionComponent(world.getComponent(ReversePositionComponentID)).set(encodedPosition, motherlodeEntity);
-    AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).set(
-      motherlodeEntity,
-      uint256(ESpaceRockType.MOTHERLODE)
-    );
+    AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).set(motherlodeEntity, ESpaceRockType.MOTHERLODE);
     MineableAtComponent(world.getComponent(MineableAtComponentID)).set(motherlodeEntity, block.number);
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, block.number);
 
-    uint256 resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
-      .getValue(LibEncode.hashKeyEntity(uint256(size), uint256(motherlodeType)))
-      .resource;
-
-    MotherlodeResourceComponent(world.getComponent(MotherlodeResourceComponentID)).set(
-      LibEncode.hashKeyEntity(motherlodeEntity, resource),
+    P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID)).set(
+      LibEncode.hashKeyEntity(getMotherlodeResource(motherlodeType), motherlodeEntity),
       0
     );
   }
@@ -103,5 +98,24 @@ library LibMotherlode {
     if (motherlodeType < 21) return EMotherlodeType.IRIDIUM;
     if (motherlodeType < 27) return EMotherlodeType.PLATINUM;
     return EMotherlodeType.KIMBERLITE;
+  }
+
+  function getMotherlodeResource(EMotherlodeType motherlodeType) internal pure returns (uint256) {
+    if (motherlodeType == EMotherlodeType.TITANIUM) return uint256(TitaniumID);
+    if (motherlodeType == EMotherlodeType.IRIDIUM) return uint256(IridiumID);
+    if (motherlodeType == EMotherlodeType.PLATINUM) return uint256(PlatinumID);
+    return uint256(KimberliteID);
+  }
+
+  function getMotherlodeMaxResource(EMotherlodeSize size) internal pure returns (uint32 amount) {
+    if (size == EMotherlodeSize.SMALL) return 1000;
+    if (size == EMotherlodeSize.MEDIUM) return 5000;
+    if (size == EMotherlodeSize.LARGE) return 10000;
+  }
+
+  function getMotherlodeMaxResource(uint256 motherlodeEntity) internal pure returns (uint256 resource, uint32 amount) {
+    (uint8 size, uint8 motherlodeType, ) = getMotherlodeRawPrototype(motherlodeEntity);
+    resource = getMotherlodeResource(getMotherlodeType(motherlodeType));
+    amount = getMotherlodeMaxResource(getSize(size));
   }
 }

@@ -21,8 +21,8 @@ library LibInitMotherlode {
   }
 
   function initResources(IWorld world) internal {
-    // MotherlodeResourceComponent tracks the total amount of a resource a motherlode can produce
-    // the current amount of a resource mined is stored in OccupiedUtilityResourceComponent, and once the maximum is reached, it resets to 0 and cooldown begins
+    // P_MotherlodeResourceComponent tracks the total amount of a resource a motherlode can produce
+    // the current amount of a resource mined is stored in MotherlodeResourceComponent, and once the maximum is reached, it resets to 0 and cooldown begins
     // if cooldown hasn't passed, the resource can't be mined and claiming does nothing
     // cooldown is tracked in the MineableAtComponent
     P_MotherlodeResourceComponent motherlodeResourceComponent = P_MotherlodeResourceComponent(
