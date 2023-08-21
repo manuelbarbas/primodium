@@ -10,9 +10,8 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
-import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 
-import { Coord, Dimensions, ESpaceRockType } from "../types.sol";
+import { Coord, ESpaceRockType } from "../types.sol";
 
 import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
 import { LibEncode } from "libraries/LibEncode.sol";

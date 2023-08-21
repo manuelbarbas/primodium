@@ -14,7 +14,6 @@ import { MineableAtComponent, ID as MineableAtComponentID } from "components/Min
 import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
 import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
-import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
 import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID } from "components/UnitProductionQueueComponent.sol";
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
@@ -22,10 +21,8 @@ import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueInd
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 
 // libs
-import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 
 // types
