@@ -18,7 +18,7 @@ export const TileInfo: React.FC = () => {
       {
         <div className=" text-white font-mono select-none">
           <motion.div
-            className="flex items-center justify-center w-56 md:w-80 space-y-2 mt-5"
+            className="lg:fixed md:top-0 lg:right-1/2 lg:translate-x-1/2 flex justify-center w-56 md:w-80 space-y-2 mt-8"
             initial={{ opacity: 0, scale: 0, y: -200 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0, y: -200 }}
