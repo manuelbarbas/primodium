@@ -49,11 +49,12 @@ library LibMotherlode {
   }
 
   function initMotherlode(IWorld world, Coord memory position, uint256 motherlodeEntity) internal {
-    (uint8 size, uint8 rawMotherlodeType, uint256 cooldownBlocks) = getMotherlodeRawPrototype(motherlodeEntity);
+    (uint8 rawSize, uint8 rawMotherlodeType, uint256 cooldownBlocks) = getMotherlodeRawPrototype(motherlodeEntity);
     EMotherlodeType motherlodeType = getMotherlodeType(rawMotherlodeType);
+    EMotherlodeSize size = getSize(rawSize);
     MotherlodeComponent(world.getComponent(MotherlodeComponentID)).set(
       motherlodeEntity,
-      Motherlode(getSize(size), motherlodeType, cooldownBlocks)
+      Motherlode(size, motherlodeType, cooldownBlocks)
     );
     uint256 encodedPosition = LibEncode.encodeCoord(position);
     PositionComponent(world.getComponent(PositionComponentID)).set(motherlodeEntity, position);
@@ -63,7 +64,7 @@ library LibMotherlode {
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, block.number);
 
     uint256 resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
-      .getValue(LibEncode.hashKeyEntity(rawMotherlodeType, size))
+      .getValue(LibEncode.hashKeyEntity(uint256(motherlodeType), uint256(size)))
       .resource;
 
     MotherlodeResourceComponent(world.getComponent(MotherlodeResourceComponentID)).set(

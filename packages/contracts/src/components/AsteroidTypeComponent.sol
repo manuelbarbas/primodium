@@ -7,7 +7,7 @@ import { ESpaceRockType } from "src/types.sol";
 uint256 constant ID = uint256(keccak256("component.AsteroidType"));
 
 contract AsteroidTypeComponent is Component {
-  constructor(address world, uint256 id) Component(world, id) {}
+  constructor(address world) Component(world, ID) {}
 
   function getSchema() public pure override returns (string[] memory keys, LibTypes.SchemaValue[] memory values) {
     keys = new string[](1);
@@ -21,7 +21,7 @@ contract AsteroidTypeComponent is Component {
     set(entity, abi.encode(value));
   }
 
-  function getValue(uint256 entity) public view virtual returns (ESpaceRockType) {
+  function getValue(uint256 entity) public view returns (ESpaceRockType) {
     uint256 value = abi.decode(getRawValue(entity), (uint256));
     return ESpaceRockType(value);
   }

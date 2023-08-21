@@ -7,7 +7,8 @@ import { SingletonID } from "solecs/SingletonID.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
-import { P_MotherlodeComponent, ID as P_MotherlodeComponentID } from "components/P_MotherlodeComponent.sol";
+import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
+import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { ReversePositionComponent, ID as ReversePositionComponentID } from "components/ReversePositionComponent.sol";
 
 import "../../prototypes.sol";
@@ -17,7 +18,7 @@ import { LibMath } from "../../libraries/LibMath.sol";
 
 import { Coord, Dimensions, Motherlode } from "../../types.sol";
 
-contract LibAsteroidTest is PrimodiumTest {
+contract LibMotherlodeTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   function setUp() public override {
@@ -79,13 +80,14 @@ contract LibAsteroidTest is PrimodiumTest {
     ReversePositionComponent reversePositionComponent = ReversePositionComponent(
       world.getComponent(ReversePositionComponentID)
     );
-    P_MotherlodeComponent motherlodeComponent = P_MotherlodeComponent(world.getComponent(P_MotherlodeComponentID));
+    MotherlodeComponent motherlodeComponent = MotherlodeComponent(world.getComponent(MotherlodeComponentID));
 
     (uint8 size, uint8 motherlodeType, uint256 cooldownBlocks) = LibMotherlode.getMotherlodeRawPrototype(
       motherlodeEntity
     );
+
     assertCoordEq(positionComponent.getValue(motherlodeEntity), position);
-    assertEq(asteroidTypeComponent.getValue(motherlodeEntity), uint256(ESpaceRockType.MOTHERLODE));
+    assertEq(asteroidTypeComponent.getValue(motherlodeEntity), ESpaceRockType.MOTHERLODE);
     assertEq(reversePositionComponent.getValue(LibEncode.encodeCoord(position)), motherlodeEntity);
 
     Motherlode memory motherlode = motherlodeComponent.getValue(motherlodeEntity);
