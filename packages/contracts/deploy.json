@@ -93,7 +93,7 @@
     },
     {
       "name": "UpgradeBuildingSystem",
-      "writeAccess": ["LevelComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "UpgradeRangeSystem",
