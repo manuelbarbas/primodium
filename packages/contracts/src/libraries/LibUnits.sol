@@ -13,7 +13,7 @@ import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID 
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
-
+import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { LibUtilityResource } from "./LibUtilityResource.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
@@ -138,6 +138,16 @@ library LibUnits {
       if (count < min) min = count;
     }
     return min;
+  }
+
+  function getUnitCountOnRock(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 asteroidEntity,
+    uint256 unitType
+  ) internal view returns (uint32) {
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
+    return LibMath.getSafe(UnitsComponent(world.getComponent(UnitsComponentID)), unitPlayerSpaceRockEntity);
   }
 
   function getUnitTrainingTime(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {
