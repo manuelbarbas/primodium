@@ -13,7 +13,7 @@ import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID } fr
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -90,6 +90,40 @@ library LibUpdateSpaceRock {
     addUnitsToAsteroid(world, playerEntity, asteroid, unitType, unitCount);
   }
 
+  function destroyAllPlayerUnitsOnAsteroid(IWorld world, uint256 playerEntity, uint256 asteroidEntity) internal {
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    for (uint256 i = 0; i < unitTypes.length; i++) {
+      uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitTypes[i], playerEntity, asteroidEntity);
+      if (unitsComponent.has(unitPlayerSpaceRockEntity)) {
+        destroyUnitsOnAsteroid(
+          world,
+          playerEntity,
+          asteroidEntity,
+          unitTypes[i],
+          LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity)
+        );
+      }
+    }
+  }
+
+  function destroyUnitsOnAsteroid(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 asteroidEntity,
+    uint256 unitType,
+    uint32 unitCount
+  ) internal {
+    if (unitCount == 0) return;
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    uint32 currUnitCount = LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity);
+    require(unitCount <= currUnitCount, "LibUpdateSpaceRock: unitCount must be less than currUnitCount");
+    LibUnits.updateOccuppiedUtilityResources(world, playerEntity, unitType, unitCount, false);
+    if (currUnitCount - unitCount > 0) unitsComponent.set(unitPlayerSpaceRockEntity, currUnitCount - unitCount);
+    else unitsComponent.remove(unitPlayerSpaceRockEntity);
+  }
+
   function addUnitsToAsteroid(
     IWorld world,
     uint256 playerEntity,
@@ -99,6 +133,17 @@ library LibUpdateSpaceRock {
   ) internal {
     uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
     LibMath.add(UnitsComponent(world.getComponent(UnitsComponentID)), unitPlayerSpaceRockEntity, unitCount);
+  }
+
+  function setUnitsOnAsteroid(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 asteroidEntity,
+    uint256 unitType,
+    uint32 unitCount
+  ) internal {
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
+    UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
   }
 
   function claimUnits(IWorld world, uint256 playerEntity, uint256 blockNumber) internal {

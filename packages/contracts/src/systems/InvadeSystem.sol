@@ -14,7 +14,7 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
-
+import { LibInvade } from "../libraries/LibInvade.sol";
 // types
 import { Coord } from "../types.sol";
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
@@ -24,13 +24,13 @@ uint256 constant ID = uint256(keccak256("system.Invade"));
 contract InvadeSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function executeTyped(Coord memory coord) public returns (bytes memory) {
-    return execute(abi.encode(coord));
+  function executeTyped(uint256 rockEntity) public returns (bytes memory) {
+    return execute(abi.encode(rockEntity));
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
-    Coord memory coord = abi.decode(args, (Coord));
-
-    return abi.encode(coord);
+    uint256 rockEntity = abi.decode(args, (uint256));
+    LibInvade.invade(world, addressToEntity(msg.sender), rockEntity);
+    return abi.encode(rockEntity);
   }
 }
