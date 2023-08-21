@@ -14,7 +14,7 @@ import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
-import { LibInvade } from "../libraries/LibInvade.sol";
+import { LibReinforce } from "../libraries/LibReinforce.sol";
 // types
 import { Coord } from "../types.sol";
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
@@ -30,7 +30,7 @@ contract RecallReinforcementsSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     uint256 rockEntity = abi.decode(args, (uint256));
-    LibInvade.invade(world, addressToEntity(msg.sender), rockEntity);
+    LibReinforce.recallReinforcements(world, addressToEntity(msg.sender), rockEntity);
     return abi.encode(rockEntity);
   }
 }

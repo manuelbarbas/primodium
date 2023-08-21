@@ -52,7 +52,8 @@
     "P_UnitProductionTypesComponent",
     "P_UnitTrainingTimeComponent",
     "P_UnitTravelSpeedComponent",
-    "P_TerrainComponent"
+    "P_TerrainComponent",
+    "P_IsUnitComponent"
   ],
   "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
   "systems": [
@@ -140,6 +141,9 @@
       ]
     },
     { "name": "SendUnitsSystem", "writeAccess": ["*"] },
+    { "name": "InvadeSystem", "writeAccess": ["*"] },
+    { "name": "RecallReinforcements", "writeAccess": ["*"] },
+    { "name": "ReceiveReinforcements", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
