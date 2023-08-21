@@ -14,11 +14,13 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 
 // types
-import { Coord, Arrival, ArrivalUnit } from "src/types.sol";
+import { Coord, Arrival, ArrivalUnit, ESendType } from "src/types.sol";
 
 library LibSend {
   function sendUnits(IWorld world, Arrival memory arrival) internal {
-    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(arrival.from, arrival.destination);
+    uint256 playerAsteroidEntity = (arrival.sendType == ESendType.INVADE)
+      ? LibEncode.hashKeyEntity(arrival.from, arrival.destination)
+      : LibEncode.hashKeyEntity(arrival.to, arrival.destination);
     ArrivalsList.add(world, playerAsteroidEntity, arrival);
   }
 

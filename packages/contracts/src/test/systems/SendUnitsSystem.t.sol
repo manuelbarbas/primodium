@@ -99,7 +99,7 @@ contract SendUnitsTest is PrimodiumTest {
     invade();
   }
 
-  function reinforce() returns (Arrival memory) {
+  function reinforce() public returns (Arrival memory) {
     setupInvasion(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
@@ -187,7 +187,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.roll(arrival.arrivalBlock - 1);
     vm.stopPrank();
     vm.startPrank(deployer);
-    LibArrival.applyArrivals(world, addressToEntity(bob), getHomeAsteroid(bob));
+    LibArrival.applyArrivals(world, addressToEntity(alice), getHomeAsteroid(bob));
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 1);
   }
 
@@ -197,7 +197,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.roll(arrival.arrivalBlock);
     vm.stopPrank();
     vm.startPrank(deployer);
-    LibArrival.applyArrivals(world, addressToEntity(bob), getHomeAsteroid(bob));
+    LibArrival.applyArrivals(world, addressToEntity(alice), getHomeAsteroid(bob));
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 0);
   }
 
@@ -213,7 +213,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.roll(arrival.arrivalBlock);
     vm.stopPrank();
     vm.startPrank(deployer);
-    LibArrival.applyArrivals(world, addressToEntity(bob), arrival.destination);
+    LibArrival.applyArrivals(world, addressToEntity(alice), arrival.destination);
 
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 1);
   }
@@ -242,8 +242,8 @@ contract SendUnitsTest is PrimodiumTest {
     vm.roll(arrival2.arrivalBlock);
     vm.stopPrank();
     vm.startPrank(deployer);
-    LibArrival.applyArrivals(world, addressToEntity(bob), arrival2.destination);
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
+    LibArrival.applyArrivals(world, addressToEntity(alice), arrival2.destination);
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 1);
     assertEq(
       ArrivalsList.get(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob)), 0),
       slowArrival

@@ -5,7 +5,7 @@ import "../PrimodiumTest.t.sol";
 import "forge-std/console.sol";
 import { addressToEntity } from "solecs/utils.sol";
 import { S_RaidSystem, ID as S_RaidSystemID } from "../../systems/S_RaidSystem.sol";
-import { S_BattleSystem, ID as S_BattleSystemID } from "../../systems/S_BattleSystem.sol";
+import { S_ResolveBattleSystem, ID as S_ResolveBattleSystemID } from "../../systems/S_ResolveBattleSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { BuildSystem as BuildSystem } from "../../systems/BuildSystem.sol";
 
@@ -20,12 +20,12 @@ import { BIGNUM } from "../../prototypes/Debug.sol";
 //debug buildings
 import "../../prototypes.sol";
 
-contract S_BattleSystemTest is PrimodiumTest {
+contract S_ResolveBattleSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   ComponentDevSystem public componentDevSystem;
   S_RaidSystem public raidSystem;
-  S_BattleSystem public battleSystem;
+  S_ResolveBattleSystem public battleSystem;
   BuildSystem public buildSystem;
   LevelComponent public levelComponent;
   BattleResultComponent public battleResultComponent;
@@ -39,7 +39,7 @@ contract S_BattleSystemTest is PrimodiumTest {
     itemComponent = ItemComponent(component(ItemComponentID));
     // init systems
     buildSystem = BuildSystem(system(BuildSystemID));
-    battleSystem = S_BattleSystem(system(S_BattleSystemID));
+    battleSystem = S_ResolveBattleSystem(system(S_ResolveBattleSystemID));
     raidSystem = S_RaidSystem(system(S_RaidSystemID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     spawn(alice);
@@ -49,7 +49,7 @@ contract S_BattleSystemTest is PrimodiumTest {
 
   function testBattleMultipleUnitTypes() public {
     vm.startPrank(alice);
-    uint256 battleEntity = LibEncode.hashKeyEntity(S_BattleSystemID, 0);
+    uint256 battleEntity = LibEncode.hashKeyEntity(S_ResolveBattleSystemID, 0);
 
     //alice
     uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
@@ -112,7 +112,7 @@ contract S_BattleSystemTest is PrimodiumTest {
 
   function testBattle() public {
     vm.startPrank(alice);
-    uint256 battleEntity = LibEncode.hashKeyEntity(S_BattleSystemID, 0);
+    uint256 battleEntity = LibEncode.hashKeyEntity(S_ResolveBattleSystemID, 0);
 
     //alice
     uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
@@ -168,7 +168,7 @@ contract S_BattleSystemTest is PrimodiumTest {
   function testBattleRaid() public {
     vm.startPrank(alice);
 
-    uint256 battleEntity = LibEncode.hashKeyEntity(S_BattleSystemID, 0);
+    uint256 battleEntity = LibEncode.hashKeyEntity(S_ResolveBattleSystemID, 0);
 
     //alice
     uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
