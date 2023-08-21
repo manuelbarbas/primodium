@@ -3,12 +3,14 @@ pragma solidity >=0.8.0;
 
 import "../PrimodiumTest.t.sol";
 
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { SendUnitsSystem, ID as SendUnitsSystemID } from "systems/SendUnitsSystem.sol";
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 
 import { LibSend } from "libraries/LibSend.sol";
 import { LibArrival } from "libraries/LibArrival.sol";
@@ -19,6 +21,7 @@ import { MOVE_SPEED } from "src/constants.sol";
 contract SendUnitsTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
+  ComponentDevSystem public componentDevSystem;
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
   BuildSystem public buildSystem;
@@ -26,12 +29,16 @@ contract SendUnitsTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
 
+    componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
     spawn(alice);
     spawn(bob);
     spawn(deployer);
+    componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(alice), abi.encode(100));
+    componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(bob), abi.encode(100));
+    componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(deployer), abi.encode(100));
   }
 
   function testFailSendUnitsCountZero() public {
@@ -92,11 +99,6 @@ contract SendUnitsTest is PrimodiumTest {
 
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, entity, 10);
-  }
-
-  function testInvade() public {
-    vm.startPrank(alice);
-    invade();
   }
 
   function invade() public returns (Arrival memory) {

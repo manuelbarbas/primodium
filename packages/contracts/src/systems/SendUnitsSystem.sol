@@ -93,7 +93,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     uint256 moveCount = LibMath.getSafe(ArrivalsSizeComponent(getC(ArrivalsSizeComponentID)), playerEntity);
     uint32 maxMoveCount = LibMath.getSafe(MaxMovesComponent(getC(MaxMovesComponentID)), playerEntity);
 
-    require(moveCount <= maxMoveCount, "you have reached your max move count");
+    require(moveCount < maxMoveCount, "you have reached your max move count");
 
     require(origin != destination, "origin and destination cannot be the same");
     if (originType == ESpaceRockType.ASTEROID) {
