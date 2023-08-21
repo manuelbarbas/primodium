@@ -93,9 +93,6 @@ export function getResourceKey(coord: Coord) {
     return BlockType.Osmium;
   }
 
-  if (resource == BlockType.Sulfur) {
-    return BlockType.Titanium;
-  }
   return resource;
 }
 const topLayerKeys = new Map<string, EntityID | null>();

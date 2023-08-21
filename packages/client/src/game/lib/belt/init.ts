@@ -21,6 +21,11 @@ export const initBeltView = async (_: EntityID, network: Network) => {
 
   scene.camera.phaserCamera.fadeIn(1000);
 
+  scene.phaserScene.add
+    .sprite(0, 0, "asteroid-sprite")
+    .setOrigin(0, 0)
+    .preFX?.addGlow();
+
   setupBasicCameraMovement(scene, {
     translateKeybind: false,
   });

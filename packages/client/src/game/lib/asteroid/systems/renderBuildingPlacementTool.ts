@@ -24,6 +24,7 @@ import {
   Animation,
   Outline,
 } from "../../common/object-components/sprite";
+import { getBuildingDimensions } from "src/util/building";
 
 const {
   EntityIDtoAnimationKey,
@@ -73,15 +74,21 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
       ? EntityIDtoAnimationKey[selectedBuilding][0]
       : undefined;
 
+    const buildingDimensions = getBuildingDimensions(selectedBuilding);
+
     buildingTool.setComponents([
       ObjectPosition(
         {
           x: pixelCoord.x,
-          y: -pixelCoord.y,
+          y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        DepthLayers.Marker
+        DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
-      Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.Node),
+      SetValue({
+        alpha: 0.9,
+        originY: 1,
+      }),
+      Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.IronMine1),
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
@@ -89,9 +96,6 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
       }),
       Outline({
         thickness: 5,
-      }),
-      SetValue({
-        alpha: 0.9,
       }),
     ]);
   };

@@ -20,5 +20,5 @@ export const runSystems = (scene: Scene, player: EntityID) => {
   renderBuildingPlacementTool(scene);
   renderPathPlacementTool(scene);
   focusMainbase(scene, player);
-  // renderFog(scene, player);
+  renderFog(scene, player);
 };

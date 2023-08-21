@@ -137,7 +137,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     }
     gameObject.setDepth(10);
     gameObject.cameraFilter = cameraFilter.current;
-    gameObject.resetPipeline(true, true);
+    gameObject.resetPipeline(true);
     gameObject.setScale(1, 1);
     gameObject.setAlpha(1);
     gameObject.setScrollFactor(1);

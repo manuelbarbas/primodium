@@ -78,10 +78,16 @@ export const renderBuildingPaths = (scene: Scene) => {
         },
         AsteroidMap.DepthLayers.Path
       ),
-      ManhattanPath({
-        x: endPixelCoord.x + tileWidth / 2,
-        y: -endPixelCoord.y + tileHeight / 2,
-      }),
+      ManhattanPath(
+        {
+          x: endPixelCoord.x + tileWidth / 2,
+          y: -endPixelCoord.y + tileHeight / 2,
+        },
+        {
+          color: 0x00ffff,
+          thickness: 1,
+        }
+      ),
     ]);
   };
 

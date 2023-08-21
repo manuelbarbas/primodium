@@ -16,7 +16,12 @@ export type ChunkedTilemapConfig<Tile, LayerKeys extends string> = {
   tilesets: { [key: string]: Phaser.Tilemaps.Tileset };
   layerConfig: {
     layers: {
-      [id in LayerKeys]: { tilesets: string[]; hasHueTintShader?: boolean };
+      [id in LayerKeys]: {
+        tilesets: string[];
+        hasHueTintShader?: boolean;
+        hasLightShader?: boolean;
+        depth?: number;
+      };
     };
     defaultLayer: LayerKeys;
   };
@@ -114,18 +119,24 @@ export function createChunkedTilemap<
         height
       );
 
+      if (layer.depth) tilemapLayer?.setDepth(layer.depth);
+
       if (!tilemapLayer) {
         console.error(`Adding tilemap layer ${key} failed.`);
         continue;
       }
 
-      // tilemapLayer.setPipeline("Light2D");
       layers[key] = tilemapLayer;
       const renderer = scene.game
         .renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-      if (layer.hasHueTintShader && renderer?.pipelines) {
+
+      if (!renderer?.pipelines) continue;
+
+      if (layer.hasHueTintShader) {
         layers[key].pipeline = renderer.pipelines.get(MultiHueTintPipeline.KEY);
       }
+
+      if (layer.hasLightShader) tilemapLayer.setPipeline("Light2D");
     }
 
     return {

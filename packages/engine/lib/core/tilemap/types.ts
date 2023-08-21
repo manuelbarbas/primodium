@@ -1,5 +1,9 @@
 import { CoordMap } from "@latticexyz/utils";
-import { WorldCoord } from "@latticexyz/phaserx/dist/types";
+import {
+  Assets,
+  TilesetConfig,
+  WorldCoord,
+} from "@latticexyz/phaserx/dist/types";
 
 export interface ChunkedTilemap<
   TileKeys extends number,
@@ -26,6 +30,18 @@ export interface VirtualTilemap<
 > extends ChunkedTilemap<TileKeys, LayerKeys> {
   tiles: { [key in LayerKeys]: CoordMap<Tile> };
 }
+
+export declare type LayerConfig<
+  A extends Assets,
+  T extends TilesetConfig<A>
+> = {
+  [key: string]: {
+    tilesets: (keyof T & string)[];
+    depth?: number;
+    hasHueTintShader?: boolean;
+    hasLightShader?: boolean;
+  };
+};
 
 export interface AnimatedTilemap<
   TileKeys extends number,

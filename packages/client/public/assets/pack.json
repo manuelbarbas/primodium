@@ -18,6 +18,11 @@
       },
       {
         "type": "image",
+        "key": "light-patches",
+        "url": "/assets/tilesets/light-patches.png"
+      },
+      {
+        "type": "image",
         "key": "walls",
         "url": "/assets/tilesets/walls.png"
       },
@@ -44,8 +49,17 @@
       },
       {
         "type": "image",
-        "key": "fog-tileset",
+        "key": "fog",
         "url": "/assets/tilesets/fog.png"
+      },
+      {
+        "type": "image",
+        "key": "dark-fog",
+        "url": "/assets/tilesets/dark-fog.png"
+      }, {
+        "type": "image",
+        "key": "resource",
+        "url": "/assets/tilesets/resource.png"
       }
     ]
   },

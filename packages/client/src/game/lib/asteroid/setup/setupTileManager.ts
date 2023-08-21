@@ -1,13 +1,13 @@
 import { AsteroidMap } from "../../../constants";
-import type { AnimatedTilemap } from "@latticexyz/phaserx";
-import { getTopLayerKeyPair } from "../../../../util/tile";
+import { getResourceKey } from "../../../../util/tile";
 import { Coord, CoordMap } from "@latticexyz/utils";
 import { interval } from "rxjs";
 import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import AsteroidTiledMap from "../../../../maps/asteroid_0.7.json";
+import { AnimatedTilemap } from "engine/lib/core/tilemap/types";
 
-const { TileKeys, EntityIdtoTilesetId, TileAnimationKeys } = AsteroidMap;
+const { EntityIDToResourceTilesetKey } = AsteroidMap;
 
 const renderChunk = async (
   coord: Coord,
@@ -55,56 +55,18 @@ const renderChunk = async (
         // }
 
         // const { terrain, resource } = getTopLayerKeyPair(coord);
-
-        // if (!terrain) continue;
-
-        //lookup and place terrain
-        // const terrainId = EntityIdtoTilesetId[terrain];
-
-        // if (terrainId === TileKeys.Water) {
-        //   // map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
-        //   continue;
-        // }
-        //lookup and place resource
-        // map.putTileAt({ x, y }, terrainId ?? TileKeys.Alluvium, "Terrain");
-
-        // if (!resource) continue;
-        // const resourceId = EntityIdtoTilesetId[resource!];
-        // map.putTileAt({ x, y }, resourceId, "Resource");
       }
+
+      const resource = getResourceKey({ x, y });
+
+      if (!resource) continue;
+      const resourceId = EntityIDToResourceTilesetKey[resource!];
+
+      map.putTileAt({ x, y: -y }, resourceId, AsteroidMap.Tilesets.Resource);
     }
   }
 
   chunkCache.set(coord, true);
-};
-
-const renderBounds = (
-  upperLeft: Coord,
-  bottomRight: Coord,
-  map: AnimatedTilemap<number, string, string>
-) => {
-  for (let x = upperLeft.x; x <= bottomRight.x; x++) {
-    for (let y = upperLeft.y; y <= bottomRight.y; y++) {
-      const coord = { x, y: -y };
-
-      const { terrain, resource } = getTopLayerKeyPair(coord);
-
-      if (!terrain) return;
-      //lookup and place terrain
-      const terrainId = EntityIdtoTilesetId[terrain];
-
-      if (terrainId === TileKeys.Water) {
-        map.putAnimationAt({ x, y }, TileAnimationKeys.Water, "Terrain");
-        continue;
-      }
-      //lookup and place resource
-      map.putTileAt({ x, y }, terrainId ?? TileKeys.Alluvium, "Terrain");
-
-      if (!resource) continue;
-      const resourceId = EntityIdtoTilesetId[resource!];
-      map.putTileAt({ x, y }, resourceId, "Resource");
-    }
-  }
 };
 
 export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
@@ -116,10 +78,6 @@ export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
     for (const chunk of chunks.visibleChunks.current.coords()) {
       renderChunk(chunk, map, chunkSize, chunkCache);
     }
-  };
-
-  const renderMapBounds = (upperLeft: Coord, bottomRight: Coord) => {
-    renderBounds(upperLeft, bottomRight, map);
   };
 
   const startChunkRenderer = () => {
@@ -145,5 +103,5 @@ export const setupTileManager = async (tilemap: Scene["tilemap"]) => {
     }, "game");
   };
 
-  return { renderInitialChunks, startChunkRenderer, renderMapBounds };
+  return { renderInitialChunks, startChunkRenderer };
 };

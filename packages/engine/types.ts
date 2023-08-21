@@ -4,7 +4,7 @@ import { createObjectPool } from "./lib/core/createObjectPool";
 import { Animation } from "@latticexyz/phaserx/dist/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
-import { createAnimatedTilemap } from "@latticexyz/phaserx";
+import { createAnimatedTilemap } from "./lib/core/tilemap/createAnimatedTilemap";
 
 export type Game = Awaited<ReturnType<typeof createGame>>;
 export type Scene = Awaited<ReturnType<typeof createScene>>;

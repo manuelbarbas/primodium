@@ -30,8 +30,14 @@ import {
   Texture,
   Outline,
 } from "../../common/object-components/sprite";
-import { ObjectPosition } from "../../common/object-components/common";
-import { getBuildingTopLeftCoord } from "src/util/building";
+import {
+  ObjectPosition,
+  SetValue,
+} from "../../common/object-components/common";
+import {
+  getBuildingDimensions,
+  getBuildingTopLeftCoord,
+} from "src/util/building";
 
 const {
   Assets,
@@ -72,25 +78,48 @@ export const renderBuilding = (scene: Scene) => {
       tileHeight
     );
 
-    scene.objectPool.remove(renderId);
-    const buildingRenderEntity = scene.objectPool.get(renderId, "Sprite");
+    scene.objectPool.removeGroup(renderId);
+    const buildingRenderGroup = scene.objectPool.getGroup(renderId);
 
     const sprites = EntityIDtoSpriteKey[buildingType];
-    const spriteKey = sprites ? safeIndex(level - 1, sprites) : SpriteKeys.Node;
+    const spriteKey = sprites
+      ? safeIndex(level - 1, sprites)
+      : SpriteKeys.IronMine1;
     const animations = EntityIDtoAnimationKey[buildingType];
     const animationKey = animations
       ? safeIndex(level - 1, animations)
       : undefined;
 
-    buildingRenderEntity.setComponents([
-      ObjectPosition(
-        { x: pixelCoord.x, y: -pixelCoord.y },
-        DepthLayers.Building
-      ),
+    const buildingDimensions = getBuildingDimensions(buildingType);
+
+    const components = [
+      ObjectPosition({
+        x: pixelCoord.x,
+        y: -pixelCoord.y + buildingDimensions.height * tileHeight,
+      }),
+      SetValue({
+        originY: 1,
+      }),
       Texture(Assets.SpriteAtlas, spriteKey),
+    ];
+
+    buildingRenderGroup.add("Sprite").setComponents([
+      SetValue({
+        depth:
+          DepthLayers.Building - tilePosition.y + buildingDimensions.height,
+      }),
       animationKey ? Animation(animationKey) : undefined,
-      selected ? Outline() : undefined,
+      ...components,
     ]);
+
+    if (selected)
+      buildingRenderGroup
+        .add("Sprite")
+        .setComponents([
+          SetValue({ depth: DepthLayers.Building }),
+          Outline({ knockout: true }),
+          ...components,
+        ]);
   };
 
   const positionQuery = [
@@ -107,7 +136,7 @@ export const renderBuilding = (scene: Scene) => {
 
   defineExitSystem(gameWorld, positionQuery, ({ entity }) => {
     const renderId = `${entity}_entitySprite`;
-    scene.objectPool.remove(renderId);
+    scene.objectPool.removeGroup(renderId);
   });
 
   defineComponentSystem(

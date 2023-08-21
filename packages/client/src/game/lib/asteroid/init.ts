@@ -24,18 +24,14 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
 
   scene.camera.phaserCamera.setRoundPixels(false);
 
-  // const light = scene.phaserScene.lights.addLight(
-  //   18 * 16,
-  //   -10 * 16,
-  //   10000,
-  //   undefined
-  // );
-  // scene.phaserScene.lights.enable();
+  scene.phaserScene.lights.addLight(18 * 32, -10 * 32, 500, 0x5a848a, 1.5);
+  scene.phaserScene.lights.setAmbientColor(0xa2a2ba);
+  scene.phaserScene.lights.enable();
 
   // scene.camera.phaserCamera.postFX.addGradient(
   //   0x0000ff,
   //   undefined,
-  //   0.9,
+  //   0.92,
   //   undefined,
   //   undefined,
   //   undefined,
