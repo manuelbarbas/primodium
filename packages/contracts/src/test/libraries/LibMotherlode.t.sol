@@ -40,7 +40,7 @@ contract LibMotherlodeTest is PrimodiumTest {
       moveSpeed: 100,
       motherlodeDistance: 10,
       maxMotherlodesPerAsteroid: 6,
-      motherlodeChanceInv: 6
+      motherlodeChanceInv: 1
     });
     vm.prank(deployer);
     gameConfigComponent.set(SingletonID, gameConfig);
@@ -65,7 +65,7 @@ contract LibMotherlodeTest is PrimodiumTest {
 
   function findMotherlode() public returns (uint256, Coord memory) {
     GameConfig memory config = gameConfigComponent.getValue(SingletonID);
-    address player = deployer;
+    address player = bob;
     spawn(player);
     vm.startPrank(deployer);
     uint256 asteroid = getHomeAsteroid(player);
@@ -80,7 +80,7 @@ contract LibMotherlodeTest is PrimodiumTest {
       sourcePosition.y + targetPositionRelative.y,
       0
     );
-    uint256 motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition)));
+    uint256 motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y)));
     uint32 i = 0;
     bool found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
     while (i < 6 && !found) {
@@ -91,7 +91,7 @@ contract LibMotherlodeTest is PrimodiumTest {
         sourcePosition.y + targetPositionRelative.y,
         0
       );
-      motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition)));
+      motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y)));
       found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
     }
     require(found, "uh oh, no motherlode found");

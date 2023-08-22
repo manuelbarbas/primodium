@@ -5,27 +5,31 @@ import {
   defineEnterSystem,
   // defineUpdateQuery,
   EntityIndex,
+  HasValue,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
   SetValue,
 } from "../../common/object-components/common";
 import { Texture } from "../../common/object-components/sprite";
-import { AsteroidType } from "src/network/components/chainComponents";
+import { AsteroidType, Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
+import { ESpaceRockType } from "../types";
 
 export const renderMotherlode = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
 
-  const query = [Has(AsteroidType)];
+  const query = [
+    Has(AsteroidType),
+    HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
+  ];
 
   const render = ({ entity }: { entity: EntityIndex }) => {
     const motherlodeObjectGroup = scene.objectPool.getGroup(
       "motherlode_" + entity
     );
-    const coord = { x: 0, y: 0, parent: 0 };
-
+    const coord = Position.get(world.entities[entity]);
     if (!coord) return;
 
     motherlodeObjectGroup.add("Sprite").setComponents([

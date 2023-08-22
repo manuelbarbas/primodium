@@ -36,7 +36,7 @@ library LibMotherlode {
       if (!activeComponent.has(sourceEncodedPos)) continue;
       uint256 sourceAsteroid = activeComponent.getValue(sourceEncodedPos);
       if (asteroidTypeComponent.getValue(sourceAsteroid) == ESpaceRockType.MOTHERLODE) continue;
-      uint256 motherlodeSeed = uint256(keccak256(abi.encode(sourceAsteroid, "motherlode", position)));
+      uint256 motherlodeSeed = uint256(keccak256(abi.encode(sourceAsteroid, "motherlode", position.x, position.y)));
       if (!isMotherlode(motherlodeSeed, config.motherlodeChanceInv)) continue;
       initMotherlode(world, position, motherlodeSeed);
       return motherlodeSeed;
@@ -61,7 +61,6 @@ library LibMotherlode {
     uint256 encodedPosition = LibEncode.encodeCoord(position);
     PositionComponent(world.getComponent(PositionComponentID)).set(motherlodeEntity, position);
     ReversePositionComponent(world.getComponent(ReversePositionComponentID)).set(encodedPosition, motherlodeEntity);
-    AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).set(motherlodeEntity, ESpaceRockType.MOTHERLODE);
     MineableAtComponent(world.getComponent(MineableAtComponentID)).set(motherlodeEntity, block.number);
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, block.number);
 
@@ -73,6 +72,7 @@ library LibMotherlode {
       LibEncode.hashKeyEntity(resource, motherlodeEntity),
       0
     );
+    AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).set(motherlodeEntity, ESpaceRockType.MOTHERLODE);
   }
 
   function getMotherlodeRawPrototype(
@@ -87,7 +87,7 @@ library LibMotherlode {
   }
 
   function getCoord(uint32 i, uint32 distance, uint32 max) internal pure returns (Coord memory) {
-    return LibAsteroid.getPositionByVector(distance, (i * 360) / max);
+    return LibAsteroid.getPositionByVector(distance, (360 / max) * i);
   }
 
   function getSize(uint8 size) internal pure returns (EMotherlodeSize) {

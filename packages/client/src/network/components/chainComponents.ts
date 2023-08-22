@@ -8,11 +8,22 @@ import newComponent, {
 
 const commonIdPrefix = "component.";
 
-// todo: organize these alphabetically
+// todo: organize these
 export const Counter = newComponent(
   world,
   { value: Type.Number },
   { id: "Counter", metadata: { contractId: `${commonIdPrefix}Counter` } }
+);
+
+export const GameConfig = newComponent(
+  world,
+  {
+    moveSpeed: Type.Number,
+    motherlodeDistance: Type.Number,
+    maxMotherlodesPerAsteroid: Type.Number,
+    motherlodeChanceInv: Type.Number,
+  },
+  { id: "GameConfig", metadata: { contractId: `${commonIdPrefix}GameConfig` } }
 );
 
 export const BuildingType = newComponent(
@@ -173,7 +184,7 @@ export const Active = newBoolComponent(world, {
   metadata: { contractId: `${commonIdPrefix}Active` },
 });
 
-export const AsteroidType = newStringComponent(world, {
+export const AsteroidType = newNumberComponent(world, {
   id: "AsteroidType",
   metadata: { contractId: `${commonIdPrefix}AsteroidType` },
 });
@@ -198,6 +209,17 @@ export const Position = newComponent(
     id: "Position",
     metadata: { contractId: `${commonIdPrefix}Position` },
     overridable: true,
+  }
+);
+
+export const ReversePosition = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "ReversePosition",
+    metadata: { contractId: `${commonIdPrefix}ReversePosition` },
   }
 );
 
@@ -247,6 +269,7 @@ export const P_MotherlodeResource = newComponent(
 );
 
 export default {
+  GameConfig,
   P_Terrain,
   Active,
   AsteroidType,
@@ -275,7 +298,7 @@ export default {
   OccupiedUtilityResource,
   MaxUtility,
 
-  // Motherlode,
-  // MotherlodeResource,
-  // P_MotherlodeResource,
+  Motherlode,
+  MotherlodeResource,
+  P_MotherlodeResource,
 };
