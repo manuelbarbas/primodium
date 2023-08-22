@@ -8,3 +8,6 @@ uint256 constant MOVE_SPEED = 100;
 
 uint32 constant MOTHERLODE_DISTANCE = 10;
 uint32 constant MAX_MOTHERLODES_PER_ASTEROID = 6;
+
+// chance of motherlode is (1 / MOTHERLODE_CHANCE_INV)
+uint32 constant MOTHERLODE_CHANCE_INV = 6;

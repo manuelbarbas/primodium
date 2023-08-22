@@ -21,7 +21,7 @@ import { LibAsteroid } from "libraries/LibAsteroid.sol";
 // types
 import { Coord, ESpaceRockType, Motherlode, EMotherlodeSize, EMotherlodeType, ResourceValue } from "src/types.sol";
 import { TitaniumID, IridiumID, PlatinumID, KimberliteID } from "src/prototypes.sol";
-import { MOTHERLODE_DISTANCE, MAX_MOTHERLODES_PER_ASTEROID } from "src/constants.sol";
+import { MOTHERLODE_DISTANCE, MAX_MOTHERLODES_PER_ASTEROID, MOTHERLODE_CHANCE_INV } from "src/constants.sol";
 
 library LibMotherlode {
   function createMotherlode(IWorld world, Coord memory position) internal returns (uint256) {
@@ -37,7 +37,7 @@ library LibMotherlode {
       uint256 sourceAsteroid = activeComponent.getValue(sourceEncodedPos);
       if (asteroidTypeComponent.getValue(sourceAsteroid) == ESpaceRockType.MOTHERLODE) continue;
       uint256 motherlodeSeed = uint256(keccak256(abi.encode(sourceAsteroid, "motherlode", position)));
-      if (!isMotherlode(motherlodeSeed)) continue;
+      if (!isMotherlode(motherlodeSeed, MOTHERLODE_CHANCE_INV)) continue;
       initMotherlode(world, position, motherlodeSeed);
       return motherlodeSeed;
     }
@@ -45,9 +45,9 @@ library LibMotherlode {
   }
 
   // a bit more than 1/6 chance of motherlode
-  function isMotherlode(uint256 entity) internal pure returns (bool) {
+  function isMotherlode(uint256 entity, uint256 chanceInv) internal pure returns (bool) {
     uint256 motherlodeType = LibEncode.getByteUInt(entity, 6, 128);
-    return motherlodeType % 6 == 1;
+    return motherlodeType % chanceInv == 1;
   }
 
   function initMotherlode(IWorld world, Coord memory position, uint256 motherlodeEntity) internal {
