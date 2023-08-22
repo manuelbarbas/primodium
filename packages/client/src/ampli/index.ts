@@ -77,7 +77,7 @@ export interface SystemBuildProperties {
    */
   coord: [number, number];
   /**
-   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action. Also refers to the level of building expansion on an asteroid.
    *
    * | Rule | Value |
    * |---|---|
@@ -348,7 +348,7 @@ export interface SystemDestroyProperties {
    */
   coord: [number, number];
   /**
-   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action. Also refers to the level of building expansion on an asteroid.
    *
    * | Rule | Value |
    * |---|---|
@@ -618,7 +618,7 @@ export interface SystemUpgradeProperties {
    */
   coord: [number, number];
   /**
-   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action. Also refers to the level of building expansion on an asteroid.
    *
    * | Rule | Value |
    * |---|---|
@@ -671,27 +671,6 @@ export interface SystemUpgradeRangeProperties {
    * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
    */
   asteroidCoord: string;
-  /**
-   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action.
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
-   */
-  currLevel: number;
-  /**
-   * Range of buildable area on a player's asteroid, represented by \[max.x, max.y\] where each parameter is the maximum number of tiles buildable in each direction.
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Min Items | 2 |
-   * | Max Items | 2 |
-   * | Item Type | number |
-   *
-   * @minItems 2
-   * @maxItems 2
-   */
-  currRange: [number, number];
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
