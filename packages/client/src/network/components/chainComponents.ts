@@ -212,6 +212,40 @@ export const P_Terrain = newComponent(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                 Motherlode                                 */
+/* -------------------------------------------------------------------------- */
+
+export const Motherlode = newComponent(
+  world,
+  {
+    size: Type.Number,
+    motherlodeType: Type.Number,
+    cooldownBlocks: Type.String,
+  },
+  {
+    id: "Motherlode",
+    metadata: { contractId: `${commonIdPrefix}Motherlode` },
+  }
+);
+
+export const MotherlodeResource = newNumberComponent(world, {
+  id: "MotherlodeResource",
+  metadata: { contractId: `${commonIdPrefix}MotherlodeResource` },
+});
+
+export const P_MotherlodeResource = newComponent(
+  world,
+  {
+    ResourceID: Type.Entity,
+    MaxAmount: Type.Number,
+  },
+  {
+    id: "P_MotherlodeResource",
+    metadata: { contractId: `${commonIdPrefix}P_MotherlodeResource` },
+  }
+);
+
 export default {
   P_Terrain,
   Active,
@@ -240,4 +274,8 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+
+  Motherlode,
+  MotherlodeResource,
+  P_MotherlodeResource,
 };
