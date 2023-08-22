@@ -1,7 +1,6 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { ComponentUpdate, Has } from "@latticexyz/recs";
 import {
-  ComponentUpdate,
-  Has,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,

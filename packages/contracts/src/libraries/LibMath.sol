@@ -18,7 +18,31 @@ library LibMath {
     return component.has(entity) ? component.getValue(entity) : 0;
   }
 
+  function add(Uint32Component component, uint256 entity, uint32 addend) internal {
+    uint32 value = getSafe(component, entity);
+    component.set(entity, value + addend);
+  }
+
+  function add(Uint256Component component, uint256 entity, uint256 addend) internal {
+    uint256 value = getSafe(component, entity);
+    component.set(entity, value + addend);
+  }
+
+  function subtract(Uint32Component component, uint256 entity, uint32 subtractor) internal {
+    uint32 value = getSafe(component, entity);
+    require(value >= subtractor, "not enough value to subtract");
+    component.set(entity, value - subtractor);
+  }
+
   function abs(int32 input) internal pure returns (int32) {
     return input < 0 ? -input : input;
+  }
+
+  function min(uint32 num1, uint32 num2) internal pure returns (uint32) {
+    return num1 < num2 ? num1 : num2;
+  }
+
+  function max(uint32 num1, uint32 num2) internal pure returns (uint32) {
+    return num1 > num2 ? num1 : num2;
   }
 }

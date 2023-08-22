@@ -61,8 +61,6 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] You do not have the required Utility resources"
     );
 
-    //check resource requirements and if ok spend required resources
-
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
 
     require(buildingType != MainBaseID, "[BuildSystem] Cannot build more than one main base per wallet");

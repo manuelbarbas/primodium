@@ -2,7 +2,6 @@ import { useEntityQuery } from "@latticexyz/react";
 import { EntityID, Has, HasValue } from "@latticexyz/recs";
 import { FixedSizeGrid as Grid } from "react-window";
 
-import { useMud } from "src/hooks/useMud";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BlockColors } from "../util/constants";
 import { getTopLayerKey } from "src/util/tile";
@@ -10,8 +9,6 @@ import { BuildingType, Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 
 export default function Map() {
-  const { perlin } = useMud();
-
   // React Window
   const { height, width } = useWindowDimensions();
   const DISPLAY_GRID_SIZE = 16;
@@ -47,13 +44,10 @@ export default function Map() {
     if (tilesAtPosition.length > 0 && tilesAtPosition[0] && tile) {
       topLayerKey = tile.value;
     } else {
-      topLayerKey = getTopLayerKey(
-        {
-          x: plotX,
-          y: plotY,
-        },
-        perlin
-      );
+      topLayerKey = getTopLayerKey({
+        x: plotX,
+        y: plotY,
+      });
     }
 
     const defaultStyle = {

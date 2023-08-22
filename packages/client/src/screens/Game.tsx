@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import GameUI from "src/components/game-ui/GameUI";
+import AsteroidUI from "src/components/asteroid-ui/GameUI";
 import { useMud } from "src/hooks/useMud";
 import { useAccount } from "src/hooks/useAccount";
 
@@ -15,9 +15,8 @@ export const Game = () => {
   return (
     <div>
       {!gameReady && (
-        <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
+        <div className="flex items-center justify-center h-screen text-white font-mono">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Primodium</h1>
             <p className="text-lg">Initializing Game World...</p>
           </div>
         </div>
@@ -25,9 +24,8 @@ export const Game = () => {
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div id="game-container">
-        <div id="phaser-container" className="absolute cursor-pointer" />
         <PhaserWrapper />
-        {gameReady && <GameUI />}
+        {gameReady && <AsteroidUI />}
       </div>
     </div>
   );
@@ -56,7 +54,7 @@ const PhaserWrapper = () => {
       primodium.destroy();
       GameReady.set({ value: false });
     };
-  }, []);
+  }, [network]);
 
   return <div id="phaser-container" className="absolute cursor-pointer" />;
 };

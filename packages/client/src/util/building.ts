@@ -1,6 +1,10 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Children, Position } from "src/network/components/chainComponents";
+import {
+  Children,
+  Position,
+  RawBlueprint,
+} from "src/network/components/chainComponents";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -73,4 +77,14 @@ export function getBuildingTopLeftCoord(building: EntityID) {
   }, []);
 
   return getTopLeftCoord(coords);
+}
+
+export function getBuildingDimensions(building: EntityID) {
+  const blueprint = RawBlueprint.get(building)?.value;
+
+  const dimensions = blueprint
+    ? calcDims(building, convertToCoords(blueprint))
+    : { width: 1, height: 1 };
+
+  return dimensions;
 }

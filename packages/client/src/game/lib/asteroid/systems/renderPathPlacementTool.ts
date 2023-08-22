@@ -1,12 +1,12 @@
 import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
-  ComponentUpdate,
-  Has,
-  HasValue,
   defineEnterSystem,
   defineExitSystem,
   defineUpdateSystem,
   namespaceWorld,
+  Has,
+  HasValue,
+  ComponentUpdate,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
@@ -110,21 +110,6 @@ export const renderPathPlacementTool = (scene: Scene) => {
         alpha: 0.2,
       }),
     ]);
-
-    // pathGraphicsEmbodiedEntity.setComponent(
-    //   createPath({
-    //     id: objGraphicsIndex,
-    //     startX: pixelStartCoord.x + tileWidth / 2,
-    //     startY: -pixelStartCoord.y + tileHeight / 2,
-    //     endX: pixelHoverCoord.x + tileWidth / 2,
-    //     endY: -pixelHoverCoord.y + tileHeight / 2,
-    //     color: 0xff00ff,
-    //     speed: 50,
-    //     lineWidth: 1.5,
-    //     highlight: true,
-    //     dashed: true,
-    //   })
-    // );
   };
 
   defineEnterSystem(gameWorld, query, (update) => {

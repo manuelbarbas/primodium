@@ -18,6 +18,10 @@ library LibEncode {
     return uint256(keccak256(abi.encodePacked(key, entity)));
   }
 
+  function hashEntities(uint256 entity1, uint256 entity2, uint256 entity3) internal pure returns (uint256) {
+    return uint256(keccak256(abi.encode(entity1, entity2, entity3)));
+  }
+
   function hashKeyEntity(string memory key, uint256 entity) internal pure returns (uint256) {
     return uint256(keccak256(abi.encodePacked(key, entity)));
   }
@@ -42,5 +46,17 @@ library LibEncode {
 
     // Masking with 0xFFFFFFFF gives the second int32
     coord.y = int32(uint32(encoded & 0xFFFFFFFF));
+  }
+
+  /**
+   * @notice  masks a bit string based on length and shift
+   * @param   _b  bit string to mask
+   * @param   length  length in bits of return bit string
+   * @param   shift  starting position of mask
+   * @return  _byteUInt masked bit string
+   */
+  function getByteUInt(uint256 _b, uint256 length, uint256 shift) internal pure returns (uint256 _byteUInt) {
+    uint256 mask = ((1 << length) - 1) << shift;
+    _byteUInt = (_b & mask) >> shift;
   }
 }

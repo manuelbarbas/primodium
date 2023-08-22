@@ -44,6 +44,33 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
   }
 
+  function assertEq(Arrival memory arrivalA, Arrival memory arrivalB) internal {
+    assertEq(uint8(arrivalA.sendType), uint8(arrivalB.sendType), "[assertArrivalEq]: sendType doesn't match");
+    assertEq(arrivalA.arrivalBlock, arrivalB.arrivalBlock, "[assertArrivalEq]: arrivalBlock doesn't match");
+    assertEq(arrivalA.from, arrivalB.from, "[assertArrivalEq]: from doesn't match");
+    assertEq(arrivalA.to, arrivalB.to, "[assertArrivalEq]: to doesn't match");
+    assertEq(arrivalA.origin, arrivalB.origin, "[assertArrivalEq]: origin doesn't match");
+    assertEq(arrivalA.destination, arrivalB.destination, "[assertArrivalEq]: destination doesn't match");
+    assertEq(arrivalA.units.length, arrivalB.units.length, "[assertArrivalEq]: units length doesn't match");
+
+    for (uint256 i = 0; i < arrivalA.units.length; i++) {
+      assertEq(arrivalA.units[i].unitType, arrivalB.units[i].unitType, "[assertArrivalEq]: unitType doesn't match");
+      assertEq(arrivalA.units[i].count, arrivalB.units[i].count, "[assertArrivalEq]: count doesn't match");
+    }
+  }
+
+  function assertEq(ESpaceRockType a, ESpaceRockType b) internal {
+    assertEq(uint256(a), uint256(b));
+  }
+
+  function assertEq(ESpaceRockType a, ESpaceRockType b, string memory context) internal {
+    assertEq(uint256(a), uint256(b), context);
+  }
+
+  function getHomeAsteroid(address player) public view returns (uint256) {
+    return PositionComponent(component(PositionComponentID)).getValue(addressToEntity(player)).parent;
+  }
+
   function logCoord(Coord memory coord) internal view {
     console.log("x");
     console.logInt(coord.x);

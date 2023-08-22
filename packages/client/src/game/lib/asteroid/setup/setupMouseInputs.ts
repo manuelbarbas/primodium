@@ -19,6 +19,7 @@ import {
 import { world } from "src/network/world";
 import { Network } from "src/network/layer";
 import { IsDebug } from "src/network/components/chainComponents";
+import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (
   scene: Scene,
@@ -33,6 +34,12 @@ export const setupMouseInputs = (
     );
 
     const gameCoord = { x, y: -y };
+
+    if (outOfBounds(gameCoord, player)) {
+      SelectedBuilding.remove();
+      SelectedTile.remove();
+      return;
+    }
 
     const selectedAction = SelectedAction.get()?.value;
 
@@ -91,6 +98,11 @@ export const setupMouseInputs = (
     //set hover tile if it is different
     const currentHoverTile = HoverTile.get();
     if (coordEq(currentHoverTile, mouseCoord)) return;
+
+    if (outOfBounds(mouseCoord, player)) {
+      HoverTile.remove();
+      return;
+    }
 
     HoverTile.set(mouseCoord);
   });

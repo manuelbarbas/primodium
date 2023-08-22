@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { SingletonID } from "solecs/SingletonID.sol";
 // Production Buildings
+import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "components/P_RequiredTileComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
@@ -24,12 +25,14 @@ import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierCo
 
 import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from "components/P_UnitTrainingTimeComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
+import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
+import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
+import { P_UnitMiningComponent, ID as P_UnitMiningComponentID } from "components/P_UnitMiningComponent.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
 
 import "../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../types.sol";
-import { DEBUG } from "../constants.sol";
 
 // Research
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
@@ -471,8 +474,9 @@ library LibInitDebug {
     maxLevelComponent.set(DebugUnitProductionBuilding, 2);
     uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
 
-    uint256[] memory unitTypes = new uint256[](1);
+    uint256[] memory unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit3;
     unitProductionTypesComponent.set(entity, unitTypes);
     unitProductionMultiplierComponent.set(entity, 100);
 
@@ -486,14 +490,20 @@ library LibInitDebug {
 
   function initializeUnits(IWorld world) internal {
     P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
+    P_UnitDefenceComponent unitDefenceComponent = P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID));
+
     P_UnitTrainingTimeComponent unitTrainingTimeComponent = P_UnitTrainingTimeComponent(
       world.getComponent(P_UnitTrainingTimeComponentID)
     );
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       world.getComponent(P_RequiredUtilityComponentID)
     );
+    SpeedComponent speedComponent = SpeedComponent(world.getComponent(SpeedComponentID));
+    P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
+    P_UnitMiningComponent unitMiningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
 
     //DebugUnit
+    speedComponent.set(DebugUnit, 100);
     uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
     unitTrainingTimeComponent.set(entity, 2);
 
@@ -502,7 +512,12 @@ library LibInitDebug {
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
 
+    unitAttackComponent.set(entity, 5);
+    unitDefenceComponent.set(entity, 3);
+    unitCargoComponent.set(entity, 10);
     //DebugUnit2
+
+    speedComponent.set(DebugUnit2, 200);
     entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
     unitTrainingTimeComponent.set(entity, 4);
 
@@ -510,5 +525,44 @@ library LibInitDebug {
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
+
+    unitAttackComponent.set(entity, 20);
+    unitDefenceComponent.set(entity, 10);
+    unitCargoComponent.set(entity, 20);
+    // debuguint3
+    speedComponent.set(DebugUnit3, 50);
+    entity = LibEncode.hashKeyEntity(DebugUnit3, 1);
+    unitTrainingTimeComponent.set(entity, 4);
+
+    requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtility.resources[0] = HousingUtilityResourceID;
+    requiredUtility.values[0] = 1;
+    requiredUtilityComponent.set(entity, requiredUtility);
+    unitAttackComponent.set(entity, 20);
+    unitDefenceComponent.set(entity, 10);
+    unitCargoComponent.set(entity, 20);
+
+    // DebugUnitMiner
+    entity = DebugUnitMiner;
+    unitMiningComponent.set(entity, 100);
+
+    entity = DebugUnitMiner2;
+    unitMiningComponent.set(entity, 47);
+
+    //DebugUnitBattle1
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle1, 1);
+    unitTrainingTimeComponent.set(entity, 0);
+
+    unitAttackComponent.set(entity, 10);
+    unitDefenceComponent.set(entity, 5);
+    unitCargoComponent.set(entity, 100);
+
+    //DebugUnitBattle2
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle2, 1);
+    unitTrainingTimeComponent.set(entity, 0);
+
+    unitAttackComponent.set(entity, 5);
+    unitDefenceComponent.set(entity, 10);
+    unitCargoComponent.set(entity, 100);
   }
 }

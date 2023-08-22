@@ -6,6 +6,7 @@ import newComponent, {
   newNumberComponent,
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
+import newFleetComponent from "./customComponents/FleetComponent";
 
 // todo: organize these alphabetically
 export const BlockNumber = newNumberComponent(world, {
@@ -33,6 +34,10 @@ export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
 });
 
+export const Fleet = newFleetComponent(world, {
+  id: "Fleet",
+});
+
 export const ActiveAsteroid = newComponent(
   world,
   { value: Type.Entity },
@@ -50,4 +55,5 @@ export default {
   SelectedAction,
   StartSelectedPath,
   Marker,
+  Fleet,
 };

@@ -1,5 +1,8 @@
 {
   "components": [
+    "ArrivalComponent",
+    "ArrivalsIndexComponent",
+    "ArrivalsSizeComponent",
     "AsteroidCountComponent",
     "CounterComponent",
     "BuildingTypeComponent",
@@ -12,9 +15,12 @@
     "LevelComponent",
     "ChildrenComponent",
     "ProductionComponent",
+    "MotherlodeResourceComponent",
     "IsDebugComponent",
     "PositionComponent",
     "MaxUtilityComponent",
+    "MineableAtComponent",
+    "MotherlodeComponent",
     "OccupiedUtilityResourceComponent",
     "UnitProductionOwnedByComponent",
     "UnitProductionQueueComponent",
@@ -24,10 +30,18 @@
     "AsteroidTypeComponent",
     "ActiveComponent",
     "DimensionsComponent",
+    "ReversePositionComponent",
+    "BattleAttackerComponent",
+    "BattleDefenderComponent",
+    "BattleResultComponent",
+    "MaxMovesComponent",
+    "GameConfigComponent",
 
+    "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
+    "P_MotherlodeResourceComponent",
     "P_RequiredTileComponent",
     "P_RequiredUtilityComponent",
     "P_UtilityProductionComponent",
@@ -48,7 +62,14 @@
     "P_UnitTravelSpeedComponent",
     "P_TerrainComponent"
   ],
-  "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
+  "initializers": [
+    "LibInitWorld",
+    "LibInitTerrain",
+    "LibInitBuildings",
+    "LibInitResearch",
+    "LibInitDebug",
+    "LibInitMotherlode"
+  ],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -60,46 +81,15 @@
     },
     {
       "name": "SpawnSystem",
-      "writeAccess": [
-        "PositionComponent",
-        "ActiveComponent",
-        "AsteroidCountComponent",
-        "AsteroidTypeComponent",
-        "ActiveComponent",
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "LevelComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "MainBaseComponent",
-        "UnitProductionOwnedByComponent"
-      ]
+      "writeAccess": ["*"]
     },
     {
       "name": "BuildSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "LevelComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "MainBaseComponent",
-        "PositionComponent",
-        "UnitProductionOwnedByComponent"
-      ]
+      "writeAccess": ["*"]
     },
     {
       "name": "DestroySystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "LevelComponent",
-        "PathComponent",
-        "PositionComponent",
-        "UnitProductionOwnedByComponent"
-      ]
+      "writeAccess": ["*"]
     },
 
     {
@@ -116,7 +106,7 @@
     },
     {
       "name": "UpgradeBuildingSystem",
-      "writeAccess": ["LevelComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "UpgradeRangeSystem",
@@ -131,9 +121,18 @@
         "LastClaimedAtComponent"
       ]
     },
+    { "name": "SendUnitsSystem", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
+    },
+    {
+      "name": "S_BattleSystem",
+      "writeAccess": ["BattleResultComponent"]
+    },
+    {
+      "name": "S_RaidSystem",
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",
@@ -155,6 +154,7 @@
       "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["ItemComponent"]
     },
+    { "name": "S_UpdatePlayerSpaceRockSystem", "writeAccess": ["*"] },
     {
       "name": "S_UpdatePlayerResourceProductionSystem",
       "writeAccess": ["ProductionComponent", "ProductionComponent"]
@@ -178,24 +178,6 @@
     {
       "name": "S_UpdateConnectedRequiredProductionSystem",
       "writeAccess": ["P_ProductionDependenciesComponent"]
-    },
-    {
-      "name": "S_ClaimUnitsSystem",
-      "writeAccess": [
-        "UnitsComponent",
-        "LastClaimedAtComponent",
-        "UnitProductionQueueComponent",
-        "UnitProductionQueueIndexComponent"
-      ]
-    },
-    {
-      "name": "S_ClaimUnitsFromBuildingSystem",
-      "writeAccess": [
-        "UnitsComponent",
-        "LastClaimedAtComponent",
-        "UnitProductionQueueComponent",
-        "UnitProductionQueueIndexComponent"
-      ]
     }
   ]
 }

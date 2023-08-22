@@ -17,10 +17,10 @@ enum EActionType {
   Destroy
 }
 
-// note: for use when we get special asteroids
-enum EAsteroidType {
+enum ESpaceRockType {
   NONE,
-  NORMAL
+  ASTEROID,
+  MOTHERLODE
 }
 
 struct Coord {
@@ -40,4 +40,76 @@ struct Bounds {
   int32 minY;
   int32 maxX;
   int32 maxY;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Game Config                                */
+/* -------------------------------------------------------------------------- */
+
+struct GameConfig {
+  uint256 moveSpeed;
+  uint32 motherlodeDistance;
+  uint32 maxMotherlodesPerAsteroid;
+  // chance of motherlode is (1 / MOTHERLODE_CHANCE_INV)
+  uint32 motherlodeChanceInv;
+}
+/* -------------------------------------------------------------------------- */
+/*                                  Arrivals                                  */
+/* -------------------------------------------------------------------------- */
+enum ESendType {
+  INVADE,
+  REINFORCE
+}
+
+struct ArrivalUnit {
+  uint256 unitType;
+  uint32 count;
+}
+
+struct Arrival {
+  ESendType sendType;
+  ArrivalUnit[] units;
+  uint256 arrivalBlock;
+  uint256 from;
+  uint256 to;
+  uint256 origin;
+  uint256 destination;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Motherlode                                 */
+/* -------------------------------------------------------------------------- */
+enum EMotherlodeSize {
+  SMALL,
+  MEDIUM,
+  LARGE
+}
+
+enum EMotherlodeType {
+  TITANIUM,
+  IRIDIUM,
+  PLATINUM,
+  KIMBERLITE
+}
+
+struct Motherlode {
+  EMotherlodeSize size;
+  EMotherlodeType motherlodeType;
+  uint256 cooldownBlocks;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Battle                                   */
+/* -------------------------------------------------------------------------- */
+struct BattleResult {
+  uint256 winnerEntity;
+  uint32[] attackerUnitsLeft;
+  uint32[] defenderUnitsLeft;
+}
+
+struct BattleParticipant {
+  uint256 participantEntity;
+  uint256[] unitTypes;
+  uint32[] unitLevels;
+  uint32[] unitCounts;
 }

@@ -11,6 +11,9 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
+import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
+import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
+
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
@@ -169,6 +172,12 @@ contract DestroySystem is PrimodiumSystem {
       UnitProductionOwnedByComponent(getC(UnitProductionOwnedByComponentID)).remove(buildingEntity);
     }
 
+    if (P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).has(buildingLevelEntity)) {
+      uint32 movesToSubtract = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(
+        buildingLevelEntity
+      );
+      LibMath.subtract(MaxMovesComponent(world.getComponent(MaxMovesComponentID)), playerEntity, movesToSubtract);
+    }
     levelComponent.remove(buildingEntity);
     buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);

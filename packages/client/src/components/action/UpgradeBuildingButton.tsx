@@ -100,7 +100,7 @@ export default function UpgradeBuildingButton({
         }
         disable={isUpgradeLocked || !isLevelConditionMet}
       >
-        <div className="font-bold leading-none h-8 flex justify-center items-center crt">
+        <div className="font-bold leading-none h-8 flex justify-center items-center px-2">
           {transactionLoading ? <Spinner /> : upgradeText}
         </div>
       </GameButton>

@@ -1,7 +1,6 @@
 import { initializeContext } from "../../api";
 import { createSceneManager } from "./createSceneManager";
 import { deferred } from "@latticexyz/utils";
-import { resizePhaserGame } from "../util/resizePhaserGame";
 import { GameConfig } from "../../types";
 import createPhaserScene from "../util/createPhaserScene";
 import { getSceneLoadPromise } from "../util/getSceneLoadPromise";
@@ -15,8 +14,6 @@ export const createGame = async (config: GameConfig) => {
     const [resolve, , promise] = deferred();
     phaserGame.events.on("ready", resolve);
     await promise;
-
-    const resizer = resizePhaserGame(phaserGame);
 
     // Create scene for loading assets
     const phaserScene = createPhaserScene({
@@ -43,7 +40,6 @@ export const createGame = async (config: GameConfig) => {
       sceneManager,
       dispose: () => {
         console.log(config.key + ": Disposing");
-        resizer.dispose();
         phaserGame.destroy(true);
         sceneManager.dispose();
       },

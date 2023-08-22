@@ -1,4 +1,3 @@
-import { Perlin } from "@latticexyz/noise";
 import { addCoords } from "@latticexyz/phaserx";
 import {
   EntityID,
@@ -46,7 +45,6 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
   };
 
   const target = async (
-    perlin: Perlin,
     tile: EntityID,
     type: EntityID,
     origin: ContractCoord,
@@ -54,13 +52,7 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
     excludeRange: number = 0,
     offset: Coord = { x: 0, y: 0 }
   ) => {
-    const tiles = getTilesOfTypeInRange(
-      origin,
-      tile,
-      range,
-      excludeRange,
-      perlin
-    );
+    const tiles = getTilesOfTypeInRange(origin, tile, range, excludeRange);
 
     const buildings = getBuildingsOfTypeInRange(origin, tile, range);
 

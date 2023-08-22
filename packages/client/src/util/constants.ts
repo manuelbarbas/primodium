@@ -224,8 +224,14 @@ export const BlockType = {
   HousingUnit3Research: keccak256("research.HousingUnit3") as EntityID,
 
   BuildingKey: "building" as EntityID,
-
   ArrowMarker: keccak256("marker.Arrow") as EntityID,
+
+  // Units
+  HammerLightDrone: keccak256("unit.HammerLightDrone") as EntityID,
+  StingerDrone: keccak256("unit.StingerDrone") as EntityID,
+  AnvilLightDrone: keccak256("unit.AnvilLightDrone") as EntityID,
+  AegisDrone: keccak256("unit.AegisDrone") as EntityID,
+  MiningVessel: keccak256("unit.MiningVessel") as EntityID,
 };
 
 export const BlockIdToKey = Object.entries(BlockType).reduce<{
@@ -280,6 +286,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.Lithium, ["/img/resource/lithium_ore_layer.png"]],
   [BlockType.Iron, ["/img/resource/iron_ore_layer.png"]],
   [BlockType.Copper, ["/img/resource/copper_ore_layer.png"]],
+  [BlockType.Sulfur, ["/img/resource/sulfur_ore_layer.png"]],
   [BlockType.Titanium, ["/img/resource/titanium_ore_layer.png"]],
   [BlockType.Iridium, ["/img/resource/iridium_ore_layer.png"]],
   [BlockType.Osmium, ["/img/resource/osmium_ore_layer.png"]],
@@ -322,32 +329,32 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [
     BlockType.CopperMine,
     [
-      "/img/building/coppermine/copper-miner.gif",
-      "/img/building/coppermine/copper-miner-level2.gif",
+      "/img/building/coppermine/copper-miner-level1.png",
+      "/img/building/coppermine/copper-miner-level2.png",
       "/img/building/coppermine/copper-miner-level3.png",
     ],
   ],
   [
     BlockType.IronMine,
     [
-      "/img/building/ironmine/iron-miner.gif",
-      "/img/building/ironmine/iron-miner-level2.gif",
+      "/img/building/ironmine/iron-mine-level1.png",
+      "/img/building/ironmine/iron-miner-level2.png",
       "/img/building/ironmine/iron-miner-level3.png",
     ],
   ],
   [
     BlockType.LithiumMine,
     [
-      "/img/building/lithiummine/lithium-miner.gif",
-      "/img/building/lithiummine/lithium-miner-level2.gif",
+      "/img/building/lithiummine/lithium-mine-level1.png",
+      "/img/building/lithiummine/lithium-miner-level2.png",
       "/img/building/lithiummine/lithium-miner-level3.png",
     ],
   ],
   [
     BlockType.SulfurMine,
     [
-      "/img/building/sulfurmine/sulfur-miner.gif",
-      "/img/building/sulfurmine/sulfur-miner-level2.gif",
+      "/img/building/sulfurmine/sulfur-mine-level1.png",
+      "/img/building/sulfurmine/sulfur-miner-level2.png",
       "/img/building/sulfurmine/sulfur-miner-level3.png",
     ],
   ],
@@ -355,19 +362,19 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     BlockType.StorageUnit,
     [
       "/img/building/storageunit/storageunit-level1.png",
-      "/img/building/storageunit/storageunit-level2.gif",
+      "/img/building/storageunit/storageunit-level2.png",
     ],
   ],
   [
     BlockType.IronPlateFactory,
     [
-      "/img/building/ironplatingfactory/ironplatingfactory-level1.gif",
-      "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
+      "/img/building/ironplatingfactory/ironplatingfactory-level1.png",
+      "/img/building/ironplatingfactory/ironplatingfactory-level2.png",
     ],
   ],
   [
     BlockType.AlloyFactory,
-    ["/img/building/alloyfactory/alloyfactory-level1.gif"],
+    ["/img/building/alloyfactory/alloyfactory-level1.png"],
   ],
   [
     BlockType.PhotovoltaicCellFactory,
@@ -388,13 +395,13 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     BlockType.PropulsionFuelFactory,
     ["/img/building/propulsionfuelfactory.gif"],
   ],
-  [BlockType.SpaceFuelFactory, ["/img/building/newplatingfactory.gif"]],
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
   [BlockType.Iron, "/img/resource/iron_resource.png"],
   [BlockType.Copper, "/img/resource/copper_resource.png"],
   [BlockType.Lithium, "/img/resource/lithium_resource.png"],
+  [BlockType.Sulfur, "/img/resource/sulfur_resource.png"],
   [BlockType.Titanium, "/img/resource/titanium_resource.png"],
   [BlockType.Osmium, "/img/resource/osmium_resource.png"],
   [BlockType.Tungsten, "/img/resource/tungsten_resource.png"],
@@ -509,6 +516,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.Copper, "/img/resource/copper_resource.png"],
   [BlockType.Lithium, "/img/resource/lithium_resource.png"],
   [BlockType.Titanium, "/img/resource/titanium_resource.png"],
+  [BlockType.Sulfur, "/img/resource/sulfur_resource.png"],
   [BlockType.Osmium, "/img/resource/osmium_resource.png"],
   [BlockType.Tungsten, "/img/resource/tungsten_resource.png"],
   [BlockType.Iridium, "/img/resource/iridium_resource.png"],
@@ -518,7 +526,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
   [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
-  [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/advancedbattery.png"],
+  [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/photovoltaiccell.png"],
   [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
   [BlockType.IridiumDrillbitCrafted, "/img/crafted/iridiumdrillbit.png"],
   [BlockType.LaserPowerSourceCrafted, "/img/crafted/laserbattery.png"],
@@ -544,7 +552,7 @@ export const ResourceImage = new Map<EntityID, string>([
 ]);
 
 export type DisplayKeyPair = {
-  terrain: EntityID;
+  terrain: EntityID | null;
   resource: EntityID | null;
 };
 

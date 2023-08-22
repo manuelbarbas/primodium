@@ -23,6 +23,23 @@ function drawPath(
   const _end = getRelativeCoord(gameObject, end);
 
   gameObject.lineStyle(lineWidth, color, 0.7);
+  gameObject.moveTo(_start.x, _start.y);
+  gameObject.lineTo(_end.x, _end.y);
+  gameObject.stroke();
+}
+
+function drawManhattanPath(
+  gameObject: Phaser.GameObjects.Graphics,
+  start: Coord,
+  end: Coord,
+  color: number,
+  lineWidth: number
+) {
+  const _start = getRelativeCoord(gameObject, start);
+
+  const _end = getRelativeCoord(gameObject, end);
+
+  gameObject.lineStyle(lineWidth, color, 0.7);
 
   //draw vertical segment
   gameObject.moveTo(_start.x, _start.y);
@@ -32,7 +49,7 @@ function drawPath(
   gameObject.stroke();
 }
 
-function drawDashedPath(
+function drawDashedManhattanPath(
   gameObject: Phaser.GameObjects.Graphics,
   start: Coord,
   end: Coord,
@@ -126,7 +143,7 @@ export const ManhattanPath = (
     id: id ?? `square_${uuid()}`,
     once: (gameObject) => {
       dashed
-        ? drawDashedPath(
+        ? drawDashedManhattanPath(
             gameObject,
             start ? start : { x: gameObject.x, y: gameObject.y },
             desitination,
@@ -135,13 +152,39 @@ export const ManhattanPath = (
             3,
             2
           )
-        : drawPath(
+        : drawManhattanPath(
             gameObject,
             start ? start : { x: gameObject.x, y: gameObject.y },
             desitination,
             color,
             thickness
           );
+    },
+  };
+};
+
+export const Path = (
+  desitination: Coord,
+  options: {
+    start?: Coord;
+    id?: string;
+    color?: number;
+    thickness?: number;
+    dashed?: boolean;
+  } = {}
+): GameObjectComponent<"Graphics"> => {
+  const { id, color = 0xffffff, thickness = 1.5, start } = options;
+
+  return {
+    id: id ?? `square_${uuid()}`,
+    once: (gameObject) => {
+      drawPath(
+        gameObject,
+        start ? start : { x: gameObject.x, y: gameObject.y },
+        desitination,
+        color,
+        thickness
+      );
     },
   };
 };

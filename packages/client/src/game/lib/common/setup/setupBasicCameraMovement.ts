@@ -125,7 +125,7 @@ export const setupBasicCameraMovement = (
 
   function handleCenter() {
     if (isDown(KeybindActions.Center)) {
-      pan({ x: 0, y: 0 });
+      pan({ x: 15, y: 6 });
     }
   }
 

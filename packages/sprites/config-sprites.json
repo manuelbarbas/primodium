@@ -1,6 +1,6 @@
 {
   "savePath": "../client/public/assets/sprites/",
-  "folders": ["asteroid_sprites"],
+  "folders": ["sprites"],
   "images": [],
   "packOptions": {
     "allowTrim": false,
