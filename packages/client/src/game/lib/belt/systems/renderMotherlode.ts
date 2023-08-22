@@ -12,9 +12,18 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Texture } from "../../common/object-components/sprite";
-import { AsteroidType, Position } from "src/network/components/chainComponents";
+import {
+  AsteroidType,
+  Motherlode,
+  Position,
+} from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { ESpaceRockType } from "../types";
+import {
+  EMotherlodeSize,
+  ESpaceRockType,
+  MotherlodeSizeNames,
+  MotherlodeTypeNames,
+} from "../types";
 
 export const renderMotherlode = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -29,9 +38,21 @@ export const renderMotherlode = (scene: Scene) => {
     const motherlodeObjectGroup = scene.objectPool.getGroup(
       "motherlode_" + entity
     );
+    const motherlodeData = Motherlode.get(world.entities[entity]);
+    if (!motherlodeData) throw new Error("motherlode data not found");
+    const sprite = `motherlode-${
+      MotherlodeTypeNames[motherlodeData.motherlodeType]
+    }-${MotherlodeSizeNames[motherlodeData.size]}`;
+    console.log("sprite", sprite);
     const coord = Position.get(world.entities[entity]);
     if (!coord) return;
 
+    const scale =
+      motherlodeData.size == EMotherlodeSize.SMALL
+        ? 1
+        : motherlodeData.size == EMotherlodeSize.MEDIUM
+        ? 2
+        : 4;
     motherlodeObjectGroup.add("Sprite").setComponents([
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -40,8 +61,9 @@ export const renderMotherlode = (scene: Scene) => {
       SetValue({
         originX: 0.5,
         originY: 0.5,
+        scale,
       }),
-      Texture("motherlode-sprite"),
+      Texture(sprite),
     ]);
   };
 

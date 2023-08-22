@@ -35,7 +35,6 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
       console.log(i, "not a motherlode");
       continue;
     }
-    console.log("hello");
     world.registerEntity({ id: motherlodeEntity });
     const {
       size: rawSize,
@@ -70,7 +69,6 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
 
 function isMotherlode(entity: EntityID, chanceInv: number) {
   const motherlodeType = getByteUInt(entity, 6, 128);
-  console.log("output: ", motherlodeType % chanceInv);
   return motherlodeType % chanceInv === 1;
 }
 
