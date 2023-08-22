@@ -13,7 +13,7 @@ export const increment = async (entity: EntityID, network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
-  const counter = Counter.use();
+  const counter = Counter.get();
 
   const receipt = await execute(
     systems["system.Increment"].executeTyped(entity, {

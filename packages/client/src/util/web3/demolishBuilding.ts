@@ -18,11 +18,11 @@ export const demolishBuilding = async (coord: Coord, network: Network) => {
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
-  const building = SelectedBuilding.use()?.value;
-  const buildingType = BuildingType.use(building, {
+  const building = SelectedBuilding.get()?.value;
+  const buildingType = BuildingType.get(building, {
     value: "-1" as EntityID,
   })?.value;
-  const currLevel = Level.use(building)?.value || 0;
+  const currLevel = Level.get(building)?.value || 0;
 
   const activeAsteroid = ActiveAsteroid.get()?.value;
   if (!activeAsteroid) return;
