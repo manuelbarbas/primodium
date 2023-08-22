@@ -56,7 +56,8 @@
         "type": "image",
         "key": "dark-fog",
         "url": "/assets/tilesets/dark-fog.png"
-      }, {
+      },
+      {
         "type": "image",
         "key": "resource",
         "url": "/assets/tilesets/resource.png"
@@ -64,12 +65,12 @@
     ]
   },
   "BELT_MAP": {
-    "files" : [
+    "files": [
       {
         "type": "image",
         "key": "grid-tileset",
         "url": "/assets/tilesets/grid.png"
-      }, 
+      },
       {
         "type": "image",
         "key": "asteroid-sprite",
@@ -79,6 +80,11 @@
         "type": "image",
         "key": "asteroid-titanium-sprite",
         "url": "/img/asteroid-titanium.png"
+      },
+      {
+        "type": "image",
+        "key": "motherlode-sprite",
+        "url": "/img/spacerocks/motherlodes/motherlode_iridium_small.png"
       }
     ]
   }

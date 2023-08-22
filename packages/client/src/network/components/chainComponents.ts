@@ -237,8 +237,8 @@ export const MotherlodeResource = newNumberComponent(world, {
 export const P_MotherlodeResource = newComponent(
   world,
   {
-    ResourceID: Type.Entity,
-    MaxAmount: Type.Number,
+    resource: Type.Entity,
+    maxAmount: Type.Number,
   },
   {
     id: "P_MotherlodeResource",
@@ -275,7 +275,7 @@ export default {
   OccupiedUtilityResource,
   MaxUtility,
 
-  Motherlode,
-  MotherlodeResource,
-  P_MotherlodeResource,
+  // Motherlode,
+  // MotherlodeResource,
+  // P_MotherlodeResource,
 };
