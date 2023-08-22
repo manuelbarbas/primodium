@@ -9,14 +9,13 @@ import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 import { InvadeSystem, ID as InvadeSystemID } from "systems/InvadeSystem.sol";
 import { ReceiveReinforcementSystem, ID as ReceiveReinforcementSystemID } from "systems/ReceiveReinforcementSystem.sol";
 import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "systems/RecallReinforcementsSystem.sol";
+import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 
 import { LibSend } from "libraries/LibSend.sol";
 import { LibArrival } from "libraries/LibArrival.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
-
-import { MOVE_SPEED } from "src/constants.sol";
 
 contract SendUnitsTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
@@ -171,8 +170,10 @@ contract SendUnitsTest is PrimodiumTest {
     Coord memory destinationPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
       getHomeAsteroid(bob)
     );
+
+    uint256 worldSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     uint256 expectedArrivalBlock = block.number +
-      ((LibSend.distance(originPosition, destinationPosition) * speed * MOVE_SPEED) / 100 / 100);
+      ((LibSend.distance(originPosition, destinationPosition) * speed * worldSpeed) / 100 / 100);
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.INVADE,
       units: units,
