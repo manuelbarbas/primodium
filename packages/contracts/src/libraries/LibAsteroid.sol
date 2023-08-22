@@ -69,6 +69,7 @@ library LibAsteroid {
   }
 
   /**
+   * todo: move this function to a separate library
    * @dev Calculates the position (x, y) based on a given distance and direction.
    * @param _distance The distance to be moved.
    * @param direction The direction angle in degrees.

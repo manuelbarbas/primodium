@@ -16,17 +16,20 @@ import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "componen
 
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
 // types
 import { Coord, ESpaceRockType, Motherlode, EMotherlodeSize, EMotherlodeType, ResourceValue } from "src/types.sol";
 import { TitaniumID, IridiumID, PlatinumID, KimberliteID } from "src/prototypes.sol";
+import { MOTHERLODE_DISTANCE, MAX_MOTHERLODES_PER_ASTEROID } from "src/constants.sol";
 
 library LibMotherlode {
   function createMotherlode(IWorld world, Coord memory position) internal returns (uint256) {
     ReversePositionComponent activeComponent = ReversePositionComponent(world.getComponent(ReversePositionComponentID));
+    uint32 maxMotherlodes = MAX_MOTHERLODES_PER_ASTEROID;
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
-    for (uint256 i = 0; i < 6; i++) {
-      Coord memory relPosition = LibMotherlode.getCoord(i);
+    for (uint32 i = 0; i < maxMotherlodes; i++) {
+      Coord memory relPosition = LibMotherlode.getCoord(i, maxMotherlodes);
       uint256 sourceEncodedPos = LibEncode.encodeCoord(
         Coord(relPosition.x + position.x, relPosition.y + position.y, 0)
       );
@@ -83,13 +86,8 @@ library LibMotherlode {
     cooldownBlocks = LibEncode.getByteUInt(entity, 6, 10);
   }
 
-  function getCoord(uint256 i) internal pure returns (Coord memory) {
-    if (i == 0) return Coord(4, 0, 0);
-    if (i == 1) return Coord(3, 4, 0);
-    if (i == 2) return Coord(-3, 4, 0);
-    if (i == 3) return Coord(-4, 0, 0);
-    if (i == 4) return Coord(-3, -4, 0);
-    return Coord(3, -4, 0);
+  function getCoord(uint32 i, uint32 max) internal pure returns (Coord memory) {
+    return LibAsteroid.getPositionByVector(MOTHERLODE_DISTANCE, (i * 360) / max);
   }
 
   function getSize(uint8 size) internal pure returns (EMotherlodeSize) {
