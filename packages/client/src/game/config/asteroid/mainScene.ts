@@ -1,83 +1,71 @@
 // import { SceneConfig } from "../../types";
-import { SceneConfig } from "engine/types";
+import { SceneConfig, TilesetConfig } from "engine/types";
 import { AsteroidMap } from "../../constants";
 import { animationConfig } from "./animation";
 import { tileAnimationConfig } from "./tileAnimation";
+import asteroidMap from "../../../maps/asteroid_0.7.json";
+import { LayerConfig } from "engine/lib/core/tilemap/types";
 
-const { Assets, Scenes, Tilesets, Tilekeys } = AsteroidMap;
+const { Scenes } = AsteroidMap;
+
+let tilesets: TilesetConfig = {};
+let tilesetNames = [];
+let layers: LayerConfig<any, any> = {};
+
+for (const tileset of asteroidMap.tilesets) {
+  tilesets[tileset.name] = {
+    key: tileset.name,
+    tileHeight: tileset.tileheight,
+    tileWidth: tileset.tilewidth,
+    extrusion: 1,
+    gid: tileset.firstgid,
+  };
+
+  tilesetNames.push(tileset.name);
+}
+
+for (const layer of asteroidMap.layers) {
+  layers[layer.name] = {
+    tilesets: tilesetNames,
+    depth: layer.properties ? layer.properties[0].value : 0,
+    hasHueTintShader: false,
+    hasLightShader: true,
+  };
+}
 
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
   camera: {
     minZoom: Math.max(1, window.devicePixelRatio),
     maxZoom: window.devicePixelRatio * 5,
-    defaultZoom: window.devicePixelRatio * 3,
+    defaultZoom: Math.max(1, window.devicePixelRatio),
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },
   animations: animationConfig,
   cullingChunkSize: 64,
   tilemap: {
-    tileWidth: 16,
-    tileHeight: 16,
-    chunkSize: 32,
+    tileWidth: asteroidMap.tilewidth,
+    tileHeight: asteroidMap.tileheight,
+    chunkSize: 64,
     tilesets: {
-      [Tilesets.Terrain]: {
-        key: Assets.TerrainTileset,
-        tileHeight: 16,
-        tileWidth: 16,
-        extrusion: 1,
-      },
-      [Tilesets.Resource]: {
-        key: Assets.ResourceTileset,
-        tileHeight: 16,
-        tileWidth: 16,
+      ...tilesets,
+      [AsteroidMap.Tilesets.Resource]: {
+        key: AsteroidMap.Assets.ResourceTileset,
+        tileHeight: 32,
+        tileWidth: 32,
       },
     },
     layerConfig: {
       layers: {
-        Terrain: {
-          tilesets: [Tilesets.Terrain, Tilesets.Terrain],
-        },
+        ...layers,
         Resource: {
-          tilesets: [Tilesets.Resource, Tilesets.Resource],
+          tilesets: [AsteroidMap.Tilesets.Resource],
+          hasHueTintShader: false,
         },
       },
-      defaultLayer: Tilesets.Terrain,
+      defaultLayer: "Base",
     },
-    backgroundTile: [
-      Tilekeys.Bedrock,
-      Tilekeys.Bedrock,
-      Tilekeys.Bedrock,
-      Tilekeys.Bedrock,
-      Tilekeys.Alluvium,
-      Tilekeys.Alluvium,
-      Tilekeys.Alluvium,
-      Tilekeys.Alluvium,
-      Tilekeys.Alluvium,
-      Tilekeys.Alluvium,
-      Tilekeys.Alluvium,
-      Tilekeys.Alluvium,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-      Tilekeys.Regolith,
-    ],
     tileAnimations: tileAnimationConfig,
     animationInterval: 200,
   },

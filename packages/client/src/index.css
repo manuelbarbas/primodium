@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
+}
+
 @layer utilities {
   body {
     cursor: url("/img/cursors/normal.png"), auto !important;
@@ -91,116 +101,5 @@
   /* remove outline on waltour tooltip containers */
   #walktour-tooltip-container[tabindex] {
     @apply focus:outline-none;
-  }
-
-  .vignette {
-    background: rgb(0, 0, 0);
-    background: -moz-radial-gradient(
-      circle,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 80%,
-      rgba(0, 0, 0, 0.7945772058823529) 86%,
-      rgba(0, 0, 0, 0.9654455532212886) 91%,
-      rgba(0, 0, 0, 1) 100%
-    );
-    background: -webkit-radial-gradient(
-      circle,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 80%,
-      rgba(0, 0, 0, 0.7945772058823529) 86%,
-      rgba(0, 0, 0, 0.9654455532212886) 91%,
-      rgba(0, 0, 0, 1) 100%
-    );
-    background: radial-gradient(
-      circle,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 80%,
-      rgba(0, 0, 0, 0.7945772058823529) 86%,
-      rgba(0, 0, 0, 0.9654455532212886) 91%,
-      rgba(0, 0, 0, 1) 100%
-    );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
-  }
-}
-
-.crt {
-  position: relative;
-}
-
-@keyframes flicker {
-  0% {
-    opacity: 0.57861;
-  }
-  5% {
-    opacity: 0.64769;
-  }
-  10% {
-    opacity: 0.73604;
-  }
-  15% {
-    opacity: 0.90626;
-  }
-  20% {
-    opacity: 0.68128;
-  }
-  25% {
-    opacity: 0.83891;
-  }
-  30% {
-    opacity: 0.65583;
-  }
-  35% {
-    opacity: 0.67807;
-  }
-  40% {
-    opacity: 0.66559;
-  }
-  45% {
-    opacity: 0.84693;
-  }
-  50% {
-    opacity: 0.96019;
-  }
-  55% {
-    opacity: 0.58594;
-  }
-  60% {
-    opacity: 0.60313;
-  }
-  65% {
-    opacity: 0.71988;
-  }
-  70% {
-    opacity: 0.53455;
-  }
-  75% {
-    opacity: 0.67288;
-  }
-  80% {
-    opacity: 0.71428;
-  }
-  85% {
-    opacity: 0.70419;
-  }
-  90% {
-    opacity: 0.7003;
-  }
-  95% {
-    opacity: 0.66108;
-  }
-  100% {
-    opacity: 0.54387;
-  }
-}
-
-@keyframes scanline {
-  0% {
-    bottom: 100%;
-  }
-  80% {
-    bottom: 100%;
-  }
-  100% {
-    bottom: -20%;
   }
 }

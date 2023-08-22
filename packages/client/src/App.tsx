@@ -41,14 +41,17 @@ export default function App() {
 
   if (networkLayer === undefined) {
     return (
-      <>
-        <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
+      <div
+        style={{
+          backgroundImage: "url(/img/backgrounds/star.png)",
+        }}
+      >
+        <div className="flex items-center justify-center h-screen text-white font-mono">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Primodium</h1>
             <p className="text-lg">Initializing...</p>
           </div>
         </div>
-      </>
+      </div>
     );
   } else {
     return (

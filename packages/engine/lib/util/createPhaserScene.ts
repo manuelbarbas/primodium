@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import OutlinePostFx from "phaser3-rex-plugins/plugins/outlinepipeline.js";
 
 export const createPhaserScene = (options: {
   key: string;
@@ -19,12 +18,6 @@ export const createPhaserScene = (options: {
 
     create() {
       create && create(this);
-
-      const renderer = this.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-
-      if (renderer?.pipelines) {
-        renderer.pipelines.addPostPipeline("outline", OutlinePostFx);
-      }
     }
 
     update() {
