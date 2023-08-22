@@ -11,6 +11,7 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 //systems
 import { S_ResolveBattleSystem, ID as S_ResolveBattleSystemID } from "systems/S_ResolveBattleSystem.sol";
 
+import "forge-std/console.sol";
 // comps
 
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
@@ -111,6 +112,7 @@ library LibInvade {
     );
     uint256 index = 0;
     while (index < size) {
+      console.log("index: %s , size: %s", index, size);
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
       if (arrival.sendType != ESendType.INVADE) {
         index++;
@@ -122,6 +124,8 @@ library LibInvade {
         }
         ArrivalsList.remove(world, playerAsteroidEntity, index);
         size--;
+      } else {
+        index++;
       }
     }
     battleAttackerComponent.set(battleEntity, attacker);

@@ -65,6 +65,7 @@ library LibReinforce {
         LibUnits.howManyUnitsCanAdd(world, playerEntity, arrival.units[i].unitType),
         arrival.units[i].count
       );
+
       if (num > 0) {
         LibUpdateSpaceRock.addUnitsToAsteroid(world, playerEntity, asteroidEntity, arrival.units[i].unitType, num);
         arrival.units[i].count -= num;
@@ -127,8 +128,8 @@ library LibReinforce {
       ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
       playerAsteroidEntity
     );
-    uint256 index = 0;
 
+    uint256 index = 0;
     while (index < size) {
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
       if (arrival.sendType != ESendType.REINFORCE) {
