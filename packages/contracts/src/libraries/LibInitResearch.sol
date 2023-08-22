@@ -135,13 +135,33 @@ library LibInitResearch {
     isTechComponent.set(LithiumCopperOxideFactoryResearchID);
 
     // Solar Panel
-    levelComponent.set(SolarPanelResearchID, 5);
-    requiredResources = new ResourceValue[](3);
-    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 2500 });
-    requiredResources[1] = ResourceValue({ resource: CopperResourceItemID, value: 2500 });
-    requiredResources[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1500 });
+    levelComponent.set(SolarPanelResearchID, 2);
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
     LibSetBuildingReqs.setResourceReqs(world, SolarPanelResearchID, requiredResources);
     isTechComponent.set(SolarPanelResearchID);
+
+    // Starmapper 1
+    levelComponent.set(StarmapperResearchID, 3);
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
+    LibSetBuildingReqs.setResourceReqs(world, StarmapperResearchID, requiredResources);
+    isTechComponent.set(StarmapperResearchID);
+
+    // Starmapper 2
+    levelComponent.set(Starmapper2ResearchID, 4);
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
+    LibSetBuildingReqs.setResourceReqs(world, Starmapper2ResearchID, requiredResources);
+    isTechComponent.set(Starmapper2ResearchID);
+
+    // Starmapper 3
+    levelComponent.set(Starmapper3ResearchID, 5);
+    requiredResources = new ResourceValue[](1);
+    requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
+
+    LibSetBuildingReqs.setResourceReqs(world, Starmapper3ResearchID, requiredResources);
+    isTechComponent.set(Starmapper3ResearchID);
   }
 
   function initExpansion(IWorld world) internal {

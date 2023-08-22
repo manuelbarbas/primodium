@@ -25,5 +25,7 @@ uint256 constant PlatinumID = uint256(keccak256("block.Platinum"));
 uint256 constant UraniniteID = uint256(keccak256("block.Uraninite"));
 uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 
+uint256 constant MoveCountID = uint256(keccak256("block.MoveCount"));
+
 uint256 constant ElectricityUtilityResourceID = uint256(keccak256("item.ElectricityUtilityResource"));
 uint256 constant HousingUtilityResourceID = uint256(keccak256("item.HousingUtilityResource"));

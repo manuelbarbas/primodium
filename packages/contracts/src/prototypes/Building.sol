@@ -39,3 +39,6 @@ uint256 constant StorageUnitID = uint256(keccak256("block.StorageUnit"));
 
 // Units
 uint256 constant TrainingFacilityID = uint256(keccak256("block.TrainingFacility"));
+
+// Starmapper
+uint256 constant StarmapperID = uint256(keccak256("block.Starmapper"));

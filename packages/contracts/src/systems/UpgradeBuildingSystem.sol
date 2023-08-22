@@ -14,6 +14,8 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "components/LevelComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
+import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
@@ -21,12 +23,16 @@ import { P_ProductionComponent, ID as P_ProductionComponentID } from "components
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
-import { Coord } from "../types.sol";
-import { LibResearch } from "../libraries/LibResearch.sol";
-import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibResource } from "../libraries/LibResource.sol";
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
-import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
+
+import { Coord } from "src/types.sol";
+
+import { LibMath } from "libraries/LibMath.sol";
+import { LibResearch } from "libraries/LibResearch.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { LibResource } from "libraries/LibResource.sol";
+
+import { IOnEntitySubsystem } from "src/interfaces/IOnEntitySubsystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "src/interfaces/IOnBuildingSubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.UpgradeBuilding"));
 
@@ -82,6 +88,20 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
     uint32 newLevel = levelComponent.getValue(buildingEntity) + 1;
     levelComponent.set(buildingEntity, newLevel);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, newLevel);
+
+    /* ------------------------------- Starmapper ------------------------------- */
+    if (P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).has(buildingLevelEntity)) {
+      uint32 movesToAdd = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(buildingLevelEntity);
+      uint256 prevBuildingLevelEntity = LibEncode.hashKeyEntity(buildingType, newLevel - 1);
+      uint32 movesToSubtract = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(
+        prevBuildingLevelEntity
+      );
+      LibMath.add(
+        MaxMovesComponent(world.getComponent(MaxMovesComponentID)),
+        playerEntity,
+        movesToAdd - movesToSubtract
+      );
+    }
 
     //required production update
     if (
