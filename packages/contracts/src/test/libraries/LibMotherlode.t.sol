@@ -37,11 +37,11 @@ contract LibMotherlodeTest is PrimodiumTest {
 
   function testIsMotherlode() public {
     uint256 entity = 0 << 128;
-    assertFalse(LibMotherlode.isMotherlode(entity));
+    assertFalse(LibMotherlode.isMotherlode(entity, 6));
     entity = 1 << 128;
-    assertTrue(LibMotherlode.isMotherlode(entity));
+    assertTrue(LibMotherlode.isMotherlode(entity, 6));
     entity = 2 << 128;
-    assertTrue(!LibMotherlode.isMotherlode(entity));
+    assertTrue(!LibMotherlode.isMotherlode(entity, 6));
   }
 
   function testFuzzMotherlodePrototype(uint256 entity) public {
@@ -52,30 +52,30 @@ contract LibMotherlodeTest is PrimodiumTest {
   }
 
   function findMotherlode() public returns (uint256, Coord memory) {
-    address player = bob;
+    address player = deployer;
     spawn(player);
     vm.startPrank(deployer);
     uint256 asteroid = getHomeAsteroid(player);
     Coord memory sourcePosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(asteroid);
-    Coord memory targetPositionRelative = LibMotherlode.getCoord(0);
+    Coord memory targetPositionRelative = LibMotherlode.getCoord(0, 4, 6);
     Coord memory targetPosition = Coord(
       sourcePosition.x + targetPositionRelative.x,
       sourcePosition.y + targetPositionRelative.y,
       0
     );
     uint256 motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition)));
-    uint i = 0;
-    bool found = LibMotherlode.isMotherlode(motherlodeSeed);
+    uint32 i = 0;
+    bool found = LibMotherlode.isMotherlode(motherlodeSeed, 6);
     while (i < 6 && !found) {
       i++;
-      targetPositionRelative = LibMotherlode.getCoord(i);
+      targetPositionRelative = LibMotherlode.getCoord(i, 4, 6);
       targetPosition = Coord(
         sourcePosition.x + targetPositionRelative.x,
         sourcePosition.y + targetPositionRelative.y,
         0
       );
       motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition)));
-      found = LibMotherlode.isMotherlode(motherlodeSeed);
+      found = LibMotherlode.isMotherlode(motherlodeSeed, 6);
     }
     require(found, "uh oh, no motherlode found");
     return (asteroid, targetPosition);

@@ -29,7 +29,7 @@ library LibMotherlode {
     uint32 maxMotherlodes = MAX_MOTHERLODES_PER_ASTEROID;
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
     for (uint32 i = 0; i < maxMotherlodes; i++) {
-      Coord memory relPosition = LibMotherlode.getCoord(i, maxMotherlodes);
+      Coord memory relPosition = LibMotherlode.getCoord(i, MOTHERLODE_DISTANCE, maxMotherlodes);
       uint256 sourceEncodedPos = LibEncode.encodeCoord(
         Coord(relPosition.x + position.x, relPosition.y + position.y, 0)
       );
@@ -86,8 +86,8 @@ library LibMotherlode {
     cooldownBlocks = LibEncode.getByteUInt(entity, 6, 10);
   }
 
-  function getCoord(uint32 i, uint32 max) internal pure returns (Coord memory) {
-    return LibAsteroid.getPositionByVector(MOTHERLODE_DISTANCE, (i * 360) / max);
+  function getCoord(uint32 i, uint32 distance, uint32 max) internal pure returns (Coord memory) {
+    return LibAsteroid.getPositionByVector(distance, (i * 360) / max);
   }
 
   function getSize(uint8 size) internal pure returns (EMotherlodeSize) {
