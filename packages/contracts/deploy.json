@@ -15,9 +15,12 @@
     "LevelComponent",
     "ChildrenComponent",
     "ProductionComponent",
+    "MotherlodeResourceComponent",
     "IsDebugComponent",
     "PositionComponent",
     "MaxUtilityComponent",
+    "MineableAtComponent",
+    "MotherlodeComponent",
     "OccupiedUtilityResourceComponent",
     "UnitProductionOwnedByComponent",
     "UnitProductionQueueComponent",
@@ -27,13 +30,16 @@
     "AsteroidTypeComponent",
     "ActiveComponent",
     "DimensionsComponent",
+    "ReversePositionComponent",
     "BattleAttackerComponent",
     "BattleDefenderComponent",
     "BattleResultComponent",
+    "GameConfigComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
+    "P_MotherlodeResourceComponent",
     "P_RequiredTileComponent",
     "P_RequiredUtilityComponent",
     "P_UtilityProductionComponent",
@@ -54,7 +60,14 @@
     "P_UnitTravelSpeedComponent",
     "P_TerrainComponent"
   ],
-  "initializers": ["LibInitWorld", "LibInitTerrain", "LibInitBuildings", "LibInitResearch", "LibInitDebug"],
+  "initializers": [
+    "LibInitWorld",
+    "LibInitTerrain",
+    "LibInitBuildings",
+    "LibInitResearch",
+    "LibInitDebug",
+    "LibInitMotherlode"
+  ],
   "systems": [
     {
       "name": "ResearchSystem",
@@ -68,10 +81,9 @@
       "name": "SpawnSystem",
       "writeAccess": [
         "PositionComponent",
-        "ActiveComponent",
+        "ReversePositionComponent",
         "AsteroidCountComponent",
         "AsteroidTypeComponent",
-        "ActiveComponent",
         "BuildingTypeComponent",
         "OwnedByComponent",
         "LevelComponent",

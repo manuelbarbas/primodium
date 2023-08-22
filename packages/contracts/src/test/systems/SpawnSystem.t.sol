@@ -45,7 +45,7 @@ contract SpawnSystemTest is PrimodiumTest {
     );
     assertEq(
       asteroidTypeComponent.getValue(asteroidEntity),
-      uint256(ESpaceRockType.ASTEROID),
+      ESpaceRockType.ASTEROID,
       "Asteroid should be a normal asteroid"
     );
     assertEq(
@@ -72,7 +72,7 @@ contract SpawnSystemTest is PrimodiumTest {
     for (uint32 i = 1; i <= 10; i++) {
       address newAddress = address(uint160(uint256(keccak256(abi.encodePacked(i)))));
       uint256 playerEntity = addressToEntity(newAddress);
-      Coord memory position = LibAsteroid.getUniqueAsteroidPosition(i);
+      Coord memory position = LibAsteroid.getUniqueAsteroidPosition(world, i);
       spawn(newAddress);
       uint256 asteroid = positionComponent.getValue(playerEntity).parent;
       Coord memory retrievedPosition = positionComponent.getValue(asteroid);
