@@ -310,6 +310,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
   [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
 
+  //buildings
   [
     BlockType.MainBase,
     [
@@ -395,6 +396,13 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     BlockType.PropulsionFuelFactory,
     ["/img/building/propulsionfuelfactory.gif"],
   ],
+
+  //units
+  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.gif"]],
+  [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
+  [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
+  [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
+  [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
