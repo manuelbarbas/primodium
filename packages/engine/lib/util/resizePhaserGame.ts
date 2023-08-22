@@ -2,6 +2,7 @@ export const resizePhaserGame = (game: Phaser.Game) => {
   const resize = () => {
     const w = window.innerWidth * window.devicePixelRatio;
     const h = window.innerHeight * window.devicePixelRatio;
+
     game.scale.resize(w, h);
     for (const scene of game.scene.scenes) {
       if (scene.scene.settings.active) {
@@ -13,12 +14,7 @@ export const resizePhaserGame = (game: Phaser.Game) => {
           game.scale.height
         );
 
-        const currentCenterX = scene.cameras.main.scrollX + game.scale.width;
-        const currentCenterY = scene.cameras.main.scrollY + game.scale.height;
-
-        scene.cameras.main.centerOn(currentCenterX, currentCenterY);
-
-        // Re-center the camera
+        // // Re-center the camera
         // scene.cameras.main.setScroll(
         //   -game.scale.width / 2,
         //   -game.scale.height / 2

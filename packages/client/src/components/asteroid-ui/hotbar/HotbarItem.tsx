@@ -125,8 +125,11 @@ const HotbarItem: React.FC<{
       }}
     >
       <div
-        className={`relative flex flex-col text-sm items-center cursor-pointer w-16 ${
-          selectedBuilding === blockType ? "scale-110" : ""
+        onClick={handleSelectBuilding}
+        className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400 ${
+          selectedBuilding === blockType
+            ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100"
+            : ""
         }`}
       >
         <img
@@ -135,14 +138,7 @@ const HotbarItem: React.FC<{
               ? BackgroundImage.get(blockType)![0]
               : undefined
           }
-          onClick={handleSelectBuilding}
-          className={`w-14 h-14 pixel-images border border-cyan-700 rounded-md
-          ${
-            selectedBuilding === blockType
-              ? " ring-4 ring-amber-400 transistion-all duration-100"
-              : ""
-          }
-          `}
+          className={`absolute bottom-0 w-14 pixel-images rounded-md`}
         />
         {selectedBuilding === blockType && (
           <motion.p
@@ -159,8 +155,8 @@ const HotbarItem: React.FC<{
         {keyImage && !isMobile && (
           <img
             src={keyImage}
-            className={`absolute -top-2 -left-2 w-8 h-8 pixel-images ${
-              selectedBuilding === blockType ? "opacity-30" : ""
+            className={`absolute -bottom-2 -left-2 w-7 h-7 pixel-images rounded-md ${
+              selectedBuilding === blockType ? "opacity-30" : "opacity-70"
             }`}
           />
         )}

@@ -59,7 +59,7 @@ const Hotbar: React.FC = () => {
           exit={{ opacity: 0, scale: 0, y: 200 }}
           className="flex flex-col items-center relative mb-5"
         >
-          <div className="flex gap-1 mb-1 ">
+          <div className="flex gap-2 mb-2 ">
             {hotbarContent.map((item, index) => {
               return (
                 <HotbarLabel

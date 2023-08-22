@@ -329,32 +329,32 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [
     BlockType.CopperMine,
     [
-      "/img/building/coppermine/copper-miner.gif",
-      "/img/building/coppermine/copper-miner-level2.gif",
+      "/img/building/coppermine/copper-miner-level1.png",
+      "/img/building/coppermine/copper-miner-level2.png",
       "/img/building/coppermine/copper-miner-level3.png",
     ],
   ],
   [
     BlockType.IronMine,
     [
-      "/img/building/ironmine/iron-miner.gif",
-      "/img/building/ironmine/iron-miner-level2.gif",
+      "/img/building/ironmine/iron-mine-level1.png",
+      "/img/building/ironmine/iron-miner-level2.png",
       "/img/building/ironmine/iron-miner-level3.png",
     ],
   ],
   [
     BlockType.LithiumMine,
     [
-      "/img/building/lithiummine/lithium-miner.gif",
-      "/img/building/lithiummine/lithium-miner-level2.gif",
+      "/img/building/lithiummine/lithium-mine-level1.png",
+      "/img/building/lithiummine/lithium-miner-level2.png",
       "/img/building/lithiummine/lithium-miner-level3.png",
     ],
   ],
   [
     BlockType.SulfurMine,
     [
-      "/img/building/sulfurmine/sulfur-miner.gif",
-      "/img/building/sulfurmine/sulfur-miner-level2.gif",
+      "/img/building/sulfurmine/sulfur-mine-level1.png",
+      "/img/building/sulfurmine/sulfur-miner-level2.png",
       "/img/building/sulfurmine/sulfur-miner-level3.png",
     ],
   ],
@@ -362,19 +362,19 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     BlockType.StorageUnit,
     [
       "/img/building/storageunit/storageunit-level1.png",
-      "/img/building/storageunit/storageunit-level2.gif",
+      "/img/building/storageunit/storageunit-level2.png",
     ],
   ],
   [
     BlockType.IronPlateFactory,
     [
-      "/img/building/ironplatingfactory/ironplatingfactory-level1.gif",
-      "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
+      "/img/building/ironplatingfactory/ironplatingfactory-level1.png",
+      "/img/building/ironplatingfactory/ironplatingfactory-level2.png",
     ],
   ],
   [
     BlockType.AlloyFactory,
-    ["/img/building/alloyfactory/alloyfactory-level1.gif"],
+    ["/img/building/alloyfactory/alloyfactory-level1.png"],
   ],
   [
     BlockType.PhotovoltaicCellFactory,
@@ -395,7 +395,6 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     BlockType.PropulsionFuelFactory,
     ["/img/building/propulsionfuelfactory.gif"],
   ],
-  [BlockType.SpaceFuelFactory, ["/img/building/newplatingfactory.gif"]],
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
