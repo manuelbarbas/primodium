@@ -268,6 +268,11 @@ export const P_MotherlodeResource = newComponent(
   }
 );
 
+export const IsMineableAt = newStringComponent(world, {
+  id: "IsMineableAt",
+  metadata: { contractId: `${commonIdPrefix}IsMineableAt` },
+});
+
 export default {
   GameConfig,
   P_Terrain,
@@ -301,4 +306,5 @@ export default {
   Motherlode,
   MotherlodeResource,
   P_MotherlodeResource,
+  IsMineableAt,
 };

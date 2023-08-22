@@ -1,7 +1,11 @@
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import {
+  ActiveAsteroid,
+  BlockNumber,
+} from "src/network/components/clientComponents";
 import { UnitBreakdown } from "./UnitBreakdown";
 import {
   AsteroidType,
+  IsMineableAt,
   Level,
   MainBase,
   Motherlode,
@@ -96,6 +100,10 @@ const MotherlodeTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
     hashKeyEntity(resource, target),
     { value: 0 }
   ).value;
+
+  const mineableAt = Number(IsMineableAt.use(target, { value: "0" }).value);
+  const blockNumber = BlockNumber.use(undefined, { value: 0 }).value;
+  const blocksLeft = mineableAt - blockNumber;
   const resourceLeft = maxAmount - resourceMined;
   const resourceName = MotherlodeTypeNames[motherlodeData.motherlodeType];
   const resourceSize = MotherlodeSizeNames[motherlodeData.size];
@@ -104,6 +112,15 @@ const MotherlodeTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
   return (
     <>
       <div className="relative flex pixel-images h-32 w-fit bg-slate-900/90">
+        {blocksLeft > 0 && (
+          <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center">
+            <div className="text-red-500 text-4xl font-bold z-[1009]">
+              <b>COOLING DOWN</b>
+              <br />
+              <b className="text-3xl">{blocksLeft} Blocks Left</b>
+            </div>
+          </div>
+        )}
         <div className="relative">
           <img
             src={`/img/spacerocks/motherlodes/${img}`}
