@@ -6,7 +6,9 @@ import "../PrimodiumTest.t.sol";
 import { SendUnitsSystem, ID as SendUnitsSystemID } from "systems/SendUnitsSystem.sol";
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
-
+import { InvadeSystem, ID as InvadeSystemID } from "systems/InvadeSystem.sol";
+import { ReceiveReinforcementSystem, ID as ReceiveReinforcementSystemID } from "systems/ReceiveReinforcementSystem.sol";
+import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "systems/RecallReinforcementsSystem.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 
@@ -22,6 +24,9 @@ contract SendUnitsTest is PrimodiumTest {
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
   BuildSystem public buildSystem;
+  InvadeSystem public invadeSystem;
+  ReceiveReinforcementSystem public receiveReinforcementSystem;
+  RecallReinforcementsSystem public recallReinforcementsSystem;
 
   function setUp() public override {
     super.setUp();
@@ -29,6 +34,10 @@ contract SendUnitsTest is PrimodiumTest {
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
+    invadeSystem = InvadeSystem(system(InvadeSystemID));
+    receiveReinforcementSystem = ReceiveReinforcementSystem(system(ReceiveReinforcementSystemID));
+    recallReinforcementsSystem = RecallReinforcementsSystem(system(RecallReinforcementsSystemID));
+
     spawn(alice);
     spawn(bob);
     spawn(deployer);
@@ -248,5 +257,15 @@ contract SendUnitsTest is PrimodiumTest {
       ArrivalsList.get(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob)), 0),
       slowArrival
     );
+  }
+
+  function testExecuteInvade() public {
+    vm.startPrank(alice);
+    Arrival memory invasionArrival = invade();
+    vm.roll(invasionArrival.arrivalBlock);
+
+    invadeSystem.executeTyped(invasionArrival.destination);
+
+    vm.stopPrank();
   }
 }

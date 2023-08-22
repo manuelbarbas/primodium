@@ -143,8 +143,8 @@
     },
     { "name": "SendUnitsSystem", "writeAccess": ["*"] },
     { "name": "InvadeSystem", "writeAccess": ["*"] },
-    { "name": "RecallReinforcements", "writeAccess": ["*"] },
-    { "name": "ReceiveReinforcements", "writeAccess": ["*"] },
+    { "name": "RecallReinforcementsSystem", "writeAccess": ["*"] },
+    { "name": "ReceiveReinforcementSystem", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
