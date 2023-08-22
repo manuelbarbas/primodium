@@ -21,6 +21,7 @@ uint256 constant IridiumID = uint256(keccak256("block.Iridium"));
 uint256 constant OsmiumID = uint256(keccak256("block.Osmium"));
 uint256 constant TungstenID = uint256(keccak256("block.Tungsten"));
 uint256 constant KimberliteID = uint256(keccak256("block.Kimberlite"));
+uint256 constant PlatinumID = uint256(keccak256("block.Platinum"));
 uint256 constant UraniniteID = uint256(keccak256("block.Uraninite"));
 uint256 constant BolutiteID = uint256(keccak256("block.Bolutite"));
 

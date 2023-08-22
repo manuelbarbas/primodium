@@ -59,6 +59,14 @@ contract PrimodiumTest is MudTest {
     }
   }
 
+  function assertEq(ESpaceRockType a, ESpaceRockType b) internal {
+    assertEq(uint256(a), uint256(b));
+  }
+
+  function assertEq(ESpaceRockType a, ESpaceRockType b, string memory context) internal {
+    assertEq(uint256(a), uint256(b), context);
+  }
+
   function getHomeAsteroid(address player) public view returns (uint256) {
     return PositionComponent(component(PositionComponentID)).getValue(addressToEntity(player)).parent;
   }

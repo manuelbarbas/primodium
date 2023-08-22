@@ -17,7 +17,6 @@ enum EActionType {
   Destroy
 }
 
-// note: for use when we get special asteroids
 enum ESpaceRockType {
   NONE,
   ASTEROID,
@@ -43,7 +42,20 @@ struct Bounds {
   int32 maxY;
 }
 
-// Arrivals
+/* -------------------------------------------------------------------------- */
+/*                                 Game Config                                */
+/* -------------------------------------------------------------------------- */
+
+struct GameConfig {
+  uint256 moveSpeed;
+  uint32 motherlodeDistance;
+  uint32 maxMotherlodesPerAsteroid;
+  // chance of motherlode is (1 / MOTHERLODE_CHANCE_INV)
+  uint32 motherlodeChanceInv;
+}
+/* -------------------------------------------------------------------------- */
+/*                                  Arrivals                                  */
+/* -------------------------------------------------------------------------- */
 enum ESendType {
   INVADE,
   REINFORCE
@@ -64,6 +76,31 @@ struct Arrival {
   uint256 destination;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                 Motherlode                                 */
+/* -------------------------------------------------------------------------- */
+enum EMotherlodeSize {
+  SMALL,
+  MEDIUM,
+  LARGE
+}
+
+enum EMotherlodeType {
+  TITANIUM,
+  IRIDIUM,
+  PLATINUM,
+  KIMBERLITE
+}
+
+struct Motherlode {
+  EMotherlodeSize size;
+  EMotherlodeType motherlodeType;
+  uint256 cooldownBlocks;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Battle                                   */
+/* -------------------------------------------------------------------------- */
 struct BattleResult {
   uint256 winnerEntity;
   uint32[] attackerUnitsLeft;

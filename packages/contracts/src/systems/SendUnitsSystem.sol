@@ -10,6 +10,7 @@ import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
+import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -18,9 +19,8 @@ import { ID as S_UpdatePlayerSpaceRockSystem } from "./S_UpdatePlayerSpaceRockSy
 import { LibSend } from "libraries/LibSend.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibMotherlode } from "libraries/LibMotherlode.sol";
 
-import { MoveCountID } from "src/prototypes.sol";
-import { MOVE_SPEED } from "src/constants.sol";
 import { ESendType, ESpaceRockType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
 
 uint256 constant ID = uint256(keccak256("system.SendUnits"));
@@ -35,11 +35,15 @@ contract SendUnitsSystem is PrimodiumSystem {
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
     uint256 playerEntity = addressToEntity(msg.sender);
 
-    checkMovementRules(origin, destination, playerEntity, to, sendType);
-
     PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
     Coord memory originPosition = positionComponent.getValue(origin);
     Coord memory destinationPosition = positionComponent.getValue(destination);
+
+    if (!AsteroidTypeComponent(getC(AsteroidTypeComponentID)).has(destination)) {
+      LibMotherlode.createMotherlode(world, destinationPosition);
+    }
+
+    checkMovementRules(origin, destination, playerEntity, to, sendType);
 
     // make sure the troop count at the planet is leq the one given and subtract from planet total
     UnitsComponent unitsComponent = UnitsComponent(getC(UnitsComponentID));
@@ -54,11 +58,12 @@ contract SendUnitsSystem is PrimodiumSystem {
     }
 
     uint256 moveSpeed = LibSend.getSlowestUnitSpeed(world, arrivalUnits);
+    uint256 worldSpeed = GameConfigComponent(getC(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     Arrival memory arrival = Arrival({
       units: arrivalUnits,
       sendType: sendType,
       arrivalBlock: block.number +
-        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * MOVE_SPEED) / 100 / 100),
+        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * worldSpeed) / 100 / 100),
       from: playerEntity,
       to: addressToEntity(to),
       origin: origin,
@@ -87,6 +92,10 @@ contract SendUnitsSystem is PrimodiumSystem {
       5. You can only reinforce yourself on a motherlode.
       6. You must be under the max move count.
     */
+    require(
+      asteroidTypeComponent.has(origin) && asteroidTypeComponent.has(destination),
+      "must travel between space rocks"
+    );
     ESpaceRockType originType = ESpaceRockType(asteroidTypeComponent.getValue(origin));
     ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
 
