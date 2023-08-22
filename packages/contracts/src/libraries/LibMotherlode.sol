@@ -13,23 +13,23 @@ import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } 
 import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
 import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
+import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
 // types
-import { Coord, ESpaceRockType, Motherlode, EMotherlodeSize, EMotherlodeType, ResourceValue } from "src/types.sol";
+import { Coord, ESpaceRockType, Motherlode, EMotherlodeSize, EMotherlodeType, ResourceValue, GameConfig } from "src/types.sol";
 import { TitaniumID, IridiumID, PlatinumID, KimberliteID } from "src/prototypes.sol";
-import { MOTHERLODE_DISTANCE, MAX_MOTHERLODES_PER_ASTEROID, MOTHERLODE_CHANCE_INV } from "src/constants.sol";
 
 library LibMotherlode {
   function createMotherlode(IWorld world, Coord memory position) internal returns (uint256) {
     ReversePositionComponent activeComponent = ReversePositionComponent(world.getComponent(ReversePositionComponentID));
-    uint32 maxMotherlodes = MAX_MOTHERLODES_PER_ASTEROID;
+    GameConfig memory config = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID);
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
-    for (uint32 i = 0; i < maxMotherlodes; i++) {
-      Coord memory relPosition = LibMotherlode.getCoord(i, MOTHERLODE_DISTANCE, maxMotherlodes);
+    for (uint32 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
+      Coord memory relPosition = LibMotherlode.getCoord(i, config.motherlodeDistance, config.maxMotherlodesPerAsteroid);
       uint256 sourceEncodedPos = LibEncode.encodeCoord(
         Coord(relPosition.x + position.x, relPosition.y + position.y, 0)
       );
@@ -37,7 +37,7 @@ library LibMotherlode {
       uint256 sourceAsteroid = activeComponent.getValue(sourceEncodedPos);
       if (asteroidTypeComponent.getValue(sourceAsteroid) == ESpaceRockType.MOTHERLODE) continue;
       uint256 motherlodeSeed = uint256(keccak256(abi.encode(sourceAsteroid, "motherlode", position)));
-      if (!isMotherlode(motherlodeSeed, MOTHERLODE_CHANCE_INV)) continue;
+      if (!isMotherlode(motherlodeSeed, config.motherlodeChanceInv)) continue;
       initMotherlode(world, position, motherlodeSeed);
       return motherlodeSeed;
     }

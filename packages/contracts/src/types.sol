@@ -43,6 +43,17 @@ struct Bounds {
 }
 
 /* -------------------------------------------------------------------------- */
+/*                                 Game Config                                */
+/* -------------------------------------------------------------------------- */
+
+struct GameConfig {
+  uint256 moveSpeed;
+  uint32 motherlodeDistance;
+  uint32 maxMotherlodesPerAsteroid;
+  // chance of motherlode is (1 / MOTHERLODE_CHANCE_INV)
+  uint32 motherlodeChanceInv;
+}
+/* -------------------------------------------------------------------------- */
 /*                                  Arrivals                                  */
 /* -------------------------------------------------------------------------- */
 enum ESendType {

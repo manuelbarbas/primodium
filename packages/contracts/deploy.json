@@ -34,6 +34,7 @@
     "BattleAttackerComponent",
     "BattleDefenderComponent",
     "BattleResultComponent",
+    "GameConfigComponent",
 
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",

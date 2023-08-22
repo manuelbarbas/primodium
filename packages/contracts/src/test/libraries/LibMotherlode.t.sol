@@ -16,6 +16,7 @@ import { ReversePositionComponent, ID as ReversePositionComponentID } from "comp
 import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } from "components/P_MotherlodeResourceComponent.sol";
 import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
 import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
+import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -28,20 +29,31 @@ contract LibMotherlodeTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   ComponentDevSystem public componentDevSystem;
+  GameConfigComponent public gameConfigComponent;
 
   function setUp() public override {
     super.setUp();
 
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    gameConfigComponent = GameConfigComponent(world.getComponent(GameConfigComponentID));
+    GameConfig memory gameConfig = GameConfig({
+      moveSpeed: 100,
+      motherlodeDistance: 10,
+      maxMotherlodesPerAsteroid: 6,
+      motherlodeChanceInv: 6
+    });
+    vm.prank(deployer);
+    gameConfigComponent.set(SingletonID, gameConfig);
   }
 
   function testIsMotherlode() public {
+    uint32 chanceInv = gameConfigComponent.getValue(SingletonID).motherlodeChanceInv;
     uint256 entity = 0 << 128;
-    assertFalse(LibMotherlode.isMotherlode(entity, 6));
+    assertFalse(LibMotherlode.isMotherlode(entity, chanceInv));
     entity = 1 << 128;
-    assertTrue(LibMotherlode.isMotherlode(entity, 6));
+    assertTrue(LibMotherlode.isMotherlode(entity, chanceInv));
     entity = 2 << 128;
-    assertTrue(!LibMotherlode.isMotherlode(entity, 6));
+    assertTrue(!LibMotherlode.isMotherlode(entity, chanceInv));
   }
 
   function testFuzzMotherlodePrototype(uint256 entity) public {
@@ -52,12 +64,17 @@ contract LibMotherlodeTest is PrimodiumTest {
   }
 
   function findMotherlode() public returns (uint256, Coord memory) {
+    GameConfig memory config = gameConfigComponent.getValue(SingletonID);
     address player = deployer;
     spawn(player);
     vm.startPrank(deployer);
     uint256 asteroid = getHomeAsteroid(player);
     Coord memory sourcePosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(asteroid);
-    Coord memory targetPositionRelative = LibMotherlode.getCoord(0, 4, 6);
+    Coord memory targetPositionRelative = LibMotherlode.getCoord(
+      0,
+      config.motherlodeDistance,
+      config.motherlodeChanceInv
+    );
     Coord memory targetPosition = Coord(
       sourcePosition.x + targetPositionRelative.x,
       sourcePosition.y + targetPositionRelative.y,
@@ -65,17 +82,17 @@ contract LibMotherlodeTest is PrimodiumTest {
     );
     uint256 motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition)));
     uint32 i = 0;
-    bool found = LibMotherlode.isMotherlode(motherlodeSeed, 6);
+    bool found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
     while (i < 6 && !found) {
       i++;
-      targetPositionRelative = LibMotherlode.getCoord(i, 4, 6);
+      targetPositionRelative = LibMotherlode.getCoord(i, config.motherlodeDistance, config.motherlodeChanceInv);
       targetPosition = Coord(
         sourcePosition.x + targetPositionRelative.x,
         sourcePosition.y + targetPositionRelative.y,
         0
       );
       motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition)));
-      found = LibMotherlode.isMotherlode(motherlodeSeed, 6);
+      found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
     }
     require(found, "uh oh, no motherlode found");
     return (asteroid, targetPosition);

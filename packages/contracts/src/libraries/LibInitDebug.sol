@@ -33,7 +33,6 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 
 import "../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../types.sol";
-import { DEBUG } from "../constants.sol";
 
 // Research
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";

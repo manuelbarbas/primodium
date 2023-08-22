@@ -7,6 +7,7 @@ import { addressToEntity, getAddressById } from "solecs/utils.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
+import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -17,7 +18,6 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 
-import { MOVE_SPEED } from "src/constants.sol";
 import { ESendType, ESpaceRockType, Coord, Arrival, ArrivalUnit } from "src/types.sol";
 
 uint256 constant ID = uint256(keccak256("system.SendUnits"));
@@ -55,11 +55,12 @@ contract SendUnitsSystem is PrimodiumSystem {
     }
 
     uint256 moveSpeed = LibSend.getSlowestUnitSpeed(world, arrivalUnits);
+    uint256 worldSpeed = GameConfigComponent(getC(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     Arrival memory arrival = Arrival({
       units: arrivalUnits,
       sendType: sendType,
       arrivalBlock: block.number +
-        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * MOVE_SPEED) / 100 / 100),
+        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * worldSpeed) / 100 / 100),
       from: playerEntity,
       to: addressToEntity(to),
       origin: origin,
