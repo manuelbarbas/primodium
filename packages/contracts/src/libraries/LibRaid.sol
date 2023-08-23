@@ -50,21 +50,10 @@ library LibRaid {
     console.log("setup attacker");
     uint256 defenderEntity = 0;
     if (ownedByComponent.has(rockEntity)) {
-      require(ownedByComponent.getValue(rockEntity) != invader, "[Invade]: can not invade your own rock");
+      require(ownedByComponent.getValue(rockEntity) != invader, "[Raid]: can not raid your own rock");
       defenderEntity = ownedByComponent.getValue(rockEntity);
     } else {
-      BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID))
-        .getValue(battleEntity);
-      for (uint i = 0; i < attacker.unitTypes.length; i++) {
-        LibUpdateSpaceRock.addUnitsToAsteroid(
-          world,
-          invader,
-          rockEntity,
-          attacker.unitTypes[i],
-          attacker.unitCounts[i]
-        );
-      }
-      return;
+      revert("LibRaid: can not raid unowned rock");
     }
     LibBattle.setupBattleDefender(world, battleEntity, defenderEntity, rockEntity);
     console.log("setup defender");
@@ -101,6 +90,8 @@ library LibRaid {
       ? defender.participantEntity
       : attacker.participantEntity;
     uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    uint256 attackerHomeAsteroid = LibEncode.hashEntity(world, attacker.participantEntity);
+
     if (attacker.participantEntity == battleResult.winnerEntity) {
       LibUpdateSpaceRock.destroyAllPlayerUnitsOnAsteroid(world, loserEntity, rockEntity);
       for (uint i = 0; i < battleResult.attackerUnitsLeft.length; i++) {
@@ -115,7 +106,7 @@ library LibRaid {
         LibUpdateSpaceRock.setUnitsOnAsteroid(
           world,
           attacker.participantEntity,
-          rockEntity,
+          attackerHomeAsteroid,
           unitTypes[i],
           battleResult.attackerUnitsLeft[i]
         );
