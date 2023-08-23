@@ -247,4 +247,14 @@ contract LibMotherlodeTest is PrimodiumTest {
     assertEq(LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity), totalMined);
     assertEq(lastClaimedAtComponent.getValue(motherlodeEntity), lastClaimed);
   }
+
+  function testPrintMotherlodeEntities() public view {
+    for (uint32 i = 0; i < 10; i++) {
+      Coord memory position = Coord(int32(i) * 7, int32(i) * 11, 0);
+      uint256 motherlodeEntity = uint256(keccak256(abi.encode(uint256(i), "motherlode", position.x, position.y)));
+      logCoord(position);
+      console.log("i:", i);
+      console.log("motherlodeEntity: ", motherlodeEntity);
+    }
+  }
 }

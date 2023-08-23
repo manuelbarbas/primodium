@@ -1,6 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
-import { Coord, keccak256 } from "@latticexyz/utils";
-import { defaultAbiCoder } from "ethers/lib/utils.js";
+import { Coord } from "@latticexyz/utils";
 import {
   AsteroidType,
   GameConfig,
@@ -10,7 +9,11 @@ import {
   Position,
   ReversePosition,
 } from "src/network/components/chainComponents";
-import { encodeCoord, hashKeyEntity } from "src/util/encode";
+import {
+  encodeCoord,
+  getMotherlodeEntity,
+  hashKeyEntity,
+} from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
 import { EMotherlodeSize, EMotherlodeType, ESpaceRockType } from "../types";
 import { world } from "src/network/world";
@@ -25,18 +28,13 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
       source
     );
     if (ReversePosition.has(encodeCoord(motherlodePosition))) continue;
-    const motherlodeEntity = keccak256(
-      defaultAbiCoder.encode(
-        ["uint256", "string", "int32", "int32"],
-        [sourceEntity, "motherlode", motherlodePosition.x, motherlodePosition.y]
-      )
-    ) as EntityID;
-    if (!isMotherlode(motherlodeEntity, config.motherlodeChanceInv)) {
-      continue;
-    }
+    const motherlodeEntity = getMotherlodeEntity(
+      sourceEntity,
+      motherlodePosition
+    );
+    if (!isMotherlode(motherlodeEntity, config.motherlodeChanceInv)) continue;
 
     world.registerEntity({ id: motherlodeEntity });
-    console.log("initializing motherlode at ", motherlodePosition);
     const {
       size: rawSize,
       motherlodeType: rawMotherlodeType,
