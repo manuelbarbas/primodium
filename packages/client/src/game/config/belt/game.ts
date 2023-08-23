@@ -13,6 +13,11 @@ const gameConfig: GameConfig = {
   scale: {
     mode: Phaser.Scale.NONE,
   },
+  antialias: false,
+  antialiasGL: false,
+  desynchronized: true,
+  autoMobilePipeline: true,
+  premultipliedAlpha: true,
   autoRound: true,
   transparent: true,
   pixelArt: true,

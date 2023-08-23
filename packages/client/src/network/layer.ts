@@ -9,8 +9,8 @@ import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
 import { singletonIndex, world } from "./world";
 import chainComponents, { Counter } from "./components/chainComponents";
-import { BlockNumber, DoubleCounter } from "./components/clientComponents";
-import setupDevSystems from "./setupDevSystems";
+import { DoubleCounter } from "./components/clientComponents";
+import setupDevSystems from "./systems/setupDevSystems";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
@@ -91,6 +91,7 @@ export async function createNetworkLayer(config: NetworkConfig) {
     components,
     singletonIndex,
     providers: network.providers,
+    blockNumber$: network.blockNumber$,
     defaultWalletAddress: config.defaultWalletAddress,
     perlin,
     dev: setupDevSystems(
@@ -103,16 +104,6 @@ export async function createNetworkLayer(config: NetworkConfig) {
   };
 
   startSync();
-
-  // TODO: move this functionality into runSystems()
-  const blockNumber = (await network.providers.get().ws?.getBlockNumber()) ?? 0;
-  BlockNumber.set({ value: blockNumber });
-
-  const blockListener = network.blockNumber$.subscribe((blockNumber) => {
-    BlockNumber.set({ value: blockNumber });
-  });
-
-  world.registerDisposer(() => blockListener.unsubscribe());
 
   return context;
 }

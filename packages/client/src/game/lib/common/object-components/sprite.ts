@@ -6,7 +6,7 @@ const { outline } = createFxApi();
 
 export const Texture = (
   key: string,
-  frame: string
+  frame?: string
 ): GameObjectComponent<"Sprite"> => {
   return {
     id: "texture",

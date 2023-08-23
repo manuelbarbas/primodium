@@ -11,7 +11,7 @@ export const research = async (item: EntityID, network: Network) => {
   setTransactionLoading(true);
   await execute(
     systems["system.Research"].executeTyped(item, {
-      gasLimit: 3_000_000,
+      gasLimit: 2_000_000,
     }),
     providers,
     setNotification

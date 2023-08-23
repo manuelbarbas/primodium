@@ -55,6 +55,10 @@ uint256 constant HousingUnitResearchID = uint256(keccak256("research.HousingUnit
 uint256 constant HousingUnit2ResearchID = uint256(keccak256("research.HousingUnit2"));
 uint256 constant HousingUnit3ResearchID = uint256(keccak256("research.HousingUnit3"));
 
+uint256 constant StarmapperResearchID = uint256(keccak256("research.Starmapper"));
+uint256 constant Starmapper2ResearchID = uint256(keccak256("research.Starmapper2"));
+uint256 constant Starmapper3ResearchID = uint256(keccak256("research.Starmapper3"));
+
 string constant ExpansionKey = "research.Expansion";
 // this behavior is identical to LibEncode.hashKeyEntity
 uint256 constant ExpansionResearch = uint256(keccak256(abi.encodePacked(ExpansionKey, uint256(1))));

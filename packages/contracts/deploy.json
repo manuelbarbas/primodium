@@ -35,8 +35,10 @@
     "BattleDefenderComponent",
     "BattleResultComponent",
     "BattleSpaceRockComponent",
+    "MaxMovesComponent",
     "GameConfigComponent",
 
+    "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
     "P_MaxLevelComponent",
@@ -81,47 +83,15 @@
     },
     {
       "name": "SpawnSystem",
-      "writeAccess": [
-        "PositionComponent",
-        "ReversePositionComponent",
-        "AsteroidCountComponent",
-        "AsteroidTypeComponent",
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "LevelComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "MainBaseComponent",
-        "UnitProductionOwnedByComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["*"]
     },
     {
       "name": "BuildSystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "LevelComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "MainBaseComponent",
-        "PositionComponent",
-        "UnitProductionOwnedByComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["*"]
     },
     {
       "name": "DestroySystem",
-      "writeAccess": [
-        "BuildingTypeComponent",
-        "OwnedByComponent",
-        "MainBaseComponent",
-        "ChildrenComponent",
-        "LevelComponent",
-        "PathComponent",
-        "PositionComponent",
-        "UnitProductionOwnedByComponent"
-      ]
+      "writeAccess": ["*"]
     },
 
     {
@@ -138,7 +108,7 @@
     },
     {
       "name": "UpgradeBuildingSystem",
-      "writeAccess": ["LevelComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "UpgradeRangeSystem",

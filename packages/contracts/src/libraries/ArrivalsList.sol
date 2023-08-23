@@ -16,9 +16,8 @@ import { Arrival } from "src/types.sol";
 library ArrivalsList {
   function add(IWorld world, uint256 listId, Arrival memory arrival) internal returns (uint256 arrivalKey) {
     ArrivalsSizeComponent arrivalsSizeComponent = ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID));
-    console.log("adding arrival");
-    uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
 
+    uint32 size = LibMath.getSafe(arrivalsSizeComponent, listId);
     uint256 listSizeIndex = LibEncode.hashKeyEntity(listId, size);
     arrivalKey = uint256(keccak256(abi.encode(arrival)));
     ArrivalsIndexComponent(world.getComponent(ArrivalsIndexComponentID)).set(
@@ -32,7 +31,7 @@ library ArrivalsList {
 
   function set(IWorld world, uint256 listId, uint256 index, Arrival memory arrival) internal {
     ArrivalsSizeComponent arrivalsSizeComponent = ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID));
-    uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
+    uint32 size = LibMath.getSafe(arrivalsSizeComponent, listId);
     require(index < size, "[ArrivalList]: Index out of bounds");
 
     uint256 listIndex = LibEncode.hashKeyEntity(listId, index);
@@ -43,7 +42,7 @@ library ArrivalsList {
 
   function get(IWorld world, uint256 listId, uint256 index) internal view returns (Arrival memory) {
     ArrivalsSizeComponent arrivalsSizeComponent = ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID));
-    uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
+    uint32 size = LibMath.getSafe(arrivalsSizeComponent, listId);
     console.log("try get arrival index %s: size: %s", index, size);
     require(index < size, "[ArrivalList]: Index out of bounds");
 
@@ -62,7 +61,8 @@ library ArrivalsList {
     ArrivalsIndexComponent arrivalsIndexComponent = ArrivalsIndexComponent(
       world.getComponent(ArrivalsIndexComponentID)
     );
-    uint256 size = LibMath.getSafe(arrivalsSizeComponent, listId);
+
+    uint32 size = LibMath.getSafe(arrivalsSizeComponent, listId);
     console.log("try remove arrival index %s: size: %s", index, size);
     require(index < size, "[ArrivalList]: Index out of bounds");
 

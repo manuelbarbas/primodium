@@ -1,6 +1,7 @@
-import { createAnimatedTilemap, createChunks } from "@latticexyz/phaserx";
+import { createChunks } from "@latticexyz/phaserx";
 import type { createCamera } from "@latticexyz/phaserx";
 import { SceneConfig, TileAnimation, TilesetConfig } from "../../types";
+import { createAnimatedTilemap } from "./tilemap/createAnimatedTilemap";
 
 export const createTilemap = (
   scene: Phaser.Scene,
@@ -29,7 +30,8 @@ export const createTilemap = (
         value.tileWidth,
         value.tileHeight,
         value.extrusion ?? 0,
-        value.extrusion ? value.extrusion * 2 : 0
+        value.extrusion ? value.extrusion * 2 : 0,
+        value.gid ?? 0
       )!;
     } catch (e) {
       throw new Error("Failed to load tileset: " + key + "/" + value);

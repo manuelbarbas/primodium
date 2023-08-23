@@ -9,7 +9,12 @@ import {
   P_Terrain,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
 import { hashKeyCoord } from "./encode";
+import AsteroidTiledMap from "../maps/asteroid_0.7.json";
+import { AsteroidMap } from "@game/constants";
+
+const { TerrainTilesetIdToEntityId } = AsteroidMap;
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -39,14 +44,29 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
   return Math.floor(normalizedDepth);
 }
 
-export function getTerrainKey(coord: Coord, perlin: Perlin) {
-  const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
-  if (normalizedDepth <= 32) return BlockType.Biofilm;
-  if (normalizedDepth <= 35) return BlockType.Alluvium;
-  if (normalizedDepth <= 39) return BlockType.Sandstone;
-  if (normalizedDepth <= 48) return BlockType.Regolith;
+export function getTerrainKey(coord: Coord) {
+  if (
+    coord.x < 0 ||
+    coord.x > AsteroidTiledMap.width - 1 ||
+    coord.y < 0 ||
+    coord.y > AsteroidTiledMap.height
+  ) {
+    return null;
+  }
 
-  return BlockType.Bedrock;
+  //reverse through the layers
+  for (let i = AsteroidTiledMap.layers.length - 1; i >= 0; i--) {
+    const layer = AsteroidTiledMap.layers[i];
+    const tile =
+      layer.data[
+        coord.x +
+          (AsteroidTiledMap.height - coord.y - 1) * AsteroidTiledMap.width
+      ];
+
+    if (tile > 0) return TerrainTilesetIdToEntityId[tile - 1];
+  }
+
+  return null;
 }
 
 export function getResourceKey(coord: Coord) {
@@ -54,6 +74,18 @@ export function getResourceKey(coord: Coord) {
     ...coord,
     parent: "0" as EntityID,
   });
+  // todo: pull this from the Dimensions component
+  const resourceDimensions = { width: 37, length: 25 };
+
+  if (
+    coord.x < 0 ||
+    coord.x > resourceDimensions.width ||
+    coord.y < 0 ||
+    coord.y > resourceDimensions.length
+  ) {
+    return null;
+  }
+
   const resource = P_Terrain.get(coordEntity, { value: BlockType.Air })?.value;
 
   // temp: until we have the sprites in the game
@@ -61,19 +93,16 @@ export function getResourceKey(coord: Coord) {
     return BlockType.Osmium;
   }
 
-  if (resource == BlockType.Sulfur) {
-    return BlockType.Titanium;
-  }
   return resource;
 }
-const topLayerKeys = new Map<string, EntityID>();
+const topLayerKeys = new Map<string, EntityID | null>();
 
-export function getTopLayerKey(coord: Coord, perlin: Perlin) {
+export function getTopLayerKey(coord: Coord) {
   const coordKey = `${coord.x}-${coord.y}`; // Assuming 2D coords. Adjust if needed.
 
   if (topLayerKeys.has(coordKey)) return topLayerKeys.get(coordKey);
 
-  const terrainKey = getTerrainKey(coord, perlin);
+  const terrainKey = getTerrainKey(coord);
   const resourceKey = getResourceKey(coord);
   let result;
 
@@ -87,28 +116,29 @@ export function getTopLayerKey(coord: Coord, perlin: Perlin) {
   return result;
 }
 
-export function getTopLayerKeyPair(
-  coord: Coord,
-  perlin: Perlin
-): DisplayKeyPair {
-  // todo: pull this from the Dimensions component
-  const asteroidDimensions = { width: 37, length: 25 };
-  if (
-    coord.x < 0 ||
-    coord.x >= asteroidDimensions.width ||
-    coord.y < 0 ||
-    coord.y >= asteroidDimensions.length
-  ) {
-    // temp: using the water sprite for now
-    return { terrain: BlockType.Water, resource: null };
+const topLayerKeyPair = new Map<
+  string,
+  { terrain: EntityID | null; resource: EntityID | null }
+>();
+
+export function getTopLayerKeyPair(coord: Coord): DisplayKeyPair {
+  const coordKey = `${coord.x}-${coord.y}`; // Assuming 2D coords. Adjust if needed.
+
+  if (topLayerKeyPair.has(coordKey)) {
+    return topLayerKeyPair.get(coordKey)!;
   }
-  const terrainKey = getTerrainKey(coord, perlin);
+
+  const terrainKey = getTerrainKey(coord);
   const resourceKey = getResourceKey(coord);
 
   if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
-    return { terrain: terrainKey, resource: null };
+    const pair = { terrain: terrainKey, resource: null };
+    topLayerKeyPair.set(coordKey, pair);
+    return pair;
   } else {
-    return { terrain: terrainKey, resource: resourceKey };
+    const pair = { terrain: terrainKey, resource: resourceKey };
+    topLayerKeyPair.set(coordKey, pair);
+    return pair;
   }
 }
 
@@ -117,8 +147,7 @@ export function getTilesOfTypeInRange(
   origin: Coord,
   type: EntityID,
   range: number,
-  excludeRange: number,
-  perlin: Perlin
+  excludeRange: number
 ): Coord[] {
   const tiles: Coord[] = [];
 
@@ -130,7 +159,7 @@ export function getTilesOfTypeInRange(
       }
 
       const currentCoord = { x: origin.x + x, y: origin.y + y };
-      const keyPair = getTopLayerKeyPair(currentCoord, perlin);
+      const keyPair = getTopLayerKeyPair(currentCoord);
       if (keyPair.resource === type || keyPair.terrain === type) {
         tiles.push(currentCoord);
       }
@@ -185,8 +214,11 @@ export const getEntityTileAtCoord = (coord: Coord) => {
 
 export const getBuildingAtCoord = (coord: Coord) => {
   const entities = runQuery([
-    HasValue(Position, coord),
-    Has(OwnedBy),
+    HasValue(Position, {
+      x: coord.x,
+      y: coord.y,
+      parent: ActiveAsteroid.get()?.value,
+    }),
     Not(BuildingType),
   ]);
 

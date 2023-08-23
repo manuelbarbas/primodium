@@ -9,9 +9,9 @@ const { Assets, Scenes, Tilesets } = BeltMap;
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
   camera: {
-    minZoom: Math.max(1, window.devicePixelRatio),
+    minZoom: Math.max(1, window.devicePixelRatio) * 0.5,
     maxZoom: window.devicePixelRatio * 3,
-    defaultZoom: window.devicePixelRatio * 1,
+    defaultZoom: Math.max(1, window.devicePixelRatio) * 0.5,
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },
@@ -20,7 +20,7 @@ const mainSceneConfig: SceneConfig = {
   tilemap: {
     tileWidth: 32,
     tileHeight: 32,
-    chunkSize: 32,
+    chunkSize: 64,
     tilesets: {
       [Tilesets.Grid]: {
         key: Assets.GridTileset,

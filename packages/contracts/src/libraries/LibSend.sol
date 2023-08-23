@@ -7,10 +7,12 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 // comps
 
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
+import { ArrivalsSizeComponent as ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibMath } from "libraries/LibMath.sol";
 import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 
 // types
@@ -22,6 +24,8 @@ library LibSend {
       ? LibEncode.hashKeyEntity(arrival.to, arrival.destination)
       : LibEncode.hashKeyEntity(arrival.from, arrival.destination);
     ArrivalsList.add(world, playerAsteroidEntity, arrival);
+
+    LibMath.increment(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from);
   }
 
   function distance(Coord memory a, Coord memory b) internal pure returns (uint32) {

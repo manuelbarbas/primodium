@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import "../PrimodiumTest.t.sol";
 
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { SendUnitsSystem, ID as SendUnitsSystemID } from "systems/SendUnitsSystem.sol";
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
@@ -15,6 +16,8 @@ import { PositionComponent, ID as PositionComponentID } from "components/Positio
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
+
 import { LibSend } from "libraries/LibSend.sol";
 import { LibArrival } from "libraries/LibArrival.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
@@ -27,6 +30,8 @@ contract SendUnitsTest is PrimodiumTest {
   GameConfigComponent public gameConfigComponent;
   OwnedByComponent public ownedByComponent;
 
+  ComponentDevSystem public componentDevSystem;
+
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
   BuildSystem public buildSystem;
@@ -37,6 +42,7 @@ contract SendUnitsTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
 
+    componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
@@ -60,6 +66,10 @@ contract SendUnitsTest is PrimodiumTest {
     vm.prank(deployer);
     gameConfigComponent.set(SingletonID, gameConfig);
     vm.stopPrank();
+
+    componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(alice), abi.encode(100));
+    componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(bob), abi.encode(100));
+    componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(deployer), abi.encode(100));
   }
 
   function testFailSendUnitsCountZero() public {

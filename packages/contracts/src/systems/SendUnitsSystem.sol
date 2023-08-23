@@ -6,7 +6,10 @@ import { addressToEntity, getAddressById } from "solecs/utils.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
+import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
@@ -90,6 +93,7 @@ contract SendUnitsSystem is PrimodiumSystem {
       3. You cannot move between motherlodes.
       4. You can only invade an enemy.
       5. You can only reinforce yourself on a motherlode.
+      6. You must be under the max move count.
     */
     require(
       asteroidTypeComponent.has(origin) && asteroidTypeComponent.has(destination),
@@ -99,6 +103,11 @@ contract SendUnitsSystem is PrimodiumSystem {
     ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
     if (sendType == ESendType.REINFORCE || sendType == ESendType.RAID)
       require(ownedByComponent.has(destination), "reinforce/raid destination must be a owned by player");
+
+    uint256 moveCount = LibMath.getSafe(ArrivalsSizeComponent(getC(ArrivalsSizeComponentID)), playerEntity);
+    uint32 maxMoveCount = LibMath.getSafe(MaxMovesComponent(getC(MaxMovesComponentID)), playerEntity);
+
+    require(moveCount < maxMoveCount, "you have reached your max move count");
 
     require(origin != destination, "origin and destination cannot be the same");
 
