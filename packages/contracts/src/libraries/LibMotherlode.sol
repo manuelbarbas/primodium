@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
+import { console } from "forge-std/console.sol";
 
 // comps
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
@@ -30,14 +31,21 @@ library LibMotherlode {
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
     for (uint32 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
       Coord memory relPosition = LibMotherlode.getCoord(i, config.motherlodeDistance, config.maxMotherlodesPerAsteroid);
+      console.log("sourcePosition x: ", uint32(relPosition.x + position.x));
+      console.log("sourcePosition y: ", uint32(relPosition.y + position.y));
+
       uint256 sourceEncodedPos = LibEncode.encodeCoord(
         Coord(relPosition.x + position.x, relPosition.y + position.y, 0)
       );
+      console.log("source pos: ", sourceEncodedPos);
       if (!activeComponent.has(sourceEncodedPos)) continue;
+      console.log("source pos exists");
       uint256 sourceAsteroid = activeComponent.getValue(sourceEncodedPos);
       if (asteroidTypeComponent.getValue(sourceAsteroid) == ESpaceRockType.MOTHERLODE) continue;
       uint256 motherlodeSeed = uint256(keccak256(abi.encode(sourceAsteroid, "motherlode", position.x, position.y)));
+      console.log("seed:", motherlodeSeed);
       if (!isMotherlode(motherlodeSeed, config.motherlodeChanceInv)) continue;
+      console.log("is motherlode");
       initMotherlode(world, position, motherlodeSeed);
       return motherlodeSeed;
     }
@@ -86,8 +94,10 @@ library LibMotherlode {
     cooldownBlocks = LibEncode.getByteUInt(entity, 6, 10);
   }
 
-  function getCoord(uint32 i, uint32 distance, uint32 max) internal pure returns (Coord memory) {
-    return LibAsteroid.getPositionByVector(distance, (360 / max) * i);
+  function getCoord(uint32 i, uint32 distance, uint32 max) internal view returns (Coord memory) {
+    console.log("direction: ", (i * 360) / max);
+    console.log("distance: ", distance);
+    return LibAsteroid.getPositionByVector(distance, (i * 360) / max);
   }
 
   function getSize(uint8 size) internal pure returns (EMotherlodeSize) {

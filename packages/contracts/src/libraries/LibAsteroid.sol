@@ -76,9 +76,12 @@ library LibAsteroid {
    * @return Coord Returns a struct containing x and y coordinates.
    */
   function getPositionByVector(uint32 _distance, uint32 direction) internal pure returns (Coord memory) {
-    uint32 angleDegs = (direction) % 360;
+    direction = direction % 360;
+    bool negY = direction > 180;
+    bool negX = direction > 90 && direction <= 270;
+    direction = direction % 90;
 
-    uint256 angleRadsTimes10000 = uint256(angleDegs * 1745);
+    uint256 angleRadsTimes10000 = direction * 1745;
 
     uint256 angleRadsConverted = angleRadsTimes10000 * 1e13 + Trig.TWO_PI;
 
@@ -88,8 +91,7 @@ library LibAsteroid {
 
     int32 finalX = int32(newX / 1e18);
     int32 finalY = int32(newY / 1e18);
-
-    return Coord({ x: finalX, y: finalY, parent: 0 });
+    return Coord({ x: negX ? -finalX : finalX, y: negY ? -finalY : finalY, parent: 0 });
   }
 
   /**

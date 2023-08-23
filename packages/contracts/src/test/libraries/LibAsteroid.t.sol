@@ -43,4 +43,29 @@ contract LibAsteroidTest is PrimodiumTest {
       vm.roll(block.number + 1);
     }
   }
+
+  function testFuzzPositionByVector(uint32 distance, uint32 direction) public {
+    distance = distance % 100_000;
+    direction = direction % 720;
+    Coord memory destination = LibAsteroid.getPositionByVector(distance, direction);
+    uint32 reverseDirection = direction + 180;
+    Coord memory origin = LibAsteroid.getPositionByVector(distance, reverseDirection);
+    origin = Coord(origin.x + destination.x, origin.y + destination.y, 0);
+    assertCoordEq(origin, Coord(0, 0, 0));
+  }
+
+  function testPositionByVector() public {
+    uint32 distance = 100;
+    uint32 direction = 85;
+    Coord memory destination = LibAsteroid.getPositionByVector(distance, direction);
+    console.log("params:", distance, direction);
+    console.log("destination:", uint32(destination.x), uint32(destination.y));
+    uint32 reverseDirection = direction + 180;
+    console.log("params:", distance, reverseDirection);
+    Coord memory origin = LibAsteroid.getPositionByVector(distance, reverseDirection);
+    console.log("origin:", uint32(origin.x), uint32(origin.y));
+    origin = Coord(origin.x + destination.x, origin.y + destination.y, 0);
+    console.log("origin:", uint32(origin.x), uint32(origin.y));
+    assertCoordEq(origin, Coord(0, 0, 0));
+  }
 }

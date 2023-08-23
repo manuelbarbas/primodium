@@ -38,9 +38,9 @@ contract LibMotherlodeTest is PrimodiumTest {
     gameConfigComponent = GameConfigComponent(world.getComponent(GameConfigComponentID));
     GameConfig memory gameConfig = GameConfig({
       moveSpeed: 100,
-      motherlodeDistance: 10,
-      maxMotherlodesPerAsteroid: 6,
-      motherlodeChanceInv: 1
+      motherlodeDistance: 8,
+      maxMotherlodesPerAsteroid: 12,
+      motherlodeChanceInv: 2
     });
     vm.prank(deployer);
     gameConfigComponent.set(SingletonID, gameConfig);
@@ -65,27 +65,23 @@ contract LibMotherlodeTest is PrimodiumTest {
 
   function findMotherlode() public returns (uint256, Coord memory) {
     GameConfig memory config = gameConfigComponent.getValue(SingletonID);
-    address player = bob;
+    address player = alice;
     spawn(player);
     vm.startPrank(deployer);
     uint256 asteroid = getHomeAsteroid(player);
+    uint256 motherlodeSeed;
     Coord memory sourcePosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(asteroid);
-    Coord memory targetPositionRelative = LibMotherlode.getCoord(
-      0,
-      config.motherlodeDistance,
-      config.motherlodeChanceInv
-    );
-    Coord memory targetPosition = Coord(
-      sourcePosition.x + targetPositionRelative.x,
-      sourcePosition.y + targetPositionRelative.y,
-      0
-    );
-    uint256 motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y)));
+    console.log("sourcePosition x: ", uint32(sourcePosition.x));
+    console.log("sourcePosition y: ", uint32(sourcePosition.y));
+    Coord memory targetPosition;
     uint32 i = 0;
-    bool found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
+    bool found = false;
     while (i < 6 && !found) {
-      i++;
-      targetPositionRelative = LibMotherlode.getCoord(i, config.motherlodeDistance, config.motherlodeChanceInv);
+      Coord memory targetPositionRelative = LibMotherlode.getCoord(
+        i,
+        config.motherlodeDistance,
+        config.maxMotherlodesPerAsteroid
+      );
       targetPosition = Coord(
         sourcePosition.x + targetPositionRelative.x,
         sourcePosition.y + targetPositionRelative.y,
@@ -93,15 +89,17 @@ contract LibMotherlodeTest is PrimodiumTest {
       );
       motherlodeSeed = uint256(keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y)));
       found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
+      i++;
     }
     require(found, "uh oh, no motherlode found");
+    console.log("motherlodeSeed: ", motherlodeSeed);
     return (asteroid, targetPosition);
   }
 
   function testCreateMotherlode() public {
     (uint256 asteroid, Coord memory position) = findMotherlode();
     LibMotherlode.createMotherlode(world, position);
-    uint256 motherlodeEntity = uint256(keccak256(abi.encode(asteroid, "motherlode", position)));
+    uint256 motherlodeEntity = uint256(keccak256(abi.encode(asteroid, "motherlode", position.x, position.y)));
     PositionComponent positionComponent = PositionComponent(world.getComponent(PositionComponentID));
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
     ReversePositionComponent reversePositionComponent = ReversePositionComponent(
