@@ -12,7 +12,7 @@ import "../../prototypes.sol";
 
 import { LibAsteroid } from "../../libraries/LibAsteroid.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
-
+import { Trigonometry } from "libraries/Trigonometry.sol";
 import { Coord, Dimensions } from "../../types.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
@@ -67,5 +67,27 @@ contract LibAsteroidTest is PrimodiumTest {
     origin = Coord(origin.x + destination.x, origin.y + destination.y, 0);
     console.log("origin:", uint32(origin.x), uint32(origin.y));
     assertCoordEq(origin, Coord(0, 0, 0));
+  }
+
+  function testPrintPositions() public view {
+    uint32 distance = 100;
+    uint32 max = 13;
+    for (uint32 i = 0; i < max; i++) {
+      uint32 direction = (i * 360) / max;
+      console.log("direction:", direction);
+      Coord memory coord = LibAsteroid.getPositionByVector(distance, (i * 360) / max);
+      logCoord(coord);
+    }
+  }
+
+  function testSin() public view {
+    uint256 angle = 90;
+    uint256 angleDegsTimes10000 = angle * 1745;
+
+    uint256 angleRads = angleDegsTimes10000 * 1e13 + Trigonometry.TWO_PI;
+    console.log("angleRads:", angleRads);
+    int256 newY = Trigonometry.sin(angleRads) * 100;
+    console.log("new y: ", uint256(newY));
+    console.log("new y: ", uint256(newY / 1e18));
   }
 }

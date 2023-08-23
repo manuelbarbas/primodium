@@ -79,15 +79,15 @@ library LibAsteroid {
     direction = direction % 360;
     bool negY = direction > 180;
     bool negX = direction > 90 && direction <= 270;
-    direction = direction % 90;
+    direction = direction % 180;
 
-    uint256 angleRadsTimes10000 = direction * 1745;
+    uint256 angleDegsTimes10000 = direction * 1745;
 
-    uint256 angleRadsConverted = angleRadsTimes10000 * 1e13 + Trig.TWO_PI;
+    uint256 angleRads = angleDegsTimes10000 * 1e13 + Trig.TWO_PI;
 
-    int256 newX = Trig.cos(angleRadsConverted) * int32(_distance);
+    int256 newX = Trig.cos(angleRads) * int32(_distance);
 
-    int256 newY = Trig.sin(angleRadsConverted) * int32(_distance);
+    int256 newY = Trig.sin(angleRads) * int32(_distance);
 
     int32 finalX = int32(newX / 1e18);
     int32 finalY = int32(newY / 1e18);
