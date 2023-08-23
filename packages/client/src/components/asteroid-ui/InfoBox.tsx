@@ -16,6 +16,7 @@ import { TileInfo } from "./tile-info/TileInfo";
 import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
+import { FaList } from "react-icons/fa";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -24,6 +25,7 @@ export const InfoBox = () => {
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
+  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
@@ -99,10 +101,28 @@ export const InfoBox = () => {
                     setShowResearchModal(true);
                     setNotify(false);
                   }}
-                  depth={6}
+                  depth={4}
                 >
                   <div className="flex m-1 items-center gap-2 px-1">
                     <IoFlaskSharp size={18} />
+                  </div>
+                </GameButton>
+                {notify && (
+                  <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse rounded-full" />
+                )}
+              </div>
+              <div className="relative">
+                <GameButton
+                  id="leaderboard"
+                  color="bg-orange-500"
+                  className="mt-2 ml-1 text-sm"
+                  onClick={() => {
+                    setShowLeaderboard(true);
+                  }}
+                  depth={4}
+                >
+                  <div className="flex m-1 items-center gap-2 px-1">
+                    <FaList size={18} />
                   </div>
                 </GameButton>
                 {notify && (
@@ -115,7 +135,7 @@ export const InfoBox = () => {
                   className="mt-2 ml-1 text-sm"
                   onClick={() => setShowMenuModal(true)}
                   color="bg-gray-700"
-                  depth={6}
+                  depth={4}
                 >
                   <div className="flex m-1 items-center gap-2 px-1 h-4">
                     <IoSettings size={18} />
@@ -141,6 +161,13 @@ export const InfoBox = () => {
         onClose={() => setShowResearchModal(!showResearchModal)}
       >
         <ResearchPage />
+      </Modal>
+      <Modal
+        title="Leaderboard"
+        show={showLeaderboard}
+        onClose={() => setShowLeaderboard(!showLeaderboard)}
+      >
+        <div>Leaderboard</div>
       </Modal>
     </div>
   );
