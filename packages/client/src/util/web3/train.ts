@@ -4,7 +4,7 @@ import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 
-export const spawn = async (
+export const train = async (
   buildingEntity: EntityID,
   type: EntityID,
   count: number,
