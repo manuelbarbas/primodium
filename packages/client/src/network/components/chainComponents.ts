@@ -8,11 +8,22 @@ import newComponent, {
 
 const commonIdPrefix = "component.";
 
-// todo: organize these alphabetically
+// todo: organize these
 export const Counter = newComponent(
   world,
   { value: Type.Number },
   { id: "Counter", metadata: { contractId: `${commonIdPrefix}Counter` } }
+);
+
+export const GameConfig = newComponent(
+  world,
+  {
+    moveSpeed: Type.Number,
+    motherlodeDistance: Type.Number,
+    maxMotherlodesPerAsteroid: Type.Number,
+    motherlodeChanceInv: Type.Number,
+  },
+  { id: "GameConfig", metadata: { contractId: `${commonIdPrefix}GameConfig` } }
 );
 
 export const BuildingType = newComponent(
@@ -173,7 +184,7 @@ export const Active = newBoolComponent(world, {
   metadata: { contractId: `${commonIdPrefix}Active` },
 });
 
-export const AsteroidType = newStringComponent(world, {
+export const AsteroidType = newNumberComponent(world, {
   id: "AsteroidType",
   metadata: { contractId: `${commonIdPrefix}AsteroidType` },
 });
@@ -201,6 +212,17 @@ export const Position = newComponent(
   }
 );
 
+export const ReversePosition = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "ReversePosition",
+    metadata: { contractId: `${commonIdPrefix}ReversePosition` },
+  }
+);
+
 export const P_Terrain = newComponent(
   world,
   {
@@ -212,7 +234,47 @@ export const P_Terrain = newComponent(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                 Motherlode                                 */
+/* -------------------------------------------------------------------------- */
+
+export const Motherlode = newComponent(
+  world,
+  {
+    size: Type.Number,
+    motherlodeType: Type.Number,
+    cooldownBlocks: Type.String,
+  },
+  {
+    id: "Motherlode",
+    metadata: { contractId: `${commonIdPrefix}Motherlode` },
+  }
+);
+
+export const MotherlodeResource = newNumberComponent(world, {
+  id: "MotherlodeResource",
+  metadata: { contractId: `${commonIdPrefix}MotherlodeResource` },
+});
+
+export const P_MotherlodeResource = newComponent(
+  world,
+  {
+    resource: Type.Entity,
+    maxAmount: Type.Number,
+  },
+  {
+    id: "P_MotherlodeResource",
+    metadata: { contractId: `${commonIdPrefix}P_MotherlodeResource` },
+  }
+);
+
+export const IsMineableAt = newStringComponent(world, {
+  id: "IsMineableAt",
+  metadata: { contractId: `${commonIdPrefix}IsMineableAt` },
+});
+
 export default {
+  GameConfig,
   P_Terrain,
   Active,
   AsteroidType,
@@ -240,4 +302,9 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+
+  Motherlode,
+  MotherlodeResource,
+  P_MotherlodeResource,
+  IsMineableAt,
 };
