@@ -9,7 +9,8 @@ import {
 import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
-import { invadeAsteroid, reinforceAsteroid } from "src/util/web3/units";
+import { ESendType } from "src/util/web3/types";
+import { sendUnits } from "src/util/web3/units";
 
 export const FleetPane: React.FC<{
   setShowHangar: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,7 +24,7 @@ export const FleetPane: React.FC<{
 
   const selectedAsteroid = SelectedAsteroid.use();
 
-  const handleInvade = () => {
+  const sendFleet = (sendType: ESendType) => {
     const destinationAsteroid = selectedAsteroid?.value;
 
     if (destinationAsteroid === undefined) return;
@@ -35,22 +36,7 @@ export const FleetPane: React.FC<{
       count: fleet.count?.at(index) ?? 0,
     }));
 
-    invadeAsteroid(destinationAsteroid, arrivalUnits, network);
-  };
-
-  const handleReinforce = () => {
-    const destinationAsteroid = selectedAsteroid?.value;
-
-    if (destinationAsteroid === undefined) return;
-
-    if (fleet.units === undefined || fleet.units.length === 0) return;
-
-    const arrivalUnits = fleet.units.map((unit, index) => ({
-      unitType: unit,
-      count: fleet.count?.at(index) ?? 0,
-    }));
-
-    reinforceAsteroid(destinationAsteroid, arrivalUnits, network);
+    sendUnits(destinationAsteroid, arrivalUnits, sendType, network);
   };
 
   return (
@@ -138,13 +124,13 @@ export const FleetPane: React.FC<{
                 <>
                   <button
                     className="p-2 border rounded-md border-slate-700 ring ring-slate-900 bg-slate-700 hover:scale-105 transition-all"
-                    onClick={handleReinforce}
+                    onClick={() => sendFleet(ESendType.REINFORCE)}
                   >
                     {transactionLoading ? <Spinner /> : "REINFORCE"}
                   </button>
                   <button
                     className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all"
-                    onClick={handleInvade}
+                    onClick={() => sendFleet(ESendType.INVADE)}
                   >
                     {transactionLoading ? <Spinner /> : "INVADE"}
                   </button>
