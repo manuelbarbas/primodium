@@ -58,6 +58,7 @@ struct GameConfig {
 /* -------------------------------------------------------------------------- */
 enum ESendType {
   INVADE,
+  RAID,
   REINFORCE
 }
 

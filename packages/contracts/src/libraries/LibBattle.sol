@@ -6,20 +6,95 @@ import { addressToEntity } from "solecs/utils.sol";
 //components
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
 import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
 import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "components/BattleAttackerComponent.sol";
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
-import { BattleResult, BattleParticipant } from "../types.sol";
-
+import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
+import { BattleResult, BattleParticipant, Arrival, ESendType } from "../types.sol";
+import { ArrivalsList } from "libraries/ArrivalsList.sol";
+import { LibUnits } from "./LibUnits.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
+import "forge-std/console.sol";
+
 library LibBattle {
+  function setupBattleDefender(IWorld world, uint256 battleEntity, uint256 defenderEntity, uint256 spaceRock) internal {
+    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
+      world.getComponent(BattleDefenderComponentID)
+    );
+
+    BattleParticipant memory defender;
+    defender.participantEntity = defenderEntity;
+    defender.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    defender.unitCounts = new uint32[](defender.unitTypes.length);
+    defender.unitLevels = new uint32[](defender.unitTypes.length);
+    for (uint i = 0; i < defender.unitTypes.length; i++) {
+      defender.unitCounts[i] = (LibUnits.getUnitCountOnRock(world, defenderEntity, spaceRock, defender.unitTypes[i]));
+      defender.unitLevels[i] = LibUnits.getPlayerUnitTypeLevel(world, defenderEntity, defender.unitTypes[i]);
+    }
+    battleDefenderComponent.set(battleEntity, defender);
+  }
+
+  function setupBattleAttacker(
+    IWorld world,
+    uint256 battleEntity,
+    uint256 attackerEntity,
+    uint256 spaceRock,
+    ESendType sendType
+  ) internal {
+    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
+      world.getComponent(BattleAttackerComponentID)
+    );
+
+    BattleParticipant memory attacker;
+    attacker.participantEntity = attackerEntity;
+    attacker.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntities();
+    attacker.unitCounts = new uint32[](attacker.unitTypes.length);
+    attacker.unitLevels = new uint32[](attacker.unitTypes.length);
+    for (uint i = 0; i < attacker.unitTypes.length; i++) {
+      attacker.unitLevels[i] = LibUnits.getPlayerUnitTypeLevel(world, attackerEntity, attacker.unitTypes[i]);
+    }
+    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(attackerEntity, spaceRock);
+    uint256 size = LibMath.getSafe(
+      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
+      playerAsteroidEntity
+    );
+    uint256 index = 0;
+    while (index < size) {
+      console.log("while loop index: %s , size: %s", index, size);
+      Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
+      console.log("while loop after get index: %s , size: %s", index, size);
+      if (arrival.sendType != sendType) {
+        index++;
+        console.log("while loop not invade increment index: %s , size: %s", index, size);
+        continue;
+      }
+      if (arrival.arrivalBlock <= block.number) {
+        console.log("arrival reached add units index %s", index);
+        for (uint i = 0; i < arrival.units.length; i++) {
+          attacker.unitCounts[i] += arrival.units[i].count;
+        }
+        console.log("try to remove arrival at %s", index);
+        ArrivalsList.remove(world, playerAsteroidEntity, index);
+        console.log("removed arrival at %s", index);
+        size--;
+      } else {
+        console.log("while loop invade not reached yet increment index: %s , size: %s", index, size);
+        index++;
+      }
+      console.log("while loop end of loop index: %s , size: %s", index, size);
+    }
+    console.log("while loop exit index: %s , size: %s", index, size);
+    battleAttackerComponent.set(battleEntity, attacker);
+  }
+
   function resolveBattle(IWorld world, uint256 battleEntity) internal view returns (BattleResult memory) {
     BattleResult memory battleResult;
 
