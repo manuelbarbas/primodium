@@ -1,6 +1,12 @@
+import { Coord } from "@latticexyz/utils";
+
 export const deg2rad = (degrees: number) => degrees * (Math.PI / 180);
 
-export function getPositionByVector(distance: number, direction: number) {
+export function getPositionByVector(
+  distance: number,
+  direction: number,
+  origin: Coord = { x: 0, y: 0 }
+) {
   direction = direction % 360;
   const negY: boolean = direction > 180;
   const negX: boolean = direction > 90 && direction <= 270;
@@ -11,10 +17,9 @@ export function getPositionByVector(distance: number, direction: number) {
 
   const finalX = Number(solDiv(newX, 1000000000000000000n));
   const finalY = Number(solDiv(newY, 1000000000000000000n));
-
   return {
-    x: negX ? -finalX : finalX,
-    y: negY ? -finalY : finalY,
+    x: negX ? origin.x - finalX : origin.x + finalX,
+    y: negY ? origin.y - finalY : origin.y + finalY,
   };
 }
 

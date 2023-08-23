@@ -20,9 +20,9 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
   if (!config) throw new Error("GameConfig not found");
   for (let i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
     const motherlodePosition = getPositionByVector(
-      source,
       config.motherlodeDistance,
-      Math.floor(Math.floor(360 / config.maxMotherlodesPerAsteroid) * i)
+      Math.floor((i * 360) / config.maxMotherlodesPerAsteroid),
+      source
     );
     if (ReversePosition.has(encodeCoord(motherlodePosition))) continue;
     const motherlodeEntity = keccak256(
@@ -32,10 +32,11 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
       )
     ) as EntityID;
     if (!isMotherlode(motherlodeEntity, config.motherlodeChanceInv)) {
-      console.log(i, "not a motherlode");
       continue;
     }
+
     world.registerEntity({ id: motherlodeEntity });
+    console.log("initializing motherlode at ", motherlodePosition);
     const {
       size: rawSize,
       motherlodeType: rawMotherlodeType,

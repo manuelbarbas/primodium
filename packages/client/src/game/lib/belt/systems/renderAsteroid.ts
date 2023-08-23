@@ -10,6 +10,7 @@ import {
 import {
   ObjectPosition,
   SetValue,
+  onClick,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { AsteroidType, Position } from "src/network/components/chainComponents";
@@ -51,6 +52,9 @@ export const renderAsteroid = (scene: Scene) => {
       activeAsteroid && activeAsteroid === entityId
         ? Outline({ color: 0xffffff })
         : undefined,
+      onClick(() => {
+        ActiveAsteroid.set({ value: entityId });
+      }),
     ]);
 
     initializeMotherlodes(entityId, coord);
