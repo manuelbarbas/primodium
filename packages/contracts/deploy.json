@@ -127,6 +127,7 @@
     { "name": "InvadeSystem", "writeAccess": ["*"] },
     { "name": "RecallReinforcementsSystem", "writeAccess": ["*"] },
     { "name": "ReceiveReinforcementSystem", "writeAccess": ["*"] },
+    { "name": "RaidSystem", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]

@@ -151,6 +151,7 @@ library LibRaid {
 
     totalCargoValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
+      if (attacker.unitCounts[i] == 0) continue;
       uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
 

@@ -8,8 +8,11 @@ import { SendUnitsSystem, ID as SendUnitsSystemID } from "systems/SendUnitsSyste
 import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 import { InvadeSystem, ID as InvadeSystemID } from "systems/InvadeSystem.sol";
+import { RaidSystem, ID as RaidSystemID } from "systems/RaidSystem.sol";
 import { ReceiveReinforcementSystem, ID as ReceiveReinforcementSystemID } from "systems/ReceiveReinforcementSystem.sol";
 import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "systems/RecallReinforcementsSystem.sol";
+//components
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
@@ -36,12 +39,14 @@ contract SendUnitsTest is PrimodiumTest {
   TrainUnitsSystem public trainUnitsSystem;
   BuildSystem public buildSystem;
   InvadeSystem public invadeSystem;
+  RaidSystem public raidSystem;
   ReceiveReinforcementSystem public receiveReinforcementSystem;
   RecallReinforcementsSystem public recallReinforcementsSystem;
 
   function setUp() public override {
     super.setUp();
 
+    raidSystem = RaidSystem(system(RaidSystemID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
@@ -119,7 +124,7 @@ contract SendUnitsTest is PrimodiumTest {
 
   // todo: check motherlode movement rules
 
-  function setupInvasion(uint256 entity) internal {
+  function setupAttackerUnits(uint256 entity) internal {
     vm.roll(0);
     bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
       DebugUnitProductionBuilding,
@@ -136,8 +141,9 @@ contract SendUnitsTest is PrimodiumTest {
     invade(alice);
   }
 
-  function reinforce() public returns (Arrival memory) {
-    setupInvasion(DebugUnit);
+  function reinforce(address reinforcer) public returns (Arrival memory) {
+    vm.startPrank(reinforcer);
+    setupAttackerUnits(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
     uint256[] memory unitTypes = isUnitComponent.getEntities();
@@ -177,6 +183,7 @@ contract SendUnitsTest is PrimodiumTest {
     assertEq(arrival, expectedArrival);
 
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 1);
+    vm.stopPrank();
     return arrival;
   }
 
@@ -224,7 +231,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.stopPrank();
 
     vm.startPrank(invader);
-    setupInvasion(DebugUnit);
+    setupAttackerUnits(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
 
@@ -271,8 +278,16 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function raid(address raider) public returns (Arrival memory) {
+    vm.startPrank(bob);
+    componentDevSystem.executeTyped(
+      ItemComponentID,
+      LibEncode.hashKeyEntity(IronID, addressToEntity(bob)),
+      abi.encode(1000)
+    );
+    vm.stopPrank();
+
     vm.startPrank(raider);
-    setupInvasion(DebugUnit);
+    setupAttackerUnits(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
 
@@ -355,7 +370,7 @@ contract SendUnitsTest is PrimodiumTest {
 
   function testArrivalSnuckInBehind() public {
     vm.startPrank(alice);
-    setupInvasion(DebugUnit);
+    setupAttackerUnits(DebugUnit);
 
     uint256 unitProductionBuildingEntityID = LibEncode.hashKeyCoord(BuildingKey, getIronCoord(alice));
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit3, 10);
@@ -395,6 +410,16 @@ contract SendUnitsTest is PrimodiumTest {
       0
     );
     assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
+    vm.stopPrank();
+  }
+
+  function testExecuteRaid() public {
+    Arrival memory raidArival = raid(alice);
+    vm.roll(raidArival.arrivalBlock);
+    vm.prank(alice);
+    raidSystem.executeTyped(raidArival.destination);
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), raidArival.destination)), 0);
+    assertEq(ownedByComponent.getValue(raidArival.destination), addressToEntity(bob));
     vm.stopPrank();
   }
 }
