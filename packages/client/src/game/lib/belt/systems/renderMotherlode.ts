@@ -9,7 +9,6 @@ import {
 import {
   ObjectPosition,
   SetValue,
-  onClick,
 } from "../../common/object-components/common";
 import { Texture } from "../../common/object-components/sprite";
 import {
@@ -24,7 +23,6 @@ import {
   MotherlodeSizeNames,
   MotherlodeTypeNames,
 } from "../types";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 export const renderMotherlode = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -36,7 +34,6 @@ export const renderMotherlode = (scene: Scene) => {
   ];
 
   const render = ({ entity }: { entity: EntityIndex }) => {
-    const entityId = world.entities[entity];
     const motherlodeObjectGroup = scene.objectPool.getGroup(
       "motherlode_" + entity
     );

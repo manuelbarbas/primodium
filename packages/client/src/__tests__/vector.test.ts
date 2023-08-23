@@ -1,11 +1,5 @@
 import { Coord } from "@latticexyz/utils";
-import {
-  TWO_PI,
-  deg2rad,
-  getPositionByVector,
-  solSin,
-  solSinDegrees,
-} from "src/util/vector";
+import { TWO_PI, getPositionByVector, solSinDegrees } from "src/util/vector";
 import { expect, test } from "vitest";
 
 const moveResults = [
