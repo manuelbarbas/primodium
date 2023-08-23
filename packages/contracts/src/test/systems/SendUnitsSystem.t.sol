@@ -390,8 +390,11 @@ contract SendUnitsTest is PrimodiumTest {
     vm.roll(invasionArrival.arrivalBlock);
     vm.prank(alice);
     invadeSystem.executeTyped(invasionArrival.destination);
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 0);
-
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), invasionArrival.destination)),
+      0
+    );
+    assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
     vm.stopPrank();
   }
 }
