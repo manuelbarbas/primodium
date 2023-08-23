@@ -203,3 +203,10 @@ export function newBoolComponent<
 >(world: World, options?: Options<Overridable, M>) {
   return newComponent(world, { value: Type.Boolean }, options);
 }
+
+export function newEntityComponent<
+  Overridable extends boolean,
+  M extends Metadata
+>(world: World, options?: Options<Overridable, M>) {
+  return newComponent(world, { value: Type.Entity }, options);
+}

@@ -3,12 +3,12 @@ import { HangarPane } from "./HangarPane";
 import { FleetPane } from "./FleetPane";
 import { AnimatePresence } from "framer-motion";
 
-export const UnitDeploymentBar: React.FC = () => {
+export const UnitDeployment: React.FC = () => {
   const [showHangar, setShowHangar] = useState(false);
 
   return (
     <div>
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 max-w-full pointer-events-auto">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-screen pointer-events-auto flex items-center justify-center px-4">
         <AnimatePresence>
           <FleetPane key="fleet" setShowHangar={setShowHangar} />
         </AnimatePresence>

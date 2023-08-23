@@ -16,3 +16,8 @@ export enum EMotherlodeType {
   PLATINUM,
   KIMBERLITE,
 }
+
+export enum ESendType {
+  INVADE,
+  REINFORCE,
+}

@@ -32,6 +32,20 @@ export const ObjectPosition = <T extends keyof GameObjectTypes>(
   };
 };
 
+export const OnClick = <T extends keyof GameObjectTypes>(
+  callback: (gameObject: GameObjectInstances[T]) => void
+): GameObjectComponent<T> => {
+  return {
+    id: "click",
+    once: (gameObject) => {
+      gameObject.setInteractive();
+      gameObject.on("pointerdown", () => {
+        callback(gameObject as GameObjectInstances[T]);
+      });
+    },
+  };
+};
+
 export const SetValue = <T extends keyof GameObjectTypes>(
   properties: Partial<GameObjectInstances[T]>
 ): GameObjectComponent<T> => {
