@@ -16,6 +16,7 @@ import { IOnEntityCountSubsystem } from "../interfaces/IOnEntityCountSubsystem.s
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID, ResourceValues } from "../components/P_RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 
+import { LibResource } from "../libraries/LibResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 
@@ -50,7 +51,13 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, IOnEntityCountSub
         requiredResources.resources[i]
       );
       uint32 currItem = LibMath.getSafe(itemComponent, playerResourceHash);
-      itemComponent.set(playerResourceHash, currItem - (requiredResources.values[i] * count));
+      LibResource.updateResourceAmount(
+        world,
+        playerEntity,
+        requiredResources.resources[i],
+        currItem - (requiredResources.values[i] * count)
+      );
+      //itemComponent.set(playerResourceHash, currItem - (requiredResources.values[i] * count));
     }
 
     return abi.encode(playerAddress, targetEntity);
