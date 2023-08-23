@@ -24,6 +24,7 @@ import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUni
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
+import { LibResource } from "libraries/LibResource.sol";
 
 // types
 import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue, ESpaceRockType, Motherlode } from "src/types.sol";
@@ -190,8 +191,8 @@ library LibUpdateSpaceRock {
   ) internal {
     MineableAtComponent mineableAtComponent = MineableAtComponent(world.getComponent(MineableAtComponentID));
     // cannot claim during cooldown
-    bool isCooldown = blockNumber < mineableAtComponent.getValue(motherlodeEntity);
-    if (isCooldown) return;
+
+    if (blockNumber < mineableAtComponent.getValue(motherlodeEntity)) return;
 
     uint32 blocksSinceLastClaim = uint32(
       blockNumber - LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity)
@@ -214,7 +215,6 @@ library LibUpdateSpaceRock {
 
     // cannot claim if resources are maxed out
     if (resource.value == prevMotherlodeResources) return;
-    uint256 resourcePlayerEntity = LibEncode.hashKeyEntity(resource.resource, playerEntity);
 
     // get the amount of resources that have been mined
     uint32 rawIncrease = miningPower * blocksSinceLastClaim;
@@ -222,7 +222,12 @@ library LibUpdateSpaceRock {
       rawIncrease = resource.value - prevMotherlodeResources;
     }
     motherlodeResourceComponent.set(motherlodeEntity, rawIncrease + prevMotherlodeResources);
-    LibMath.add(ItemComponent(world.getComponent(ItemComponentID)), resourcePlayerEntity, rawIncrease);
+    uint32 currAmount = LibMath.getSafe(
+      ItemComponent(world.getComponent(ItemComponentID)),
+      LibEncode.hashKeyEntity(resource.resource, playerEntity)
+    );
+    LibResource.updateResourceAmount(world, playerEntity, resource.resource, currAmount + rawIncrease);
+
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, blockNumber);
   }
 
