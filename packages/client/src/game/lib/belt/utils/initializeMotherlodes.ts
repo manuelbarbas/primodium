@@ -88,9 +88,10 @@ function getMotherlodeType(motherlodeType: number) {
   return EMotherlodeType.KIMBERLITE;
 }
 
+const ONE = BigInt(1);
 const getByteUInt = (_b: EntityID, length: number, shift: number): number => {
   const b = BigInt(_b);
-  const mask = ((1n << BigInt(length)) - 1n) << BigInt(shift);
+  const mask = ((ONE << BigInt(length)) - ONE) << BigInt(shift);
   const _byteUInt = (b & mask) >> BigInt(shift);
   return Number(_byteUInt);
 };
