@@ -7,6 +7,7 @@ import {
   SelectedAsteroid,
 } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
+import { getAsteroidImage } from "src/util/asteroid";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 import { ESendType } from "src/util/web3/types";
@@ -106,8 +107,8 @@ export const FleetPane: React.FC<{
           {selectedAsteroid?.value && (
             <div className="flex items-center justify-center p-1 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs gap-2">
               <img
-                src="img/asteroids/player_asteroids/asteroid1.png"
-                className="w-[16px] h-[16px] rounded-md"
+                src={getAsteroidImage(selectedAsteroid.value)}
+                className="w-[24px] h-[24px] shadow-2xl"
               />
               TARGET LOCKED
             </div>

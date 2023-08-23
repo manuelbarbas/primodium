@@ -2,6 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
 import { hashStringEntity } from "./encode";
+import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
 
 export enum Action {
   DemolishBuilding,
@@ -578,3 +579,17 @@ export const KeyImages = new Map<Key, string>([
   ["Q", "/img/keys/q.png"],
   ["E", "/img/keys/e.png"],
 ]);
+
+export const MotherlodeSizeNames: Record<number, string> = {
+  [EMotherlodeSize.SMALL]: "small",
+  [EMotherlodeSize.MEDIUM]: "medium",
+  [EMotherlodeSize.LARGE]: "large",
+};
+
+// do the same for types
+export const MotherlodeTypeNames: Record<number, string> = {
+  [EMotherlodeType.TITANIUM]: "titanium",
+  [EMotherlodeType.IRIDIUM]: "iridium",
+  [EMotherlodeType.PLATINUM]: "platinum",
+  [EMotherlodeType.KIMBERLITE]: "kimberlite",
+};
