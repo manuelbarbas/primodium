@@ -59,6 +59,7 @@ contract SendUnitsTest is PrimodiumTest {
     });
     vm.prank(deployer);
     gameConfigComponent.set(SingletonID, gameConfig);
+    vm.stopPrank();
   }
 
   function testFailSendUnitsCountZero() public {
@@ -122,8 +123,7 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function testInvade() public {
-    vm.startPrank(alice);
-    invade();
+    invade(alice);
   }
 
   function reinforce() public returns (Arrival memory) {
@@ -170,7 +170,7 @@ contract SendUnitsTest is PrimodiumTest {
     return arrival;
   }
 
-  function findMotherlode(address player) public returns (uint256, Coord memory) {
+  function findAndInitializeMotherlode(address player) public returns (uint256) {
     GameConfig memory config = gameConfigComponent.getValue(SingletonID);
 
     vm.startPrank(deployer);
@@ -201,10 +201,19 @@ contract SendUnitsTest is PrimodiumTest {
       found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
     }
     require(found, "uh oh, no motherlode found");
-    return (asteroid, targetPosition);
+    LibMotherlode.initMotherlode(world, targetPosition, asteroid);
+    vm.stopPrank();
+    return (asteroid);
   }
 
-  function invade() public returns (Arrival memory) {
+  function invade(address invader) public returns (Arrival memory) {
+    uint256 motherlodeEntity = findAndInitializeMotherlode(bob);
+
+    vm.startPrank(deployer);
+    ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
+    vm.stopPrank();
+
+    vm.startPrank(invader);
     setupInvasion(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
@@ -215,15 +224,6 @@ contract SendUnitsTest is PrimodiumTest {
       units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? attackNumber : 0);
     }
 
-    (uint256 motherlodeEntity, Coord memory motherlodePosition) = findMotherlode(bob);
-    vm.stopPrank();
-
-    vm.startPrank(deployer);
-    LibMotherlode.initMotherlode(world, motherlodePosition, motherlodeEntity);
-    ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
-    vm.stopPrank();
-
-    vm.startPrank(alice);
     bytes memory rawArrival = sendUnitsSystem.executeTyped(
       units,
       ESendType.INVADE,
@@ -234,17 +234,16 @@ contract SendUnitsTest is PrimodiumTest {
 
     Arrival memory arrival = abi.decode(rawArrival, (Arrival));
 
-    uint32 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(DebugUnit);
+    uint256 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(DebugUnit) *
+      GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     Coord memory originPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
       getHomeAsteroid(alice)
     );
     Coord memory destinationPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
       motherlodeEntity
     );
-
-    uint256 worldSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     uint256 expectedArrivalBlock = block.number +
-      ((LibSend.distance(originPosition, destinationPosition) * speed * worldSpeed) / 100 / 100);
+      ((LibSend.distance(originPosition, destinationPosition) * speed) / 100 / 100);
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.INVADE,
       units: units,
@@ -257,10 +256,12 @@ contract SendUnitsTest is PrimodiumTest {
     assertEq(arrival, expectedArrival);
 
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), motherlodeEntity)), 1);
+    vm.stopPrank();
     return arrival;
   }
 
-  function raid() public returns (Arrival memory) {
+  function raid(address raider) public returns (Arrival memory) {
+    vm.startPrank(raider);
     setupInvasion(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
@@ -292,7 +293,7 @@ contract SendUnitsTest is PrimodiumTest {
     uint256 expectedArrivalBlock = block.number +
       ((LibSend.distance(originPosition, destinationPosition) * speed * worldSpeed) / 100 / 100);
     Arrival memory expectedArrival = Arrival({
-      sendType: ESendType.INVADE,
+      sendType: ESendType.RAID,
       units: units,
       arrivalBlock: expectedArrivalBlock,
       from: addressToEntity(alice),
@@ -303,26 +304,23 @@ contract SendUnitsTest is PrimodiumTest {
     assertEq(arrival, expectedArrival);
 
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 1);
+    vm.stopPrank();
     return arrival;
   }
 
   // Arrival resolution
 
   function testArrivalTooSoon() public {
-    vm.startPrank(alice);
-    Arrival memory arrival = invade();
+    Arrival memory arrival = raid(alice);
     vm.roll(arrival.arrivalBlock - 1);
-    vm.stopPrank();
     vm.startPrank(deployer);
     LibArrival.applyArrivals(world, addressToEntity(alice), getHomeAsteroid(bob));
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 1);
   }
 
   function testArrivalExecuted() public {
-    vm.startPrank(alice);
-    Arrival memory arrival = invade();
+    Arrival memory arrival = raid(alice);
     vm.roll(arrival.arrivalBlock);
-    vm.stopPrank();
     vm.startPrank(deployer);
     LibArrival.applyArrivals(world, addressToEntity(alice), getHomeAsteroid(bob));
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 0);
@@ -330,13 +328,13 @@ contract SendUnitsTest is PrimodiumTest {
 
   // testTwoArrivals
   function testOneArrivedOneDidntYet() public {
-    vm.startPrank(alice);
-    Arrival memory arrival = invade();
+    Arrival memory arrival = raid(alice);
     vm.roll(block.number + 10);
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 5);
 
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
+    vm.startPrank(alice);
+    sendUnitsSystem.executeTyped(units, ESendType.RAID, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
     vm.roll(arrival.arrivalBlock);
     vm.stopPrank();
     vm.startPrank(deployer);
@@ -378,10 +376,9 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function testExecuteInvade() public {
-    vm.startPrank(alice);
-    Arrival memory invasionArrival = invade();
+    Arrival memory invasionArrival = invade(alice);
     vm.roll(invasionArrival.arrivalBlock);
-
+    vm.prank(alice);
     invadeSystem.executeTyped(invasionArrival.destination);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 0);
 

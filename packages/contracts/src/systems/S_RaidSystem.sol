@@ -7,6 +7,7 @@ import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "../com
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "../components/BattleDefenderComponent.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibBattle } from "../libraries/LibBattle.sol";
+import { LibRaid } from "../libraries/LibRaid.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.S_Raid"));
@@ -19,7 +20,7 @@ contract S_RaidSystem is PrimodiumSystem, IOnEntitySubsystem {
     BattleResultComponent battleResultComponent = BattleResultComponent(getC(BattleResultComponentID));
     require(battleResultComponent.has(battleEntity), "S_RaidSystem: battle has not resolved yet");
 
-    LibBattle.resolveRaid(world, battleEntity);
+    LibRaid.resolveRaid(world, battleEntity);
     return abi.encode(battleEntity);
   }
 

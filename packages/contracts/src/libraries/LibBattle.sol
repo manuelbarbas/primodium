@@ -112,7 +112,7 @@ library LibBattle {
     uint32 totalDefenceValue = getTotalDefenceValue(world, battleEntity);
 
     for (uint256 i = 0; i < attackerUnitCounts.length; i++) {
-      uint32 attackPercentage = (attackValues[i] * 100) / totalAttackValue;
+      uint32 attackPercentage = totalAttackValue > 0 ? (attackValues[i] * 100) / totalAttackValue : 0;
       uint32 defendToward = (totalDefenceValue * attackPercentage) / 100;
       uint32 battleRatio = 0;
       if (defendToward > 0) {

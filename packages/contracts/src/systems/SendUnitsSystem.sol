@@ -97,25 +97,24 @@ contract SendUnitsSystem is PrimodiumSystem {
     );
     ESpaceRockType originType = ESpaceRockType(asteroidTypeComponent.getValue(origin));
     ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
+    if (sendType == ESendType.REINFORCE || sendType == ESendType.RAID)
+      require(ownedByComponent.has(destination), "reinforce/raid destination must be a owned by player");
 
     require(origin != destination, "origin and destination cannot be the same");
+
     if (originType == ESpaceRockType.ASTEROID) {
       require(ownedByComponent.getValue(origin) == playerEntity, "you can only move from an asteroid you own");
     }
 
     if (destinationType == ESpaceRockType.MOTHERLODE) {
       require(originType != ESpaceRockType.MOTHERLODE, "you cannot move between motherlodes");
-      require(
-        ownedByComponent.getValue(destination) == playerEntity,
-        "you can only move to your asteroid from a motherlode"
-      );
     }
 
     if (sendType == ESendType.INVADE) require(playerEntity != addressToEntity(to), "you cannot invade yourself");
     if (sendType == ESendType.REINFORCE)
       require(
-        destinationType == ESpaceRockType.MOTHERLODE && playerEntity == addressToEntity(to),
-        "you can only reinforce yourself on a motherlode"
+        ownedByComponent.getValue(destination) == addressToEntity(to),
+        "you can only reinforce the current owner of a motherlode"
       );
   }
 
