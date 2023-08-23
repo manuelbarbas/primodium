@@ -68,7 +68,7 @@ export const BuildingInfo: React.FC<{
   return (
     <div className="flex flex-col w-fit items-center gap-3">
       {/* <Header content={`${ownerName}`} /> */}
-      <div className="relative flex flex-col justify-center items-center w-full border border-yellow-400 ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
+      <div className="relative flex flex-col justify-center items-center border border-yellow-400 ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
         <div className="relative flex items-center gap-2">
           <img
             src={imageURI}

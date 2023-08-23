@@ -1,49 +1,16 @@
 import { motion } from "framer-motion";
-import { BackgroundImage, BlockType } from "src/util/constants";
+import { BackgroundImage } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { EntityID } from "@latticexyz/recs";
 import { train } from "src/util/web3";
 import { useMud } from "src/hooks";
-
-const unitStats = [
-  {
-    name: "ATK",
-    value: "10",
-  },
-  {
-    name: "DEF",
-    value: "10",
-  },
-  {
-    name: "MOVE",
-    value: "10/s",
-  },
-  {
-    name: "CAP",
-    value: "200",
-  },
-];
-
-const availableUnits = [
-  {
-    type: BlockType.AnvilLightDrone,
-    count: 100,
-  },
-  {
-    type: BlockType.AegisDrone,
-    count: 100,
-  },
-  {
-    type: BlockType.MiningVessel,
-    count: 100,
-  },
-  {
-    type: BlockType.StingerDrone,
-    count: 100,
-  },
-];
+import {
+  getPlayerUnitCount,
+  getUnitStats,
+  useTrainableUnits,
+} from "src/util/trainUnits";
 
 const maximum = 10;
 
@@ -52,24 +19,20 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
 }) => {
   const network = useMud();
   const [show, setShow] = useState(false);
-  const [selectedUnit, setSelectedUnit] = useState<
-    (typeof availableUnits)[0]["type"] | null
-  >(null);
+  const [selectedUnit, setSelectedUnit] = useState<EntityID>();
   const [count, setCount] = useState(0);
-  const totalUnits = useMemo(() => {
-    return availableUnits.reduce((acc, unit) => {
-      return acc + unit.count;
-    }, 0);
-  }, [availableUnits]);
-
   useEffect(() => {
-    setSelectedUnit(null);
+    setSelectedUnit(undefined);
   }, [show]);
 
   useEffect(() => {
     setCount(0);
   }, [selectedUnit]);
 
+  const totalUnits = getPlayerUnitCount();
+  const trainableUnits = useTrainableUnits(buildingEntity);
+  console.log("trainable units:", trainableUnits);
+  //   if (trainableUnits.length == 0) return null;
   return (
     <motion.div
       initial={{ translateY: -100, opacity: 0 }}
@@ -81,7 +44,7 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
         stiffness: 500,
         damping: 30,
       }}
-      className="relative flex justify-between items-center text-white w-full"
+      className="relative flex flex-col justify-between items-center text-white w-full"
     >
       <motion.button
         layout="position"
@@ -96,37 +59,37 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
             show ? "background-white" : ""
           }`}
         >
-          <p>{!show ? "Train Units" : "Your Units"}</p>
+          <p>Train Units</p>
           {!show && <p className="text-xs opacity-50">{totalUnits} unit(s)</p>}
         </div>
       </motion.button>
 
       {show && (
-        <div className="absolute translate-y-1/4 translate-x-full bg-slate-900/90 pixel-images border border-cyan-400 p-3 w-80">
+        <div className="bg-slate-900/90 pixel-images border border-cyan-400 p-3 w-80">
           <div className="flex flex-col items-center space-y-3">
             <div className="flex flex-wrap gap-2 items-center justify-center">
-              {availableUnits.map((unit, index) => {
+              {trainableUnits.map((unit, index) => {
                 return (
                   <button
                     key={index}
                     className="relative flex flex-col items-center group hover:scale-110 transition-transform hover:z-50"
                     onClick={() =>
-                      selectedUnit == unit.type
-                        ? setSelectedUnit(null)
-                        : setSelectedUnit(unit.type)
+                      selectedUnit == unit
+                        ? setSelectedUnit(undefined)
+                        : setSelectedUnit(unit)
                     }
                   >
                     <img
                       src={
-                        BackgroundImage.get(unit.type)?.at(0) ??
+                        BackgroundImage.get(unit)?.at(0) ??
                         "/img/icons/debugicon.png"
                       }
                       className={`border border-cyan-400 w-[64px] h-[64px] group-hover:opacity-50 rounded-xl ${
-                        selectedUnit == unit.type ? "border-2 border-white" : ""
+                        selectedUnit == unit ? "border-2 border-white" : ""
                       }`}
                     />
                     <p className="opacity-0 absolute -bottom-4 text-xs bg-pink-900 group-hover:opacity-100 whitespace-nowrap transition-opacity">
-                      {getBlockTypeName(unit.type)}
+                      {getBlockTypeName(unit)}
                     </p>
                   </button>
                 );
@@ -139,8 +102,8 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
               </p>
             ) : (
               <>
-                <div className="grid grid-cols-6 gap-2 border-y py-2 my-2 border-cyan-400/30">
-                  {unitStats.map((stat) => (
+                <div className="grid grid-cols-5 gap-2 border-y py-2 my-2 border-cyan-400/30">
+                  {getUnitStats(selectedUnit).map((stat) => (
                     <div key={stat.name} className="flex flex-col items-center">
                       <p className="text-xs opacity-50">{stat.name}</p>
                       <p>{stat.value}</p>

@@ -470,15 +470,22 @@ library LibInitDebug {
     );
     P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
 
+    // MainBase
+    uint256 entity = LibEncode.hashKeyEntity(MainBaseID, 1);
+    uint256[] memory unitTypes = new uint256[](3);
+    unitTypes[0] = DebugUnitMiner;
+    unitTypes[1] = DebugUnitBattle1;
+    unitTypes[2] = DebugUnit;
+    unitProductionTypesComponent.set(entity, unitTypes);
+
     //DebugUnitProductionBuilding
     maxLevelComponent.set(DebugUnitProductionBuilding, 2);
-    uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
+    entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
 
-    uint256[] memory unitTypes = new uint256[](2);
+    unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
     unitTypes[1] = DebugUnit3;
     unitProductionTypesComponent.set(entity, unitTypes);
-    unitProductionMultiplierComponent.set(entity, 100);
 
     entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 2);
     unitTypes = new uint256[](2);

@@ -272,6 +272,38 @@ export const IsMineableAt = newStringComponent(world, {
   id: "IsMineableAt",
   metadata: { contractId: `${commonIdPrefix}IsMineableAt` },
 });
+/* -------------------------------------------------------------------------- */
+/*                                    Units                                   */
+/* -------------------------------------------------------------------------- */
+export const P_UnitAttack = newNumberComponent(world, {
+  id: "P_UnitAttack",
+  metadata: { contractId: `${commonIdPrefix}P_UnitAttack` },
+});
+
+export const P_UnitCargo = newNumberComponent(world, {
+  id: "P_UnitCargo",
+  metadata: { contractId: `${commonIdPrefix}P_UnitCargo` },
+});
+
+export const P_UnitTravelSpeed = newNumberComponent(world, {
+  id: "P_UnitTravelSpeed",
+  metadata: { contractId: `${commonIdPrefix}P_UnitTravelSpeed` },
+});
+
+export const P_UnitDefence = newNumberComponent(world, {
+  id: "P_UnitDefence",
+  metadata: { contractId: `${commonIdPrefix}P_UnitDefence` },
+});
+
+export const P_UnitMining = newNumberComponent(world, {
+  id: "P_UnitMining",
+  metadata: { contractId: `${commonIdPrefix}P_UnitMining` },
+});
+
+export const Units = newNumberComponent(world, {
+  id: "Units",
+  metadata: { contractId: `${commonIdPrefix}Units` },
+});
 
 /* -------------------------------------------------------------------------- */
 /*                                Unit Training                               */
@@ -294,7 +326,7 @@ export const P_UnitProductionTypes = newComponent(
 
 export const P_TrainingTime = newNumberComponent(world, {
   id: "P_TrainingTime",
-  metadata: { contractId: `${commonIdPrefix}P_TrainingTime` },
+  metadata: { contractId: `${commonIdPrefix}P_UnitTrainingTime` },
 });
 
 export const UnitProductionLastQueue = newNumberComponent(world, {
@@ -360,6 +392,14 @@ export default {
   MotherlodeResource,
   P_MotherlodeResource,
   IsMineableAt,
+
+  // Units
+  P_UnitAttack,
+  P_UnitCargo,
+  P_UnitTravelSpeed,
+  P_UnitDefence,
+  P_UnitMining,
+  Units,
 
   // Unit Training
   P_UnitProductionMultiplier,

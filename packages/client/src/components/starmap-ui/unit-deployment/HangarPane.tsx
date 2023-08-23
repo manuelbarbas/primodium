@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { BackgroundImage, BlockType } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
@@ -45,30 +45,33 @@ export const HangarPane: React.FC<{
   }, [show]);
 
   return (
-    <motion.div
-      initial={{ translateY: -100, opacity: 0 }}
-      animate={{ translateY: 0, opacity: 1 }}
-      exit={{ translateY: 100, opacity: 0, transition: { duration: 0.1 } }}
-      layout="position"
-      transition={{
-        type: "spring",
-        stiffness: 500,
-        damping: 30,
-      }}
-      className="relative flex flex-col justify-between items-center"
-    >
-      <motion.button
+    <>
+      <motion.div
+        initial={{ translateX: -100, opacity: 0 }}
+        animate={{ translateX: 0, opacity: 1 }}
+        exit={{ translateX: 100, opacity: 0, transition: { duration: 0.1 } }}
         layout="position"
-        className="border border-cyan-400 px-4 py-2 bg-slate-900 hover:bg-cyan-600 hover:scale-105 font-bold flex items-center gap-2 transition-all"
-        onClick={() => setShow(show ? false : true)}
+        transition={{
+          type: "spring",
+          stiffness: 500,
+          damping: 30,
+        }}
+        className="relative flex flex-col justify-between items-center"
       >
-        <img src="/img/icons/debugicon.png" className="w-[24px] h-[24px]" />
-        <div className="flex flex-col justify-end">
-          <p>{!show ? "View Hangar" : "Your Hangar"}</p>
-          {!show && <p className="text-xs opacity-50">{totalUnits} unit(s)</p>}
-        </div>
-      </motion.button>
-
+        <motion.button
+          layout="position"
+          className="border border-cyan-400 px-4 py-2 bg-slate-900 hover:bg-cyan-600 hover:scale-105 font-bold flex items-center gap-2 transition-all"
+          onClick={() => setShow(show ? false : true)}
+        >
+          <img src="/img/icons/debugicon.png" className="w-[24px] h-[24px]" />
+          <div className="flex flex-col justify-end">
+            <p>{!show ? "View Hangar" : "Your Hangar"}</p>
+            {!show && (
+              <p className="text-xs opacity-50">{totalUnits} unit(s)</p>
+            )}
+          </div>
+        </motion.button>
+      </motion.div>
       {show && (
         <div className="bg-slate-900/90 pixel-images border border-cyan-400 p-3 w-80">
           {selectedUnit === null && (
@@ -116,6 +119,6 @@ export const HangarPane: React.FC<{
           )}
         </div>
       )}
-    </motion.div>
+    </>
   );
 };
