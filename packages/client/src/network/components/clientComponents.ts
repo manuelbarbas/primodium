@@ -51,6 +51,7 @@ export const SelectedAsteroid = newEntityComponent(world, {
 
 export default {
   ActiveAsteroid,
+  SelectedAsteroid,
   BlockNumber,
   GameReady,
   DoubleCounter,

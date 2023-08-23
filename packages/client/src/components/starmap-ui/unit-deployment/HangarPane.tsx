@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { BackgroundImage, BlockType } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
 import { UnitPane } from "./UnitPane";
+import { Fleet } from "src/network/components/clientComponents";
 
 const availableUnits = [
   {
@@ -36,6 +37,12 @@ export const HangarPane: React.FC<{
       return acc + unit.count;
     }, 0);
   }, [availableUnits]);
+
+  useEffect(() => {
+    if (show) {
+      setSelectedUnit(null);
+    }
+  }, [show]);
 
   return (
     <motion.div
@@ -86,7 +93,7 @@ export const HangarPane: React.FC<{
                         {getBlockTypeName(unit.type)}
                       </p>
                       <p className="absolute bottom-1 right-1 font-bold text-[.6rem] bg-slate-900 border-cyan-400/30">
-                        {unit.count}
+                        {unit.count - Fleet.getUnitCount(unit.type)}
                       </p>
                     </button>
                   );

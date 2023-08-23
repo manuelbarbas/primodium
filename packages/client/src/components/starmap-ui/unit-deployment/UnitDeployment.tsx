@@ -3,7 +3,7 @@ import { HangarPane } from "./HangarPane";
 import { FleetPane } from "./FleetPane";
 import { AnimatePresence } from "framer-motion";
 
-export const UnitDeploymentBar: React.FC = () => {
+export const UnitDeployment: React.FC = () => {
   const [showHangar, setShowHangar] = useState(false);
 
   return (
