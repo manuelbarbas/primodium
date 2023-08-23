@@ -28,14 +28,19 @@ library LibInitScoreMultipliers {
     scoreMultiplierComponent.set(IronID, 10);
     scoreMultiplierComponent.set(CopperID, 15);
     scoreMultiplierComponent.set(LithiumID, 20);
-    scoreMultiplierComponent.set(SulfurID, 25);
-    scoreMultiplierComponent.set(TitaniumID, 30);
-    scoreMultiplierComponent.set(IridiumID, 40);
-    scoreMultiplierComponent.set(OsmiumID, 50);
-    scoreMultiplierComponent.set(TungstenID, 70);
-    scoreMultiplierComponent.set(KimberliteID, 100);
-    scoreMultiplierComponent.set(PlatinumID, 150);
-    scoreMultiplierComponent.set(UraniniteID, 200);
-    scoreMultiplierComponent.set(BolutiteID, 250);
+    scoreMultiplierComponent.set(SulfurID, 30);
+    scoreMultiplierComponent.set(TitaniumID, 100);
+    scoreMultiplierComponent.set(IridiumID, 200);
+    scoreMultiplierComponent.set(OsmiumID, 300);
+    scoreMultiplierComponent.set(TungstenID, 400);
+    scoreMultiplierComponent.set(KimberliteID, 1000);
+    scoreMultiplierComponent.set(PlatinumID, 1500);
+    scoreMultiplierComponent.set(UraniniteID, 2000);
+    scoreMultiplierComponent.set(BolutiteID, 2500);
+
+    scoreMultiplierComponent.set(IronPlateCraftedItemID, 30);
+    scoreMultiplierComponent.set(LithiumCopperOxideCraftedItemID, 60);
+    scoreMultiplierComponent.set(AlloyCraftedItemID, 100);
+    scoreMultiplierComponent.set(SpaceFuelCraftedItemID, 200);
   }
 }
