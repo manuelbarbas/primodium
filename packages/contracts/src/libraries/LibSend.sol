@@ -37,6 +37,7 @@ library LibSend {
     SpeedComponent speedComponent = SpeedComponent(world.getComponent(SpeedComponentID));
     slowestSpeed = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
     for (uint i = 0; i < arrivalUnits.length; i++) {
+      if (arrivalUnits[i].count == 0) continue;
       uint256 unitType = uint256(arrivalUnits[i].unitType);
       require(speedComponent.has(unitType), "LibSend: unit type does not have speed component");
       uint256 currSpeed = speedComponent.getValue(unitType);

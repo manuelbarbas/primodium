@@ -22,7 +22,7 @@ import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "co
 
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
-
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from "components/P_UnitTrainingTimeComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
 import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
@@ -62,6 +62,8 @@ library LibInitDebug {
     initializeUnitProductionBuildings(world);
 
     initializeUnits(world);
+
+    registerUnitType(world);
   }
 
   function registerBuildingTypes(IWorld world) internal {
@@ -100,6 +102,19 @@ library LibInitDebug {
 
     isBuildingTypeComponent.set(DebugUnitProductionBuilding);
     isBuildingTypeComponent.set(DebugHousingBuilding);
+  }
+
+  function registerUnitType(IWorld world) internal {
+    P_IsUnitComponent isUnitComponent = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID));
+    isUnitComponent.set(DebugUnit);
+    isUnitComponent.set(DebugUnit2);
+    isUnitComponent.set(DebugUnit3);
+
+    isUnitComponent.set(DebugUnitMiner);
+    isUnitComponent.set(DebugUnitMiner2);
+
+    isUnitComponent.set(DebugUnitBattle1);
+    isUnitComponent.set(DebugUnitBattle2);
   }
 
   function initBlueprints(IWorld world) internal {

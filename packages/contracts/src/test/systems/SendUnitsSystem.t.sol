@@ -12,13 +12,15 @@ import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
-
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { LibSend } from "libraries/LibSend.sol";
 import { LibArrival } from "libraries/LibArrival.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 
 contract SendUnitsTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
+
+  P_IsUnitComponent public isUnitComponent;
 
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
@@ -36,7 +38,7 @@ contract SendUnitsTest is PrimodiumTest {
     invadeSystem = InvadeSystem(system(InvadeSystemID));
     receiveReinforcementSystem = ReceiveReinforcementSystem(system(ReceiveReinforcementSystemID));
     recallReinforcementsSystem = RecallReinforcementsSystem(system(RecallReinforcementsSystemID));
-
+    isUnitComponent = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID));
     spawn(alice);
     spawn(bob);
     spawn(deployer);
@@ -111,8 +113,11 @@ contract SendUnitsTest is PrimodiumTest {
     setupInvasion(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
-    ArrivalUnit[] memory units = new ArrivalUnit[](1);
-    units[0] = ArrivalUnit(DebugUnit, attackNumber);
+    uint256[] memory unitTypes = isUnitComponent.getEntities();
+    ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
+    for (uint i = 0; i < unitTypes.length; i++) {
+      units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? attackNumber : 0);
+    }
 
     bytes memory rawArrival = sendUnitsSystem.executeTyped(
       units,
@@ -130,8 +135,9 @@ contract SendUnitsTest is PrimodiumTest {
     Coord memory destinationPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
       getHomeAsteroid(bob)
     );
+    uint256 worldSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     uint256 expectedArrivalBlock = block.number +
-      ((LibSend.distance(originPosition, destinationPosition) * speed * MOVE_SPEED) / 100 / 100);
+      ((LibSend.distance(originPosition, destinationPosition) * speed * worldSpeed) / 100 / 100);
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.INVADE,
       units: units,
@@ -151,8 +157,12 @@ contract SendUnitsTest is PrimodiumTest {
     setupInvasion(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
-    ArrivalUnit[] memory units = new ArrivalUnit[](1);
-    units[0] = ArrivalUnit(DebugUnit, attackNumber);
+
+    uint256[] memory unitTypes = isUnitComponent.getEntities();
+    ArrivalUnit[] memory units = new ArrivalUnit[](unitTypes.length);
+    for (uint i = 0; i < unitTypes.length; i++) {
+      units[i] = ArrivalUnit(unitTypes[i], unitTypes[i] == DebugUnit ? attackNumber : 0);
+    }
 
     bytes memory rawArrival = sendUnitsSystem.executeTyped(
       units,

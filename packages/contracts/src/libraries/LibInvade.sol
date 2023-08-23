@@ -40,6 +40,7 @@ library LibInvade {
     uint256 battleEntity = LibEncode.hashKeyEntity(rockEntity, block.number);
     BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).set(battleEntity, rockEntity);
     setupBattleAttacker(world, battleEntity, invader, rockEntity);
+    console.log("setup attacker");
     uint256 defenderEntity = 0;
     if (ownedByComponent.has(rockEntity)) {
       require(ownedByComponent.getValue(rockEntity) != invader, "[Invade]: can not invade your own rock");
@@ -56,15 +57,17 @@ library LibInvade {
           attacker.unitCounts[i]
         );
       }
+      return;
     }
     setupBattleDefender(world, battleEntity, defenderEntity, rockEntity);
-
+    console.log("setup defender");
     IOnEntitySubsystem(getAddressById(world.systems(), S_ResolveBattleSystemID)).executeTyped(
       entityToAddress(invader),
       battleEntity
     );
-
+    console.log("resolve battle");
     updatePlayerUnitsAfterBattle(world, battleEntity, rockEntity);
+    console.log("update units after battle");
     uint256 winnerEntity = BattleResultComponent(world.getComponent(BattleResultComponentID))
       .getValue(battleEntity)
       .winnerEntity;
@@ -72,6 +75,7 @@ library LibInvade {
       LibReinforce.recallAllReinforcements(world, rockEntity);
     }
     ownedByComponent.set(rockEntity, winnerEntity);
+    console.log("ownership updated after battle");
     //ArrivalsList.get(world, playerAsteroidEntity, arrival);
   }
 
@@ -99,7 +103,7 @@ library LibInvade {
 
     BattleParticipant memory attacker;
     attacker.participantEntity = attackerEntity;
-    attacker.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    attacker.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntities();
     attacker.unitCounts = new uint32[](attacker.unitTypes.length);
     attacker.unitLevels = new uint32[](attacker.unitTypes.length);
     for (uint i = 0; i < attacker.unitTypes.length; i++) {
@@ -112,22 +116,30 @@ library LibInvade {
     );
     uint256 index = 0;
     while (index < size) {
-      console.log("index: %s , size: %s", index, size);
+      console.log("while loop index: %s , size: %s", index, size);
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
+      console.log("while loop after get index: %s , size: %s", index, size);
       if (arrival.sendType != ESendType.INVADE) {
         index++;
+        console.log("while loop not invade increment index: %s , size: %s", index, size);
         continue;
       }
       if (arrival.arrivalBlock <= block.number) {
+        console.log("arrival reached add units index %s", index);
         for (uint i = 0; i < arrival.units.length; i++) {
           attacker.unitCounts[i] += arrival.units[i].count;
         }
+        console.log("try to remove arrival at %s", index);
         ArrivalsList.remove(world, playerAsteroidEntity, index);
+        console.log("removed arrival at %s", index);
         size--;
       } else {
+        console.log("while loop invade not reached yet increment index: %s , size: %s", index, size);
         index++;
       }
+      console.log("while loop end of loop index: %s , size: %s", index, size);
     }
+    console.log("while loop exit index: %s , size: %s", index, size);
     battleAttackerComponent.set(battleEntity, attacker);
   }
 
@@ -149,6 +161,7 @@ library LibInvade {
     if (attacker.participantEntity == battleResult.winnerEntity) {
       LibUpdateSpaceRock.destroyAllPlayerUnitsOnAsteroid(world, loserEntity, rockEntity);
       for (uint i = 0; i < battleResult.attackerUnitsLeft.length; i++) {
+        if (attacker.unitCounts[i] <= 0) continue;
         LibUnits.updateOccuppiedUtilityResources(
           world,
           attacker.participantEntity,
@@ -166,13 +179,15 @@ library LibInvade {
       }
     } else {
       for (uint i = 0; i < unitTypes.length; i++) {
-        LibUnits.updateOccuppiedUtilityResources(
-          world,
-          attacker.participantEntity,
-          unitTypes[i],
-          attacker.unitCounts[i],
-          false
-        );
+        if (attacker.unitCounts[i] > 0)
+          LibUnits.updateOccuppiedUtilityResources(
+            world,
+            attacker.participantEntity,
+            unitTypes[i],
+            attacker.unitCounts[i],
+            false
+          );
+        if (defender.unitCounts[i] <= 0) continue;
         LibUnits.updateOccuppiedUtilityResources(
           world,
           attacker.participantEntity,

@@ -44,16 +44,19 @@ contract SendUnitsSystem is PrimodiumSystem {
 
     // make sure the troop count at the planet is leq the one given and subtract from planet total
     UnitsComponent unitsComponent = UnitsComponent(getC(UnitsComponentID));
+    bool anyUnitsSent = false;
     for (uint256 i = 0; i < arrivalUnits.length; i++) {
-      require(arrivalUnits[i].count > 0, "unit count must be positive");
-      uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(
-        uint256(arrivalUnits[i].unitType),
-        playerEntity,
-        origin
-      );
-      LibMath.subtract(unitsComponent, unitPlayerAsteroidEntity, arrivalUnits[i].count);
+      if (arrivalUnits[i].count > 0) {
+        uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(
+          uint256(arrivalUnits[i].unitType),
+          playerEntity,
+          origin
+        );
+        LibMath.subtract(unitsComponent, unitPlayerAsteroidEntity, arrivalUnits[i].count);
+        anyUnitsSent = true;
+      }
     }
-
+    require(anyUnitsSent, "unit count must be positive");
     uint256 moveSpeed = LibSend.getSlowestUnitSpeed(world, arrivalUnits);
     uint256 worldSpeed = GameConfigComponent(getC(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     Arrival memory arrival = Arrival({

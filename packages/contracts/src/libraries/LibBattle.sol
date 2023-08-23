@@ -102,6 +102,7 @@ library LibBattle {
     BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
     uint32 totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
+      if (attackerUnitsLeft[i] <= 0) continue;
       uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
       totalAttackValue +=
@@ -125,6 +126,7 @@ library LibBattle {
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
     uint32 totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
+      if (defenderUnitsLeft[i] <= 0) continue;
       uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
       totalDefenceValue +=
@@ -143,6 +145,7 @@ library LibBattle {
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
     totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
+      if (defender.unitCounts[i] <= 0) continue;
       uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
       totalDefenceValue +=
@@ -157,7 +160,7 @@ library LibBattle {
     uint256 battleEntity
   ) internal view returns (uint32[] memory attackValues, uint32 totalAttackValue) {
     LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-    P_UnitAttackComponent unitDefenceComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
+    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
     );
@@ -165,12 +168,13 @@ library LibBattle {
     attackValues = new uint32[](attacker.unitTypes.length);
     totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
+      if (attacker.unitCounts[i] <= 0) continue;
       uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
       uint32 level = levelComponent.getValue(playerUnitEntity);
 
       attackValues[i] =
         attacker.unitCounts[i] *
-        unitDefenceComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
+        unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
       totalAttackValue += attackValues[i];
     }
 
