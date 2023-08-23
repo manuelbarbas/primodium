@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { BlockType } from "src/util/constants";
+import { BackgroundImage, BlockType } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
 import { UnitPane } from "./UnitPane";
+import { Fleet } from "src/network/components/clientComponents";
 
 const availableUnits = [
   {
@@ -16,10 +17,6 @@ const availableUnits = [
   },
   {
     type: BlockType.MiningVessel,
-    count: 100,
-  },
-  {
-    type: BlockType.StingerDrone,
     count: 100,
   },
   {
@@ -40,6 +37,12 @@ export const HangarPane: React.FC<{
       return acc + unit.count;
     }, 0);
   }, [availableUnits]);
+
+  useEffect(() => {
+    if (show) {
+      setSelectedUnit(null);
+    }
+  }, [show]);
 
   return (
     <motion.div
@@ -79,15 +82,18 @@ export const HangarPane: React.FC<{
                       onClick={() => setSelectedUnit(unit)}
                     >
                       <img
-                        src="/img/icons/debugicon.png"
-                        className="border border-cyan-400 w-[64px] h-[64px] group-hover:opacity-50"
+                        src={
+                          BackgroundImage.get(unit.type)?.at(0) ??
+                          "/img/icons/debugicon.png"
+                        }
+                        className="border border-cyan-400 w-[64px] h-[64px] group-hover:opacity-50 rounded-xl"
                       />
                       <FaEye className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100" />
                       <p className="opacity-0 absolute -bottom-4 text-xs bg-pink-900 group-hover:opacity-100 whitespace-nowrap transition-opacity">
                         {getBlockTypeName(unit.type)}
                       </p>
                       <p className="absolute bottom-1 right-1 font-bold text-[.6rem] bg-slate-900 border-cyan-400/30">
-                        {unit.count}
+                        {unit.count - Fleet.getUnitCount(unit.type)}
                       </p>
                     </button>
                   );

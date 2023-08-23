@@ -2,6 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
 import { hashStringEntity } from "./encode";
+import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
 
 export enum Action {
   DemolishBuilding,
@@ -310,6 +311,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
   [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
 
+  //buildings
   [
     BlockType.MainBase,
     [
@@ -395,6 +397,13 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     BlockType.PropulsionFuelFactory,
     ["/img/building/propulsionfuelfactory.gif"],
   ],
+
+  //units
+  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.gif"]],
+  [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
+  [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
+  [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
+  [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
@@ -570,3 +579,17 @@ export const KeyImages = new Map<Key, string>([
   ["Q", "/img/keys/q.png"],
   ["E", "/img/keys/e.png"],
 ]);
+
+export const MotherlodeSizeNames: Record<number, string> = {
+  [EMotherlodeSize.SMALL]: "small",
+  [EMotherlodeSize.MEDIUM]: "medium",
+  [EMotherlodeSize.LARGE]: "large",
+};
+
+// do the same for types
+export const MotherlodeTypeNames: Record<number, string> = {
+  [EMotherlodeType.TITANIUM]: "titanium",
+  [EMotherlodeType.IRIDIUM]: "iridium",
+  [EMotherlodeType.PLATINUM]: "platinum",
+  [EMotherlodeType.KIMBERLITE]: "kimberlite",
+};

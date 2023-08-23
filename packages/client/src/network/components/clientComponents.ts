@@ -3,6 +3,7 @@ import { world } from "../world";
 import newComponent, {
   newBoolComponent,
   newCoordComponent,
+  newEntityComponent,
   newNumberComponent,
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
@@ -44,8 +45,13 @@ export const ActiveAsteroid = newComponent(
   { id: "ActiveAsteroid" }
 );
 
+export const SelectedAsteroid = newEntityComponent(world, {
+  id: "SelectedAsteroid",
+});
+
 export default {
   ActiveAsteroid,
+  SelectedAsteroid,
   BlockNumber,
   GameReady,
   DoubleCounter,
