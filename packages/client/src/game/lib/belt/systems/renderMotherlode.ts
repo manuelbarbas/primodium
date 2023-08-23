@@ -3,7 +3,6 @@ import {
   namespaceWorld,
   Has,
   defineEnterSystem,
-  // defineUpdateQuery,
   EntityIndex,
   HasValue,
 } from "@latticexyz/recs";
@@ -66,9 +65,6 @@ export const renderMotherlode = (scene: Scene) => {
         scale,
       }),
       Texture(sprite),
-      onClick(() => {
-        ActiveAsteroid.set({ value: entityId });
-      }),
     ]);
   };
 

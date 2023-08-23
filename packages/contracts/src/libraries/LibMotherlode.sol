@@ -30,7 +30,6 @@ library LibMotherlode {
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
     for (uint32 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
       Coord memory relPosition = LibMotherlode.getCoord(i, config.motherlodeDistance, config.maxMotherlodesPerAsteroid);
-
       uint256 sourceEncodedPos = LibEncode.encodeCoord(
         Coord(relPosition.x + position.x, relPosition.y + position.y, 0)
       );
