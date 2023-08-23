@@ -16,6 +16,8 @@ import "forge-std/console.sol";
 
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
+import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "components/BattleSpaceRockComponent.sol";
@@ -24,6 +26,8 @@ import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "compon
 import { BattleResultComponent, ID as BattleResultComponentID } from "components/BattleResultComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
+import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -33,6 +37,8 @@ import { LibUnits } from "libraries/LibUnits.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { LibReinforce } from "libraries/LibReinforce.sol";
 import { LibBattle } from "libraries/LibBattle.sol";
+import { LibResource } from "libraries/LibResource.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 // types
 import { Coord, Arrival, ArrivalUnit, BattleParticipant, ESendType, BattleResult, ESpaceRockType } from "src/types.sol";
 
@@ -64,14 +70,9 @@ library LibRaid {
     console.log("resolve battle");
     updatePlayerUnitsAfterBattle(world, battleEntity, rockEntity);
     console.log("update units after battle");
-    uint256 winnerEntity = BattleResultComponent(world.getComponent(BattleResultComponentID))
-      .getValue(battleEntity)
-      .winnerEntity;
-    if (ownedByComponent.has(rockEntity) && ownedByComponent.getValue(rockEntity) != winnerEntity) {
-      LibReinforce.recallAllReinforcements(world, rockEntity);
-    }
-    ownedByComponent.set(rockEntity, winnerEntity);
-    console.log("ownership updated after battle");
+
+    resolveRaid(world, battleEntity);
+    console.log("resouces updated after raid");
     //ArrivalsList.get(world, playerAsteroidEntity, arrival);
   }
 
@@ -137,6 +138,73 @@ library LibRaid {
           battleResult.defenderUnitsLeft[i]
         );
       }
+    }
+  }
+
+  function getTotalCargoValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalCargoValue) {
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
+    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
+      world.getComponent(BattleAttackerComponentID)
+    );
+    BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
+
+    totalCargoValue = 0;
+    for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
+      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
+      uint32 level = levelComponent.getValue(playerUnitEntity);
+
+      totalCargoValue +=
+        attacker.unitCounts[i] *
+        unitCargoComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
+    }
+
+    return totalCargoValue;
+  }
+
+  function resolveRaid(IWorld world, uint256 battleEntity) internal {
+    uint32 totalCargo = getTotalCargoValue(world, battleEntity);
+
+    if (totalCargo == 0) return;
+
+    BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
+      battleEntity
+    );
+
+    (uint32 totalResources, uint32[] memory resources) = LibResource.getTotalResources(
+      world,
+      defender.participantEntity
+    );
+    if (totalResources == 0) return;
+
+    LibResource.claimAllResources(
+      world,
+      BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(battleEntity).participantEntity
+    );
+    LibResource.claimAllResources(
+      world,
+      BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).participantEntity
+    );
+
+    BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
+      battleEntity
+    );
+
+    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
+    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
+      .getValue(defender.participantEntity);
+
+    for (uint256 i = 0; i < resources.length; i++) {
+      uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
+
+      if (resources[i] >= raidAmount) resources[i] = resources[i] - raidAmount;
+      else {
+        raidAmount = resources[i];
+        resources[i] = 0;
+      }
+      LibStorage.addResourceToStorage(world, resourceIds[i], raidAmount, attacker.participantEntity);
+
+      itemComponent.set(LibEncode.hashKeyEntity(resourceIds[i], defender.participantEntity), resources[i]);
     }
   }
 }

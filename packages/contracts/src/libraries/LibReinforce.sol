@@ -65,7 +65,6 @@ library LibReinforce {
         LibUnits.howManyUnitsCanAdd(world, playerEntity, arrival.units[i].unitType),
         arrival.units[i].count
       );
-
       if (num > 0) {
         LibUpdateSpaceRock.addUnitsToAsteroid(world, playerEntity, asteroidEntity, arrival.units[i].unitType, num);
         arrival.units[i].count -= num;
