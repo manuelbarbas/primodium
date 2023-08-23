@@ -11,7 +11,7 @@ import { expect, test } from "vitest";
 const moveResults = [
   { x: 100, y: 0 },
   { x: 89, y: 45 },
-  { x: 57, y: 82 },
+  { x: 57, y: 81 },
   { x: 12, y: 99 },
   { x: -93, y: 34 },
   { x: -66, y: 74 },

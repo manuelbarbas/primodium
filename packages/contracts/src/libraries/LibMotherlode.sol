@@ -87,7 +87,7 @@ library LibMotherlode {
     cooldownBlocks = LibEncode.getByteUInt(entity, 6, 10);
   }
 
-  function getCoord(uint32 i, uint32 distance, uint32 max) internal pure returns (Coord memory) {
+  function getCoord(uint32 i, uint32 distance, uint32 max) internal view returns (Coord memory) {
     return LibAsteroid.getPositionByVector(distance, (i * 360) / max);
   }
 

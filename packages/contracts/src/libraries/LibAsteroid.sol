@@ -86,11 +86,10 @@ library LibAsteroid {
     uint256 angleRads = angleDegsTimes10000 * 1e13 + Trig.TWO_PI;
 
     int256 newX = Trig.cos(angleRads) * int32(_distance);
-
     int256 newY = Trig.sin(angleRads) * int32(_distance);
-
     int32 finalX = int32(newX / 1e18);
     int32 finalY = int32(newY / 1e18);
+
     return Coord({ x: negX ? -finalX : finalX, y: negY ? -finalY : finalY, parent: 0 });
   }
 

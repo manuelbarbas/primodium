@@ -6,14 +6,15 @@ export function getPositionByVector(distance: number, direction: number) {
   const negX: boolean = direction > 90 && direction <= 270;
   direction = direction % 90;
 
-  const newX = Math.round(solCosDegrees(direction) * distance);
-  const newY = Math.round(solSinDegrees(direction) * distance);
+  const newX = solCosDegrees(direction) * BigInt(distance);
+  const newY = solSinDegrees(direction) * BigInt(distance);
 
-  console.log("newX:", newX);
-  console.log("newY:", newY);
+  const finalX = Number(solDiv(newX, 1000000000000000000n));
+  const finalY = Number(solDiv(newY, 1000000000000000000n));
+
   return {
-    x: negX ? -newX : newX,
-    y: negY ? -newY : newY,
+    x: negX ? -finalX : finalX,
+    y: negY ? -finalY : finalY,
   };
 }
 
@@ -30,45 +31,46 @@ export const TWO_PI: bigint = 2n * PI;
 const PI_OVER_TWO: bigint = PI / 2n;
 
 // in radians
-export function solSinDegrees(_angle: number): number {
+export function solSinDegrees(_angle: number): bigint {
   const angle = BigInt(Math.round(_angle) % 360);
   const angleDegsTimes10000 = angle * 1745n;
 
   const angleRads = angleDegsTimes10000 * 10000000000000n + TWO_PI;
 
   const value = solSin(angleRads);
-  console.log("value: ", value);
   return value;
 }
-export function solCosDegrees(_angle: number): number {
-  const value = solSinDegrees(_angle + 90);
+export function solCosDegrees(_angle: number) {
+  const angle = BigInt(Math.round(_angle) % 360);
+  const angleDegsTimes10000 = angle * 1745n;
+
+  const angleRads = angleDegsTimes10000 * 10000000000000n + TWO_PI;
+
+  const value = solCos(angleRads);
   return value;
 }
 
-export function solSin(angle: bigint): number {
+function solDiv(a: bigint, b: bigint) {
+  return ((a >= 0 ? a : a - b + 1n) / b) | 0n;
+}
+
+export function solSin(angle: bigint): bigint {
   angle = (ANGLES_IN_CYCLE * (angle % TWO_PI)) / TWO_PI;
 
-  console.log("angle:", angle);
   const interp = (angle >> INTERP_OFFSET) & ((1n << INTERP_WIDTH) - 1n);
-  console.log("interp:", interp);
   let index = (angle >> INDEX_OFFSET) & ((1n << INDEX_WIDTH) - 1n);
-  console.log("index:", index);
   const isOddQuadrant = (angle & QUADRANT_LOW_MASK) == 0n;
   const isNegativeQuadrant = (angle & QUADRANT_HIGH_MASK) != 0n;
   if (!isOddQuadrant) {
     index = SINE_TABLE_SIZE - index - 1n;
   }
   const x1 = BigInt(sin_table[Number(index)]);
-  console.log("x1:", x1);
   const x2 = BigInt(sin_table[Number(index) + 1]);
-  console.log("x2:", x2);
   const approximation = ((x2 - x1) * interp) >> INTERP_WIDTH;
-  console.log("approx:", approximation);
   let sine = isOddQuadrant ? x1 + approximation : x2 - approximation;
-  console.log("sine: ", sine);
   if (isNegativeQuadrant) sine = -sine;
 
-  return Number(sine) / 2147843647;
+  return (sine * 1000000000000000000n) / 2147483647n;
 }
 
 function solCos(_angle: bigint) {

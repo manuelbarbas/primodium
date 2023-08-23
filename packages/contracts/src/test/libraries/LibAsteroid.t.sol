@@ -12,7 +12,6 @@ import "../../prototypes.sol";
 
 import { LibAsteroid } from "../../libraries/LibAsteroid.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
-import { Trigonometry } from "libraries/Trigonometry.sol";
 import { Coord, Dimensions } from "../../types.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
@@ -78,16 +77,5 @@ contract LibAsteroidTest is PrimodiumTest {
       Coord memory coord = LibAsteroid.getPositionByVector(distance, (i * 360) / max);
       logCoord(coord);
     }
-  }
-
-  function testSin() public view {
-    uint256 angle = 90;
-    uint256 angleDegsTimes10000 = angle * 1745;
-
-    uint256 angleRads = angleDegsTimes10000 * 1e13 + Trigonometry.TWO_PI;
-    console.log("angleRads:", angleRads);
-    int256 newY = Trigonometry.sin(angleRads) * 100;
-    console.log("new y: ", uint256(newY));
-    console.log("new y: ", uint256(newY / 1e18));
   }
 }
