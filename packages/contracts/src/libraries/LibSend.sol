@@ -25,7 +25,10 @@ library LibSend {
       : LibEncode.hashKeyEntity(arrival.from, arrival.destination);
     ArrivalsList.add(world, playerAsteroidEntity, arrival);
 
-    LibMath.increment(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from);
+    LibMath.increment(
+      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
+      (arrival.sendType == ESendType.REINFORCE) ? arrival.to : arrival.from
+    );
   }
 
   function distance(Coord memory a, Coord memory b) internal pure returns (uint32) {

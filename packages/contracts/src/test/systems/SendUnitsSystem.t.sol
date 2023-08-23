@@ -20,6 +20,7 @@ import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUni
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
+import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 
 import { LibSend } from "libraries/LibSend.sol";
 import { LibArrival } from "libraries/LibArrival.sol";
@@ -32,7 +33,7 @@ contract SendUnitsTest is PrimodiumTest {
   P_IsUnitComponent public isUnitComponent;
   GameConfigComponent public gameConfigComponent;
   OwnedByComponent public ownedByComponent;
-
+  UnitsComponent public unitsComponent;
   ComponentDevSystem public componentDevSystem;
 
   SendUnitsSystem public sendUnitsSystem;
@@ -124,17 +125,19 @@ contract SendUnitsTest is PrimodiumTest {
 
   // todo: check motherlode movement rules
 
-  function setupAttackerUnits(uint256 entity) internal {
+  function setupAttackerUnits(address playerAddress, uint256 entity) internal {
+    vm.startPrank(playerAddress);
     vm.roll(0);
     bytes memory unitProductionBuildingEntity = buildSystem.executeTyped(
       DebugUnitProductionBuilding,
-      getIronCoord(alice)
+      getIronCoord(playerAddress)
     );
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
-    buildSystem.executeTyped(DebugHousingBuilding, getCoord3(alice));
+    buildSystem.executeTyped(DebugHousingBuilding, getCoord3(playerAddress));
 
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, entity, 10);
+    vm.stopPrank();
   }
 
   function testInvade() public {
@@ -142,8 +145,11 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function reinforce(address reinforcer) public returns (Arrival memory) {
+    setupAttackerUnits(bob, DebugUnit);
+
+    setupAttackerUnits(reinforcer, DebugUnit);
+
     vm.startPrank(reinforcer);
-    setupAttackerUnits(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
     uint256[] memory unitTypes = isUnitComponent.getEntities();
@@ -172,7 +178,7 @@ contract SendUnitsTest is PrimodiumTest {
     uint256 expectedArrivalBlock = block.number +
       ((LibSend.distance(originPosition, destinationPosition) * speed * worldSpeed) / 100 / 100);
     Arrival memory expectedArrival = Arrival({
-      sendType: ESendType.INVADE,
+      sendType: ESendType.REINFORCE,
       units: units,
       arrivalBlock: expectedArrivalBlock,
       from: addressToEntity(alice),
@@ -182,7 +188,7 @@ contract SendUnitsTest is PrimodiumTest {
     });
     assertEq(arrival, expectedArrival);
 
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), getHomeAsteroid(bob))), 1);
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
     vm.stopPrank();
     return arrival;
   }
@@ -230,8 +236,8 @@ contract SendUnitsTest is PrimodiumTest {
     ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
     vm.stopPrank();
 
+    setupAttackerUnits(invader, DebugUnit);
     vm.startPrank(invader);
-    setupAttackerUnits(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
 
@@ -286,8 +292,8 @@ contract SendUnitsTest is PrimodiumTest {
     );
     vm.stopPrank();
 
+    setupAttackerUnits(raider, DebugUnit);
     vm.startPrank(raider);
-    setupAttackerUnits(DebugUnit);
     uint32 attackNumber = 4;
     vm.roll(100);
 
@@ -369,9 +375,8 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function testArrivalSnuckInBehind() public {
+    setupAttackerUnits(alice, DebugUnit);
     vm.startPrank(alice);
-    setupAttackerUnits(DebugUnit);
-
     uint256 unitProductionBuildingEntityID = LibEncode.hashKeyCoord(BuildingKey, getIronCoord(alice));
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit3, 10);
     vm.roll(block.number + 1000);
@@ -420,6 +425,28 @@ contract SendUnitsTest is PrimodiumTest {
     raidSystem.executeTyped(raidArival.destination);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), raidArival.destination)), 0);
     assertEq(ownedByComponent.getValue(raidArival.destination), addressToEntity(bob));
+    vm.stopPrank();
+  }
+
+  function testExecuteReinforce() public {
+    Arrival memory reinforceArrival = reinforce(alice);
+
+    assertEq(unitsComponent.getValue(LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice))), 0);
+    assertEq(unitsComponent.getValue(LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob))), 10);
+
+    vm.roll(reinforceArrival.arrivalBlock);
+    vm.prank(bob);
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), reinforceArrival.destination)),
+      1
+    );
+    receiveReinforcementSystem.executeTyped(reinforceArrival.destination, 0);
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), reinforceArrival.destination)),
+      0
+    );
+    assertEq(unitsComponent.getValue(LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob))), 20);
+    assertEq(ownedByComponent.getValue(reinforceArrival.destination), addressToEntity(bob));
     vm.stopPrank();
   }
 }

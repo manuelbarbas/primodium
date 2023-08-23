@@ -244,6 +244,7 @@ contract Storage is PrimodiumTest {
       afterDestroyIronCapacity,
       "Alice should have lost excess iron from storage decrease"
     );
+
     vm.stopPrank();
   }
 }
