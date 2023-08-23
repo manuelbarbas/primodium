@@ -15,59 +15,64 @@ export function getPositionByVector(
   const newX = solCosDegrees(direction) * BigInt(distance);
   const newY = solSinDegrees(direction) * BigInt(distance);
 
-  const finalX = Number(solDiv(newX, 1000000000000000000n));
-  const finalY = Number(solDiv(newY, 1000000000000000000n));
+  const finalX = Number(solDiv(newX, TENe18));
+  const finalY = Number(solDiv(newY, TENe18));
   return {
     x: negX ? origin.x - finalX : origin.x + finalX,
     y: negY ? origin.y - finalY : origin.y + finalY,
   };
 }
 
-const INDEX_WIDTH: bigint = 8n;
-const INTERP_WIDTH: bigint = 16n;
-const INDEX_OFFSET: bigint = 28n - INDEX_WIDTH;
+const TENe18 = BigInt("1000000000000000000");
+const TENe13 = BigInt("10000000000000");
+const ZERO = BigInt(0);
+const ONE = BigInt(1);
+const TWO = BigInt(2);
+const INDEX_WIDTH: bigint = BigInt(8);
+const INTERP_WIDTH: bigint = BigInt(16);
+const INDEX_OFFSET: bigint = BigInt(28) - INDEX_WIDTH;
 const INTERP_OFFSET: bigint = INDEX_OFFSET - INTERP_WIDTH;
-const ANGLES_IN_CYCLE: bigint = 1073741824n;
-const QUADRANT_HIGH_MASK: bigint = 536870912n;
-const QUADRANT_LOW_MASK: bigint = 268435456n;
-const SINE_TABLE_SIZE: bigint = 256n;
-const PI: bigint = 3141592653589793238n;
-export const TWO_PI: bigint = 2n * PI;
-const PI_OVER_TWO: bigint = PI / 2n;
+const ANGLES_IN_CYCLE: bigint = BigInt(1073741824);
+const QUADRANT_HIGH_MASK: bigint = BigInt(536870912);
+const QUADRANT_LOW_MASK: bigint = BigInt(268435456);
+const SINE_TABLE_SIZE: bigint = BigInt(256);
+const PI: bigint = BigInt("3141592653589793238");
+export const TWO_PI: bigint = TWO * PI;
+const PI_OVER_TWO: bigint = PI / TWO;
 
 // in radians
 export function solSinDegrees(_angle: number): bigint {
   const angle = BigInt(Math.round(_angle) % 360);
-  const angleDegsTimes10000 = angle * 1745n;
+  const angleDegsTimes10000 = angle * BigInt(1745);
 
-  const angleRads = angleDegsTimes10000 * 10000000000000n + TWO_PI;
+  const angleRads = angleDegsTimes10000 * TENe13 + TWO_PI;
 
   const value = solSin(angleRads);
   return value;
 }
 export function solCosDegrees(_angle: number) {
   const angle = BigInt(Math.round(_angle) % 360);
-  const angleDegsTimes10000 = angle * 1745n;
+  const angleDegsTimes10000 = angle * BigInt(1745);
 
-  const angleRads = angleDegsTimes10000 * 10000000000000n + TWO_PI;
+  const angleRads = angleDegsTimes10000 * TENe13 + TWO_PI;
 
   const value = solCos(angleRads);
   return value;
 }
 
 function solDiv(a: bigint, b: bigint) {
-  return ((a >= 0 ? a : a - b + 1n) / b) | 0n;
+  return ((a >= 0 ? a : a - b + ONE) / b) | ZERO;
 }
 
 export function solSin(angle: bigint): bigint {
   angle = (ANGLES_IN_CYCLE * (angle % TWO_PI)) / TWO_PI;
 
-  const interp = (angle >> INTERP_OFFSET) & ((1n << INTERP_WIDTH) - 1n);
-  let index = (angle >> INDEX_OFFSET) & ((1n << INDEX_WIDTH) - 1n);
-  const isOddQuadrant = (angle & QUADRANT_LOW_MASK) == 0n;
-  const isNegativeQuadrant = (angle & QUADRANT_HIGH_MASK) != 0n;
+  const interp = (angle >> INTERP_OFFSET) & ((ONE << INTERP_WIDTH) - ONE);
+  let index = (angle >> INDEX_OFFSET) & ((ONE << INDEX_WIDTH) - ONE);
+  const isOddQuadrant = (angle & QUADRANT_LOW_MASK) == ZERO;
+  const isNegativeQuadrant = (angle & QUADRANT_HIGH_MASK) != ZERO;
   if (!isOddQuadrant) {
-    index = SINE_TABLE_SIZE - index - 1n;
+    index = SINE_TABLE_SIZE - index - ONE;
   }
   const x1 = BigInt(sin_table[Number(index)]);
   const x2 = BigInt(sin_table[Number(index) + 1]);
@@ -75,7 +80,7 @@ export function solSin(angle: bigint): bigint {
   let sine = isOddQuadrant ? x1 + approximation : x2 - approximation;
   if (isNegativeQuadrant) sine = -sine;
 
-  return (sine * 1000000000000000000n) / 2147483647n;
+  return (sine * TENe18) / BigInt(2147483647);
 }
 
 function solCos(_angle: bigint) {

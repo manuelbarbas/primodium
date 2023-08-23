@@ -17,9 +17,6 @@ export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
       target: "es2020",
-      supported: {
-        bigint: true,
-      },
     },
 
     exclude: ["@latticexyz/network", "@latticexyz/noise"],

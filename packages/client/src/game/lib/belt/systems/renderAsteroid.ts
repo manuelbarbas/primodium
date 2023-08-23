@@ -16,8 +16,8 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import { AsteroidType, Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { ActiveAsteroid } from "src/network/components/clientComponents";
-import { ESpaceRockType } from "../types";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { ESpaceRockType } from "src/util/web3/types";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;

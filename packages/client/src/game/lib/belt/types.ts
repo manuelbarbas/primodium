@@ -1,21 +1,4 @@
-export enum ESpaceRockType {
-  None,
-  Asteroid,
-  Motherlode,
-}
-
-export enum EMotherlodeSize {
-  SMALL,
-  MEDIUM,
-  LARGE,
-}
-
-export enum EMotherlodeType {
-  TITANIUM,
-  IRIDIUM,
-  PLATINUM,
-  KIMBERLITE,
-}
+import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
 
 export const MotherlodeSizeNames: Record<number, string> = {
   [EMotherlodeSize.SMALL]: "small",

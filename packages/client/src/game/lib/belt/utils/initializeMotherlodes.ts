@@ -15,8 +15,12 @@ import {
   hashKeyEntity,
 } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
-import { EMotherlodeSize, EMotherlodeType, ESpaceRockType } from "../types";
 import { world } from "src/network/world";
+import {
+  EMotherlodeSize,
+  EMotherlodeType,
+  ESpaceRockType,
+} from "src/util/web3/types";
 
 export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
   const config = GameConfig.get();

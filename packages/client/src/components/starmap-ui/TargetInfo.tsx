@@ -15,12 +15,12 @@ import {
   Position,
 } from "src/network/components/chainComponents";
 import {
-  ESpaceRockType,
   MotherlodeSizeNames,
   MotherlodeTypeNames,
 } from "src/game/lib/belt/types";
 import { EntityID } from "@latticexyz/recs";
 import { hashKeyEntity } from "src/util/encode";
+import { ESpaceRockType } from "src/util/web3/types";
 
 export const TargetInfo: React.FC = () => {
   const target = ActiveAsteroid.use()?.value;

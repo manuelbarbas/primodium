@@ -17,12 +17,8 @@ import {
   Position,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import {
-  EMotherlodeSize,
-  ESpaceRockType,
-  MotherlodeSizeNames,
-  MotherlodeTypeNames,
-} from "../types";
+import { MotherlodeSizeNames, MotherlodeTypeNames } from "../types";
+import { EMotherlodeSize, ESpaceRockType } from "src/util/web3/types";
 
 export const renderMotherlode = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;

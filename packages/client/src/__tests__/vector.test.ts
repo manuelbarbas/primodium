@@ -35,7 +35,7 @@ test("sin", () => {
   const angle = 55;
   const angleDegsTimes10000 = BigInt(angle * 1745);
 
-  const angleRads = angleDegsTimes10000 * 10000000000000n + TWO_PI;
+  const angleRads = angleDegsTimes10000 * BigInt(10000000000000) + TWO_PI;
   console.log("angleRads:", angleRads);
   const newY = solSinDegrees(angle);
   console.log("newY:", newY);
