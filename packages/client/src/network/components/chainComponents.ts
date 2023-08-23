@@ -273,6 +273,58 @@ export const IsMineableAt = newStringComponent(world, {
   metadata: { contractId: `${commonIdPrefix}IsMineableAt` },
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                Unit Training                               */
+/* -------------------------------------------------------------------------- */
+export const P_UnitProductionMultiplier = newNumberComponent(world, {
+  id: "P_UnitProductionMultiplier",
+  metadata: { contractId: `${commonIdPrefix}P_UnitProductionMultiplier` },
+});
+
+export const P_UnitProductionTypes = newComponent(
+  world,
+  {
+    value: Type.EntityArray,
+  },
+  {
+    id: "P_UnitProductionTypes",
+    metadata: { contractId: `${commonIdPrefix}P_UnitProductionTypes` },
+  }
+);
+
+export const P_TrainingTime = newNumberComponent(world, {
+  id: "P_TrainingTime",
+  metadata: { contractId: `${commonIdPrefix}P_TrainingTime` },
+});
+
+export const UnitProductionLastQueue = newNumberComponent(world, {
+  id: "UnitProductionLastQueue",
+  metadata: { contractId: `${commonIdPrefix}UnitProductionLastQueue` },
+});
+
+export const UnitProductionOwnedBy = newComponent(
+  world,
+  { value: Type.Entity },
+  {
+    id: "UnitProductionOwnedBy",
+    metadata: { contractId: `${commonIdPrefix}UnitProductionOwnedBy` },
+  }
+);
+
+export const UnitProductionQueue = newComponent(
+  world,
+  { unitId: Type.EntityArray, productionRate: Type.NumberArray },
+  {
+    id: "UnitProductionQueue",
+    metadata: { contractId: `${commonIdPrefix}UnitProductionQueue` },
+  }
+);
+
+export const UnitProductionQueueIndex = newNumberComponent(world, {
+  id: "UnitProductionQueueIndex",
+  metadata: { contractId: `${commonIdPrefix}UnitProductionQueueIndex` },
+});
+
 export default {
   GameConfig,
   P_Terrain,
@@ -303,8 +355,18 @@ export default {
   OccupiedUtilityResource,
   MaxUtility,
 
+  // Motherlodes
   Motherlode,
   MotherlodeResource,
   P_MotherlodeResource,
   IsMineableAt,
+
+  // Unit Training
+  P_UnitProductionMultiplier,
+  P_UnitProductionTypes,
+  P_TrainingTime,
+  UnitProductionLastQueue,
+  UnitProductionOwnedBy,
+  UnitProductionQueue,
+  UnitProductionQueueIndex,
 };
