@@ -7,12 +7,11 @@ import { EntityID } from "@latticexyz/recs";
 import { train } from "src/util/web3";
 import { useMud } from "src/hooks";
 import {
-  getPlayerUnitCount,
   getUnitStats,
+  useMaxPlayerUnitCount,
+  usePlayerUnitCount,
   useTrainableUnits,
 } from "src/util/trainUnits";
-
-const maximum = 10;
 
 export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   buildingEntity,
@@ -29,7 +28,8 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
     setCount(0);
   }, [selectedUnit]);
 
-  const totalUnits = getPlayerUnitCount();
+  const maximum = useMaxPlayerUnitCount();
+  const totalUnits = usePlayerUnitCount();
   const trainableUnits = useTrainableUnits(buildingEntity);
   console.log("trainable units:", trainableUnits);
   //   if (trainableUnits.length == 0) return null;
@@ -98,7 +98,7 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
             <hr className="border-t border-cyan-600 w-full" />
             {!selectedUnit ? (
               <p className="opacity-50 text-xs italic mb-2 flex gap-2 z-10">
-                <FaInfoCircle size={16} /> Click on a ship to train it.
+                <FaInfoCircle size={16} /> Select a unit to train it.
               </p>
             ) : (
               <>
@@ -167,7 +167,7 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
                 </button>
               </>
             )}
-            <p className="opacity-50 text-xs">{maximum - count} ships left</p>
+            <p className="opacity-50 text-xs">{maximum - count} units left</p>
           </div>
         </div>
       )}

@@ -58,6 +58,10 @@ export function checkUtilityReqs() {}
 
 export function checkResourceReqs() {}
 
-export function getPlayerUnitCount() {
-  return 100;
+export function usePlayerUnitCount() {
+  return 0;
+}
+
+export function useMaxPlayerUnitCount() {
+  return 10;
 }
