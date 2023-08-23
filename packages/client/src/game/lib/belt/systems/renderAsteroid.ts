@@ -5,6 +5,7 @@ import {
   defineEnterSystem,
   EntityIndex,
   defineComponentSystem,
+  HasValue,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -18,12 +19,19 @@ import {
   ActiveAsteroid,
   SelectedAsteroid,
 } from "src/network/components/clientComponents";
+import { initializeMotherlodes } from "../utils/initializeMotherlodes";
+import { ESpaceRockType } from "src/util/web3/types";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
 
-  const query = [Has(AsteroidType)];
+  const query = [
+    Has(AsteroidType),
+    HasValue(AsteroidType, {
+      value: ESpaceRockType.Asteroid,
+    }),
+  ];
 
   const render = ({ entity }: { entity: EntityIndex }) => {
     const entityId = world.entities[entity];
@@ -62,6 +70,8 @@ export const renderAsteroid = (scene: Scene) => {
           : SelectedAsteroid.set({ value: entityId });
       }),
     ]);
+
+    initializeMotherlodes(entityId, coord);
   };
 
   defineEnterSystem(gameWorld, query, render);

@@ -56,3 +56,17 @@ export const SetValue = <T extends keyof GameObjectTypes>(
     },
   };
 };
+
+export const onClick = <T extends keyof GameObjectTypes>(
+  callback: (gameObject?: GameObjectInstances[T]) => void
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      gameObject.setInteractive();
+      gameObject.on("pointerdown", () => {
+        callback(gameObject as GameObjectInstances[T]);
+      });
+    },
+  };
+};

@@ -14,10 +14,10 @@ contract P_MotherlodeResourceComponent is Component {
     keys = new string[](2);
     values = new LibTypes.SchemaValue[](2);
 
-    keys[0] = "ResourceID";
+    keys[0] = "resource";
     values[0] = LibTypes.SchemaValue.UINT256;
 
-    keys[1] = "ResourceMotherlodeResourceRate";
+    keys[1] = "maxAmount";
     values[1] = LibTypes.SchemaValue.UINT32;
   }
 
@@ -26,13 +26,13 @@ contract P_MotherlodeResourceComponent is Component {
   }
 
   function getValue(uint256 entity) public view virtual returns (ResourceValue memory) {
-    (uint256 resourceID, uint32 resourceMotherlodeResourceRate) = abi.decode(getRawValue(entity), (uint256, uint32));
-    return ResourceValue(resourceID, resourceMotherlodeResourceRate);
+    (uint256 resourceID, uint32 maxResource) = abi.decode(getRawValue(entity), (uint256, uint32));
+    return ResourceValue(resourceID, maxResource);
   }
 
   function getEntitiesWithValue(
-    ResourceValue calldata factoryMotherlodeResourceData
+    ResourceValue calldata motherlodeResourceData
   ) public view virtual returns (uint256[] memory) {
-    return getEntitiesWithValue(abi.encode(factoryMotherlodeResourceData));
+    return getEntitiesWithValue(abi.encode(motherlodeResourceData));
   }
 }

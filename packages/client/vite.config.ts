@@ -18,6 +18,7 @@ export default defineConfig({
     esbuildOptions: {
       target: "es2020",
     },
+
     exclude: ["@latticexyz/network", "@latticexyz/noise"],
     include: [
       "proxy-deep",
