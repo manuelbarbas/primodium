@@ -329,9 +329,9 @@ export const P_TrainingTime = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}P_UnitTrainingTime` },
 });
 
-export const UnitProductionLastQueue = newNumberComponent(world, {
-  id: "UnitProductionLastQueue",
-  metadata: { contractId: `${commonIdPrefix}UnitProductionLastQueue` },
+export const UnitProductionLastQueueIndex = newNumberComponent(world, {
+  id: "UnitProductionLastQueueIndex",
+  metadata: { contractId: `${commonIdPrefix}UnitProductionLastQueueIndex` },
 });
 
 export const UnitProductionOwnedBy = newComponent(
@@ -405,7 +405,7 @@ export default {
   P_UnitProductionMultiplier,
   P_UnitProductionTypes,
   P_TrainingTime,
-  UnitProductionLastQueue,
+  UnitProductionLastQueueIndex,
   UnitProductionOwnedBy,
   UnitProductionQueue,
   UnitProductionQueueIndex,
