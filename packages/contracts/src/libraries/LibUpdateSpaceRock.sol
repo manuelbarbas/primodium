@@ -25,6 +25,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibResource } from "libraries/LibResource.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 
 // types
 import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue, ESpaceRockType, Motherlode } from "src/types.sol";
@@ -222,11 +223,8 @@ library LibUpdateSpaceRock {
       rawIncrease = resource.value - prevMotherlodeResources;
     }
     motherlodeResourceComponent.set(motherlodeEntity, rawIncrease + prevMotherlodeResources);
-    uint32 currAmount = LibMath.getSafe(
-      ItemComponent(world.getComponent(ItemComponentID)),
-      LibEncode.hashKeyEntity(resource.resource, playerEntity)
-    );
-    LibResource.updateResourceAmount(world, playerEntity, resource.resource, currAmount + rawIncrease);
+
+    LibStorage.addResourceToStorage(world, playerEntity, resource.resource, rawIncrease);
 
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, blockNumber);
   }

@@ -7,19 +7,18 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 
 //interfaces
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
 
 //systems
-import { S_ResolveBattleSystem, ID as S_ResolveBattleSystemID } from "systems/S_ResolveBattleSystem.sol";
+import { ID as S_ResolveBattleSystemID } from "systems/S_ResolveBattleSystem.sol";
+import { ID as S_ClaimAllResourcesSystemID } from "systems/S_ClaimAllResourcesSystem.sol";
 
-import "forge-std/console.sol";
 // comps
 
-import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "components/BattleSpaceRockComponent.sol";
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
 import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "components/BattleAttackerComponent.sol";
@@ -31,7 +30,6 @@ import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.s
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
@@ -53,7 +51,7 @@ library LibRaid {
       "LibRaid: can only raid asteroids"
     );
     LibBattle.setupBattleAttacker(world, battleEntity, invader, rockEntity, ESendType.RAID);
-    console.log("setup attacker");
+    //console.log("setup attacker");
     uint256 defenderEntity = 0;
     if (ownedByComponent.has(rockEntity)) {
       require(ownedByComponent.getValue(rockEntity) != invader, "[Raid]: can not raid your own rock");
@@ -62,18 +60,17 @@ library LibRaid {
       revert("LibRaid: can not raid unowned rock");
     }
     LibBattle.setupBattleDefender(world, battleEntity, defenderEntity, rockEntity);
-    console.log("setup defender");
+    //console.log("setup defender");
     IOnEntitySubsystem(getAddressById(world.systems(), S_ResolveBattleSystemID)).executeTyped(
       entityToAddress(invader),
       battleEntity
     );
-    console.log("resolve battle");
+    //console.log("resolve battle");
     updatePlayerUnitsAfterBattle(world, battleEntity, rockEntity);
-    console.log("update units after battle");
+    //console.log("update units after battle");
 
     resolveRaid(world, battleEntity);
-    console.log("resouces updated after raid");
-    //ArrivalsList.get(world, playerAsteroidEntity, arrival);
+    //console.log("resouces updated after raid");
   }
 
   function updatePlayerUnitsAfterBattle(IWorld world, uint256 battleEntity, uint256 rockEntity) internal {
@@ -177,35 +174,29 @@ library LibRaid {
       defender.participantEntity
     );
     if (totalResources == 0) return;
-
-    LibResource.claimAllResources(
-      world,
-      BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(battleEntity).participantEntity
-    );
-    LibResource.claimAllResources(
-      world,
-      BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).participantEntity
-    );
-
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
 
-    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
+    IOnSubsystem(getAddressById(world.systems(), S_ClaimAllResourcesSystemID)).executeTyped(
+      entityToAddress(defender.participantEntity)
+    );
+
+    IOnSubsystem(getAddressById(world.systems(), S_ClaimAllResourcesSystemID)).executeTyped(
+      entityToAddress(attacker.participantEntity)
+    );
+
     uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
       .getValue(defender.participantEntity);
 
     for (uint256 i = 0; i < resources.length; i++) {
       uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
 
-      if (resources[i] >= raidAmount) resources[i] = resources[i] - raidAmount;
-      else {
+      if (resources[i] < raidAmount) {
         raidAmount = resources[i];
-        resources[i] = 0;
       }
-      LibStorage.addResourceToStorage(world, resourceIds[i], raidAmount, attacker.participantEntity);
-
-      itemComponent.set(LibEncode.hashKeyEntity(resourceIds[i], defender.participantEntity), resources[i]);
+      LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
+      LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
     }
   }
 }
