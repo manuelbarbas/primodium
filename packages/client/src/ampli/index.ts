@@ -672,6 +672,27 @@ export interface SystemUpgradeRangeProperties {
    */
   asteroidCoord: string;
   /**
+   * Bounds of buildable area on a player's asteroid, represented by \[min.x, min.y, max.x, max.y\].
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Min Items | 4 |
+   * | Max Items | 4 |
+   * | Item Type | number |
+   *
+   * @minItems 4
+   * @maxItems 4
+   */
+  currBounds: [number, number, number, number];
+  /**
+   * Current level of the building being upgraded. If there is a duplicate event, then the user failed to upgrade the building in the previous action. Also refers to the level of building expansion on an asteroid.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  currLevel: number;
+  /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
   transactionFrom?: string;
