@@ -10,17 +10,17 @@ export function useAccount(): {
   const { address } = useWagmiAccount();
   const { defaultWalletAddress } = useMud();
 
-  if (defaultWalletAddress) {
-    return {
-      rawAddress: defaultWalletAddress,
-      address: defaultWalletAddress.toString().toLowerCase() as EntityID,
-      external: false,
-    };
-  } else if (address) {
+  if (address) {
     return {
       rawAddress: address,
       address: address.toString().toLowerCase() as EntityID,
       external: true,
+    };
+  } else if (defaultWalletAddress) {
+    return {
+      rawAddress: defaultWalletAddress,
+      address: defaultWalletAddress.toString().toLowerCase() as EntityID,
+      external: false,
     };
   } else {
     throw new Error("No account found");

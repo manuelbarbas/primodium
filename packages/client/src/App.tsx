@@ -12,7 +12,7 @@ import { Network, createNetworkLayer } from "./network/layer";
 import AppLoadingState from "./AppLoadingState";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import wagmiClient from "./network/wagmi";
-import { ComponentBrowser } from "./components/ComponentBrowser";
+import { ComponentBrowser } from "./components/dev/ComponentBrowser";
 import { ampli } from "./ampli";
 
 const DEV = import.meta.env.VITE_DEV === "true";
