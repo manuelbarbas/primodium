@@ -74,12 +74,7 @@
       {
         "type": "image",
         "key": "asteroid-sprite",
-        "url": "/img/asteroid.png"
-      },
-      {
-        "type": "image",
-        "key": "asteroid-titanium-sprite",
-        "url": "/img/asteroid-titanium.png"
+        "url": "/img/spacerocks/asteroids/asteroid1.png"
       },
       {
         "type": "image",

@@ -67,6 +67,18 @@ const advancedBuildingHotbar: Hotbar = {
       blockType: BlockType.SolarPanel,
       keybind: KeybindActions.Hotbar3,
     },
+    {
+      blockType: BlockType.StarmapperStation,
+      keybind: KeybindActions.Hotbar4,
+    },
+    {
+      blockType: BlockType.DroneFactory,
+      keybind: KeybindActions.Hotbar5,
+    },
+    {
+      blockType: BlockType.Hangar,
+      keybind: KeybindActions.Hotbar6,
+    },
   ],
 };
 
