@@ -12,6 +12,8 @@ import { keccak256 } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
 import { SystemTypes } from "../../../../contracts/types/SystemTypes";
 
+export type DevSystems = ReturnType<typeof setupDevSystems>;
+
 function setupDevSystems(
   world: World,
   encodersPromise: Promise<
