@@ -273,6 +273,20 @@ export const IsMineableAt = newStringComponent(world, {
   metadata: { contractId: `${commonIdPrefix}IsMineableAt` },
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                 Leaderboard                                */
+/* -------------------------------------------------------------------------- */
+
+export const Score = newNumberComponent(world, {
+  id: "Score",
+  metadata: { contractId: `${commonIdPrefix}Score` },
+});
+
+export const P_ScoreMultiplier = newNumberComponent(world, {
+  id: "P_ScoreMultiplier",
+  metadata: { contractId: `${commonIdPrefix}P_ScoreMultiplier` },
+});
+
 export default {
   GameConfig,
   P_Terrain,
@@ -307,4 +321,7 @@ export default {
   MotherlodeResource,
   P_MotherlodeResource,
   IsMineableAt,
+
+  Score,
+  P_ScoreMultiplier,
 };
