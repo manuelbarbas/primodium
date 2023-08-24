@@ -2,8 +2,6 @@ import { EntityID } from "@latticexyz/recs";
 import {
   BuildingType,
   Level,
-  MaxUtility,
-  OccupiedUtilityResource,
   P_UnitAttack,
   P_UnitCargo,
   P_UnitDefence,
@@ -11,9 +9,8 @@ import {
   P_UnitProductionTypes,
   P_UnitTravelSpeed,
 } from "src/network/components/chainComponents";
-import { BlockIdToKey, BlockType } from "./constants";
+import { BlockIdToKey } from "./constants";
 import { hashKeyEntity } from "./encode";
-import { useAccount } from "src/hooks";
 
 export function useTrainableUnits(buildingEntity: EntityID) {
   const buildingType = BuildingType.get(buildingEntity)?.value;
