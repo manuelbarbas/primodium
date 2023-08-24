@@ -12,7 +12,7 @@ import { IOnSubsystem } from "../interfaces/IOnSubsystem.sol";
 //systems
 import { ID as S_ResolveBattleSystemID } from "systems/S_ResolveBattleSystem.sol";
 import { ID as S_ClaimAllResourcesSystemID } from "systems/S_ClaimAllResourcesSystem.sol";
-
+import { ID as S_ResolveRaidUnitsSystemID } from "systems/S_ResolveRaidUnitsSystem.sol";
 // comps
 
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
@@ -66,14 +66,21 @@ library LibRaid {
       battleEntity
     );
     //console.log("resolve battle");
-    updatePlayerUnitsAfterBattle(world, battleEntity, rockEntity);
+
+    IOnEntitySubsystem(getAddressById(world.systems(), S_ResolveRaidUnitsSystemID)).executeTyped(
+      entityToAddress(invader),
+      battleEntity
+    );
     //console.log("update units after battle");
 
     resolveRaid(world, battleEntity);
     //console.log("resouces updated after raid");
   }
 
-  function updatePlayerUnitsAfterBattle(IWorld world, uint256 battleEntity, uint256 rockEntity) internal {
+  function updatePlayerUnitsAfterBattle(IWorld world, uint256 battleEntity) internal {
+    uint256 rockEntity = BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).getValue(
+      battleEntity
+    );
     BattleResult memory battleResult = BattleResultComponent(world.getComponent(BattleResultComponentID)).getValue(
       battleEntity
     );
