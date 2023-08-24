@@ -75,63 +75,29 @@ export const BlockType = {
   // Dummy block for Conveyor between tiles
   Conveyor: keccak256("block.Conveyor") as EntityID,
 
-  // New Buildings
+  // Basic Buildings
   IronMine: keccak256("block.IronMine") as EntityID,
   CopperMine: keccak256("block.CopperMine") as EntityID,
   LithiumMine: keccak256("block.LithiumMine") as EntityID,
   SulfurMine: keccak256("block.SulfurMine") as EntityID,
   StorageUnit: keccak256("block.StorageUnit") as EntityID,
+
+  //Advanced Buildings
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
   PhotovoltaicCellFactory: keccak256(
     "block.LithiumCopperOxideFactory"
   ) as EntityID,
-  SpaceFuelFactory: keccak256("block.SpaceFuelFactory") as EntityID,
-  DroneFactory: keccak256("block.DroneFactory") as EntityID,
-  PropulsionFuelFactory: keccak256("block.PropulsionFuelFactory") as EntityID,
   AlloyFactory: keccak256("block.AlloyFactory") as EntityID,
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
-  HousingUnit: keccak256("block.HousingUnit") as EntityID,
-
-  // Old Buildings
-  BasicMiner: keccak256("block.BasicMiner") as EntityID,
-  Node: keccak256("block.Node") as EntityID,
-  PlatingFactory: keccak256("block.PlatingFactory") as EntityID,
-  BasicBatteryFactory: keccak256("block.BasicBatteryFactory") as EntityID,
-  KineticMissileFactory: keccak256("block.KineticMissileFactory") as EntityID,
-  ProjectileLauncher: keccak256("block.ProjectileLauncher") as EntityID,
-  HardenedDrill: keccak256("block.HardenedDrill") as EntityID,
-  DenseMetalRefinery: keccak256("block.DenseMetalRefinery") as EntityID,
-  AdvancedBatteryFactory: keccak256("block.AdvancedBatteryFactory") as EntityID,
-  HighTempFoundry: keccak256("block.HighTempFoundry") as EntityID,
-  PrecisionMachineryFactory: keccak256(
-    "block.PrecisionMachineryFactory"
-  ) as EntityID,
-  IridiumDrillbitFactory: keccak256("block.IridiumDrillbitFactory") as EntityID,
-  PrecisionPneumaticDrill: keccak256(
-    "block.PrecisionPneumaticDrill"
-  ) as EntityID,
-  PenetratorFactory: keccak256("block.PenetratorFactory") as EntityID,
-  PenetratingMissileFactory: keccak256(
-    "block.PenetratingMissileFactory"
-  ) as EntityID,
-  MissileLaunchComplex: keccak256("block.MissileLaunchComplex") as EntityID,
-  HighEnergyLaserFactory: keccak256("block.HighEnergyLaserFactory") as EntityID,
-  ThermobaricWarheadFactory: keccak256(
-    "block.ThermobaricWarheadFactory"
-  ) as EntityID,
-  ThermobaricMissileFactory: keccak256(
-    "block.ThermobaricMissileFactory"
-  ) as EntityID,
-  KimberliteCatalystFactory: keccak256(
-    "block.KimberliteCatalystFactory"
-  ) as EntityID,
-
-  // Crafted Components
+  Hangar: keccak256("block.HousingUnit") as EntityID,
+  DroneFactory: keccak256("block.TrainingFacility") as EntityID,
+  StarmapperStation: keccak256("block.Starmapper") as EntityID,
 
   AlloyCraftedItem: keccak256("item.AlloyCrafted") as EntityID,
   LithiumCopperOxideCraftedItem: keccak256(
     "item.LithiumCopperOxideCrafted"
   ) as EntityID,
+
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
   ElectricityUtilityResource: keccak256(
     "item.ElectricityUtilityResource"
@@ -139,7 +105,6 @@ export const BlockType = {
   HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
-
   IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
   BasicPowerSourceCrafted: keccak256(
     "item.BasicPowerSourceCrafted"
@@ -407,8 +372,8 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [
     BlockType.PhotovoltaicCellFactory,
     [
-      "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
-      "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
+      "/img/building/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
+      "/img/building/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
     ],
   ],
   [
@@ -418,10 +383,14 @@ export const BackgroundImage = new Map<EntityID, string[]>([
       "/img/building/solarpanels/solarpanel-level2.png",
     ],
   ],
-  [BlockType.HousingUnit, ["/img/building/newplatingfactory.gif"]],
+  [BlockType.Hangar, ["/img/building/hangar/level1/Hangar1.png"]],
   [
-    BlockType.PropulsionFuelFactory,
-    ["/img/building/propulsionfuelfactory.gif"],
+    BlockType.DroneFactory,
+    ["/img/building/drone-factory/normal/Drone_Factory1.png"],
+  ],
+  [
+    BlockType.StarmapperStation,
+    ["/img/building/starmapper-station/level1/Starmapper1.png"],
   ],
 
   //units
