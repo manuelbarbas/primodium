@@ -2,6 +2,8 @@ import { EntityID } from "@latticexyz/recs";
 import {
   BuildingType,
   Level,
+  MaxUtility,
+  OccupiedUtilityResource,
   P_UnitAttack,
   P_UnitCargo,
   P_UnitDefence,
@@ -9,8 +11,9 @@ import {
   P_UnitProductionTypes,
   P_UnitTravelSpeed,
 } from "src/network/components/chainComponents";
-import { BlockIdToKey } from "./constants";
+import { BlockIdToKey, BlockType } from "./constants";
 import { hashKeyEntity } from "./encode";
+import { useAccount } from "src/hooks";
 
 export function useTrainableUnits(buildingEntity: EntityID) {
   const buildingType = BuildingType.get(buildingEntity)?.value;
@@ -58,10 +61,20 @@ export function checkUtilityReqs() {}
 
 export function checkResourceReqs() {}
 
-export function usePlayerUnitCount() {
-  return 0;
+export function usePlayerUnitCount(player?: EntityID) {
+  const user = player ?? useAccount().address;
+  const playerResourceEntity = hashKeyEntity(
+    BlockType.HousingUtilityResource,
+    user
+  );
+  return OccupiedUtilityResource.use(playerResourceEntity, { value: 0 }).value;
 }
 
-export function useMaxPlayerUnitCount() {
-  return 10;
+export function useMaxPlayerUnitCount(player?: EntityID) {
+  const user = player ?? useAccount().address;
+  const playerResourceEntity = hashKeyEntity(
+    BlockType.HousingUtilityResource,
+    user
+  );
+  return MaxUtility.use(playerResourceEntity, { value: 0 }).value;
 }

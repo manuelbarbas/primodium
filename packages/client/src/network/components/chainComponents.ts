@@ -106,7 +106,15 @@ export const P_RequiredResources = newComponent(
     metadata: { contractId: `${commonIdPrefix}P_RequiredResources` },
   }
 );
+export const P_RequiredUtility = newComponent(
+  world,
+  { resourceIDs: Type.EntityArray, requiredAmounts: Type.NumberArray },
 
+  {
+    id: "P_RequiredUtility",
+    metadata: { contractId: `${commonIdPrefix}P_RequiredUtility` },
+  }
+);
 export const P_MaxLevel = newNumberComponent(world, {
   id: "P_MaxLevel",
   metadata: { contractId: `${commonIdPrefix}P_MaxLevel` },
@@ -375,6 +383,7 @@ export default {
   MainBase,
   P_RequiredResearch,
   P_RequiredResources,
+  P_RequiredUtility,
   P_MaxLevel,
   Level,
   P_MaxStorage,

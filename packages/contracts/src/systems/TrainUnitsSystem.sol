@@ -25,7 +25,6 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 import { ID as S_UpdatePlayerSpaceRockSystem } from "./S_UpdatePlayerSpaceRockSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
-import { Unit } from "src/prototypes/Unit.sol";
 
 uint256 constant ID = uint256(keccak256("system.TrainUnits"));
 
@@ -53,7 +52,7 @@ contract TrainUnitsSystem is PrimodiumSystem {
     );
 
     require(
-      LibUnits.checkUtilityResourceReqs(world, playerEntity, Unit, count),
+      LibUnits.checkUtilityResourceReqs(world, playerEntity, unitType, count),
       "[TrainUnitsSystem] You do not have the required Utility resources"
     );
 
@@ -73,7 +72,7 @@ contract TrainUnitsSystem is PrimodiumSystem {
     //Occupied Utility Update
     if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(unitTypeLevelEntity)) {
       // update occupied utility
-      LibUnits.updateOccuppiedUtilityResources(world, playerEntity, Unit, count, true);
+      LibUnits.updateOccuppiedUtilityResources(world, playerEntity, unitType, count, true);
     }
 
     UnitProductionLastQueueIndexComponent unitProductionLastQueueIndexComponent = UnitProductionLastQueueIndexComponent(

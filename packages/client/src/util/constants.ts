@@ -135,6 +135,7 @@ export const BlockType = {
   ElectricityUtilityResource: keccak256(
     "item.ElectricityUtilityResource"
   ) as EntityID,
+  HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
 
@@ -579,6 +580,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.LithiumCopperOxideCraftedItem, "/img/crafted/advancedbattery.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
   [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
+  // todo: update this
+  [BlockType.HousingUtilityResource, "/img/crafted/thermobaricwarhead.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
