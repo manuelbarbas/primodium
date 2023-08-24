@@ -473,7 +473,7 @@ library LibInitDebug {
     // MainBase
     uint256 entity = LibEncode.hashKeyEntity(MainBaseID, 1);
     uint256[] memory unitTypes = new uint256[](3);
-    unitTypes[0] = DebugUnitMiner;
+    unitTypes[0] = DebugUnit3;
     unitTypes[1] = DebugUnitBattle1;
     unitTypes[2] = DebugUnit;
     unitProductionTypesComponent.set(entity, unitTypes);
@@ -509,9 +509,12 @@ library LibInitDebug {
     P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
     P_UnitMiningComponent unitMiningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
 
+    uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
+    speedComponent.set(DebugUnit, 100);
+    unitAttackComponent.set(DebugUnit, 5);
     //DebugUnit
     speedComponent.set(DebugUnit, 100);
-    uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
+    entity = LibEncode.hashKeyEntity(DebugUnit, 1);
     unitTrainingTimeComponent.set(entity, 2);
 
     ResourceValues memory requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
@@ -537,17 +540,13 @@ library LibInitDebug {
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
     // debuguint3
-    speedComponent.set(DebugUnit3, 50);
     entity = LibEncode.hashKeyEntity(DebugUnit3, 1);
+    speedComponent.set(entity, 50);
     unitTrainingTimeComponent.set(entity, 4);
-
-    requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
-    requiredUtility.resources[0] = HousingUtilityResourceID;
-    requiredUtility.values[0] = 1;
-    requiredUtilityComponent.set(entity, requiredUtility);
     unitAttackComponent.set(entity, 20);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
+    unitMiningComponent.set(entity, 100);
 
     // DebugUnitMiner
     entity = DebugUnitMiner;
