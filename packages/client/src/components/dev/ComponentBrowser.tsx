@@ -5,7 +5,7 @@ import { useMud } from "src/hooks";
 import components from "src/network/components";
 import { world } from "src/network/world";
 import Cheatcodes from "./Cheatcodes";
-import { setupCheatCodes } from "src/util/cheatcodes.ts";
+import { setupCheatcodes } from "src/util/cheatcodes";
 
 export const ComponentBrowser = () => {
   const mud = useMud();
@@ -19,7 +19,7 @@ export const ComponentBrowser = () => {
     components,
   };
 
-  const cheatcodes = setupCheatCodes(mud);
+  const cheatcodes = setupCheatcodes(mud);
   return (
     <div
       className={`z-10 fixed bottom-0 right-0 ${
