@@ -5,7 +5,7 @@ import { Network } from "src/network/layer";
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => ({
   addCounter: {
-    params: [{ name: "off", type: "number" }],
+    params: [{ name: "value", type: "number" }],
     function: (value: number) => {
       mud.dev.setContractComponentValue(singletonIndex, Counter, {
         value: value,
