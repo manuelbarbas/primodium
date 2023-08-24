@@ -19,10 +19,11 @@ import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/Mot
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { ScoreComponent, ID as ScoreComponentID } from "components/ScoreComponent.sol";
 import { P_ScoreMultiplierComponent, ID as P_ScoreMultiplierComponentID } from "components/P_ScoreMultiplierComponent.sol";
+import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
-
+import { BIGNUM } from "../../prototypes/Debug.sol";
 import "src/types.sol";
 import "src/prototypes.sol";
 
@@ -153,9 +154,12 @@ contract LibMotherlodeTest is PrimodiumTest {
     uint256 motherlodeEntity = LibMotherlode.createMotherlode(world, position);
     ResourceValue memory maxResource = LibMotherlode.getMaxMotherlodeResource(world, motherlodeEntity);
     uint256 playerEntity = addressToEntity(deployer);
+    uint256 resourcePlayerEntity = LibEncode.hashKeyEntity(maxResource.resource, playerEntity);
+
+    componentDevSystem.executeTyped(P_MaxStorageComponentID, resourcePlayerEntity, abi.encode(BIGNUM));
 
     uint256 unitPlayerMotherlodeEntity = LibEncode.hashEntities(DebugUnitMiner, playerEntity, motherlodeEntity);
-    uint256 resourcePlayerEntity = LibEncode.hashKeyEntity(maxResource.resource, playerEntity);
+
     componentDevSystem.executeTyped(UnitsComponentID, unitPlayerMotherlodeEntity, abi.encode(1));
 
     uint256 timeElapsed = 1;
@@ -198,6 +202,8 @@ contract LibMotherlodeTest is PrimodiumTest {
       LibMotherlode.getMaxMotherlodeResource(world, motherlodeEntity).resource,
       playerEntity
     );
+    componentDevSystem.executeTyped(P_MaxStorageComponentID, resourcePlayerEntity, abi.encode(BIGNUM));
+
     componentDevSystem.executeTyped(UnitsComponentID, unitPlayerMotherlodeEntity, abi.encode(1));
     componentDevSystem.executeTyped(UnitsComponentID, unit2PlayerMotherlodeEntity, abi.encode(1));
     uint256 timeElapsed = 1;
@@ -244,6 +250,7 @@ contract LibMotherlodeTest is PrimodiumTest {
     uint256 playerEntity = addressToEntity(deployer);
     uint256 unitPlayerMotherlodeEntity = LibEncode.hashEntities(DebugUnitMiner, playerEntity, motherlodeEntity);
     uint256 resourcePlayerEntity = LibEncode.hashKeyEntity(maxResource.resource, playerEntity);
+    componentDevSystem.executeTyped(P_MaxStorageComponentID, resourcePlayerEntity, abi.encode(BIGNUM));
     componentDevSystem.executeTyped(UnitsComponentID, unitPlayerMotherlodeEntity, abi.encode(1));
 
     uint256 timeElapsed = 1000000;
