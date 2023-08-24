@@ -51,7 +51,6 @@ const ImageGrid: React.FC = () => {
     if (activeTab == "resource") return [...ResourceImage.entries()];
     return [...ResearchImage.entries()];
   }, [activeTab]);
-  console.log(images);
 
   return (
     <div className="text-black w-full h-full p-4 z-10 bg-white overflow-auto">

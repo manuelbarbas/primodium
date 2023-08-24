@@ -353,7 +353,7 @@ export const UnitProductionOwnedBy = newComponent(
 
 export const UnitProductionQueue = newComponent(
   world,
-  { unitId: Type.EntityArray, productionRate: Type.NumberArray },
+  { unitEntity: Type.Entity, count: Type.Number },
   {
     id: "UnitProductionQueue",
     metadata: { contractId: `${commonIdPrefix}UnitProductionQueue` },

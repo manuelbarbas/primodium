@@ -9,17 +9,13 @@ import {
   P_UnitProductionTypes,
   P_UnitTravelSpeed,
 } from "src/network/components/chainComponents";
-import { BlockIdToKey } from "./constants";
 import { hashKeyEntity } from "./encode";
 
 export function useTrainableUnits(buildingEntity: EntityID) {
   const buildingType = BuildingType.get(buildingEntity)?.value;
   if (!buildingType) return [];
   const level = Level.use(buildingEntity, { value: 0 }).value;
-  console.log("building type:", BlockIdToKey[buildingType]);
   const buildingLevelEntity = hashKeyEntity(buildingType, level);
-  console.log("building level:", level);
-  console.log("buildingLevelEntity:", buildingLevelEntity);
   return P_UnitProductionTypes.use(buildingLevelEntity, { value: [] })?.value;
 }
 

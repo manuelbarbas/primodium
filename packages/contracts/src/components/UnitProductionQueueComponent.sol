@@ -14,10 +14,10 @@ contract UnitProductionQueueComponent is Component {
     keys = new string[](2);
     values = new LibTypes.SchemaValue[](2);
 
-    keys[0] = "unitID";
+    keys[0] = "unitEntity";
     values[0] = LibTypes.SchemaValue.UINT256;
 
-    keys[1] = "productionRate";
+    keys[1] = "count";
     values[1] = LibTypes.SchemaValue.UINT32;
   }
 

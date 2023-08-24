@@ -1,12 +1,11 @@
 import { useState } from "react";
 
-export type Cheatcodes = Record<
-  string,
-  {
-    function: (...args: any[]) => any;
-    params: { name: string; type: "number" | "string" | "boolean" }[];
-  }
->;
+export type Cheatcodes = Record<string, Cheatcode>;
+
+export type Cheatcode = {
+  function: (...args: any[]) => any;
+  params: { name: string; type: "number" | "string" | "boolean" }[];
+};
 const FunctionListComponent: React.FC<{ cheatcodes: Cheatcodes }> = ({
   cheatcodes,
 }) => {

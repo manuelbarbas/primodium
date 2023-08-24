@@ -52,10 +52,7 @@ export function renderFog(scene: Scene, player: EntityID) {
   defineComponentSystem(gameWorld, Level, ({ entity }) => {
     if (world.entities[entity] !== player) return;
     const bounds = getPlayerBounds(player);
-    const asteroidBounds = getAsteroidBounds();
     const nextBounds = getPlayerNextBounds(player);
-    console.log("bounds:", bounds);
-    console.log("asteroid bounds:", asteroidBounds);
 
     const objIndex = entity + objSuffix;
     if (scene.objectPool.objects.has(objIndex)) {
