@@ -1,6 +1,6 @@
 import {
-  ActiveAsteroid,
   BlockNumber,
+  SelectedAsteroid,
 } from "src/network/components/clientComponents";
 import { UnitBreakdown } from "./UnitBreakdown";
 import {
@@ -14,48 +14,58 @@ import {
   P_MotherlodeResource,
   Position,
 } from "src/network/components/chainComponents";
-import {
-  MotherlodeSizeNames,
-  MotherlodeTypeNames,
-} from "src/game/lib/belt/types";
+import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
 import { hashKeyEntity } from "src/util/encode";
 import { ESpaceRockType } from "src/util/web3/types";
+import { AnimatePresence, motion } from "framer-motion";
+import { getAsteroidImage } from "src/util/asteroid";
 
 export const TargetInfo: React.FC = () => {
-  const target = ActiveAsteroid.use()?.value;
-  if (!target) return null;
+  const target = SelectedAsteroid.use()?.value;
   const type = AsteroidType.use(target, { value: ESpaceRockType.Asteroid })
     .value as ESpaceRockType;
 
+  if (!target) return null;
+
   return (
-    <div className="absolute top-0 left-0 pointer-events-auto">
-      {type == ESpaceRockType.Asteroid && (
-        <AsteroidTargetInfo target={target} />
-      )}
-      {type == ESpaceRockType.Motherlode && (
-        <MotherlodeTargetInfo target={target} />
-      )}
-    </div>
+    <AnimatePresence>
+      <motion.div
+        layout
+        key="target-info"
+        className="absolute top-0 left-0 pointer-events-auto"
+      >
+        {type == ESpaceRockType.Asteroid && (
+          <AsteroidTargetInfo target={target} />
+        )}
+        {type == ESpaceRockType.Motherlode && (
+          <MotherlodeTargetInfo target={target} />
+        )}
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
 const AsteroidTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
-  const owner = OwnedBy.use(target)?.value;
-  const mainBase = MainBase.use(owner)?.value;
-  if (!mainBase) return null;
+  const owner = OwnedBy.get(target)?.value;
+  const mainBase = MainBase.get(owner)?.value;
   const mainBaseLevel = Level.use(mainBase, { value: 0 }).value;
   const position = Position.use(target, {
     x: 0,
     y: 0,
     parent: "0" as EntityID,
   });
+
+  if (!mainBase) return null;
+
+  const image = getAsteroidImage(target);
+
   return (
     <>
       <div className="relative flex pixel-images h-32 w-fit bg-slate-900/90">
         <div className="relative">
           <img
-            src="/img/asteroid-titanium.png"
+            src={image}
             className="border border-r-0 border-cyan-400 h-full w-auto object-cover"
           />
           <p className="absolute bottom-1 right-1 bg-slate-900/90 text-xs">
@@ -90,9 +100,12 @@ const MotherlodeTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
     y: 0,
     parent: "0" as EntityID,
   });
-  const motherlodeData = Motherlode.use(target);
+  const blockNumber = BlockNumber.use(undefined, { value: 0 }).value;
+
+  const motherlodeData = Motherlode.get(target);
   if (!motherlodeData) return null;
-  const { resource, maxAmount } = P_MotherlodeResource.use(
+
+  const { resource, maxAmount } = P_MotherlodeResource.get(
     hashKeyEntity(motherlodeData?.motherlodeType, motherlodeData.size),
     { resource: "0" as EntityID, maxAmount: 0 }
   );
@@ -101,13 +114,13 @@ const MotherlodeTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
     { value: 0 }
   ).value;
 
-  const mineableAt = Number(IsMineableAt.use(target, { value: "0" }).value);
-  const blockNumber = BlockNumber.use(undefined, { value: 0 }).value;
+  const mineableAt = Number(IsMineableAt.get(target, { value: "0" }).value);
+
   const blocksLeft = mineableAt - blockNumber;
   const resourceLeft = maxAmount - resourceMined;
   const resourceName = MotherlodeTypeNames[motherlodeData.motherlodeType];
   const resourceSize = MotherlodeSizeNames[motherlodeData.size];
-  const img = `motherlode_${resourceName}_${resourceSize}.png`;
+  const image = getAsteroidImage(target);
 
   return (
     <>
@@ -123,7 +136,7 @@ const MotherlodeTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
         )}
         <div className="relative">
           <img
-            src={`/img/spacerocks/motherlodes/${img}`}
+            src={image}
             className="border border-r-0 border-cyan-400 h-full w-auto object-cover"
           />
           <p className="absolute bottom-1 right-1 bg-slate-900/90 text-xs">

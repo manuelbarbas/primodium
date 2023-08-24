@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
@@ -16,6 +16,9 @@ import { TileInfo } from "./tile-info/TileInfo";
 import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
+import { FaList } from "react-icons/fa";
+import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
+import { Leaderboard } from "./Leaderboard";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -24,9 +27,11 @@ export const InfoBox = () => {
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
+  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
+  const leaderboard = useRef<Map<EntityID, number>>();
 
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
@@ -36,6 +41,10 @@ export const InfoBox = () => {
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
+
+  useEffect(() => {
+    leaderboard.current = setupLeaderboard();
+  }, []);
 
   useEffect(() => {
     if (mainBaseLevel === undefined) return;
@@ -99,7 +108,7 @@ export const InfoBox = () => {
                     setShowResearchModal(true);
                     setNotify(false);
                   }}
-                  depth={6}
+                  depth={4}
                 >
                   <div className="flex m-1 items-center gap-2 px-1">
                     <IoFlaskSharp size={18} />
@@ -111,11 +120,26 @@ export const InfoBox = () => {
               </div>
               <div className="relative">
                 <GameButton
+                  id="leaderboard"
+                  color="bg-orange-500"
+                  className="mt-2 ml-1 text-sm"
+                  onClick={() => {
+                    setShowLeaderboard(true);
+                  }}
+                  depth={4}
+                >
+                  <div className="flex m-1 items-center gap-2 px-1">
+                    <FaList size={18} />
+                  </div>
+                </GameButton>
+              </div>
+              <div className="relative">
+                <GameButton
                   id="research"
                   className="mt-2 ml-1 text-sm"
                   onClick={() => setShowMenuModal(true)}
                   color="bg-gray-700"
-                  depth={6}
+                  depth={4}
                 >
                   <div className="flex m-1 items-center gap-2 px-1 h-4">
                     <IoSettings size={18} />
@@ -141,6 +165,13 @@ export const InfoBox = () => {
         onClose={() => setShowResearchModal(!showResearchModal)}
       >
         <ResearchPage />
+      </Modal>
+      <Modal
+        title="Leaderboard"
+        show={showLeaderboard}
+        onClose={() => setShowLeaderboard(!showLeaderboard)}
+      >
+        <Leaderboard data={leaderboard.current} />
       </Modal>
     </div>
   );

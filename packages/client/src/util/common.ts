@@ -61,3 +61,7 @@ export const getBlockTypeName = (blockType: EntityID | undefined) => {
     .replace(/([A-Z][a-z])/g, " $1")
     .trimStart();
 };
+
+export const shortenAddress = (address: string) => {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};

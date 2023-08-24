@@ -18,7 +18,6 @@ export const createFxApi = () => {
   }
 
   function removeOutline(gameObject: Phaser.GameObjects.Sprite) {
-    // gameObject.removePostPipeline("outline");
     gameObject.clearFX();
   }
 
