@@ -447,9 +447,12 @@ contract SendUnitsTest is PrimodiumTest {
     Arrival memory reinforceArrival = reinforce(alice, bob);
     console.log("reinforcer : %s , receiver : %s ", addressToEntity(alice), addressToEntity(bob));
     assertEq(
-      LibMath.getSafe(unitsComponent, LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice))),
-      0,
-      "reinforcer must have 0 units on their home asteroid"
+      LibMath.getSafe(
+        unitsComponent,
+        LibEncode.hashEntities(DebugUnit, addressToEntity(alice), getHomeAsteroid(alice))
+      ),
+      6,
+      "reinforcer must have 6 units on their home asteroid"
     );
     console.log("checking trained units suceess");
     vm.roll(reinforceArrival.arrivalBlock);
@@ -467,8 +470,21 @@ contract SendUnitsTest is PrimodiumTest {
       ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), reinforceArrival.destination)),
       0
     );
-    assertEq(unitsComponent.getValue(LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob))), 20);
-    assertEq(ownedByComponent.getValue(reinforceArrival.destination), addressToEntity(bob));
+    uint256 unitReceiverSpaceRockEntity = LibEncode.hashEntities(
+      DebugUnit,
+      addressToEntity(bob),
+      reinforceArrival.destination
+    );
+    assertEq(
+      unitsComponent.getValue(unitReceiverSpaceRockEntity),
+      14,
+      "bob should have 14 units after receiving reinforcements"
+    );
+    assertEq(
+      ownedByComponent.getValue(reinforceArrival.destination),
+      addressToEntity(bob),
+      "bob should own their asteroid after receiving reinforcements"
+    );
     vm.stopPrank();
   }
 }

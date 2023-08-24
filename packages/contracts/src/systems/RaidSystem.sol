@@ -8,7 +8,7 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
-
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 // libraries
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -16,6 +16,7 @@ import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { LibInvade } from "../libraries/LibInvade.sol";
 import { LibRaid } from "../libraries/LibRaid.sol";
+import { LibUpdateSpaceRock } from "../libraries/LibUpdateSpaceRock.sol";
 // types
 import { Coord } from "../types.sol";
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
@@ -31,6 +32,10 @@ contract RaidSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     uint256 rockEntity = abi.decode(args, (uint256));
+    OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
+    if (ownedByComponent.has(rockEntity)) {
+      LibUpdateSpaceRock.updateSpaceRock(world, ownedByComponent.getValue(rockEntity), rockEntity);
+    }
     LibRaid.raid(world, addressToEntity(msg.sender), rockEntity);
     return abi.encode(rockEntity);
   }

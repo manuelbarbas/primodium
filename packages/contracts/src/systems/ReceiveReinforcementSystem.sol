@@ -16,6 +16,7 @@ import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { LibReinforce } from "../libraries/LibReinforce.sol";
+import { LibUpdateSpaceRock } from "../libraries/LibUpdateSpaceRock.sol";
 // types
 import { Coord } from "../types.sol";
 import { MainBaseID, BuildingKey } from "../prototypes.sol";
@@ -37,6 +38,7 @@ contract ReceiveReinforcementSystem is PrimodiumSystem {
       OwnedByComponent(getC(OwnedByComponentID)).getValue(rockEntity) == addressToEntity(msg.sender),
       "[ReceiveReinforcement]: only the owner of a rock can receive reinforcements"
     );
+    LibUpdateSpaceRock.updateSpaceRock(world, addressToEntity(msg.sender), rockEntity);
     LibReinforce.receiveReinforcementsFromArrival(world, addressToEntity(msg.sender), rockEntity, arrivalIndex);
     return abi.encode(rockEntity);
   }
