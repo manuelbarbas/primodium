@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
@@ -17,6 +17,8 @@ import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { FaList } from "react-icons/fa";
+import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
+import { Leaderboard } from "./Leaderboard";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -29,6 +31,7 @@ export const InfoBox = () => {
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
+  const leaderboard = useRef<Map<EntityID, number>>();
 
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
@@ -38,6 +41,10 @@ export const InfoBox = () => {
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
+
+  useEffect(() => {
+    leaderboard.current = setupLeaderboard();
+  }, []);
 
   useEffect(() => {
     if (mainBaseLevel === undefined) return;
@@ -125,9 +132,6 @@ export const InfoBox = () => {
                     <FaList size={18} />
                   </div>
                 </GameButton>
-                {notify && (
-                  <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse rounded-full" />
-                )}
               </div>
               <div className="relative">
                 <GameButton
@@ -167,7 +171,7 @@ export const InfoBox = () => {
         show={showLeaderboard}
         onClose={() => setShowLeaderboard(!showLeaderboard)}
       >
-        <div>Leaderboard</div>
+        <Leaderboard data={leaderboard.current} />
       </Modal>
     </div>
   );
