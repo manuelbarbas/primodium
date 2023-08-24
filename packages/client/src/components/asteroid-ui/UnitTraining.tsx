@@ -11,18 +11,16 @@ import { FaInfoCircle } from "react-icons/fa";
 import { EntityID } from "@latticexyz/recs";
 import { train } from "src/util/web3";
 import { useMud } from "src/hooks";
+import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
 import {
-  getUnitStats,
-  useMaxPlayerUnitCount,
-  usePlayerUnitCount,
-  useTrainableUnits,
-} from "src/util/trainUnits";
-import {
+  MaxUtility,
+  OccupiedUtilityResource,
   P_RequiredResources,
   P_RequiredUtility,
 } from "src/network/components/chainComponents";
 import { hashKeyEntity } from "src/util/encode";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
+import { Account } from "src/network/components/clientComponents";
 
 export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   buildingEntity,
@@ -31,6 +29,7 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   const [show, setShow] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState<EntityID>();
   const [count, setCount] = useState(0);
+  const account = Account.use(undefined, { value: "0" as EntityID }).value;
   useEffect(() => {
     setSelectedUnit(undefined);
   }, [show]);
@@ -38,9 +37,14 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   useEffect(() => {
     setCount(0);
   }, [selectedUnit]);
-
-  const maximum = useMaxPlayerUnitCount();
-  const totalUnits = usePlayerUnitCount();
+  const playerResourceEntity = hashKeyEntity(
+    BlockType.HousingUtilityResource,
+    account
+  );
+  const totalUnits = OccupiedUtilityResource.use(playerResourceEntity, {
+    value: 0,
+  }).value;
+  const maximum = MaxUtility.use(playerResourceEntity, { value: 0 }).value;
   const trainableUnits = useTrainableUnits(buildingEntity);
 
   const requiredHousing = useMemo(() => {

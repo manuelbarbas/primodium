@@ -60,21 +60,3 @@ export function getUnitStats(unitEntity: EntityID) {
 export function checkUtilityReqs() {}
 
 export function checkResourceReqs() {}
-
-export function usePlayerUnitCount(player?: EntityID) {
-  const user = player ?? useAccount().address;
-  const playerResourceEntity = hashKeyEntity(
-    BlockType.HousingUtilityResource,
-    user
-  );
-  return OccupiedUtilityResource.use(playerResourceEntity, { value: 0 }).value;
-}
-
-export function useMaxPlayerUnitCount(player?: EntityID) {
-  const user = player ?? useAccount().address;
-  const playerResourceEntity = hashKeyEntity(
-    BlockType.HousingUtilityResource,
-    user
-  );
-  return MaxUtility.use(playerResourceEntity, { value: 0 }).value;
-}

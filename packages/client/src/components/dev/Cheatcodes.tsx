@@ -68,7 +68,7 @@ const FunctionListComponent: React.FC<{ cheatcodes: Cheatcodes }> = ({
                       : e.target.value
                   )
                 }
-                className="border rounded py-1 px-2 focus:outline-none focus:ring focus:border-blue-300"
+                className="border rounded py-1 px-2 focus:outline-none focus:ring focus:border-blue-300 text-black"
               />
             </div>
           ))}
