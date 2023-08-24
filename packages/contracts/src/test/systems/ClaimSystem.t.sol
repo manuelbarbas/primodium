@@ -15,6 +15,8 @@ import { PathComponent, ID as PathComponentID } from "../../components/PathCompo
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "../../components/ProductionComponent.sol";
+import { ScoreComponent, ID as ScoreComponentID } from "../../components/ScoreComponent.sol";
+import { P_ScoreMultiplierComponent, ID as P_ScoreMultiplierComponentID } from "../../components/P_ScoreMultiplierComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "../../components/P_RequiredResearchComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "../../components/P_MaxResourceStorageComponent.sol";
@@ -27,8 +29,13 @@ import { Coord } from "../../types.sol";
 contract ClaimSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
+  ScoreComponent public scoreComponent;
+  P_ScoreMultiplierComponent public scoreMultiplierComponent;
+
   function setUp() public override {
     super.setUp();
+    scoreComponent = ScoreComponent(component(ScoreComponentID));
+    scoreMultiplierComponent = P_ScoreMultiplierComponent(component(P_ScoreMultiplierComponentID));
     spawn(alice);
   }
 

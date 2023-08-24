@@ -15,7 +15,7 @@ contract GameConfigComponent is Component {
     values = new LibTypes.SchemaValue[](4);
 
     keys[0] = "moveSpeed";
-    values[0] = LibTypes.SchemaValue.UINT256;
+    values[0] = LibTypes.SchemaValue.UINT32;
 
     keys[1] = "motherlodeDistance";
     values[1] = LibTypes.SchemaValue.UINT32;
@@ -32,8 +32,8 @@ contract GameConfigComponent is Component {
   }
 
   function getValue(uint256 entity) public view returns (GameConfig memory) {
-    (uint256 moveSpeed, uint32 motherlodeDistance, uint32 maxMotherlodesPerAsteroid, uint32 motherlodeChanceInv) = abi
-      .decode(getRawValue(entity), (uint256, uint32, uint32, uint32));
+    (uint32 moveSpeed, uint32 motherlodeDistance, uint32 maxMotherlodesPerAsteroid, uint32 motherlodeChanceInv) = abi
+      .decode(getRawValue(entity), (uint32, uint32, uint32, uint32));
     return
       GameConfig({
         moveSpeed: moveSpeed,

@@ -8,18 +8,20 @@ import DestroyPathSystem from "../abi/DestroyPathSystem.json";
 import DestroySystem from "../abi/DestroySystem.json";
 import IncrementSystem from "../abi/IncrementSystem.json";
 import ResearchSystem from "../abi/ResearchSystem.json";
-import S_ClaimUnitsFromBuildingSystem from "../abi/S_ClaimUnitsFromBuildingSystem.json";
-import S_ClaimUnitsSystem from "../abi/S_ClaimUnitsSystem.json";
+import S_BattleSystem from "../abi/S_BattleSystem.json";
 import S_PlaceBuildingTilesSystem from "../abi/S_PlaceBuildingTilesSystem.json";
+import S_RaidSystem from "../abi/S_RaidSystem.json";
 import S_SpendRequiredResourcesSystem from "../abi/S_SpendRequiredResourcesSystem.json";
 import S_UpdateActiveStatusSystem from "../abi/S_UpdateActiveStatusSystem.json";
 import S_UpdateConnectedRequiredProductionSystem from "../abi/S_UpdateConnectedRequiredProductionSystem.json";
 import S_UpdateOccupiedUtilitySystem from "../abi/S_UpdateOccupiedUtilitySystem.json";
 import S_UpdatePlayerResourceProductionSystem from "../abi/S_UpdatePlayerResourceProductionSystem.json";
+import S_UpdatePlayerSpaceRockSystem from "../abi/S_UpdatePlayerSpaceRockSystem.json";
 import S_UpdatePlayerStorageSystem from "../abi/S_UpdatePlayerStorageSystem.json";
 import S_UpdateRequiredProductionSystem from "../abi/S_UpdateRequiredProductionSystem.json";
 import S_UpdateUnclaimedResourcesSystem from "../abi/S_UpdateUnclaimedResourcesSystem.json";
 import S_UpdateUtilityProductionSystem from "../abi/S_UpdateUtilityProductionSystem.json";
+import SendUnitsSystem from "../abi/SendUnitsSystem.json";
 import SpawnSystem from "../abi/SpawnSystem.json";
 import TrainUnitsSystem from "../abi/TrainUnitsSystem.json";
 import UpgradeBuildingSystem from "../abi/UpgradeBuildingSystem.json";
@@ -35,18 +37,20 @@ export const SystemAbis = {
   "system.Destroy": DestroySystem.abi,
   "system.Increment": IncrementSystem.abi,
   "system.Research": ResearchSystem.abi,
-  "system.S_ClaimUnitsFromBuilding": S_ClaimUnitsFromBuildingSystem.abi,
-  "system.S_ClaimUnits": S_ClaimUnitsSystem.abi,
+  "system.S_Battle": S_BattleSystem.abi,
   "system.S_PlaceBuildingTiles": S_PlaceBuildingTilesSystem.abi,
+  "system.S_Raid": S_RaidSystem.abi,
   "system.S_SpendRequiredResources": S_SpendRequiredResourcesSystem.abi,
   "system.S_UpdateActiveStatus": S_UpdateActiveStatusSystem.abi,
   "system.S_UpdateConnectedRequiredProduction": S_UpdateConnectedRequiredProductionSystem.abi,
   "system.S_UpdateOccupiedUtilitySystem": S_UpdateOccupiedUtilitySystem.abi,
   "system.S_UpdatePlayerResourceProduction": S_UpdatePlayerResourceProductionSystem.abi,
+  "system.S_UpdatePlayerSpaceRock": S_UpdatePlayerSpaceRockSystem.abi,
   "system.S_UpdatePlayerStorage": S_UpdatePlayerStorageSystem.abi,
   "system.S_UpdateRequiredProduction": S_UpdateRequiredProductionSystem.abi,
   "system.S_UpdateUnclaimedResources": S_UpdateUnclaimedResourcesSystem.abi,
   "system.S_UpdateUtilityProduction": S_UpdateUtilityProductionSystem.abi,
+  "system.SendUnits": SendUnitsSystem.abi,
   "system.Spawn": SpawnSystem.abi,
   "system.TrainUnits": TrainUnitsSystem.abi,
   "system.UpgradeBuilding": UpgradeBuildingSystem.abi,

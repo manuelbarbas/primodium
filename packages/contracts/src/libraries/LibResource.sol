@@ -4,6 +4,8 @@ pragma solidity >=0.8.0;
 import { getAddressById } from "solecs/utils.sol";
 
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
+import { ScoreComponent, ID as ScoreComponentID } from "components/ScoreComponent.sol";
+import { P_ScoreMultiplierComponent, ID as P_ScoreMultiplierComponentID } from "components/P_ScoreMultiplierComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
@@ -94,5 +96,29 @@ library LibResource {
       }
       lastClaimedAtComponent.set(playerResourceEntity, block.number);
     }
+  }
+
+  function updateResourceAmount(IWorld world, uint256 entity, uint256 resourceType, uint32 value) internal {
+    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
+    ScoreComponent scoreComponent = ScoreComponent(world.getComponent(ScoreComponentID));
+    uint256 resourceEntity = LibEncode.hashKeyEntity(resourceType, entity);
+    uint32 currentAmount = LibMath.getSafe(itemComponent, resourceEntity);
+    uint256 currentScore = LibMath.getSafe(scoreComponent, entity);
+    uint256 scoreChangeAmount = LibMath.getSafe(
+      P_ScoreMultiplierComponent(world.getComponent(P_ScoreMultiplierComponentID)),
+      resourceType
+    );
+    if (value < currentAmount) {
+      scoreChangeAmount *= (currentAmount - value);
+      if (scoreChangeAmount > currentScore) {
+        scoreChangeAmount = currentScore;
+      }
+      currentScore -= scoreChangeAmount;
+    } else {
+      scoreChangeAmount *= (value - currentAmount);
+      currentScore += scoreChangeAmount;
+    }
+    scoreComponent.set(entity, currentScore);
+    itemComponent.set(resourceEntity, value);
   }
 }

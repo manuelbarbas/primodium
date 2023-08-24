@@ -12,7 +12,6 @@ import "../../prototypes.sol";
 
 import { LibAsteroid } from "../../libraries/LibAsteroid.sol";
 import { LibMath } from "../../libraries/LibMath.sol";
-
 import { Coord, Dimensions } from "../../types.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
@@ -41,6 +40,37 @@ contract LibAsteroidTest is PrimodiumTest {
       componentDevSystem.executeTyped(AsteroidCountComponentID, SingletonID, abi.encode(count + 1));
       logCoord(coord);
       vm.roll(block.number + 1);
+    }
+  }
+
+  function testFuzzPositionByVector(uint32 distance, uint32 direction) public {
+    distance = distance % 100_000;
+    direction = direction % 720;
+    Coord memory destination = LibAsteroid.getPositionByVector(distance, direction);
+    uint32 reverseDirection = direction + 180;
+    Coord memory origin = LibAsteroid.getPositionByVector(distance, reverseDirection);
+    origin = Coord(origin.x + destination.x, origin.y + destination.y, 0);
+    assertCoordEq(origin, Coord(0, 0, 0));
+  }
+
+  function testPositionByVector() public {
+    uint32 distance = 100;
+    uint32 direction = 85;
+    Coord memory destination = LibAsteroid.getPositionByVector(distance, direction);
+    uint32 reverseDirection = direction + 180;
+    Coord memory origin = LibAsteroid.getPositionByVector(distance, reverseDirection);
+    origin = Coord(origin.x + destination.x, origin.y + destination.y, 0);
+    assertCoordEq(origin, Coord(0, 0, 0));
+  }
+
+  function testPrintPositions() public view {
+    uint32 distance = 100;
+    uint32 max = 13;
+    for (uint32 i = 0; i < max; i++) {
+      uint32 direction = (i * 360) / max;
+      console.log("direction:", direction);
+      Coord memory coord = LibAsteroid.getPositionByVector(distance, (i * 360) / max);
+      logCoord(coord);
     }
   }
 }

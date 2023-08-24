@@ -14,7 +14,7 @@ contract AsteroidTypeComponent is Component {
     values = new LibTypes.SchemaValue[](1);
 
     keys[0] = "value";
-    values[0] = LibTypes.SchemaValue.UINT256;
+    values[0] = LibTypes.SchemaValue.UINT32;
   }
 
   function set(uint256 entity, ESpaceRockType value) public {
@@ -22,11 +22,11 @@ contract AsteroidTypeComponent is Component {
   }
 
   function getValue(uint256 entity) public view returns (ESpaceRockType) {
-    uint256 value = abi.decode(getRawValue(entity), (uint256));
+    uint32 value = abi.decode(getRawValue(entity), (uint32));
     return ESpaceRockType(value);
   }
 
   function getEntitiesWithValue(ESpaceRockType value) public view returns (uint256[] memory) {
-    return getEntitiesWithValue(abi.encode(uint256(value)));
+    return getEntitiesWithValue(abi.encode(uint32(value)));
   }
 }

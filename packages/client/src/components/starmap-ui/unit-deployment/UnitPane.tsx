@@ -3,6 +3,7 @@ import { getBlockTypeName } from "src/util/common";
 import { useState } from "react";
 import { EntityID } from "@latticexyz/recs";
 import { Fleet } from "src/network/components/clientComponents";
+import { BackgroundImage } from "src/util/constants";
 
 const unitStats = [
   {
@@ -49,7 +50,10 @@ export const UnitPane: React.FC<{
       className="relative flex flex-col justify-between items-center"
     >
       <div className="flex gap-2 items-center">
-        <img src="img/icons/debugicon.png" className="w-[32px] h-[32px]" />
+        <img
+          src={BackgroundImage.get(unit)?.at(0) ?? "img/icons/debugicon.png"}
+          className="w-[32px] h-[32px]"
+        />
         <p className="bg-pink-900 px-2">{getBlockTypeName(unit)}</p>
       </div>
 

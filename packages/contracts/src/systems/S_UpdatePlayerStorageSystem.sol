@@ -17,6 +17,7 @@ import { LevelComponent, ID as LevelComponentID } from "../components/LevelCompo
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.S_UpdatePlayerStorage"));
 
@@ -97,7 +98,7 @@ contract S_UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {
 
     uint32 playerResourceAmount = LibMath.getSafe(ItemComponent(world.getComponent(ItemComponentID)), resourceEntity);
     if (playerResourceAmount > newMaxStorage) {
-      ItemComponent(world.getComponent(ItemComponentID)).set(resourceEntity, newMaxStorage);
+      LibResource.updateResourceAmount(world, entity, resourceId, newMaxStorage);
     }
   }
 

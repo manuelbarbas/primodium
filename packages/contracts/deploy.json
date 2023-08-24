@@ -36,6 +36,7 @@
     "BattleResultComponent",
     "MaxMovesComponent",
     "GameConfigComponent",
+    "ScoreComponent",
 
     "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
@@ -60,7 +61,8 @@
     "P_UnitProductionTypesComponent",
     "P_UnitTrainingTimeComponent",
     "P_UnitTravelSpeedComponent",
-    "P_TerrainComponent"
+    "P_TerrainComponent",
+    "P_ScoreMultiplierComponent"
   ],
   "initializers": [
     "LibInitWorld",
@@ -68,7 +70,8 @@
     "LibInitBuildings",
     "LibInitResearch",
     "LibInitDebug",
-    "LibInitMotherlode"
+    "LibInitMotherlode",
+    "LibInitScoreMultipliers"
   ],
   "systems": [
     {
@@ -132,7 +135,7 @@
     },
     {
       "name": "S_RaidSystem",
-      "writeAccess": ["ItemComponent", "LastClaimedAtComponent"]
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent", "ScoreComponent"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",
@@ -140,11 +143,11 @@
     },
     {
       "name": "S_UpdatePlayerStorageSystem",
-      "writeAccess": ["ItemComponent", "P_MaxStorageComponent", "P_MaxResourceStorageComponent"]
+      "writeAccess": ["ItemComponent", "P_MaxStorageComponent", "P_MaxResourceStorageComponent", "ScoreComponent"]
     },
     {
       "name": "S_SpendRequiredResourcesSystem",
-      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
     },
     {
       "name": "S_UpdateActiveStatusSystem",
@@ -152,7 +155,7 @@
     },
     {
       "name": "S_SpendRequiredResourcesSystem",
-      "writeAccess": ["ItemComponent"]
+      "writeAccess": ["ItemComponent", "ScoreComponent"]
     },
     { "name": "S_UpdatePlayerSpaceRockSystem", "writeAccess": ["*"] },
     {
@@ -161,7 +164,7 @@
     },
     {
       "name": "S_UpdateUnclaimedResourcesSystem",
-      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
     },
     {
       "name": "S_UpdateOccupiedUtilitySystem",

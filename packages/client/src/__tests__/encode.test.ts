@@ -2,6 +2,7 @@ import { expect, test } from "vitest";
 import {
   decodeCoord,
   encodeCoord,
+  getMotherlodeEntity,
   hashKeyCoord,
   hashKeyEntity,
 } from "../util/encode";
@@ -172,6 +173,77 @@ test("hashKeyCoord", () => {
         y: example.coord.y,
         parent: "0" as EntityID,
       })
+    );
+  }
+});
+
+const motherlodeHashes = [
+  {
+    Coord: { x: 0, y: 0 },
+    i: 0,
+    motherlodeEntity:
+      "29890671933111895212135880125759349577539333039780540095697413485225524862294",
+  },
+  {
+    Coord: { x: 7, y: 11 },
+    i: 1,
+    motherlodeEntity:
+      "75606207422227065766018308945694276188648012329425277151450290581228475266037",
+  },
+  {
+    Coord: { x: 14, y: 22 },
+    i: 2,
+    motherlodeEntity:
+      "56818282599026547950251730660126348339991771193204857755929908828156211116710",
+  },
+  {
+    Coord: { x: 21, y: 33 },
+    i: 3,
+    motherlodeEntity:
+      "50119512804716241922711369707996643928211381710707999263237442351073138882659",
+  },
+  {
+    Coord: { x: 28, y: 44 },
+    i: 4,
+    motherlodeEntity:
+      "24953602701218774071661218245244089959347974787123319957308740685889942288097",
+  },
+  {
+    Coord: { x: 35, y: 55 },
+    i: 5,
+    motherlodeEntity:
+      "62203979884552515419306819601663628921764661747695825520162909926398563680261",
+  },
+  {
+    Coord: { x: 42, y: 66 },
+    i: 6,
+    motherlodeEntity:
+      "61023907394037091164063286689280021119480536360456167865958464494379419734754",
+  },
+  {
+    Coord: { x: 49, y: 77 },
+    i: 7,
+    motherlodeEntity:
+      "90508163938610830355933897832649707000695036410292051183282052463317229956842",
+  },
+  {
+    Coord: { x: 56, y: 88 },
+    i: 8,
+    motherlodeEntity:
+      "76146543010518759282207936544077963635482501210780896454104642223317087727027",
+  },
+  {
+    Coord: { x: 63, y: 99 },
+    i: 9,
+    motherlodeEntity:
+      "33174019957925864689236368538552968135614427705135003245843141467571433069036",
+  },
+];
+
+test("motherlodeHashes", () => {
+  for (const example of motherlodeHashes) {
+    expect(formattedString(example.motherlodeEntity)).eq(
+      getMotherlodeEntity(example.i.toString() as EntityID, example.Coord)
     );
   }
 });

@@ -20,7 +20,7 @@ library LibInitWorld {
       moveSpeed: 100,
       motherlodeDistance: 10,
       maxMotherlodesPerAsteroid: 6,
-      motherlodeChanceInv: 6
+      motherlodeChanceInv: 4
     });
 
     Dimensions memory maxRange = Dimensions(37, 25);

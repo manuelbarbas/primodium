@@ -1,5 +1,5 @@
 import { BigNumber, utils } from "ethers";
-import { solidityKeccak256 } from "ethers/lib/utils";
+import { defaultAbiCoder, solidityKeccak256 } from "ethers/lib/utils";
 
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
@@ -45,6 +45,17 @@ export function decodeCoord(encodedValue: EntityID) {
     x: int32_x,
     y: int32_y,
   };
+}
+export function getMotherlodeEntity(sourceEntity: EntityID, position: Coord) {
+  return solidityKeccak256(
+    ["bytes"],
+    [
+      defaultAbiCoder.encode(
+        ["uint256", "string", "int32", "int32"],
+        [sourceEntity, "motherlode", position.x, position.y]
+      ),
+    ]
+  ) as EntityID;
 }
 
 export function hashAndTrimKeyEntity(
