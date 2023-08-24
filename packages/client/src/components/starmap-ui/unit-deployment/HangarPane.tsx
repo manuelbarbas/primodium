@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { BackgroundImage, BlockType } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
