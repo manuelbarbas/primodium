@@ -8,7 +8,8 @@ import Cheatcodes from "./Cheatcodes";
 import { setupCheatCodes } from "src/util/cheatcodes.ts";
 
 export const ComponentBrowser = () => {
-  const { dev } = useMud();
+  const mud = useMud();
+  const { dev } = mud;
   const [isVisible, setIsVisible] = useState<"browser" | "cheat" | false>(
     false
   );
@@ -18,7 +19,7 @@ export const ComponentBrowser = () => {
     components,
   };
 
-  const cheatcodes = setupCheatCodes(dev);
+  const cheatcodes = setupCheatCodes(mud);
   return (
     <div
       className={`z-10 fixed bottom-0 right-0 ${

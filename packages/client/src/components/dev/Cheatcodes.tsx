@@ -11,7 +11,6 @@ const FunctionListComponent: React.FC<{ cheatcodes: Cheatcodes }> = ({
   cheatcodes,
 }) => {
   const [params, setParams] = useState<Record<string, Record<string, any>>>({});
-  const [results, setResults] = useState<Record<string, any>>({});
 
   const handleParamChange = (
     funcName: string,
@@ -33,10 +32,8 @@ const FunctionListComponent: React.FC<{ cheatcodes: Cheatcodes }> = ({
       const funcParams = params[funcName] || {};
       const args = Object.values(funcParams);
       const result = func(...args);
-      setResults((prevResults) => ({
-        ...prevResults,
-        [funcName]: result,
-      }));
+
+      console.log("result:", result);
     }
   };
 
