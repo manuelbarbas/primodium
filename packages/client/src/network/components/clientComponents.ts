@@ -5,7 +5,6 @@ import newComponent, {
   newCoordComponent,
   newEntityComponent,
   newNumberComponent,
-  newStringComponent,
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
 import newFleetComponent from "./customComponents/FleetComponent";
@@ -14,7 +13,7 @@ import newFleetComponent from "./customComponents/FleetComponent";
 export const BlockNumber = newNumberComponent(world, {
   id: "BlockNumber",
 });
-export const Account = newStringComponent(world, { id: "Account" });
+export const Account = newEntityComponent(world, { id: "Account" });
 
 export const GameReady = newBoolComponent(world, { id: "GameReady" });
 export const DoubleCounter = newNumberComponent(world, {
