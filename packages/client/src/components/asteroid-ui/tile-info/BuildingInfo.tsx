@@ -16,7 +16,8 @@ import {
 } from "src/network/components/chainComponents";
 import { clampedIndex, toRomanNumeral } from "src/util/common";
 import { FaTrash } from "react-icons/fa";
-import { UnitTraining } from "../UnitTraining";
+import { UnitTraining } from "./UnitTraining";
+import { TrainingProgress } from "./TrainingProgress";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -148,6 +149,8 @@ export const BuildingInfo: React.FC<{
           </div>
         </div>
       </PortalModal>
+
+      <TrainingProgress building={building} />
     </div>
   );
 };

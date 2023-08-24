@@ -477,6 +477,7 @@ library LibInitDebug {
     unitTypes[1] = DebugUnitBattle1;
     unitTypes[2] = DebugUnit;
     unitProductionTypesComponent.set(entity, unitTypes);
+    unitProductionMultiplierComponent.set(entity, 100);
 
     //DebugUnitProductionBuilding
     maxLevelComponent.set(DebugUnitProductionBuilding, 2);
@@ -515,7 +516,7 @@ library LibInitDebug {
     //DebugUnit
     speedComponent.set(DebugUnit, 100);
     entity = LibEncode.hashKeyEntity(DebugUnit, 1);
-    unitTrainingTimeComponent.set(entity, 2);
+    unitTrainingTimeComponent.set(entity, 100);
 
     ResourceValues memory requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
     requiredUtility.resources[0] = HousingUtilityResourceID;

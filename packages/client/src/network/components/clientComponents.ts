@@ -55,6 +55,7 @@ export const TrainingQueue = newComponent(
   world,
   {
     units: Type.EntityArray,
+    counts: Type.NumberArray,
     progress: Type.NumberArray,
   },
   {

@@ -1,6 +1,10 @@
 import {
+  BuildingType,
+  Level,
   MaxUtility,
   OccupiedUtilityResource,
+  P_ScoreMultiplier,
+  P_TrainingTime,
 } from "src/network/components/chainComponents";
 import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import { Network } from "src/network/layer";
@@ -34,6 +38,23 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
 
   return {
     setMaxHousing,
+    setMultiplier: {
+      params: [{ name: "multiplier", type: "number" }],
+      function: async (multiplier: number) => {
+        const building = SelectedBuilding.get()?.value;
+        const type = BuildingType.get(building)?.value;
+        const level = Level.get(building)?.value;
+        if (!type || !level) throw new Error("No player found");
+
+        await mud.dev.setEntityContractComponentValue(
+          hashKeyEntity(type, level),
+          P_ScoreMultiplier,
+          {
+            value: multiplier,
+          }
+        );
+      },
+    },
     setHousing: {
       params: [{ name: "housing", type: "number" }],
       function: (housing: number) => {
@@ -53,11 +74,22 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
       },
     },
     trainDebugUnits: {
-      params: [{ name: "count", type: "number" }],
-      function: async (count: number) => {
+      params: [
+        { name: "trainingTime", type: "number" },
+        { name: "count", type: "number" },
+      ],
+      function: async (trainingTime: number, count: number) => {
         const building = SelectedBuilding.get()?.value;
         if (!building) throw new Error("No building selected");
-        setMaxHousing.function(count);
+        await mud.dev.setEntityContractComponentValue(
+          hashKeyEntity(BlockType.DebugUnit, 1),
+          P_TrainingTime,
+          {
+            value: trainingTime,
+          }
+        );
+
+        await setMaxHousing.function(count);
         console.log(
           `Training ${count} debug units on building ${BlockIdToKey[building]}`
         );

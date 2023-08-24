@@ -67,7 +67,7 @@ library LibUnits {
     uint256 buildingType = BuildingTypeComponent(world.getComponent(BuildingTypeComponentID)).getValue(buildingEntity);
     uint32 buildingLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(buildingEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    uint32 buildingUnitProductionMultiplier = unitProductionMultiplierComponent.getValue(buildingLevelEntity);
+    uint32 buildingUnitProductionMultiplier = 100;
     uint32 unitTrainingTime = (getUnitTrainingTime(world, playerEntity, unitType) * 100) /
       buildingUnitProductionMultiplier;
     return unitTrainingTime;

@@ -19,7 +19,7 @@ import {
   P_RequiredUtility,
 } from "src/network/components/chainComponents";
 import { hashKeyEntity } from "src/util/encode";
-import ResourceIconTooltip from "../shared/ResourceIconTooltip";
+import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import { Account } from "src/network/components/clientComponents";
 
 export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({

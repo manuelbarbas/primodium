@@ -23,25 +23,18 @@ import {
   UnitProductionQueueIndex,
 } from "../components/chainComponents";
 import { hashKeyEntity } from "src/util/encode";
-import { BlockIdToKey } from "src/util/constants";
 
 export function setupTrainingQueues() {
   function renderTrainingQueues(blockNumber: number, buildings: EntityID[]) {
     buildings.forEach((building) => {
       const startingIndex = UnitProductionQueueIndex.get(building)?.value;
-      const queueLength = UnitProductionLastQueueIndex.get(building)?.value;
+      const queueLength =
+        UnitProductionLastQueueIndex.get(building)?.value || 1;
+
+      console.log("starting index:", startingIndex);
+      console.log("length: ", queueLength);
       const owner = OwnedBy.get(building)?.value;
       const lastClaimedAt = LastClaimedAt.get(building)?.value;
-      const buildingType = BuildingType.get(building, {
-        value: "0" as EntityID,
-      })?.value;
-
-      console.log(
-        "rendering queue",
-        BlockIdToKey[buildingType],
-        startingIndex,
-        queueLength
-      );
       if (
         startingIndex == undefined ||
         queueLength == undefined ||
@@ -58,7 +51,11 @@ export function setupTrainingQueues() {
         const update = UnitProductionQueue.get(buildingQueueEntity);
         if (!update) return;
         if (foundUnfinished) {
-          queue.push({ unit: update.unitEntity, progress: 0 });
+          queue.push({
+            unit: update.unitEntity,
+            count: update.count,
+            progress: 0,
+          });
           continue;
         }
         const trainingTime = getUnitTrainingTime(owner, update.unitEntity);
@@ -66,23 +63,26 @@ export function setupTrainingQueues() {
         if (trainedUnits < update.count) {
           queue.push({
             unit: update.unitEntity,
+            count: update.count,
             progress: trainedUnits / update.count,
           });
           foundUnfinished = true;
         }
       }
-      console.log("queue", BlockIdToKey[buildingType], queue);
       const units = queue.map((update) => update.unit);
+      const counts = queue.map((update) => update.count);
       const progress = queue.map((update) => update.progress);
-      TrainingQueue.set({ units, progress }, building);
+      TrainingQueue.set({ units, counts, progress }, building);
     });
   }
 
   function getUnitTrainingTime(player: EntityID, unit: EntityID) {
     const playerUnitEntity = hashKeyEntity(player, unit);
-    const level = Level.get(playerUnitEntity, { value: 0 }).value;
+    const level = Level.get(playerUnitEntity, { value: 1 }).value;
     const unitLevelEntity = hashKeyEntity(unit, level);
-    return P_TrainingTime.get(unitLevelEntity, { value: 0 }).value;
+    const time = P_TrainingTime.get(unitLevelEntity, { value: 0 }).value;
+
+    return time;
   }
 
   const query = [
