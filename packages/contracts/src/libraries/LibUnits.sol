@@ -28,6 +28,8 @@ library LibUnits {
     uint32 count,
     bool isAdd
   ) internal {
+    if (count == 0) return;
+
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       world.getComponent(P_RequiredUtilityComponentID)
     );
@@ -45,14 +47,23 @@ library LibUnits {
     uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(unitLevelEntity).values;
 
     for (uint256 i = 0; i < resourceIDs.length; i++) {
+      if (requiredAmounts[i] == 0) continue; // this is a hack to avoid division by zero (should be fixed in the future])
       uint32 requiredAmount = requiredAmounts[i] * count;
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
-      occupiedUtilityResourceComponent.set(
-        playerResourceEntity,
-        isAdd
-          ? LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) + requiredAmount
-          : LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) - requiredAmount
-      );
+
+      if (isAdd) {
+        occupiedUtilityResourceComponent.set(
+          playerResourceEntity,
+          LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) + requiredAmount
+        );
+      } else if (requiredAmount < LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity)) {
+        occupiedUtilityResourceComponent.set(
+          playerResourceEntity,
+          LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) - requiredAmount
+        );
+      } else {
+        occupiedUtilityResourceComponent.set(playerResourceEntity, 0);
+      }
     }
   }
 

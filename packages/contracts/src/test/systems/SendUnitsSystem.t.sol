@@ -453,13 +453,14 @@ contract SendUnitsTest is PrimodiumTest {
     );
     console.log("checking trained units suceess");
     vm.roll(reinforceArrival.arrivalBlock);
-    vm.startPrank(bob);
+
     console.log("check if reinforcements arrival has been added");
     assertEq(
       ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), reinforceArrival.destination)),
       1
     );
     console.log("execute receive reinforcements");
+    vm.startPrank(bob);
     receiveReinforcementSystem.executeTyped(reinforceArrival.destination, 0);
     console.log("receive reinforcements sucess");
     assertEq(

@@ -32,7 +32,7 @@ contract ReceiveReinforcementSystem is PrimodiumSystem {
   function execute(bytes memory args) public override returns (bytes memory) {
     (uint256 rockEntity, uint256 arrivalIndex) = abi.decode(args, (uint256, uint256));
 
-    console.log("executer: %s", msg.sender);
+    console.log("executer: %s", addressToEntity(msg.sender));
     require(
       OwnedByComponent(getC(OwnedByComponentID)).getValue(rockEntity) == addressToEntity(msg.sender),
       "[ReceiveReinforcement]: only the owner of a rock can receive reinforcements"
