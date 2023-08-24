@@ -2,23 +2,19 @@
 pragma solidity >=0.8.0;
 
 // external
-import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem, IWorld, addressToEntity, getAddressById, entityToAddress } from "./internal/PrimodiumSystem.sol";
+
+//systems
+import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { ID as S_UpdatePlayerSpaceRockSystemID } from "systems/S_UpdatePlayerSpaceRockSystem.sol";
 
 // components
-import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
-import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 // libraries
-import { LibUpdateSpaceRock } from "../libraries/LibUpdateSpaceRock.sol";
-import { LibBuilding } from "../libraries/LibBuilding.sol";
+
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibResearch } from "../libraries/LibResearch.sol";
-import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { LibInvade } from "../libraries/LibInvade.sol";
-// types
-import { Coord } from "../types.sol";
-import { MainBaseID, BuildingKey } from "../prototypes.sol";
 
 uint256 constant ID = uint256(keccak256("system.Invade"));
 
@@ -34,7 +30,10 @@ contract InvadeSystem is PrimodiumSystem {
 
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     if (ownedByComponent.has(rockEntity)) {
-      LibUpdateSpaceRock.updateSpaceRock(world, ownedByComponent.getValue(rockEntity), rockEntity);
+      IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystemID)).executeTyped(
+        entityToAddress(ownedByComponent.getValue(rockEntity)),
+        rockEntity
+      );
     }
     LibInvade.invade(world, addressToEntity(msg.sender), rockEntity);
     return abi.encode(rockEntity);
