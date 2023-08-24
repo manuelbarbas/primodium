@@ -62,17 +62,17 @@ contract Storage is PrimodiumTest {
     assertTrue(itemComponent.has(hashedAliceKey), "Alice should have iron");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    vm.roll(10);
+    vm.roll(ironCapacity + 10);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    vm.roll(20);
+    vm.roll(ironCapacity + 20);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    vm.roll(30);
+    vm.roll(ironCapacity + 30);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");

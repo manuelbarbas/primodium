@@ -153,6 +153,7 @@ contract LibMotherlodeTest is PrimodiumTest {
     uint256 motherlodeEntity = LibMotherlode.createMotherlode(world, position);
     ResourceValue memory maxResource = LibMotherlode.getMaxMotherlodeResource(world, motherlodeEntity);
     uint256 playerEntity = addressToEntity(deployer);
+
     uint256 unitPlayerMotherlodeEntity = LibEncode.hashEntities(DebugUnitMiner, playerEntity, motherlodeEntity);
     uint256 resourcePlayerEntity = LibEncode.hashKeyEntity(maxResource.resource, playerEntity);
     componentDevSystem.executeTyped(UnitsComponentID, unitPlayerMotherlodeEntity, abi.encode(1));

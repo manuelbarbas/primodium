@@ -18,7 +18,7 @@ import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaime
 import { Coord } from "../types.sol";
 
 import { LibEncode } from "../libraries/LibEncode.sol";
-uint256 constant ID = uint256(keccak256("system.ClaimFromMine"));
+uint256 constant ID = uint256(keccak256("system.S_ClaimAllResources"));
 
 contract S_ClaimAllResourcesSystem is PrimodiumSystem, IOnSubsystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}

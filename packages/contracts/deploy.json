@@ -173,6 +173,10 @@
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
     },
     {
+      "name": "S_ClaimAllResourcesSystem",
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent", "ScoreComponent"]
+    },
+    {
       "name": "S_UpdateOccupiedUtilitySystem",
       "writeAccess": ["OccupiedUtilityResourceComponent"]
     },
