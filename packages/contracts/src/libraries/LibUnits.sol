@@ -127,12 +127,13 @@ library LibUnits {
     uint32 unitLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(
       LibEncode.hashKeyEntity(unitType, playerEntity)
     );
-    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
-    if (!requiredUtilityComponent.has(buildingLevelEntity)) return min; //this should be subtracted by current count of the unit type
+    uint256 unitLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
+    if (!requiredUtilityComponent.has(unitLevelEntity)) return min; //this should be subtracted by current count of the unit type
 
-    uint256[] memory resourceIDs = requiredUtilityComponent.getValue(buildingLevelEntity).resources;
-    uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(buildingLevelEntity).values;
+    uint256[] memory resourceIDs = requiredUtilityComponent.getValue(unitLevelEntity).resources;
+    uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(unitLevelEntity).values;
     for (uint256 i = 0; i < resourceIDs.length; i++) {
+      if (requiredAmounts[i] == 0) continue; // this is a hack to avoid division by zero (should be fixed in the future
       uint32 count = LibUtilityResource.getAvailableUtilityCapacity(world, playerEntity, resourceIDs[i]) /
         requiredAmounts[i];
       if (count < min) min = count;

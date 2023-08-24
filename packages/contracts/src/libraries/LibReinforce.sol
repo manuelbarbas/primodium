@@ -39,10 +39,12 @@ library LibReinforce {
     uint256 index = 0;
     while (index < size) {
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
-      if (arrival.sendType != ESendType.REINFORCE) continue;
-      if (arrival.to != receiver) continue;
+      if (arrival.sendType != ESendType.REINFORCE || arrival.to != receiver) {
+        index++;
+        continue;
+      }
       if (arrival.arrivalBlock <= block.number) {
-        if (!receiveReinforcementsFromArrival(world, index, receiver, rockEntity)) index++;
+        if (!receiveReinforcementsFromArrival(world, receiver, rockEntity, index)) index++;
         else size -= 1;
       }
     }
@@ -52,9 +54,9 @@ library LibReinforce {
   // will return true if the arrival is resolved
   function receiveReinforcementsFromArrival(
     IWorld world,
-    uint256 arrivalIndex,
     uint256 playerEntity,
-    uint256 asteroidEntity
+    uint256 asteroidEntity,
+    uint256 arrivalIndex
   ) internal returns (bool) {
     uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(playerEntity, asteroidEntity);
     Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, arrivalIndex);
