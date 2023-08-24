@@ -365,6 +365,20 @@ export const UnitProductionQueueIndex = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}UnitProductionQueueIndex` },
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                 Leaderboard                                */
+/* -------------------------------------------------------------------------- */
+
+export const Score = newNumberComponent(world, {
+  id: "Score",
+  metadata: { contractId: `${commonIdPrefix}Score` },
+});
+
+export const P_ScoreMultiplier = newNumberComponent(world, {
+  id: "P_ScoreMultiplier",
+  metadata: { contractId: `${commonIdPrefix}P_ScoreMultiplier` },
+});
+
 export default {
   GameConfig,
   P_Terrain,
@@ -418,4 +432,8 @@ export default {
   UnitProductionOwnedBy,
   UnitProductionQueue,
   UnitProductionQueueIndex,
+
+  // Scoreboard
+  Score,
+  P_ScoreMultiplier,
 };

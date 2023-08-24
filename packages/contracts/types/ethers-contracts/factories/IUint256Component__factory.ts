@@ -282,7 +282,7 @@ const _abi = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
 
 export class IUint256Component__factory {
   static readonly abi = _abi;

@@ -3,9 +3,9 @@ import {
   namespaceWorld,
   Has,
   defineEnterSystem,
-  EntityIndex,
   defineComponentSystem,
   HasValue,
+  EntityID,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -21,6 +21,7 @@ import {
 } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
+import { Coord } from "@latticexyz/utils";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -33,18 +34,13 @@ export const renderAsteroid = (scene: Scene) => {
     }),
   ];
 
-  const render = ({ entity }: { entity: EntityIndex }) => {
-    const entityId = world.entities[entity];
-
+  const render = (entityId: EntityID, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entityId);
     const asteroidObjectGroup = scene.objectPool.getGroup(
       "asteroid_" + entityId
     );
-    const coord = Position.get(entityId);
 
     const activeAsteroid = ActiveAsteroid.get()?.value;
-
-    if (!coord) return;
 
     const selectedAsteroid = SelectedAsteroid.get()?.value;
 
@@ -65,28 +61,52 @@ export const renderAsteroid = (scene: Scene) => {
       OnClick(() => {
         if (entityId === ActiveAsteroid.get()?.value) return;
 
-        selectedAsteroid
-          ? SelectedAsteroid.remove()
-          : SelectedAsteroid.set({ value: entityId });
+        if (selectedAsteroid && selectedAsteroid === entityId) {
+          SelectedAsteroid.remove();
+          return;
+        }
+
+        SelectedAsteroid.set({ value: entityId });
       }),
     ]);
-
-    initializeMotherlodes(entityId, coord);
   };
 
-  defineEnterSystem(gameWorld, query, render);
+  defineEnterSystem(gameWorld, query, ({ entity }) => {
+    const entityId = world.entities[entity];
+
+    const coord = Position.get(entityId);
+
+    if (!coord) return;
+
+    render(entityId, coord);
+    initializeMotherlodes(entityId, coord);
+  });
 
   defineComponentSystem(
     gameWorld,
     SelectedAsteroid,
     ({ value: [newValue, oldValue] }) => {
       if (oldValue?.value) {
-        const entityIndex = world.entityToIndex.get(oldValue.value);
-        if (entityIndex) render({ entity: entityIndex });
+        const entityId = oldValue.value;
+        const coord = Position.get(entityId);
+
+        if (!coord) return;
+
+        const asteroidType = AsteroidType.get(entityId)?.value;
+        if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
+
+        render(oldValue.value, coord);
       }
       if (newValue?.value) {
-        const entityIndex = world.entityToIndex.get(newValue.value);
-        if (entityIndex) render({ entity: entityIndex });
+        const entityId = newValue.value;
+        const coord = Position.get(entityId);
+
+        if (!coord) return;
+
+        const asteroidType = AsteroidType.get(entityId)?.value;
+        if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
+
+        render(newValue.value, coord);
       }
     }
   );

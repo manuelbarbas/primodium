@@ -17,7 +17,8 @@ import { P_MotherlodeResourceComponent, ID as P_MotherlodeResourceComponentID } 
 import { MotherlodeResourceComponent, ID as MotherlodeResourceComponentID } from "components/MotherlodeResourceComponent.sol";
 import { MotherlodeComponent, ID as MotherlodeComponentID } from "components/MotherlodeComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
-
+import { ScoreComponent, ID as ScoreComponentID } from "components/ScoreComponent.sol";
+import { P_ScoreMultiplierComponent, ID as P_ScoreMultiplierComponentID } from "components/P_ScoreMultiplierComponent.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
@@ -28,11 +29,17 @@ import "src/prototypes.sol";
 contract LibMotherlodeTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
+  ScoreComponent public scoreComponent;
+  P_ScoreMultiplierComponent public scoreMultiplierComponent;
+
   ComponentDevSystem public componentDevSystem;
   GameConfigComponent public gameConfigComponent;
 
   function setUp() public override {
     super.setUp();
+
+    scoreComponent = ScoreComponent(world.getComponent(ScoreComponentID));
+    scoreMultiplierComponent = P_ScoreMultiplierComponent(world.getComponent(P_ScoreMultiplierComponentID));
 
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     gameConfigComponent = GameConfigComponent(world.getComponent(GameConfigComponentID));
@@ -167,6 +174,11 @@ contract LibMotherlodeTest is PrimodiumTest {
     assertEq(LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity), totalMined, "1 motherlode");
     uint256 lastClaimed = block.number;
     assertEq(lastClaimedAtComponent.getValue(motherlodeEntity), lastClaimed, "1 last claimed");
+
+    uint256 score = scoreMultiplierComponent.getValue(maxResource.resource) *
+      itemComponent.getValue(resourcePlayerEntity);
+    console.log("score for %s Iron is %s", itemComponent.getValue(resourcePlayerEntity), score);
+    assertEq(scoreComponent.getValue(playerEntity), score, "score does not match");
   }
 
   function testClaimMultipleMotherlode() public {
@@ -209,6 +221,11 @@ contract LibMotherlodeTest is PrimodiumTest {
       lastClaimed,
       "1 last claimed"
     );
+    uint256 score = scoreMultiplierComponent.getValue(
+      LibMotherlode.getMaxMotherlodeResource(world, motherlodeEntity).resource
+    ) * itemComponent.getValue(resourcePlayerEntity);
+    console.log("score for %s Iron is %s", itemComponent.getValue(resourcePlayerEntity), score);
+    assertEq(scoreComponent.getValue(playerEntity), score, "score does not match");
   }
 
   function testClaimMaxMotherlode() public {
@@ -246,6 +263,11 @@ contract LibMotherlodeTest is PrimodiumTest {
     assertEq(LibMath.getSafe(itemComponent, resourcePlayerEntity), totalMined);
     assertEq(LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity), totalMined);
     assertEq(lastClaimedAtComponent.getValue(motherlodeEntity), lastClaimed);
+
+    uint256 score = scoreMultiplierComponent.getValue(maxResource.resource) *
+      itemComponent.getValue(resourcePlayerEntity);
+    console.log("score for %s Iron is %s", itemComponent.getValue(resourcePlayerEntity), score);
+    assertEq(scoreComponent.getValue(playerEntity), score, "score does not match");
   }
 
   function testPrintMotherlodeEntities() public view {

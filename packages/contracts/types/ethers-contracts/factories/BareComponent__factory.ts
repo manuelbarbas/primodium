@@ -288,7 +288,7 @@ const _abi = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
 
 export class BareComponent__factory {
   static readonly abi = _abi;

@@ -27,11 +27,20 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface S_ClaimUnitsFromBuildingSystemInterface
-  extends utils.Interface {
+export type ArrivalUnitStruct = {
+  unitType: PromiseOrValue<BigNumberish>;
+  count: PromiseOrValue<BigNumberish>;
+};
+
+export type ArrivalUnitStructOutput = [BigNumber, number] & {
+  unitType: BigNumber;
+  count: number;
+};
+
+export interface SendUnitsSystemInterface extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
-    "executeTyped(address,uint256)": FunctionFragment;
+    "executeTyped((uint256,uint32)[],uint8,uint256,uint256,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -50,7 +59,13 @@ export interface S_ClaimUnitsFromBuildingSystemInterface
   ): string;
   encodeFunctionData(
     functionFragment: "executeTyped",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [
+      ArrivalUnitStruct[],
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -88,12 +103,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface S_ClaimUnitsFromBuildingSystem extends BaseContract {
+export interface SendUnitsSystem extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: S_ClaimUnitsFromBuildingSystemInterface;
+  interface: SendUnitsSystemInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -121,8 +136,11 @@ export interface S_ClaimUnitsFromBuildingSystem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      arrivalUnits: ArrivalUnitStruct[],
+      sendType: PromiseOrValue<BigNumberish>,
+      origin: PromiseOrValue<BigNumberish>,
+      destination: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -140,8 +158,11 @@ export interface S_ClaimUnitsFromBuildingSystem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   executeTyped(
-    playerAddress: PromiseOrValue<string>,
-    buildingEntity: PromiseOrValue<BigNumberish>,
+    arrivalUnits: ArrivalUnitStruct[],
+    sendType: PromiseOrValue<BigNumberish>,
+    origin: PromiseOrValue<BigNumberish>,
+    destination: PromiseOrValue<BigNumberish>,
+    to: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -159,8 +180,11 @@ export interface S_ClaimUnitsFromBuildingSystem extends BaseContract {
     ): Promise<string>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      arrivalUnits: ArrivalUnitStruct[],
+      sendType: PromiseOrValue<BigNumberish>,
+      origin: PromiseOrValue<BigNumberish>,
+      destination: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -190,8 +214,11 @@ export interface S_ClaimUnitsFromBuildingSystem extends BaseContract {
     ): Promise<BigNumber>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      arrivalUnits: ArrivalUnitStruct[],
+      sendType: PromiseOrValue<BigNumberish>,
+      origin: PromiseOrValue<BigNumberish>,
+      destination: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -210,8 +237,11 @@ export interface S_ClaimUnitsFromBuildingSystem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      buildingEntity: PromiseOrValue<BigNumberish>,
+      arrivalUnits: ArrivalUnitStruct[],
+      sendType: PromiseOrValue<BigNumberish>,
+      origin: PromiseOrValue<BigNumberish>,
+      destination: PromiseOrValue<BigNumberish>,
+      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

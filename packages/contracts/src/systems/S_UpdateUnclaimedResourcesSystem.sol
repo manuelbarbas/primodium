@@ -15,7 +15,7 @@ import { ProductionComponent, ID as ProductionComponentID } from "components/Pro
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibStorage } from "../libraries/LibStorage.sol";
-
+import { LibResource } from "../libraries/LibResource.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
 uint256 constant ID = uint256(keccak256("system.S_UpdateUnclaimedResources"));
@@ -65,11 +65,15 @@ contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem
       unclaimedResource = availableSpaceInStorage;
     }
     lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
-    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    itemComponent.set(
-      playerResourceProductionEntity,
-      LibMath.getSafe(itemComponent, playerResourceProductionEntity) + unclaimedResource
+
+    LibResource.updateResourceAmount(
+      world,
+      playerEntity,
+      resourceID,
+      LibMath.getSafe(ItemComponent(world.getComponent(ItemComponentID)), playerResourceProductionEntity) +
+        unclaimedResource
     );
+
     return abi.encode(resourceID);
   }
 

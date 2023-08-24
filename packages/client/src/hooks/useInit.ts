@@ -5,6 +5,7 @@ import { setupActiveAsteroid } from "src/network/systems/setupActiveAsteroid";
 import {
   ActiveAsteroid,
   BlockNumber,
+  Account,
 } from "src/network/components/clientComponents";
 
 export const useInit = () => {
@@ -26,6 +27,8 @@ export const useInit = () => {
     const blockListener = blockNumber$.subscribe((blockNumber) => {
       BlockNumber.set({ value: blockNumber });
     });
+
+    Account.set({ value: address });
 
     return () => {
       world.registerDisposer(() => blockListener.unsubscribe());
