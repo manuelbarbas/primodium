@@ -263,7 +263,7 @@ contract TrainUnitSystem is PrimodiumTest {
       getHomeAsteroid(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 units");
 
     vm.stopPrank();
   }
@@ -310,7 +310,7 @@ contract TrainUnitSystem is PrimodiumTest {
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 10, "player should have 10 DebugUnit2");
     vm.roll(45);
     updateSystem.executeTyped(alice, getHomeAsteroid(alice));
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 15, "player should have 15 DebugUnit");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 DebugUnit");
     vm.stopPrank();
   }
 

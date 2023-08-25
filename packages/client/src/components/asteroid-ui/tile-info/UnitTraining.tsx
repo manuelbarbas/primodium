@@ -21,6 +21,7 @@ import {
 import { hashKeyEntity } from "src/util/encode";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import { Account } from "src/network/components/clientComponents";
+import { world } from "src/network/world";
 
 export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   buildingEntity,
@@ -35,6 +36,8 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   }, [show]);
 
   useEffect(() => {
+    if (selectedUnit)
+      console.log("entity:", world.getEntityIndexStrict(selectedUnit));
     setCount(0);
   }, [selectedUnit]);
   const playerResourceEntity = hashKeyEntity(
@@ -103,7 +106,9 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
             show ? "background-white" : ""
           }`}
         >
-          <p>Train Units</p>
+          <p>
+            Train Units ({totalUnits} / {maximum})
+          </p>
           {!show && <p className="text-xs opacity-50">{totalUnits} unit(s)</p>}
         </div>
       </motion.button>
