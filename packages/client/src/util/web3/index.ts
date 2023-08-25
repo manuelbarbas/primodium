@@ -7,5 +7,6 @@ export * from "./demolishPath";
 export * from "./increment";
 export * from "./override";
 export * from "./research";
+export * from "./train";
 export * from "./upgradeBuilding";
 export * from "./upgradeRange";

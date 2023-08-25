@@ -106,7 +106,15 @@ export const P_RequiredResources = newComponent(
     metadata: { contractId: `${commonIdPrefix}P_RequiredResources` },
   }
 );
+export const P_RequiredUtility = newComponent(
+  world,
+  { resourceIDs: Type.EntityArray, requiredAmounts: Type.NumberArray },
 
+  {
+    id: "P_RequiredUtility",
+    metadata: { contractId: `${commonIdPrefix}P_RequiredUtility` },
+  }
+);
 export const P_MaxLevel = newNumberComponent(world, {
   id: "P_MaxLevel",
   metadata: { contractId: `${commonIdPrefix}P_MaxLevel` },
@@ -272,6 +280,90 @@ export const IsMineableAt = newStringComponent(world, {
   id: "IsMineableAt",
   metadata: { contractId: `${commonIdPrefix}IsMineableAt` },
 });
+/* -------------------------------------------------------------------------- */
+/*                                    Units                                   */
+/* -------------------------------------------------------------------------- */
+export const P_UnitAttack = newNumberComponent(world, {
+  id: "P_UnitAttack",
+  metadata: { contractId: `${commonIdPrefix}P_UnitAttack` },
+});
+
+export const P_UnitCargo = newNumberComponent(world, {
+  id: "P_UnitCargo",
+  metadata: { contractId: `${commonIdPrefix}P_UnitCargo` },
+});
+
+export const P_UnitTravelSpeed = newNumberComponent(world, {
+  id: "P_UnitTravelSpeed",
+  metadata: { contractId: `${commonIdPrefix}P_UnitTravelSpeed` },
+});
+
+export const P_UnitDefence = newNumberComponent(world, {
+  id: "P_UnitDefence",
+  metadata: { contractId: `${commonIdPrefix}P_UnitDefence` },
+});
+
+export const P_UnitMining = newNumberComponent(world, {
+  id: "P_UnitMining",
+  metadata: { contractId: `${commonIdPrefix}P_UnitMining` },
+});
+
+export const Units = newNumberComponent(world, {
+  id: "Units",
+  metadata: { contractId: `${commonIdPrefix}Units` },
+});
+
+/* -------------------------------------------------------------------------- */
+/*                                Unit Training                               */
+/* -------------------------------------------------------------------------- */
+export const P_UnitProductionMultiplier = newNumberComponent(world, {
+  id: "P_UnitProductionMultiplier",
+  metadata: { contractId: `${commonIdPrefix}P_UnitProductionMultiplier` },
+});
+
+export const P_UnitProductionTypes = newComponent(
+  world,
+  {
+    value: Type.EntityArray,
+  },
+  {
+    id: "P_UnitProductionTypes",
+    metadata: { contractId: `${commonIdPrefix}P_UnitProductionTypes` },
+  }
+);
+
+export const P_TrainingTime = newNumberComponent(world, {
+  id: "P_TrainingTime",
+  metadata: { contractId: `${commonIdPrefix}P_UnitTrainingTime` },
+});
+
+export const UnitProductionLastQueueIndex = newNumberComponent(world, {
+  id: "UnitProductionLastQueueIndex",
+  metadata: { contractId: `${commonIdPrefix}UnitProductionLastQueueIndex` },
+});
+
+export const UnitProductionOwnedBy = newComponent(
+  world,
+  { value: Type.Entity },
+  {
+    id: "UnitProductionOwnedBy",
+    metadata: { contractId: `${commonIdPrefix}UnitProductionOwnedBy` },
+  }
+);
+
+export const UnitProductionQueue = newComponent(
+  world,
+  { unitEntity: Type.Entity, count: Type.Number },
+  {
+    id: "UnitProductionQueue",
+    metadata: { contractId: `${commonIdPrefix}UnitProductionQueue` },
+  }
+);
+
+export const UnitProductionQueueIndex = newNumberComponent(world, {
+  id: "UnitProductionQueueIndex",
+  metadata: { contractId: `${commonIdPrefix}UnitProductionQueueIndex` },
+});
 
 /* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
@@ -305,6 +397,7 @@ export default {
   MainBase,
   P_RequiredResearch,
   P_RequiredResources,
+  P_RequiredUtility,
   P_MaxLevel,
   Level,
   P_MaxStorage,
@@ -317,11 +410,30 @@ export default {
   OccupiedUtilityResource,
   MaxUtility,
 
+  // Motherlodes
   Motherlode,
   MotherlodeResource,
   P_MotherlodeResource,
   IsMineableAt,
 
+  // Units
+  P_UnitAttack,
+  P_UnitCargo,
+  P_UnitTravelSpeed,
+  P_UnitDefence,
+  P_UnitMining,
+  Units,
+
+  // Unit Training
+  P_UnitProductionMultiplier,
+  P_UnitProductionTypes,
+  P_TrainingTime,
+  UnitProductionLastQueueIndex,
+  UnitProductionOwnedBy,
+  UnitProductionQueue,
+  UnitProductionQueueIndex,
+
+  // Scoreboard
   Score,
   P_ScoreMultiplier,
 };

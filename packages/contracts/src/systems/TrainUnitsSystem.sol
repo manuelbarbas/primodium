@@ -6,7 +6,6 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 // components
 
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
@@ -41,8 +40,8 @@ contract TrainUnitsSystem is PrimodiumSystem {
 
     uint256 playerEntity = addressToEntity(msg.sender);
 
-    uint256 unitTypeLevelEntity = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
-
+    uint256 unitLevel = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
+    uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(
       msg.sender,
       PositionComponent(getC(PositionComponentID)).getValue(buildingEntity).parent

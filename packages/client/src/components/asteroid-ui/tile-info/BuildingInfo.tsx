@@ -16,6 +16,8 @@ import {
 } from "src/network/components/chainComponents";
 import { clampedIndex, toRomanNumeral } from "src/util/common";
 import { FaTrash } from "react-icons/fa";
+import { UnitTraining } from "./UnitTraining";
+import { TrainingProgress } from "./TrainingProgress";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -65,9 +67,9 @@ export const BuildingInfo: React.FC<{
   if (!buildingName || !buildingType || !coord || owner == undefined)
     return null;
   return (
-    <div className="flex flex-col w-fit">
+    <div className="flex flex-col w-fit items-center gap-3">
       {/* <Header content={`${ownerName}`} /> */}
-      <div className="relative flex flex-col justify-center items-center w-full border border-yellow-400 ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
+      <div className="relative flex flex-col justify-center items-center border border-yellow-400 ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
         <div className="relative flex items-center gap-2">
           <img
             src={imageURI}
@@ -94,9 +96,10 @@ export const BuildingInfo: React.FC<{
           </div>
         )}
       </div>
+      <UnitTraining buildingEntity={building} />
       <div>
         {isOwner && (
-          <div className="relative p-2">
+          <div className="relative">
             <UpgradeBuildingButton
               id="upgrade-building"
               builtTile={buildingType ?? BlockType.Air}
@@ -146,6 +149,8 @@ export const BuildingInfo: React.FC<{
           </div>
         </div>
       </PortalModal>
+
+      <TrainingProgress building={building} />
     </div>
   );
 };

@@ -43,6 +43,7 @@ import { LibMath } from "../../libraries/LibMath.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { ResourceValue, ResourceValues } from "../../types.sol";
 
+// todo: test that resources and utilities are being updated
 contract TrainUnitSystem is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
@@ -263,7 +264,7 @@ contract TrainUnitSystem is PrimodiumTest {
       getHomeAsteroid(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 units");
 
     vm.stopPrank();
   }
@@ -295,7 +296,7 @@ contract TrainUnitSystem is PrimodiumTest {
       getHomeAsteroid(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have DebugUnit");
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 DebugUnit");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 2, "player should have 2 DebugUnit");
     vm.roll(25);
     updateSystem.executeTyped(alice, getHomeAsteroid(alice));
     uint256 playerUnitAsteroidEntity2 = LibEncode.hashEntities(
@@ -304,13 +305,13 @@ contract TrainUnitSystem is PrimodiumTest {
       getHomeAsteroid(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity2), "player should have DebugUnit2");
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 5, "player should have 5 DebugUnit2");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 1, "player should have 1 DebugUnit2");
     vm.roll(35);
     updateSystem.executeTyped(alice, getHomeAsteroid(alice));
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 10, "player should have 10 DebugUnit2");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 3, "player should have 3 DebugUnit2");
     vm.roll(45);
     updateSystem.executeTyped(alice, getHomeAsteroid(alice));
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 15, "player should have 15 DebugUnit");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 DebugUnit");
     vm.stopPrank();
   }
 

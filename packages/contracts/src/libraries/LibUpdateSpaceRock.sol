@@ -55,6 +55,7 @@ library LibUpdateSpaceRock {
     );
     bool isStillClaiming = unitProductionQueueIndexComponent.has(unitProductionBuildingEntity);
     uint32 queueIndex = LibMath.getSafe(unitProductionQueueIndexComponent, unitProductionBuildingEntity);
+    uint256 startTime = lastClaimedAtComponent.getValue(unitProductionBuildingEntity);
     while (isStillClaiming) {
       uint256 buildingQueueEntity = LibEncode.hashKeyEntity(unitProductionBuildingEntity, queueIndex);
       ResourceValue memory unitProductionQueue = unitProductionQueueComponent.getValue(buildingQueueEntity);
@@ -65,8 +66,7 @@ library LibUpdateSpaceRock {
         unitProductionBuildingEntity,
         unitProductionQueue.resource
       );
-      uint32 trainedUnitsCount = uint32(blockNumber - lastClaimedAtComponent.getValue(unitProductionBuildingEntity)) /
-        unitTrainingTimeForBuilding;
+      uint32 trainedUnitsCount = uint32(blockNumber - startTime) / unitTrainingTimeForBuilding;
 
       if (trainedUnitsCount > 0) {
         if (trainedUnitsCount >= unitProductionQueue.value) {
@@ -80,11 +80,7 @@ library LibUpdateSpaceRock {
           unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
         }
 
-        LibMath.add(
-          lastClaimedAtComponent,
-          unitProductionBuildingEntity,
-          trainedUnitsCount * unitTrainingTimeForBuilding
-        );
+        startTime += trainedUnitsCount * unitTrainingTimeForBuilding;
         addPlayerUnitsToAsteroid(world, playerEntity, unitProductionQueue.resource, trainedUnitsCount);
       } else {
         isStillClaiming = false;
