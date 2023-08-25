@@ -54,7 +54,8 @@ export function toRomanNumeral(number: number) {
 }
 
 export const getBlockTypeName = (blockType: EntityID | undefined) => {
-  if (blockType === undefined) return "";
+  if (blockType === undefined || BlockIdToKey[blockType] == undefined)
+    return "";
 
   return BlockIdToKey[blockType]
     .replace(/([A-Z]+)/g, "$1")

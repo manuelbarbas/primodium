@@ -5,7 +5,6 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 
 // components
 
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";

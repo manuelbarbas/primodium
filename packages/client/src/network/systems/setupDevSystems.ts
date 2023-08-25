@@ -3,6 +3,7 @@ import {
   Component,
   ComponentValue,
   defineComponent,
+  EntityID,
   EntityIndex,
   Schema,
   Type,
@@ -28,8 +29,8 @@ function setupDevSystems(
     y: Type.OptionalNumber,
   });
 
-  async function setContractComponentValue<T extends Schema>(
-    entity: EntityIndex,
+  async function setEntityContractComponentValue<T extends Schema>(
+    entityId: EntityID,
     component: Component<T, { contractId: string }>,
     newValue: ComponentValue<T>
   ) {
@@ -41,7 +42,6 @@ function setupDevSystems(
     const encoders = await encodersPromise;
     const contractHash = keccak256(component.metadata.contractId);
     const data = encoders[contractHash](newValue);
-    const entityId = world.entities[entity];
     console.log(
       `Sent transaction to edit networked Component ${component.id} for Entity ${entityId} to value `,
       newValue
@@ -53,7 +53,20 @@ function setupDevSystems(
     );
   }
 
+  async function setContractComponentValue<T extends Schema>(
+    entity: EntityIndex,
+    component: Component<T, { contractId: string }>,
+    newValue: ComponentValue<T>
+  ) {
+    setEntityContractComponentValue(
+      world.entities[entity],
+      component,
+      newValue
+    );
+  }
+
   return {
+    setEntityContractComponentValue,
     setContractComponentValue,
     DevHighlightComponent,
     HoverHighlightComponent,

@@ -54,6 +54,17 @@ export const BlockType = {
   DebugDemolishBuilding: keccak256("block.DebugDemolishBuilding") as EntityID,
   DebugDemolishPath: keccak256("block.DebugDemolishPath") as EntityID,
 
+  // debug units
+  DebugUnit: keccak256("block.DebugUnit") as EntityID,
+  DebugUnit2: keccak256("block.DebugUnit2") as EntityID,
+  DebugUnit3: keccak256("block.DebugUnit3") as EntityID,
+
+  DebugUnitMiner: keccak256("unit.DebugUnitMiner") as EntityID,
+  DebugUnitMiner2: keccak256("unit.DebugUnitMiner2") as EntityID,
+
+  DebugUnitBattle1: keccak256("unit.DebugUnitBattle1") as EntityID,
+  DebugUnitBattle2: keccak256("unit.DebugUnitBattle2") as EntityID,
+
   MainBase: keccak256("block.MainBase") as EntityID,
   DebugNode: keccak256("block.DebugNode") as EntityID,
   Miner: keccak256("block.Miner") as EntityID,
@@ -91,6 +102,8 @@ export const BlockType = {
   ElectricityUtilityResource: keccak256(
     "item.ElectricityUtilityResource"
   ) as EntityID,
+  HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
+
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
   IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
   BasicPowerSourceCrafted: keccak256(
@@ -274,6 +287,20 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   ],
   [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
   [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
+
+  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.gif"]],
+  [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
+  [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
+  [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
+  [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
+  // debug units
+  [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
+  [BlockType.DebugUnit2, ["/img/unit/anvildrone.png"]],
+  [BlockType.DebugUnit3, ["/img/unit/aegisdrone.png"]],
+  [BlockType.DebugUnitMiner, ["/img/unit/miningvessel.png"]],
+  [BlockType.DebugUnitMiner2, ["/img/unit/miningvessel.png"]],
+  [BlockType.DebugUnitBattle1, ["/img/unit/hammerdrone.png"]],
+  [BlockType.DebugUnitBattle2, ["/img/unit/hammerdrone.png"]],
 
   //buildings
   [
@@ -523,6 +550,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.LithiumCopperOxideCraftedItem, "/img/crafted/advancedbattery.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
   [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
+  // todo: update this
+  [BlockType.HousingUtilityResource, "/img/crafted/thermobaricwarhead.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
