@@ -472,7 +472,7 @@ library LibInitDebug {
 
     //DebugHousingBuilding
     entity = LibEncode.hashKeyEntity(DebugHousingBuilding, 1);
-    UtilityProductionComponent.set(entity, ResourceValue(HousingUtilityResourceID, 10));
+    UtilityProductionComponent.set(entity, ResourceValue(HousingUtilityResourceID, 20));
   }
 
   function initializeUnitProductionBuildings(IWorld world) internal {

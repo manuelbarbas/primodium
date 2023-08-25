@@ -21,12 +21,13 @@ import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "c
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
-
+import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibSend } from "libraries/LibSend.sol";
 import { LibArrival } from "libraries/LibArrival.sol";
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
+import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 
 contract SendUnitsTest is PrimodiumTest {
@@ -37,6 +38,7 @@ contract SendUnitsTest is PrimodiumTest {
   OwnedByComponent public ownedByComponent;
   UnitsComponent public unitsComponent;
   ComponentDevSystem public componentDevSystem;
+  OccupiedUtilityResourceComponent public occupiedUtilityResourceComponent;
 
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
@@ -57,6 +59,10 @@ contract SendUnitsTest is PrimodiumTest {
     invadeSystem = InvadeSystem(system(InvadeSystemID));
     receiveReinforcementSystem = ReceiveReinforcementSystem(system(ReceiveReinforcementSystemID));
     recallReinforcementsSystem = RecallReinforcementsSystem(system(RecallReinforcementsSystemID));
+
+    occupiedUtilityResourceComponent = OccupiedUtilityResourceComponent(
+      world.getComponent(OccupiedUtilityResourceComponentID)
+    );
     unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
     isUnitComponent = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID));
     gameConfigComponent = GameConfigComponent(world.getComponent(GameConfigComponentID));
@@ -454,6 +460,13 @@ contract SendUnitsTest is PrimodiumTest {
       6,
       "reinforcer must have 6 units on their home asteroid"
     );
+    assertEq(
+      occupiedUtilityResourceComponent.getValue(
+        LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice))
+      ),
+      10,
+      "alice must have occuppied 10 Housing"
+    );
     console.log("checking trained units suceess");
     vm.roll(reinforceArrival.arrivalBlock);
 
@@ -485,6 +498,20 @@ contract SendUnitsTest is PrimodiumTest {
       addressToEntity(bob),
       "bob should own their asteroid after receiving reinforcements"
     );
+    assertEq(
+      occupiedUtilityResourceComponent.getValue(
+        LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice))
+      ),
+      6,
+      "alice must have occuppied 6 Housing after 4 of their units was received by bob"
+    );
+    assertEq(
+      occupiedUtilityResourceComponent.getValue(
+        LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(bob))
+      ),
+      14,
+      "bob must have occuppied 14 Housing after receiving 4 of units from bob"
+    );
     vm.stopPrank();
   }
 
@@ -498,6 +525,17 @@ contract SendUnitsTest is PrimodiumTest {
       ),
       6,
       "reinforcer must have 6 units on their home asteroid"
+    );
+    console.log(
+      "alice has available housing : %s",
+      LibUtilityResource.getAvailableUtilityCapacity(world, addressToEntity(alice), HousingUtilityResourceID)
+    );
+    assertEq(
+      occupiedUtilityResourceComponent.getValue(
+        LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice))
+      ),
+      10,
+      "alice must have occuppied 10 Housing"
     );
     console.log("checking trained units suceess");
     vm.roll(reinforceArrival.arrivalBlock);
@@ -530,6 +568,13 @@ contract SendUnitsTest is PrimodiumTest {
       ),
       10,
       "alice should have 10 units after recalling reinforcements"
+    );
+    assertEq(
+      occupiedUtilityResourceComponent.getValue(
+        LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice))
+      ),
+      10,
+      "alice must have occuppied 10 Housing"
     );
     assertEq(
       ownedByComponent.getValue(reinforceArrival.destination),

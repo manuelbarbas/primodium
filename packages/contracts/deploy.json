@@ -119,12 +119,7 @@
     },
     {
       "name": "TrainUnitsSystem",
-      "writeAccess": [
-        "UnitProductionQueueComponent",
-        "UnitProductionQueueIndexComponent",
-        "UnitProductionLastQueueIndexComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["*"]
     },
     { "name": "SendUnitsSystem", "writeAccess": ["*"] },
     { "name": "InvadeSystem", "writeAccess": ["*"] },

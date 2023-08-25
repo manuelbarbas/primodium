@@ -30,6 +30,7 @@ contract RecallReinforcementsSystem is PrimodiumSystem {
 
   function execute(bytes memory args) public override returns (bytes memory) {
     uint256 rockEntity = abi.decode(args, (uint256));
+
     LibReinforce.recallReinforcements(world, addressToEntity(msg.sender), rockEntity);
     return abi.encode(rockEntity);
   }

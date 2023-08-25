@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-
+import "forge-std/console.sol";
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
@@ -28,14 +28,14 @@ library LibUnits {
     uint32 count,
     bool isAdd
   ) internal {
+    console.log("updating occupied for player: %s is add: %s", playerEntity, isAdd);
     if (count == 0) return;
 
+    console.log("updating occupied for player: %s is add: %s not zero", playerEntity, isAdd);
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       world.getComponent(P_RequiredUtilityComponentID)
     );
-    uint32 unitLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(
-      LibEncode.hashKeyEntity(unitType, playerEntity)
-    );
+    uint32 unitLevel = getPlayerUnitTypeLevel(world, playerEntity, unitType);
     uint256 unitLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
     if (!requiredUtilityComponent.has(unitLevelEntity)) return;
 
@@ -47,21 +47,25 @@ library LibUnits {
     uint32[] memory requiredAmounts = requiredUtilityComponent.getValue(unitLevelEntity).values;
 
     for (uint256 i = 0; i < resourceIDs.length; i++) {
+      console.log("updating occupied for player: %s amount required: %s", playerEntity, requiredAmounts[i]);
       if (requiredAmounts[i] == 0) continue; // this is a hack to avoid division by zero (should be fixed in the future])
       uint32 requiredAmount = requiredAmounts[i] * count;
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceIDs[i], playerEntity);
 
       if (isAdd) {
+        console.log("updating occupied for player: %s amount required: %s add", playerEntity, requiredAmounts[i]);
         occupiedUtilityResourceComponent.set(
           playerResourceEntity,
           LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) + requiredAmount
         );
-      } else if (requiredAmount < LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity)) {
+      } else if (requiredAmount <= LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity)) {
+        console.log("updating occupied for player: %s amount required: %s reduce", playerEntity, requiredAmounts[i]);
         occupiedUtilityResourceComponent.set(
           playerResourceEntity,
           LibMath.getSafe(occupiedUtilityResourceComponent, playerResourceEntity) - requiredAmount
         );
       } else {
+        console.log("updating occupied for player: %s amount required: %s set zero", playerEntity, requiredAmounts[i]);
         occupiedUtilityResourceComponent.set(playerResourceEntity, 0);
       }
     }
@@ -172,7 +176,8 @@ library LibUnits {
 
   function getPlayerUnitTypeLevel(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitType, playerEntity);
-    return LibMath.getSafe(LevelComponent(world.getComponent(LevelComponentID)), playerUnitEntity);
+    uint32 level = LibMath.getSafe(LevelComponent(world.getComponent(LevelComponentID)), playerUnitEntity);
+    return level > 0 ? level : 1;
   }
 
   function getUnitResourceCosts(

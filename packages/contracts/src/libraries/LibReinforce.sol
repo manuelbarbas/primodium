@@ -72,6 +72,7 @@ library LibReinforce {
       if (num > 0) {
         console.log("adding %s units to receiver ", num);
         LibUpdateSpaceRock.addUnitsToAsteroid(world, playerEntity, asteroidEntity, arrival.units[i].unitType, num);
+        LibUnits.updateOccuppiedUtilityResources(world, playerEntity, arrival.units[i].unitType, num, true);
         console.log("reducing %s arrival units by %s ", arrival.units[i].count, num);
         arrival.units[i].count -= num;
         console.log("reducing %s arrival units by %s done", arrival.units[i].count, num);
