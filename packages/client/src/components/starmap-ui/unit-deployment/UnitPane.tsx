@@ -1,41 +1,29 @@
 import { motion } from "framer-motion";
 import { getBlockTypeName } from "src/util/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EntityID } from "@latticexyz/recs";
 import { Fleet } from "src/network/components/clientComponents";
 import { BackgroundImage } from "src/util/constants";
-
-const unitStats = [
-  {
-    name: "ATK",
-    value: "10",
-  },
-  {
-    name: "DEF",
-    value: "10",
-  },
-  {
-    name: "MOVE",
-    value: "10/s",
-  },
-  {
-    name: "CAP",
-    value: "200",
-  },
-];
+import { getUnitStats } from "src/util/trainUnits";
 
 export const UnitPane: React.FC<{
   unit: EntityID;
   maximum: number;
   setSelectedUnit: React.Dispatch<
-    React.SetStateAction<{
-      type: EntityID;
-      count: number;
-    } | null>
+    React.SetStateAction<
+      | {
+          type: EntityID;
+          count: number;
+        }
+      | undefined
+    >
   >;
 }> = ({ unit, maximum, setSelectedUnit }) => {
-  const [count, setCount] = useState<number | "">(0);
-
+  const [count, setCount] = useState<number | "">(Fleet.getUnitCount(unit));
+  const fleet = Fleet.use();
+  useEffect(() => {
+    setCount(Fleet.getUnitCount(unit));
+  }, [fleet]);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -62,7 +50,7 @@ export const UnitPane: React.FC<{
       </p>
 
       <div className="grid grid-cols-6 gap-2 border-y py-2 my-2 border-cyan-400/30">
-        {unitStats.map((stat) => (
+        {getUnitStats(unit).map((stat) => (
           <div key={stat.name} className="flex flex-col items-center">
             <p className="text-xs opacity-50">{stat.name}</p>
             <p>{stat.value}</p>
@@ -130,7 +118,7 @@ export const UnitPane: React.FC<{
       </button>
       <button
         className="bg-slate-900 border border-cyan-400 px-2 m-2"
-        onClick={() => setSelectedUnit(null)}
+        onClick={() => setSelectedUnit(undefined)}
       >
         Return to Hangar
       </button>
