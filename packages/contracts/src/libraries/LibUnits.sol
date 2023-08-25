@@ -174,6 +174,11 @@ library LibUnits {
     return LibMath.getSafe(LevelComponent(world.getComponent(LevelComponentID)), playerUnitEntity);
   }
 
+  function setPlayerUnitTypeLevel(IWorld world, uint256 playerEntity, uint256 unitType, uint32 level) internal {
+    uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitType, playerEntity);
+    LevelComponent(world.getComponent(LevelComponentID)).set(playerUnitEntity, level);
+  }
+
   function getUnitResourceCosts(
     IWorld world,
     uint256 unitType,
