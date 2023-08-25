@@ -41,7 +41,7 @@ export const FleetPane: React.FC<{
       send.destination === undefined
     )
       return;
-    const to = OwnedBy.get(undefined, { value: account })?.value;
+    const to = "0x00" as EntityID;
 
     const arrivalUnits = send.units.map((unit, index) => ({
       unitType: unit,

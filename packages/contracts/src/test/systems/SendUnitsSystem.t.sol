@@ -99,7 +99,13 @@ contract SendUnitsTest is PrimodiumTest {
     units[0] = ArrivalUnit(DebugUnit, 0);
 
     vm.expectRevert(bytes("unit count must be positive"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      addressToEntity(bob)
+    );
   }
 
   function testFailSendTooFewUnits() public {
@@ -108,7 +114,13 @@ contract SendUnitsTest is PrimodiumTest {
     units[0] = ArrivalUnit(DebugUnit, 10);
 
     vm.expectRevert(bytes("not enough value to subtract"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      addressToEntity(bob)
+    );
   }
 
   function testFailMustSendFromYourAsteroid() public {
@@ -117,7 +129,13 @@ contract SendUnitsTest is PrimodiumTest {
     units[0] = ArrivalUnit(DebugUnit, 10);
 
     vm.expectRevert(bytes("you can only move from an asteroid you own"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(deployer), getHomeAsteroid(bob), bob);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(deployer),
+      getHomeAsteroid(bob),
+      addressToEntity(bob)
+    );
   }
 
   function testFailSameRock() public {
@@ -126,7 +144,13 @@ contract SendUnitsTest is PrimodiumTest {
     units[0] = ArrivalUnit(DebugUnit, 10);
 
     vm.expectRevert(bytes("origin and destination cannot be the same"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(alice), bob);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(alice),
+      addressToEntity(bob)
+    );
   }
 
   function testFailInvadeSameTo() public {
@@ -135,7 +159,13 @@ contract SendUnitsTest is PrimodiumTest {
     units[0] = ArrivalUnit(DebugUnit, 10);
 
     vm.expectRevert(bytes("you cannot invade yourself"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), alice);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      addressToEntity(alice)
+    );
   }
 
   // todo: check motherlode movement rules
@@ -177,7 +207,7 @@ contract SendUnitsTest is PrimodiumTest {
       ESendType.REINFORCE,
       getHomeAsteroid(reinforcer),
       getHomeAsteroid(receiver),
-      receiver
+      addressToEntity(receiver)
     );
     Arrival memory arrival = abi.decode(rawArrival, (Arrival));
 
@@ -283,7 +313,7 @@ contract SendUnitsTest is PrimodiumTest {
       ESendType.INVADE,
       getHomeAsteroid(alice),
       motherlodeEntity,
-      bob
+      addressToEntity(bob)
     );
 
     Arrival memory arrival = abi.decode(rawArrival, (Arrival));
@@ -345,7 +375,7 @@ contract SendUnitsTest is PrimodiumTest {
       ESendType.RAID,
       getHomeAsteroid(alice),
       getHomeAsteroid(bob),
-      bob
+      addressToEntity(bob)
     );
     Arrival memory arrival = abi.decode(rawArrival, (Arrival));
     uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(raider), DebugUnit);
@@ -405,7 +435,13 @@ contract SendUnitsTest is PrimodiumTest {
     units[0] = ArrivalUnit(DebugUnit, 5);
 
     vm.startPrank(alice);
-    sendUnitsSystem.executeTyped(units, ESendType.RAID, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.RAID,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      addressToEntity(bob)
+    );
     vm.roll(arrival.arrivalBlock);
     vm.stopPrank();
     vm.startPrank(deployer);
@@ -431,14 +467,26 @@ contract SendUnitsTest is PrimodiumTest {
     units[0] = ArrivalUnit(DebugUnit, 1);
 
     Arrival memory slowArrival = abi.decode(
-      sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob),
+      sendUnitsSystem.executeTyped(
+        units,
+        ESendType.INVADE,
+        getHomeAsteroid(alice),
+        getHomeAsteroid(bob),
+        addressToEntity(bob)
+      ),
       (Arrival)
     );
     units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit3, 1);
 
     Arrival memory arrival2 = abi.decode(
-      sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob),
+      sendUnitsSystem.executeTyped(
+        units,
+        ESendType.INVADE,
+        getHomeAsteroid(alice),
+        getHomeAsteroid(bob),
+        addressToEntity(bob)
+      ),
       (Arrival)
     );
     vm.roll(arrival2.arrivalBlock);

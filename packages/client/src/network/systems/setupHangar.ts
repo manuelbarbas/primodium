@@ -81,7 +81,6 @@ export function setupHangar() {
     });
   }
   defineComponentSystem(world, BlockNumber, ({ value: [rawBlockNumber] }) => {
-    console.log(rawBlockNumber);
     if (!rawBlockNumber) return;
     const blockNumber = rawBlockNumber.value;
     const spaceRock = ActiveAsteroid.get()?.value;

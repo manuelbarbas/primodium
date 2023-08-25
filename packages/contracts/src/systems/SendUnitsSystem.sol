@@ -29,8 +29,8 @@ contract SendUnitsSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
-    (ArrivalUnit[] memory arrivalUnits, ESendType sendType, uint256 origin, uint256 destination, address to) = abi
-      .decode(args, (ArrivalUnit[], ESendType, uint256, uint256, address));
+    (ArrivalUnit[] memory arrivalUnits, ESendType sendType, uint256 origin, uint256 destination, uint256 to) = abi
+      .decode(args, (ArrivalUnit[], ESendType, uint256, uint256, uint256));
 
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
     uint256 playerEntity = addressToEntity(msg.sender);
@@ -68,7 +68,7 @@ contract SendUnitsSystem is PrimodiumSystem {
       arrivalBlock: block.number +
         ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * worldSpeed) / 100 / 100),
       from: playerEntity,
-      to: addressToEntity(to),
+      to: to,
       origin: origin,
       destination: destination
     });
@@ -81,7 +81,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     uint256 origin,
     uint256 destination,
     uint256 playerEntity,
-    address to,
+    uint256 to,
     ESendType sendType
   ) internal view {
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
@@ -119,12 +119,9 @@ contract SendUnitsSystem is PrimodiumSystem {
       require(originType != ESpaceRockType.MOTHERLODE, "you cannot move between motherlodes");
     }
 
-    if (sendType == ESendType.INVADE) require(playerEntity != addressToEntity(to), "you cannot invade yourself");
+    if (sendType == ESendType.INVADE) require(playerEntity != to, "you cannot invade yourself");
     if (sendType == ESendType.REINFORCE)
-      require(
-        ownedByComponent.getValue(destination) == addressToEntity(to),
-        "you can only reinforce the current owner of a motherlode"
-      );
+      require(ownedByComponent.getValue(destination) == to, "you can only reinforce the current owner of a motherlode");
   }
 
   function executeTyped(
@@ -132,7 +129,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     ESendType sendType,
     uint256 origin,
     uint256 destination,
-    address to
+    uint256 to
   ) public returns (bytes memory) {
     return execute(abi.encode(arrivalUnits, sendType, origin, destination, to));
   }
