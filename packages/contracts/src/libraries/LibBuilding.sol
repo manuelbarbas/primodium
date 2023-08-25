@@ -158,15 +158,6 @@ library LibBuilding {
         buildingEntity,
         playerEntity
       );
-      uint256[] memory unitTypes = P_UnitProductionTypesComponent(world.getComponent(P_UnitProductionTypesComponentID))
-        .getValue(buildingLevelEntity);
-      LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-      for (uint256 i = 0; i < unitTypes.length; i++) {
-        uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitTypes[i], playerEntity);
-        if (!levelComponent.has(playerUnitEntity)) {
-          levelComponent.set(playerUnitEntity, 1);
-        }
-      }
     }
   }
 }
