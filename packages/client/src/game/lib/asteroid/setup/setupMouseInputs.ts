@@ -18,7 +18,6 @@ import {
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { Network } from "src/network/layer";
-import { IsDebug } from "src/network/components/chainComponents";
 import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (
@@ -79,8 +78,6 @@ export const setupMouseInputs = (
       SelectedBuilding.remove();
       SelectedTile.set(gameCoord);
     } else {
-      if (IsDebug.get()?.value)
-        console.log("[DEBUG] Selected Building: " + building);
       SelectedBuilding.set({ value: building });
       SelectedTile.remove();
     }

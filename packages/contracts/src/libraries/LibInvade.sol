@@ -21,7 +21,6 @@ import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "comp
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
 import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "components/BattleAttackerComponent.sol";
 import { BattleResultComponent, ID as BattleResultComponentID } from "components/BattleResultComponent.sol";
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";

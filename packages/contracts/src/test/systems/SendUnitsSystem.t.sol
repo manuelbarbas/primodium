@@ -14,11 +14,16 @@ import { RecallReinforcementsSystem, ID as RecallReinforcementsSystemID } from "
 //components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
+import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+
+import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
+
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
@@ -309,7 +314,7 @@ contract SendUnitsTest is PrimodiumTest {
     return arrival;
   }
 
-  function getPlayerUnitSpeed(IWorld world, address player, uint256 unitType) public returns (uint32) {
+  function getPlayerUnitSpeed(IWorld world, address player, uint256 unitType) public view returns (uint32) {
     uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(player), unitType);
     uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, playerUnitTypeLevel);
     return P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(unitTypeLevelEntity);
@@ -413,6 +418,13 @@ contract SendUnitsTest is PrimodiumTest {
     setupAttackerUnits(alice, DebugUnit);
     vm.startPrank(alice);
     uint256 unitProductionBuildingEntityID = LibEncode.hashKeyCoord(BuildingKey, getIronCoord(alice));
+    uint256 total = 1000;
+    componentDevSystem.executeTyped(
+      MaxUtilityComponentID,
+      LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice)),
+      abi.encode(total)
+    );
+
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit3, 10);
     vm.roll(block.number + 1000);
     ArrivalUnit[] memory units = new ArrivalUnit[](1);

@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import { IWorld } from "solecs/System.sol";
 import { addressToEntity } from "solecs/utils.sol";
 //components
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
@@ -163,14 +162,11 @@ library LibBattle {
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
     );
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-
     BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
     uint32 totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
       if (attackerUnitsLeft[i] <= 0) continue;
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
       totalAttackValue +=
         attackerUnitsLeft[i] *
         unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
@@ -187,14 +183,12 @@ library LibBattle {
     BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
       world.getComponent(BattleDefenderComponentID)
     );
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
 
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
     uint32 totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
       if (defenderUnitsLeft[i] <= 0) continue;
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, defender.participantEntity, defender.unitTypes[i]);
       totalDefenceValue +=
         defenderUnitsLeft[i] *
         unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
@@ -203,7 +197,6 @@ library LibBattle {
   }
 
   function getTotalDefenceValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalDefenceValue) {
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     P_UnitDefenceComponent unitDefenceComponent = P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID));
     BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
       world.getComponent(BattleDefenderComponentID)
@@ -212,8 +205,7 @@ library LibBattle {
     totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
       if (defender.unitCounts[i] <= 0) continue;
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, defender.participantEntity, defender.unitTypes[i]);
       totalDefenceValue +=
         defender.unitCounts[i] *
         unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
@@ -225,7 +217,6 @@ library LibBattle {
     IWorld world,
     uint256 battleEntity
   ) internal view returns (uint32[] memory attackValues, uint32 totalAttackValue) {
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
@@ -235,9 +226,7 @@ library LibBattle {
     totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
       if (attacker.unitCounts[i] <= 0) continue;
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
-
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
       attackValues[i] =
         attacker.unitCounts[i] *
         unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));

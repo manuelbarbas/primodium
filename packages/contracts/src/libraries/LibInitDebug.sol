@@ -485,16 +485,27 @@ library LibInitDebug {
     );
     P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
 
-    //DebugUnitProductionBuilding
-    maxLevelComponent.set(DebugUnitProductionBuilding, 2);
-    uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
-
+    // MainBase
+    // Level 1
+    uint256 entity = LibEncode.hashKeyEntity(MainBaseID, 1);
     uint256[] memory unitTypes = new uint256[](2);
+
     unitTypes[0] = DebugUnit;
     unitTypes[1] = DebugUnit3;
     unitProductionTypesComponent.set(entity, unitTypes);
     unitProductionMultiplierComponent.set(entity, 100);
 
+    //DebugUnitProductionBuilding
+    maxLevelComponent.set(DebugUnitProductionBuilding, 2);
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
+
+    unitTypes = new uint256[](2);
+    unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit3;
+    unitProductionTypesComponent.set(entity, unitTypes);
+    unitProductionMultiplierComponent.set(entity, 100);
+    // Level 2
     entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 2);
     unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
@@ -518,8 +529,8 @@ library LibInitDebug {
     P_UnitMiningComponent unitMiningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
 
     //DebugUnit
-
-    uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
+    // Level 1
+    uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 0);
     unitTrainingTimeComponent.set(entity, 2);
 
     ResourceValues memory requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
@@ -531,9 +542,10 @@ library LibInitDebug {
     unitAttackComponent.set(entity, 5);
     unitDefenceComponent.set(entity, 3);
     unitCargoComponent.set(entity, 10);
-    //DebugUnit2
 
-    entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
+    //DebugUnit2
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnit2, 0);
     unitTrainingTimeComponent.set(entity, 4);
 
     requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
@@ -546,11 +558,10 @@ library LibInitDebug {
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
 
-    // debuguint3
-
-    entity = LibEncode.hashKeyEntity(DebugUnit3, 1);
+    //DebugUnit3
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnit3, 0);
     unitTrainingTimeComponent.set(entity, 4);
-
     requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
@@ -560,28 +571,46 @@ library LibInitDebug {
     unitAttackComponent.set(entity, 20);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
-
-    // DebugUnitMiner
-    entity = DebugUnitMiner;
     unitMiningComponent.set(entity, 100);
 
-    entity = DebugUnitMiner2;
-    unitMiningComponent.set(entity, 47);
+    // DebugUnit3
+    // Level 2
+    entity = LibEncode.hashKeyEntity(DebugUnit3, 0);
+
+    unitTrainingTimeComponent.set(entity, 4);
+    requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtility.resources[0] = HousingUtilityResourceID;
+    requiredUtility.values[0] = 1;
+    requiredUtilityComponent.set(entity, requiredUtility);
+
+    speedComponent.set(entity, 50);
+    unitAttackComponent.set(entity, 20);
+    unitDefenceComponent.set(entity, 10);
+    unitCargoComponent.set(entity, 20);
+    unitMiningComponent.set(entity, 100);
 
     //DebugUnitBattle1
-    entity = LibEncode.hashKeyEntity(DebugUnitBattle1, 1);
-    unitTrainingTimeComponent.set(entity, 0);
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle1, 0);
+    unitTrainingTimeComponent.set(entity, 10);
 
     unitAttackComponent.set(entity, 10);
     unitDefenceComponent.set(entity, 5);
     unitCargoComponent.set(entity, 100);
 
     //DebugUnitBattle2
-    entity = LibEncode.hashKeyEntity(DebugUnitBattle2, 1);
-    unitTrainingTimeComponent.set(entity, 0);
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle2, 0);
+    unitTrainingTimeComponent.set(entity, 10);
 
     unitAttackComponent.set(entity, 5);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 100);
+
+    entity = LibEncode.hashKeyEntity(DebugUnitMiner, 0);
+    unitMiningComponent.set(entity, 100);
+
+    entity = LibEncode.hashKeyEntity(DebugUnitMiner2, 0);
+    unitMiningComponent.set(entity, 47);
   }
 }

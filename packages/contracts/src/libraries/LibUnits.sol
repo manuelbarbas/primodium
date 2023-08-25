@@ -73,12 +73,18 @@ library LibUnits {
     P_UnitProductionMultiplierComponent unitProductionMultiplierComponent = P_UnitProductionMultiplierComponent(
       world.getComponent(P_UnitProductionMultiplierComponentID)
     );
+
     uint256 buildingType = BuildingTypeComponent(world.getComponent(BuildingTypeComponentID)).getValue(buildingEntity);
+
     uint32 buildingLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(buildingEntity);
+
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
+
     uint32 buildingUnitProductionMultiplier = unitProductionMultiplierComponent.getValue(buildingLevelEntity);
+
     uint32 unitTrainingTime = (getUnitTrainingTime(world, playerEntity, unitType) * 100) /
       buildingUnitProductionMultiplier;
+
     return unitTrainingTime;
   }
 
@@ -108,9 +114,7 @@ library LibUnits {
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       world.getComponent(P_RequiredUtilityComponentID)
     );
-    uint32 unitLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(
-      LibEncode.hashKeyEntity(unitType, playerEntity)
-    );
+    uint32 unitLevel = getPlayerUnitTypeLevel(world, playerEntity, unitType);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
     if (!requiredUtilityComponent.has(buildingLevelEntity)) return true;
 
@@ -125,16 +129,12 @@ library LibUnits {
     return true;
   }
 
-  function stationUnits(IWorld world, uint256 asteroidEntity, uint256 unitType, uint32 count) internal {}
-
   function howManyUnitsCanAdd(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {
     uint32 min = BIGNUM;
     P_RequiredUtilityComponent requiredUtilityComponent = P_RequiredUtilityComponent(
       world.getComponent(P_RequiredUtilityComponentID)
     );
-    uint32 unitLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(
-      LibEncode.hashKeyEntity(unitType, playerEntity)
-    );
+    uint32 unitLevel = getPlayerUnitTypeLevel(world, playerEntity, unitType);
     uint256 unitLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
     if (!requiredUtilityComponent.has(unitLevelEntity)) return min; //this should be subtracted by current count of the unit type
 
@@ -163,14 +163,15 @@ library LibUnits {
     P_UnitTrainingTimeComponent unitTrainingTimeComponent = P_UnitTrainingTimeComponent(
       world.getComponent(P_UnitTrainingTimeComponentID)
     );
+
     uint32 unitTypeLevel = getPlayerUnitTypeLevel(world, playerEntity, unitType);
+
     return unitTrainingTimeComponent.getValue(LibEncode.hashKeyEntity(unitType, unitTypeLevel));
   }
 
   function getPlayerUnitTypeLevel(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {
     uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitType, playerEntity);
-    uint32 level = LibMath.getSafe(LevelComponent(world.getComponent(LevelComponentID)), playerUnitEntity);
-    return level > 0 ? level : 1;
+    return LibMath.getSafe(LevelComponent(world.getComponent(LevelComponentID)), playerUnitEntity);
   }
 
   function getUnitResourceCosts(
