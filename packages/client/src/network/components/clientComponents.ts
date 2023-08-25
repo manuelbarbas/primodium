@@ -13,6 +13,8 @@ import newFleetComponent from "./customComponents/FleetComponent";
 export const BlockNumber = newNumberComponent(world, {
   id: "BlockNumber",
 });
+export const Account = newEntityComponent(world, { id: "Account" });
+
 export const GameReady = newBoolComponent(world, { id: "GameReady" });
 export const DoubleCounter = newNumberComponent(world, {
   id: "DoubleCounter",

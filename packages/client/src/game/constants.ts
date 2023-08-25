@@ -113,6 +113,12 @@ export namespace AsteroidMap {
 
     PhotovoltaicCellFactory1 = "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
     PhotovoltaicCellFactory2 = "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
+
+    StarmapperStation1 = "sprites/starmapper-station/level1/Starmapper1.png",
+
+    Hangar1 = "sprites/hangar/level1/Hangar1.png",
+
+    DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
   }
 
   export enum AnimationKeys {
@@ -143,6 +149,12 @@ export namespace AsteroidMap {
 
     SolarPanel1 = "solarpanel/level1",
     SolarPanel2 = "solarpanel/level2",
+
+    StarmapperStation1 = "starmapperstation/level1",
+
+    Hangar1 = "hangar/level1",
+
+    DroneFactory1 = "dronefactory/level1",
   }
 
   export const EntityIDToResourceTilesetKey = {
@@ -203,6 +215,12 @@ export namespace AsteroidMap {
     ],
 
     [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
+
+    [BlockType.StarmapperStation]: [SpriteKeys.StarmapperStation1],
+
+    [BlockType.Hangar]: [SpriteKeys.Hangar1],
+
+    [BlockType.DroneFactory]: [SpriteKeys.DroneFactory1],
   };
 
   // Array index corresponds to lvl
@@ -233,6 +251,7 @@ export namespace AsteroidMap {
     ],
 
     [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
+
     [BlockType.PhotovoltaicCellFactory]: [
       AnimationKeys.PhotovoltaicCellFactory1,
       AnimationKeys.PhotovoltaicCellFactory2,
@@ -242,6 +261,12 @@ export namespace AsteroidMap {
       AnimationKeys.SolarPanel1,
       AnimationKeys.SolarPanel2,
     ],
+
+    [BlockType.StarmapperStation]: [AnimationKeys.StarmapperStation1],
+
+    [BlockType.Hangar]: [AnimationKeys.Hangar1],
+
+    [BlockType.DroneFactory]: [AnimationKeys.DroneFactory1],
   };
 }
 
