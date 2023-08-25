@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-
+import "forge-std/console.sol";
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 
@@ -57,16 +57,19 @@ library LibUpdateSpaceRock {
     bool isStillClaiming = unitProductionQueueIndexComponent.has(unitProductionBuildingEntity);
     uint32 queueIndex = LibMath.getSafe(unitProductionQueueIndexComponent, unitProductionBuildingEntity);
     uint256 startTime = lastClaimedAtComponent.getValue(unitProductionBuildingEntity);
+    console.log("claiming units from building");
     while (isStillClaiming) {
       uint256 buildingQueueEntity = LibEncode.hashKeyEntity(unitProductionBuildingEntity, queueIndex);
       ResourceValue memory unitProductionQueue = unitProductionQueueComponent.getValue(buildingQueueEntity);
 
+      console.log("getting training time for unit");
       uint32 unitTrainingTimeForBuilding = LibUnits.getBuildingBuildTimeForUnit(
         world,
         playerEntity,
         unitProductionBuildingEntity,
         unitProductionQueue.resource
       );
+      console.log("getting training time for unit success");
       uint32 trainedUnitsCount = uint32(blockNumber - startTime) / unitTrainingTimeForBuilding;
 
       if (trainedUnitsCount > 0) {
@@ -156,9 +159,11 @@ library LibUpdateSpaceRock {
       world.getComponent(UnitProductionOwnedByComponentID)
     ).getEntitiesWithValue(playerEntity);
 
+    console.log("claiming units");
     for (uint32 i = 0; i < unitProductionBuildingEntities.length; i++) {
       claimUnitsFromBuilding(world, unitProductionBuildingEntities[i], playerEntity, blockNumber);
     }
+    console.log("claiming units success");
   }
 
   function tryMoveUpQueue(IWorld world, uint256 buildingEntity) internal returns (uint32) {

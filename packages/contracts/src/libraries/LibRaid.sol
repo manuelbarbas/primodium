@@ -23,7 +23,6 @@ import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "comp
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
 import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "components/BattleAttackerComponent.sol";
 import { BattleResultComponent, ID as BattleResultComponentID } from "components/BattleResultComponent.sol";
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 
@@ -146,7 +145,6 @@ library LibRaid {
   }
 
   function getTotalCargoValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalCargoValue) {
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
@@ -156,9 +154,7 @@ library LibRaid {
     totalCargoValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
       if (attacker.unitCounts[i] == 0) continue;
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
-
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
       totalCargoValue +=
         attacker.unitCounts[i] *
         unitCargoComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));

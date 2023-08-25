@@ -53,9 +53,9 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
 
     //alice
     uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
     unitEntity = LibEncode.hashKeyEntity(DebugUnit2, addressToEntity(alice));
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
 
     uint256[] memory unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
@@ -78,9 +78,9 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
     console.log("attacker: %s", getAttacker.participantEntity);
     //bob
     unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob));
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
     unitEntity = LibEncode.hashKeyEntity(DebugUnit2, addressToEntity(bob));
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
     unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
     unitTypes[1] = DebugUnit2;
@@ -116,7 +116,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
 
     //alice
     uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
 
     uint256[] memory unitTypes = new uint256[](1);
     unitTypes[0] = DebugUnit;
@@ -136,7 +136,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
     console.log("attacker: %s", getAttacker.participantEntity);
     //bob
     unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(bob));
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
 
     unitTypes = new uint256[](1);
     unitTypes[0] = DebugUnit;
@@ -172,7 +172,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
 
     //alice
     uint256 unitEntity = LibEncode.hashKeyEntity(DebugUnit, addressToEntity(alice));
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
 
     uint256[] memory unitTypes = new uint256[](1);
     unitTypes[0] = DebugUnit;
@@ -199,7 +199,7 @@ contract S_ResolveBattleSystemTest is PrimodiumTest {
       abi.encode(2000)
     );
 
-    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(1));
+    componentDevSystem.executeTyped(LevelComponentID, unitEntity, abi.encode(0));
 
     unitTypes = new uint256[](1);
     unitTypes[0] = DebugUnit;
