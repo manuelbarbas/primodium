@@ -13,6 +13,7 @@ import { train } from "src/util/web3";
 import { useMud } from "src/hooks";
 import { getUnitStats, useTrainableUnits } from "src/util/trainUnits";
 import {
+  Level,
   MaxUtility,
   OccupiedUtilityResource,
   P_RequiredResources,
@@ -21,7 +22,6 @@ import {
 import { hashKeyEntity } from "src/util/encode";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import { Account } from "src/network/components/clientComponents";
-import { world } from "src/network/world";
 
 export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   buildingEntity,
@@ -36,35 +36,39 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
   }, [show]);
 
   useEffect(() => {
-    if (selectedUnit)
-      console.log("entity:", world.getEntityIndexStrict(selectedUnit));
     setCount(0);
   }, [selectedUnit]);
   const playerResourceEntity = hashKeyEntity(
     BlockType.HousingUtilityResource,
     account
   );
+
   const totalUnits = OccupiedUtilityResource.use(playerResourceEntity, {
     value: 0,
   }).value;
   const maximum = MaxUtility.use(playerResourceEntity, { value: 0 }).value;
   const trainableUnits = useTrainableUnits(buildingEntity);
 
+  const unitLevelEntity = useMemo(() => {
+    if (!selectedUnit) return undefined;
+    const playerUnitEntity = hashKeyEntity(selectedUnit, account);
+    const level = Level.get(playerUnitEntity, { value: 0 }).value;
+    return hashKeyEntity(selectedUnit, level);
+  }, [selectedUnit]);
+
   const requiredHousing = useMemo(() => {
-    if (!selectedUnit) return 0;
-    const entityID = hashKeyEntity(selectedUnit, 1);
-    const raw = P_RequiredUtility.get(entityID);
+    if (!unitLevelEntity) return 0;
+    const raw = P_RequiredUtility.get(unitLevelEntity);
     if (!raw) return 0;
     const amountIndex = raw.resourceIDs.indexOf(
       BlockType.HousingUtilityResource
     );
     return amountIndex == -1 ? 0 : raw.requiredAmounts[amountIndex];
-  }, [selectedUnit]);
+  }, [unitLevelEntity]);
 
   const requiredResources = useMemo(() => {
-    if (!selectedUnit) return null;
-    const entityID = hashKeyEntity(selectedUnit, 1);
-    const raw = P_RequiredResources.get(entityID);
+    if (!unitLevelEntity) return null;
+    const raw = P_RequiredResources.get(unitLevelEntity);
     if (!raw) return null;
     return raw.resources.map((resource, i) => {
       return {
@@ -72,11 +76,10 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
         amount: raw.values[i],
       };
     });
-  }, [selectedUnit]);
+  }, [unitLevelEntity]);
 
-  const cost = useMemo(() => {
-    if (!requiredHousing) return 0;
-    return count * requiredHousing;
+  const unitsTaken = useMemo(() => {
+    return totalUnits + count * (requiredHousing ?? 0);
   }, [count, requiredHousing]);
 
   if (trainableUnits.length == 0 || maximum == 0) return null;
@@ -145,7 +148,7 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
               })}
             </div>
             <hr className="border-t border-cyan-600 w-full" />
-            {!selectedUnit ? (
+            {!unitLevelEntity || !selectedUnit ? (
               <p className="opacity-50 text-xs italic mb-2 flex gap-2 z-10">
                 <FaInfoCircle size={16} /> Select a unit to train it.
               </p>
@@ -157,7 +160,8 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
                     <p className="text-sm font-bold leading-none">HOUSING</p>
                     <ResourceIconTooltip
                       image={
-                        ResourceImage.get(BlockType.HousingUtilityResource)!
+                        ResourceImage.get(BlockType.HousingUtilityResource) ??
+                        ""
                       }
                       resourceId={BlockType.HousingUtilityResource}
                       name={BlockIdToKey[BlockType.HousingUtilityResource]}
@@ -232,14 +236,14 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
                       setCount(Math.min(maximum, count + 1));
                     }}
                     className="disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={maximum - cost < requiredHousing}
+                    disabled={maximum - unitsTaken < requiredHousing}
                   >
                     +
                   </button>
                 </div>
                 <button
                   className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={maximum - cost < requiredHousing}
+                  disabled={maximum - unitsTaken <= requiredHousing}
                   onClick={() => {
                     train(buildingEntity, selectedUnit, count, network);
                   }}
@@ -248,7 +252,9 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
                 </button>
               </>
             )}
-            <p className="opacity-50 text-xs">{maximum - cost} housing left</p>
+            <p className="opacity-50 text-xs">
+              {maximum - unitsTaken} housing left
+            </p>
           </div>
         </div>
       )}

@@ -43,6 +43,7 @@ import { LibMath } from "../../libraries/LibMath.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { ResourceValue, ResourceValues } from "../../types.sol";
 
+// todo: test that resources and utilities are being updated
 contract TrainUnitSystem is PrimodiumTest {
   constructor() PrimodiumTest() {}
 

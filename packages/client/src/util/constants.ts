@@ -296,7 +296,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   // debug units
   [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
   [BlockType.DebugUnit2, ["/img/unit/anvildrone.png"]],
-  [BlockType.DebugUnit3, ["/img/unit/aegistrone.png"]],
+  [BlockType.DebugUnit3, ["/img/unit/aegisdrone.png"]],
   [BlockType.DebugUnitMiner, ["/img/unit/miningvessel.png"]],
   [BlockType.DebugUnitMiner2, ["/img/unit/miningvessel.png"]],
   [BlockType.DebugUnitBattle1, ["/img/unit/hammerdrone.png"]],

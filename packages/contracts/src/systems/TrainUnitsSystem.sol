@@ -40,8 +40,8 @@ contract TrainUnitsSystem is PrimodiumSystem {
 
     uint256 playerEntity = addressToEntity(msg.sender);
 
-    uint256 unitTypeLevelEntity = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
-
+    uint256 unitLevel = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
+    uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, unitLevel);
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(
       msg.sender,
       PositionComponent(getC(PositionComponentID)).getValue(buildingEntity).parent
