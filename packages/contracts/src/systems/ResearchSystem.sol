@@ -9,12 +9,13 @@ import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } fr
 
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
-
+import { P_UnitLevelUpgradeComponent, ID as P_UnitLevelUpgradeComponentID } from "components/P_UnitLevelUpgradeComponent.sol";
 import { LibResearch } from "libraries/LibResearch.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
+import { LibUnits } from "libraries/LibUnits.sol";
 import { ResourceValue } from "../types.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
@@ -43,6 +44,10 @@ contract ResearchSystem is System {
 
     require(isTechComponent.has(researchItem), "[ResearchSystem] Technology not registered");
 
+    P_UnitLevelUpgradeComponent unitLevelUpgradeComponent = P_UnitLevelUpgradeComponent(
+      getAddressById(components, P_UnitLevelUpgradeComponentID)
+    );
+
     require(
       checkMainBaseLevelRequirement(world, playerEntity, researchItem),
       "[ResearchSystem] MainBase level requirement not met"
@@ -52,6 +57,15 @@ contract ResearchSystem is System {
       LibResearch.hasResearched(world, researchItem, playerEntity),
       "[ResearchSystem] Research requirements not met"
     );
+
+    ResourceValue memory unitUpgrade;
+    if (unitLevelUpgradeComponent.has(researchItem)) {
+      unitUpgrade = unitLevelUpgradeComponent.getValue(researchItem);
+      require(
+        unitUpgrade.value == LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitUpgrade.resource) + 1,
+        "[ResearchSystem] previous unit level not met"
+      );
+    }
 
     if (P_RequiredResourcesComponent(getAddressById(components, P_RequiredResourcesComponentID)).has(researchItem)) {
       require(
@@ -75,7 +89,9 @@ contract ResearchSystem is System {
       ResourceValue memory resourceValue = utilityProductionComponent.getValue(researchItem);
       LibUtilityResource.modifyMaxUtility(world, playerEntity, resourceValue.resource, resourceValue.value, true);
     }
-
+    if (unitLevelUpgradeComponent.has(researchItem)) {
+      LibUnits.setPlayerUnitTypeLevel(world, playerEntity, unitUpgrade.resource, unitUpgrade.value);
+    }
     return abi.encode(true);
   }
 

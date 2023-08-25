@@ -17,9 +17,11 @@ import { ItemComponent, ID as ItemComponentID } from "../../components/ItemCompo
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { IronResourceItemID, CopperResourceItemID, LithiumResourceItemID, IronPlateCraftedItemID } from "../../prototypes.sol";
-
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "../../components/P_UtilityProductionComponent.sol";
+import { LibUtilityResource } from "../../libraries/LibUtilityResource.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibUnits } from "../../libraries/LibUnits.sol";
 import { Coord } from "../../types.sol";
 import "../../prototypes.sol";
 import { ResourceValue, ResourceValues } from "../../types.sol";
@@ -191,6 +193,77 @@ contract ResearchSystemTest is PrimodiumTest {
 
     // should fail because alice has not upgraded their MainBase
     researchSystem.executeTyped(DebugSimpleTechnologyMainBaseLevelReqsID);
+
+    // not enough resources
+    vm.stopPrank();
+  }
+
+  function testResearchIncreaseUtilityCapacity() public {
+    vm.startPrank(alice);
+
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
+    ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
+
+    // alice researches DebugSimpleTechnologyResourceReqsID
+    assertTrue(
+      !hasResearchedComponent.has(
+        LibEncode.hashKeyEntity(DebugSimpleTechnologyIncreaseHousing, addressToEntity(alice))
+      ),
+      "alice should not have researched DebugSimpleTechnologyIncreaseHousing yet"
+    );
+
+    assertEq(
+      LibUtilityResource.getAvailableUtilityCapacity(world, addressToEntity(alice), HousingUtilityResourceID),
+      0,
+      "alice should have 0 housing capacity"
+    );
+
+    researchSystem.executeTyped(DebugSimpleTechnologyIncreaseHousing);
+    assertTrue(
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyIncreaseHousing, addressToEntity(alice))),
+      "alice should have researched DebugSimpleTechnologyIncreaseHousing"
+    );
+    P_UtilityProductionComponent utilityProductionComponent = P_UtilityProductionComponent(
+      getAddressById(world.components(), P_UtilityProductionComponentID)
+    );
+    assertEq(
+      LibUtilityResource.getAvailableUtilityCapacity(world, addressToEntity(alice), HousingUtilityResourceID),
+      utilityProductionComponent.getValue(DebugSimpleTechnologyIncreaseHousing).value,
+      "alice should have  housing capacity"
+    );
+
+    // not enough resources
+    vm.stopPrank();
+  }
+
+  function testResearchUpgradeUnitLevel() public {
+    vm.startPrank(alice);
+
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(component(HasResearchedComponentID));
+    ResearchSystem researchSystem = ResearchSystem(system(ResearchSystemID));
+
+    // alice researches DebugSimpleTechnologyResourceReqsID
+    assertTrue(
+      !hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyUpgradeUnit, addressToEntity(alice))),
+      "alice should not have researched DebugSimpleTechnologyUpgradeUnit yet"
+    );
+
+    assertEq(
+      LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(alice), DebugUnit),
+      0,
+      "alice DebugUnit level should be  0"
+    );
+
+    researchSystem.executeTyped(DebugSimpleTechnologyUpgradeUnit);
+    assertTrue(
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(DebugSimpleTechnologyUpgradeUnit, addressToEntity(alice))),
+      "alice should have researched DebugSimpleTechnologyUpgradeUnit"
+    );
+    assertEq(
+      LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(alice), DebugUnit),
+      1,
+      "alice DebugUnit level should be  1"
+    );
 
     // not enough resources
     vm.stopPrank();

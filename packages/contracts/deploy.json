@@ -79,7 +79,7 @@
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["HasResearchedComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "IncrementSystem",
