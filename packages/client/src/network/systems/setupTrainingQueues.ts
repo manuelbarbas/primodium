@@ -87,6 +87,9 @@ export function setupTrainingQueues() {
 
   defineComponentSystem(world, BlockNumber, (update) => {
     const query = [
+      Has(UnitProductionQueueIndex),
+      Has(UnitProductionLastQueueIndex),
+      Has(LastClaimedAt),
       HasValue(Position, {
         parent: ActiveAsteroid.get()?.value,
       }),
