@@ -34,6 +34,7 @@
     "BattleAttackerComponent",
     "BattleDefenderComponent",
     "BattleResultComponent",
+    "BattleSpaceRockComponent",
     "MaxMovesComponent",
     "GameConfigComponent",
     "ScoreComponent",
@@ -62,7 +63,9 @@
     "P_UnitTrainingTimeComponent",
     "P_UnitTravelSpeedComponent",
     "P_TerrainComponent",
-    "P_ScoreMultiplierComponent"
+    "P_IsUnitComponent",
+    "P_ScoreMultiplierComponent",
+    "P_UnitLevelUpgradeComponent"
   ],
   "initializers": [
     "LibInitWorld",
@@ -76,7 +79,7 @@
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["HasResearchedComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "IncrementSystem",
@@ -120,13 +123,21 @@
       "writeAccess": ["*"]
     },
     { "name": "SendUnitsSystem", "writeAccess": ["*"] },
+    { "name": "InvadeSystem", "writeAccess": ["*"] },
+    { "name": "RecallReinforcementsSystem", "writeAccess": ["*"] },
+    { "name": "ReceiveReinforcementSystem", "writeAccess": ["*"] },
+    { "name": "RaidSystem", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
     },
     {
-      "name": "S_BattleSystem",
+      "name": "S_ResolveBattleSystem",
       "writeAccess": ["BattleResultComponent"]
+    },
+    {
+      "name": "S_ResolveRaidUnitsSystem",
+      "writeAccess": ["*"]
     },
     {
       "name": "S_RaidSystem",
@@ -160,6 +171,10 @@
     {
       "name": "S_UpdateUnclaimedResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
+    },
+    {
+      "name": "S_ClaimAllResourcesSystem",
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent", "ScoreComponent"]
     },
     {
       "name": "S_UpdateOccupiedUtilitySystem",

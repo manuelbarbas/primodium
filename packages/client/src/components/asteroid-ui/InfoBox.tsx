@@ -19,6 +19,7 @@ import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { FaList } from "react-icons/fa";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { Leaderboard } from "./Leaderboard";
+import { SelectedAsteroid } from "src/network/components/clientComponents";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -80,6 +81,7 @@ export const InfoBox = () => {
                 <FullStarmap
                   show={showFullStarmap}
                   onClose={() => {
+                    SelectedAsteroid.remove();
                     setShowFullStarmap(false);
                     setTarget("starmap");
                     const position = getPosition();

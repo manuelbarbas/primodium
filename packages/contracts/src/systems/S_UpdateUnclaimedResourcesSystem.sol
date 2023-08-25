@@ -24,14 +24,6 @@ contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
-    require(
-      msg.sender == getAddressById(world.systems(), UpdatePlayerStorageSystemID) ||
-        msg.sender == getAddressById(world.systems(), UpdatePlayerResourceProductionSystemID) ||
-        msg.sender == getAddressById(world.systems(), SpendRequiredResourcesSystemID) ||
-        msg.sender == getAddressById(world.systems(), ClaimFromMineSystemID),
-      "S_UpdateUnclaimedResourcesSystem: Only S_UpdatePlayerStorageSystem, S_UpdatePlayerResourceProductionSystem, S_SpendRequiredResourcesSystem, ClaimFromMineSystemID  can call this function"
-    );
-
     (address playerAddress, uint256 resourceID) = abi.decode(args, (address, uint256));
     uint256 playerEntity = addressToEntity(playerAddress);
 
@@ -53,28 +45,13 @@ contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem
       return abi.encode(resourceID);
     }
 
-    uint32 availableSpaceInStorage = LibStorage.getResourceStorageSpace(world, playerEntity, resourceID);
-    if (availableSpaceInStorage <= 0) {
-      lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
-      return abi.encode(resourceID);
-    }
     uint32 unclaimedResource = (playerResourceProduction *
       uint32(block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceProductionEntity)));
 
-    if (availableSpaceInStorage < unclaimedResource) {
-      unclaimedResource = availableSpaceInStorage;
-    }
+    unclaimedResource = LibStorage.addResourceToStorage(world, playerEntity, resourceID, unclaimedResource);
     lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
 
-    LibResource.updateResourceAmount(
-      world,
-      playerEntity,
-      resourceID,
-      LibMath.getSafe(ItemComponent(world.getComponent(ItemComponentID)), playerResourceProductionEntity) +
-        unclaimedResource
-    );
-
-    return abi.encode(resourceID);
+    return abi.encode(unclaimedResource);
   }
 
   function executeTyped(address playerAddress, uint256 resourceID) public returns (bytes memory) {

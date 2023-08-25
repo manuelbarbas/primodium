@@ -149,19 +149,6 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
         EActionType.Upgrade
       );
     }
-
-    if (P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {
-      uint256[] memory unitTypes = P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).getValue(
-        buildingLevelEntity
-      );
-      for (uint256 i = 0; i < unitTypes.length; i++) {
-        uint256 playerUnitEntity = LibEncode.hashKeyEntity(unitTypes[i], playerEntity);
-        if (!levelComponent.has(playerUnitEntity)) {
-          levelComponent.set(playerUnitEntity, 1);
-        }
-      }
-    }
-
     return abi.encode(buildingEntity);
   }
 

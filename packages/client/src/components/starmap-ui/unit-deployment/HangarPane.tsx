@@ -1,49 +1,45 @@
 import { motion } from "framer-motion";
-import { BackgroundImage, BlockType } from "src/util/constants";
+import { BackgroundImage } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
 import { UnitPane } from "./UnitPane";
-import { Fleet } from "src/network/components/clientComponents";
-
-const availableUnits = [
-  {
-    type: BlockType.AnvilLightDrone,
-    count: 100,
-  },
-  {
-    type: BlockType.AegisDrone,
-    count: 100,
-  },
-  {
-    type: BlockType.MiningVessel,
-    count: 100,
-  },
-  {
-    type: BlockType.StingerDrone,
-    count: 100,
-  },
-];
+import { Fleet, Hangar } from "src/network/components/clientComponents";
+import { EntityID } from "@latticexyz/recs";
 
 export const HangarPane: React.FC<{
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ show, setShow }) => {
-  const [selectedUnit, setSelectedUnit] = useState<
-    (typeof availableUnits)[0] | null
-  >(null);
-  const totalUnits = useMemo(() => {
-    return availableUnits.reduce((acc, unit) => {
-      return acc + unit.count;
-    }, 0);
-  }, [availableUnits]);
-
+  const [selectedUnit, setSelectedUnit] = useState<EntityID>();
   useEffect(() => {
     if (show) {
-      setSelectedUnit(null);
+      setSelectedUnit(undefined);
     }
   }, [show]);
 
+  const hangar = Hangar.use();
+  const fleet = Fleet.use();
+  if (!hangar) return null;
+
+  const selectedCount = useMemo(() => {
+    if (!selectedUnit) return 0;
+    return hangar.counts[hangar.units.indexOf(selectedUnit)];
+  }, [selectedUnit, hangar]);
+
+  const totalUnits =
+    hangar.counts.reduce((a, b) => a + b, 0) -
+    (fleet?.count ? fleet.count.reduce((a, b) => a + b, 0) : 0);
+  console.log("totalUnits: ", totalUnits);
+  const availableUnits = hangar.units.map((unit, i) => ({
+    type: unit,
+    count: hangar.counts[i],
+  }));
+  console.log("selectedUnit", selectedUnit);
+  console.log(
+    "fleet",
+    fleet?.count?.reduce((a, b) => a + b, 0)
+  );
   return (
     <motion.div
       initial={{ translateY: -100, opacity: 0 }}
@@ -71,15 +67,16 @@ export const HangarPane: React.FC<{
 
       {show && (
         <div className="bg-slate-900/90 pixel-images border border-cyan-400 p-3 w-80">
-          {selectedUnit === null && (
+          {selectedUnit === undefined && (
             <div className="flex flex-col items-center space-y-3">
               <div className="flex flex-wrap gap-2 items-center justify-center">
                 {availableUnits.map((unit, index) => {
+                  console.log("fleet count", Fleet.getUnitCount(unit.type));
                   return (
                     <button
                       key={index}
                       className="relative flex flex-col items-center group hover:scale-110 transition-transform hover:z-50"
-                      onClick={() => setSelectedUnit(unit)}
+                      onClick={() => setSelectedUnit(unit.type)}
                     >
                       <img
                         src={
@@ -107,11 +104,11 @@ export const HangarPane: React.FC<{
             </div>
           )}
 
-          {selectedUnit !== null && (
+          {selectedUnit && (
             <UnitPane
-              unit={selectedUnit.type}
+              unit={selectedUnit}
               setSelectedUnit={setSelectedUnit}
-              maximum={selectedUnit.count}
+              maximum={selectedCount}
             />
           )}
         </div>

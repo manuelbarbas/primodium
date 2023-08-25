@@ -105,7 +105,7 @@ export const FleetPane: React.FC<{
           )}
 
           {selectedAsteroid?.value && (
-            <div className="flex items-center justify-center p-1 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs gap-2">
+            <div className="flex items-center justify-center p-1 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-red-400 text-xs gap-2">
               <img
                 src={getAsteroidImage(selectedAsteroid.value)}
                 className="w-[24px] h-[24px] shadow-2xl"

@@ -16,6 +16,7 @@ import { IOnEntityCountSubsystem } from "../interfaces/IOnEntityCountSubsystem.s
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID, ResourceValues } from "../components/P_RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../components/ItemComponent.sol";
 
+import { LibStorage } from "../libraries/LibStorage.sol";
 import { LibResource } from "../libraries/LibResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
@@ -41,23 +42,20 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, IOnEntityCountSub
     P_RequiredResourcesComponent requiredResourcesComponent = P_RequiredResourcesComponent(
       world.getComponent(P_RequiredResourcesComponentID)
     );
-    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    if (!requiredResourcesComponent.has(targetEntity)) abi.encode(playerAddress, targetEntity);
+
+    if (!requiredResourcesComponent.has(targetEntity)) return abi.encode(playerAddress, targetEntity);
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(targetEntity);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      uint256 playerResourceHash = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
       IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
         playerAddress,
         requiredResources.resources[i]
       );
-      uint32 currItem = LibMath.getSafe(itemComponent, playerResourceHash);
-      LibResource.updateResourceAmount(
+      LibStorage.reduceResourceFromStorage(
         world,
         playerEntity,
         requiredResources.resources[i],
-        currItem - (requiredResources.values[i] * count)
+        requiredResources.values[i] * count
       );
-      //itemComponent.set(playerResourceHash, currItem - (requiredResources.values[i] * count));
     }
 
     return abi.encode(playerAddress, targetEntity);

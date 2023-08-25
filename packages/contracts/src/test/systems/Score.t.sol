@@ -73,7 +73,7 @@ contract Score is PrimodiumTest {
     console.log("score for %s Iron is %s", itemComponent.getValue(hashedAliceKey), score);
     assertEq(scoreComponent.getValue(addressToEntity(alice)), score, "score does not match");
 
-    vm.roll(10);
+    vm.roll(ironCapacity + 10);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
@@ -81,7 +81,7 @@ contract Score is PrimodiumTest {
     console.log("score for %s Iron is %s", itemComponent.getValue(hashedAliceKey), score);
     assertEq(scoreComponent.getValue(addressToEntity(alice)), score, "score does not match");
 
-    vm.roll(20);
+    vm.roll(ironCapacity + 20);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
@@ -89,7 +89,7 @@ contract Score is PrimodiumTest {
     score = scoreMultiplierComponent.getValue(IronID) * itemComponent.getValue(hashedAliceKey);
     console.log("score for %s Iron is %s", itemComponent.getValue(hashedAliceKey), score);
     assertEq(scoreComponent.getValue(addressToEntity(alice)), score, "score does not match");
-    vm.roll(30);
+    vm.roll(ironCapacity + 30);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
