@@ -23,29 +23,29 @@ import {
   UnitProductionQueueIndex,
 } from "../components/chainComponents";
 import { hashKeyEntity } from "src/util/encode";
+import { BlockIdToKey } from "src/util/constants";
 
 export function setupTrainingQueues() {
   function renderTrainingQueues(blockNumber: number, buildings: EntityID[]) {
     buildings.forEach((building) => {
+      console.log("rendering training queues for building", building);
       const startingIndex = UnitProductionQueueIndex.get(building)?.value;
-      const queueLength =
-        UnitProductionLastQueueIndex.get(building)?.value || 1;
+      const finalIndex = UnitProductionLastQueueIndex.get(building)?.value;
+      console.log(startingIndex, finalIndex);
 
-      console.log("starting index:", startingIndex);
-      console.log("length: ", queueLength);
       const owner = OwnedBy.get(building)?.value;
-      const lastClaimedAt = LastClaimedAt.get(building)?.value;
+      let startTime = LastClaimedAt.get(building)?.value;
       if (
         startingIndex == undefined ||
-        queueLength == undefined ||
+        finalIndex == undefined ||
         !owner ||
-        lastClaimedAt == undefined
+        startTime == undefined
       )
         return;
 
       const queue = [];
       let foundUnfinished = false;
-      for (let i = startingIndex; i < queueLength; i++) {
+      for (let i = startingIndex; i <= finalIndex; i++) {
         const queueIndex = i;
         const buildingQueueEntity = hashKeyEntity(building, queueIndex);
         const update = UnitProductionQueue.get(buildingQueueEntity);
@@ -59,15 +59,32 @@ export function setupTrainingQueues() {
           continue;
         }
         const trainingTime = getUnitTrainingTime(owner, update.unitEntity);
-        const trainedUnits = (blockNumber - lastClaimedAt) / trainingTime;
-        if (trainedUnits < update.count) {
-          queue.push({
-            unit: update.unitEntity,
-            count: update.count,
-            progress: trainedUnits / update.count,
-          });
+        console.log("training time: ", trainingTime);
+        let trainedUnits = (blockNumber - startTime) / trainingTime;
+        if (trainedUnits > 0) {
+          if (trainedUnits > update.count) {
+            trainedUnits = update.count;
+            foundUnfinished = queueIndex > 0;
+          } else {
+            queue.push({
+              unit: update.unitEntity,
+              count: update.count,
+              progress: trainedUnits / update.count,
+            });
+
+            foundUnfinished = true;
+          }
+        } else {
           foundUnfinished = true;
         }
+        console.log(
+          "start block: ",
+          Number(startTime),
+          "block number: ",
+          blockNumber
+        );
+        console.log("trained units: ", trainedUnits);
+        startTime += trainingTime * trainedUnits;
       }
       const units = queue.map((update) => update.unit);
       const counts = queue.map((update) => update.count);
@@ -85,14 +102,13 @@ export function setupTrainingQueues() {
     return time;
   }
 
-  const query = [
-    HasValue(Position, {
-      parent: ActiveAsteroid.get()?.value,
-    }),
-    Has(BuildingType),
-  ];
-
   defineComponentSystem(world, BlockNumber, (update) => {
+    const query = [
+      HasValue(Position, {
+        parent: ActiveAsteroid.get()?.value,
+      }),
+      Has(BuildingType),
+    ];
     const blockNumber = update?.value[0]?.value;
     if (!blockNumber) return;
     const buildings = [...runQuery(query)].map(

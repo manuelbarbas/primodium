@@ -17,7 +17,7 @@ export const train = async (
   setTransactionLoading(true);
   await execute(
     systems["system.TrainUnits"].executeTyped(buildingEntity, type, count, {
-      gasLimit: 10_000_000,
+      gasLimit: 30_000_000,
     }),
     providers,
     setNotification

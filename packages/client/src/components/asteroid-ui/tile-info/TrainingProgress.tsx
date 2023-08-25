@@ -1,18 +1,13 @@
 import { EntityID } from "@latticexyz/recs";
 import { TrainingQueue } from "src/network/components/clientComponents";
-import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
+import { BackgroundImage, BlockIdToKey } from "src/util/constants";
 
 export const TrainingProgress: React.FC<{ building: EntityID }> = ({
   building,
 }) => {
   const rawQueue = TrainingQueue.use(building);
-  //   console.log(testQueue);
-  //   const rawQueue = {
-  //     units: [BlockType.DebugUnit, BlockType.DebugUnit],
-  //     progress: [25, 0],
-  //     counts: [20, 100],
-  //   };
-  if (!rawQueue) return null;
+
+  if (!rawQueue || rawQueue.units.length == 0) return null;
   const queue = convertTrainingQueue(rawQueue);
   return (
     <div className="bg-gray-900 z-[999] w-full border rounded-md border-cyan-600 ring ring-cyan-900 p-2 text-xs flex flex-col gap-2 items-center">
@@ -47,7 +42,7 @@ const ProgressBar: React.FC<{
       </div>
       <div
         className="absolute h-full bg-blue-500"
-        style={{ width: `${percent}%` }}
+        style={{ width: `${percent * 100}%` }}
       />
     </div>
   );
