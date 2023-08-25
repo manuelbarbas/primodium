@@ -11,6 +11,7 @@ export const TrainingProgress: React.FC<{ buildingEntity: EntityID }> = ({
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
 
+  console.log("queue", queue);
   const active = queue.shift();
 
   return (

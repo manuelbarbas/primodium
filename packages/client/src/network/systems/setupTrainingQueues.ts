@@ -66,10 +66,10 @@ export function setupTrainingQueues() {
       let timeRemaining =
         trainingTime - ((blockNumber - startTime) % trainingTime);
 
-      if (trainedUnits > 0) {
+      if (trainedUnits == 0) foundUnfinished = true;
+      else {
         if (trainedUnits > update.count) {
           trainedUnits = update.count;
-          foundUnfinished = queueIndex > 0;
         } else {
           queue.push({
             unit: update.unitEntity,
@@ -80,10 +80,7 @@ export function setupTrainingQueues() {
 
           foundUnfinished = true;
         }
-      } else {
-        foundUnfinished = true;
       }
-
       startTime += trainingTime * trainedUnits;
     }
     const units = queue.map((update) => update.unit);
