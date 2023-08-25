@@ -15,10 +15,7 @@ import {
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { AsteroidType, Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import {
-  ActiveAsteroid,
-  SelectedAsteroid,
-} from "src/network/components/clientComponents";
+import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
@@ -42,7 +39,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const activeAsteroid = ActiveAsteroid.get()?.value;
 
-    const selectedAsteroid = SelectedAsteroid.get()?.value;
+    const selectedTarget = Send.get()?.destination;
 
     asteroidObjectGroup.add("Sprite").setComponents([
       ObjectPosition({
@@ -57,16 +54,16 @@ export const renderAsteroid = (scene: Scene) => {
       activeAsteroid && activeAsteroid === entityId
         ? Outline({ color: 0xffffff })
         : undefined,
-      selectedAsteroid && selectedAsteroid === entityId ? Outline() : undefined,
+      selectedTarget && selectedTarget === entityId ? Outline() : undefined,
       OnClick(() => {
         if (entityId === ActiveAsteroid.get()?.value) return;
 
-        if (selectedAsteroid && selectedAsteroid === entityId) {
-          SelectedAsteroid.remove();
+        if (selectedTarget && selectedTarget === entityId) {
+          Send.remove();
           return;
         }
 
-        SelectedAsteroid.set({ value: entityId });
+        Send.update({ destination: entityId });
       }),
     ]);
   };
@@ -82,32 +79,28 @@ export const renderAsteroid = (scene: Scene) => {
     initializeMotherlodes(entityId, coord);
   });
 
-  defineComponentSystem(
-    gameWorld,
-    SelectedAsteroid,
-    ({ value: [newValue, oldValue] }) => {
-      if (oldValue?.value) {
-        const entityId = oldValue.value;
-        const coord = Position.get(entityId);
+  defineComponentSystem(gameWorld, Send, ({ value: [newValue, oldValue] }) => {
+    if (oldValue?.destination) {
+      const entityId = oldValue.destination;
+      const coord = Position.get(entityId);
 
-        if (!coord) return;
+      if (!coord) return;
 
-        const asteroidType = AsteroidType.get(entityId)?.value;
-        if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
+      const asteroidType = AsteroidType.get(entityId)?.value;
+      if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
 
-        render(oldValue.value, coord);
-      }
-      if (newValue?.value) {
-        const entityId = newValue.value;
-        const coord = Position.get(entityId);
-
-        if (!coord) return;
-
-        const asteroidType = AsteroidType.get(entityId)?.value;
-        if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
-
-        render(newValue.value, coord);
-      }
+      render(oldValue.destination, coord);
     }
-  );
+    if (newValue?.destination) {
+      const entityId = newValue.destination;
+      const coord = Position.get(entityId);
+
+      if (!coord) return;
+
+      const asteroidType = AsteroidType.get(entityId)?.value;
+      if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
+
+      render(newValue.destination, coord);
+    }
+  });
 };

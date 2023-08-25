@@ -30,7 +30,7 @@ const FunctionListComponent: React.FC<{ cheatcodes: Cheatcodes }> = ({
     if (func) {
       const funcParams = params[funcName] || {};
       const args = Object.values(funcParams);
-      const result = func(...args);
+      func(...args);
     }
   };
 

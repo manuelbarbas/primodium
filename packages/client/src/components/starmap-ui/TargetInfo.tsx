@@ -1,7 +1,4 @@
-import {
-  BlockNumber,
-  SelectedAsteroid,
-} from "src/network/components/clientComponents";
+import { BlockNumber, Send } from "src/network/components/clientComponents";
 import { UnitBreakdown } from "./UnitBreakdown";
 import {
   AsteroidType,
@@ -22,7 +19,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { getAsteroidImage } from "src/util/asteroid";
 
 export const TargetInfo: React.FC = () => {
-  const target = SelectedAsteroid.use()?.value;
+  const target = Send.use()?.destination;
   const type = AsteroidType.use(target, { value: ESpaceRockType.Asteroid })
     .value as ESpaceRockType;
 

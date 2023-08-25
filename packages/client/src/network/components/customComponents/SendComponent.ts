@@ -2,13 +2,16 @@ import { EntityID, Metadata, World, Type } from "@latticexyz/recs";
 
 import newComponent, { Options } from "./Component";
 
-function newFleetComponent<Overridable extends boolean, M extends Metadata>(
+function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
   options?: Options<Overridable, M>
 ) {
   const component = newComponent(
     world,
     {
+      origin: Type.OptionalEntity,
+      destination: Type.OptionalEntity,
+      to: Type.OptionalEntity,
       units: Type.OptionalEntityArray,
       count: Type.OptionalNumberArray,
     },
@@ -43,7 +46,7 @@ function newFleetComponent<Overridable extends boolean, M extends Metadata>(
     units.splice(index, 1);
     count!.splice(index, 1);
 
-    component.set({ units, count });
+    component.update({ units, count });
   };
 
   const setUnitCount = (entity: EntityID, count: number) => {
@@ -54,7 +57,7 @@ function newFleetComponent<Overridable extends boolean, M extends Metadata>(
     if (!currentUnits) {
       currentUnits = [entity];
       currentCount = [count];
-      component.set({ units: currentUnits, count: currentCount });
+      component.update({ units: currentUnits, count: currentCount });
       return;
     }
 
@@ -64,16 +67,16 @@ function newFleetComponent<Overridable extends boolean, M extends Metadata>(
     if (index === -1) {
       currentUnits.push(entity);
       currentCount!.push(count);
-      component.set({ units: currentUnits, count: currentCount });
+      component.update({ units: currentUnits, count: currentCount });
       return;
     }
 
     //update existing entity
     currentCount![index] = count;
-    component.set({ units: currentUnits, count: currentCount });
+    component.update({ units: currentUnits, count: currentCount });
   };
 
   return { ...component, getUnitCount, setUnitCount, removeUnit };
 }
 
-export default newFleetComponent;
+export default newSendComponent;
