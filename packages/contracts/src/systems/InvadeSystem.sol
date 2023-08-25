@@ -11,9 +11,8 @@ import { ID as S_UpdatePlayerSpaceRockSystemID } from "systems/S_UpdatePlayerSpa
 // components
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-// libraries
 
-import { LibEncode } from "../libraries/LibEncode.sol";
+// libraries
 import { LibInvade } from "../libraries/LibInvade.sol";
 
 uint256 constant ID = uint256(keccak256("system.Invade"));
