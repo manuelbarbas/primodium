@@ -79,7 +79,7 @@ export const setupMouseInputs = (
       SelectedBuilding.remove();
       SelectedTile.set(gameCoord);
     } else {
-      if (IsDebug.get()?.value) SelectedBuilding.set({ value: building });
+      SelectedBuilding.set({ value: building });
       SelectedTile.remove();
     }
   });
