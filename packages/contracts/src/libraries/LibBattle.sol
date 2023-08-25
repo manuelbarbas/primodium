@@ -4,22 +4,87 @@ pragma solidity ^0.8.0;
 import { IWorld } from "solecs/System.sol";
 import { addressToEntity } from "solecs/utils.sol";
 //components
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
 import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
 import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
 import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "components/BattleAttackerComponent.sol";
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
-import { BattleResult, BattleParticipant } from "../types.sol";
-
+import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
+import { BattleResult, BattleParticipant, Arrival, ESendType } from "../types.sol";
+import { ArrivalsList } from "libraries/ArrivalsList.sol";
+import { LibUnits } from "./LibUnits.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
 library LibBattle {
+  function setupBattleDefender(IWorld world, uint256 battleEntity, uint256 defenderEntity, uint256 spaceRock) internal {
+    BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
+      world.getComponent(BattleDefenderComponentID)
+    );
+
+    BattleParticipant memory defender;
+    defender.participantEntity = defenderEntity;
+    defender.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    defender.unitCounts = new uint32[](defender.unitTypes.length);
+    defender.unitLevels = new uint32[](defender.unitTypes.length);
+    for (uint i = 0; i < defender.unitTypes.length; i++) {
+      defender.unitCounts[i] = (LibUnits.getUnitCountOnRock(world, defenderEntity, spaceRock, defender.unitTypes[i]));
+      defender.unitLevels[i] = LibUnits.getPlayerUnitTypeLevel(world, defenderEntity, defender.unitTypes[i]);
+    }
+    battleDefenderComponent.set(battleEntity, defender);
+  }
+
+  function setupBattleAttacker(
+    IWorld world,
+    uint256 battleEntity,
+    uint256 attackerEntity,
+    uint256 spaceRock,
+    ESendType sendType
+  ) internal {
+    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
+      world.getComponent(BattleAttackerComponentID)
+    );
+
+    BattleParticipant memory attacker;
+    attacker.participantEntity = attackerEntity;
+    attacker.unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntities();
+    attacker.unitCounts = new uint32[](attacker.unitTypes.length);
+    attacker.unitLevels = new uint32[](attacker.unitTypes.length);
+    for (uint i = 0; i < attacker.unitTypes.length; i++) {
+      attacker.unitLevels[i] = LibUnits.getPlayerUnitTypeLevel(world, attackerEntity, attacker.unitTypes[i]);
+    }
+    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(attackerEntity, spaceRock);
+    uint256 size = LibMath.getSafe(
+      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
+      playerAsteroidEntity
+    );
+    uint256 index = 0;
+    while (index < size) {
+      Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
+
+      if (arrival.sendType != sendType) {
+        index++;
+
+        continue;
+      }
+      if (arrival.arrivalBlock <= block.number) {
+        for (uint i = 0; i < arrival.units.length; i++) {
+          attacker.unitCounts[i] += arrival.units[i].count;
+        }
+        ArrivalsList.remove(world, playerAsteroidEntity, index);
+        size--;
+      } else {
+        index++;
+      }
+    }
+    battleAttackerComponent.set(battleEntity, attacker);
+  }
+
   function resolveBattle(IWorld world, uint256 battleEntity) internal view returns (BattleResult memory) {
     BattleResult memory battleResult;
 
@@ -37,7 +102,7 @@ library LibBattle {
     uint32 totalDefenceValue = getTotalDefenceValue(world, battleEntity);
 
     for (uint256 i = 0; i < attackerUnitCounts.length; i++) {
-      uint32 attackPercentage = (attackValues[i] * 100) / totalAttackValue;
+      uint32 attackPercentage = totalAttackValue > 0 ? (attackValues[i] * 100) / totalAttackValue : 0;
       uint32 defendToward = (totalDefenceValue * attackPercentage) / 100;
       uint32 battleRatio = 0;
       if (defendToward > 0) {
@@ -97,13 +162,11 @@ library LibBattle {
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
     );
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-
     BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
     uint32 totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
+      if (attackerUnitsLeft[i] <= 0) continue;
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
       totalAttackValue +=
         attackerUnitsLeft[i] *
         unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
@@ -120,13 +183,12 @@ library LibBattle {
     BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
       world.getComponent(BattleDefenderComponentID)
     );
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
 
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
     uint32 totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
+      if (defenderUnitsLeft[i] <= 0) continue;
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, defender.participantEntity, defender.unitTypes[i]);
       totalDefenceValue +=
         defenderUnitsLeft[i] *
         unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
@@ -135,7 +197,6 @@ library LibBattle {
   }
 
   function getTotalDefenceValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalDefenceValue) {
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
     P_UnitDefenceComponent unitDefenceComponent = P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID));
     BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
       world.getComponent(BattleDefenderComponentID)
@@ -143,8 +204,8 @@ library LibBattle {
     BattleParticipant memory defender = battleDefenderComponent.getValue(battleEntity);
     totalDefenceValue = 0;
     for (uint256 i = 0; i < defender.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(defender.unitTypes[i], defender.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
+      if (defender.unitCounts[i] <= 0) continue;
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, defender.participantEntity, defender.unitTypes[i]);
       totalDefenceValue +=
         defender.unitCounts[i] *
         unitDefenceComponent.getValue(LibEncode.hashKeyEntity(defender.unitTypes[i], level));
@@ -156,8 +217,7 @@ library LibBattle {
     IWorld world,
     uint256 battleEntity
   ) internal view returns (uint32[] memory attackValues, uint32 totalAttackValue) {
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-    P_UnitAttackComponent unitDefenceComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
+    P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
     );
@@ -165,82 +225,14 @@ library LibBattle {
     attackValues = new uint32[](attacker.unitTypes.length);
     totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
-
+      if (attacker.unitCounts[i] <= 0) continue;
+      uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
       attackValues[i] =
         attacker.unitCounts[i] *
-        unitDefenceComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
+        unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
       totalAttackValue += attackValues[i];
     }
 
     return (attackValues, totalAttackValue);
-  }
-
-  function getTotalCargoValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalCargoValue) {
-    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
-    P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
-    BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
-      world.getComponent(BattleAttackerComponentID)
-    );
-    BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-
-    totalCargoValue = 0;
-    for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
-      uint256 playerUnitEntity = LibEncode.hashKeyEntity(attacker.unitTypes[i], attacker.participantEntity);
-      uint32 level = levelComponent.getValue(playerUnitEntity);
-
-      totalCargoValue +=
-        attacker.unitCounts[i] *
-        unitCargoComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
-    }
-
-    return totalCargoValue;
-  }
-
-  function resolveRaid(IWorld world, uint256 battleEntity) internal {
-    uint32 totalCargo = getTotalCargoValue(world, battleEntity);
-
-    if (totalCargo == 0) return;
-
-    BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
-      battleEntity
-    );
-
-    (uint32 totalResources, uint32[] memory resources) = LibResource.getTotalResources(
-      world,
-      defender.participantEntity
-    );
-    if (totalResources == 0) return;
-
-    LibResource.claimAllResources(
-      world,
-      BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(battleEntity).participantEntity
-    );
-    LibResource.claimAllResources(
-      world,
-      BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(battleEntity).participantEntity
-    );
-
-    BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
-      battleEntity
-    );
-
-    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
-      .getValue(defender.participantEntity);
-
-    for (uint256 i = 0; i < resources.length; i++) {
-      uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
-
-      if (resources[i] >= raidAmount) resources[i] = resources[i] - raidAmount;
-      else {
-        raidAmount = resources[i];
-        resources[i] = 0;
-      }
-      LibStorage.addResourceToStorage(world, resourceIds[i], raidAmount, attacker.participantEntity);
-
-      itemComponent.set(LibEncode.hashKeyEntity(resourceIds[i], defender.participantEntity), resources[i]);
-    }
   }
 }
