@@ -77,15 +77,12 @@ library LibBattle {
         for (uint i = 0; i < arrival.units.length; i++) {
           attacker.unitCounts[i] += arrival.units[i].count;
         }
-
         ArrivalsList.remove(world, playerAsteroidEntity, index);
-
         size--;
       } else {
         index++;
       }
     }
-    console.log("while loop exit index: %s , size: %s", index, size);
     battleAttackerComponent.set(battleEntity, attacker);
   }
 

@@ -82,7 +82,6 @@ library LibReinforce {
       ArrivalsList.remove(world, playerAsteroidEntity, arrivalIndex);
       return true;
     } else {
-      console.log("arrival for reinforcements index: %s received but not resolved success", arrivalIndex);
       ArrivalsList.set(world, playerAsteroidEntity, arrivalIndex, arrival);
       return false;
     }
