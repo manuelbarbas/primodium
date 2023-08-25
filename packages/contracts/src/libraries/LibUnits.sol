@@ -125,7 +125,6 @@ library LibUnits {
     return true;
   }
 
-  function stationUnits(IWorld world, uint256 asteroidEntity, uint256 unitType, uint32 count) internal {}
 
   function howManyUnitsCanAdd(IWorld world, uint256 playerEntity, uint256 unitType) internal view returns (uint32) {
     uint32 min = BIGNUM;
