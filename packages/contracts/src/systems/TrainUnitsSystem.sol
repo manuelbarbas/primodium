@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
-import "forge-std/console.sol";
 // components
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
@@ -45,18 +44,14 @@ contract TrainUnitsSystem is PrimodiumSystem {
       msg.sender,
       PositionComponent(getC(PositionComponentID)).getValue(buildingEntity).parent
     );
-    console.log("train units system after update space rock");
     require(
       LibUnits.canBuildingProduceUnit(world, buildingEntity, unitType),
       "[TrainUnitsSystem] Building cannot produce unit"
     );
-    console.log("train units system after can build check");
     require(
       LibUnits.checkUtilityResourceReqs(world, playerEntity, unitType, count),
       "[TrainUnitsSystem] You do not have the required Utility resources"
     );
-
-    console.log("train units system after utility resource check");
     //check resource requirements and if ok spend required resources
     if (P_RequiredResourcesComponent(getC(P_RequiredResourcesComponentID)).has(unitTypeLevelEntity)) {
       require(

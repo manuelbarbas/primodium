@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "systems/internal/PrimodiumSystem.sol";
 
 import { ID as TrainUnitsSystemID } from "systems/TrainUnitsSystem.sol";
@@ -24,7 +23,6 @@ contract S_UpdatePlayerSpaceRockSystem is IOnEntitySubsystem, PrimodiumSystem {
 
     uint256 playerEntity = ownedByComponent.getValue(spaceRockEntity);
     LibUpdateSpaceRock.updateSpaceRock(world, playerEntity, spaceRockEntity);
-    console.log("update space rock finished");
   }
 
   function executeTyped(address playerAddress, uint256 spaceRockEntity) public returns (bytes memory) {

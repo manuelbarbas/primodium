@@ -314,7 +314,7 @@ contract SendUnitsTest is PrimodiumTest {
     return arrival;
   }
 
-  function getPlayerUnitSpeed(IWorld world, address player, uint256 unitType) public returns (uint32) {
+  function getPlayerUnitSpeed(IWorld world, address player, uint256 unitType) public view returns (uint32) {
     uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(player), unitType);
     uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, playerUnitTypeLevel);
     return P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(unitTypeLevelEntity);

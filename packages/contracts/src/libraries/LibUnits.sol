@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 import { IWorld } from "solecs/interfaces/IWorld.sol";
-import "forge-std/console.sol";
+
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
@@ -73,18 +73,18 @@ library LibUnits {
     P_UnitProductionMultiplierComponent unitProductionMultiplierComponent = P_UnitProductionMultiplierComponent(
       world.getComponent(P_UnitProductionMultiplierComponentID)
     );
-    console.log("getBuildingBuildTimeForUnit");
+
     uint256 buildingType = BuildingTypeComponent(world.getComponent(BuildingTypeComponentID)).getValue(buildingEntity);
-    console.log("buildingType", buildingType);
+
     uint32 buildingLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(buildingEntity);
-    console.log("buildingLevel", buildingLevel);
+
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    console.log("buildingLevelEntity", buildingLevelEntity);
+
     uint32 buildingUnitProductionMultiplier = unitProductionMultiplierComponent.getValue(buildingLevelEntity);
-    console.log("buildingUnitProductionMultiplier", buildingUnitProductionMultiplier);
+
     uint32 unitTrainingTime = (getUnitTrainingTime(world, playerEntity, unitType) * 100) /
       buildingUnitProductionMultiplier;
-    console.log("unitTrainingTime", unitTrainingTime);
+
     return unitTrainingTime;
   }
 
@@ -163,9 +163,9 @@ library LibUnits {
     P_UnitTrainingTimeComponent unitTrainingTimeComponent = P_UnitTrainingTimeComponent(
       world.getComponent(P_UnitTrainingTimeComponentID)
     );
-    console.log("getUnitTrainingTime");
+
     uint32 unitTypeLevel = getPlayerUnitTypeLevel(world, playerEntity, unitType);
-    console.log("unitTypeLevel", unitTypeLevel);
+
     return unitTrainingTimeComponent.getValue(LibEncode.hashKeyEntity(unitType, unitTypeLevel));
   }
 
