@@ -5,6 +5,7 @@ import newComponent, {
   newNumberComponent,
   newStringComponent,
 } from "./customComponents/Component";
+import { newArrivalComponent } from "./customComponents/ArrivalComponent";
 
 const commonIdPrefix = "component.";
 
@@ -366,6 +367,12 @@ export const UnitProductionQueueIndex = newNumberComponent(world, {
 });
 
 /* -------------------------------------------------------------------------- */
+/*                                  Arrivals                                  */
+/* -------------------------------------------------------------------------- */
+
+export const Arrival = newArrivalComponent();
+
+/* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
 /* -------------------------------------------------------------------------- */
 
@@ -432,6 +439,9 @@ export default {
   UnitProductionOwnedBy,
   UnitProductionQueue,
   UnitProductionQueueIndex,
+
+  // Arrivals
+  Arrival,
 
   // Scoreboard
   Score,

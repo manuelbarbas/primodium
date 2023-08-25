@@ -14,7 +14,7 @@ contract ArrivalComponent is Component {
     values = new LibTypes.SchemaValue[](8);
 
     keys[0] = "sendType";
-    values[0] = LibTypes.SchemaValue.UINT256;
+    values[0] = LibTypes.SchemaValue.UINT8;
 
     keys[1] = "unitCounts";
     values[1] = LibTypes.SchemaValue.UINT32_ARRAY;
