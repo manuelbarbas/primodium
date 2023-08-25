@@ -16,8 +16,6 @@ import {
 } from "src/network/components/chainComponents";
 import { clampedIndex, toRomanNumeral } from "src/util/common";
 import { FaTrash } from "react-icons/fa";
-import { UnitTraining } from "./UnitTraining";
-import { TrainingProgress } from "./TrainingProgress";
 import { TrainUnits } from "./TrainUnits";
 
 export const BuildingInfo: React.FC<{
