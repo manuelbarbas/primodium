@@ -9,8 +9,10 @@ import { TrainUnitsSystem, ID as TrainUnitsSystemID } from "systems/TrainUnitsSy
 import { BuildSystem, ID as BuildSystemID } from "systems/BuildSystem.sol";
 
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
+import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { P_UnitTravelSpeedComponent, ID as P_UnitTravelSpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 
 import { LibSend } from "libraries/LibSend.sol";
@@ -186,6 +188,13 @@ contract SendUnitsTest is PrimodiumTest {
     setupInvasion(DebugUnit);
 
     uint256 unitProductionBuildingEntityID = LibEncode.hashKeyCoord(BuildingKey, getIronCoord(alice));
+    uint256 total = 1000;
+    componentDevSystem.executeTyped(
+      MaxUtilityComponentID,
+      LibEncode.hashKeyEntity(HousingUtilityResourceID, addressToEntity(alice)),
+      abi.encode(total)
+    );
+
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit3, 10);
     vm.roll(block.number + 1000);
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
