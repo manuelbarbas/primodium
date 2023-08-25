@@ -10,6 +10,7 @@ const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
   const gameReady = GameReady.use()?.value;
+  console.log("game ready:", gameReady);
 
   return (
     <div>
