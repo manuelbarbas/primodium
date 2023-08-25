@@ -243,7 +243,7 @@ export const UnitTraining: React.FC<{ buildingEntity: EntityID }> = ({
                 </div>
                 <button
                   className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={maximum - unitsTaken <= requiredHousing}
+                  disabled={maximum - unitsTaken < requiredHousing}
                   onClick={() => {
                     train(buildingEntity, selectedUnit, count, network);
                   }}
