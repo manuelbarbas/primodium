@@ -140,6 +140,10 @@
       "writeAccess": ["BattleResultComponent"]
     },
     {
+      "name": "S_ResolveRaidUnitsSystem",
+      "writeAccess": ["*"]
+    },
+    {
       "name": "S_RaidSystem",
       "writeAccess": ["ItemComponent", "LastClaimedAtComponent", "ScoreComponent"]
     },
