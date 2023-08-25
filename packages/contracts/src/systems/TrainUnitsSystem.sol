@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
 
@@ -40,7 +39,6 @@ contract TrainUnitsSystem is PrimodiumSystem {
     (uint256 buildingEntity, uint256 unitType, uint32 count) = abi.decode(args, (uint256, uint256, uint32));
 
     uint256 playerEntity = addressToEntity(msg.sender);
-    console.log("TrainUnitsSystem: execute: playerEntity: %s unitType: %s count: %s", playerEntity, unitType, count);
     uint32 playerUnitLevel = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
     uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, playerUnitLevel);
 
@@ -74,12 +72,6 @@ contract TrainUnitsSystem is PrimodiumSystem {
     //Occupied Utility Update
     if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(unitTypeLevelEntity)) {
       // update occupied utility
-      console.log(
-        "TrainUnitsSystem: required utility: playerEntity: %s unitType: %s count: %s",
-        playerEntity,
-        unitType,
-        count
-      );
       LibUnits.updateOccuppiedUtilityResources(world, playerEntity, unitType, count, true);
     }
 

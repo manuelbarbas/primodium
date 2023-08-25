@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "forge-std/console.sol";
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById, entityToAddress } from "./internal/PrimodiumSystem.sol";
 

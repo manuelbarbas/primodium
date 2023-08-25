@@ -22,8 +22,6 @@ import { LibResource } from "libraries/LibResource.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 
-import "forge-std/console.sol";
-
 library LibBattle {
   function setupBattleDefender(IWorld world, uint256 battleEntity, uint256 defenderEntity, uint256 spaceRock) internal {
     BattleDefenderComponent battleDefenderComponent = BattleDefenderComponent(
@@ -68,28 +66,24 @@ library LibBattle {
     );
     uint256 index = 0;
     while (index < size) {
-      console.log("while loop index: %s , size: %s", index, size);
       Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
-      console.log("while loop after get index: %s , size: %s", index, size);
+
       if (arrival.sendType != sendType) {
         index++;
-        console.log("while loop not invade increment index: %s , size: %s", index, size);
+
         continue;
       }
       if (arrival.arrivalBlock <= block.number) {
-        console.log("arrival reached add units index %s", index);
         for (uint i = 0; i < arrival.units.length; i++) {
           attacker.unitCounts[i] += arrival.units[i].count;
         }
-        console.log("try to remove arrival at %s", index);
+
         ArrivalsList.remove(world, playerAsteroidEntity, index);
-        console.log("removed arrival at %s", index);
+
         size--;
       } else {
-        console.log("while loop invade not reached yet increment index: %s , size: %s", index, size);
         index++;
       }
-      console.log("while loop end of loop index: %s , size: %s", index, size);
     }
     console.log("while loop exit index: %s , size: %s", index, size);
     battleAttackerComponent.set(battleEntity, attacker);

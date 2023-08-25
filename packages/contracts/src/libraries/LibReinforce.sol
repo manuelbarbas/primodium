@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-import "forge-std/console.sol";
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 
@@ -59,9 +58,7 @@ library LibReinforce {
     uint256 arrivalIndex
   ) internal returns (bool) {
     uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(playerEntity, asteroidEntity);
-    console.log("try get arrival for reinforcements index: %s", arrivalIndex);
     Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, arrivalIndex);
-    console.log("arrival for reinforcements index: %s get success", arrivalIndex);
     bool isArrivalResolved = true;
     for (uint i = 0; i < arrival.units.length; i++) {
       if (arrival.units[i].count == 0) continue;
@@ -70,21 +67,18 @@ library LibReinforce {
         arrival.units[i].count
       );
       if (num > 0) {
-        console.log("adding %s units to receiver ", num);
         LibUpdateSpaceRock.addUnitsToAsteroid(world, playerEntity, asteroidEntity, arrival.units[i].unitType, num);
         LibUnits.updateOccuppiedUtilityResources(world, playerEntity, arrival.units[i].unitType, num, true);
-        console.log("reducing %s arrival units by %s ", arrival.units[i].count, num);
+
         arrival.units[i].count -= num;
-        console.log("reducing %s arrival units by %s done", arrival.units[i].count, num);
+
         LibUnits.updateOccuppiedUtilityResources(world, arrival.from, arrival.units[i].unitType, num, false);
-        console.log("adding %s units to receiver done", num);
       }
       if (arrival.units[i].count > 0) {
         isArrivalResolved = false;
       }
     }
     if (isArrivalResolved) {
-      console.log("arrival for reinforcements index: %s received and resolved success", arrivalIndex);
       ArrivalsList.remove(world, playerAsteroidEntity, arrivalIndex);
       return true;
     } else {

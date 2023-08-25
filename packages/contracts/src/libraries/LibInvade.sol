@@ -11,7 +11,6 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 //systems
 import { S_ResolveBattleSystem, ID as S_ResolveBattleSystemID } from "systems/S_ResolveBattleSystem.sol";
 
-import "forge-std/console.sol";
 // comps
 
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
@@ -47,7 +46,6 @@ library LibInvade {
       "LibInvade: can only invade motherlodes"
     );
     LibBattle.setupBattleAttacker(world, battleEntity, invader, rockEntity, ESendType.INVADE);
-    console.log("setup attacker");
     uint256 defenderEntity = 0;
     if (ownedByComponent.has(rockEntity)) {
       require(ownedByComponent.getValue(rockEntity) != invader, "[Invade]: can not invade your own rock");
@@ -67,14 +65,11 @@ library LibInvade {
       return;
     }
     LibBattle.setupBattleDefender(world, battleEntity, defenderEntity, rockEntity);
-    console.log("setup defender");
     IOnEntitySubsystem(getAddressById(world.systems(), S_ResolveBattleSystemID)).executeTyped(
       entityToAddress(invader),
       battleEntity
     );
-    console.log("resolve battle");
     updatePlayerUnitsAfterBattle(world, battleEntity, rockEntity);
-    console.log("update units after battle");
     uint256 winnerEntity = BattleResultComponent(world.getComponent(BattleResultComponentID))
       .getValue(battleEntity)
       .winnerEntity;
@@ -82,7 +77,7 @@ library LibInvade {
       LibReinforce.recallAllReinforcements(world, rockEntity);
     }
     ownedByComponent.set(rockEntity, winnerEntity);
-    console.log("ownership updated after battle");
+
     //ArrivalsList.get(world, playerAsteroidEntity, arrival);
   }
 
