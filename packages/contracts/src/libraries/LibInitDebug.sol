@@ -504,7 +504,7 @@ library LibInitDebug {
     unitTypes[0] = DebugUnit;
     unitTypes[1] = DebugUnit3;
     unitProductionTypesComponent.set(entity, unitTypes);
-
+    unitProductionMultiplierComponent.set(entity, 100);
     // Level 2
     entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 2);
     unitTypes = new uint256[](2);
