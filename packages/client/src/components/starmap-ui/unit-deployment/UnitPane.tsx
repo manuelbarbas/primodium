@@ -9,15 +9,7 @@ import { getUnitStats } from "src/util/trainUnits";
 export const UnitPane: React.FC<{
   unit: EntityID;
   maximum: number;
-  setSelectedUnit: React.Dispatch<
-    React.SetStateAction<
-      | {
-          type: EntityID;
-          count: number;
-        }
-      | undefined
-    >
-  >;
+  setSelectedUnit: React.Dispatch<React.SetStateAction<EntityID | undefined>>;
 }> = ({ unit, maximum, setSelectedUnit }) => {
   const [count, setCount] = useState<number | "">(Fleet.getUnitCount(unit));
   const fleet = Fleet.use();

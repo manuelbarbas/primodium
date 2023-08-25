@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { BackgroundImage } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
 import { UnitPane } from "./UnitPane";
 import { Fleet, Hangar } from "src/network/components/clientComponents";
@@ -11,10 +11,7 @@ export const HangarPane: React.FC<{
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ show, setShow }) => {
-  const [selectedUnit, setSelectedUnit] = useState<{
-    type: EntityID;
-    count: number;
-  }>();
+  const [selectedUnit, setSelectedUnit] = useState<EntityID>();
   useEffect(() => {
     if (show) {
       setSelectedUnit(undefined);
@@ -24,6 +21,11 @@ export const HangarPane: React.FC<{
   const hangar = Hangar.use();
   const fleet = Fleet.use();
   if (!hangar) return null;
+
+  const selectedCount = useMemo(() => {
+    if (!selectedUnit) return 0;
+    return hangar.counts[hangar.units.indexOf(selectedUnit)];
+  }, [selectedUnit, hangar]);
 
   const totalUnits =
     hangar.counts.reduce((a, b) => a + b, 0) -
@@ -74,7 +76,7 @@ export const HangarPane: React.FC<{
                     <button
                       key={index}
                       className="relative flex flex-col items-center group hover:scale-110 transition-transform hover:z-50"
-                      onClick={() => setSelectedUnit(unit)}
+                      onClick={() => setSelectedUnit(unit.type)}
                     >
                       <img
                         src={
@@ -104,9 +106,9 @@ export const HangarPane: React.FC<{
 
           {selectedUnit && (
             <UnitPane
-              unit={selectedUnit?.type}
+              unit={selectedUnit}
               setSelectedUnit={setSelectedUnit}
-              maximum={selectedUnit.count}
+              maximum={selectedCount}
             />
           )}
         </div>
