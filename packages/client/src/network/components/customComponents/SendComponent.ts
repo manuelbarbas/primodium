@@ -1,6 +1,7 @@
 import { EntityID, Metadata, World, Type } from "@latticexyz/recs";
 
 import newComponent, { Options } from "./Component";
+import { ActiveAsteroid } from "../clientComponents";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -14,6 +15,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
       to: Type.OptionalEntity,
       units: Type.OptionalEntityArray,
       count: Type.OptionalNumberArray,
+      sendType: Type.OptionalNumber,
     },
     options
   );
@@ -31,6 +33,16 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     if (index >= count.length) return 0;
 
     return count[index];
+  };
+
+  const remove = (entity: EntityID) => {
+    component.update({
+      origin: ActiveAsteroid.get()?.value,
+      destination: undefined,
+      to: undefined,
+      units: undefined,
+      count: undefined,
+    });
   };
 
   const removeUnit = (entity: EntityID) => {
@@ -76,7 +88,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     component.update({ units: currentUnits, count: currentCount });
   };
 
-  return { ...component, getUnitCount, setUnitCount, removeUnit };
+  return { ...component, getUnitCount, setUnitCount, removeUnit, remove };
 }
 
 export default newSendComponent;

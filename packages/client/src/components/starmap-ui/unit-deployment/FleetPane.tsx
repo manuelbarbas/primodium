@@ -3,7 +3,12 @@ import { motion } from "framer-motion";
 import { FaTrash } from "react-icons/fa";
 import Spinner from "src/components/shared/Spinner";
 import { useMud } from "src/hooks";
-import { Send } from "src/network/components/clientComponents";
+import { OwnedBy } from "src/network/components/chainComponents";
+import {
+  Account,
+  ActiveAsteroid,
+  Send,
+} from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getAsteroidImage } from "src/util/asteroid";
 import { getBlockTypeName } from "src/util/common";
@@ -19,21 +24,24 @@ export const FleetPane: React.FC<{
   const send = Send.use(undefined, {
     units: new Array<EntityID>(),
     count: new Array<number>(),
-    origin: undefined,
+    origin: ActiveAsteroid.get()?.value,
     destination: undefined,
     to: undefined,
+    sendType: undefined,
   });
 
   const sendFleet = (sendType: ESendType) => {
+    const account = Account.get()?.value;
     if (
-      origin == undefined ||
-      send.to == undefined ||
+      account == undefined ||
+      send.origin == undefined ||
       send.units === undefined ||
       send.units.length === 0 ||
       send.origin === undefined ||
       send.destination === undefined
     )
       return;
+    const to = OwnedBy.get(undefined, { value: account })?.value;
 
     const arrivalUnits = send.units.map((unit, index) => ({
       unitType: unit,
@@ -45,7 +53,7 @@ export const FleetPane: React.FC<{
       sendType,
       send.origin,
       send.destination,
-      send.to,
+      to,
       network
     );
   };
@@ -108,6 +116,19 @@ export const FleetPane: React.FC<{
         )}
 
         <div className="flex flex-col items-center justify-center ml-2 border rounded-md border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-32 h-full">
+          {!send.origin ? (
+            <b className="p-1 rounded text-center border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs">
+              NO ORIGIN SELECTED
+            </b>
+          ) : (
+            <div className="flex items-center justify-center p-1 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-red-400 text-xs gap-2">
+              <img
+                src={getAsteroidImage(send.origin)}
+                className="w-[24px] h-[24px] shadow-2xl"
+              />
+              ORIGIN LOCKED
+            </div>
+          )}
           {!send.destination ? (
             <b className="p-1 rounded text-center border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs">
               NO TARGET SELECTED
@@ -121,7 +142,6 @@ export const FleetPane: React.FC<{
               TARGET LOCKED
             </div>
           )}
-
           {send.destination && (
             <div className="flex gap-2 text-xs p-2">
               {(!send.units || send.units?.length === 0) && (
