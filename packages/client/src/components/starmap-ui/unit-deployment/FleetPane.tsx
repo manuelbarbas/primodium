@@ -1,8 +1,11 @@
+import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import { FaTrash } from "react-icons/fa";
 import Spinner from "src/components/shared/Spinner";
 import { useMud } from "src/hooks";
+import { OwnedBy } from "src/network/components/chainComponents";
 import {
+  ActiveAsteroid,
   Fleet,
   SelectedAsteroid,
 } from "src/network/components/clientComponents";
@@ -10,6 +13,7 @@ import { useGameStore } from "src/store/GameStore";
 import { getAsteroidImage } from "src/util/asteroid";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
+import { send } from "src/util/web3/send";
 import { ESendType } from "src/util/web3/types";
 import { sendUnits } from "src/util/web3/units";
 
@@ -27,10 +31,19 @@ export const FleetPane: React.FC<{
 
   const sendFleet = (sendType: ESendType) => {
     const destinationAsteroid = selectedAsteroid?.value;
+    const origin = ActiveAsteroid.get()?.value;
 
+    const recipient = OwnedBy.get(destinationAsteroid, {
+      value: "0" as EntityID,
+    }).value;
     if (destinationAsteroid === undefined) return;
 
-    if (fleet.units === undefined || fleet.units.length === 0) return;
+    if (
+      origin == undefined ||
+      fleet.units === undefined ||
+      fleet.units.length === 0
+    )
+      return;
 
     const arrivalUnits = fleet.units.map((unit, index) => ({
       unitType: unit,
@@ -38,6 +51,14 @@ export const FleetPane: React.FC<{
     }));
 
     sendUnits(destinationAsteroid, arrivalUnits, sendType, network);
+    // send(
+    //   arrivalUnits,
+    //   sendType,
+    //   origin,
+    //   destinationAsteroid,
+    //   recipient,
+    //   network
+    // );
   };
 
   return (

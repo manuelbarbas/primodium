@@ -31,7 +31,6 @@ const FunctionListComponent: React.FC<{ cheatcodes: Cheatcodes }> = ({
       const funcParams = params[funcName] || {};
       const args = Object.values(funcParams);
       const result = func(...args);
-      if (result) console.log("result:", result);
     }
   };
 

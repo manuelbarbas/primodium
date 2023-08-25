@@ -30,16 +30,11 @@ export const HangarPane: React.FC<{
   const totalUnits =
     hangar.counts.reduce((a, b) => a + b, 0) -
     (fleet?.count ? fleet.count.reduce((a, b) => a + b, 0) : 0);
-  console.log("totalUnits: ", totalUnits);
   const availableUnits = hangar.units.map((unit, i) => ({
     type: unit,
     count: hangar.counts[i],
   }));
-  console.log("selectedUnit", selectedUnit);
-  console.log(
-    "fleet",
-    fleet?.count?.reduce((a, b) => a + b, 0)
-  );
+
   return (
     <motion.div
       initial={{ translateY: -100, opacity: 0 }}
@@ -71,7 +66,6 @@ export const HangarPane: React.FC<{
             <div className="flex flex-col items-center space-y-3">
               <div className="flex flex-wrap gap-2 items-center justify-center">
                 {availableUnits.map((unit, index) => {
-                  console.log("fleet count", Fleet.getUnitCount(unit.type));
                   return (
                     <button
                       key={index}

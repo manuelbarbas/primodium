@@ -4,9 +4,10 @@ import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 import { ESendType } from "./types";
+import { ArrivalUnitStruct } from "../../../../contracts/types/ethers-contracts/SendUnitsSystem";
 
 export const send = async (
-  arrivalUnits: { unitType: EntityID; count: number }[],
+  arrivalUnits: ArrivalUnitStruct[],
   sendType: ESendType,
   origin: EntityID,
   destination: EntityID,
@@ -27,7 +28,7 @@ export const send = async (
       destination,
       to,
       {
-        gasLimit: 30_000_000,
+        gasLimit: 5_000_000,
       }
     ),
     providers,
