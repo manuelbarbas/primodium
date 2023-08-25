@@ -528,10 +528,6 @@ library LibInitDebug {
     P_UnitCargoComponent unitCargoComponent = P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID));
     P_UnitMiningComponent unitMiningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
 
-    unitMiningComponent.set(DebugUnitMiner, 100);
-
-    unitMiningComponent.set(DebugUnitMiner2, 47);
-
     //DebugUnit
     // Level 1
     uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
@@ -612,5 +608,11 @@ library LibInitDebug {
     unitAttackComponent.set(entity, 5);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 100);
+
+    entity = LibEncode.hashKeyEntity(DebugUnitMiner, 1);
+    unitMiningComponent.set(entity, 100);
+
+    entity = LibEncode.hashKeyEntity(DebugUnitMiner2, 1);
+    unitMiningComponent.set(entity, 47);
   }
 }

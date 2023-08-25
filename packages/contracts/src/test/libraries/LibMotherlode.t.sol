@@ -23,6 +23,7 @@ import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components
 import { LibMotherlode } from "libraries/LibMotherlode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
+import { LibUnits } from "libraries/LibUnits.sol";
 import { BIGNUM } from "../../prototypes/Debug.sol";
 import "src/types.sol";
 import "src/prototypes.sol";
@@ -171,7 +172,7 @@ contract LibMotherlodeTest is PrimodiumTest {
 
     LibUpdateSpaceRock.claimMotherlodeResource(world, playerEntity, motherlodeEntity, block.number);
 
-    uint32 miningPower = LibMath.getSafe(unitMiningComponent, DebugUnitMiner);
+    uint32 miningPower = getMiningPowerOfUnit(world, playerEntity, DebugUnitMiner);
 
     uint32 totalMined = miningPower * uint32(timeElapsed);
     console.log("total mined: ", totalMined);
@@ -182,7 +183,7 @@ contract LibMotherlodeTest is PrimodiumTest {
 
     uint256 score = scoreMultiplierComponent.getValue(maxResource.resource) *
       itemComponent.getValue(resourcePlayerEntity);
-    console.log("score for %s Iron is %s", itemComponent.getValue(resourcePlayerEntity), score);
+    console.log("score for %s motherlodeResource is %s", itemComponent.getValue(resourcePlayerEntity), score);
     assertEq(scoreComponent.getValue(playerEntity), score, "score does not match");
   }
 
@@ -215,8 +216,8 @@ contract LibMotherlodeTest is PrimodiumTest {
 
     LibUpdateSpaceRock.claimMotherlodeResource(world, playerEntity, motherlodeEntity, block.number);
 
-    uint32 miningPower = LibMath.getSafe(unitMiningComponent, DebugUnitMiner);
-    uint32 miningPower2 = LibMath.getSafe(unitMiningComponent, DebugUnitMiner2);
+    uint32 miningPower = getMiningPowerOfUnit(world, playerEntity, DebugUnitMiner);
+    uint32 miningPower2 = getMiningPowerOfUnit(world, playerEntity, DebugUnitMiner2);
 
     uint32 totalMined = miningPower * uint32(timeElapsed) + miningPower2 * uint32(timeElapsed);
     console.log("total mined: ", totalMined);
@@ -233,6 +234,12 @@ contract LibMotherlodeTest is PrimodiumTest {
     ) * itemComponent.getValue(resourcePlayerEntity);
     console.log("score for %s Iron is %s", itemComponent.getValue(resourcePlayerEntity), score);
     assertEq(scoreComponent.getValue(playerEntity), score, "score does not match");
+  }
+
+  function getMiningPowerOfUnit(IWorld world, uint256 playerEntity, uint256 unitType) public view returns (uint32) {
+    P_UnitMiningComponent unitMiningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
+    uint32 playerUnitLevel = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
+    return LibMath.getSafe(unitMiningComponent, LibEncode.hashKeyEntity(unitType, playerUnitLevel));
   }
 
   function testClaimMaxMotherlode() public {
