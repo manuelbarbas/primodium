@@ -86,14 +86,14 @@ export default function UpgradeBuildingButton({
   } else if (!isLevelConditionMet) {
     upgradeText = "Max Level Reached";
   } else {
-    upgradeText = "Upgrade Building to Level " + upgradedLevel.toString();
+    upgradeText = "Upgrade Building Level " + upgradedLevel.toString();
   }
 
   return (
     <div className="flex flex-col items-center">
       <GameButton
         id={id}
-        className="w-44 mt-2 text-sm"
+        className="w-44 text-sm"
         onClick={() => upgradeBuilding(coords, network)}
         color={
           isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined

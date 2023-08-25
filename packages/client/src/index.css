@@ -34,18 +34,15 @@
   }
 
   .scrollbar::-webkit-scrollbar {
-    width: 20px;
-    height: 20px;
+    @apply relative w-1;
   }
 
   .scrollbar::-webkit-scrollbar-track {
-    border-radius: 10px;
+    @apply bg-slate-700;
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #6b7280;
-    border-right: 6px solid #334155;
-    border-left: 6px solid #334155;
+    @apply bg-slate-900 rounded-md;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {

@@ -51,6 +51,7 @@ export function setupTrainingQueues() {
           unit: update.unitEntity,
           count: update.count,
           progress: 0,
+          timeRemaining: 0,
         });
         continue;
       }
@@ -60,6 +61,11 @@ export function setupTrainingQueues() {
         update.unitEntity
       );
       let trainedUnits = (blockNumber - startTime) / trainingTime;
+
+      //temp
+      let timeRemaining =
+        trainingTime - ((blockNumber - startTime) % trainingTime);
+
       if (trainedUnits > 0) {
         if (trainedUnits > update.count) {
           trainedUnits = update.count;
@@ -69,6 +75,7 @@ export function setupTrainingQueues() {
             unit: update.unitEntity,
             count: update.count,
             progress: trainedUnits / update.count,
+            timeRemaining: timeRemaining,
           });
 
           foundUnfinished = true;
@@ -82,7 +89,8 @@ export function setupTrainingQueues() {
     const units = queue.map((update) => update.unit);
     const counts = queue.map((update) => update.count);
     const progress = queue.map((update) => update.progress);
-    TrainingQueue.set({ units, counts, progress }, building);
+    const timeRemaining = queue.map((update) => update.timeRemaining);
+    TrainingQueue.set({ units, counts, progress, timeRemaining }, building);
   }
 
   defineComponentSystem(world, BlockNumber, (update) => {
