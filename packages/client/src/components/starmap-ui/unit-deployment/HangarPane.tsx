@@ -68,6 +68,7 @@ export const HangarPane: React.FC<{
           {!show && <p className="text-xs opacity-50">{totalUnits} unit(s)</p>}
         </div>
       </motion.button>
+
       {show && (
         <div className="bg-slate-900/90 pixel-images border border-cyan-400 p-3 w-80">
           {selectedUnit === null && (

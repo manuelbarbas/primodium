@@ -2,10 +2,12 @@ import { EntityID } from "@latticexyz/recs";
 import {
   BuildingType,
   Level,
+  P_TrainingTime,
   P_UnitAttack,
   P_UnitCargo,
   P_UnitDefence,
   P_UnitMining,
+  P_UnitProductionMultiplier,
   P_UnitProductionTypes,
   P_UnitTravelSpeed,
 } from "src/network/components/chainComponents";
@@ -50,6 +52,23 @@ export function getUnitStats(unitEntity: EntityID) {
   ];
 }
 
-export function checkUtilityReqs() {}
+// time is in blocks (~1/second)
+export function getUnitTrainingTime(
+  player: EntityID,
+  building: EntityID,
+  unit: EntityID
+) {
+  const playerUnitEntity = hashKeyEntity(player, unit);
+  const playerUnitLevel = Level.get(playerUnitEntity, { value: 1 }).value;
+  const unitLevelEntity = hashKeyEntity(unit, playerUnitLevel);
 
-export function checkResourceReqs() {}
+  const buildingLevel = Level.get(building, { value: 1 }).value;
+  const multiplier =
+    P_UnitProductionMultiplier.get(hashKeyEntity(building, buildingLevel), {
+      value: 100,
+    }).value / 100;
+  const time =
+    P_TrainingTime.get(unitLevelEntity, { value: 0 }).value / multiplier;
+
+  return time;
+}
