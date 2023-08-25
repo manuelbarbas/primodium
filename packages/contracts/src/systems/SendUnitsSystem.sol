@@ -59,7 +59,7 @@ contract SendUnitsSystem is PrimodiumSystem {
         anyUnitsSent = true;
       }
     }
-    require(anyUnitsSent, "unit count must be positive");
+    require(anyUnitsSent, "must send units");
     uint256 moveSpeed = LibSend.getSlowestUnitSpeed(world, playerEntity, arrivalUnits);
     uint256 worldSpeed = GameConfigComponent(getC(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     Arrival memory arrival = Arrival({
