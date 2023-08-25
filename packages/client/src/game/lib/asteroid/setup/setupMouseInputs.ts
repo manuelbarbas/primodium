@@ -18,7 +18,6 @@ import {
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { Network } from "src/network/layer";
-import { IsDebug } from "src/network/components/chainComponents";
 import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (
