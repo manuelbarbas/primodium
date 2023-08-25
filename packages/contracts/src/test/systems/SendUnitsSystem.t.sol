@@ -22,6 +22,7 @@ import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByCo
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
+import { LibUnits } from "libraries/LibUnits.sol";
 import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibSend } from "libraries/LibSend.sol";
@@ -201,7 +202,11 @@ contract SendUnitsTest is PrimodiumTest {
 
   function calculateArrivalBlock(address from, address to, Arrival memory arrival) public view returns (uint256) {
     //TODO can modify to use the actual speed of the slowest unit
-    uint32 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(DebugUnit);
+    uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(from), DebugUnit);
+    uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(DebugUnit, playerUnitTypeLevel);
+    uint32 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(
+      unitTypeLevelEntity
+    );
     Coord memory originPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
       getHomeAsteroid(from)
     );
@@ -278,7 +283,7 @@ contract SendUnitsTest is PrimodiumTest {
 
     Arrival memory arrival = abi.decode(rawArrival, (Arrival));
 
-    uint256 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(DebugUnit) *
+    uint256 speed = getPlayerUnitSpeed(world, invader, DebugUnit) *
       GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     Coord memory originPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
       getHomeAsteroid(alice)
@@ -302,6 +307,12 @@ contract SendUnitsTest is PrimodiumTest {
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), motherlodeEntity)), 1);
     vm.stopPrank();
     return arrival;
+  }
+
+  function getPlayerUnitSpeed(IWorld world, address player, uint256 unitType) public returns (uint32) {
+    uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(player), unitType);
+    uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, playerUnitTypeLevel);
+    return P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(unitTypeLevelEntity);
   }
 
   function raid(address raider) public returns (Arrival memory) {
@@ -332,8 +343,11 @@ contract SendUnitsTest is PrimodiumTest {
       bob
     );
     Arrival memory arrival = abi.decode(rawArrival, (Arrival));
-
-    uint32 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(DebugUnit);
+    uint256 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, addressToEntity(raider), DebugUnit);
+    uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(DebugUnit, playerUnitTypeLevel);
+    uint32 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(
+      unitTypeLevelEntity
+    );
     Coord memory originPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
       getHomeAsteroid(alice)
     );

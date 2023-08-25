@@ -13,6 +13,7 @@ import { ArrivalsSizeComponent as ArrivalsSizeComponent, ID as ArrivalsSizeCompo
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibUnits } from "libraries/LibUnits.sol";
 import { ABDKMath64x64 as Math } from "abdk-libraries-solidity/ABDKMath64x64.sol";
 
 // types
@@ -35,6 +36,7 @@ library LibSend {
 
   function getSlowestUnitSpeed(
     IWorld world,
+    uint256 playerEntity,
     ArrivalUnit[] memory arrivalUnits
   ) internal view returns (uint256 slowestSpeed) {
     require(arrivalUnits.length > 0, "LibSend: arrivalUnits length must be greater than 0");
@@ -42,9 +44,12 @@ library LibSend {
     slowestSpeed = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
     for (uint i = 0; i < arrivalUnits.length; i++) {
       if (arrivalUnits[i].count == 0) continue;
-      uint256 unitType = uint256(arrivalUnits[i].unitType);
-      require(speedComponent.has(unitType), "LibSend: unit type does not have speed component");
-      uint256 currSpeed = speedComponent.getValue(unitType);
+      uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(
+        arrivalUnits[i].unitType,
+        LibUnits.getPlayerUnitTypeLevel(world, playerEntity, arrivalUnits[i].unitType)
+      );
+      require(speedComponent.has(unitTypeLevelEntity), "LibSend: unit type does not have speed component");
+      uint256 currSpeed = speedComponent.getValue(unitTypeLevelEntity);
       if (currSpeed < slowestSpeed) {
         slowestSpeed = currSpeed;
       }
