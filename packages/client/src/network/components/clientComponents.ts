@@ -75,6 +75,18 @@ export const Hangar = newComponent(
   }
 );
 
+export const Leaderboard = newComponent(
+  world,
+  {
+    players: Type.EntityArray,
+    playerRank: Type.Number,
+    scores: Type.NumberArray,
+  },
+  {
+    id: "Leaderboard",
+  }
+);
+
 export default {
   ActiveAsteroid,
   SelectedAsteroid,
@@ -90,4 +102,5 @@ export default {
   Fleet,
   TrainingQueue,
   Hangar,
+  Leaderboard,
 };

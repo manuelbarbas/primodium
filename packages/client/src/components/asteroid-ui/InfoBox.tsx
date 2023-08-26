@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BlockType } from "src/util/constants";
 import { EntityID } from "@latticexyz/recs";
+import { BlockType } from "src/util/constants";
 import { hashAndTrimKeyCoord } from "src/util/encode";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
 import { useGameStore } from "src/store/GameStore";
@@ -16,8 +16,6 @@ import { TileInfo } from "./tile-info/TileInfo";
 import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
-import { FaList } from "react-icons/fa";
-import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { Leaderboard } from "./Leaderboard";
 import { SelectedAsteroid } from "src/network/components/clientComponents";
 
@@ -28,11 +26,9 @@ export const InfoBox = () => {
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
-  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
-  const leaderboard = useRef<Map<EntityID, number>>();
 
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
@@ -42,10 +38,6 @@ export const InfoBox = () => {
   const mainBaseLevel = Level.use(coordEntity, {
     value: 0,
   }).value;
-
-  useEffect(() => {
-    leaderboard.current = setupLeaderboard();
-  }, []);
 
   useEffect(() => {
     if (mainBaseLevel === undefined) return;
@@ -75,7 +67,7 @@ export const InfoBox = () => {
                 initial={{ scaleY: 0 }}
                 animate={{ scaleY: 1 }}
                 exit={{ scale: 0 }}
-                className="relative bg-gray-900 z-[999] w-56 md:w-80 h-44 md:h-56 rounded-md border-2 border-cyan-400 ring ring-cyan-900  overflow-hidden"
+                className="relative bg-gray-900 z-[999] w-80 h-56 rounded-md border-2 border-cyan-400 ring ring-cyan-900  overflow-hidden"
               >
                 <Starmap id="starmap" />
                 <FullStarmap
@@ -120,7 +112,7 @@ export const InfoBox = () => {
                   <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse rounded-full" />
                 )}
               </div>
-              <div className="relative">
+              {/* <div className="relative">
                 <GameButton
                   id="leaderboard"
                   color="bg-orange-500"
@@ -134,7 +126,7 @@ export const InfoBox = () => {
                     <FaList size={18} />
                   </div>
                 </GameButton>
-              </div>
+              </div> */}
               <div className="relative">
                 <GameButton
                   id="research"
@@ -152,6 +144,7 @@ export const InfoBox = () => {
           </div>
 
           <TileInfo />
+          <Leaderboard />
         </motion.div>
       </div>
       <Modal
@@ -167,13 +160,6 @@ export const InfoBox = () => {
         onClose={() => setShowResearchModal(!showResearchModal)}
       >
         <ResearchPage />
-      </Modal>
-      <Modal
-        title="Leaderboard"
-        show={showLeaderboard}
-        onClose={() => setShowLeaderboard(!showLeaderboard)}
-      >
-        <Leaderboard data={leaderboard.current} />
       </Modal>
     </div>
   );
