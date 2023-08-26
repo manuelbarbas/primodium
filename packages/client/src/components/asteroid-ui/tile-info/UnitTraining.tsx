@@ -22,6 +22,7 @@ import { hashKeyEntity } from "src/util/encode";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
+import { NumberInput } from "src/components/shared/NumberInput";
 
 export const UnitTraining: React.FC<{
   buildingEntity: EntityID;
@@ -80,6 +81,8 @@ export const UnitTraining: React.FC<{
   const unitsTaken = useMemo(() => {
     return totalUnits + count * (requiredHousing ?? 0);
   }, [count, requiredHousing, totalUnits]);
+
+  console.log(requiredHousing, maximum, totalUnits, unitsTaken);
 
   if (trainableUnits.length == 0 || maximum == 0) return null;
   return (
@@ -157,63 +160,16 @@ export const UnitTraining: React.FC<{
                   </div>
                 ))}
               </div>
-              <div className="flex gap-2 mt-4 mb-2">
-                <button
-                  onClick={() => {
-                    setCount(Math.max(0, count - 1));
-                  }}
-                  disabled={count == 0}
-                  className="disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  className="bg-transparent text-center w-fit outline-none border-b border-pink-900"
-                  value={count}
-                  placeholder="0"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    e.preventDefault();
 
-                    const value = parseInt(e.target.value, 10);
+              <NumberInput
+                min={0}
+                max={(maximum - totalUnits) / requiredHousing}
+                onChange={(val) => setCount(val)}
+              />
 
-                    if (isNaN(value)) {
-                      setCount(0);
-                      return;
-                    }
-
-                    // Check if the input value is a number and within the specified range
-                    if (value >= 0 && value <= maximum) {
-                      setCount(value);
-                      return;
-                    }
-
-                    if (value > maximum) setCount(maximum);
-                    else setCount(0);
-
-                    // Else, we don't update count (this makes it a controlled input that does not accept values outside the range)
-                  }}
-                  min={0}
-                  max={maximum}
-                />
-                {/* add to count */}
-                <button
-                  onClick={() => {
-                    setCount(Math.min(maximum, count + 1));
-                  }}
-                  className="disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={
-                    maximum - unitsTaken < requiredHousing || transactionLoading
-                  }
-                >
-                  +
-                </button>
-              </div>
               <button
                 className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold disabled:opacity-50 disabled:cursor-not-allowed rounded-md hover:scale-105"
-                disabled={
-                  maximum - unitsTaken < requiredHousing || transactionLoading
-                }
+                disabled={maximum - unitsTaken < 0 || transactionLoading}
                 onClick={() => {
                   train(buildingEntity, selectedUnit, count, network);
                 }}
@@ -223,7 +179,7 @@ export const UnitTraining: React.FC<{
             </>
           )}
           <p className="opacity-50 text-xs">
-            {maximum - unitsTaken} housing left
+            {Math.max(maximum - unitsTaken, 0)} housing left
           </p>
         </div>
       </div>
