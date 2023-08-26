@@ -12,6 +12,7 @@ import { ProductionComponent, ID as ProductionComponentID } from "components/Pro
 import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_UnitLevelUpgradeComponent, ID as P_UnitLevelUpgradeComponentID } from "components/P_UnitLevelUpgradeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { P_BlueprintComponent as P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
 import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
@@ -438,6 +439,22 @@ library LibInitDebug {
     //DebugSimpleTechnologyMainBaseLevelReqsID
     isTechComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     levelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
+
+    P_UnitLevelUpgradeComponent unitLevelUpgradeComponent = P_UnitLevelUpgradeComponent(
+      world.getComponent(P_UnitLevelUpgradeComponentID)
+    );
+
+    //DebugSimpleTechnologyUpgradeUnit
+    isTechComponent.set(DebugSimpleTechnologyUpgradeUnit);
+    unitLevelUpgradeComponent.set(DebugSimpleTechnologyUpgradeUnit, ResourceValue({ resource: DebugUnit, value: 1 }));
+
+    P_UtilityProductionComponent utilityProductionComponent = P_UtilityProductionComponent(
+      world.getComponent(P_UtilityProductionComponentID)
+    );
+
+    //DebugSimpleTechnologyIncreaseHousing
+    isTechComponent.set(DebugSimpleTechnologyIncreaseHousing);
+    utilityProductionComponent.set(DebugSimpleTechnologyIncreaseHousing, ResourceValue(HousingUtilityResourceID, 10));
   }
 
   function initializeStorageBuildings(IWorld world) internal {

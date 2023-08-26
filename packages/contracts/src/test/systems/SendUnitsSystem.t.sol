@@ -86,7 +86,6 @@ contract SendUnitsTest is PrimodiumTest {
     });
     vm.prank(deployer);
     gameConfigComponent.set(SingletonID, gameConfig);
-    vm.stopPrank();
 
     componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(alice), abi.encode(100));
     componentDevSystem.executeTyped(MaxMovesComponentID, addressToEntity(bob), abi.encode(100));
@@ -510,7 +509,6 @@ contract SendUnitsTest is PrimodiumTest {
       0
     );
     assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
-    vm.stopPrank();
   }
 
   function testExecuteRaid() public {
@@ -520,7 +518,6 @@ contract SendUnitsTest is PrimodiumTest {
     raidSystem.executeTyped(raidArival.destination);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), raidArival.destination)), 0);
     assertEq(ownedByComponent.getValue(raidArival.destination), addressToEntity(bob));
-    vm.stopPrank();
   }
 
   function testExecuteReinforce() public {

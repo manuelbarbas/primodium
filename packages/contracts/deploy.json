@@ -64,7 +64,8 @@
     "P_UnitTravelSpeedComponent",
     "P_TerrainComponent",
     "P_IsUnitComponent",
-    "P_ScoreMultiplierComponent"
+    "P_ScoreMultiplierComponent",
+    "P_UnitLevelUpgradeComponent"
   ],
   "initializers": [
     "LibInitWorld",
@@ -78,7 +79,7 @@
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["HasResearchedComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "IncrementSystem",
