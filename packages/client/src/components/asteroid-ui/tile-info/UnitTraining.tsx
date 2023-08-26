@@ -36,6 +36,7 @@ export const UnitTraining: React.FC<{
   useEffect(() => {
     setCount(0);
   }, [selectedUnit]);
+
   const playerResourceEntity = hashKeyEntity(
     BlockType.HousingUtilityResource,
     account
