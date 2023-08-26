@@ -5,10 +5,17 @@ import {
 import { shortenAddress } from "src/util/common";
 import Modal from "../shared/Modal";
 import { useState } from "react";
-import { FaList } from "react-icons/fa";
+import { FaList, FaSync } from "react-icons/fa";
+import { claimFromMine } from "src/util/web3";
+import { useMud } from "src/hooks/useMud";
+import { useMainBaseCoord } from "src/hooks";
+import { useGameStore } from "src/store/GameStore";
 
 export const Leaderboard = () => {
+  const network = useMud();
   const address = Account.use()?.value;
+  const mainbaseCoord = useMainBaseCoord();
+  const transactionLoading = useGameStore((state) => state.transactionLoading);
   const data = _Leaderboard.use();
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
@@ -17,20 +24,32 @@ export const Leaderboard = () => {
   return (
     <>
       <div className="w-80 flex gap-1">
-        <div className="flex gap-1 border border-slate-700 p-1 rounded-md bg-slate-800 text-sm my-2 flex-grow items-center">
-          <p className="bg-rose-700 px-2 rounded-md font-bold">
-            <span className="opacity-75">#</span>
-            {data.playerRank}
-          </p>
-          <span>
-            {data.scores.length > data.playerRank
-              ? data.scores[data.playerRank - 1].toLocaleString()
-              : 0}
-          </span>
-          <p className="text-xs opacity-50"> POINTS </p>
+        <div className="flex gap-1 border border-slate-700 p-1 rounded-md bg-slate-800 text-sm my-2 flex-grow items-center justify-between">
+          <div className="flex items-center gap-1">
+            <p className="bg-rose-700 px-2 rounded-md font-bold">
+              <span className="opacity-75">#</span>
+              {data.playerRank}
+            </p>
+            <span>
+              {data.scores.length > data.playerRank
+                ? data.scores[data.playerRank - 1].toLocaleString()
+                : 0}
+            </span>
+            <p className="text-xs opacity-50"> POINTS </p>
+          </div>
+          {/* sync utility */}
+          {mainbaseCoord && (
+            <div className="hover:bg-slate-500 rounded-md transition-all opacity-50 cursor-pointer">
+              <FaSync
+                size={20}
+                onClick={() => claimFromMine(mainbaseCoord, network)}
+                className={`p-1 ${transactionLoading ? "animate-spin" : ""}`}
+              />
+            </div>
+          )}
         </div>
         <button
-          className="border border-cyan-700 p-1 rounded-md bg-slate-800 text-sm my-2 px-2"
+          className={`border border-cyan-700 p-1 rounded-md bg-slate-800 text-sm my-2 px-2`}
           onClick={() => setShowLeaderboard(true)}
         >
           <FaList />
