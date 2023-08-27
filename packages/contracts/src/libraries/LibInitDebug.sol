@@ -12,6 +12,7 @@ import { ProductionComponent, ID as ProductionComponentID } from "components/Pro
 import { P_IsTechComponent, ID as P_IsTechComponentID } from "components/P_IsTechComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_UnitLevelUpgradeComponent, ID as P_UnitLevelUpgradeComponentID } from "components/P_UnitLevelUpgradeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { P_BlueprintComponent as P_BlueprintComponent, ID as P_BlueprintComponentID } from "components/P_BlueprintComponent.sol";
 import { P_MaxLevelComponent, ID as P_MaxLevelComponentID } from "components/P_MaxLevelComponent.sol";
@@ -22,7 +23,7 @@ import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "co
 
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
-
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from "components/P_UnitTrainingTimeComponent.sol";
 import { P_UnitAttackComponent, ID as P_UnitAttackComponentID } from "components/P_UnitAttackComponent.sol";
 import { P_UnitDefenceComponent, ID as P_UnitDefenceComponentID } from "components/P_UnitDefenceComponent.sol";
@@ -62,6 +63,8 @@ library LibInitDebug {
     initializeUnitProductionBuildings(world);
 
     initializeUnits(world);
+
+    registerUnitType(world);
   }
 
   function registerBuildingTypes(IWorld world) internal {
@@ -100,6 +103,20 @@ library LibInitDebug {
 
     isBuildingTypeComponent.set(DebugUnitProductionBuilding);
     isBuildingTypeComponent.set(DebugHousingBuilding);
+    isBuildingTypeComponent.set(DebugSimpleBuildingMainBaseLevelReqID);
+  }
+
+  function registerUnitType(IWorld world) internal {
+    P_IsUnitComponent isUnitComponent = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID));
+    isUnitComponent.set(DebugUnit);
+    isUnitComponent.set(DebugUnit2);
+    isUnitComponent.set(DebugUnit3);
+
+    isUnitComponent.set(DebugUnitMiner);
+    isUnitComponent.set(DebugUnitMiner2);
+
+    isUnitComponent.set(DebugUnitBattle1);
+    isUnitComponent.set(DebugUnitBattle2);
   }
 
   function initBlueprints(IWorld world) internal {
@@ -137,6 +154,7 @@ library LibInitDebug {
 
     blueprintComponent.set(DebugUnitProductionBuilding, coords);
     blueprintComponent.set(DebugHousingBuilding, coords);
+    blueprintComponent.set(DebugSimpleBuildingMainBaseLevelReqID, coords);
   }
 
   function initializeSimpleBuildings(IWorld world) internal {
@@ -212,6 +230,16 @@ library LibInitDebug {
     requiredUtilityComponent.set(entity, requiredUtilityData);
 
     //DebugSimpleBuilding3x3
+
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    //DebugSimpleBuildingWithUpgradeResourceReqsID
+    maxLevelComponent.set(DebugSimpleBuildingMainBaseLevelReqID, 2);
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingMainBaseLevelReqID, 1);
+    levelComponent.set(entity, 2);
+
+    //DebugSimpleBuildingWithUpgradeResourceReqsID level 2
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingMainBaseLevelReqID, 2);
+    levelComponent.set(entity, 3);
   }
 
   function initializeMines(IWorld world) internal {
@@ -423,6 +451,22 @@ library LibInitDebug {
     //DebugSimpleTechnologyMainBaseLevelReqsID
     isTechComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID);
     levelComponent.set(DebugSimpleTechnologyMainBaseLevelReqsID, 2);
+
+    P_UnitLevelUpgradeComponent unitLevelUpgradeComponent = P_UnitLevelUpgradeComponent(
+      world.getComponent(P_UnitLevelUpgradeComponentID)
+    );
+
+    //DebugSimpleTechnologyUpgradeUnit
+    isTechComponent.set(DebugSimpleTechnologyUpgradeUnit);
+    unitLevelUpgradeComponent.set(DebugSimpleTechnologyUpgradeUnit, ResourceValue({ resource: DebugUnit, value: 1 }));
+
+    P_UtilityProductionComponent utilityProductionComponent = P_UtilityProductionComponent(
+      world.getComponent(P_UtilityProductionComponentID)
+    );
+
+    //DebugSimpleTechnologyIncreaseHousing
+    isTechComponent.set(DebugSimpleTechnologyIncreaseHousing);
+    utilityProductionComponent.set(DebugSimpleTechnologyIncreaseHousing, ResourceValue(HousingUtilityResourceID, 10));
   }
 
   function initializeStorageBuildings(IWorld world) internal {
@@ -457,7 +501,7 @@ library LibInitDebug {
 
     //DebugHousingBuilding
     entity = LibEncode.hashKeyEntity(DebugHousingBuilding, 1);
-    UtilityProductionComponent.set(entity, ResourceValue(HousingUtilityResourceID, 10));
+    UtilityProductionComponent.set(entity, ResourceValue(HousingUtilityResourceID, 20));
   }
 
   function initializeUnitProductionBuildings(IWorld world) internal {
@@ -470,16 +514,27 @@ library LibInitDebug {
     );
     P_MaxLevelComponent maxLevelComponent = P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID));
 
-    //DebugUnitProductionBuilding
-    maxLevelComponent.set(DebugUnitProductionBuilding, 2);
-    uint256 entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
-
+    // MainBase
+    // Level 1
+    uint256 entity = LibEncode.hashKeyEntity(MainBaseID, 1);
     uint256[] memory unitTypes = new uint256[](2);
+
     unitTypes[0] = DebugUnit;
     unitTypes[1] = DebugUnit3;
     unitProductionTypesComponent.set(entity, unitTypes);
     unitProductionMultiplierComponent.set(entity, 100);
 
+    //DebugUnitProductionBuilding
+    maxLevelComponent.set(DebugUnitProductionBuilding, 2);
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 1);
+
+    unitTypes = new uint256[](2);
+    unitTypes[0] = DebugUnit;
+    unitTypes[1] = DebugUnit3;
+    unitProductionTypesComponent.set(entity, unitTypes);
+    unitProductionMultiplierComponent.set(entity, 100);
+    // Level 2
     entity = LibEncode.hashKeyEntity(DebugUnitProductionBuilding, 2);
     unitTypes = new uint256[](2);
     unitTypes[0] = DebugUnit;
@@ -503,8 +558,8 @@ library LibInitDebug {
     P_UnitMiningComponent unitMiningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
 
     //DebugUnit
-    speedComponent.set(DebugUnit, 100);
-    uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 1);
+    // Level 1
+    uint256 entity = LibEncode.hashKeyEntity(DebugUnit, 0);
     unitTrainingTimeComponent.set(entity, 2);
 
     ResourceValues memory requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
@@ -512,13 +567,14 @@ library LibInitDebug {
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
 
+    speedComponent.set(entity, 100);
     unitAttackComponent.set(entity, 5);
     unitDefenceComponent.set(entity, 3);
     unitCargoComponent.set(entity, 10);
+
     //DebugUnit2
-
-    speedComponent.set(DebugUnit2, 200);
-    entity = LibEncode.hashKeyEntity(DebugUnit2, 1);
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnit2, 0);
     unitTrainingTimeComponent.set(entity, 4);
 
     requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
@@ -526,43 +582,64 @@ library LibInitDebug {
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
 
+    speedComponent.set(entity, 200);
     unitAttackComponent.set(entity, 20);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
-    // debuguint3
-    speedComponent.set(DebugUnit3, 50);
-    entity = LibEncode.hashKeyEntity(DebugUnit3, 1);
-    unitTrainingTimeComponent.set(entity, 4);
 
+    //DebugUnit3
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnit3, 0);
+    unitTrainingTimeComponent.set(entity, 4);
     requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
     requiredUtility.resources[0] = HousingUtilityResourceID;
     requiredUtility.values[0] = 1;
     requiredUtilityComponent.set(entity, requiredUtility);
+
+    speedComponent.set(entity, 50);
     unitAttackComponent.set(entity, 20);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 20);
-
-    // DebugUnitMiner
-    entity = DebugUnitMiner;
     unitMiningComponent.set(entity, 100);
 
-    entity = DebugUnitMiner2;
-    unitMiningComponent.set(entity, 47);
+    // DebugUnit3
+    // Level 2
+    entity = LibEncode.hashKeyEntity(DebugUnit3, 0);
+
+    unitTrainingTimeComponent.set(entity, 4);
+    requiredUtility = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtility.resources[0] = HousingUtilityResourceID;
+    requiredUtility.values[0] = 1;
+    requiredUtilityComponent.set(entity, requiredUtility);
+
+    speedComponent.set(entity, 50);
+    unitAttackComponent.set(entity, 20);
+    unitDefenceComponent.set(entity, 10);
+    unitCargoComponent.set(entity, 20);
+    unitMiningComponent.set(entity, 100);
 
     //DebugUnitBattle1
-    entity = LibEncode.hashKeyEntity(DebugUnitBattle1, 1);
-    unitTrainingTimeComponent.set(entity, 0);
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle1, 0);
+    unitTrainingTimeComponent.set(entity, 10);
 
     unitAttackComponent.set(entity, 10);
     unitDefenceComponent.set(entity, 5);
     unitCargoComponent.set(entity, 100);
 
     //DebugUnitBattle2
-    entity = LibEncode.hashKeyEntity(DebugUnitBattle2, 1);
-    unitTrainingTimeComponent.set(entity, 0);
+    // Level 1
+    entity = LibEncode.hashKeyEntity(DebugUnitBattle2, 0);
+    unitTrainingTimeComponent.set(entity, 10);
 
     unitAttackComponent.set(entity, 5);
     unitDefenceComponent.set(entity, 10);
     unitCargoComponent.set(entity, 100);
+
+    entity = LibEncode.hashKeyEntity(DebugUnitMiner, 0);
+    unitMiningComponent.set(entity, 100);
+
+    entity = LibEncode.hashKeyEntity(DebugUnitMiner2, 0);
+    unitMiningComponent.set(entity, 47);
   }
 }

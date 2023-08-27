@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-
 // external
 import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./internal/PrimodiumSystem.sol";
-
 // components
 
-import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
@@ -40,8 +37,8 @@ contract TrainUnitsSystem is PrimodiumSystem {
     (uint256 buildingEntity, uint256 unitType, uint32 count) = abi.decode(args, (uint256, uint256, uint32));
 
     uint256 playerEntity = addressToEntity(msg.sender);
-
-    uint256 unitTypeLevelEntity = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
+    uint32 playerUnitLevel = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, unitType);
+    uint256 unitTypeLevelEntity = LibEncode.hashKeyEntity(unitType, playerUnitLevel);
 
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(
       msg.sender,
@@ -51,12 +48,10 @@ contract TrainUnitsSystem is PrimodiumSystem {
       LibUnits.canBuildingProduceUnit(world, buildingEntity, unitType),
       "[TrainUnitsSystem] Building cannot produce unit"
     );
-
     require(
       LibUnits.checkUtilityResourceReqs(world, playerEntity, unitType, count),
       "[TrainUnitsSystem] You do not have the required Utility resources"
     );
-
     //check resource requirements and if ok spend required resources
     if (P_RequiredResourcesComponent(getC(P_RequiredResourcesComponentID)).has(unitTypeLevelEntity)) {
       require(

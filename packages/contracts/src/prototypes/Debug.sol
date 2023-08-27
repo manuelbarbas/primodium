@@ -7,6 +7,9 @@ uint256 constant DebugSimpleBuildingResourceReqsID = uint256(keccak256("block.De
 uint256 constant DebugSimpleBuildingResearchReqsID = uint256(keccak256("block.DebugSimpleBuildingResearchReqs"));
 uint256 constant DebugSimpleBuildingBuildLimitReq = uint256(keccak256("block.DebugSimpleBuildingBuildLimitReq"));
 uint256 constant DebugSimpleBuildingTileReqID = uint256(keccak256("block.DebugSimpleBuildingTileReq"));
+uint256 constant DebugSimpleBuildingMainBaseLevelReqID = uint256(
+  keccak256("block.DebugSimpleBuildingMainBaseLevelReq")
+);
 
 uint256 constant DebugSimpleBuildingUtilityResourceRequirement = uint256(
   keccak256("block.DebugSimpleBuildingUtilityResourceRequirement")
@@ -56,6 +59,12 @@ uint256 constant DebugUnitBattle2 = uint256(keccak256("unit.DebugUnitBattle2"));
 uint256 constant DebugSuperIronMineID = uint256(keccak256("block.DebugSuperIronMine"));
 uint256 constant DebugSuperIronPlateFactoryID = uint256(keccak256("block.DebugSuperIronPlateFactory"));
 //technologies
+
+uint256 constant DebugSimpleTechnologyUpgradeUnit = uint256(keccak256("block.DebugSimpleTechnologyUpgradeUnit"));
+uint256 constant DebugSimpleTechnologyIncreaseHousing = uint256(
+  keccak256("block.DebugSimpleTechnologyIncreaseHousing")
+);
+
 uint256 constant DebugSimpleTechnologyNoReqsID = uint256(keccak256("block.DebugSimpleTechnologyNoReqs"));
 uint256 constant DebugSimpleTechnologyResourceReqsID = uint256(keccak256("block.DebugSimpleTechnologyResourceReqs"));
 uint256 constant DebugSimpleTechnologyResearchReqsID = uint256(keccak256("block.DebugSimpleTechnologyResearchReqs"));

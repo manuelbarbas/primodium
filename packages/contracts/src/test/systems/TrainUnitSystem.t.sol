@@ -29,6 +29,7 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../comp
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 import { ElectricityUtilityResourceID } from "../../prototypes.sol";
 import { BIGNUM } from "../../prototypes/Debug.sol";
@@ -43,6 +44,7 @@ import { LibMath } from "../../libraries/LibMath.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { ResourceValue, ResourceValues } from "../../types.sol";
 
+// todo: test that resources and utilities are being updated
 contract TrainUnitSystem is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
@@ -51,9 +53,11 @@ contract TrainUnitSystem is PrimodiumTest {
   UpgradeBuildingSystem public upgradeBuildingSystem;
   S_UpdatePlayerSpaceRockSystem public updateSystem;
 
+  P_UtilityProductionComponent public utilityProductionComponent;
+
   function setUp() public override {
     super.setUp();
-
+    utilityProductionComponent = P_UtilityProductionComponent(component(P_UtilityProductionComponentID));
     // init systems
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
@@ -325,9 +329,9 @@ contract TrainUnitSystem is PrimodiumTest {
       getIronCoord(alice)
     );
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
-
+    uint32 housingUtility = utilityProductionComponent.getValue(LibEncode.hashKeyEntity(DebugHousingBuilding, 1)).value;
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 11);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, housingUtility + 1);
 
     vm.stopPrank();
   }

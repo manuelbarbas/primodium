@@ -56,4 +56,24 @@ library LibUtilityResource {
         playerResourceEntity
       );
   }
+
+  function modifyMaxUtility(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 resourceId,
+    uint32 amount,
+    bool isAdd
+  ) internal {
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(world.getComponent(MaxUtilityComponentID));
+    uint32 currValue = LibMath.getSafe(maxUtilityComponent, playerResourceEntity);
+    if (isAdd) {
+      maxUtilityComponent.set(playerResourceEntity, currValue + amount);
+      return;
+    } else {
+      if (currValue < amount) maxUtilityComponent.set(playerResourceEntity, 0);
+      else maxUtilityComponent.set(playerResourceEntity, currValue - amount);
+    }
+    return;
+  }
 }

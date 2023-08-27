@@ -51,6 +51,29 @@ export const SelectedAsteroid = newEntityComponent(world, {
   id: "SelectedAsteroid",
 });
 
+export const TrainingQueue = newComponent(
+  world,
+  {
+    units: Type.EntityArray,
+    counts: Type.NumberArray,
+    progress: Type.NumberArray,
+  },
+  {
+    id: "TrainingQueue",
+  }
+);
+
+export const Hangar = newComponent(
+  world,
+  {
+    units: Type.EntityArray,
+    counts: Type.NumberArray,
+  },
+  {
+    id: "Hangar",
+  }
+);
+
 export default {
   ActiveAsteroid,
   SelectedAsteroid,
@@ -64,4 +87,6 @@ export default {
   StartSelectedPath,
   Marker,
   Fleet,
+  TrainingQueue,
+  Hangar,
 };

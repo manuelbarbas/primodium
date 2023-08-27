@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
-
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 
@@ -19,12 +18,13 @@ import { UnitProductionQueueComponent, ID as UnitProductionQueueComponentID } fr
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibResource } from "libraries/LibResource.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 
 // types
 import { ESendType, Coord, Arrival, ArrivalUnit, ResourceValue, ESpaceRockType, Motherlode } from "src/types.sol";
@@ -55,18 +55,17 @@ library LibUpdateSpaceRock {
     );
     bool isStillClaiming = unitProductionQueueIndexComponent.has(unitProductionBuildingEntity);
     uint32 queueIndex = LibMath.getSafe(unitProductionQueueIndexComponent, unitProductionBuildingEntity);
+    uint256 startTime = lastClaimedAtComponent.getValue(unitProductionBuildingEntity);
     while (isStillClaiming) {
       uint256 buildingQueueEntity = LibEncode.hashKeyEntity(unitProductionBuildingEntity, queueIndex);
       ResourceValue memory unitProductionQueue = unitProductionQueueComponent.getValue(buildingQueueEntity);
-
       uint32 unitTrainingTimeForBuilding = LibUnits.getBuildingBuildTimeForUnit(
         world,
         playerEntity,
         unitProductionBuildingEntity,
         unitProductionQueue.resource
       );
-      uint32 trainedUnitsCount = uint32(blockNumber - lastClaimedAtComponent.getValue(unitProductionBuildingEntity)) /
-        unitTrainingTimeForBuilding;
+      uint32 trainedUnitsCount = uint32(blockNumber - startTime) / unitTrainingTimeForBuilding;
 
       if (trainedUnitsCount > 0) {
         if (trainedUnitsCount >= unitProductionQueue.value) {
@@ -80,11 +79,7 @@ library LibUpdateSpaceRock {
           unitProductionQueueComponent.set(buildingQueueEntity, unitProductionQueue);
         }
 
-        LibMath.add(
-          lastClaimedAtComponent,
-          unitProductionBuildingEntity,
-          trainedUnitsCount * unitTrainingTimeForBuilding
-        );
+        startTime += trainedUnitsCount * unitTrainingTimeForBuilding;
         addPlayerUnitsToAsteroid(world, playerEntity, unitProductionQueue.resource, trainedUnitsCount);
       } else {
         isStillClaiming = false;
@@ -95,9 +90,63 @@ library LibUpdateSpaceRock {
 
   function addPlayerUnitsToAsteroid(IWorld world, uint256 playerEntity, uint256 unitType, uint32 unitCount) internal {
     uint256 asteroid = PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
-    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroid);
+    addUnitsToAsteroid(world, playerEntity, asteroid, unitType, unitCount);
+  }
 
+  function destroyAllPlayerUnitsOnAsteroid(IWorld world, uint256 playerEntity, uint256 asteroidEntity) internal {
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    for (uint256 i = 0; i < unitTypes.length; i++) {
+      uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitTypes[i], playerEntity, asteroidEntity);
+      if (unitsComponent.has(unitPlayerSpaceRockEntity)) {
+        destroyUnitsOnAsteroid(
+          world,
+          playerEntity,
+          asteroidEntity,
+          unitTypes[i],
+          LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity)
+        );
+      }
+    }
+  }
+
+  function destroyUnitsOnAsteroid(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 asteroidEntity,
+    uint256 unitType,
+    uint32 unitCount
+  ) internal {
+    if (unitCount == 0) return;
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    uint32 currUnitCount = LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity);
+    require(unitCount <= currUnitCount, "LibUpdateSpaceRock: unitCount must be less than currUnitCount");
+    LibUnits.updateOccuppiedUtilityResources(world, playerEntity, unitType, unitCount, false);
+    if (currUnitCount - unitCount > 0) unitsComponent.set(unitPlayerSpaceRockEntity, currUnitCount - unitCount);
+    else unitsComponent.remove(unitPlayerSpaceRockEntity);
+  }
+
+  function addUnitsToAsteroid(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 asteroidEntity,
+    uint256 unitType,
+    uint32 unitCount
+  ) internal {
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
     LibMath.add(UnitsComponent(world.getComponent(UnitsComponentID)), unitPlayerSpaceRockEntity, unitCount);
+  }
+
+  function setUnitsOnAsteroid(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 asteroidEntity,
+    uint256 unitType,
+    uint32 unitCount
+  ) internal {
+    uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
+    UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
   }
 
   function claimUnits(IWorld world, uint256 playerEntity, uint256 blockNumber) internal {
@@ -168,25 +217,27 @@ library LibUpdateSpaceRock {
       rawIncrease = resource.value - prevMotherlodeResources;
     }
     motherlodeResourceComponent.set(motherlodeEntity, rawIncrease + prevMotherlodeResources);
-    uint32 currAmount = LibMath.getSafe(
-      ItemComponent(world.getComponent(ItemComponentID)),
-      LibEncode.hashKeyEntity(resource.resource, playerEntity)
-    );
-    LibResource.updateResourceAmount(world, playerEntity, resource.resource, currAmount + rawIncrease);
+
+    LibStorage.addResourceToStorage(world, playerEntity, resource.resource, rawIncrease);
 
     LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).set(motherlodeEntity, blockNumber);
   }
 
   function getMiningPower(IWorld world, uint256 playerEntity, uint256 motherlodeEntity) internal view returns (uint32) {
+    P_IsUnitComponent isUnitComponent = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID));
     P_UnitMiningComponent miningComponent = P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID));
-    uint256[] memory minerPrototypes = miningComponent.getEntities();
+    uint256[] memory unitPrototypes = isUnitComponent.getEntities();
     uint32 totalPower = 0;
-    for (uint256 i = 0; i < minerPrototypes.length; i++) {
-      uint256 minerPrototype = minerPrototypes[i];
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      uint256 minerPrototype = unitPrototypes[i];
       uint256 minerEntity = LibEncode.hashEntities(minerPrototype, playerEntity, motherlodeEntity);
       uint32 units = LibMath.getSafe(UnitsComponent(world.getComponent(UnitsComponentID)), minerEntity);
       if (units > 0) {
-        uint32 miningPower = miningComponent.getValue(minerPrototype);
+        uint32 playerUnitTypeLevel = LibUnits.getPlayerUnitTypeLevel(world, playerEntity, minerPrototype);
+        uint32 miningPower = LibMath.getSafe(
+          miningComponent,
+          LibEncode.hashKeyEntity(minerPrototype, playerUnitTypeLevel)
+        );
         totalPower += miningPower * units;
       }
     }

@@ -11,6 +11,8 @@ import { singletonIndex, world } from "./world";
 import chainComponents, { Counter } from "./components/chainComponents";
 import { DoubleCounter } from "./components/clientComponents";
 import setupDevSystems from "./systems/setupDevSystems";
+import { setupTrainingQueues } from "./systems/setupTrainingQueues";
+import { setupHangar } from "./systems/setupHangar";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
@@ -84,6 +86,9 @@ export async function createNetworkLayer(config: NetworkConfig) {
     world.registerDisposer(() => clearInterval(intervalId2));
   }
   const perlin = await createPerlin();
+
+  setupTrainingQueues();
+  setupHangar();
 
   const context = {
     world,
