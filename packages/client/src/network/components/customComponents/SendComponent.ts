@@ -20,6 +20,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
       units: Type.OptionalEntityArray,
       count: Type.OptionalNumberArray,
       sendType: Type.OptionalNumber,
+      activeButton: Type.Number,
     },
     options
   );
@@ -65,11 +66,21 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     component.update({ units, count });
   };
 
-  const setOrigin = (position: Coord) => {
+  const setOrigin = (position: Coord | undefined) => {
+    if (!position)
+      return component.update({
+        originX: undefined,
+        originY: undefined,
+      });
     component.update({ originX: position.x, originY: position.y });
   };
 
-  const setDestination = (position: Coord) => {
+  const setDestination = (position: Coord | undefined) => {
+    if (!position)
+      return component.update({
+        destinationX: undefined,
+        destinationY: undefined,
+      });
     component.update({ destinationX: position.x, destinationY: position.y });
   };
 
