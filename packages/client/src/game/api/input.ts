@@ -114,11 +114,25 @@ export function createInputApi(targetScene: Scene) {
     phaserKey.removeAllListeners();
   }
 
+  function disableInput() {
+    const { input } = targetScene;
+
+    input.disableInput();
+  }
+
+  function enableInput() {
+    const { input } = targetScene;
+
+    input.enableInput();
+  }
+
   return {
     isDown,
     isUp,
     addListener,
     transferListeners,
     removeListeners,
+    disableInput,
+    enableInput,
   };
 }

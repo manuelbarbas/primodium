@@ -7,6 +7,8 @@ import {
   BlockNumber,
   Account,
 } from "src/network/components/clientComponents";
+import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
+import { setupHangar } from "src/network/systems/setupHangar";
 
 export const useInit = () => {
   const { world, blockNumber$ } = useMud();
@@ -34,6 +36,12 @@ export const useInit = () => {
       world.registerDisposer(() => blockListener.unsubscribe());
     };
   }, [address]);
+
+  //initialize systems
+  useEffect(() => {
+    setupTrainingQueues();
+    setupHangar();
+  }, []);
 
   return initialized;
 };
