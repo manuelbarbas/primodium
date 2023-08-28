@@ -103,6 +103,7 @@ library LibInitDebug {
 
     isBuildingTypeComponent.set(DebugUnitProductionBuilding);
     isBuildingTypeComponent.set(DebugHousingBuilding);
+    isBuildingTypeComponent.set(DebugSimpleBuildingMainBaseLevelReqID);
   }
 
   function registerUnitType(IWorld world) internal {
@@ -153,6 +154,7 @@ library LibInitDebug {
 
     blueprintComponent.set(DebugUnitProductionBuilding, coords);
     blueprintComponent.set(DebugHousingBuilding, coords);
+    blueprintComponent.set(DebugSimpleBuildingMainBaseLevelReqID, coords);
   }
 
   function initializeSimpleBuildings(IWorld world) internal {
@@ -228,6 +230,16 @@ library LibInitDebug {
     requiredUtilityComponent.set(entity, requiredUtilityData);
 
     //DebugSimpleBuilding3x3
+
+    LevelComponent levelComponent = LevelComponent(world.getComponent(LevelComponentID));
+    //DebugSimpleBuildingWithUpgradeResourceReqsID
+    maxLevelComponent.set(DebugSimpleBuildingMainBaseLevelReqID, 2);
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingMainBaseLevelReqID, 1);
+    levelComponent.set(entity, 2);
+
+    //DebugSimpleBuildingWithUpgradeResourceReqsID level 2
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingMainBaseLevelReqID, 2);
+    levelComponent.set(entity, 3);
   }
 
   function initializeMines(IWorld world) internal {
