@@ -9,6 +9,7 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { ArrivalsSizeComponent as ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
+import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
@@ -57,14 +58,27 @@ library LibSend {
     }
   }
 
-  function getArrivalTime(
+  function removeUnits(IWorld world, uint256 playerEntity, uint256 origin, ArrivalUnit[] memory units) internal {
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    for (uint256 i = 0; i < units.length; i++) {
+      require(units[i].count >= 0, "unit count must be greater than or equal to 0 for all unit types");
+      LibMath.subtract(
+        unitsComponent,
+        LibEncode.hashEntities(uint256(units[i].unitType), playerEntity, origin),
+        units[i].count
+      );
+    }
+  }
+
+  function getArrivalBlock(
     IWorld world,
     Coord memory origin,
     Coord memory destination,
+    uint256 playerEntity,
     ArrivalUnit[] memory arrivalUnits
-  ) internal view returns (uint256 blockNumber) {
-    uint256 moveSpeed = LibSend.getSlowestUnitSpeed(world, arrivalUnits);
+  ) internal view returns (uint256) {
     uint256 worldSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
-    return block.number + ((distance(origin, destination) * moveSpeed * worldSpeed) / 100 / 100);
+    uint256 unitSpeed = getSlowestUnitSpeed(world, playerEntity, arrivalUnits);
+    return block.number + ((distance(origin, destination) * unitSpeed * worldSpeed) / 10000);
   }
 }

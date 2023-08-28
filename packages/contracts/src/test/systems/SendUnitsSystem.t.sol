@@ -259,7 +259,6 @@ contract SendUnitsTest is PrimodiumTest {
 
   function invade(address invader) public returns (Arrival memory) {
     uint256 motherlodeEntity = findMotherlode(bob);
-    Coord memory motherlodePosition = positionComponent.getValue(motherlodeEntity);
 
     vm.startPrank(deployer);
     ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
@@ -280,7 +279,7 @@ contract SendUnitsTest is PrimodiumTest {
       units,
       ESendType.INVADE,
       getHomeAsteroid(alice),
-      motherlodePosition,
+      positionComponent.getValue(motherlodeEntity),
       bob
     );
 
