@@ -7,10 +7,16 @@ import CraftSystem from "../abi/CraftSystem.json";
 import DestroyPathSystem from "../abi/DestroyPathSystem.json";
 import DestroySystem from "../abi/DestroySystem.json";
 import IncrementSystem from "../abi/IncrementSystem.json";
+import InvadeSystem from "../abi/InvadeSystem.json";
+import RaidSystem from "../abi/RaidSystem.json";
+import RecallReinforcementsSystem from "../abi/RecallReinforcementsSystem.json";
+import ReceiveReinforcementSystem from "../abi/ReceiveReinforcementSystem.json";
 import ResearchSystem from "../abi/ResearchSystem.json";
-import S_BattleSystem from "../abi/S_BattleSystem.json";
+import S_ClaimAllResourcesSystem from "../abi/S_ClaimAllResourcesSystem.json";
 import S_PlaceBuildingTilesSystem from "../abi/S_PlaceBuildingTilesSystem.json";
 import S_RaidSystem from "../abi/S_RaidSystem.json";
+import S_ResolveBattleSystem from "../abi/S_ResolveBattleSystem.json";
+import S_ResolveRaidUnitsSystem from "../abi/S_ResolveRaidUnitsSystem.json";
 import S_SpendRequiredResourcesSystem from "../abi/S_SpendRequiredResourcesSystem.json";
 import S_UpdateActiveStatusSystem from "../abi/S_UpdateActiveStatusSystem.json";
 import S_UpdateConnectedRequiredProductionSystem from "../abi/S_UpdateConnectedRequiredProductionSystem.json";
@@ -36,10 +42,16 @@ export const SystemAbis = {
   "system.DestroyPath": DestroyPathSystem.abi,
   "system.Destroy": DestroySystem.abi,
   "system.Increment": IncrementSystem.abi,
+  "system.Invade": InvadeSystem.abi,
+  "system.Raid": RaidSystem.abi,
+  "system.RecallReinforcements": RecallReinforcementsSystem.abi,
+  "system.ReceiveReinforcement": ReceiveReinforcementSystem.abi,
   "system.Research": ResearchSystem.abi,
-  "system.S_Battle": S_BattleSystem.abi,
+  "system.S_ClaimAllResources": S_ClaimAllResourcesSystem.abi,
   "system.S_PlaceBuildingTiles": S_PlaceBuildingTilesSystem.abi,
   "system.S_Raid": S_RaidSystem.abi,
+  "system.S_ResolveBattle": S_ResolveBattleSystem.abi,
+  "system.S_ResolveRaidUnits": S_ResolveRaidUnitsSystem.abi,
   "system.S_SpendRequiredResources": S_SpendRequiredResourcesSystem.abi,
   "system.S_UpdateActiveStatus": S_UpdateActiveStatusSystem.abi,
   "system.S_UpdateConnectedRequiredProduction": S_UpdateConnectedRequiredProductionSystem.abi,
