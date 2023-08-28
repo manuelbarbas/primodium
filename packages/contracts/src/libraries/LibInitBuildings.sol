@@ -15,6 +15,7 @@ import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_M
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
 import { LibBlueprint } from "../libraries/LibBlueprint.sol";
@@ -205,24 +206,56 @@ library LibInitBuildings {
     }
   }
 
+  function setupMine(
+    IWorld world,
+    uint256 mineBuildingType,
+    uint32 maxLevel,
+    uint32[] memory requiredMainBaseLevels,
+    ResourceValue[][] memory requiredResources,
+    uint256 productionResourceType,
+    uint32[] memory productionRates
+  ) internal {
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(mineBuildingType);
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(mineBuildingType, maxLevel);
+    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(
+      mineBuildingType,
+      productionResourceType
+    );
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
+      mineBuildingType,
+      LibBlueprint.get1x1Blueprint()
+    );
+
+    for (uint256 i = 0; i < maxLevel; i++) {
+      uint256 level = i + 1;
+      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(mineBuildingType, level);
+      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(
+        buildingLevelEntity,
+        ResourceValue({ resource: IronResourceItemID, value: productionRates[i] })
+      );
+      LevelComponent(world.getComponent(LevelComponentID)).set(buildingLevelEntity, requiredMainBaseLevels[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
+    }
+  }
+
   /******************************** Mines ********************************** */
 
   function initIronMine(IWorld world) internal {
     uint256 entity = IronMineID;
-    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 3;
+    uint256 productionResourceType = IronResourceItemID;
 
-    /****************** Required Research *******************/
-    uint256[] memory requiredResearch = new uint256[](maxLevel);
-    // no research required for level 1
-    requiredResearch[1] = IronMine2ResearchID;
-    requiredResearch[2] = IronMine3ResearchID;
+    /****************** Required Main Base Levels *******************/
+    uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
+    requiredMainBaseLevels[0] = 1;
+    requiredMainBaseLevels[1] = 2;
+    requiredMainBaseLevels[2] = 3;
 
     /****************** Production Rates *******************/
     uint32[] memory productionRates = new uint32[](maxLevel);
-    productionRates[0] = 2;
-    productionRates[1] = 3;
-    productionRates[2] = 5;
+    productionRates[0] = 50;
+    productionRates[1] = 60;
+    productionRates[2] = 75;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -231,33 +264,23 @@ library LibInitBuildings {
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 800 });
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 20000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1500 });
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 100000 });
     requiredResources[2] = resourceValues;
 
     /* ***********************Set Values ************************* */
-
-    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
-    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(entity, IronResourceItemID);
-    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get1x1Blueprint());
-    for (uint256 i = 0; i < maxLevel; i++) {
-      uint256 level = i + 1;
-      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
-      P_ProductionComponent(world.getComponent(P_ProductionComponentID)).set(
-        buildingLevelEntity,
-        ResourceValue({ resource: IronResourceItemID, value: productionRates[i] })
-      );
-
-      if (requiredResearch[i] > 0)
-        P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
-          buildingLevelEntity,
-          requiredResearch[i]
-        );
-      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
-    }
+    setupMine(
+      world,
+      entity,
+      maxLevel,
+      requiredMainBaseLevels,
+      requiredResources,
+      productionResourceType,
+      productionRates
+    );
   }
 
   function initCopperMine(IWorld world) internal {
