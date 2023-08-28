@@ -26,6 +26,7 @@ import { ESendType, ESpaceRockType, Coord, Arrival, ArrivalUnit } from "src/type
 
 uint256 constant ID = uint256(keccak256("system.SendUnits"));
 
+// resolves stack too deep error
 struct SendArgs {
   ArrivalUnit[] arrivalUnits;
   ESendType sendType;
@@ -49,26 +50,32 @@ contract SendUnitsSystem is PrimodiumSystem {
     }
     uint256 destination = reversePositionComponent.getValue(LibEncode.encodeCoord(sendArgs.destinationPosition));
 
-    checkMovementRules(origin, destination, addressToEntity(msg.sender), sendArgs.to, sendArgs.sendType);
+    uint256 playerEntity = addressToEntity(msg.sender);
+    checkMovementRules(origin, destination, playerEntity, sendArgs.to, sendArgs.sendType);
 
     bool anyUnitsSent = false;
     for (uint256 i = 0; i < sendArgs.arrivalUnits.length; i++) {
       if (sendArgs.arrivalUnits[i].count == 0) continue;
       LibMath.subtract(
         UnitsComponent(getC(UnitsComponentID)),
-        LibEncode.hashEntities(uint256(sendArgs.arrivalUnits[i].unitType), addressToEntity(msg.sender), origin),
+        LibEncode.hashEntities(uint256(sendArgs.arrivalUnits[i].unitType), playerEntity, origin),
         sendArgs.arrivalUnits[i].count
       );
       anyUnitsSent = true;
     }
+    uint256 arrivalBlock = LibSend.getArrivalBlock(
+      world,
+      sendArgs.originPosition,
+      sendArgs.destinationPosition,
+      playerEntity,
+      sendArgs.arrivalUnits
+    );
+
     Arrival memory arrival = Arrival({
       units: sendArgs.arrivalUnits,
       sendType: sendArgs.sendType,
-      arrivalBlock: block.number +
-        ((LibSend.distance(sendArgs.originPosition, sendArgs.destinationPosition) *
-          LibSend.getSlowestUnitSpeed(world, addressToEntity(msg.sender), sendArgs.arrivalUnits) *
-          GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed) / 10000),
-      from: addressToEntity(msg.sender),
+      arrivalBlock: arrivalBlock,
+      from: playerEntity,
       to: addressToEntity(sendArgs.to),
       origin: origin,
       destination: destination

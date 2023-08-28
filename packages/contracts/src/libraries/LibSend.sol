@@ -58,18 +58,6 @@ library LibSend {
     }
   }
 
-  function removeUnits(IWorld world, uint256 playerEntity, uint256 origin, ArrivalUnit[] memory units) internal {
-    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
-    for (uint256 i = 0; i < units.length; i++) {
-      require(units[i].count >= 0, "unit count must be greater than or equal to 0 for all unit types");
-      LibMath.subtract(
-        unitsComponent,
-        LibEncode.hashEntities(uint256(units[i].unitType), playerEntity, origin),
-        units[i].count
-      );
-    }
-  }
-
   function getArrivalBlock(
     IWorld world,
     Coord memory origin,
