@@ -14,6 +14,9 @@ import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_M
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
+import { P_IsUnitTypeComponent, ID as P_IsUnitTypeComponentID } from "components/P_IsUnitTypeComponent.sol";
+import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID} from "components/P_UnitProductionMultiplierComponent.sol";
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
@@ -43,6 +46,7 @@ library LibInitBuildings {
     initStorageUnit(world);
     initSolarPanel(world);
     initHanger(world);
+    initDroneFactory(world);
     initStarmapper(world);
   }
 
@@ -1006,9 +1010,9 @@ library LibInitBuildings {
     uint32[] memory productionRates = new uint32[](maxLevel);
 
     // LEVEL 1
-    productionRates[0] = 8;
+    productionRates[0] = 300;
     // LEVEL 2
-    productionRates[1] = 10;
+    productionRates[1] = 600;
 
     /* ***********************Set Values ************************* */
     setupUtilityBuilding(
@@ -1061,18 +1065,24 @@ library LibInitBuildings {
     uint32[] memory utilityResourceAmounts;
 
     // LEVEL 1
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 100;
     requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
     // LEVEL 2
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 200;
     requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
     // LEVEL 3
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 500;
     requiredUtilities[2] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
     /****************** Utility Production *******************/
@@ -1098,32 +1108,190 @@ library LibInitBuildings {
     );
   }
 
+  function setupUnitTrainingBuilding(
+    IWorld world,
+    uint256 uniTrainingBuildingType,
+    uint32 maxLevel,
+    uint32[] memory requiredMainBaseLevels,
+    ResourceValue[][] memory requiredResources,
+    ResourceValues[] memory requiredUtilities,
+    uint256[][] memory unitTypes,
+    uint32[] memory trainingSpeedMultipliers
+  ) internal {
+    P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(uniTrainingBuildingType);
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(uniTrainingBuildingType, maxLevel);
+    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(
+      uniTrainingBuildingType,
+      productionResourceType
+    );
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
+      uniTrainingBuildingType,
+      LibBlueprint.get1x1Blueprint()
+    );
+
+    for (uint256 i = 0; i < maxLevel; i++) {
+      uint256 level = i + 1;
+      uint256 buildingLevelEntity = LibEncode.hashKeyEntity(uniTrainingBuildingType, level);
+      P_UnitProductionMultiplierComponent(world.getComponent(P_UnitProductionMultiplierComponentID)).set(
+        buildingLevelEntity,
+        trainingSpeedMultipliers[i]);
+      
+      P_UnitProductionTypesComponent(world.getComponent(P_UnitProductionTypesComponentID)).set(
+        buildingLevelEntity,
+        unitTypes[i]
+      );
+      P_RequiredUtilityComponent(world.getComponent(P_RequiredUtilityComponentID)).set(
+        buildingLevelEntity,
+        requiredUtilities[i]
+      );
+      LevelComponent(world.getComponent(LevelComponentID)).set(buildingLevelEntity, requiredMainBaseLevels[i]);
+      LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
+    }
+  }
+  }
+
+  
+
+  function initDroneFactory(IWorld world) internal {
+    uint256 unitTrainingBuildingType = DroneFactoryID;
+    uint32 maxLevel = 3;
+
+    /****************** Required Main Base Levels *******************/
+    uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
+    requiredMainBaseLevels[0] = 3;
+    requiredMainBaseLevels[1] = 7;
+    requiredMainBaseLevels[2] = 8;
+
+    /****************** Required Resources *******************/
+    ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
+    ResourceValue[] memory resourceValues;
+
+    // LEVEL 1
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 8000 });
+    requiredResources[0] = resourceValues;
+    // LEVEL 2
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 250000 });
+    requiredResources[1] = resourceValues;
+
+    // LEVEL 3
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 275000 });
+    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
+    requiredResources[2] = resourceValues;
+
+    /****************** Required Utility Resources *******************/
+
+    ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
+
+    uint256[] memory utilityResourceIds;
+    uint32[] memory utilityResourceAmounts;
+
+    // LEVEL 1
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 100;
+    requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 2
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 200;
+    requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    // LEVEL 3
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = ElectricityUtilityResourceID;
+    utilityResourceAmounts[0] = 500;
+    requiredUtilities[2] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    /****************** Unit Production Multipliers *******************/
+    uint32[] memory productionSpeedMultipliers = new uint32[](maxLevel);
+
+    // LEVEL 1
+    productionSpeedMultipliers[0] = 100;
+    // LEVEL 2
+    productionSpeedMultipliers[1] = 110;
+    // LEVEL 3
+    productionSpeedMultipliers[2] = 120;
+
+
+    /****************** Unit Types Production *******************/
+    uint256[][] allUnitTypes = new uint256[][](maxLevel);
+    uint256[] unitTypes;
+    //Level 1
+    unitTypes = new uint256[](5);
+    unitTypes[0] = AnvilDrone;
+    unitTypes[1] = HammerDrone;
+    unitTypes[2] = MiningVessel;
+    unitTypes[3] = AegisDrone;
+    unitTypes[4] = StingerDrone;
+    allUnitTypes[0] = unitTypes;
+    //Level 2
+    unitTypes = new uint256[](5);
+    unitTypes[0] = AnvilDrone;
+    unitTypes[1] = HammerDrone;
+    unitTypes[2] = MiningVessel;
+    unitTypes[3] = AegisDrone;
+    unitTypes[4] = StingerDrone;
+    allUnitTypes[1] = unitTypes;
+
+    //Level 3
+    unitTypes = new uint256[](5);
+    unitTypes[0] = AnvilDrone;
+    unitTypes[1] = HammerDrone;
+    unitTypes[2] = MiningVessel;
+    unitTypes[3] = AegisDrone;
+    unitTypes[4] = StingerDrone;
+    allUnitTypes[w] = unitTypes;
+
+    
+
+    /* ***********************Set Values ************************* */
+    setupUnitTrainingBuilding(
+      world,
+      unitTrainingBuildingType,
+      maxLevel,
+      requiredMainBaseLevels,
+      requiredResources,
+      requiredUtilities,
+      allUnitTypes,
+      productionSpeedMultipliers
+    );
+  }
+
   function initStarmapper(IWorld world) internal {
     uint256 entity = StarmapperID;
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 3;
 
-    /****************** Required Research *******************/
-    uint256[] memory requiredResearch = new uint256[](maxLevel);
-    // LEVEL 1
-    requiredResearch[0] = StarmapperResearchID;
-    // LEVEL 2
-    requiredResearch[1] = Starmapper2ResearchID;
-    // LEVEL 3
-    requiredResearch[2] = Starmapper3ResearchID;
+    /****************** Required Main Base Levels *******************/
+    uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
+    requiredMainBaseLevels[0] = 4;
+    requiredMainBaseLevels[1] = 7;
+    requiredMainBaseLevels[2] = 8;
+
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
     // LEVEL 1
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 25000 });
     requiredResources[0] = resourceValues;
 
     // LEVEL 2
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 125000 });
     requiredResources[1] = resourceValues;
 
     // LEVEL 3
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 125000 });
+    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
     requiredResources[2] = resourceValues;
 
     /* -------------------------------- Max Moves ------------------------------- */
@@ -1145,10 +1313,7 @@ library LibInitBuildings {
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
 
       P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).set(buildingLevelEntity, maxMoves[i]);
-      P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).set(
-        buildingLevelEntity,
-        requiredResearch[i]
-      );
+      LevelComponent(world.getComponent(LevelComponentID)).set(buildingLevelEntity, requiredMainBaseLevels[i]);
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
     }
   }
