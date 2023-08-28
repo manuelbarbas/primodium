@@ -1,12 +1,6 @@
 import { world } from "src/network/world";
 import newComponent from "./Component";
-import { Type, defineComponentSystem } from "@latticexyz/recs";
-import {
-  BattleAttacker,
-  BattleDefender,
-  BattleResult,
-  BattleSpaceRock,
-} from "../chainComponents";
+import { ComponentValue, Type } from "@latticexyz/recs";
 
 export const BattleComponent = () => {
   const component = newComponent(world, {
@@ -24,30 +18,39 @@ export const BattleComponent = () => {
     spaceRock: Type.Entity,
   });
 
-  defineComponentSystem(world, BattleResult, ({ entity, value: [result] }) => {
-    if (!result) return;
-    const entityId = world.entities[entity];
-    const attacker = BattleAttacker.get(entityId);
-    const defender = BattleDefender.get(entityId);
-    const spaceRock = BattleSpaceRock.get(entityId)?.value;
+  const format = (battle: ComponentValue<typeof component.schema>) => {
+    const attackerUnits = [];
+    const defenderUnits = [];
+    if (battle.attackerUnitTypes.length !== battle.attackerUnitCounts.length)
+      throw new Error(
+        "attackerUnitTypes and attackerUnitCounts must be the same length"
+      );
 
-    if (!attacker || !defender || !spaceRock) return;
-    component.set({
-      attacker: attacker.participantEntity,
-      defender: defender.participantEntity,
-      attackerUnitCounts: attacker.unitCounts,
-      defenderUnitCounts: defender.unitCounts,
-      attackerUnitTypes: attacker.unitTypes,
-      defenderUnitTypes: defender.unitTypes,
-      attackerUnitLevels: attacker.unitLevels,
-      defenderUnitLevels: defender.unitLevels,
-      winner: result.winner,
-      attackerUnitsLeft: result.attackerUnitsLeft,
-      defenderUnitsLeft: result.defenderUnitsLeft,
-      spaceRock,
-    });
-  });
+    for (let i = 0; i < battle.attackerUnitTypes.length; i++) {
+      attackerUnits.push({
+        type: battle.attackerUnitTypes[i],
+        count: battle.attackerUnitCounts[i],
+        level: battle.attackerUnitLevels[i],
+        unitsLeft: battle.attackerUnitsLeft[i],
+      });
+      defenderUnits.push({
+        type: battle.defenderUnitTypes[i],
+        count: battle.defenderUnitCounts[i],
+        level: battle.defenderUnitLevels[i],
+        unitsLeft: battle.defenderUnitsLeft[i],
+      });
+    }
+    return {
+      attacker: battle.attacker,
+      defender: battle.defender,
+      winner: battle.winner,
+      attackerUnits,
+      defenderUnits,
+      spaceRock: battle.spaceRock,
+    };
+  };
   return {
     ...component,
+    format,
   };
 };

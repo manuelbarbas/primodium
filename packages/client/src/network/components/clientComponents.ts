@@ -70,7 +70,7 @@ export const Hangar = newComponent(
   }
 );
 
-const Battle = BattleComponent();
+export const Battle = BattleComponent();
 
 export default {
   ActiveAsteroid,
