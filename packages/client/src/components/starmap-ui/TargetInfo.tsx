@@ -17,11 +17,16 @@ import { hashKeyEntity } from "src/util/encode";
 import { ESpaceRockType } from "src/util/web3/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { getAsteroidImage } from "src/util/asteroid";
+import { useMemo } from "react";
 
 export const TargetInfo: React.FC = () => {
-  const target = Send.use()?.destination;
-  const type = AsteroidType.use(target, { value: ESpaceRockType.Asteroid })
-    .value as ESpaceRockType;
+  const send = Send.use();
+  const target = useMemo(() => {
+    return Send.getDestination();
+  }, [send]);
+  const type = AsteroidType.use(target?.entity, {
+    value: ESpaceRockType.Asteroid,
+  }).value as ESpaceRockType;
 
   if (!target) return null;
 
@@ -33,10 +38,10 @@ export const TargetInfo: React.FC = () => {
         className="absolute top-0 left-0 pointer-events-auto"
       >
         {type == ESpaceRockType.Asteroid && (
-          <AsteroidTargetInfo target={target} />
+          <AsteroidTargetInfo target={target.entity} />
         )}
         {type == ESpaceRockType.Motherlode && (
-          <MotherlodeTargetInfo target={target} />
+          <MotherlodeTargetInfo target={target.entity} />
         )}
       </motion.div>
     </AnimatePresence>

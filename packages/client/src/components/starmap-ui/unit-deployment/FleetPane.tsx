@@ -1,14 +1,10 @@
 import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import { FaTrash } from "react-icons/fa";
 import Spinner from "src/components/shared/Spinner";
 import { useMud } from "src/hooks";
-import { OwnedBy } from "src/network/components/chainComponents";
-import {
-  Account,
-  ActiveAsteroid,
-  Send,
-} from "src/network/components/clientComponents";
+import { Account, Send } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getAsteroidImage } from "src/util/asteroid";
 import { getBlockTypeName } from "src/util/common";
@@ -24,21 +20,32 @@ export const FleetPane: React.FC<{
   const send = Send.use(undefined, {
     units: new Array<EntityID>(),
     count: new Array<number>(),
-    origin: ActiveAsteroid.get()?.value,
-    destination: undefined,
+    originX: undefined,
+    originY: undefined,
+    destinationX: undefined,
+    destinationY: undefined,
     to: undefined,
     sendType: undefined,
   });
 
+  const origin = useMemo(() => {
+    return Send.getOrigin();
+  }, [send]);
+
+  const destination = useMemo(() => {
+    return Send.getDestination();
+  }, [send]);
+
   const sendFleet = (sendType: ESendType) => {
     const account = Account.get()?.value;
+    const origin = Send.getOrigin();
+    const destination = Send.getDestination();
     if (
       account == undefined ||
-      send.origin == undefined ||
+      origin == undefined ||
       send.units === undefined ||
       send.units.length === 0 ||
-      send.origin === undefined ||
-      send.destination === undefined
+      destination === undefined
     )
       return;
     const to = "0x00" as EntityID;
@@ -48,14 +55,7 @@ export const FleetPane: React.FC<{
       count: send.count?.at(index) ?? 0,
     }));
 
-    sendUnits(
-      arrivalUnits,
-      sendType,
-      send.origin,
-      send.destination,
-      to,
-      network
-    );
+    sendUnits(arrivalUnits, sendType, origin, destination, to, network);
   };
 
   return (
@@ -116,33 +116,33 @@ export const FleetPane: React.FC<{
         )}
 
         <div className="flex flex-col items-center justify-center ml-2 border rounded-md border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-32 h-full">
-          {!send.origin ? (
+          {!origin ? (
             <b className="p-1 rounded text-center border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs">
               NO ORIGIN SELECTED
             </b>
           ) : (
             <div className="flex items-center justify-center p-1 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-red-400 text-xs gap-2">
               <img
-                src={getAsteroidImage(send.origin)}
+                src={getAsteroidImage(origin.entity)}
                 className="w-[24px] h-[24px] shadow-2xl"
               />
               ORIGIN LOCKED
             </div>
           )}
-          {!send.destination ? (
+          {!destination ? (
             <b className="p-1 rounded text-center border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs">
               NO TARGET SELECTED
             </b>
           ) : (
             <div className="flex items-center justify-center p-1 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-red-400 text-xs gap-2">
               <img
-                src={getAsteroidImage(send.destination)}
+                src={getAsteroidImage(destination.entity)}
                 className="w-[24px] h-[24px] shadow-2xl"
               />
               TARGET LOCKED
             </div>
           )}
-          {send.destination && (
+          {destination && (
             <div className="flex gap-2 text-xs p-2">
               {(!send.units || send.units?.length === 0) && (
                 <b className="p-1 rounded text-center border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs">

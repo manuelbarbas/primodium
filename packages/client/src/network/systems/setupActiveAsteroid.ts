@@ -13,6 +13,9 @@ export const setupActiveAsteroid = (player: EntityID) => {
     const asteroid = value[0]?.parent;
     if (!asteroid) return;
     ActiveAsteroid.set({ value: asteroid });
-    Send.update({ origin: asteroid });
+
+    // temp so we can test without the set origin ui
+    const position = Position.get(asteroid);
+    Send.update({ originX: position?.x, originY: position?.y });
   });
 };

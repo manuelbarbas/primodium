@@ -13,12 +13,17 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-import { AsteroidType, Position } from "src/network/components/chainComponents";
+import {
+  AsteroidType,
+  Position,
+  ReversePosition,
+} from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
+import { encodeCoord } from "src/util/encode";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -39,7 +44,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const activeAsteroid = ActiveAsteroid.get()?.value;
 
-    const selectedTarget = Send.get()?.destination;
+    const selectedTarget = Send.getDestination();
 
     asteroidObjectGroup.add("Sprite").setComponents([
       ObjectPosition({
@@ -54,16 +59,18 @@ export const renderAsteroid = (scene: Scene) => {
       activeAsteroid && activeAsteroid === entityId
         ? Outline({ color: 0xffffff })
         : undefined,
-      selectedTarget && selectedTarget === entityId ? Outline() : undefined,
+      selectedTarget && selectedTarget.entity === entityId
+        ? Outline()
+        : undefined,
       OnClick(() => {
         if (entityId === ActiveAsteroid.get()?.value) return;
 
-        if (selectedTarget && selectedTarget === entityId) {
+        if (selectedTarget && selectedTarget.entity === entityId) {
           Send.remove();
           return;
         }
 
-        Send.update({ destination: entityId });
+        Send.setDestination(coord);
       }),
     ]);
   };
@@ -78,29 +85,25 @@ export const renderAsteroid = (scene: Scene) => {
     render(entityId, coord);
     initializeMotherlodes(entityId, coord);
   });
-
   defineComponentSystem(gameWorld, Send, ({ value: [newValue, oldValue] }) => {
-    if (oldValue?.destination) {
-      const entityId = oldValue.destination;
-      const coord = Position.get(entityId);
-
-      if (!coord) return;
-
+    if (oldValue?.destinationX && oldValue?.destinationY) {
+      const coord = { x: oldValue.destinationX, y: oldValue.destinationY };
+      const entityId = ReversePosition.get(encodeCoord(coord))?.value;
+      if (!entityId) return;
       const asteroidType = AsteroidType.get(entityId)?.value;
       if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
 
-      render(oldValue.destination, coord);
+      render(entityId, coord);
     }
-    if (newValue?.destination) {
-      const entityId = newValue.destination;
-      const coord = Position.get(entityId);
+    if (newValue?.destinationX && newValue?.destinationY) {
+      const coord = { x: newValue.destinationX, y: newValue.destinationY };
+      const entityId = ReversePosition.get(encodeCoord(coord))?.value;
 
-      if (!coord) return;
-
+      if (!entityId) return;
       const asteroidType = AsteroidType.get(entityId)?.value;
       if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
 
-      render(newValue.destination, coord);
+      render(entityId, coord);
     }
   });
 };

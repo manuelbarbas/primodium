@@ -5,12 +5,13 @@ import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 import { ESendType } from "./types";
 import { ArrivalUnitStruct } from "../../../../contracts/types/ethers-contracts/SendUnitsSystem";
+import { Coord } from "@latticexyz/utils";
 
 export const send = async (
   arrivalUnits: ArrivalUnitStruct[],
   sendType: ESendType,
-  origin: EntityID,
-  destination: EntityID,
+  origin: Coord,
+  destination: Coord,
   to: EntityID,
   network: Network
 ) => {
@@ -24,8 +25,8 @@ export const send = async (
     systems["system.SendUnits"].executeTyped(
       arrivalUnits,
       sendType,
-      origin,
-      destination,
+      { ...origin, parent: 0 },
+      { ...destination, parent: 0 },
       to,
       {
         gasLimit: 30_000_000,

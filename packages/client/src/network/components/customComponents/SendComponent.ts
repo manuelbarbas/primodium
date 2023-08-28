@@ -1,7 +1,9 @@
 import { EntityID, Metadata, World, Type } from "@latticexyz/recs";
 
 import newComponent, { Options } from "./Component";
-import { ActiveAsteroid } from "../clientComponents";
+import { Coord } from "@latticexyz/utils";
+import { ReversePosition } from "../chainComponents";
+import { encodeCoord } from "src/util/encode";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -10,8 +12,10 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
   const component = newComponent(
     world,
     {
-      origin: Type.OptionalEntity,
-      destination: Type.OptionalEntity,
+      originX: Type.OptionalNumber,
+      originY: Type.OptionalNumber,
+      destinationX: Type.OptionalNumber,
+      destinationY: Type.OptionalNumber,
       to: Type.OptionalEntity,
       units: Type.OptionalEntityArray,
       count: Type.OptionalNumberArray,
@@ -35,10 +39,10 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     return count[index];
   };
 
-  const remove = (entity: EntityID) => {
+  const remove = () => {
     component.update({
-      origin: ActiveAsteroid.get()?.value,
-      destination: undefined,
+      destinationX: undefined,
+      destinationY: undefined,
       to: undefined,
       units: undefined,
       count: undefined,
@@ -59,6 +63,41 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     count!.splice(index, 1);
 
     component.update({ units, count });
+  };
+
+  const setOrigin = (position: Coord) => {
+    component.update({ originX: position.x, originY: position.y });
+  };
+
+  const setDestination = (position: Coord) => {
+    component.update({ destinationX: position.x, destinationY: position.y });
+  };
+
+  const getOrigin = () => {
+    const componentValue = component.get();
+    if (!componentValue || !componentValue.originX || !componentValue.originY)
+      return undefined;
+    const coord = { x: componentValue.originX, y: componentValue.originY };
+    const entity = ReversePosition.get(encodeCoord(coord))?.value;
+    if (!entity) return undefined;
+    return { ...coord, entity };
+  };
+
+  const getDestination = () => {
+    const componentValue = component.get();
+    if (
+      !componentValue ||
+      !componentValue.destinationX ||
+      !componentValue.destinationY
+    )
+      return undefined;
+    const coord = {
+      x: componentValue.destinationX,
+      y: componentValue.destinationY,
+    };
+    const entity = ReversePosition.get(encodeCoord(coord))?.value;
+    if (!entity) return undefined;
+    return { ...coord, entity };
   };
 
   const setUnitCount = (entity: EntityID, count: number) => {
@@ -88,7 +127,17 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     component.update({ units: currentUnits, count: currentCount });
   };
 
-  return { ...component, getUnitCount, setUnitCount, removeUnit, remove };
+  return {
+    ...component,
+    getUnitCount,
+    getOrigin,
+    getDestination,
+    setUnitCount,
+    setOrigin,
+    setDestination,
+    removeUnit,
+    remove,
+  };
 }
 
 export default newSendComponent;

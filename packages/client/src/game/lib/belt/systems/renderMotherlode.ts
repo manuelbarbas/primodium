@@ -17,11 +17,13 @@ import {
   AsteroidType,
   Motherlode,
   Position,
+  ReversePosition,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { MotherlodeSizeNames, MotherlodeTypeNames } from "src/util/constants";
 import { EMotherlodeSize, ESpaceRockType } from "src/util/web3/types";
 import { Send } from "src/network/components/clientComponents";
+import { encodeCoord } from "src/util/encode";
 
 export const renderMotherlode = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -46,7 +48,7 @@ export const renderMotherlode = (scene: Scene) => {
     const coord = Position.get(world.entities[entity]);
     if (!coord) return;
 
-    const selectedTarget = Send.get()?.destination;
+    const selectedTarget = Send.getDestination();
 
     const scale =
       motherlodeData.size == EMotherlodeSize.SMALL
@@ -59,7 +61,9 @@ export const renderMotherlode = (scene: Scene) => {
         x: coord.x * tileWidth,
         y: -coord.y * tileHeight,
       }),
-      selectedTarget && selectedTarget === entityId ? Outline() : undefined,
+      selectedTarget && selectedTarget.entity === entityId
+        ? Outline()
+        : undefined,
       SetValue({
         originX: 0.5,
         originY: 0.5,
@@ -67,12 +71,12 @@ export const renderMotherlode = (scene: Scene) => {
       }),
       Texture(sprite),
       OnClick(() => {
-        if (selectedTarget && selectedTarget === entityId) {
+        if (selectedTarget && selectedTarget.entity === entityId) {
           Send.remove();
           return;
         }
 
-        Send.update({ destination: entityId });
+        Send.setDestination(coord);
       }),
     ]);
   };
@@ -80,18 +84,23 @@ export const renderMotherlode = (scene: Scene) => {
   defineEnterSystem(gameWorld, query, render);
 
   defineComponentSystem(gameWorld, Send, ({ value: [newValue, oldValue] }) => {
-    if (oldValue?.destination) {
-      const entityId = oldValue.destination;
-
+    if (oldValue?.destinationX && oldValue?.destinationY) {
+      const entityId = ReversePosition.get(
+        encodeCoord({ x: oldValue.destinationX, y: oldValue.destinationY })
+      )?.value;
+      if (!entityId) return;
       const asteroidType = AsteroidType.get(entityId)?.value;
       if (!asteroidType || asteroidType !== ESpaceRockType.Motherlode) return;
 
       const entityIndex = world.entityToIndex.get(entityId);
       if (entityIndex) render({ entity: entityIndex });
     }
-    if (newValue?.destination) {
-      const entityId = newValue.destination;
+    if (newValue?.destinationX && newValue?.destinationY) {
+      const entityId = ReversePosition.get(
+        encodeCoord({ x: newValue.destinationX, y: newValue.destinationY })
+      )?.value;
 
+      if (!entityId) return;
       const asteroidType = AsteroidType.get(entityId)?.value;
       if (!asteroidType || asteroidType !== ESpaceRockType.Motherlode) return;
 
