@@ -50,30 +50,32 @@ contract SendUnitsSystem is PrimodiumSystem {
     checkMovementRules(origin, destination, addressToEntity(msg.sender), to, sendType);
 
     // make sure the troop count at the planet is leq the one given and subtract from planet total
+    bool anyUnitsSent = false;
     for (uint256 i = 0; i < arrivalUnits.length; i++) {
-      require(arrivalUnits[i].count > 0, "unit count must be positive");
+      if (arrivalUnits[i].count == 0) continue;
       LibMath.subtract(
         UnitsComponent(getC(UnitsComponentID)),
         LibEncode.hashEntities(uint256(arrivalUnits[i].unitType), addressToEntity(msg.sender), origin),
         arrivalUnits[i].count
       );
+      anyUnitsSent = true;
     }
+    require(anyUnitsSent, "must send units");
+    Arrival memory arrival = Arrival({
+      units: arrivalUnits,
+      sendType: sendType,
+      arrivalBlock: block.number +
+        ((LibSend.distance(originPosition, destinationPosition) *
+          LibSend.getSlowestUnitSpeed(world, addressToEntity(msg.sender), arrivalUnits) *
+          GameConfigComponent(getC(GameConfigComponentID)).getValue(SingletonID).moveSpeed) / 10000),
+      from: addressToEntity(msg.sender),
+      to: addressToEntity(to),
+      origin: origin,
+      destination: destination
+    });
 
-    LibSend.sendUnits(
-      world,
-      Arrival({
-        units: arrivalUnits,
-        sendType: sendType,
-        arrivalBlock: block.number +
-          ((LibSend.distance(originPosition, destinationPosition) *
-            LibSend.getSlowestUnitSpeed(world, arrivalUnits) *
-            GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed) / 10000),
-        from: addressToEntity(msg.sender),
-        to: addressToEntity(to),
-        origin: origin,
-        destination: destination
-      })
-    );
+    LibSend.sendUnits(world, arrival);
+    return abi.encode(arrival);
   }
 
   function checkMovementRules(
@@ -100,6 +102,8 @@ contract SendUnitsSystem is PrimodiumSystem {
     );
     ESpaceRockType originType = ESpaceRockType(asteroidTypeComponent.getValue(origin));
     ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
+    if (sendType == ESendType.REINFORCE || sendType == ESendType.RAID)
+      require(ownedByComponent.has(destination), "reinforce/raid destination must be a owned by player");
 
     uint256 moveCount = LibMath.getSafe(ArrivalsSizeComponent(getC(ArrivalsSizeComponentID)), playerEntity);
     uint32 maxMoveCount = LibMath.getSafe(MaxMovesComponent(getC(MaxMovesComponentID)), playerEntity);
@@ -107,23 +111,20 @@ contract SendUnitsSystem is PrimodiumSystem {
     require(moveCount < maxMoveCount, "you have reached your max move count");
 
     require(origin != destination, "origin and destination cannot be the same");
+
     if (originType == ESpaceRockType.ASTEROID) {
       require(ownedByComponent.getValue(origin) == playerEntity, "you can only move from an asteroid you own");
     }
 
     if (destinationType == ESpaceRockType.MOTHERLODE) {
       require(originType != ESpaceRockType.MOTHERLODE, "you cannot move between motherlodes");
-      require(
-        ownedByComponent.getValue(destination) == playerEntity,
-        "you can only move to your asteroid from a motherlode"
-      );
     }
 
     if (sendType == ESendType.INVADE) require(playerEntity != addressToEntity(to), "you cannot invade yourself");
     if (sendType == ESendType.REINFORCE)
       require(
-        destinationType == ESpaceRockType.MOTHERLODE && playerEntity == addressToEntity(to),
-        "you can only reinforce yourself on a motherlode"
+        ownedByComponent.getValue(destination) == addressToEntity(to),
+        "you can only reinforce the current owner of a motherlode"
       );
   }
 

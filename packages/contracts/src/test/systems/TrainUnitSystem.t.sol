@@ -29,6 +29,7 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../comp
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 import { ElectricityUtilityResourceID } from "../../prototypes.sol";
 import { BIGNUM } from "../../prototypes/Debug.sol";
@@ -52,9 +53,11 @@ contract TrainUnitSystem is PrimodiumTest {
   UpgradeBuildingSystem public upgradeBuildingSystem;
   S_UpdatePlayerSpaceRockSystem public updateSystem;
 
+  P_UtilityProductionComponent public utilityProductionComponent;
+
   function setUp() public override {
     super.setUp();
-
+    utilityProductionComponent = P_UtilityProductionComponent(component(P_UtilityProductionComponentID));
     // init systems
     buildSystem = BuildSystem(system(BuildSystemID));
     trainUnitsSystem = TrainUnitsSystem(system(TrainUnitsSystemID));
@@ -264,7 +267,7 @@ contract TrainUnitSystem is PrimodiumTest {
       getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 units");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
 
     vm.stopPrank();
   }
@@ -296,7 +299,7 @@ contract TrainUnitSystem is PrimodiumTest {
       getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have DebugUnit");
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 2, "player should have 2 DebugUnit");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 DebugUnit");
     vm.roll(25);
     updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     uint256 playerUnitAsteroidEntity2 = LibEncode.hashEntities(
@@ -305,13 +308,13 @@ contract TrainUnitSystem is PrimodiumTest {
       getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity2), "player should have DebugUnit2");
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 1, "player should have 1 DebugUnit2");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 5, "player should have 5 DebugUnit2");
     vm.roll(35);
     updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 3, "player should have 3 DebugUnit2");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 10, "player should have 10 DebugUnit2");
     vm.roll(45);
     updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
-    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 DebugUnit");
+    assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 15, "player should have 15 DebugUnit");
     vm.stopPrank();
   }
 
@@ -326,9 +329,9 @@ contract TrainUnitSystem is PrimodiumTest {
       getIronCoord(alice)
     );
     uint256 unitProductionBuildingEntityID = abi.decode(unitProductionBuildingEntity, (uint256));
-
+    uint32 housingUtility = utilityProductionComponent.getValue(LibEncode.hashKeyEntity(DebugHousingBuilding, 1)).value;
     vm.roll(10);
-    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 11);
+    trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, housingUtility + 1);
 
     vm.stopPrank();
   }

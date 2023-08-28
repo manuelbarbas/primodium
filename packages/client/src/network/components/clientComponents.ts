@@ -63,6 +63,17 @@ export const TrainingQueue = newComponent(
   }
 );
 
+export const Hangar = newComponent(
+  world,
+  {
+    units: Type.EntityArray,
+    counts: Type.NumberArray,
+  },
+  {
+    id: "Hangar",
+  }
+);
+
 export default {
   ActiveAsteroid,
   SelectedAsteroid,
@@ -77,4 +88,5 @@ export default {
   Marker,
   Fleet,
   TrainingQueue,
+  Hangar,
 };

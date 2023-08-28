@@ -7,7 +7,7 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
@@ -23,6 +23,8 @@ import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../comp
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
 import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "../../components/LevelComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "../../components/MainBaseComponent.sol";
 import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes.sol";
 import { ElectricityUtilityResourceID } from "../../prototypes.sol";
 import { BIGNUM } from "../../prototypes/Debug.sol";
@@ -41,21 +43,26 @@ contract BuildSystemTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   BuildSystem public buildSystem;
+  UpgradeBuildingSystem public upgradeBuildingSystem;
+  ComponentDevSystem public componentDevSystem;
 
   OwnedByComponent public ownedByComponent;
   ChildrenComponent public childrenComponent;
   BuildingTypeComponent public buildingTypeComponent;
+  MainBaseComponent public mainBaseComponent;
 
   function setUp() public override {
     super.setUp();
 
     // init systems
     buildSystem = BuildSystem(system(BuildSystemID));
-
+    upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
+    componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     // init components
     ownedByComponent = OwnedByComponent(component(OwnedByComponentID));
     childrenComponent = ChildrenComponent(component(ChildrenComponentID));
     buildingTypeComponent = BuildingTypeComponent(component(BuildingTypeComponentID));
+    mainBaseComponent = MainBaseComponent(component(MainBaseComponentID));
 
     // init other
     spawn(alice);
@@ -366,6 +373,42 @@ contract BuildSystemTest is PrimodiumTest {
 
     Coord memory coord1 = getCoord3(alice);
     buildSystem.executeTyped(MainBaseID, coord1);
+    vm.stopPrank();
+  }
+
+  function testFailBuildMainBaseLevelNotMet() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = getCoord3(alice);
+    buildSystem.executeTyped(DebugSimpleBuildingMainBaseLevelReqID, coord1);
+    vm.stopPrank();
+  }
+
+  function testBuildMainBaseLevelMet() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = getCoord3(alice);
+    componentDevSystem.executeTyped(
+      LevelComponentID,
+      mainBaseComponent.getValue(addressToEntity(alice)),
+      abi.encode(2)
+    );
+    buildSystem.executeTyped(DebugSimpleBuildingMainBaseLevelReqID, coord1);
+    vm.stopPrank();
+  }
+
+  function testUpgradeMainBaseLevelMet() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = getCoord3(alice);
+    componentDevSystem.executeTyped(
+      LevelComponentID,
+      mainBaseComponent.getValue(addressToEntity(alice)),
+      abi.encode(3)
+    );
+    buildSystem.executeTyped(DebugSimpleBuildingMainBaseLevelReqID, coord1);
+    upgradeBuildingSystem.executeTyped(coord1);
+
     vm.stopPrank();
   }
 }

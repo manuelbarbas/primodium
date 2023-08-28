@@ -58,6 +58,12 @@ export function getMotherlodeEntity(sourceEntity: EntityID, position: Coord) {
   ) as EntityID;
 }
 
+export function hashEntities(...args: (EntityID | string | number)[]) {
+  const types = args.map(() => "uint256");
+  const values = args.map((arg) => BigNumber.from(arg));
+  return solidityKeccak256(types, values) as EntityID;
+}
+
 export function hashAndTrimKeyEntity(
   key: string | EntityID | number,
   entity: EntityID | string | number

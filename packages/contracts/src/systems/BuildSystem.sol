@@ -52,6 +52,11 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     require(
+      LibBuilding.checkMainBaseLevelRequirement(world, playerEntity, buildingTypeLevelEntity),
+      "[ResearchSystem] MainBase level requirement not met"
+    );
+
+    require(
       LibResearch.hasResearched(world, buildingTypeLevelEntity, playerEntity),
       "[BuildSystem] You have not researched the required technology"
     );

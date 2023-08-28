@@ -12,6 +12,7 @@ import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "../components/
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "../components/P_UtilityProductionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../components/BuildingTypeComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../components/LevelComponent.sol";
+import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 
@@ -45,7 +46,6 @@ contract S_UpdateUtilityProductionSystem is IOnBuildingSubsystem, PrimodiumSyste
     );
 
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, buildingLevel);
-    MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(world.getComponent(MaxUtilityComponentID));
     uint256 resourceId = UtilityProductionComponent.getValue(buildingLevelEntity).resource;
     uint32 capacityIncrease = UtilityProductionComponent.getValue(buildingLevelEntity).value;
     if (actionType == EActionType.Upgrade) {
@@ -54,13 +54,13 @@ contract S_UpdateUtilityProductionSystem is IOnBuildingSubsystem, PrimodiumSyste
         UtilityProductionComponent.getValue(LibEncode.hashKeyEntity(buildingType, buildingLevel - 1)).value;
     }
 
-    uint32 newCapacity = LibMath.getSafe(maxUtilityComponent, LibEncode.hashKeyEntity(resourceId, playerEntity));
-    if (actionType == EActionType.Destroy) {
-      newCapacity -= capacityIncrease;
-    } else {
-      newCapacity += capacityIncrease;
-    }
-    maxUtilityComponent.set(LibEncode.hashKeyEntity(resourceId, playerEntity), newCapacity);
+    LibUtilityResource.modifyMaxUtility(
+      world,
+      playerEntity,
+      resourceId,
+      capacityIncrease,
+      actionType != EActionType.Destroy
+    );
   }
 
   function executeTyped(

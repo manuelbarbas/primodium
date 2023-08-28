@@ -7,6 +7,7 @@ import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components
 import { P_MaxStorageComponent, ID as MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibResource } from "libraries/LibResource.sol";
 
 library LibStorage {
   function getResourceStorageSpace(IWorld world, uint256 entity, uint256 resourceId) internal view returns (uint32) {
@@ -27,22 +28,53 @@ library LibStorage {
       );
   }
 
+  function reduceResourceFromStorage(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 resourceId,
+    uint32 resourceAmount
+  ) internal returns (uint32) {
+    ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
+
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+    uint32 playerResourceAmount = LibMath.getSafe(itemComponent, playerResourceEntity);
+    if (playerResourceAmount > resourceAmount) {
+      LibResource.updateResourceAmount(
+        world,
+        playerEntity,
+        resourceId,
+        LibMath.getSafe(itemComponent, playerResourceEntity) - resourceAmount
+      );
+      return 0;
+    } else {
+      LibResource.updateResourceAmount(world, playerEntity, resourceId, 0);
+      return resourceAmount - playerResourceAmount;
+    }
+  }
+
   function addResourceToStorage(
     IWorld world,
+    uint256 playerEntity,
     uint256 resourceId,
-    uint32 resourceAmount,
-    uint256 playerEntity
+    uint32 resourceAmount
   ) internal returns (uint32) {
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
 
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
     uint32 availableSpaceInPlayerStorage = getResourceStorageSpace(world, playerEntity, resourceId);
     if (availableSpaceInPlayerStorage > resourceAmount) {
-      itemComponent.set(playerResourceEntity, LibMath.getSafe(itemComponent, playerResourceEntity) + resourceAmount);
+      LibResource.updateResourceAmount(
+        world,
+        playerEntity,
+        resourceId,
+        LibMath.getSafe(itemComponent, playerResourceEntity) + resourceAmount
+      );
       return 0;
     } else {
-      itemComponent.set(
-        playerResourceEntity,
+      LibResource.updateResourceAmount(
+        world,
+        playerEntity,
+        resourceId,
         LibMath.getSafe(itemComponent, playerResourceEntity) + availableSpaceInPlayerStorage
       );
       return resourceAmount - availableSpaceInPlayerStorage;
