@@ -9,6 +9,7 @@ import {
 } from "src/network/components/clientComponents";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { setupHangar } from "src/network/systems/setupHangar";
+import { setupBattleComponent } from "src/network/systems/setupBattleComponent";
 
 export const useInit = () => {
   const { world, blockNumber$ } = useMud();
@@ -41,6 +42,7 @@ export const useInit = () => {
   useEffect(() => {
     setupTrainingQueues();
     setupHangar();
+    setupBattleComponent();
   }, []);
 
   return initialized;
