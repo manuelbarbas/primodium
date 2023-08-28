@@ -371,6 +371,10 @@ export const UnitProductionQueueIndex = newNumberComponent(world, {
 /* -------------------------------------------------------------------------- */
 
 export const Arrival = newArrivalComponent();
+export const MaxMoves = newNumberComponent(world, {
+  id: "MaxMoves",
+  metadata: { contractId: `${commonIdPrefix}MaxMoves` },
+});
 
 /* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
@@ -443,6 +447,7 @@ export default {
 
   // Arrivals
   Arrival,
+  MaxMoves,
 
   // Scoreboard
   Score,

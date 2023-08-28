@@ -38,21 +38,22 @@ export const newArrivalComponent = () => {
     const blockNumber = BlockNumber.get()?.value ?? 0;
     let all = component.getAll().map((entity) => component.get(entity));
     if (!filters) return all;
-    all.filter((elem) => {
+    return all.filter((elem) => {
       if (elem == undefined) return false;
+
       if (filters.to && elem.to !== filters.to) return false;
       if (filters.from && elem?.from !== filters.from) return false;
       if (filters.origin && elem?.origin !== filters.origin) return false;
       if (filters.destination && elem?.destination !== filters.destination)
         return false;
       if (filters.sendType && elem?.sendType !== filters.sendType) return false;
-      if (filters.onlyOrbiting && Number(elem.arrivalBlock) < blockNumber)
+      if (filters.onlyOrbiting && Number(elem.arrivalBlock) >= blockNumber)
         return false;
-      if (filters.onlyTransit && Number(elem.arrivalBlock) >= blockNumber)
+      if (filters.onlyTransit && Number(elem.arrivalBlock) < blockNumber) {
         return false;
+      }
       return true;
     });
-    return all;
   };
 
   const use = (filters?: {
