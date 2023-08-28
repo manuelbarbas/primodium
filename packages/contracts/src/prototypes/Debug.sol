@@ -7,6 +7,9 @@ uint256 constant DebugSimpleBuildingResourceReqsID = uint256(keccak256("block.De
 uint256 constant DebugSimpleBuildingResearchReqsID = uint256(keccak256("block.DebugSimpleBuildingResearchReqs"));
 uint256 constant DebugSimpleBuildingBuildLimitReq = uint256(keccak256("block.DebugSimpleBuildingBuildLimitReq"));
 uint256 constant DebugSimpleBuildingTileReqID = uint256(keccak256("block.DebugSimpleBuildingTileReq"));
+uint256 constant DebugSimpleBuildingMainBaseLevelReqID = uint256(
+  keccak256("block.DebugSimpleBuildingMainBaseLevelReq")
+);
 
 uint256 constant DebugSimpleBuildingUtilityResourceRequirement = uint256(
   keccak256("block.DebugSimpleBuildingUtilityResourceRequirement")

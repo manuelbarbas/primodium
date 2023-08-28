@@ -46,6 +46,17 @@ import { ID as UpdateRequiredProductionSystemID } from "systems/S_UpdateRequired
 import { ID as UpdateUtilityProductionSystemID } from "systems/S_UpdateUtilityProductionSystem.sol";
 
 library LibBuilding {
+  function checkMainBaseLevelRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    LevelComponent levelComponent = LevelComponent(getAddressById(world.components(), LevelComponentID));
+    if (!levelComponent.has(entity)) return true;
+    uint256 mainLevel = getBaseLevel(world, playerEntity);
+    return mainLevel >= levelComponent.getValue(entity);
+  }
+
   function canBuildOnTile(IWorld world, uint256 buildingType, Coord memory coord) internal view returns (bool) {
     P_RequiredTileComponent requiredTileComponent = P_RequiredTileComponent(
       world.getComponent(P_RequiredTileComponentID)

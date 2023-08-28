@@ -26,6 +26,7 @@ import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID 
 
 import { Coord } from "src/types.sol";
 
+import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibResearch } from "libraries/LibResearch.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -70,6 +71,11 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
     require(
       LibResearch.hasResearched(world, buildingIdLevel, playerEntity),
       "[UpgradeBuildingSystem] Cannot upgrade a building that does not meet research requirements"
+    );
+
+    require(
+      LibBuilding.checkMainBaseLevelRequirement(world, playerEntity, buildingIdLevel),
+      "[ResearchSystem] MainBase level requirement not met"
     );
 
     //spend required resources
