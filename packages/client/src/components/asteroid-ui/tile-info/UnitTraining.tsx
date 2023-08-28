@@ -82,8 +82,6 @@ export const UnitTraining: React.FC<{
     return totalUnits + count * (requiredHousing ?? 0);
   }, [count, requiredHousing, totalUnits]);
 
-  console.log(requiredHousing, maximum, totalUnits, unitsTaken);
-
   if (trainableUnits.length == 0 || maximum == 0) return null;
   return (
     <div className="relative flex flex-col  items-center text-white w-96">

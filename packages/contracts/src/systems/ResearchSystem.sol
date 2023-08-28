@@ -25,17 +25,6 @@ uint256 constant ID = uint256(keccak256("system.Research"));
 contract ResearchSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
 
-  function checkMainBaseLevelRequirement(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 entity
-  ) internal view returns (bool) {
-    LevelComponent levelComponent = LevelComponent(getAddressById(world.components(), LevelComponentID));
-    if (!levelComponent.has(entity)) return true;
-    uint256 mainLevel = LibBuilding.getBaseLevel(world, playerEntity);
-    return mainLevel >= levelComponent.getValue(entity);
-  }
-
   function execute(bytes memory args) public returns (bytes memory) {
     uint256 researchItem = abi.decode(args, (uint256));
     uint256 playerEntity = addressToEntity(msg.sender);
@@ -49,7 +38,7 @@ contract ResearchSystem is System {
     );
 
     require(
-      checkMainBaseLevelRequirement(world, playerEntity, researchItem),
+      LibBuilding.checkMainBaseLevelRequirement(world, playerEntity, researchItem),
       "[ResearchSystem] MainBase level requirement not met"
     );
 

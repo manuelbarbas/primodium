@@ -67,8 +67,15 @@ contract PrimodiumTest is MudTest {
     assertEq(uint256(a), uint256(b), context);
   }
 
-  function getHomeAsteroid(address player) public view returns (uint256) {
-    return PositionComponent(component(PositionComponentID)).getValue(addressToEntity(player)).parent;
+  function getHomeAsteroidEntity(address player) public view returns (uint256) {
+    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
+    return positionComponent.getValue(addressToEntity(player)).parent;
+  }
+
+  function getHomeAsteroid(address player) public view returns (Coord memory) {
+    PositionComponent positionComponent = PositionComponent(component(PositionComponentID));
+    uint256 asteroid = positionComponent.getValue(addressToEntity(player)).parent;
+    return positionComponent.getValue(asteroid);
   }
 
   function logCoord(Coord memory coord) internal view {
