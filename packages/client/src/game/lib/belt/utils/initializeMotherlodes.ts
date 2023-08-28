@@ -25,14 +25,12 @@ import {
 export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
   const config = GameConfig.get();
   if (!config) throw new Error("GameConfig not found");
-  console.log("source: ", source, sourceEntity);
   for (let i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
     const motherlodePosition = getPositionByVector(
       config.motherlodeDistance,
       Math.floor((i * 360) / config.maxMotherlodesPerAsteroid),
       source
     );
-    console.log("motherlodePosition", motherlodePosition);
     if (ReversePosition.has(encodeCoord(motherlodePosition))) continue;
     const motherlodeEntity = getMotherlodeEntity(
       sourceEntity,
