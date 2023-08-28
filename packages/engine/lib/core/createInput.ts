@@ -42,8 +42,6 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
     phaserKeyboard.disableGlobalCapture();
     phaserKeyboard.enabled = false;
-
-    console.log("disable input");
   }
 
   function enableInput() {
@@ -52,8 +50,6 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
     phaserKeyboard?.enableGlobalCapture();
     phaserKeyboard.enabled = true;
-
-    console.log("enable input");
   }
 
   function setCursor(cursor: string) {
