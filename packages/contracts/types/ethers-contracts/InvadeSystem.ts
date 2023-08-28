@@ -27,10 +27,10 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface S_BattleSystemInterface extends utils.Interface {
+export interface InvadeSystemInterface extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
-    "executeTyped(address,uint256)": FunctionFragment;
+    "executeTyped(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -49,7 +49,7 @@ export interface S_BattleSystemInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "executeTyped",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -87,12 +87,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface S_BattleSystem extends BaseContract {
+export interface InvadeSystem extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: S_BattleSystemInterface;
+  interface: InvadeSystemInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -120,8 +120,7 @@ export interface S_BattleSystem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      battleEntity: PromiseOrValue<BigNumberish>,
+      rockEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -139,8 +138,7 @@ export interface S_BattleSystem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   executeTyped(
-    playerAddress: PromiseOrValue<string>,
-    battleEntity: PromiseOrValue<BigNumberish>,
+    rockEntity: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -158,8 +156,7 @@ export interface S_BattleSystem extends BaseContract {
     ): Promise<string>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      battleEntity: PromiseOrValue<BigNumberish>,
+      rockEntity: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -189,8 +186,7 @@ export interface S_BattleSystem extends BaseContract {
     ): Promise<BigNumber>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      battleEntity: PromiseOrValue<BigNumberish>,
+      rockEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -209,8 +205,7 @@ export interface S_BattleSystem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     executeTyped(
-      playerAddress: PromiseOrValue<string>,
-      battleEntity: PromiseOrValue<BigNumberish>,
+      rockEntity: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
