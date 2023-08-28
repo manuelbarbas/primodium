@@ -57,7 +57,13 @@ contract StarmapperTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
     vm.expectRevert(bytes("you have reached your max move count"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      addressToEntity(bob)
+    );
   }
 
   function setupBuildingReqs(uint256 playerEntity, uint256 buildingType, uint256 level) public {
@@ -112,9 +118,9 @@ contract StarmapperTest is PrimodiumTest {
 
     Coord memory aliceHomeAsteroid = getHomeAsteroid(alice);
     Coord memory bobHomeAsteroid = getHomeAsteroid(bob);
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, bob);
+    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     vm.expectRevert(bytes("you have reached your max move count"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, bob);
+    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     return getCoord1(alice);
   }
 

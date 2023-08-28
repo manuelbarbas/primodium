@@ -1,7 +1,7 @@
 import { EntityID, defineComponentSystem } from "@latticexyz/recs";
 import { Position } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 
 export const setupActiveAsteroid = (player: EntityID) => {
   // todo: move this to an initialize function @NAB5
@@ -13,5 +13,9 @@ export const setupActiveAsteroid = (player: EntityID) => {
     const asteroid = value[0]?.parent;
     if (!asteroid) return;
     ActiveAsteroid.set({ value: asteroid });
+
+    // temp so we can test without the set origin ui
+    const position = Position.get(asteroid);
+    Send.update({ originX: position?.x, originY: position?.y });
   });
 };

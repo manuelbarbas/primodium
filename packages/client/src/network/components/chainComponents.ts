@@ -5,6 +5,7 @@ import newComponent, {
   newNumberComponent,
   newStringComponent,
 } from "./customComponents/Component";
+import { newArrivalComponent } from "./customComponents/ArrivalComponent";
 
 const commonIdPrefix = "component.";
 
@@ -366,6 +367,16 @@ export const UnitProductionQueueIndex = newNumberComponent(world, {
 });
 
 /* -------------------------------------------------------------------------- */
+/*                                  Arrivals                                  */
+/* -------------------------------------------------------------------------- */
+
+export const Arrival = newArrivalComponent();
+export const MaxMoves = newNumberComponent(world, {
+  id: "MaxMoves",
+  metadata: { contractId: `${commonIdPrefix}MaxMoves` },
+});
+
+/* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
 /* -------------------------------------------------------------------------- */
 
@@ -409,6 +420,7 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+  ReversePosition,
 
   // Motherlodes
   Motherlode,
@@ -432,6 +444,10 @@ export default {
   UnitProductionOwnedBy,
   UnitProductionQueue,
   UnitProductionQueueIndex,
+
+  // Arrivals
+  Arrival,
+  MaxMoves,
 
   // Scoreboard
   Score,

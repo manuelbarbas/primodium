@@ -32,7 +32,7 @@ struct SendArgs {
   ESendType sendType;
   Coord originPosition;
   Coord destinationPosition;
-  address to;
+  uint256 to;
 }
 
 contract SendUnitsSystem is PrimodiumSystem {
@@ -76,7 +76,7 @@ contract SendUnitsSystem is PrimodiumSystem {
       sendType: sendArgs.sendType,
       arrivalBlock: arrivalBlock,
       from: playerEntity,
-      to: addressToEntity(sendArgs.to),
+      to: sendArgs.to,
       origin: origin,
       destination: destination
     });
@@ -89,7 +89,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     uint256 origin,
     uint256 destination,
     uint256 playerEntity,
-    address to,
+    uint256 to,
     ESendType sendType
   ) internal view {
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
@@ -127,12 +127,9 @@ contract SendUnitsSystem is PrimodiumSystem {
       require(originType != ESpaceRockType.MOTHERLODE, "you cannot move between motherlodes");
     }
 
-    if (sendType == ESendType.INVADE) require(playerEntity != addressToEntity(to), "you cannot invade yourself");
+    if (sendType == ESendType.INVADE) require(playerEntity != to, "you cannot invade yourself");
     if (sendType == ESendType.REINFORCE)
-      require(
-        ownedByComponent.getValue(destination) == addressToEntity(to),
-        "you can only reinforce the current owner of a motherlode"
-      );
+      require(ownedByComponent.getValue(destination) == to, "you can only reinforce the current owner of a motherlode");
   }
 
   function executeTyped(
@@ -140,7 +137,7 @@ contract SendUnitsSystem is PrimodiumSystem {
     ESendType sendType,
     Coord memory origin,
     Coord memory destination,
-    address to
+    uint256 to
   ) public returns (bytes memory) {
     return execute(abi.encode(SendArgs(arrivalUnits, sendType, origin, destination, to)));
   }

@@ -2,19 +2,19 @@ import { motion } from "framer-motion";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useState } from "react";
 import { EntityID } from "@latticexyz/recs";
-import { Fleet } from "src/network/components/clientComponents";
 import { BackgroundImage } from "src/util/constants";
 import { getUnitStats } from "src/util/trainUnits";
+import { Send } from "src/network/components/clientComponents";
 
 export const UnitPane: React.FC<{
   unit: EntityID;
   maximum: number;
   setSelectedUnit: React.Dispatch<React.SetStateAction<EntityID | undefined>>;
 }> = ({ unit, maximum, setSelectedUnit }) => {
-  const [count, setCount] = useState<number | "">(Fleet.getUnitCount(unit));
-  const fleet = Fleet.use();
+  const [count, setCount] = useState<number | "">(Send.getUnitCount(unit));
+  const fleet = Send.use();
   useEffect(() => {
-    setCount(Fleet.getUnitCount(unit));
+    setCount(Send.getUnitCount(unit));
   }, [fleet]);
   return (
     <motion.div
@@ -103,7 +103,7 @@ export const UnitPane: React.FC<{
         onClick={() => {
           if (count === "") return;
 
-          Fleet.setUnitCount(unit, count);
+          Send.setUnitCount(unit, count);
         }}
       >
         Add to Fleet

@@ -7,7 +7,7 @@ import newComponent, {
   newNumberComponent,
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
-import newFleetComponent from "./customComponents/FleetComponent";
+import newSendComponent from "./customComponents/SendComponent";
 
 // todo: organize these alphabetically
 export const BlockNumber = newNumberComponent(world, {
@@ -37,19 +37,13 @@ export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
 });
 
-export const Fleet = newFleetComponent(world, {
-  id: "Fleet",
-});
-
 export const ActiveAsteroid = newComponent(
   world,
   { value: Type.Entity },
   { id: "ActiveAsteroid" }
 );
 
-export const SelectedAsteroid = newEntityComponent(world, {
-  id: "SelectedAsteroid",
-});
+export const Send = newSendComponent(world);
 
 export const TrainingQueue = newComponent(
   world,
@@ -77,7 +71,6 @@ export const Hangar = newComponent(
 
 export default {
   ActiveAsteroid,
-  SelectedAsteroid,
   BlockNumber,
   GameReady,
   DoubleCounter,
@@ -87,7 +80,7 @@ export default {
   SelectedAction,
   StartSelectedPath,
   Marker,
-  Fleet,
   TrainingQueue,
   Hangar,
+  Send,
 };
