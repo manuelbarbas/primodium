@@ -87,21 +87,6 @@ export const BuildingInfo: React.FC<{
           </div>
         )}
       </div>
-<<<<<<< HEAD
-      <UnitTraining buildingEntity={building} />
-      <div>
-        {isOwner && (
-          <div className="relative">
-            <UpgradeBuildingButton
-              id="upgrade-building"
-              builtTile={buildingType ?? BlockType.Air}
-              buildingEntity={building}
-              coord={coord}
-            />
-          </div>
-        )}
-      </div>
-=======
 
       <TrainUnits buildingEntity={building} />
 
@@ -111,12 +96,11 @@ export const BuildingInfo: React.FC<{
             id="upgrade-building"
             builtTile={buildingType ?? BlockType.Air}
             buildingEntity={building}
-            coords={coord}
+            coord={coord}
           />
         </div>
       )}
 
->>>>>>> 47b0704fd376f579dc5684d770f5e627fd0ef659
       <PortalModal
         show={showDestroyModal}
         onClose={() => setShowDestroyModal(false)}
