@@ -10,3 +10,7 @@ export * from "./research";
 export * from "./train";
 export * from "./upgradeBuilding";
 export * from "./upgradeRange";
+export * from "./invade";
+export * from "./raid";
+export * from "./reinforce";
+export * from "./recall";
