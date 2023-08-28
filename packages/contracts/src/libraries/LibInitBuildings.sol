@@ -14,8 +14,8 @@ import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_M
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "components/P_MaxStorageComponent.sol";
 import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
-import { P_IsUnitTypeComponent, ID as P_IsUnitTypeComponentID } from "components/P_IsUnitTypeComponent.sol";
-import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID} from "components/P_UnitProductionMultiplierComponent.sol";
+import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
+import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -543,10 +543,7 @@ library LibInitBuildings {
   ) internal {
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(factoryBuildingType);
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(factoryBuildingType, maxLevel);
-    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(
-      factoryBuildingType,
-      productionResourceType
-    );
+
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       factoryBuildingType,
       LibBlueprint.get1x1Blueprint()
@@ -941,10 +938,7 @@ library LibInitBuildings {
   ) internal {
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(utilityBuildingType);
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(utilityBuildingType, maxLevel);
-    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(
-      utilityBuildingType,
-      productionResourceType
-    );
+
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       utilityBuildingType,
       LibBlueprint.get1x1Blueprint()
@@ -1120,10 +1114,6 @@ library LibInitBuildings {
   ) internal {
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(uniTrainingBuildingType);
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(uniTrainingBuildingType, maxLevel);
-    P_RequiredTileComponent(world.getComponent(P_RequiredTileComponentID)).set(
-      uniTrainingBuildingType,
-      productionResourceType
-    );
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       uniTrainingBuildingType,
       LibBlueprint.get1x1Blueprint()
@@ -1134,8 +1124,9 @@ library LibInitBuildings {
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(uniTrainingBuildingType, level);
       P_UnitProductionMultiplierComponent(world.getComponent(P_UnitProductionMultiplierComponentID)).set(
         buildingLevelEntity,
-        trainingSpeedMultipliers[i]);
-      
+        trainingSpeedMultipliers[i]
+      );
+
       P_UnitProductionTypesComponent(world.getComponent(P_UnitProductionTypesComponentID)).set(
         buildingLevelEntity,
         unitTypes[i]
@@ -1148,9 +1139,6 @@ library LibInitBuildings {
       LibSetBuildingReqs.setResourceReqs(world, buildingLevelEntity, requiredResources[i]);
     }
   }
-  }
-
-  
 
   function initDroneFactory(IWorld world) internal {
     uint256 unitTrainingBuildingType = DroneFactoryID;
@@ -1219,10 +1207,9 @@ library LibInitBuildings {
     // LEVEL 3
     productionSpeedMultipliers[2] = 120;
 
-
     /****************** Unit Types Production *******************/
-    uint256[][] allUnitTypes = new uint256[][](maxLevel);
-    uint256[] unitTypes;
+    uint256[][] memory allUnitTypes = new uint256[][](maxLevel);
+    uint256[] memory unitTypes;
     //Level 1
     unitTypes = new uint256[](5);
     unitTypes[0] = AnvilDrone;
@@ -1247,9 +1234,7 @@ library LibInitBuildings {
     unitTypes[2] = MiningVessel;
     unitTypes[3] = AegisDrone;
     unitTypes[4] = StingerDrone;
-    allUnitTypes[w] = unitTypes;
-
-    
+    allUnitTypes[2] = unitTypes;
 
     /* ***********************Set Values ************************* */
     setupUnitTrainingBuilding(
