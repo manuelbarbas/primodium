@@ -16,8 +16,7 @@ import {
 } from "src/network/components/chainComponents";
 import { clampedIndex, toRomanNumeral } from "src/util/common";
 import { FaTrash } from "react-icons/fa";
-import { UnitTraining } from "./UnitTraining";
-import { TrainingProgress } from "./TrainingProgress";
+import { TrainUnits } from "./TrainUnits";
 
 export const BuildingInfo: React.FC<{
   building: EntityID;
@@ -30,16 +29,8 @@ export const BuildingInfo: React.FC<{
     value: "-1" as EntityID,
   })?.value;
   const owner = OwnedBy.use(building)?.value;
-
   const currLevel = Level.use(building)?.value;
-
   const isOwner = owner === address.toLowerCase();
-
-  // const ownerName = isOwner
-  //   ? "You"
-  //   : owner
-  //   ? owner.toString().slice(0, 5) + "..." + owner.toString().slice(-4)
-  //   : "Unknown";
   const coord = Position.use(building);
 
   const buildingName = useMemo(() => {
@@ -96,6 +87,7 @@ export const BuildingInfo: React.FC<{
           </div>
         )}
       </div>
+<<<<<<< HEAD
       <UnitTraining buildingEntity={building} />
       <div>
         {isOwner && (
@@ -109,6 +101,22 @@ export const BuildingInfo: React.FC<{
           </div>
         )}
       </div>
+=======
+
+      <TrainUnits buildingEntity={building} />
+
+      {isOwner && (
+        <div className="relative">
+          <UpgradeBuildingButton
+            id="upgrade-building"
+            builtTile={buildingType ?? BlockType.Air}
+            buildingEntity={building}
+            coords={coord}
+          />
+        </div>
+      )}
+
+>>>>>>> 47b0704fd376f579dc5684d770f5e627fd0ef659
       <PortalModal
         show={showDestroyModal}
         onClose={() => setShowDestroyModal(false)}
@@ -149,8 +157,6 @@ export const BuildingInfo: React.FC<{
           </div>
         </div>
       </PortalModal>
-
-      <TrainingProgress building={building} />
     </div>
   );
 };

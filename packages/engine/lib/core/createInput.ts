@@ -38,10 +38,18 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   function disableInput() {
     enabled.current = false;
+    if (!phaserKeyboard) return;
+
+    phaserKeyboard.disableGlobalCapture();
+    phaserKeyboard.enabled = false;
   }
 
   function enableInput() {
     enabled.current = true;
+    if (!phaserKeyboard) return;
+
+    phaserKeyboard?.enableGlobalCapture();
+    phaserKeyboard.enabled = true;
   }
 
   function setCursor(cursor: string) {

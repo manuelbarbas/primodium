@@ -1,6 +1,7 @@
 import {
   BuildingType,
   Level,
+  MaxMoves,
   MaxUtility,
   OccupiedUtilityResource,
   P_ScoreMultiplier,
@@ -95,6 +96,16 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         );
         await train(building, BlockType.DebugUnit, count, mud);
         return `Training ${count} debug units on building ${BlockIdToKey[building]}`;
+      },
+    },
+    increaseMaxMoves: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        const player = Account.get()?.value;
+        if (!player) throw new Error("No player found");
+        await mud.dev.setEntityContractComponentValue(player, MaxMoves, {
+          value,
+        });
       },
     },
   };

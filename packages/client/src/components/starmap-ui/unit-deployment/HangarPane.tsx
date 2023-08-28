@@ -4,7 +4,7 @@ import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
 import { UnitPane } from "./UnitPane";
-import { Fleet, Hangar } from "src/network/components/clientComponents";
+import { Hangar, Send } from "src/network/components/clientComponents";
 import { EntityID } from "@latticexyz/recs";
 
 export const HangarPane: React.FC<{
@@ -19,7 +19,7 @@ export const HangarPane: React.FC<{
   }, [show]);
 
   const hangar = Hangar.use();
-  const fleet = Fleet.use();
+  const send = Send.use();
   if (!hangar) return null;
 
   const selectedCount = useMemo(() => {
@@ -29,17 +29,12 @@ export const HangarPane: React.FC<{
 
   const totalUnits =
     hangar.counts.reduce((a, b) => a + b, 0) -
-    (fleet?.count ? fleet.count.reduce((a, b) => a + b, 0) : 0);
-  console.log("totalUnits: ", totalUnits);
+    (send?.count ? send.count.reduce((a, b) => a + b, 0) : 0);
   const availableUnits = hangar.units.map((unit, i) => ({
     type: unit,
     count: hangar.counts[i],
   }));
-  console.log("selectedUnit", selectedUnit);
-  console.log(
-    "fleet",
-    fleet?.count?.reduce((a, b) => a + b, 0)
-  );
+
   return (
     <motion.div
       initial={{ translateY: -100, opacity: 0 }}
@@ -71,7 +66,6 @@ export const HangarPane: React.FC<{
             <div className="flex flex-col items-center space-y-3">
               <div className="flex flex-wrap gap-2 items-center justify-center">
                 {availableUnits.map((unit, index) => {
-                  console.log("fleet count", Fleet.getUnitCount(unit.type));
                   return (
                     <button
                       key={index}
@@ -90,7 +84,7 @@ export const HangarPane: React.FC<{
                         {getBlockTypeName(unit.type)}
                       </p>
                       <p className="absolute bottom-1 right-1 font-bold text-[.6rem] bg-slate-900 border-cyan-400/30">
-                        {unit.count - Fleet.getUnitCount(unit.type)}
+                        {unit.count - Send.getUnitCount(unit.type)}
                       </p>
                     </button>
                   );
