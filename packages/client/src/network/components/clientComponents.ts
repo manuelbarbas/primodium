@@ -8,6 +8,7 @@ import newComponent, {
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
 import newSendComponent from "./customComponents/SendComponent";
+import { BattleComponent } from "./customComponents/BattleComponent";
 
 // todo: organize these alphabetically
 export const BlockNumber = newNumberComponent(world, {
@@ -69,6 +70,8 @@ export const Hangar = newComponent(
   }
 );
 
+const Battle = BattleComponent();
+
 export default {
   ActiveAsteroid,
   BlockNumber,
@@ -83,4 +86,5 @@ export default {
   TrainingQueue,
   Hangar,
   Send,
+  Battle,
 };
