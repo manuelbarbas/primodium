@@ -5,7 +5,6 @@ import {
   defineEnterSystem,
   defineComponentSystem,
   HasValue,
-  EntityID,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -23,7 +22,7 @@ import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
-import { encodeCoord } from "src/util/encode";
+import { encodeAndTrimCoord } from "src/util/encode";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -36,7 +35,12 @@ export const renderAsteroid = (scene: Scene) => {
     }),
   ];
 
-  const render = (entityId: EntityID, coord: Coord) => {
+  const render = (coord: Coord) => {
+    const entityId = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
+    if (!entityId) return;
+    const asteroidType = AsteroidType.get(entityId)?.value;
+
+    if (asteroidType !== ESpaceRockType.Asteroid) return;
     scene.objectPool.removeGroup("asteroid_" + entityId);
     const asteroidObjectGroup = scene.objectPool.getGroup(
       "asteroid_" + entityId
@@ -82,28 +86,19 @@ export const renderAsteroid = (scene: Scene) => {
 
     if (!coord) return;
 
-    render(entityId, coord);
+    render(coord);
     initializeMotherlodes(entityId, coord);
   });
-  defineComponentSystem(gameWorld, Send, ({ value: [newValue, oldValue] }) => {
-    if (oldValue?.destinationX && oldValue?.destinationY) {
-      const coord = { x: oldValue.destinationX, y: oldValue.destinationY };
-      const entityId = ReversePosition.get(encodeCoord(coord))?.value;
-      if (!entityId) return;
-      const asteroidType = AsteroidType.get(entityId)?.value;
-      if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
 
-      render(entityId, coord);
-    }
-    if (newValue?.destinationX && newValue?.destinationY) {
-      const coord = { x: newValue.destinationX, y: newValue.destinationY };
-      const entityId = ReversePosition.get(encodeCoord(coord))?.value;
-
-      if (!entityId) return;
-      const asteroidType = AsteroidType.get(entityId)?.value;
-      if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
-
-      render(entityId, coord);
-    }
+  defineComponentSystem(gameWorld, Send, ({ value: values }) => {
+    values.map((value) => {
+      [
+        { x: value?.originX, y: value?.originY },
+        { x: value?.destinationX, y: value?.destinationY },
+      ].map((coord) => {
+        if (!coord || !coord.x || !coord.y) return;
+        render({ x: coord.x, y: coord.y });
+      });
+    });
   });
 };

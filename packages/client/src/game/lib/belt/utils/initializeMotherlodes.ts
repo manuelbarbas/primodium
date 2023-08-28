@@ -25,17 +25,23 @@ import {
 export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
   const config = GameConfig.get();
   if (!config) throw new Error("GameConfig not found");
+  console.log("source: ", source, sourceEntity);
   for (let i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
     const motherlodePosition = getPositionByVector(
       config.motherlodeDistance,
       Math.floor((i * 360) / config.maxMotherlodesPerAsteroid),
       source
     );
+    console.log("motherlodePosition", motherlodePosition);
     if (ReversePosition.has(encodeCoord(motherlodePosition))) continue;
     const motherlodeEntity = getMotherlodeEntity(
       sourceEntity,
       motherlodePosition
     );
+    const encodedPosition = encodeCoord(motherlodePosition);
+    world.registerEntity({ id: encodedPosition });
+    ReversePosition.set({ value: motherlodeEntity }, encodedPosition);
+
     if (!isMotherlode(motherlodeEntity, config.motherlodeChanceInv)) continue;
 
     world.registerEntity({ id: motherlodeEntity });
@@ -50,12 +56,10 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
       { size, motherlodeType, cooldownBlocks: cooldownBlocks.toString() },
       motherlodeEntity
     );
-    const encodedPosition = encodeCoord(motherlodePosition);
     Position.set(
       { ...motherlodePosition, parent: "0" as EntityID },
       motherlodeEntity
     );
-    ReversePosition.set({ value: encodedPosition }, motherlodeEntity);
 
     const resource = P_MotherlodeResource.get(
       hashKeyEntity(motherlodeType, size)

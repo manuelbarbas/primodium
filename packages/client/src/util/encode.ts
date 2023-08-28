@@ -26,7 +26,7 @@ export function encodeCoord(coord: Coord): EntityID {
 
   // Shift the bits of the first int32 32 bits to the left and OR it with the second int32
   const result = (BigInt(x) << BigInt(32)) | BigInt(y);
-  return ("0x" + result.toString(16).padStart(64, "0")) as EntityID;
+  return trim(("0x" + result.toString(16).padStart(64, "0")) as EntityID);
 }
 
 export function decodeCoord(encodedValue: EntityID) {

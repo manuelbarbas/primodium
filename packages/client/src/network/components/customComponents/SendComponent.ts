@@ -2,7 +2,7 @@ import { EntityID, Metadata, World, Type } from "@latticexyz/recs";
 
 import newComponent, { Options } from "./Component";
 import { Coord } from "@latticexyz/utils";
-import { ReversePosition } from "../chainComponents";
+import { Position, ReversePosition } from "../chainComponents";
 import { encodeCoord } from "src/util/encode";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
@@ -78,7 +78,15 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     if (!componentValue || !componentValue.originX || !componentValue.originY)
       return undefined;
     const coord = { x: componentValue.originX, y: componentValue.originY };
+    console.log("origin:", coord);
+    const entities = Position.getAllWith(coord);
+    if (entities.length === 0) return;
+
+    const entityId = entities[0];
+    if (!entityId) return;
+
     const entity = ReversePosition.get(encodeCoord(coord))?.value;
+    console.log("origin entity:", entity);
     if (!entity) return undefined;
     return { ...coord, entity };
   };
@@ -95,8 +103,12 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
       x: componentValue.destinationX,
       y: componentValue.destinationY,
     };
-    const entity = ReversePosition.get(encodeCoord(coord))?.value;
-    if (!entity) return undefined;
+    const entities = Position.getAllWith(coord);
+    if (entities.length === 0) return;
+
+    const entity = entities[0];
+    if (!entity) return;
+
     return { ...coord, entity };
   };
 

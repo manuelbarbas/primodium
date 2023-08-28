@@ -416,6 +416,7 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+  ReversePosition,
 
   // Motherlodes
   Motherlode,

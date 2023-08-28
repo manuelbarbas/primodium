@@ -27,14 +27,17 @@ export const FleetPane: React.FC<{
     to: undefined,
     sendType: undefined,
   });
+  console.log("send:", send);
 
   const origin = useMemo(() => {
+    console.log("send:", Send.get());
     return Send.getOrigin();
-  }, [send]);
+  }, [send.originX, send.originY]);
 
+  console.log("origin:", origin);
   const destination = useMemo(() => {
     return Send.getDestination();
-  }, [send]);
+  }, [send.destinationX, send.destinationY]);
 
   const sendFleet = (sendType: ESendType) => {
     const account = Account.get()?.value;

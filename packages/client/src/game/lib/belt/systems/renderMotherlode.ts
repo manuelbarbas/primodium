@@ -85,15 +85,17 @@ export const renderMotherlode = (scene: Scene) => {
 
   defineComponentSystem(gameWorld, Send, ({ value: [newValue, oldValue] }) => {
     if (oldValue?.destinationX && oldValue?.destinationY) {
+      console.log("old:", oldValue.destinationX, oldValue.destinationY);
       const entityId = ReversePosition.get(
         encodeCoord({ x: oldValue.destinationX, y: oldValue.destinationY })
       )?.value;
-      if (!entityId) return;
-      const asteroidType = AsteroidType.get(entityId)?.value;
-      if (!asteroidType || asteroidType !== ESpaceRockType.Motherlode) return;
+      if (entityId) {
+        const asteroidType = AsteroidType.get(entityId)?.value;
+        if (!asteroidType || asteroidType !== ESpaceRockType.Motherlode) return;
 
-      const entityIndex = world.entityToIndex.get(entityId);
-      if (entityIndex) render({ entity: entityIndex });
+        const entityIndex = world.entityToIndex.get(entityId);
+        if (entityIndex) render({ entity: entityIndex });
+      }
     }
     if (newValue?.destinationX && newValue?.destinationY) {
       const entityId = ReversePosition.get(
