@@ -2,10 +2,12 @@ import { Type } from "@latticexyz/recs";
 import { world } from "../world";
 import newComponent, {
   newBoolComponent,
+  newEntityComponent,
   newNumberComponent,
   newStringComponent,
 } from "./customComponents/Component";
 import { newArrivalComponent } from "./customComponents/ArrivalComponent";
+import { BattleParticipantComponent } from "./customComponents/BattleParticipantComponent";
 
 const commonIdPrefix = "component.";
 
@@ -390,6 +392,35 @@ export const P_ScoreMultiplier = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}P_ScoreMultiplier` },
 });
 
+/* -------------------------------------------------------------------------- */
+/*                                   Battle                                   */
+/* -------------------------------------------------------------------------- */
+
+export const BattleAttacker = BattleParticipantComponent({
+  id: "BattleAttacker",
+  metadata: { contractId: `${commonIdPrefix}BattleAttacker` },
+});
+export const BattleDefender = BattleParticipantComponent({
+  id: "BattleDefender",
+  metadata: { contractId: `${commonIdPrefix}BattleDefender` },
+});
+export const BattleSpaceRock = newEntityComponent(world, {
+  id: "BattleSpaceRock",
+  metadata: { contractId: `${commonIdPrefix}BattleSpaceRock` },
+});
+export const BattleResult = newComponent(
+  world,
+  {
+    winner: Type.Entity,
+    attackerUnitsLeft: Type.NumberArray,
+    defenderUnitsLeft: Type.NumberArray,
+  },
+  {
+    id: "BattleResult",
+    metadata: { contractId: `${commonIdPrefix}BattleResult` },
+  }
+);
+
 export default {
   GameConfig,
   P_Terrain,
@@ -452,4 +483,10 @@ export default {
   // Scoreboard
   Score,
   P_ScoreMultiplier,
+
+  // Battle
+  BattleAttacker,
+  BattleDefender,
+  BattleSpaceRock,
+  BattleResult,
 };

@@ -3,12 +3,11 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { ESendType } from "./types";
-import { ArrivalUnitStruct } from "../../../../contracts/types/ethers-contracts/SendUnitsSystem";
+import { ArrivalUnit, ESendType } from "./types";
 import { Coord } from "@latticexyz/utils";
 
 export const send = async (
-  arrivalUnits: ArrivalUnitStruct[],
+  arrivalUnits: ArrivalUnit[],
   sendType: ESendType,
   origin: Coord,
   destination: Coord,

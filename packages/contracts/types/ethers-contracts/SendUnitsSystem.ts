@@ -37,10 +37,22 @@ export type ArrivalUnitStructOutput = [BigNumber, number] & {
   count: number;
 };
 
+export type CoordStruct = {
+  x: PromiseOrValue<BigNumberish>;
+  y: PromiseOrValue<BigNumberish>;
+  parent: PromiseOrValue<BigNumberish>;
+};
+
+export type CoordStructOutput = [number, number, BigNumber] & {
+  x: number;
+  y: number;
+  parent: BigNumber;
+};
+
 export interface SendUnitsSystemInterface extends utils.Interface {
   functions: {
     "execute(bytes)": FunctionFragment;
-    "executeTyped((uint256,uint32)[],uint8,uint256,uint256,address)": FunctionFragment;
+    "executeTyped((uint256,uint32)[],uint8,(int32,int32,uint256),(int32,int32,uint256),uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -62,9 +74,9 @@ export interface SendUnitsSystemInterface extends utils.Interface {
     values: [
       ArrivalUnitStruct[],
       PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
+      CoordStruct,
+      CoordStruct,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -138,9 +150,9 @@ export interface SendUnitsSystem extends BaseContract {
     executeTyped(
       arrivalUnits: ArrivalUnitStruct[],
       sendType: PromiseOrValue<BigNumberish>,
-      origin: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
+      origin: CoordStruct,
+      destination: CoordStruct,
+      to: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -160,9 +172,9 @@ export interface SendUnitsSystem extends BaseContract {
   executeTyped(
     arrivalUnits: ArrivalUnitStruct[],
     sendType: PromiseOrValue<BigNumberish>,
-    origin: PromiseOrValue<BigNumberish>,
-    destination: PromiseOrValue<BigNumberish>,
-    to: PromiseOrValue<string>,
+    origin: CoordStruct,
+    destination: CoordStruct,
+    to: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -182,9 +194,9 @@ export interface SendUnitsSystem extends BaseContract {
     executeTyped(
       arrivalUnits: ArrivalUnitStruct[],
       sendType: PromiseOrValue<BigNumberish>,
-      origin: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
+      origin: CoordStruct,
+      destination: CoordStruct,
+      to: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -216,9 +228,9 @@ export interface SendUnitsSystem extends BaseContract {
     executeTyped(
       arrivalUnits: ArrivalUnitStruct[],
       sendType: PromiseOrValue<BigNumberish>,
-      origin: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
+      origin: CoordStruct,
+      destination: CoordStruct,
+      to: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -239,9 +251,9 @@ export interface SendUnitsSystem extends BaseContract {
     executeTyped(
       arrivalUnits: ArrivalUnitStruct[],
       sendType: PromiseOrValue<BigNumberish>,
-      origin: PromiseOrValue<BigNumberish>,
-      destination: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
+      origin: CoordStruct,
+      destination: CoordStruct,
+      to: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
