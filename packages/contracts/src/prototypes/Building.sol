@@ -27,7 +27,7 @@ uint256 constant SulfurMineID = uint256(keccak256("block.SulfurMine"));
 
 //Resource Capacity Blocks
 uint256 constant SolarPanelID = uint256(keccak256("block.SolarPanel"));
-uint256 constant HousingUnitID = uint256(keccak256("block.HousingUnit"));
+uint256 constant HangerID = uint256(keccak256("block.HousingUnit"));
 
 // Factory Blocks
 uint256 constant IronPlateFactoryID = uint256(keccak256("block.IronPlateFactory"));
