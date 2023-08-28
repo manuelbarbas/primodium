@@ -1,3 +1,5 @@
+import { EntityID } from "@latticexyz/recs";
+
 export enum ESpaceRockType {
   None,
   Asteroid,
@@ -19,5 +21,11 @@ export enum EMotherlodeType {
 
 export enum ESendType {
   INVADE,
+  RAID,
   REINFORCE,
 }
+
+export type ArrivalUnit = {
+  unitType: EntityID;
+  count: number;
+};
