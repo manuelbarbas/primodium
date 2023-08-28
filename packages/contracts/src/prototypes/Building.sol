@@ -31,7 +31,7 @@ uint256 constant HousingUnitID = uint256(keccak256("block.HousingUnit"));
 // Factory Blocks
 uint256 constant IronPlateFactoryID = uint256(keccak256("block.IronPlateFactory"));
 uint256 constant AlloyFactoryID = uint256(keccak256("block.AlloyFactory"));
-uint256 constant LithiumCopperOxideFactoryID = uint256(keccak256("block.LithiumCopperOxideFactory"));
+uint256 constant PhotovoltaicCellFactoryID = uint256(keccak256("block.PhotovoltaicCellFactory"));
 uint256 constant SpaceFuelFactoryID = uint256(keccak256("block.SpaceFuelFactory"));
 
 //Storage Unit

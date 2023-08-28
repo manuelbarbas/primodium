@@ -142,7 +142,7 @@ export const AllResourceLabels = ({
       <ResourceLabel
         name={"Photovoltaic Cell"}
         entityIndex={entityIndex}
-        resourceId={BlockType.LithiumCopperOxideCraftedItem}
+        resourceId={BlockType.PhotovoltaicCellCraftedItem}
       />
     </div>
   );

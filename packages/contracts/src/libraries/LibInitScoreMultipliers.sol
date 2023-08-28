@@ -39,7 +39,7 @@ library LibInitScoreMultipliers {
     scoreMultiplierComponent.set(BolutiteID, 2500);
 
     scoreMultiplierComponent.set(IronPlateCraftedItemID, 30);
-    scoreMultiplierComponent.set(LithiumCopperOxideCraftedItemID, 60);
+    scoreMultiplierComponent.set(PhotovoltaicCellCraftedItemID, 60);
     scoreMultiplierComponent.set(AlloyCraftedItemID, 100);
     scoreMultiplierComponent.set(SpaceFuelCraftedItemID, 200);
   }

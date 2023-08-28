@@ -47,7 +47,7 @@ library LibInitBuildings {
 
   function initMainBase(IWorld world) internal {
     uint256 entity = MainBaseID;
-    uint32 maxLevel = 6;
+    uint32 maxLevel = 8;
 
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     /****************** Required Resources *******************/
@@ -57,71 +57,142 @@ library LibInitBuildings {
     ResourceValue[] memory resourceValues = new ResourceValue[](0);
     requiredResources[0] = resourceValues;
     // LEVEL 2
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 500 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 12000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 6000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 800 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 800 });
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 12000 });
+    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 8000 });
     requiredResources[2] = resourceValues;
     //LEVEL 4
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 800 });
+    resourceValues = new ResourceValue[](2);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 35000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 10000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 800 });
-    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 800 });
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 80000 });
     requiredResources[4] = resourceValues;
     // LEVEL 6
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 1000 });
+    resourceValues[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 250000 });
     requiredResources[5] = resourceValues;
+
+    //LEVEL 7
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: IridiumResourceItemID, value: 420000 });
+    requiredResources[6] = resourceValues;
+
+    //LEVEL 8
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: KimberliteResourceItemID, value: 590000 });
+    requiredResources[7] = resourceValues;
 
     /****************** Storage Upgrades *******************/
     ResourceValue[][] memory storageUpgrades = new ResourceValue[][](maxLevel);
     // LEVEL 1
-    resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1000 });
+    resourceValues = new ResourceValue[](3);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 275000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 135000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 54000 });
     storageUpgrades[0] = resourceValues;
 
     // LEVEL 2
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1500 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1500 });
+    resourceValues = new ResourceValue[](5);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 540000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 270000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 108000 });
+    resourceValues[3] = ResourceValue({ resource: IronPlateCraftedItemID, value: 43200 });
+    resourceValues[4] = ResourceValue({ resource: AlloyCraftedItemID, value: 27000 });
     storageUpgrades[1] = resourceValues;
 
     // LEVEL 3
-    resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 2500 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 2500 });
-    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1000 });
+    resourceValues = new ResourceValue[](7);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 1440000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 720000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 288000 });
+    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 144000 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 115200 });
+    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 72000 });
+    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 43200 });
     storageUpgrades[2] = resourceValues;
 
     // LEVEL 4
-    resourceValues = new ResourceValue[](4);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 4000 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 4000 });
-    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2500 });
-    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 1500 });
+    resourceValues = new ResourceValue[](11);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 3600000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 1800000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 720000 });
+    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 360000 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 288000 });
+    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 180000 });
+    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 108000 });
+    resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 100000 });
+    resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 40000 });
+    resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 25000 });
+    resourceValues[10] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
     storageUpgrades[3] = resourceValues;
 
     // LEVEL 5
-    resourceValues = new ResourceValue[](4);
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
-    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 4000 });
-    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 4000 });
+    resourceValues = new ResourceValue[](11);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 5760000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 2880000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1152000 });
+    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 576000 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 460800 });
+    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 300000 });
+    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 300000 });
+    resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 300000 });
+    resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 300000 });
+    resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 200000 });
+    resourceValues[10] = ResourceValue({ resource: KimberliteResourceItemID, value: 100000 });
     storageUpgrades[4] = resourceValues;
-
-    // LEVEL 5
-    resourceValues = new ResourceValue[](4);
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2000 });
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 2000 });
-    resourceValues[2] = ResourceValue({ resource: IronPlateCraftedItemID, value: 4000 });
-    resourceValues[3] = ResourceValue({ resource: LithiumResourceItemID, value: 4000 });
+    // LEVEL 6
+    resourceValues = new ResourceValue[](11);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 8640000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 4320000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 1728000 });
+    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 864000 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 691200 });
+    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 600000 });
+    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 600000 });
+    resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 600000 });
+    resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 600000 });
+    resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 600000 });
+    resourceValues[10] = ResourceValue({ resource: KimberliteResourceItemID, value: 250000 });
     storageUpgrades[5] = resourceValues;
+
+    // LEVEL 7
+    resourceValues = new ResourceValue[](11);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 17280000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 8640000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 3456000 });
+    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 1728000 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 138200 });
+    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 864000 });
+    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 700000 });
+    resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 700000 });
+    resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 700000 });
+    resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 700000 });
+    resourceValues[10] = ResourceValue({ resource: KimberliteResourceItemID, value: 700000 });
+    storageUpgrades[6] = resourceValues;
+
+    //LEVEL 8
+    resourceValues = new ResourceValue[](11);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 34560000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 17280000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 6912000 });
+    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 3456000 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2764000 });
+    resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 1728000 });
+    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 1036800 });
+    resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 800000 });
+    resourceValues[8] = ResourceValue({ resource: PlatinumResourceItemID, value: 800000 });
+    resourceValues[9] = ResourceValue({ resource: IridiumResourceItemID, value: 800000 });
+    resourceValues[10] = ResourceValue({ resource: KimberliteResourceItemID, value: 800000 });
+    storageUpgrades[7] = resourceValues;
+
     /* ***********************Set Values ************************* */
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(entity, LibBlueprint.get3x3Blueprint());
@@ -149,9 +220,9 @@ library LibInitBuildings {
 
     /****************** Production Rates *******************/
     uint32[] memory productionRates = new uint32[](maxLevel);
-    productionRates[0] = 5;
-    productionRates[1] = 7;
-    productionRates[2] = 10;
+    productionRates[0] = 2;
+    productionRates[1] = 3;
+    productionRates[2] = 5;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -440,7 +511,7 @@ library LibInitBuildings {
 
   // lithium copper oxide
   function initLi2CuO2Factory(IWorld world) internal {
-    uint256 entity = LithiumCopperOxideFactoryID;
+    uint256 entity = PhotovoltaicCellFactoryID;
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(entity);
     uint32 maxLevel = 1;
 
@@ -471,7 +542,7 @@ library LibInitBuildings {
     /****************** Production *******************/
     ResourceValue[] memory production = new ResourceValue[](maxLevel);
     // LEVEL 1
-    production[0] = ResourceValue(LithiumCopperOxideCraftedItemID, 1);
+    production[0] = ResourceValue(PhotovoltaicCellCraftedItemID, 1);
 
     /* ***********************Set Values ************************* */
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(entity, maxLevel);
@@ -575,7 +646,7 @@ library LibInitBuildings {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
     // LEVEL 1
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    resourceValues[0] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 500 });
     requiredResources[0] = resourceValues;
 
     /****************** Utility Production*******************/
