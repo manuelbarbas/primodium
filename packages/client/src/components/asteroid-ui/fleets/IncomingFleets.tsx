@@ -1,15 +1,16 @@
 import { BiSolidInvader } from "react-icons/bi";
 import { FaShieldAlt } from "react-icons/fa";
 import { BlockNumber } from "src/network/components/clientComponents";
+import { ESendType } from "src/util/web3/types";
 
 const incomingFleets = [
   {
-    origin: { x: 0, y: 0 },
+    target: { x: 0, y: 0 },
     arrivalTime: 900000,
     type: 0,
   },
   {
-    origin: { x: 40, y: -6 },
+    target: { x: 40, y: -6 },
     arrivalTime: 900000,
     type: 1,
   },
@@ -44,7 +45,7 @@ export const IncomingFleets = () => {
             className="flex items-center justify-between w-full p-2 border rounded-md border-slate-700 bg-slate-800 "
           >
             <div className="flex gap-1 items-center">
-              {fleet.type === 0 && (
+              {fleet.type === ESendType.INVADE && (
                 <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
                   <BiSolidInvader size={16} />
                   <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
@@ -52,7 +53,7 @@ export const IncomingFleets = () => {
                   </p>
                 </div>
               )}
-              {fleet.type === 1 && (
+              {fleet.type === ESendType.REINFORCE && (
                 <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
                   <FaShieldAlt size={16} />
                   <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
@@ -62,7 +63,7 @@ export const IncomingFleets = () => {
               )}
               <LabeledValue label="ORIGIN">
                 <p>
-                  [{fleet.origin.x}, {fleet.origin.y}]
+                  [{fleet.target.x}, {fleet.target.y}]
                 </p>
               </LabeledValue>
             </div>

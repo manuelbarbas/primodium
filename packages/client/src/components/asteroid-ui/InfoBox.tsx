@@ -18,7 +18,7 @@ import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
 import { SelectedAsteroid } from "src/network/components/clientComponents";
-import { FaFileAlt } from "react-icons/fa";
+import { FaSpaceAwesome } from "react-icons/fa6";
 import { Fleets } from "./fleets/Fleets";
 
 export const InfoBox = () => {
@@ -126,7 +126,7 @@ export const InfoBox = () => {
                   depth={4}
                 >
                   <div className="flex m-1 items-center gap-2 px-1">
-                    <FaFileAlt size={18} />
+                    <FaSpaceAwesome size={18} />
                   </div>
                 </GameButton>
               </div>
