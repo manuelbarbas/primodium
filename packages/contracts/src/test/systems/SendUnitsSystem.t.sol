@@ -22,6 +22,7 @@ import { ArrivalsList } from "libraries/ArrivalsList.sol";
 contract SendUnitsTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
+  PositionComponent public positionComponent;
   ComponentDevSystem public componentDevSystem;
   SendUnitsSystem public sendUnitsSystem;
   TrainUnitsSystem public trainUnitsSystem;
@@ -30,6 +31,7 @@ contract SendUnitsTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
 
+    positionComponent = PositionComponent(component(PositionComponentID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
@@ -119,28 +121,26 @@ contract SendUnitsTest is PrimodiumTest {
     Arrival memory arrival = abi.decode(rawArrival, (Arrival));
 
     uint32 speed = P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).getValue(DebugUnit);
-    Coord memory originPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
-      getHomeAsteroid(alice)
-    );
-    Coord memory destinationPosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(
-      getHomeAsteroid(bob)
-    );
+    Coord memory originPosition = getHomeAsteroid(alice);
+    Coord memory destinationPosition = getHomeAsteroid(bob);
 
     uint256 worldSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
     uint256 expectedArrivalBlock = block.number +
       ((LibSend.distance(originPosition, destinationPosition) * speed * worldSpeed) / 100 / 100);
+    uint256 origin = positionComponent.getValue(addressToEntity(alice)).parent;
+    uint256 destination = positionComponent.getValue(addressToEntity(bob)).parent;
     Arrival memory expectedArrival = Arrival({
       sendType: ESendType.INVADE,
       units: units,
       arrivalBlock: expectedArrivalBlock,
       from: addressToEntity(alice),
       to: addressToEntity(bob),
-      origin: getHomeAsteroid(alice),
-      destination: getHomeAsteroid(bob)
+      origin: origin,
+      destination: destination
     });
     assertEq(arrival, expectedArrival);
 
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), destination)), 1);
     return arrival;
   }
 
@@ -152,8 +152,9 @@ contract SendUnitsTest is PrimodiumTest {
     vm.roll(arrival.arrivalBlock - 1);
     vm.stopPrank();
     vm.startPrank(deployer);
-    LibArrival.applyArrivals(world, addressToEntity(bob), getHomeAsteroid(bob));
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
+    uint256 destination = positionComponent.getValue(addressToEntity(bob)).parent;
+    LibArrival.applyArrivals(world, addressToEntity(bob), destination);
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), destination)), 1);
   }
 
   function testArrivalExecuted() public {
@@ -162,8 +163,9 @@ contract SendUnitsTest is PrimodiumTest {
     vm.roll(arrival.arrivalBlock);
     vm.stopPrank();
     vm.startPrank(deployer);
-    LibArrival.applyArrivals(world, addressToEntity(bob), getHomeAsteroid(bob));
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 0);
+    uint256 destination = positionComponent.getValue(addressToEntity(bob)).parent;
+    LibArrival.applyArrivals(world, addressToEntity(bob), destination);
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), destination)), 0);
   }
 
   // testTwoArrivals
@@ -180,7 +182,8 @@ contract SendUnitsTest is PrimodiumTest {
     vm.startPrank(deployer);
     LibArrival.applyArrivals(world, addressToEntity(bob), arrival.destination);
 
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
+    uint256 destination = positionComponent.getValue(addressToEntity(bob)).parent;
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), destination)), 1);
   }
 
   function testArrivalSnuckInBehind() public {
@@ -215,10 +218,8 @@ contract SendUnitsTest is PrimodiumTest {
     vm.stopPrank();
     vm.startPrank(deployer);
     LibArrival.applyArrivals(world, addressToEntity(bob), arrival2.destination);
-    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob))), 1);
-    assertEq(
-      ArrivalsList.get(world, LibEncode.hashKeyEntity(addressToEntity(bob), getHomeAsteroid(bob)), 0),
-      slowArrival
-    );
+    uint256 destination = positionComponent.getValue(addressToEntity(bob)).parent;
+    assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), destination)), 1);
+    assertEq(ArrivalsList.get(world, LibEncode.hashKeyEntity(addressToEntity(bob), destination), 0), slowArrival);
   }
 }

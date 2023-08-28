@@ -5,13 +5,14 @@ import { IWorld } from "solecs/System.sol";
 import { addressToEntity, getAddressById } from "solecs/utils.sol";
 
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+import { ReversePositionComponent, ID as ReversePositionComponentID } from "components/ReversePositionComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
-import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as S_UpdatePlayerSpaceRockSystem } from "./S_UpdatePlayerSpaceRockSystem.sol";
@@ -29,49 +30,50 @@ contract SendUnitsSystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
   function execute(bytes memory args) public override returns (bytes memory) {
-    (ArrivalUnit[] memory arrivalUnits, ESendType sendType, uint256 origin, uint256 destination, address to) = abi
-      .decode(args, (ArrivalUnit[], ESendType, uint256, uint256, address));
+    (
+      ArrivalUnit[] memory arrivalUnits,
+      ESendType sendType,
+      Coord memory originPosition,
+      Coord memory destinationPosition,
+      address to
+    ) = abi.decode(args, (ArrivalUnit[], ESendType, Coord, Coord, address));
 
+    ReversePositionComponent reversePositionComponent = ReversePositionComponent(getC(ReversePositionComponentID));
+    uint256 origin = reversePositionComponent.getValue(LibEncode.encodeCoord(originPosition));
     IOnEntitySubsystem(getAddressById(world.systems(), S_UpdatePlayerSpaceRockSystem)).executeTyped(msg.sender, origin);
-    uint256 playerEntity = addressToEntity(msg.sender);
 
-    PositionComponent positionComponent = PositionComponent(getC(PositionComponentID));
-    Coord memory originPosition = positionComponent.getValue(origin);
-    Coord memory destinationPosition = positionComponent.getValue(destination);
-
-    if (!AsteroidTypeComponent(getC(AsteroidTypeComponentID)).has(destination)) {
+    if (!reversePositionComponent.has(LibEncode.encodeCoord(destinationPosition))) {
       LibMotherlode.createMotherlode(world, destinationPosition);
     }
+    uint256 destination = reversePositionComponent.getValue(LibEncode.encodeCoord(destinationPosition));
 
-    checkMovementRules(origin, destination, playerEntity, to, sendType);
+    checkMovementRules(origin, destination, addressToEntity(msg.sender), to, sendType);
 
     // make sure the troop count at the planet is leq the one given and subtract from planet total
-    UnitsComponent unitsComponent = UnitsComponent(getC(UnitsComponentID));
     for (uint256 i = 0; i < arrivalUnits.length; i++) {
       require(arrivalUnits[i].count > 0, "unit count must be positive");
-      uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(
-        uint256(arrivalUnits[i].unitType),
-        playerEntity,
-        origin
+      LibMath.subtract(
+        UnitsComponent(getC(UnitsComponentID)),
+        LibEncode.hashEntities(uint256(arrivalUnits[i].unitType), addressToEntity(msg.sender), origin),
+        arrivalUnits[i].count
       );
-      LibMath.subtract(unitsComponent, unitPlayerAsteroidEntity, arrivalUnits[i].count);
     }
 
-    uint256 moveSpeed = LibSend.getSlowestUnitSpeed(world, arrivalUnits);
-    uint256 worldSpeed = GameConfigComponent(getC(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
-    Arrival memory arrival = Arrival({
-      units: arrivalUnits,
-      sendType: sendType,
-      arrivalBlock: block.number +
-        ((LibSend.distance(originPosition, destinationPosition) * moveSpeed * worldSpeed) / 100 / 100),
-      from: playerEntity,
-      to: addressToEntity(to),
-      origin: origin,
-      destination: destination
-    });
-
-    LibSend.sendUnits(world, arrival);
-    return abi.encode(arrival);
+    LibSend.sendUnits(
+      world,
+      Arrival({
+        units: arrivalUnits,
+        sendType: sendType,
+        arrivalBlock: block.number +
+          ((LibSend.distance(originPosition, destinationPosition) *
+            LibSend.getSlowestUnitSpeed(world, arrivalUnits) *
+            GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed) / 10000),
+        from: addressToEntity(msg.sender),
+        to: addressToEntity(to),
+        origin: origin,
+        destination: destination
+      })
+    );
   }
 
   function checkMovementRules(
@@ -128,8 +130,8 @@ contract SendUnitsSystem is PrimodiumSystem {
   function executeTyped(
     ArrivalUnit[] calldata arrivalUnits,
     ESendType sendType,
-    uint256 origin,
-    uint256 destination,
+    Coord memory origin,
+    Coord memory destination,
     address to
   ) public returns (bytes memory) {
     return execute(abi.encode(arrivalUnits, sendType, origin, destination, to));

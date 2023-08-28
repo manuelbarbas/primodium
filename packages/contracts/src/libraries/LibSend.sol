@@ -8,6 +8,7 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 
 import { P_UnitTravelSpeedComponent as SpeedComponent, ID as SpeedComponentID } from "components/P_UnitTravelSpeedComponent.sol";
 import { ArrivalsSizeComponent as ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
+import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "components/GameConfigComponent.sol";
 
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
@@ -46,5 +47,16 @@ library LibSend {
         slowestSpeed = currSpeed;
       }
     }
+  }
+
+  function getArrivalTime(
+    IWorld world,
+    Coord memory origin,
+    Coord memory destination,
+    ArrivalUnit[] memory arrivalUnits
+  ) internal view returns (uint256 blockNumber) {
+    uint256 moveSpeed = LibSend.getSlowestUnitSpeed(world, arrivalUnits);
+    uint256 worldSpeed = GameConfigComponent(world.getComponent(GameConfigComponentID)).getValue(SingletonID).moveSpeed;
+    return block.number + ((distance(origin, destination) * moveSpeed * worldSpeed) / 100 / 100);
   }
 }

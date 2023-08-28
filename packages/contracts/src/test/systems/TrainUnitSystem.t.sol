@@ -97,12 +97,12 @@ contract TrainUnitSystem is PrimodiumTest {
   function testTrainAndClaimUnits() public {
     testTrainUnitsu();
     vm.roll(30);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitAsteroidEntity = LibEncode.hashEntities(
       DebugUnit,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units on asteroid");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units on asteroid");
@@ -129,12 +129,12 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 5);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntity2ID, DebugUnit, 5);
     vm.roll(20);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitAsteroidEntity = LibEncode.hashEntities(
       DebugUnit,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
@@ -159,12 +159,12 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 1);
     vm.roll(30);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitAsteroidEntity = LibEncode.hashEntities(
       DebugUnit,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
@@ -189,17 +189,17 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 3);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 1);
     vm.roll(20);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitAsteroidEntity = LibEncode.hashEntities(
       DebugUnit,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 units");
     vm.roll(30);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
 
@@ -220,22 +220,22 @@ contract TrainUnitSystem is PrimodiumTest {
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(20);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitAsteroidEntity = LibEncode.hashEntities(
       DebugUnit,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 units");
     vm.roll(30);
 
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
 
     vm.roll(40);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 10, "player should have 10 units");
 
     vm.stopPrank();
@@ -256,12 +256,12 @@ contract TrainUnitSystem is PrimodiumTest {
     vm.roll(10);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(20);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitAsteroidEntity = LibEncode.hashEntities(
       DebugUnit,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have units");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 units");
@@ -288,29 +288,29 @@ contract TrainUnitSystem is PrimodiumTest {
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit2, 5);
     trainUnitsSystem.executeTyped(unitProductionBuildingEntityID, DebugUnit, 10);
     vm.roll(15);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     UnitsComponent unitsComponent = UnitsComponent(component(UnitsComponentID));
     uint256 playerUnitAsteroidEntity = LibEncode.hashEntities(
       DebugUnit,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity), "player should have DebugUnit");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 2, "player should have 2 DebugUnit");
     vm.roll(25);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     uint256 playerUnitAsteroidEntity2 = LibEncode.hashEntities(
       DebugUnit2,
       addressToEntity(alice),
-      getHomeAsteroid(alice)
+      getHomeAsteroidEntity(alice)
     );
     assertTrue(unitsComponent.has(playerUnitAsteroidEntity2), "player should have DebugUnit2");
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 1, "player should have 1 DebugUnit2");
     vm.roll(35);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity2), 3, "player should have 3 DebugUnit2");
     vm.roll(45);
-    updateSystem.executeTyped(alice, getHomeAsteroid(alice));
+    updateSystem.executeTyped(alice, getHomeAsteroidEntity(alice));
     assertEq(unitsComponent.getValue(playerUnitAsteroidEntity), 5, "player should have 5 DebugUnit");
     vm.stopPrank();
   }
