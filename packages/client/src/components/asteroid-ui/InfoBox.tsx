@@ -19,7 +19,7 @@ import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
 import { FaSpaceAwesome } from "react-icons/fa6";
 import { Fleets } from "./fleets/Fleets";
-import { Send } from "src/network/components/clientComponents";
+import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -33,6 +33,7 @@ export const InfoBox = () => {
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
 
+  const asteroid = ActiveAsteroid.use()?.value;
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
     y: mainBaseCoord?.y ?? 0,
@@ -169,7 +170,7 @@ export const InfoBox = () => {
         show={showFleets}
         onClose={() => setShowFleets(!showFleets)}
       >
-        <Fleets />
+        {asteroid && <Fleets spacerock={asteroid} />}
       </Modal>
     </div>
   );

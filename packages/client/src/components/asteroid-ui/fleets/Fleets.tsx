@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { IncomingFleets } from "./IncomingFleets";
 import { OrbitingFleets } from "./OrbitingFleets";
+import { IncomingFleets } from "./IncomingFleets";
+import { EntityID } from "@latticexyz/recs";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -14,7 +15,7 @@ export const LabeledValue: React.FC<{
   );
 };
 
-export const Fleets = () => {
+export const Fleets: React.FC<{ spacerock: EntityID }> = ({ spacerock }) => {
   const [index, setIndex] = useState<number>(0);
 
   return (
@@ -38,8 +39,8 @@ export const Fleets = () => {
         </button>
       </div>
 
-      {index === 0 && <IncomingFleets />}
-      {index === 1 && <OrbitingFleets />}
+      {index === 0 && <IncomingFleets spaceRock={spacerock} />}
+      {index === 1 && <OrbitingFleets spaceRock={spacerock} />}
     </div>
   );
 };
