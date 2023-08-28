@@ -21,6 +21,7 @@ import { FaSpaceAwesome } from "react-icons/fa6";
 import { Fleets } from "./fleets/Fleets";
 import { FaFileAlt } from "react-icons/fa";
 import { Send } from "src/network/components/clientComponents";
+import { BattleReports } from "./battle-reports/BattleReports";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -193,7 +194,7 @@ export const InfoBox = () => {
         show={showReports}
         onClose={() => setShowReports(!showReports)}
       >
-        <Fleets />
+        <BattleReports />
       </Modal>
     </div>
   );
