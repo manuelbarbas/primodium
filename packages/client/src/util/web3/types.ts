@@ -19,5 +19,6 @@ export enum EMotherlodeType {
 
 export enum ESendType {
   INVADE,
+  RAID,
   REINFORCE,
 }

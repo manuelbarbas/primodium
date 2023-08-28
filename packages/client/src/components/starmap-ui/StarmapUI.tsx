@@ -1,4 +1,5 @@
 import { TargetInfo } from "./TargetInfo";
+import { TestArrivalPane } from "./unit-deployment/TestArrivalPane";
 import { UnitDeployment } from "./unit-deployment/UnitDeployment";
 
 export const StarmapUI: React.FC = () => {
@@ -7,6 +8,7 @@ export const StarmapUI: React.FC = () => {
       <div className="relative w-full h-full">
         <TargetInfo />
         <UnitDeployment />
+        <TestArrivalPane />
       </div>
     </div>
   );

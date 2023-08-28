@@ -31,6 +31,7 @@ import "src/prototypes.sol";
 contract LibMotherlodeTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
+  PositionComponent public positionComponent;
   ScoreComponent public scoreComponent;
   P_ScoreMultiplierComponent public scoreMultiplierComponent;
 
@@ -40,6 +41,7 @@ contract LibMotherlodeTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
 
+    positionComponent = PositionComponent(world.getComponent(PositionComponentID));
     scoreComponent = ScoreComponent(world.getComponent(ScoreComponentID));
     scoreMultiplierComponent = P_ScoreMultiplierComponent(world.getComponent(P_ScoreMultiplierComponentID));
 
@@ -77,9 +79,9 @@ contract LibMotherlodeTest is PrimodiumTest {
     address player = alice;
     spawn(player);
     vm.startPrank(deployer);
-    uint256 asteroid = getHomeAsteroid(player);
+    uint256 asteroid = positionComponent.getValue(addressToEntity(player)).parent;
+    Coord memory sourcePosition = getHomeAsteroid(player);
     uint256 motherlodeSeed;
-    Coord memory sourcePosition = PositionComponent(world.getComponent(PositionComponentID)).getValue(asteroid);
     console.log("sourcePosition x: ", uint32(sourcePosition.x));
     console.log("sourcePosition y: ", uint32(sourcePosition.y));
     Coord memory targetPosition;
@@ -109,7 +111,6 @@ contract LibMotherlodeTest is PrimodiumTest {
     (uint256 asteroid, Coord memory position) = findMotherlode();
     LibMotherlode.createMotherlode(world, position);
     uint256 motherlodeEntity = uint256(keccak256(abi.encode(asteroid, "motherlode", position.x, position.y)));
-    PositionComponent positionComponent = PositionComponent(world.getComponent(PositionComponentID));
     AsteroidTypeComponent asteroidTypeComponent = AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID));
     ReversePositionComponent reversePositionComponent = ReversePositionComponent(
       world.getComponent(ReversePositionComponentID)

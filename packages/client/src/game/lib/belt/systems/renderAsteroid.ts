@@ -5,7 +5,6 @@ import {
   defineEnterSystem,
   defineComponentSystem,
   HasValue,
-  EntityID,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -13,15 +12,17 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
-import { AsteroidType, Position } from "src/network/components/chainComponents";
-import { world } from "src/network/world";
 import {
-  ActiveAsteroid,
-  SelectedAsteroid,
-} from "src/network/components/clientComponents";
+  AsteroidType,
+  Position,
+  ReversePosition,
+} from "src/network/components/chainComponents";
+import { world } from "src/network/world";
+import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
+import { encodeAndTrimCoord } from "src/util/encode";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -34,7 +35,12 @@ export const renderAsteroid = (scene: Scene) => {
     }),
   ];
 
-  const render = (entityId: EntityID, coord: Coord) => {
+  const render = (coord: Coord) => {
+    const entityId = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
+    if (!entityId) return;
+    const asteroidType = AsteroidType.get(entityId)?.value;
+
+    if (asteroidType !== ESpaceRockType.Asteroid) return;
     scene.objectPool.removeGroup("asteroid_" + entityId);
     const asteroidObjectGroup = scene.objectPool.getGroup(
       "asteroid_" + entityId
@@ -42,7 +48,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const activeAsteroid = ActiveAsteroid.get()?.value;
 
-    const selectedAsteroid = SelectedAsteroid.get()?.value;
+    const selectedTarget = Send.getDestination();
 
     asteroidObjectGroup.add("Sprite").setComponents([
       ObjectPosition({
@@ -57,16 +63,18 @@ export const renderAsteroid = (scene: Scene) => {
       activeAsteroid && activeAsteroid === entityId
         ? Outline({ color: 0xffffff })
         : undefined,
-      selectedAsteroid && selectedAsteroid === entityId ? Outline() : undefined,
+      selectedTarget && selectedTarget.entity === entityId
+        ? Outline()
+        : undefined,
       OnClick(() => {
         if (entityId === ActiveAsteroid.get()?.value) return;
 
-        if (selectedAsteroid && selectedAsteroid === entityId) {
-          SelectedAsteroid.remove();
+        if (selectedTarget && selectedTarget.entity === entityId) {
+          Send.remove();
           return;
         }
 
-        SelectedAsteroid.set({ value: entityId });
+        Send.setDestination(coord);
       }),
     ]);
   };
@@ -78,36 +86,19 @@ export const renderAsteroid = (scene: Scene) => {
 
     if (!coord) return;
 
-    render(entityId, coord);
+    render(coord);
     initializeMotherlodes(entityId, coord);
   });
 
-  defineComponentSystem(
-    gameWorld,
-    SelectedAsteroid,
-    ({ value: [newValue, oldValue] }) => {
-      if (oldValue?.value) {
-        const entityId = oldValue.value;
-        const coord = Position.get(entityId);
-
-        if (!coord) return;
-
-        const asteroidType = AsteroidType.get(entityId)?.value;
-        if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
-
-        render(oldValue.value, coord);
-      }
-      if (newValue?.value) {
-        const entityId = newValue.value;
-        const coord = Position.get(entityId);
-
-        if (!coord) return;
-
-        const asteroidType = AsteroidType.get(entityId)?.value;
-        if (!asteroidType || asteroidType !== ESpaceRockType.Asteroid) return;
-
-        render(newValue.value, coord);
-      }
-    }
-  );
+  defineComponentSystem(gameWorld, Send, ({ value: values }) => {
+    values.map((value) => {
+      [
+        { x: value?.originX, y: value?.originY },
+        { x: value?.destinationX, y: value?.destinationY },
+      ].map((coord) => {
+        if (!coord || !coord.x || !coord.y) return;
+        render({ x: coord.x, y: coord.y });
+      });
+    });
+  });
 };
