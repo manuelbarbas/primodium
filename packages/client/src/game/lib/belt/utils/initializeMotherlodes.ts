@@ -36,6 +36,10 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
       sourceEntity,
       motherlodePosition
     );
+    const encodedPosition = encodeCoord(motherlodePosition);
+    world.registerEntity({ id: encodedPosition });
+    ReversePosition.set({ value: motherlodeEntity }, encodedPosition);
+
     if (!isMotherlode(motherlodeEntity, config.motherlodeChanceInv)) continue;
 
     world.registerEntity({ id: motherlodeEntity });
@@ -50,12 +54,10 @@ export function initializeMotherlodes(sourceEntity: EntityID, source: Coord) {
       { size, motherlodeType, cooldownBlocks: cooldownBlocks.toString() },
       motherlodeEntity
     );
-    const encodedPosition = encodeCoord(motherlodePosition);
     Position.set(
       { ...motherlodePosition, parent: "0" as EntityID },
       motherlodeEntity
     );
-    ReversePosition.set({ value: encodedPosition }, motherlodeEntity);
 
     const resource = P_MotherlodeResource.get(
       hashKeyEntity(motherlodeType, size)

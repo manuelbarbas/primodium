@@ -17,7 +17,7 @@ import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
-import { SelectedAsteroid } from "src/network/components/clientComponents";
+import { Send } from "src/network/components/clientComponents";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -73,7 +73,7 @@ export const InfoBox = () => {
                 <FullStarmap
                   show={showFullStarmap}
                   onClose={() => {
-                    SelectedAsteroid.remove();
+                    Send.remove();
                     setShowFullStarmap(false);
                     setTarget("starmap");
                     const position = getPosition();
