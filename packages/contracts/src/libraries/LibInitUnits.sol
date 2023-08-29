@@ -75,7 +75,7 @@ library LibInitUnits {
 
   /******************************** Mines ********************************** */
 
-  function initAnvileDrone(IWorld world) internal {
+  function initAnvilDrone(IWorld world) internal {
     uint256 unitType = AnvilDrone;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 
