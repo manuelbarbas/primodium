@@ -173,6 +173,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     upgradeBuildingSystem.executeTyped(coord2);
+
     vm.stopPrank();
   }
 }

@@ -68,12 +68,10 @@ contract BuildSystem is PrimodiumSystem {
       "[BuildSystem] You do not have the required Utility resources"
     );
 
-    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingTypeLevelEntity)) {
-      require(
-        LibResource.checkResourceProductionRequirements(world, playerEntity, buildingType, 1),
-        "[BuildSystem] You do not have the required prdiction resources"
-      );
-    }
+    require(
+      LibResource.checkResourceProductionRequirements(world, playerEntity, buildingType, 1),
+      "[BuildSystem] You do not have the required production resources"
+    );
 
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
 

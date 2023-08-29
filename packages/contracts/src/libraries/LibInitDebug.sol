@@ -409,10 +409,10 @@ library LibInitDebug {
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: AlloyCraftedItemID, value: 1 }));
 
-    //LithiumCopperOxideFactoryID
+    //DebugLithiumCopperOxideFactoryID
 
-    //LithiumCopperOxideFactoryID level 1
-    entity = LibEncode.hashKeyEntity(LithiumCopperOxideFactoryID, 1);
+    //level 1
+    entity = LibEncode.hashKeyEntity(DebugLithiumCopperOxideFactoryID, 1);
     resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 1000 });
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
