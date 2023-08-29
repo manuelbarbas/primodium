@@ -1,29 +1,21 @@
+import { EntityID } from "@latticexyz/recs";
 import { AnimatePresence, motion } from "framer-motion";
-import { useMemo, useState } from "react";
-import {
-  BlockNumber,
-  Hangar,
-  Send,
-} from "src/network/components/clientComponents";
+import { useState } from "react";
+import { Hangar } from "src/network/components/clientComponents";
 import { BlockIdToKey } from "src/util/constants";
 import { getUnitStats } from "src/util/trainUnits";
 
-export const UnitBreakdown = () => {
+export const UnitBreakdown: React.FC<{ asteroid: EntityID }> = ({
+  asteroid,
+}) => {
   const [showUnitBreakdown, setShowUnitBreakdown] = useState(false);
 
   function toggleShowUnitBreakdown() {
     setShowUnitBreakdown((prevShowUnitBreakdown) => !prevShowUnitBreakdown);
   }
-  const send = Send.use();
-  const block = BlockNumber.use()?.value;
-  const rawUnits = useMemo(() => {
-    const originEntity = Send.getOrigin()?.entity;
-    if (!originEntity) return;
-    return Hangar.get(originEntity);
-  }, [send?.originX, send?.originY, block]);
+  const rawUnits = Hangar.use(asteroid);
 
-  if (!rawUnits) return null;
-  const units = rawUnits.units.map((unit, i) => ({
+  const units = rawUnits?.units.map((unit, i) => ({
     type: unit,
     count: rawUnits.counts[i],
   }));
@@ -49,7 +41,7 @@ export const UnitBreakdown = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {units.map((unit, index) => {
+              {units?.map((unit, index) => {
                 const name = BlockIdToKey[unit.type];
                 const stats = getUnitStats(unit.type);
                 return (
@@ -73,9 +65,14 @@ export const UnitBreakdown = () => {
       <motion.button
         layout
         className="flex gap-1 items-center absolute -bottom-5 right-0 text-xs bg-slate-900/90"
+        disabled={!units}
         onClick={() => toggleShowUnitBreakdown()}
       >
-        {!showUnitBreakdown ? "+ show unit breakdown" : "- hide unit breakdown"}
+        {!units
+          ? "no units"
+          : !showUnitBreakdown
+          ? "+ show unit breakdown"
+          : "- hide unit breakdown"}
       </motion.button>
     </AnimatePresence>
   );

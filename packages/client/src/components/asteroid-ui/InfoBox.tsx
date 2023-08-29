@@ -77,7 +77,7 @@ export const InfoBox = () => {
                 <FullStarmap
                   show={showFullStarmap}
                   onClose={() => {
-                    Send.remove();
+                    Send.reset();
                     setShowFullStarmap(false);
                     setTarget("starmap");
                     const position = getPosition();

@@ -90,7 +90,7 @@ const AsteroidTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
           </div>
         </div>
       </div>
-      <UnitBreakdown />
+      <UnitBreakdown asteroid={target} />
     </>
   );
 };
@@ -164,7 +164,7 @@ const MotherlodeTargetInfo: React.FC<{ target: EntityID }> = ({ target }) => {
           </div>
         </div>
       </div>
-      <UnitBreakdown />
+      <UnitBreakdown asteroid={target} />
     </>
   );
 };

@@ -4,6 +4,7 @@ import newComponent, { Options } from "./Component";
 import { Coord } from "@latticexyz/utils";
 import { Position, ReversePosition } from "../chainComponents";
 import { encodeCoord } from "src/util/encode";
+import { ActiveAsteroid } from "../clientComponents";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -51,13 +52,20 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     return count[index];
   };
 
-  const remove = () => {
-    component.update({
+  const reset = () => {
+    const activeAsteroid = ActiveAsteroid.get()?.value;
+    if (!activeAsteroid) return;
+    const position = Position.get(activeAsteroid);
+    component.set({
+      originX: position?.x,
+      originY: position?.y,
       destinationX: undefined,
       destinationY: undefined,
-      to: undefined,
+      activeButton: 0,
       units: undefined,
       count: undefined,
+      to: undefined,
+      sendType: undefined,
     });
   };
 
@@ -108,7 +116,6 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     if (!componentValue || !componentValue.originX || !componentValue.originY)
       return undefined;
     const coord = { x: componentValue.originX, y: componentValue.originY };
-    console.log("origin:", coord);
     const entities = Position.getAllWith(coord);
     if (entities.length === 0) return;
 
@@ -116,7 +123,6 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     if (!entityId) return;
 
     const entity = ReversePosition.get(encodeCoord(coord))?.value;
-    console.log("origin entity:", entity);
     if (!entity) return undefined;
     return { ...coord, entity };
   };
@@ -182,7 +188,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     setOrigin,
     setDestination,
     removeUnit,
-    remove,
+    reset,
   };
 }
 
