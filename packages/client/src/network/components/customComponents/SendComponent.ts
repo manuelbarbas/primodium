@@ -24,6 +24,17 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     },
     options
   );
+  const emptyComponent = {
+    originX: undefined,
+    originY: undefined,
+    destinationX: undefined,
+    destinationY: undefined,
+    to: undefined,
+    units: undefined,
+    count: undefined,
+    sendType: undefined,
+    activeButton: 0,
+  };
 
   const getUnitCount = (entity: EntityID) => {
     const units = component.get()?.units;
@@ -72,7 +83,11 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
         originX: undefined,
         originY: undefined,
       });
-    component.update({ originX: position.x, originY: position.y });
+    component.set({
+      ...(component.get() || emptyComponent),
+      originX: position.x,
+      originY: position.y,
+    });
   };
 
   const setDestination = (position: Coord | undefined) => {
@@ -81,7 +96,11 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
         destinationX: undefined,
         destinationY: undefined,
       });
-    component.update({ destinationX: position.x, destinationY: position.y });
+    component.set({
+      ...(component.get() || emptyComponent),
+      destinationX: position.x,
+      destinationY: position.y,
+    });
   };
 
   const getOrigin = () => {
@@ -131,7 +150,11 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     if (!currentUnits) {
       currentUnits = [entity];
       currentCount = [count];
-      component.update({ units: currentUnits, count: currentCount });
+      component.set({
+        ...(component.get() || emptyComponent),
+        units: currentUnits,
+        count: currentCount,
+      });
       return;
     }
 

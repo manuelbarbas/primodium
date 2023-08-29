@@ -73,7 +73,7 @@ export const FleetPane: React.FC<{
       }}
       className="relative flex justify-center items-center bg-slate-900/90 pixel-images border border-cyan-400 p-2 rounded-md ring ring-cyan-700"
     >
-      <div className="grid grid-cols-3 items-center">
+      <div className="grid grid-cols-3 items-center h-44">
         {send.units && send.units?.length !== 0 && (
           <div className="relative grid grid-cols-5 col-span-2 gap-2 items-center justify-center border p-3 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-full">
             {send.units.map((unit, index) => {
@@ -118,57 +118,65 @@ export const FleetPane: React.FC<{
         )}
 
         <div className="flex flex-col gap-3 items-center justify-center ml-2 border rounded-md border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-32 h-full p-2">
-          <button
-            onClick={() => {
-              if (send.activeButton == ActiveButton.ORIGIN) {
-                Send.update({ activeButton: ActiveButton.NONE });
-                Send.setOrigin(undefined);
-              } else {
-                Send.update({ activeButton: ActiveButton.ORIGIN });
-              }
-            }}
-            className="flex justify-center items-center gap-3 w-3/4 border border-orange-500 w-fit px-2 py-2 rounded-md bg-orange-700 bg-gradient-to-br from-transparent to-orange-900/30 text-orange-100 text-sm font-bold"
-          >
-            {send.activeButton == ActiveButton.ORIGIN ? (
-              <p> SELECT AN ORIGIN...</p>
-            ) : !origin ? (
-              <b>NO ORIGIN SELECTED</b>
-            ) : (
-              <>
-                <img
-                  src={getAsteroidImage(origin.entity)}
-                  className="w-[24px] h-[24px] shadow-2xl"
-                />
-                ORIGIN LOCKED
-              </>
-            )}
-          </button>
-          <button
-            onClick={() => {
-              if (send.activeButton == ActiveButton.DESTINATION) {
-                Send.update({ activeButton: ActiveButton.NONE });
-                Send.setDestination(undefined);
-              } else {
-                Send.update({ activeButton: ActiveButton.DESTINATION });
-              }
-            }}
-            className="flex justify-center items-center gap-3 w-3/4 border border-orange-500 w-fit px-2 py-2 rounded-md bg-orange-700 bg-gradient-to-br from-transparent to-orange-900/30 text-orange-100 text-sm font-bold"
-          >
-            {send.activeButton == ActiveButton.DESTINATION ? (
-              <p> SELECT A TARGET...</p>
-            ) : !destination ? (
-              <b>NO TARGET SELECTED</b>
-            ) : (
-              <>
-                <img
-                  src={getAsteroidImage(destination.entity)}
-                  className="w-[24px] h-[24px] shadow-2xl"
-                />
-                TARGET LOCKED
-              </>
-            )}
-          </button>
-          {destination && (
+          {send.activeButton !== ActiveButton.DESTINATION && (
+            <button
+              onClick={() => {
+                if (send.activeButton == ActiveButton.ORIGIN) {
+                  Send.update({ activeButton: ActiveButton.NONE });
+                  Send.setOrigin(undefined);
+                } else {
+                  Send.update({ activeButton: ActiveButton.ORIGIN });
+                }
+              }}
+              className={`${
+                send.activeButton === ActiveButton.ORIGIN ? "h-full" : ""
+              } flex justify-center items-center gap-3 w-3/4 border border-orange-500 w-fit px-2 py-2 rounded-md bg-orange-700 bg-gradient-to-br from-transparent to-orange-900/30 text-orange-100 text-sm font-bold`}
+            >
+              {send.activeButton == ActiveButton.ORIGIN ? (
+                <p> SELECT AN ORIGIN...</p>
+              ) : !origin ? (
+                <b>NO ORIGIN SELECTED</b>
+              ) : (
+                <>
+                  <img
+                    src={getAsteroidImage(origin.entity)}
+                    className="w-[24px] h-[24px] shadow-2xl"
+                  />
+                  ORIGIN LOCKED
+                </>
+              )}
+            </button>
+          )}
+          {send.activeButton !== ActiveButton.ORIGIN && (
+            <button
+              onClick={() => {
+                if (send.activeButton == ActiveButton.DESTINATION) {
+                  Send.update({ activeButton: ActiveButton.NONE });
+                  Send.setDestination(undefined);
+                } else {
+                  Send.update({ activeButton: ActiveButton.DESTINATION });
+                }
+              }}
+              className={`${
+                send.activeButton === ActiveButton.DESTINATION ? "h-full" : ""
+              } flex justify-center items-center gap-3 w-3/4 border border-orange-500 w-fit px-2 py-2 rounded-md bg-orange-700 bg-gradient-to-br from-transparent to-orange-900/30 text-orange-100 text-sm font-bold`}
+            >
+              {send.activeButton == ActiveButton.DESTINATION ? (
+                <p> SELECT A TARGET...</p>
+              ) : !destination ? (
+                <b>NO TARGET SELECTED</b>
+              ) : (
+                <>
+                  <img
+                    src={getAsteroidImage(destination.entity)}
+                    className="w-[24px] h-[24px] shadow-2xl"
+                  />
+                  TARGET LOCKED
+                </>
+              )}
+            </button>
+          )}
+          {send.activeButton === ActiveButton.NONE && origin && destination && (
             <div className="flex gap-2 text-xs">
               {(!send.units || send.units?.length === 0) && (
                 <b className="p-1 rounded text-center border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs">
