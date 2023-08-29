@@ -1,6 +1,8 @@
 import {
   BuildingType,
+  Item,
   Level,
+  MainBase,
   MaxMoves,
   MaxUtility,
   OccupiedUtilityResource,
@@ -19,6 +21,22 @@ import {
 import { hashEntities, hashKeyEntity } from "./encode";
 import { train } from "./web3";
 import { world } from "src/network/world";
+import { EntityID } from "@latticexyz/recs";
+
+const resources: Record<string, EntityID> = {
+  iron: BlockType.Iron,
+  copper: BlockType.Copper,
+  lithium: BlockType.Lithium,
+  water: BlockType.Water,
+  titanium: BlockType.Titanium,
+  iridium: BlockType.Iridium,
+  sulfur: BlockType.Sulfur,
+  osmium: BlockType.Osmium,
+  tungsten: BlockType.Tungsten,
+  kimberlite: BlockType.Kimberlite,
+  uraninite: BlockType.Uraninite,
+  bolutite: BlockType.Bolutite,
+};
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
   const setMaxHousing: Cheatcode = {
@@ -42,6 +60,18 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
 
   return {
     setMaxHousing,
+    maxMainBase: {
+      params: [],
+      function: async () => {
+        const entity = Account.get()?.value;
+        const building = MainBase.get(entity)?.value;
+        if (!building) throw new Error("No main base found for player");
+
+        await mud.dev.setEntityContractComponentValue(building, Level, {
+          value: 6,
+        });
+      },
+    },
     setMultiplier: {
       params: [{ name: "multiplier", type: "number" }],
       function: async (multiplier: number) => {
@@ -57,6 +87,22 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
             value: multiplier,
           }
         );
+      },
+    },
+    giveResource: {
+      params: [
+        { name: "name", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (name: string, count: number) => {
+        const entity = Account.get()?.value;
+        const resource = resources[name.toLowerCase()];
+        if (!entity) throw new Error("No resource with that name");
+        const playerResource = hashKeyEntity(resource, entity);
+
+        await mud.dev.setEntityContractComponentValue(playerResource, Item, {
+          value: count,
+        });
       },
     },
     setHousing: {

@@ -46,7 +46,7 @@ const FunctionListComponent: React.FC<{ cheatcodes: Cheatcodes }> = ({
   };
 
   return (
-    <div className="w-full h-full mx-auto mt-8 p-4 bg-gray-700 text-white rounded shadow">
+    <div className="w-full h-full mx-auto mt-8 p-4 bg-gray-700 text-white rounded shadow overflow-y-auto">
       {Object.entries(cheatcodes).map(([funcName]) => (
         <div key={funcName} className="mb-4">
           <h3 className="text-lg font-semibold mb-2">{funcName}</h3>

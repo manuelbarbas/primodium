@@ -13,6 +13,7 @@ import {
 import { world } from "src/network/world";
 import { Network } from "src/network/layer";
 import { outOfBounds } from "src/util/outOfBounds";
+import { getBuildingOrigin } from "src/util/building";
 
 export const setupMouseInputs = (
   scene: Scene,
@@ -47,7 +48,9 @@ export const setupMouseInputs = (
         const selectedBuilding = SelectedBuilding.get()?.value;
         if (!selectedBuilding) return;
         SelectedBuilding.remove();
-        buildBuilding(gameCoord, selectedBuilding, player, network);
+        const buildingOrigin = getBuildingOrigin(gameCoord, selectedBuilding);
+        if (!buildingOrigin) return;
+        buildBuilding(buildingOrigin, selectedBuilding, player, network);
     }
 
     if (selectedAction !== undefined) SelectedAction.remove();
