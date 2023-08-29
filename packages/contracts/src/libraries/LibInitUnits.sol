@@ -27,7 +27,7 @@ import { LibSetBuildingReqs } from "../libraries/LibSetBuildingReqs.sol";
 import { LibBlueprint } from "../libraries/LibBlueprint.sol";
 
 import "../prototypes.sol";
-import { ResourceValue, ResourceValues } from "../types.sol";
+import { ResourceValue, ResourceValues, UnitDesign } from "../types.sol";
 
 uint32 constant NONE = 0;
 
@@ -44,12 +44,7 @@ library LibInitUnits {
     IWorld world,
     uint256 unitType,
     uint32 maxLevel,
-    uint32[] memory attacks,
-    uint32[] memory defences,
-    uint32[] memory cargos,
-    uint32[] memory speeds,
-    uint32[] memory minings,
-    uint32[] memory trainingTime,
+    UnitDesign[] memory unitDesign,
     ResourceValue[][] memory requiredResources,
     ResourceValues[] memory requiredUtilities
   ) internal {
@@ -62,14 +57,17 @@ library LibInitUnits {
         unitLevelEntity,
         requiredUtilities[i]
       );
-      P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID)).set(unitLevelEntity, attacks[i]);
-      P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID)).set(unitLevelEntity, defences[i]);
-      P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).set(unitLevelEntity, speeds[i]);
-      P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID)).set(unitLevelEntity, cargos[i]);
-      P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID)).set(unitLevelEntity, minings[i]);
+      P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID)).set(unitLevelEntity, unitDesign[i].attack);
+      P_UnitDefenceComponent(world.getComponent(P_UnitDefenceComponentID)).set(unitLevelEntity, unitDesign[i].defence);
+      P_UnitTravelSpeedComponent(world.getComponent(P_UnitTravelSpeedComponentID)).set(
+        unitLevelEntity,
+        unitDesign[i].speed
+      );
+      P_UnitCargoComponent(world.getComponent(P_UnitCargoComponentID)).set(unitLevelEntity, unitDesign[i].cargo);
+      P_UnitMiningComponent(world.getComponent(P_UnitMiningComponentID)).set(unitLevelEntity, unitDesign[i].mining);
       P_UnitTrainingTimeComponent(world.getComponent(P_UnitTrainingTimeComponentID)).set(
         unitLevelEntity,
-        trainingTime[i]
+        unitDesign[i].trainingTime
       );
       LibSetBuildingReqs.setResourceReqs(world, unitLevelEntity, requiredResources[i]);
     }
@@ -81,7 +79,7 @@ library LibInitUnits {
     uint256 unitType = AnvilDrone;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 
-    uint32 maxLevel = 5;
+    uint32 maxLevel = 6;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -117,6 +115,13 @@ library LibInitUnits {
     resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
     resourceValues[2] = ResourceValue({ resource: AlloyCraftedItemID, value: 1000 });
     requiredResources[4] = resourceValues;
+
+    // LEVEL 6
+    resourceValues = new ResourceValue[](3);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 1000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    resourceValues[2] = ResourceValue({ resource: AlloyCraftedItemID, value: 1000 });
+    requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
 
@@ -160,81 +165,76 @@ library LibInitUnits {
     utilityResourceAmounts[0] = 1;
     requiredUtilities[4] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
+    // LEVEL 6
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[5] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
     /****************** Attacks *******************/
 
-    uint32[] memory attacks = new uint32[](maxLevel);
-    attacks[0] = 40;
-    attacks[1] = 42;
-    attacks[2] = 44;
-    attacks[3] = 46;
-    attacks[4] = 48;
-    attacks[5] = 50;
+    unitDesigns[0].attack = 40;
+    unitDesigns[1].attack = 42;
+    unitDesigns[2].attack = 44;
+    unitDesigns[3].attack = 46;
+    unitDesigns[4].attack = 48;
+    unitDesigns[5].attack = 50;
 
     /****************** Defences *******************/
-    uint32[] memory defences = new uint32[](maxLevel);
-    defences[0] = 150;
-    defences[1] = 157;
-    defences[2] = 165;
-    defences[3] = 172;
-    defences[4] = 180;
-    defences[5] = 187;
+
+    unitDesigns[0].defence = 150;
+    unitDesigns[1].defence = 157;
+    unitDesigns[2].defence = 165;
+    unitDesigns[3].defence = 172;
+    unitDesigns[4].defence = 180;
+    unitDesigns[5].defence = 187;
 
     /****************** Cargos *******************/
-    uint32[] memory cargos = new uint32[](maxLevel);
-    cargos[0] = 20000;
-    cargos[1] = 20000;
-    cargos[2] = 20000;
-    cargos[3] = 20000;
-    cargos[4] = 20000;
-    cargos[5] = 20000;
+
+    unitDesigns[0].cargo = 20000;
+    unitDesigns[1].cargo = 20000;
+    unitDesigns[2].cargo = 20000;
+    unitDesigns[3].cargo = 20000;
+    unitDesigns[4].cargo = 20000;
+    unitDesigns[5].cargo = 20000;
 
     /****************** Speeds *******************/
-    uint32[] memory speeds = new uint32[](maxLevel);
-    speeds[0] = 20;
-    speeds[1] = 20;
-    speeds[2] = 20;
-    speeds[3] = 20;
-    speeds[4] = 20;
-    speeds[5] = 20;
+
+    unitDesigns[0].speed = 20;
+    unitDesigns[1].speed = 20;
+    unitDesigns[2].speed = 20;
+    unitDesigns[3].speed = 20;
+    unitDesigns[4].speed = 20;
+    unitDesigns[5].speed = 20;
 
     /****************** Minings *******************/
-    uint32[] memory minings = new uint32[](maxLevel);
-    minings[0] = 0;
-    minings[1] = 0;
-    minings[2] = 0;
-    minings[3] = 0;
-    minings[4] = 0;
-    minings[5] = 0;
+
+    unitDesigns[0].mining = 0;
+    unitDesigns[1].mining = 0;
+    unitDesigns[2].mining = 0;
+    unitDesigns[3].mining = 0;
+    unitDesigns[4].mining = 0;
+    unitDesigns[5].mining = 0;
 
     /****************** Training Times *******************/
-    uint32[] memory trainingTime = new uint32[](maxLevel);
-    trainingTime[0] = 30;
-    trainingTime[1] = 30;
-    trainingTime[2] = 30;
-    trainingTime[3] = 30;
-    trainingTime[4] = 30;
-    trainingTime[5] = 30;
+
+    unitDesigns[0].trainingTime = 30;
+    unitDesigns[1].trainingTime = 30;
+    unitDesigns[2].trainingTime = 30;
+    unitDesigns[3].trainingTime = 30;
+    unitDesigns[4].trainingTime = 30;
+    unitDesigns[5].trainingTime = 30;
 
     /* ***********************Set Values ************************* */
-    setupUnit(
-      world,
-      unitType,
-      maxLevel,
-      attacks,
-      defences,
-      cargos,
-      speeds,
-      minings,
-      trainingTime,
-      requiredResources,
-      requiredUtilities
-    );
+    setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 
   function initAegisDrone(IWorld world) internal {
     uint256 unitType = AegisDrone;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
-    uint32 maxLevel = 5;
+    uint32 maxLevel = 6;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -270,6 +270,13 @@ library LibInitUnits {
     resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 3000 });
     resourceValues[2] = ResourceValue({ resource: PlatinumResourceItemID, value: 1000 });
     requiredResources[4] = resourceValues;
+
+    // LEVEL 6
+    resourceValues = new ResourceValue[](3);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 3000 });
+    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 3000 });
+    resourceValues[2] = ResourceValue({ resource: PlatinumResourceItemID, value: 1000 });
+    requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
 
@@ -313,81 +320,76 @@ library LibInitUnits {
     utilityResourceAmounts[0] = 3;
     requiredUtilities[4] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
+    // LEVEL 6
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 3;
+    requiredUtilities[5] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
     /****************** Attacks *******************/
 
-    uint32[] memory attacks = new uint32[](maxLevel);
-    attacks[0] = 150;
-    attacks[1] = 157;
-    attacks[2] = 165;
-    attacks[3] = 172;
-    attacks[4] = 180;
-    attacks[5] = 187;
+    unitDesigns[0].attack = 150;
+    unitDesigns[1].attack = 157;
+    unitDesigns[2].attack = 165;
+    unitDesigns[3].attack = 172;
+    unitDesigns[4].attack = 180;
+    unitDesigns[5].attack = 187;
 
     /****************** Defences *******************/
-    uint32[] memory defences = new uint32[](maxLevel);
-    defences[0] = 400;
-    defences[1] = 420;
-    defences[2] = 440;
-    defences[3] = 460;
-    defences[4] = 480;
-    defences[5] = 500;
+
+    unitDesigns[0].defence = 400;
+    unitDesigns[1].defence = 420;
+    unitDesigns[2].defence = 440;
+    unitDesigns[3].defence = 460;
+    unitDesigns[4].defence = 480;
+    unitDesigns[5].defence = 500;
 
     /****************** Cargos *******************/
-    uint32[] memory cargos = new uint32[](maxLevel);
-    cargos[0] = 500;
-    cargos[1] = 500;
-    cargos[2] = 500;
-    cargos[3] = 500;
-    cargos[4] = 500;
-    cargos[5] = 500;
+
+    unitDesigns[0].cargo = 500;
+    unitDesigns[1].cargo = 500;
+    unitDesigns[2].cargo = 500;
+    unitDesigns[3].cargo = 500;
+    unitDesigns[4].cargo = 500;
+    unitDesigns[5].cargo = 500;
 
     /****************** Speeds *******************/
-    uint32[] memory speeds = new uint32[](maxLevel);
-    speeds[0] = 14;
-    speeds[1] = 14;
-    speeds[2] = 14;
-    speeds[3] = 14;
-    speeds[4] = 14;
-    speeds[5] = 14;
+
+    unitDesigns[0].speed = 14;
+    unitDesigns[1].speed = 14;
+    unitDesigns[2].speed = 14;
+    unitDesigns[3].speed = 14;
+    unitDesigns[4].speed = 14;
+    unitDesigns[5].speed = 14;
 
     /****************** Minings *******************/
-    uint32[] memory minings = new uint32[](maxLevel);
-    minings[0] = 0;
-    minings[1] = 0;
-    minings[2] = 0;
-    minings[3] = 0;
-    minings[4] = 0;
-    minings[5] = 0;
+
+    unitDesigns[0].mining = 0;
+    unitDesigns[1].mining = 0;
+    unitDesigns[2].mining = 0;
+    unitDesigns[3].mining = 0;
+    unitDesigns[4].mining = 0;
+    unitDesigns[5].mining = 0;
 
     /****************** Training Times *******************/
-    uint32[] memory trainingTime = new uint32[](maxLevel);
-    trainingTime[0] = 150;
-    trainingTime[1] = 150;
-    trainingTime[2] = 150;
-    trainingTime[3] = 150;
-    trainingTime[4] = 150;
-    trainingTime[5] = 150;
+
+    unitDesigns[0].trainingTime = 150;
+    unitDesigns[1].trainingTime = 150;
+    unitDesigns[2].trainingTime = 150;
+    unitDesigns[3].trainingTime = 150;
+    unitDesigns[4].trainingTime = 150;
+    unitDesigns[5].trainingTime = 150;
 
     /* ***********************Set Values ************************* */
-    setupUnit(
-      world,
-      unitType,
-      maxLevel,
-      attacks,
-      defences,
-      cargos,
-      speeds,
-      minings,
-      trainingTime,
-      requiredResources,
-      requiredUtilities
-    );
+    setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 
   function initHammerDrone(IWorld world) internal {
     uint256 unitType = HammerDrone;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
-    uint32 maxLevel = 5;
+    uint32 maxLevel = 6;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -421,6 +423,12 @@ library LibInitUnits {
     resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
     resourceValues[2] = ResourceValue({ resource: TitaniumResourceItemID, value: 500 });
     requiredResources[4] = resourceValues;
+    // LEVEL 6
+    resourceValues = new ResourceValue[](3);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[2] = ResourceValue({ resource: TitaniumResourceItemID, value: 500 });
+    requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
 
@@ -464,81 +472,76 @@ library LibInitUnits {
     utilityResourceAmounts[0] = 1;
     requiredUtilities[4] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
+    // LEVEL 6
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[5] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
     /****************** Attacks *******************/
 
-    uint32[] memory attacks = new uint32[](maxLevel);
-    attacks[0] = 147;
-    attacks[1] = 144;
-    attacks[2] = 154;
-    attacks[3] = 161;
-    attacks[4] = 168;
-    attacks[5] = 174;
+    unitDesigns[0].attack = 147;
+    unitDesigns[1].attack = 144;
+    unitDesigns[2].attack = 154;
+    unitDesigns[3].attack = 161;
+    unitDesigns[4].attack = 168;
+    unitDesigns[5].attack = 174;
 
     /****************** Defences *******************/
-    uint32[] memory defences = new uint32[](maxLevel);
-    defences[0] = 50;
-    defences[1] = 52;
-    defences[2] = 55;
-    defences[3] = 57;
-    defences[4] = 60;
-    defences[5] = 62;
+
+    unitDesigns[0].defence = 50;
+    unitDesigns[1].defence = 52;
+    unitDesigns[2].defence = 55;
+    unitDesigns[3].defence = 57;
+    unitDesigns[4].defence = 60;
+    unitDesigns[5].defence = 62;
 
     /****************** Cargos *******************/
-    uint32[] memory cargos = new uint32[](maxLevel);
-    cargos[0] = 600;
-    cargos[1] = 600;
-    cargos[2] = 600;
-    cargos[3] = 600;
-    cargos[4] = 600;
-    cargos[5] = 600;
+
+    unitDesigns[0].cargo = 600;
+    unitDesigns[1].cargo = 600;
+    unitDesigns[2].cargo = 600;
+    unitDesigns[3].cargo = 600;
+    unitDesigns[4].cargo = 600;
+    unitDesigns[5].cargo = 600;
 
     /****************** Speeds *******************/
-    uint32[] memory speeds = new uint32[](maxLevel);
-    speeds[0] = 16;
-    speeds[1] = 16;
-    speeds[2] = 16;
-    speeds[3] = 16;
-    speeds[4] = 16;
-    speeds[5] = 16;
+
+    unitDesigns[0].speed = 16;
+    unitDesigns[1].speed = 16;
+    unitDesigns[2].speed = 16;
+    unitDesigns[3].speed = 16;
+    unitDesigns[4].speed = 16;
+    unitDesigns[5].speed = 16;
 
     /****************** Minings *******************/
-    uint32[] memory minings = new uint32[](maxLevel);
-    minings[0] = 0;
-    minings[1] = 0;
-    minings[2] = 0;
-    minings[3] = 0;
-    minings[4] = 0;
-    minings[5] = 0;
+
+    unitDesigns[0].mining = 0;
+    unitDesigns[1].mining = 0;
+    unitDesigns[2].mining = 0;
+    unitDesigns[3].mining = 0;
+    unitDesigns[4].mining = 0;
+    unitDesigns[5].mining = 0;
 
     /****************** Training Times *******************/
-    uint32[] memory trainingTime = new uint32[](maxLevel);
-    trainingTime[0] = 60;
-    trainingTime[1] = 60;
-    trainingTime[2] = 60;
-    trainingTime[3] = 60;
-    trainingTime[4] = 60;
-    trainingTime[5] = 60;
+
+    unitDesigns[0].trainingTime = 60;
+    unitDesigns[1].trainingTime = 60;
+    unitDesigns[2].trainingTime = 60;
+    unitDesigns[3].trainingTime = 60;
+    unitDesigns[4].trainingTime = 60;
+    unitDesigns[5].trainingTime = 60;
 
     /* ***********************Set Values ************************* */
-    setupUnit(
-      world,
-      unitType,
-      maxLevel,
-      attacks,
-      defences,
-      cargos,
-      speeds,
-      minings,
-      trainingTime,
-      requiredResources,
-      requiredUtilities
-    );
+    setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 
   function initStingerDrone(IWorld world) internal {
     uint256 unitType = StingerDrone;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
-    uint32 maxLevel = 5;
+    uint32 maxLevel = 6;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -580,6 +583,14 @@ library LibInitUnits {
     resourceValues[3] = ResourceValue({ resource: KimberliteResourceItemID, value: 500 });
     requiredResources[4] = resourceValues;
 
+    // LEVEL 6
+    resourceValues = new ResourceValue[](4);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 3000 });
+    resourceValues[1] = ResourceValue({ resource: PlatinumResourceItemID, value: 1000 });
+    resourceValues[2] = ResourceValue({ resource: IridiumResourceItemID, value: 1000 });
+    resourceValues[3] = ResourceValue({ resource: KimberliteResourceItemID, value: 500 });
+    requiredResources[5] = resourceValues;
+
     /****************** Required Utility Resources *******************/
 
     ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
@@ -622,81 +633,76 @@ library LibInitUnits {
     utilityResourceAmounts[0] = 3;
     requiredUtilities[4] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
+    // LEVEL 6
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = HousingUtilityResourceID;
+    utilityResourceAmounts[0] = 3;
+    requiredUtilities[5] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+
+    UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
     /****************** Attacks *******************/
 
-    uint32[] memory attacks = new uint32[](maxLevel);
-    attacks[0] = 550;
-    attacks[1] = 587;
-    attacks[2] = 625;
-    attacks[3] = 662;
-    attacks[4] = 700;
-    attacks[5] = 737;
+    unitDesigns[0].attack = 550;
+    unitDesigns[1].attack = 587;
+    unitDesigns[2].attack = 625;
+    unitDesigns[3].attack = 662;
+    unitDesigns[4].attack = 700;
+    unitDesigns[5].attack = 737;
 
     /****************** Defences *******************/
-    uint32[] memory defences = new uint32[](maxLevel);
-    defences[0] = 150;
-    defences[1] = 157;
-    defences[2] = 165;
-    defences[3] = 172;
-    defences[4] = 180;
-    defences[5] = 187;
+
+    unitDesigns[0].defence = 150;
+    unitDesigns[1].defence = 157;
+    unitDesigns[2].defence = 165;
+    unitDesigns[3].defence = 172;
+    unitDesigns[4].defence = 180;
+    unitDesigns[5].defence = 187;
 
     /****************** Cargos *******************/
-    uint32[] memory cargos = new uint32[](maxLevel);
-    cargos[0] = 1500;
-    cargos[1] = 1500;
-    cargos[2] = 1500;
-    cargos[3] = 1500;
-    cargos[4] = 1500;
-    cargos[5] = 1500;
+
+    unitDesigns[0].cargo = 1500;
+    unitDesigns[1].cargo = 1500;
+    unitDesigns[2].cargo = 1500;
+    unitDesigns[3].cargo = 1500;
+    unitDesigns[4].cargo = 1500;
+    unitDesigns[5].cargo = 1500;
 
     /****************** Speeds *******************/
-    uint32[] memory speeds = new uint32[](maxLevel);
-    speeds[0] = 10;
-    speeds[1] = 10;
-    speeds[2] = 10;
-    speeds[3] = 10;
-    speeds[4] = 10;
-    speeds[5] = 10;
+
+    unitDesigns[0].speed = 10;
+    unitDesigns[1].speed = 10;
+    unitDesigns[2].speed = 10;
+    unitDesigns[3].speed = 10;
+    unitDesigns[4].speed = 10;
+    unitDesigns[5].speed = 10;
 
     /****************** Minings *******************/
-    uint32[] memory minings = new uint32[](maxLevel);
-    minings[0] = 0;
-    minings[1] = 0;
-    minings[2] = 0;
-    minings[3] = 0;
-    minings[4] = 0;
-    minings[5] = 0;
+
+    unitDesigns[0].mining = 0;
+    unitDesigns[1].mining = 0;
+    unitDesigns[2].mining = 0;
+    unitDesigns[3].mining = 0;
+    unitDesigns[4].mining = 0;
+    unitDesigns[5].mining = 0;
 
     /****************** Training Times *******************/
-    uint32[] memory trainingTime = new uint32[](maxLevel);
-    trainingTime[0] = 200;
-    trainingTime[1] = 200;
-    trainingTime[2] = 200;
-    trainingTime[3] = 200;
-    trainingTime[4] = 200;
-    trainingTime[5] = 200;
+
+    unitDesigns[0].trainingTime = 200;
+    unitDesigns[1].trainingTime = 200;
+    unitDesigns[2].trainingTime = 200;
+    unitDesigns[3].trainingTime = 200;
+    unitDesigns[4].trainingTime = 200;
+    unitDesigns[5].trainingTime = 200;
 
     /* ***********************Set Values ************************* */
-    setupUnit(
-      world,
-      unitType,
-      maxLevel,
-      attacks,
-      defences,
-      cargos,
-      speeds,
-      minings,
-      trainingTime,
-      requiredResources,
-      requiredUtilities
-    );
+    setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 
   function initMiningVessel(IWorld world) internal {
     uint256 unitType = MiningVessel;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
-    uint32 maxLevel = 5;
+    uint32 maxLevel = 6;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
@@ -730,6 +736,12 @@ library LibInitUnits {
     resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
     resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
     requiredResources[4] = resourceValues;
+    // LEVEL 6
+    resourceValues = new ResourceValue[](3);
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 2000 });
+    resourceValues[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 3000 });
+    resourceValues[2] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 5000 });
+    requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/
 
@@ -772,75 +784,69 @@ library LibInitUnits {
     utilityResourceIds[0] = VesselUtilityResourceID;
     utilityResourceAmounts[0] = 1;
     requiredUtilities[4] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    // LEVEL 6
+    utilityResourceIds = new uint256[](1);
+    utilityResourceAmounts = new uint32[](1);
+    utilityResourceIds[0] = VesselUtilityResourceID;
+    utilityResourceAmounts[0] = 1;
+    requiredUtilities[5] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
+    UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
     /****************** Attacks *******************/
 
-    uint32[] memory attacks = new uint32[](maxLevel);
-    attacks[0] = 0;
-    attacks[1] = 0;
-    attacks[2] = 0;
-    attacks[3] = 0;
-    attacks[4] = 0;
-    attacks[5] = 0;
+    unitDesigns[0].attack = 0;
+    unitDesigns[1].attack = 0;
+    unitDesigns[2].attack = 0;
+    unitDesigns[3].attack = 0;
+    unitDesigns[4].attack = 0;
+    unitDesigns[5].attack = 0;
 
     /****************** Defences *******************/
-    uint32[] memory defences = new uint32[](maxLevel);
-    defences[0] = 0;
-    defences[1] = 0;
-    defences[2] = 0;
-    defences[3] = 0;
-    defences[4] = 0;
-    defences[5] = 0;
+
+    unitDesigns[0].defence = 0;
+    unitDesigns[1].defence = 0;
+    unitDesigns[2].defence = 0;
+    unitDesigns[3].defence = 0;
+    unitDesigns[4].defence = 0;
+    unitDesigns[5].defence = 0;
 
     /****************** Cargos *******************/
-    uint32[] memory cargos = new uint32[](maxLevel);
-    cargos[0] = 600;
-    cargos[1] = 600;
-    cargos[2] = 600;
-    cargos[3] = 600;
-    cargos[4] = 600;
-    cargos[5] = 600;
+
+    unitDesigns[0].cargo = 600;
+    unitDesigns[1].cargo = 600;
+    unitDesigns[2].cargo = 600;
+    unitDesigns[3].cargo = 600;
+    unitDesigns[4].cargo = 600;
+    unitDesigns[5].cargo = 600;
 
     /****************** Speeds *******************/
-    uint32[] memory speeds = new uint32[](maxLevel);
-    speeds[0] = 16;
-    speeds[1] = 16;
-    speeds[2] = 16;
-    speeds[3] = 16;
-    speeds[4] = 16;
-    speeds[5] = 16;
+
+    unitDesigns[0].speed = 16;
+    unitDesigns[1].speed = 16;
+    unitDesigns[2].speed = 16;
+    unitDesigns[3].speed = 16;
+    unitDesigns[4].speed = 16;
+    unitDesigns[5].speed = 16;
 
     /****************** Minings *******************/
-    uint32[] memory minings = new uint32[](maxLevel);
-    minings[0] = 1;
-    minings[1] = 1;
-    minings[2] = 1;
-    minings[3] = 1;
-    minings[4] = 1;
-    minings[5] = 1;
+
+    unitDesigns[0].mining = 1;
+    unitDesigns[1].mining = 1;
+    unitDesigns[2].mining = 1;
+    unitDesigns[3].mining = 1;
+    unitDesigns[4].mining = 1;
+    unitDesigns[5].mining = 1;
 
     /****************** Training Times *******************/
-    uint32[] memory trainingTime = new uint32[](maxLevel);
-    trainingTime[0] = 100;
-    trainingTime[1] = 100;
-    trainingTime[2] = 100;
-    trainingTime[3] = 100;
-    trainingTime[4] = 100;
-    trainingTime[5] = 100;
+
+    unitDesigns[0].trainingTime = 100;
+    unitDesigns[1].trainingTime = 100;
+    unitDesigns[2].trainingTime = 100;
+    unitDesigns[3].trainingTime = 100;
+    unitDesigns[4].trainingTime = 100;
+    unitDesigns[5].trainingTime = 100;
 
     /* ***********************Set Values ************************* */
-    setupUnit(
-      world,
-      unitType,
-      maxLevel,
-      attacks,
-      defences,
-      cargos,
-      speeds,
-      minings,
-      trainingTime,
-      requiredResources,
-      requiredUtilities
-    );
+    setupUnit(world, unitType, maxLevel, unitDesigns, requiredResources, requiredUtilities);
   }
 }
