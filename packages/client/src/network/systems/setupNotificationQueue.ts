@@ -26,7 +26,7 @@ export function setupNotificationQueue() {
     }
   });
 
-  const length = 100000;
+  const length = 3500;
   defineComponentSystem(world, BlockNumber, () => {
     const currentTime = Date.now();
     const notifications = NotificationQueue.get();
