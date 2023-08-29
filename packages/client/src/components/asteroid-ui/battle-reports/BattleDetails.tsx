@@ -89,7 +89,9 @@ export const BattleDetails: React.FC<{
 
           {battle.resources && (
             <div className="flex flex-col justify-center items-center gap-2 bg-slate-900 p-2 px-5 rounded-md border border-slate-700">
-              <p className="text-lg font-bold leading-none">REWARDS</p>
+              <p className="text-lg font-bold leading-none">
+                {player === battle.winner ? "REWARDS" : "RAIDED"}
+              </p>
               <div className="flex items-center ">
                 {battle.resources.map((resource, i) => (
                   <ResourceIconTooltip
