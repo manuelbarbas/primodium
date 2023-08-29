@@ -64,7 +64,7 @@ library LibInitBuildings {
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 12000 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 6000 });
+    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 6000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
@@ -641,7 +641,7 @@ library LibInitBuildings {
 
   function initAlloyFactory(IWorld world) internal {
     uint256 factoryBuildingType = AlloyFactoryID;
-    uint32 maxLevel = 1;
+    uint32 maxLevel = 2;
     uint256 productionResourceType = AlloyCraftedItemID;
 
     /****************** Required Main Base Levels *******************/
@@ -761,6 +761,7 @@ library LibInitBuildings {
     requiredUtilities.values[1] = 1;
     allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
+    requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
     requiredUtilities.resources[0] = IronResourceItemID;
     requiredUtilities.values[0] = 1;
     requiredUtilities.resources[1] = CopperResourceItemID;
@@ -799,7 +800,7 @@ library LibInitBuildings {
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
     requiredMainBaseLevels[0] = 2;
     requiredMainBaseLevels[1] = 5;
-    requiredMainBaseLevels[1] = 8;
+    requiredMainBaseLevels[2] = 8;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
