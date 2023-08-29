@@ -104,7 +104,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const playerResource = hashKeyEntity(resource, entity);
 
         await mud.dev.setEntityContractComponentValue(playerResource, Item, {
-          value: count,
+          value: count * 100,
         });
       },
     },
