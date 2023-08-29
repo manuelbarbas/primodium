@@ -113,12 +113,12 @@ contract PrimodiumTest is MudTest {
   }
 
   function getIronCoord(address player) internal view returns (Coord memory) {
-    Coord2D memory coord = Coord2D(23, 9);
+    Coord2D memory coord = Coord2D(20, 8);
     return getCoord(coord, player);
   }
 
   function getCopperCoord(address player) internal view returns (Coord memory) {
-    Coord2D memory coord = Coord2D(23, 16);
+    Coord2D memory coord = Coord2D(20, 15);
     return getCoord(coord, player);
   }
 
