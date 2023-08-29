@@ -46,7 +46,7 @@ library LibInitBuildings {
     // special
     initStorageUnit(world);
     initSolarPanel(world);
-    initHanger(world);
+    initHangar(world);
     initDroneFactory(world);
     initStarmapper(world);
   }
@@ -992,8 +992,8 @@ library LibInitBuildings {
     );
   }
 
-  function initHanger(IWorld world) internal {
-    uint256 utilityBuildingType = HangerID;
+  function initHangar(IWorld world) internal {
+    uint256 utilityBuildingType = HangarID;
     uint32 maxLevel = 3;
     uint256 productionResourceType = HousingUtilityResourceID;
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
