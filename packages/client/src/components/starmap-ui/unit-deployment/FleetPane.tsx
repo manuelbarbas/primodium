@@ -130,7 +130,7 @@ export const FleetPane: React.FC<{
               }}
               className={`${
                 send.activeButton === ActiveButton.ORIGIN ? "h-full" : ""
-              } flex justify-center items-center gap-3 w-3/4 border border-orange-500 w-fit px-2 py-2 rounded-md bg-orange-700 bg-gradient-to-br from-transparent to-orange-900/30 text-orange-100 text-sm font-bold`}
+              } flex justify-center items-center gap-3 w-3/4 border border-green-500 w-fit px-2 py-2 rounded-md bg-green-700 bg-gradient-to-br from-transparent to-green-900/30 text-green-100 text-sm font-bold`}
             >
               {send.activeButton == ActiveButton.ORIGIN ? (
                 <p> SELECT AN ORIGIN...</p>
@@ -159,7 +159,7 @@ export const FleetPane: React.FC<{
               }}
               className={`${
                 send.activeButton === ActiveButton.DESTINATION ? "h-full" : ""
-              } flex justify-center items-center gap-3 w-3/4 border border-orange-500 w-fit px-2 py-2 rounded-md bg-orange-700 bg-gradient-to-br from-transparent to-orange-900/30 text-orange-100 text-sm font-bold`}
+              } flex justify-center items-center gap-3 w-3/4 border border-yellow-500 w-fit px-2 py-2 rounded-md bg-yellow-600 bg-gradient-to-br from-transparent to-yellow-900/30 text-yellow-100 text-sm font-bold`}
             >
               {send.activeButton == ActiveButton.DESTINATION ? (
                 <p> SELECT A TARGET...</p>
