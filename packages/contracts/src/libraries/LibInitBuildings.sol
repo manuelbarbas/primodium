@@ -755,14 +755,14 @@ library LibInitBuildings {
     ResourceValues[] memory allRequiredConnectedProductions = new ResourceValues[](maxLevel);
     // LEVEL 1
     requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
-    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.resources[0] = LithiumResourceItemID;
     requiredUtilities.values[0] = 1;
     requiredUtilities.resources[1] = CopperResourceItemID;
     requiredUtilities.values[1] = 1;
     allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
     requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
-    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.resources[0] = LithiumResourceItemID;
     requiredUtilities.values[0] = 1;
     requiredUtilities.resources[1] = CopperResourceItemID;
     requiredUtilities.values[1] = 1;
