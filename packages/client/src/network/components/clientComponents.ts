@@ -9,6 +9,7 @@ import newComponent, {
 import newMarkerComponent from "./customComponents/MarkerComponent";
 import newSendComponent from "./customComponents/SendComponent";
 import { BattleComponent } from "./customComponents/BattleComponent";
+import { NotificationQueueComponent } from "./customComponents/NotificationQueueComponent";
 
 // todo: organize these alphabetically
 export const BlockNumber = newNumberComponent(world, {
@@ -81,6 +82,8 @@ export const Leaderboard = newComponent(
 
 export const Battle = BattleComponent();
 
+export const NotificationQueue = NotificationQueueComponent();
+
 export default {
   ActiveAsteroid,
   BlockNumber,
@@ -96,4 +99,5 @@ export default {
   Leaderboard,
   Send,
   Battle,
+  NotificationQueue,
 };
