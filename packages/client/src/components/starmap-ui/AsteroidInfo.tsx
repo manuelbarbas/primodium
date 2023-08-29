@@ -145,7 +145,10 @@ const MotherlodeTargetInfo: React.FC<{
     y: 0,
     parent: "0" as EntityID,
   });
-  const blockNumber = BlockNumber.use(undefined, { value: 0 }).value;
+  const blockNumber = BlockNumber.use(undefined, {
+    value: 0,
+    avgBlockTime: 1,
+  }).value;
 
   const motherlodeData = Motherlode.get(target);
   if (!motherlodeData) return null;
