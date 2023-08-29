@@ -546,7 +546,7 @@ library LibInitBuildings {
 
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       factoryBuildingType,
-      LibBlueprint.get1x1Blueprint()
+      LibBlueprint.get2x2Blueprint()
     );
 
     for (uint256 i = 0; i < maxLevel; i++) {
@@ -911,11 +911,6 @@ library LibInitBuildings {
     P_IsBuildingTypeComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(utilityBuildingType);
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(utilityBuildingType, maxLevel);
 
-    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
-      utilityBuildingType,
-      LibBlueprint.get1x1Blueprint()
-    );
-
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i + 1;
       uint256 buildingLevelEntity = LibEncode.hashKeyEntity(utilityBuildingType, level);
@@ -936,7 +931,10 @@ library LibInitBuildings {
     uint256 utilityBuildingType = SolarPanelID;
     uint32 maxLevel = 2;
     uint256 productionResourceType = ElectricityUtilityResourceID;
-
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
+      utilityBuildingType,
+      LibBlueprint.get2x2Blueprint()
+    );
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
     requiredMainBaseLevels[0] = 3;
@@ -997,7 +995,10 @@ library LibInitBuildings {
     uint256 utilityBuildingType = HangerID;
     uint32 maxLevel = 3;
     uint256 productionResourceType = HousingUtilityResourceID;
-
+    P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
+      utilityBuildingType,
+      LibBlueprint.get3x3Blueprint()
+    );
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
     requiredMainBaseLevels[0] = 3;
@@ -1088,7 +1089,7 @@ library LibInitBuildings {
     P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(uniTrainingBuildingType, maxLevel);
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       uniTrainingBuildingType,
-      LibBlueprint.get1x1Blueprint()
+      LibBlueprint.get3x3Blueprint()
     );
 
     for (uint256 i = 0; i < maxLevel; i++) {

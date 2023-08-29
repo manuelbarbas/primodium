@@ -82,8 +82,8 @@ export const BlockType = {
   ) as EntityID,
   AlloyFactory: keccak256("block.AlloyFactory") as EntityID,
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
-  Hangar: keccak256("block.HousingUnit") as EntityID,
-  DroneFactory: keccak256("block.TrainingFacility") as EntityID,
+  Hangar: keccak256("block.Hanger") as EntityID,
+  DroneFactory: keccak256("block.DroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
 
   AlloyCraftedItem: keccak256("item.AlloyCrafted") as EntityID,
