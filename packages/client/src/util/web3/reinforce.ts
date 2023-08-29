@@ -1,8 +1,10 @@
 import { EntityID } from "@latticexyz/recs";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
+import { parseReceipt } from "../analytics/parseReceipt";
 
 export const reinforce = async (
   rockEntity: EntityID,
@@ -15,7 +17,7 @@ export const reinforce = async (
 
   setTransactionLoading(true);
 
-  await execute(
+  const receipt = await execute(
     systems["system.ReceiveReinforcement"].executeTyped(
       rockEntity,
       arrivalIndex
@@ -23,5 +25,12 @@ export const reinforce = async (
     providers,
     setNotification
   );
+
+  ampli.systemReceiveReinforcement({
+    asteroidCoord: rockEntity,
+    arrivalIndex,
+    ...parseReceipt(receipt),
+  });
+
   setTransactionLoading(false);
 };
