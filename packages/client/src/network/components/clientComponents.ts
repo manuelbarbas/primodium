@@ -91,6 +91,17 @@ export const Battle = BattleComponent();
 
 export const NotificationQueue = NotificationQueueComponent();
 
+export const BattleReport = newComponent(
+  world,
+  {
+    show: Type.Boolean,
+    battle: Type.OptionalEntity,
+  },
+  {
+    id: "ShowBattle",
+  }
+);
+
 export default {
   ActiveAsteroid,
   BlockNumber,
@@ -107,4 +118,5 @@ export default {
   Send,
   Battle,
   NotificationQueue,
+  BattleReport,
 };
