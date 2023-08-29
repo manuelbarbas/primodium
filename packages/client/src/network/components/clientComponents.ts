@@ -11,9 +11,16 @@ import newSendComponent from "./customComponents/SendComponent";
 import { BattleComponent } from "./customComponents/BattleComponent";
 
 // todo: organize these alphabetically
-export const BlockNumber = newNumberComponent(world, {
-  id: "BlockNumber",
-});
+export const BlockNumber = newComponent(
+  world,
+  {
+    value: Type.Number,
+    avgBlockTime: Type.Number, //seconds
+  },
+  {
+    id: "BlockNumber",
+  }
+);
 export const Account = newEntityComponent(world, { id: "Account" });
 
 export const GameReady = newBoolComponent(world, { id: "GameReady" });
@@ -29,9 +36,6 @@ export const SelectedBuilding = newComponent(
 );
 export const SelectedAction = newNumberComponent(world, {
   id: "SelectedAction",
-});
-export const StartSelectedPath = newCoordComponent(world, {
-  id: "StartSelectedPath",
 });
 
 export const Marker = newMarkerComponent(world, {
@@ -84,7 +88,6 @@ export const Leaderboard = newComponent(
 
 export const Battle = BattleComponent();
 
-
 export default {
   ActiveAsteroid,
   BlockNumber,
@@ -94,7 +97,6 @@ export default {
   HoverTile,
   SelectedBuilding,
   SelectedAction,
-  StartSelectedPath,
   Marker,
   TrainingQueue,
   Hangar,

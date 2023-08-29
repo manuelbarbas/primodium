@@ -3,22 +3,17 @@ import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
-import {
-  buildBuilding,
-  buildPath,
-  demolishBuilding,
-  demolishPath,
-} from "src/util/web3";
+import { buildBuilding, demolishBuilding } from "src/util/web3";
 import {
   HoverTile,
   SelectedAction,
   SelectedBuilding,
   SelectedTile,
-  StartSelectedPath,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { Network } from "src/network/layer";
 import { outOfBounds } from "src/util/outOfBounds";
+import { getBuildingOrigin } from "src/util/building";
 
 export const setupMouseInputs = (
   scene: Scene,
@@ -49,24 +44,13 @@ export const setupMouseInputs = (
       case Action.DemolishBuilding:
         demolishBuilding(gameCoord, network);
         break;
-      case Action.DemolishPath:
-        demolishPath(gameCoord, network);
-        break;
-      case Action.Conveyor:
-        const startCoord = StartSelectedPath.get();
-
-        if (!startCoord) {
-          StartSelectedPath.set(gameCoord);
-          return;
-        }
-
-        buildPath(startCoord, gameCoord, network);
-        break;
       case Action.PlaceBuilding:
         const selectedBuilding = SelectedBuilding.get()?.value;
         if (!selectedBuilding) return;
         SelectedBuilding.remove();
-        buildBuilding(gameCoord, selectedBuilding, player, network);
+        const buildingOrigin = getBuildingOrigin(gameCoord, selectedBuilding);
+        if (!buildingOrigin) return;
+        buildBuilding(buildingOrigin, selectedBuilding, player, network);
     }
 
     if (selectedAction !== undefined) SelectedAction.remove();

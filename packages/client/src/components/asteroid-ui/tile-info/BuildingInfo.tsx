@@ -6,7 +6,7 @@ import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
 import UpgradeBuildingButton from "src/components/action/UpgradeBuildingButton";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
-import { demolishBuilding, demolishPath } from "src/util/web3";
+import { demolishBuilding } from "src/util/web3";
 import PortalModal from "src/components/shared/PortalModal";
 import {
   Level,
@@ -107,7 +107,7 @@ export const BuildingInfo: React.FC<{
       >
         <div className="space-y-8 p-5">
           <h1>
-            Demolish <b>{buildingName}</b> or <b>Path</b> at{" "}
+            Demolish <b>{buildingName}</b> at
             <b>
               ({coord.x},{coord.y})
             </b>
@@ -124,18 +124,6 @@ export const BuildingInfo: React.FC<{
             >
               <p className="flex w-full h-full items-center px-1 justify-center p-1">
                 Destroy Building
-              </p>
-            </GameButton>
-            <GameButton
-              className="text-xs"
-              color="bg-orange-700"
-              onClick={() => {
-                demolishPath(coord, network);
-                setShowDestroyModal(false);
-              }}
-            >
-              <p className="flex w-full h-full items-center px-1 justify-center p-1">
-                Destroy Path
               </p>
             </GameButton>
           </div>

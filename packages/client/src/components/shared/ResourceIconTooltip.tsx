@@ -1,3 +1,6 @@
+import { formatNumber } from "src/util/common";
+import { RESOURCE_SCALE } from "src/util/constants";
+
 export default function ResourceIconTooltip({
   image,
   resourceId,
@@ -31,7 +34,7 @@ export default function ResourceIconTooltip({
         </div>
         <div>
           <img className="inline-block mr-1" src={image}></img>
-          {amount}
+          {formatNumber(amount * RESOURCE_SCALE)}
         </div>
       </div>
     );
@@ -44,7 +47,7 @@ export default function ResourceIconTooltip({
       </div>
       <div className="mr-2" key={resourceId}>
         <img src={image} className="w-4 h-4 inline-block mr-1 pixel-images" />
-        {amount}
+        {formatNumber(amount * RESOURCE_SCALE)}
       </div>
     </div>
   );

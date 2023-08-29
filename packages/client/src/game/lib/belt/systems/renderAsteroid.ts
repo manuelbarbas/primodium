@@ -18,11 +18,12 @@ import {
   ReversePosition,
 } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
+import { Send } from "src/network/components/clientComponents";
 import { initializeMotherlodes } from "../utils/initializeMotherlodes";
 import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
-import { encodeAndTrimCoord } from "src/util/encode";
+import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
+import { ActiveButton } from "src/util/types";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -37,19 +38,31 @@ export const renderAsteroid = (scene: Scene) => {
 
   const render = (coord: Coord) => {
     const entityId = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
+
     if (!entityId) return;
+    scene.objectPool.removeGroup("asteroid_" + entityId);
     const asteroidType = AsteroidType.get(entityId)?.value;
 
     if (asteroidType !== ESpaceRockType.Asteroid) return;
-    scene.objectPool.removeGroup("asteroid_" + entityId);
     const asteroidObjectGroup = scene.objectPool.getGroup(
       "asteroid_" + entityId
     );
 
-    const activeAsteroid = ActiveAsteroid.get()?.value;
+    const origin = Send.getOrigin();
+    const destination = Send.getDestination();
 
-    const selectedTarget = Send.getDestination();
-
+    const originEntity = origin
+      ? ReversePosition.get(encodeCoord(origin))
+      : undefined;
+    const destinationEntity = destination
+      ? ReversePosition.get(encodeCoord(destination))
+      : undefined;
+    const outline =
+      originEntity?.value === entityId
+        ? Outline({ color: 0x00ff00 })
+        : destinationEntity?.value === entityId
+        ? Outline()
+        : undefined;
     asteroidObjectGroup.add("Sprite").setComponents([
       ObjectPosition({
         x: coord.x * tileWidth,
@@ -60,21 +73,15 @@ export const renderAsteroid = (scene: Scene) => {
         originY: 0.5,
       }),
       Texture("asteroid-sprite"),
-      activeAsteroid && activeAsteroid === entityId
-        ? Outline({ color: 0xffffff })
-        : undefined,
-      selectedTarget && selectedTarget.entity === entityId
-        ? Outline()
-        : undefined,
+      outline,
       OnClick(() => {
-        if (entityId === ActiveAsteroid.get()?.value) return;
-
-        if (selectedTarget && selectedTarget.entity === entityId) {
-          Send.remove();
-          return;
+        const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
+        if (activeButton === ActiveButton.ORIGIN) {
+          Send.setOrigin(coord);
+        } else if (activeButton === ActiveButton.DESTINATION) {
+          Send.setDestination(coord);
         }
-
-        Send.setDestination(coord);
+        Send.update({ activeButton: ActiveButton.NONE });
       }),
     ]);
   };

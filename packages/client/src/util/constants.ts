@@ -6,12 +6,11 @@ import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
 
 export enum Action {
   DemolishBuilding,
-  DemolishPath,
-  SelectPath,
   SelectBuilding,
-  Conveyor,
   PlaceBuilding,
 }
+
+export const RESOURCE_SCALE = 1 / 100;
 
 export const BlockType = {
   // Landscape blocks
@@ -52,7 +51,6 @@ export const BlockType = {
   DebugSolarPanel: keccak256("block.DebugSolarPanel") as EntityID,
   DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
   DebugDemolishBuilding: keccak256("block.DebugDemolishBuilding") as EntityID,
-  DebugDemolishPath: keccak256("block.DebugDemolishPath") as EntityID,
 
   // debug units
   DebugUnit: keccak256("block.DebugUnit") as EntityID,
@@ -71,9 +69,6 @@ export const BlockType = {
   LithiumMiner: keccak256("block.LithiumMiner") as EntityID,
   BulletFactory: keccak256("block.BulletFactory") as EntityID,
   Silo: keccak256("block.Silo") as EntityID,
-
-  // Dummy block for Conveyor between tiles
-  Conveyor: keccak256("block.Conveyor") as EntityID,
 
   // Basic Buildings
   IronMine: keccak256("block.IronMine") as EntityID,
@@ -247,7 +242,6 @@ export const BlockColors = new Map<EntityID, string>([
 
   // Resource
   [BlockType.MainBase, "#8676c0"],
-  [BlockType.Conveyor, "#ffcd00"],
 ]);
 
 export const BackgroundImage = new Map<EntityID, string[]>([
@@ -314,10 +308,6 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     ],
   ],
   [BlockType.DebugNode, ["/img/building/node.gif"]],
-
-  // dummy buildings
-  [BlockType.Conveyor, ["/img/building/conveyor.gif"]],
-
   //new buildings
   [
     BlockType.CopperMine,
