@@ -19,8 +19,6 @@ export function setupNotificationQueue() {
     ) {
       const newNotification: Notification = {
         id: world.entities[update.entity],
-        message: "A battle occurred!",
-        status: battle.winner == playerAddress ? "winner" : "loser",
         timestamp: Date.now(),
       };
 
@@ -28,7 +26,7 @@ export function setupNotificationQueue() {
     }
   });
 
-  const length = 5000;
+  const length = 100000;
   defineComponentSystem(world, BlockNumber, () => {
     const currentTime = Date.now();
     const notifications = NotificationQueue.get();

@@ -1,43 +1,31 @@
+import { ComponentValue } from "@latticexyz/recs";
 import React from "react";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import {
+  Account,
   Battle,
   NotificationQueue,
 } from "src/network/components/clientComponents";
-
+import { shortenAddress } from "src/util/common";
 const BattleNotifications: React.FC = () => {
   const notifications = NotificationQueue.use();
   if (!notifications) return null;
-  console.log("notifications", notifications);
 
   return (
-    <div className="fixed bottom-8 left-8 z-50 p-4">
+    <div className="fixed bottom-8 left-8 z-50 p-4 w-96">
       <ul className="space-y-2">
         {notifications.id.map((id, index) => {
-          if (index > 10) return null;
           const battle = Battle.get(id);
-          console.log("battle:", battle);
-          const icon =
-            notifications.status[index] == "winner" ? (
-              <FaTrophy size={24} />
-            ) : (
-              <FaTimes size={24} />
-            );
-          const message = notifications.message[index];
-          const timestamp = notifications.timestamp[index];
+          if (battle == undefined || index > 10) return null;
+          const notification = {
+            id: id,
+            timestamp: notifications.timestamp[index],
+          };
           return (
-            <li
-              key={`${id}-${index}`}
-              className="bg-white rounded shadow-md p-3 w-64 text-black"
-            >
-              <div className="flex items-center">
-                <div className="mr-2">{icon}</div>
-                <div>
-                  <span className="block font-bold">{message}</span>
-                  <span className="text-xs text-gray-600">{timestamp}</span>
-                </div>
-              </div>
-            </li>
+            <BattleNotification
+              battle={battle}
+              key={`${notification.id}-${index}`}
+            />
           );
         })}
       </ul>
@@ -45,4 +33,39 @@ const BattleNotifications: React.FC = () => {
   );
 };
 
+const BattleNotification: React.FC<{
+  battle: ComponentValue<typeof Battle.schema>;
+}> = ({ battle }) => {
+  const player = Account.use()?.value;
+
+  const winner = player === battle.winner;
+  const enemy = player === battle.attacker ? battle.defender : battle.attacker;
+
+  return (
+    <li className="flex items-center justify-between bg-slate-800 pixel-images border border-cyan-400 p-3 rounded-md text-white">
+      {battle.winner !== player && (
+        <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <FaTimes size={16} />
+          <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
+            LOSS
+          </p>
+        </div>
+      )}
+      {battle.winner === player && (
+        <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+          <FaTrophy size={16} />
+          <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
+            WIN
+          </p>
+        </div>
+      )}
+
+      <span className="text-center text-xs uppercase font-bold">
+        You {winner ? "won" : "lost"} a
+        {!battle.raidedAmount ? "n INVASION" : " RAID"} against{" "}
+        {shortenAddress(enemy)}!
+      </span>
+    </li>
+  );
+};
 export default BattleNotifications;
