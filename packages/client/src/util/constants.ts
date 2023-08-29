@@ -80,17 +80,17 @@ export const BlockType = {
   //Advanced Buildings
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
   PhotovoltaicCellFactory: keccak256(
-    "block.LithiumCopperOxideFactory"
+    "block.PhotovoltaicCellFactory"
   ) as EntityID,
   AlloyFactory: keccak256("block.AlloyFactory") as EntityID,
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
-  Hangar: keccak256("block.HousingUnit") as EntityID,
-  DroneFactory: keccak256("block.TrainingFacility") as EntityID,
+  Hangar: keccak256("block.Hangar") as EntityID,
+  DroneFactory: keccak256("block.DroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
 
   AlloyCraftedItem: keccak256("item.AlloyCrafted") as EntityID,
-  LithiumCopperOxideCraftedItem: keccak256(
-    "item.LithiumCopperOxideCrafted"
+  PhotovoltaicCellCraftedItem: keccak256(
+    "item.PhotovoltaicCellCrafted"
   ) as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
@@ -171,7 +171,7 @@ export const BlockType = {
   AlloyFactory3Research: keccak256("research.AlloyFactory3") as EntityID,
 
   PhotovoltaicCellResearch: keccak256(
-    "research.LithiumCopperOxideFactory"
+    "research.PhotovoltaicCellFactory"
   ) as EntityID,
   PhotovoltaicCell2Research: keccak256(
     "research.LithiumCopperOxideFactory2"
@@ -200,9 +200,9 @@ export const BlockType = {
   ArrowMarker: keccak256("marker.Arrow") as EntityID,
 
   // Units
-  HammerLightDrone: keccak256("unit.HammerLightDrone") as EntityID,
+  HammerLightDrone: keccak256("unit.HammerDrone") as EntityID,
   StingerDrone: keccak256("unit.StingerDrone") as EntityID,
-  AnvilLightDrone: keccak256("unit.AnvilLightDrone") as EntityID,
+  AnvilLightDrone: keccak256("unit.AnvilDrone") as EntityID,
   AegisDrone: keccak256("unit.AegisDrone") as EntityID,
   MiningVessel: keccak256("unit.MiningVessel") as EntityID,
 };
@@ -537,7 +537,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.ThermobaricMissileCrafted, "/img/crafted/thermobaricmissile.png"],
 
   [BlockType.AlloyCraftedItem, "/img/crafted/iridiumdrillbit.png"],
-  [BlockType.LithiumCopperOxideCraftedItem, "/img/crafted/advancedbattery.png"],
+  [BlockType.PhotovoltaicCellCraftedItem, "/img/crafted/advancedbattery.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
   [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
   // todo: update this

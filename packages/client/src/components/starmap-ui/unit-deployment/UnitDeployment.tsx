@@ -15,7 +15,7 @@ export const UnitDeployment: React.FC = () => {
       </div>
       <div className="absolute top-0 right-0 pointer-events-auto">
         <AnimatePresence>
-          <HangarPane key="hanger" show={showHangar} setShow={setShowHangar} />
+          <HangarPane key="hangar" show={showHangar} setShow={setShowHangar} />
         </AnimatePresence>
       </div>
     </div>

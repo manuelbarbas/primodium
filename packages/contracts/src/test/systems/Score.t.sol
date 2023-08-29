@@ -199,7 +199,7 @@ contract Score is PrimodiumTest {
       LibEncode.hashKeyEntity(DebugCopperMineID, 1),
       abi.encode()
     );
-
+    vm.roll(0);
     //gain capacity for all resources so can store copper
     buildSystem.executeTyped(DebugIronMineID, ironCoord);
 

@@ -23,22 +23,23 @@ uint256 constant TungstenMineID = uint256(keccak256("block.TungstenMine"));
 uint256 constant KimberliteMineID = uint256(keccak256("block.KimberliteMine"));
 uint256 constant UraniniteMineID = uint256(keccak256("block.UraniniteMine"));
 uint256 constant BolutiteMineID = uint256(keccak256("block.BolutiteMine"));
+uint256 constant SulfurMineID = uint256(keccak256("block.SulfurMine"));
 
 //Resource Capacity Blocks
 uint256 constant SolarPanelID = uint256(keccak256("block.SolarPanel"));
-uint256 constant HousingUnitID = uint256(keccak256("block.HousingUnit"));
+uint256 constant HangarID = uint256(keccak256("block.Hangar"));
 
 // Factory Blocks
 uint256 constant IronPlateFactoryID = uint256(keccak256("block.IronPlateFactory"));
 uint256 constant AlloyFactoryID = uint256(keccak256("block.AlloyFactory"));
-uint256 constant LithiumCopperOxideFactoryID = uint256(keccak256("block.LithiumCopperOxideFactory"));
+uint256 constant PhotovoltaicCellFactoryID = uint256(keccak256("block.PhotovoltaicCellFactory"));
 uint256 constant SpaceFuelFactoryID = uint256(keccak256("block.SpaceFuelFactory"));
 
 //Storage Unit
 uint256 constant StorageUnitID = uint256(keccak256("block.StorageUnit"));
 
 // Units
-uint256 constant TrainingFacilityID = uint256(keccak256("block.TrainingFacility"));
+uint256 constant DroneFactoryID = uint256(keccak256("block.DroneFactory"));
 
 // Starmapper
 uint256 constant StarmapperID = uint256(keccak256("block.Starmapper"));
