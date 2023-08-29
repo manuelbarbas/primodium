@@ -33,7 +33,7 @@ uint32 constant NONE = 0;
 
 library LibInitUnits {
   function init(IWorld world) internal {
-    initAnvileDrone(world);
+    initAnvilDrone(world);
     initAegisDrone(world);
     initHammerDrone(world);
     initStingerDrone(world);
@@ -75,7 +75,7 @@ library LibInitUnits {
 
   /******************************** Mines ********************************** */
 
-  function initAnvileDrone(IWorld world) internal {
+  function initAnvilDrone(IWorld world) internal {
     uint256 unitType = AnvilDrone;
     P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).set(unitType);
 
