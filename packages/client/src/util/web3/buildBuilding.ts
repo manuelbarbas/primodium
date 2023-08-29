@@ -33,7 +33,7 @@ export const buildBuilding = async (
         BigNumber.from(blockType),
         position,
         {
-          gasLimit: 8_000_000,
+          gasLimit: 10_000_000,
         }
       ),
       providers,
