@@ -75,7 +75,7 @@ export const FleetPane: React.FC<{
     >
       <div className="grid grid-cols-3 items-center h-44">
         {send.units && send.units?.length !== 0 && (
-          <div className="relative grid grid-cols-5 col-span-2 gap-2 items-center justify-center border p-3 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-full">
+          <div className="relative grid grid-cols-5 grid-rows-2 col-span-2 gap-2 items-center justify-center border p-3 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-full">
             {send.units.map((unit, index) => {
               return (
                 <button
@@ -177,7 +177,7 @@ export const FleetPane: React.FC<{
             </button>
           )}
           {send.activeButton === ActiveButton.NONE && origin && destination && (
-            <div className="flex gap-2 text-xs">
+            <div className="flex gap-2 justify-center text-xs w-full">
               {(!send.units || send.units?.length === 0) && (
                 <b className="p-1 rounded text-center border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 mt-1 text-slate-400 text-xs">
                   NO UNITS SELECTED
