@@ -1,7 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { RawBlueprint } from "src/network/components/chainComponents";
-import { BlockIdToKey } from "./constants";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
