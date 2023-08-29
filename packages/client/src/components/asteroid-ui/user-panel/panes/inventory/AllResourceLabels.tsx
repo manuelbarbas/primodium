@@ -40,6 +40,11 @@ export const AllResourceLabels = ({
         resourceId={BlockType.Lithium}
       />
       <ResourceLabel
+        name={"Sulfur"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.Sulfur}
+      />
+      <ResourceLabel
         name={"Osmium"}
         entityIndex={entityIndex}
         resourceId={BlockType.Osmium}
