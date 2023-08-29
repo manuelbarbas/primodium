@@ -13,7 +13,7 @@ import { setupBattleComponent } from "src/network/systems/setupBattleComponent";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 
 export const useInit = () => {
-  const { blockNumber$, providers } = useMud();
+  const { blockNumber$ } = useMud();
   const { address } = useAccount();
   const activeAsteroid = ActiveAsteroid.use()?.value;
 
@@ -37,7 +37,7 @@ export const useInit = () => {
     setupHangar();
     setupLeaderboard();
     setupBattleComponent();
-    setupBlockNumber(blockNumber$, providers);
+    setupBlockNumber(blockNumber$);
   }, []);
 
   return initialized;
