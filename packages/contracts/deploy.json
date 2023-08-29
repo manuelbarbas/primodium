@@ -28,7 +28,6 @@
     "UnitProductionLastQueueIndexComponent",
     "UnitsComponent",
     "AsteroidTypeComponent",
-    "ActiveComponent",
     "DimensionsComponent",
     "ReversePositionComponent",
     "BattleAttackerComponent",
@@ -101,14 +100,6 @@
     },
 
     {
-      "name": "BuildPathSystem",
-      "writeAccess": ["PathComponent"]
-    },
-    {
-      "name": "DestroyPathSystem",
-      "writeAccess": ["PathComponent"]
-    },
-    {
       "name": "ClaimFromMineSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
@@ -157,14 +148,7 @@
       "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
     },
-    {
-      "name": "S_UpdateActiveStatusSystem",
-      "writeAccess": ["ActiveComponent"]
-    },
-    {
-      "name": "S_SpendRequiredResourcesSystem",
-      "writeAccess": ["ItemComponent", "ScoreComponent"]
-    },
+
     { "name": "S_UpdatePlayerSpaceRockSystem", "writeAccess": ["*"] },
     {
       "name": "S_UpdatePlayerResourceProductionSystem",
@@ -185,14 +169,6 @@
     {
       "name": "S_UpdateUtilityProductionSystem",
       "writeAccess": ["MaxUtilityComponent"]
-    },
-    {
-      "name": "S_UpdateRequiredProductionSystem",
-      "writeAccess": ["P_ProductionDependenciesComponent"]
-    },
-    {
-      "name": "S_UpdateConnectedRequiredProductionSystem",
-      "writeAccess": ["P_ProductionDependenciesComponent"]
     }
   ]
 }
