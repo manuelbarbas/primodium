@@ -319,7 +319,6 @@ export enum KeybindActions {
   Esc,
   Debug,
   DeleteBuilding,
-  DeletePath,
   Modifier,
   ToggleUI,
   NextHotbar,

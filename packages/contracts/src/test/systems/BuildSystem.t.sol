@@ -6,7 +6,6 @@ import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
-import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
@@ -17,7 +16,6 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/C
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
@@ -409,6 +407,14 @@ contract BuildSystemTest is PrimodiumTest {
     buildSystem.executeTyped(DebugSimpleBuildingMainBaseLevelReqID, coord1);
     upgradeBuildingSystem.executeTyped(coord1);
 
+    vm.stopPrank();
+  }
+
+  function testFailProductionRequirementsNotMet() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = getCoord3(alice);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, coord1);
     vm.stopPrank();
   }
 }

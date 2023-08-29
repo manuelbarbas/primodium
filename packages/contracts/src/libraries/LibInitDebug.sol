@@ -366,7 +366,7 @@ library LibInitDebug {
     //DebugIronPlateFactoryID level 2
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2);
     requiredConnectedProductions.resources[0] = IronResourceItemID;
-    requiredConnectedProductions.values[0] = 1;
+    requiredConnectedProductions.values[0] = 2;
     requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 4 }));
@@ -409,11 +409,12 @@ library LibInitDebug {
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: AlloyCraftedItemID, value: 1 }));
 
-    //PhotovoltaicCellFactoryID
+    //DebugLithiumCopperOxideFactoryID
 
-    //PhotovoltaicCellFactoryID level 1
-    entity = LibEncode.hashKeyEntity(PhotovoltaicCellFactoryID, 1);
+    //Level 1
+    entity = LibEncode.hashKeyEntity(DebugLithiumCopperOxideFactoryID, 1);
     resourceValues[0] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 1000 });
+
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     requiredConnectedProductions = ResourceValues(new uint256[](2), new uint32[](2));

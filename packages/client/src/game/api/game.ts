@@ -4,25 +4,22 @@ export function createGameApi(game: Game) {
   function setResolution(width: number, height: number) {
     const { phaserGame, sceneManager } = game;
 
-    phaserGame.scale.resize(width, height);
-
     sceneManager.scenes.forEach((scene) => {
-      scene.phaserScene.cameras.main.setViewport(0, 0, width, height);
+      const camera = scene.phaserScene.cameras.main;
 
-      // Re-adjust camera viewport
-      // scene.phaserScene.cameras.main.setViewport(
-      //   0,
-      //   0,
-      //   phaserGame.scale.width,
-      //   phaserGame.scale.height
-      // );
+      // Calculate the current center position of the camera's viewport
+      const currentCenterX = camera.scrollX + camera.width * 0.5;
+      const currentCenterY = camera.scrollY + camera.height * 0.5;
 
-      // Re-center the camera
-      scene.phaserScene.cameras.main.setScroll(
-        -phaserGame.scale.width / 2,
-        -phaserGame.scale.height / 2
-      );
+      // Adjust the viewport to the new dimensions
+      camera.setViewport(0, 0, width, height);
+
+      // Adjust the camera's scroll position based on the new viewport size
+      camera.scrollX = currentCenterX - width * 0.5;
+      camera.scrollY = currentCenterY - height * 0.5;
     });
+
+    phaserGame.scale.resize(width, height);
   }
 
   function setTarget(id: string) {

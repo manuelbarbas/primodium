@@ -8,12 +8,14 @@ import { PrimodiumSystem, IWorld, addressToEntity, getAddressById } from "./inte
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { P_IsBuildingTypeComponent, ID as P_IsBuildingTypeComponentID } from "components/P_IsBuildingTypeComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
 
 // libraries
 import { LibBuilding } from "../libraries/LibBuilding.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibResearch } from "../libraries/LibResearch.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 // types
 import { Coord } from "../types.sol";
@@ -64,6 +66,11 @@ contract BuildSystem is PrimodiumSystem {
     require(
       LibUtilityResource.checkUtilityResourceReqs(world, playerEntity, buildingType, 1),
       "[BuildSystem] You do not have the required Utility resources"
+    );
+
+    require(
+      LibResource.checkResourceProductionRequirements(world, playerEntity, buildingType, 1),
+      "[BuildSystem] You do not have the required production resources"
     );
 
     require(LibBuilding.canBuildOnTile(world, buildingType, coord), "[BuildSystem] Cannot build on this tile");
