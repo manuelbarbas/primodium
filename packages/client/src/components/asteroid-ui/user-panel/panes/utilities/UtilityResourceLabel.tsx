@@ -8,7 +8,7 @@ import {
   Production,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
-import { ResourceImage } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
 export const UtilityResourceLabel = ({
   name,
@@ -19,7 +19,10 @@ export const UtilityResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const blockNumber = BlockNumber.get(undefined, { value: 0 }).value;
+  const blockNumber = BlockNumber.get(undefined, {
+    value: 0,
+    avgBlockTime: 1,
+  }).value;
 
   const resourceCount = useResourceCount(
     OccupiedUtilityResource,
@@ -60,7 +63,8 @@ export const UtilityResourceLabel = ({
           <div className="flex flex-col gap-1">
             <div className="flex justify-between border rounded-md border-cyan-800">
               <p className="px-1 bg-cyan-700 rounded-md rounded-r-none">
-                {maxStorage - resourceCount + resourcesToClaim}
+                {(maxStorage - resourceCount + resourcesToClaim) *
+                  RESOURCE_SCALE}
               </p>
               <b className="rounded-md rounded-l-none bg-slate-700 px-1">
                 REMAINING

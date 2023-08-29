@@ -8,7 +8,7 @@ import {
   Production,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
-import { ResourceImage } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
 export const ResourceLabel = ({
   name,
@@ -19,7 +19,10 @@ export const ResourceLabel = ({
   resourceId: EntityID;
   entityIndex?: EntityIndex;
 }) => {
-  const blockNumber = BlockNumber.use(undefined, { value: 0 })?.value;
+  const { value: blockNumber, avgBlockTime } = BlockNumber.use(undefined, {
+    value: 0,
+    avgBlockTime: 1,
+  });
 
   const resourceCount = useResourceCount(Item, resourceId, entityIndex);
 
@@ -51,17 +54,19 @@ export const ResourceLabel = ({
             <p>{name}</p>
           </div>
           <p className="text-slate-400">
-            {production ? `+ ${production}/BLOCK` : "-"}
+            {production
+              ? `+ ${(production * RESOURCE_SCALE * 60) / avgBlockTime}/MIN`
+              : "-"}
           </p>
         </div>
         <div className="flex justify-between items-center gap-1">
           <div className="flex flex-col gap-1">
             <div className="flex justify-between border rounded-md border-cyan-800">
               <p className="px-1 bg-cyan-700 rounded-md rounded-r-none">
-                {resourceCount + resourcesToClaim}
+                {(resourceCount + resourcesToClaim) * RESOURCE_SCALE}
               </p>
               <b className="rounded-md rounded-l-none bg-slate-700 px-1">
-                {maxStorage}
+                {maxStorage * RESOURCE_SCALE}
               </b>
             </div>
             <div className={`flex items-center w-full h-1 rounded-md`}>
