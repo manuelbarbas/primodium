@@ -56,7 +56,9 @@ export const ResourceLabel = ({
           </div>
           <p className="text-slate-400">
             {production
-              ? `+ ${(production * RESOURCE_SCALE * 60) / avgBlockTime}/MIN`
+              ? `+ ${formatNumber(
+                  (production * RESOURCE_SCALE * 60) / avgBlockTime
+                )}/MIN`
               : "-"}
           </p>
         </div>
