@@ -24,12 +24,15 @@ const PortalModal: React.FC<ModalProps> = ({
   useEffect(() => {
     const handleEscPress = (event: KeyboardEvent) => {
       if (show && event.key === "Escape") {
-        enableInput();
         onClose();
       }
     };
 
-    if (show) disableInput();
+    if (show) {
+      disableInput();
+    } else {
+      enableInput();
+    }
 
     window.addEventListener("keydown", handleEscPress);
     return () => {
@@ -40,7 +43,6 @@ const PortalModal: React.FC<ModalProps> = ({
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose();
-      enableInput();
     }
   };
 
