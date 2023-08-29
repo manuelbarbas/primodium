@@ -5,12 +5,13 @@ import { useAccount } from "src/hooks/useAccount";
 
 import { primodium } from "@game/api";
 import { GameReady } from "src/network/components/clientComponents";
+import { useElementSize } from "src/hooks/useElementSize";
+import { AsteroidMap } from "@game/constants";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
   const gameReady = GameReady.use()?.value;
-  console.log("game ready:", gameReady);
 
   return (
     <div>
@@ -34,6 +35,8 @@ export const Game = () => {
 const PhaserWrapper = () => {
   const network = useMud();
   const { address } = useAccount();
+  const [elementRef, { width, height }] = useElementSize();
+  const gameReady = GameReady.use()?.value;
 
   useEffect(() => {
     (async () => {
@@ -56,5 +59,22 @@ const PhaserWrapper = () => {
     };
   }, [network]);
 
-  return <div id="phaser-container" className="absolute cursor-pointer" />;
+  useEffect(() => {
+    if (!width || !height || !gameReady) return;
+
+    const { setResolution } = primodium.api(AsteroidMap.KEY)!.game;
+
+    setResolution(
+      width * window.devicePixelRatio,
+      height * window.devicePixelRatio
+    );
+  }, [width, height, gameReady]);
+
+  return (
+    <div
+      id="phaser-container"
+      ref={elementRef}
+      className="absolute cursor-pointer screen-container"
+    />
+  );
 };
