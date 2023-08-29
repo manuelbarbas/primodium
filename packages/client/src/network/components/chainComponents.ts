@@ -163,12 +163,6 @@ export const Children = newComponent(
   }
 );
 
-export const Path = newStringComponent(world, {
-  id: "Path",
-  metadata: { contractId: `${commonIdPrefix}Path` },
-  overridable: true,
-});
-
 export const OwnedBy = newComponent(
   world,
   { value: Type.Entity },
@@ -429,7 +423,6 @@ export default {
   Counter,
   Dimensions,
   BuildingType,
-  Path,
   Position,
   OwnedBy,
   LastClaimedAt,

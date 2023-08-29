@@ -7,13 +7,10 @@ import "../PrimodiumTest.t.sol";
 import { addressToEntity, entityToAddress } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { DestroyPathSystem, ID as DestroyPathSystemID } from "../../systems/DestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
-import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
@@ -36,7 +33,6 @@ contract Storage is PrimodiumTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
@@ -50,8 +46,6 @@ contract Storage is PrimodiumTest {
 
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
-    buildPathSystem.executeTyped(coord, mainBaseCoord);
-    console.log("built path from IronMine to main base");
 
     uint256 ironCapacity = LibStorage.getResourceStorageSpace(world, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
@@ -84,7 +78,6 @@ contract Storage is PrimodiumTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
@@ -101,8 +94,6 @@ contract Storage is PrimodiumTest {
 
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
-    buildPathSystem.executeTyped(coord, mainBaseCoord);
-    console.log("built path from IronMine to main base");
 
     console.log("alice has ironCapacity of %s", ironCapacity);
 
@@ -178,7 +169,6 @@ contract Storage is PrimodiumTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
@@ -195,8 +185,6 @@ contract Storage is PrimodiumTest {
 
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
-    buildPathSystem.executeTyped(coord, mainBaseCoord);
-    console.log("built path from IronMine to main base");
 
     console.log("alice has ironCapacity of %s", ironCapacity);
 
