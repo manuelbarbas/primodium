@@ -26,7 +26,10 @@ import { BattleResultComponent, ID as BattleResultComponentID } from "components
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { BattleRaidResultComponent, ID as BattleRaidResultComponentID } from "components/BattleRaidResultComponent.sol";
+import { BattleBlockNumberComponent, ID as BattleBlockNumberComponentID } from "components/BattleBlockNumberComponent.sol";
+
 import { RaidResult } from "src/types.sol";
+
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -44,13 +47,13 @@ library LibRaid {
   function raid(IWorld world, uint256 invader, uint256 rockEntity) internal {
     OwnedByComponent ownedByComponent = OwnedByComponent(world.getComponent(OwnedByComponentID));
     uint256 battleEntity = LibEncode.hashKeyEntity(rockEntity, block.number);
-    BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).set(battleEntity, rockEntity);
+
     require(
       AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).getValue(rockEntity) ==
         ESpaceRockType.ASTEROID,
       "LibRaid: can only raid asteroids"
     );
-    LibBattle.setupBattleAttacker(world, battleEntity, invader, rockEntity, ESendType.RAID);
+
     //console.log("setup attacker");
     uint256 defenderEntity = 0;
     if (ownedByComponent.has(rockEntity)) {
@@ -59,6 +62,10 @@ library LibRaid {
     } else {
       revert("LibRaid: can not raid unowned rock");
     }
+
+    BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).set(battleEntity, rockEntity);
+    BattleBlockNumberComponent(world.getComponent(BattleBlockNumberComponentID)).set(battleEntity, block.number);
+    LibBattle.setupBattleAttacker(world, battleEntity, invader, rockEntity, ESendType.RAID);
     LibBattle.setupBattleDefender(world, battleEntity, defenderEntity, rockEntity);
     //console.log("setup defender");
     IOnEntitySubsystem(getAddressById(world.systems(), S_ResolveBattleSystemID)).executeTyped(
