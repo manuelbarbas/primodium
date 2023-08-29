@@ -54,6 +54,9 @@ export const BattleReports = () => {
       }
     }
 
+    //sort by block number descending
+    battles.sort((a, b) => b.blockNumber - a.blockNumber);
+
     return battles;
   }, [attackingBattles, defendingBattles]);
 
@@ -62,7 +65,7 @@ export const BattleReports = () => {
   return (
     <div className="flex flex-col items-center gap-2 text-white w-[30rem] min-w-full">
       {!selectedBattle && (
-        <div className="w-full text-xs space-y-3 h-96 overflow-y-auto">
+        <div className="w-full text-xs space-y-3 h-96 scrollbar p-2 rounded-md ">
           {battles.length === 0 && (
             <div className="w-full h-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center font-bold">
               <p className="opacity-50">NO BATTLE REPORTS FOUND</p>

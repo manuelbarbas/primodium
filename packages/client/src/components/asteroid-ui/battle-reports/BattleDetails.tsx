@@ -1,12 +1,13 @@
 import { EntityID } from "@latticexyz/recs";
 import { FaTimes, FaTrophy } from "react-icons/fa";
+import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { Battle } from "src/network/components/clientComponents";
 import {
   getBlockTypeName,
   shortenAddress,
   toRomanNumeral,
 } from "src/util/common";
-import { BackgroundImage } from "src/util/constants";
+import { BackgroundImage, ResourceImage } from "src/util/constants";
 
 export const UnitStatus: React.FC<{
   unit: EntityID;
@@ -52,7 +53,7 @@ export const BattleDetails: React.FC<{
 
   return (
     <div className="relative flex flex-col items-center text-white w-full">
-      <div className="bg-slate-800 pixel-images border border-cyan-400 p-3 w-full rounded-md">
+      <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full rounded-md">
         <div className="flex flex-col items-center space-y-3">
           {player === battle.winner && (
             <div className="bg-green-600 p-1 px-4 rounded-md flex flex-col items-center border border-green-400">
@@ -66,7 +67,7 @@ export const BattleDetails: React.FC<{
               <p className="font-bold text-2xl">LOST</p>
             </div>
           )}
-          <hr className="border-t border-cyan-600 w-full" />
+          <hr className="border-t border-cyan-600/40 w-full" />
 
           <div className="flex gap-2 text-sm items-center justify-center">
             <div className="bg-slate-700 p-2 rounded-md border border-rose-500 w-32">
@@ -83,7 +84,25 @@ export const BattleDetails: React.FC<{
                 : shortenAddress(battle.defender)}
             </div>
           </div>
+
           <hr className="border-t border-cyan-600/40 w-full" />
+
+          {battle.resources && (
+            <div className="flex flex-col justify-center items-center gap-2 bg-slate-900 p-2 px-5 rounded-md border border-slate-700">
+              <p className="text-lg font-bold leading-none">REWARDS</p>
+              <div className="flex items-center ">
+                {battle.resources.map((resource, i) => (
+                  <ResourceIconTooltip
+                    key={`resource-${i}`}
+                    image={ResourceImage.get(resource)!}
+                    resourceId={resource}
+                    name={getBlockTypeName(resource)}
+                    amount={Number(battle.raidedAmount?.at(i) ?? 0)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="w-full">
             <p className="p-1 text-xs font-bold text-cyan-400">
@@ -135,6 +154,15 @@ export const BattleDetails: React.FC<{
               )}
             </div>
           </div>
+        </div>
+        <div className="absolute top-0 right-0 flex gap-1 text-xs p-2">
+          <p className="opacity-30">BLOCK</p>
+          <p className="opacity-50 font-bold">{battle.blockNumber}</p>
+        </div>
+        <div className="absolute top-0 left-0 flex gap-1 text-xs p-2">
+          <p className="opacity-50 font-bold">
+            {battle.raidedAmount ? "RAID" : "INVASION"}
+          </p>
         </div>
       </div>
     </div>

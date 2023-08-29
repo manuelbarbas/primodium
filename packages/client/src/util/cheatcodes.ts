@@ -124,6 +124,8 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
           const emptyUnits = new Array(Math.floor(Math.random() * 4)).fill(
             0
           ) as number[];
+          const isRaid = Math.random() > 0.5;
+
           const battle = {
             attacker: account,
             defender: hashEntities(BlockType.DebugUnit3, account, i),
@@ -141,7 +143,10 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
             defenderUnitLevels: emptyUnits.map(() =>
               Math.floor(Math.random() * 50)
             ),
-            winner: account,
+            winner:
+              Math.random() > 0.5
+                ? account
+                : hashEntities(BlockType.DebugUnit3, account, i),
             defenderUnitsLeft: emptyUnits.map(() =>
               Math.floor(Math.random() * 50)
             ),
@@ -149,9 +154,9 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
               Math.floor(Math.random() * 50)
             ),
             blockNumber,
-            resources: undefined,
-            defenderValuesBeforeRaid: undefined,
-            raidedAmount: undefined,
+            resources: isRaid ? [BlockType.Iron, BlockType.Iridium] : undefined,
+            defenderValuesBeforeRaid: isRaid ? [1000, 1000] : undefined,
+            raidedAmount: isRaid ? [420, 69] : undefined,
             spaceRock,
           };
 
