@@ -35,6 +35,7 @@
     "BattleDefenderComponent",
     "BattleResultComponent",
     "BattleSpaceRockComponent",
+    "BattleRaidResultComponent",
     "MaxMovesComponent",
     "GameConfigComponent",
     "ScoreComponent",
@@ -141,7 +142,7 @@
     },
     {
       "name": "S_RaidSystem",
-      "writeAccess": ["ItemComponent", "LastClaimedAtComponent", "ScoreComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",

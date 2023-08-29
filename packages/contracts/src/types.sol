@@ -114,3 +114,9 @@ struct BattleParticipant {
   uint32[] unitLevels;
   uint32[] unitCounts;
 }
+
+struct RaidResult {
+  uint256[] resources;
+  uint32[] defenderValuesBeforeRaid;
+  uint32[] raidedAmount;
+}

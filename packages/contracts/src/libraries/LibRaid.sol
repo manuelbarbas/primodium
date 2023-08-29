@@ -25,7 +25,8 @@ import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "compon
 import { BattleResultComponent, ID as BattleResultComponentID } from "components/BattleResultComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-
+import { BattleRaidResultComponent, ID as BattleRaidResultComponentID } from "components/BattleRaidResultComponent.sol";
+import { RaidResult } from "src/types.sol";
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -176,7 +177,18 @@ library LibRaid {
       world,
       defender.participantEntity
     );
-    if (totalResources == 0) return;
+
+    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
+      .getValue(defender.participantEntity);
+    RaidResult memory raidResult = RaidResult({
+      resources: resourceIds,
+      defenderValuesBeforeRaid: new uint32[](resources.length),
+      raidedAmount: new uint32[](resources.length)
+    });
+    if (totalResources == 0) {
+      BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
+      return;
+    }
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
@@ -189,17 +201,18 @@ library LibRaid {
       entityToAddress(attacker.participantEntity)
     );
 
-    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
-      .getValue(defender.participantEntity);
-
     for (uint256 i = 0; i < resources.length; i++) {
       uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
 
       if (resources[i] < raidAmount) {
         raidAmount = resources[i];
       }
+      raidResult.defenderValuesBeforeRaid[i] = resources[i];
+      raidResult.raidedAmount[i] = raidAmount;
+
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
     }
+    BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
   }
 }
