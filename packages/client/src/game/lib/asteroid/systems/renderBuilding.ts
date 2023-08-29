@@ -34,10 +34,7 @@ import {
   ObjectPosition,
   SetValue,
 } from "../../common/object-components/common";
-import {
-  getBuildingDimensions,
-  getBuildingTopLeftCoord,
-} from "src/util/building";
+import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
 
 const {
   Assets,
@@ -55,14 +52,16 @@ export const renderBuilding = (scene: Scene) => {
   const render = ({ entity }: { entity: EntityIndex }) => {
     const entityId = world.entities[entity];
     const renderId = `${entity}_entitySprite`;
-    const tilePosition = getBuildingTopLeftCoord(entityId);
     const buildingType = BuildingType.get(entityId)?.value;
     const level = Level.get(entityId)?.value
       ? parseInt(Level.get(entityId)!.value.toString())
       : 1;
 
-    if (!buildingType || !tilePosition) return;
+    if (!buildingType) return;
 
+    const origin = Position.get(entityId);
+    if (!origin) return;
+    const tilePosition = getBuildingTopLeft(origin, buildingType);
     const selected = SelectedBuilding.get()?.value === entityId;
 
     // don't render beyond coord map limitation

@@ -7,6 +7,7 @@ import { useGameStore } from "src/store/GameStore";
 import { PanelButton } from "./PanelButton";
 import { AllResourceLabels } from "./panes/inventory/AllResourceLabels";
 import { AllUtilityResourceLabels } from "./panes/utilities/AllUtilityResourceLabels";
+import { UserFleets } from "./panes/fleets/UserFleets";
 
 export const UserPanel = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -44,6 +45,12 @@ export const UserPanel = () => {
               active={menuIndex === 1}
               onClick={() => setMenuIndex(menuIndex === 1 ? null : 1)}
             />
+            <PanelButton
+              name="Player Fleets"
+              icon="/img/icons/attackaircraft.png"
+              active={menuIndex === 2}
+              onClick={() => setMenuIndex(menuIndex === 2 ? null : 2)}
+            />
           </motion.div>
 
           {menuIndex === 0 && (
@@ -65,6 +72,16 @@ export const UserPanel = () => {
               className="bg-gray-900 z-[999] w-full border rounded-md border-cyan-600 ring ring-cyan-900 p-2 text-xs"
             >
               <AllUtilityResourceLabels />
+            </motion.div>
+          )}
+          {menuIndex === 2 && (
+            <motion.div
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              exit={{ scale: 0 }}
+              className="bg-gray-900 z-[999] w-full border rounded-md border-cyan-600 ring ring-cyan-900 p-2 text-xs"
+            >
+              <UserFleets user={address} />
             </motion.div>
           )}
         </div>

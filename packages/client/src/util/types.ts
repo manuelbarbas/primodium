@@ -6,7 +6,7 @@ import { Step } from "walktour";
 import { Action } from "./constants";
 import { Coord } from "@latticexyz/utils";
 
-export type ContractCoord = Coord & {parent: EntityID};
+export type ContractCoord = Coord & { parent: EntityID };
 
 export type NetworkConfig = SetupContractConfig & {
   defaultWalletAddress?: Address;
@@ -36,3 +36,9 @@ export type Hotbar = {
   icon: string;
   items: HotbarItem[];
 };
+
+export enum ActiveButton {
+  NONE,
+  ORIGIN,
+  DESTINATION,
+}

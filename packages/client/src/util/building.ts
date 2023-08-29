@@ -1,10 +1,6 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import {
-  Children,
-  Position,
-  RawBlueprint,
-} from "src/network/components/chainComponents";
+import { RawBlueprint } from "src/network/components/chainComponents";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -51,6 +47,21 @@ export function relCoordToAbs(coordinates: Coord[], origin: Coord): Coord[] {
   }));
 }
 
+export function getBuildingOrigin(source: Coord, building: EntityID) {
+  const blueprint = RawBlueprint.get(building)?.value;
+  if (!blueprint) return;
+  const topLeftCoord = getTopLeftCoord(convertToCoords(blueprint));
+  if (!blueprint) return;
+  return { x: source.x - topLeftCoord.x, y: source.y - topLeftCoord.y };
+}
+
+export function getBuildingTopLeft(origin: Coord, buildingType: EntityID) {
+  const rawBlueprint = RawBlueprint.get(buildingType)?.value;
+  if (!rawBlueprint) throw new Error("No blueprint found");
+  const relativeTopLeft = getTopLeftCoord(convertToCoords(rawBlueprint));
+  return { x: origin.x + relativeTopLeft.x, y: origin.y + relativeTopLeft.y };
+}
+
 export function getTopLeftCoord(coordinates: Coord[]): Coord {
   if (coordinates.length === 0)
     throw new Error("Cannot get top left coordinate of empty array");
@@ -65,18 +76,6 @@ export function getTopLeftCoord(coordinates: Coord[]): Coord {
   }
 
   return { x: minX, y: maxY };
-}
-
-export function getBuildingTopLeftCoord(building: EntityID) {
-  const children = Children.get(building)?.value;
-  if (!children) return Position.get(building);
-  const coords = children.reduce((prev: Coord[], child) => {
-    const coord = Position.get(child);
-    if (!coord) return prev;
-    return [...prev, coord];
-  }, []);
-
-  return getTopLeftCoord(coords);
 }
 
 export function getBuildingDimensions(building: EntityID) {

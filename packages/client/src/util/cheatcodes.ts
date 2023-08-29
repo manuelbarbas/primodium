@@ -1,6 +1,8 @@
 import {
   BuildingType,
+  Item,
   Level,
+  MainBase,
   MaxMoves,
   MaxUtility,
   OccupiedUtilityResource,
@@ -19,6 +21,22 @@ import {
 import { hashEntities, hashKeyEntity } from "./encode";
 import { train } from "./web3";
 import { world } from "src/network/world";
+import { EntityID } from "@latticexyz/recs";
+
+const resources: Record<string, EntityID> = {
+  iron: BlockType.Iron,
+  copper: BlockType.Copper,
+  lithium: BlockType.Lithium,
+  water: BlockType.Water,
+  titanium: BlockType.Titanium,
+  iridium: BlockType.Iridium,
+  sulfur: BlockType.Sulfur,
+  osmium: BlockType.Osmium,
+  tungsten: BlockType.Tungsten,
+  kimberlite: BlockType.Kimberlite,
+  uraninite: BlockType.Uraninite,
+  bolutite: BlockType.Bolutite,
+};
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
   const setMaxHousing: Cheatcode = {
@@ -42,6 +60,18 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
 
   return {
     setMaxHousing,
+    maxMainBase: {
+      params: [],
+      function: async () => {
+        const entity = Account.get()?.value;
+        const building = MainBase.get(entity)?.value;
+        if (!building) throw new Error("No main base found for player");
+
+        await mud.dev.setEntityContractComponentValue(building, Level, {
+          value: 6,
+        });
+      },
+    },
     setMultiplier: {
       params: [{ name: "multiplier", type: "number" }],
       function: async (multiplier: number) => {
@@ -57,6 +87,22 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
             value: multiplier,
           }
         );
+      },
+    },
+    giveResource: {
+      params: [
+        { name: "name", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (name: string, count: number) => {
+        const entity = Account.get()?.value;
+        const resource = resources[name.toLowerCase()];
+        if (!entity) throw new Error("No resource with that name");
+        const playerResource = hashKeyEntity(resource, entity);
+
+        await mud.dev.setEntityContractComponentValue(playerResource, Item, {
+          value: count,
+        });
       },
     },
     setHousing: {
@@ -121,18 +167,39 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
           const emptyUnits = new Array(Math.floor(Math.random() * 4)).fill(
             0
           ) as number[];
+          const isRaid = Math.random() > 0.5;
+
           const battle = {
             attacker: account,
             defender: hashEntities(BlockType.DebugUnit3, account, i),
-            attackerUnitCounts: emptyUnits.map(() => Math.random() * 50),
-            defenderUnitCounts: emptyUnits.map(() => Math.random() * 50),
+            attackerUnitCounts: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            defenderUnitCounts: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
             attackerUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
             defenderUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
-            attackerUnitLevels: emptyUnits.map(() => Math.random() * 50),
-            defenderUnitLevels: emptyUnits.map(() => Math.random() * 50),
-            winner: account,
-            defenderUnitsLeft: emptyUnits.map(() => Math.random() * 50),
-            attackerUnitsLeft: emptyUnits,
+            attackerUnitLevels: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            defenderUnitLevels: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            winner:
+              Math.random() > 0.5
+                ? account
+                : hashEntities(BlockType.DebugUnit3, account, i),
+            defenderUnitsLeft: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            attackerUnitsLeft: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            blockNumber: Math.floor(Math.random() * 1000),
+            resources: isRaid ? [BlockType.Iron, BlockType.Iridium] : undefined,
+            defenderValuesBeforeRaid: isRaid ? [1000, 1000] : undefined,
+            raidedAmount: isRaid ? [420, 69] : undefined,
             spaceRock,
           };
           world.registerEntity({ id: entityId });
