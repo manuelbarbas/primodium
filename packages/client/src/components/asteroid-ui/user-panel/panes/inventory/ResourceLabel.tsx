@@ -8,6 +8,7 @@ import {
   Production,
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
+import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
 export const ResourceLabel = ({
@@ -63,10 +64,12 @@ export const ResourceLabel = ({
           <div className="flex flex-col gap-1">
             <div className="flex justify-between border rounded-md border-cyan-800">
               <p className="px-1 bg-cyan-700 rounded-md rounded-r-none">
-                {(resourceCount + resourcesToClaim) * RESOURCE_SCALE}
+                {formatNumber(
+                  (resourceCount + resourcesToClaim) * RESOURCE_SCALE
+                )}
               </p>
               <b className="rounded-md rounded-l-none bg-slate-700 px-1">
-                {maxStorage * RESOURCE_SCALE}
+                {formatNumber(maxStorage * RESOURCE_SCALE)}
               </b>
             </div>
             <div className={`flex items-center w-full h-1 rounded-md`}>
