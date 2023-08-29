@@ -64,7 +64,7 @@ export const HangarPane: React.FC<{
       >
         <img src="/img/icons/debugicon.png" className="w-[24px] h-[24px]" />
         <div className="flex flex-col justify-end">
-          <p>{!show ? "View Hangar" : "Your Hangar"}</p>
+          <p>{!show ? "Origin Hangar" : "Hangar"}</p>
           {!show && <p className="text-xs opacity-50">{totalUnits} unit(s)</p>}
         </div>
       </motion.button>

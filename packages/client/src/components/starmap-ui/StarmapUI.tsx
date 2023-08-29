@@ -19,7 +19,7 @@ export const StarmapUI: React.FC = () => {
         <div className="flex flex-col gap-2 absolute top-0 left-0 pointer-events-auto">
           {origin && <AsteroidInfo asteroid={origin} title="Origin" />}
           {destination && (
-            <AsteroidInfo asteroid={destination} title="Destination" />
+            <AsteroidInfo asteroid={destination} title="Target" />
           )}
         </div>
         <UnitDeployment />
