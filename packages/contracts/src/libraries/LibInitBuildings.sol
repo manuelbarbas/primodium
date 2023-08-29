@@ -498,7 +498,7 @@ library LibInitBuildings {
     utilityResourceIds = new uint256[](1);
     utilityResourceAmounts = new uint32[](1);
     utilityResourceIds[0] = ElectricityUtilityResourceID;
-    utilityResourceAmounts[0] = 1;
+    utilityResourceAmounts[0] = 50;
 
     requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
@@ -506,14 +506,14 @@ library LibInitBuildings {
     utilityResourceIds = new uint256[](1);
     utilityResourceAmounts = new uint32[](1);
     utilityResourceIds[0] = ElectricityUtilityResourceID;
-    utilityResourceAmounts[0] = 1;
+    utilityResourceAmounts[0] = 100;
     requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
     // LEVEL 3
     utilityResourceIds = new uint256[](1);
     utilityResourceAmounts = new uint32[](1);
     utilityResourceIds[0] = ElectricityUtilityResourceID;
-    utilityResourceAmounts[0] = 2;
+    utilityResourceAmounts[0] = 150;
     requiredUtilities[2] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
     /* ***********************Set Values ************************* */
