@@ -120,18 +120,6 @@ library LibBuilding {
 
     OwnedByComponent(world.getComponent(OwnedByComponentID)).set(buildingEntity, playerEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, 1);
-    //required production update
-    if (
-      P_ProductionDependenciesComponent(world.getComponent(P_ProductionDependenciesComponentID)).has(
-        buildingLevelEntity
-      )
-    ) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Build
-      );
-    }
 
     // Starmapper Update
     if (P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).has(buildingLevelEntity)) {
@@ -169,6 +157,19 @@ library LibBuilding {
         buildingEntity,
         playerEntity
       );
+    }
+    //Resource Production Update
+    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(fromBuildingTypeLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Build
+      );
+    }
+
+    //required production update
+    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingLevelEntity)) {
+      LibResource.updateRequiredProduction(world, playerEntity, buildingType, 1);
     }
   }
 }
