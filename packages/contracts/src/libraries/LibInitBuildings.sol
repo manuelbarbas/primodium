@@ -998,7 +998,7 @@ library LibInitBuildings {
     uint256 productionResourceType = HousingUtilityResourceID;
     P_BlueprintComponent(world.getComponent(P_BlueprintComponentID)).set(
       utilityBuildingType,
-      LibBlueprint.get3x3Blueprint()
+      LibBlueprint.get4x4Blueprint()
     );
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
