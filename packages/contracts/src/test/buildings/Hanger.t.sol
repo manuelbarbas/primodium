@@ -31,7 +31,7 @@ import { LibMath } from "../../libraries/LibMath.sol";
 
 import { Coord, Dimensions } from "../../types.sol";
 
-contract HangerTest is PrimodiumTest {
+contract HangarTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   PositionComponent public positionComponent;
@@ -105,11 +105,11 @@ contract HangerTest is PrimodiumTest {
     }
   }
 
-  function testBuildHanger() public returns (Coord memory) {
+  function testBuildHangar() public returns (Coord memory) {
     vm.startPrank(alice);
     uint256 aliceEntity = addressToEntity(alice);
 
-    uint256 entity = HangerID;
+    uint256 entity = HangarID;
     uint32 level = 1;
 
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
@@ -119,10 +119,10 @@ contract HangerTest is PrimodiumTest {
     return getCoord1(alice);
   }
 
-  // testUpgradeHanger
-  function testUpgradeHanger() public {
-    Coord memory coord = testBuildHanger();
-    uint256 entity = HangerID;
+  // testUpgradeHangar
+  function testUpgradeHangar() public {
+    Coord memory coord = testBuildHangar();
+    uint256 entity = HangarID;
     uint32 level = 2;
 
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
@@ -131,9 +131,9 @@ contract HangerTest is PrimodiumTest {
     upgradeBuildingSystem.executeTyped(coord);
   }
 
-  // testDestroyHanger
-  function testDestroyHanger() public {
-    Coord memory coord = testBuildHanger();
+  // testDestroyHangar
+  function testDestroyHangar() public {
+    Coord memory coord = testBuildHangar();
     destroySystem.executeTyped(coord);
   }
 }
