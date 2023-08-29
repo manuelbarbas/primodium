@@ -65,7 +65,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
       function: async () => {
         const entity = Account.get()?.value;
         const building = MainBase.get(entity)?.value;
-        if (!building) throw new Error("No player found");
+        if (!building) throw new Error("No main base found for player");
 
         await mud.dev.setEntityContractComponentValue(building, Level, {
           value: 6,
@@ -97,7 +97,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
       function: async (name: string, count: number) => {
         const entity = Account.get()?.value;
         const resource = resources[name.toLowerCase()];
-        if (!entity) throw new Error("No player found");
+        if (!entity) throw new Error("No resource with that name");
         const playerResource = hashKeyEntity(resource, entity);
 
         await mud.dev.setEntityContractComponentValue(playerResource, Item, {
