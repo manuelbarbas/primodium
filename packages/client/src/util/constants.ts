@@ -200,9 +200,9 @@ export const BlockType = {
   ArrowMarker: keccak256("marker.Arrow") as EntityID,
 
   // Units
-  HammerLightDrone: keccak256("unit.HammerLightDrone") as EntityID,
+  HammerLightDrone: keccak256("unit.HammerDrone") as EntityID,
   StingerDrone: keccak256("unit.StingerDrone") as EntityID,
-  AnvilLightDrone: keccak256("unit.AnvilLightDrone") as EntityID,
+  AnvilLightDrone: keccak256("unit.AnvilDrone") as EntityID,
   AegisDrone: keccak256("unit.AegisDrone") as EntityID,
   MiningVessel: keccak256("unit.MiningVessel") as EntityID,
 };
