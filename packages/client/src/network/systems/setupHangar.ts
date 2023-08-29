@@ -5,11 +5,7 @@ import {
   defineComponentSystem,
   runQuery,
 } from "@latticexyz/recs";
-import {
-  ActiveAsteroid,
-  BlockNumber,
-  Hangar,
-} from "../components/clientComponents";
+import { BlockNumber, Hangar, Send } from "../components/clientComponents";
 import { world } from "../world";
 import {
   BuildingType,
@@ -80,11 +76,7 @@ export function setupHangar() {
       }
     });
   }
-  defineComponentSystem(world, BlockNumber, ({ value: [rawBlockNumber] }) => {
-    if (!rawBlockNumber) return;
-    const blockNumber = rawBlockNumber.value;
-    const spaceRock = ActiveAsteroid.get()?.value;
-    if (!spaceRock) return;
+  function setupHangar(blockNumber: number, spaceRock: EntityID) {
     const player = OwnedBy.get(spaceRock)?.value;
     if (!player) return;
     const units: Map<EntityID, number> = new Map();
@@ -100,9 +92,29 @@ export function setupHangar() {
 
     getTrainedUnclaimedUnits(units, blockNumber, spaceRock);
 
-    Hangar.set({
-      units: [...units.keys()],
-      counts: [...units.values()],
-    });
+    Hangar.set(
+      {
+        units: [...units.keys()],
+        counts: [...units.values()],
+      },
+      spaceRock
+    );
+  }
+  defineComponentSystem(world, Send, () => {
+    const blockNumber = BlockNumber.get()?.value;
+    if (!blockNumber) return;
+    const origin = Send.getOrigin()?.entity;
+    const destination = Send.getDestination()?.entity;
+    if (origin) setupHangar(blockNumber, origin);
+    if (destination) setupHangar(blockNumber, destination);
+  });
+
+  defineComponentSystem(world, BlockNumber, ({ value: [rawBlockNumber] }) => {
+    if (!rawBlockNumber) return;
+    const blockNumber = rawBlockNumber.value;
+    const origin = Send.getOrigin()?.entity;
+    const destination = Send.getDestination()?.entity;
+    if (origin) setupHangar(blockNumber, origin);
+    if (destination) setupHangar(blockNumber, destination);
   });
 }

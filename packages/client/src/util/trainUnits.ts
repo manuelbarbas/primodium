@@ -28,28 +28,13 @@ export function getUnitStats(unitEntity: EntityID) {
   const speed = P_UnitTravelSpeed.get(unitLevelEntity, { value: 0 })?.value;
   const mining = P_UnitMining.get(unitLevelEntity, { value: 0 })?.value;
   const cargo = P_UnitCargo.get(unitLevelEntity, { value: 0 })?.value;
-  return [
-    {
-      name: "ATK",
-      value: attack,
-    },
-    {
-      name: "DEF",
-      value: defence,
-    },
-    {
-      name: "SPD",
-      value: speed,
-    },
-    {
-      name: "MIN",
-      value: mining,
-    },
-    {
-      name: "CRG",
-      value: cargo,
-    },
-  ];
+  return {
+    ATK: attack,
+    DEF: defence,
+    SPD: speed,
+    MIN: mining,
+    CRG: cargo,
+  };
 }
 
 // time is in blocks (~1/second)

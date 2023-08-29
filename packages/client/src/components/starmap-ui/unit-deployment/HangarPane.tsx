@@ -4,7 +4,11 @@ import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaEye, FaInfoCircle } from "react-icons/fa";
 import { UnitPane } from "./UnitPane";
-import { Hangar, Send } from "src/network/components/clientComponents";
+import {
+  BlockNumber,
+  Hangar,
+  Send,
+} from "src/network/components/clientComponents";
 import { EntityID } from "@latticexyz/recs";
 
 export const HangarPane: React.FC<{
@@ -18,15 +22,20 @@ export const HangarPane: React.FC<{
     }
   }, [show]);
 
-  const hangar = Hangar.use();
   const send = Send.use();
-  if (!hangar) return null;
+  const block = BlockNumber.use()?.value;
+  const hangar = useMemo(() => {
+    const originEntity = Send.getOrigin()?.entity;
+    if (!originEntity) return;
+    return Hangar.get(originEntity);
+  }, [send?.originX, send?.originY, block]);
 
   const selectedCount = useMemo(() => {
-    if (!selectedUnit) return 0;
+    if (!selectedUnit || !hangar) return 0;
     return hangar.counts[hangar.units.indexOf(selectedUnit)];
   }, [selectedUnit, hangar]);
 
+  if (!hangar) return null;
   const totalUnits =
     hangar.counts.reduce((a, b) => a + b, 0) -
     (send?.count ? send.count.reduce((a, b) => a + b, 0) : 0);
@@ -55,7 +64,7 @@ export const HangarPane: React.FC<{
       >
         <img src="/img/icons/debugicon.png" className="w-[24px] h-[24px]" />
         <div className="flex flex-col justify-end">
-          <p>{!show ? "View Hangar" : "Your Hangar"}</p>
+          <p>{!show ? "Origin Hangar" : "Hangar"}</p>
           {!show && <p className="text-xs opacity-50">{totalUnits} unit(s)</p>}
         </div>
       </motion.button>

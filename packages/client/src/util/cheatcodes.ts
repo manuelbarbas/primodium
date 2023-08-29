@@ -167,18 +167,39 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
           const emptyUnits = new Array(Math.floor(Math.random() * 4)).fill(
             0
           ) as number[];
+          const isRaid = Math.random() > 0.5;
+
           const battle = {
             attacker: account,
             defender: hashEntities(BlockType.DebugUnit3, account, i),
-            attackerUnitCounts: emptyUnits.map(() => Math.random() * 50),
-            defenderUnitCounts: emptyUnits.map(() => Math.random() * 50),
+            attackerUnitCounts: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            defenderUnitCounts: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
             attackerUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
             defenderUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
-            attackerUnitLevels: emptyUnits.map(() => Math.random() * 50),
-            defenderUnitLevels: emptyUnits.map(() => Math.random() * 50),
-            winner: account,
-            defenderUnitsLeft: emptyUnits.map(() => Math.random() * 50),
-            attackerUnitsLeft: emptyUnits,
+            attackerUnitLevels: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            defenderUnitLevels: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            winner:
+              Math.random() > 0.5
+                ? account
+                : hashEntities(BlockType.DebugUnit3, account, i),
+            defenderUnitsLeft: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            attackerUnitsLeft: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            blockNumber: Math.floor(Math.random() * 1000),
+            resources: isRaid ? [BlockType.Iron, BlockType.Iridium] : undefined,
+            defenderValuesBeforeRaid: isRaid ? [1000, 1000] : undefined,
+            raidedAmount: isRaid ? [420, 69] : undefined,
             spaceRock,
           };
           world.registerEntity({ id: entityId });

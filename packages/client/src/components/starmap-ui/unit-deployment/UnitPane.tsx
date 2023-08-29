@@ -42,10 +42,10 @@ export const UnitPane: React.FC<{
       </p>
 
       <div className="grid grid-cols-6 gap-2 border-y py-2 my-2 border-cyan-400/30">
-        {getUnitStats(unit).map((stat) => (
-          <div key={stat.name} className="flex flex-col items-center">
-            <p className="text-xs opacity-50">{stat.name}</p>
-            <p>{stat.value}</p>
+        {Object.entries(getUnitStats(unit)).map(([name, value]) => (
+          <div key={name} className="flex flex-col items-center">
+            <p className="text-xs opacity-50">{name}</p>
+            <p>{value}</p>
           </div>
         ))}
       </div>

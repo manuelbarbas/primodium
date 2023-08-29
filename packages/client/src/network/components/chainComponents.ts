@@ -414,6 +414,22 @@ export const BattleResult = newComponent(
     metadata: { contractId: `${commonIdPrefix}BattleResult` },
   }
 );
+export const BattleBlockNumber = newNumberComponent(world, {
+  id: "BattleBlockNumber",
+  metadata: { contractId: `${commonIdPrefix}BattleBlockNumber` },
+});
+export const BattleRaidResult = newComponent(
+  world,
+  {
+    resources: Type.EntityArray,
+    defenderValuesBeforeRaid: Type.NumberArray,
+    raidedAmount: Type.NumberArray,
+  },
+  {
+    id: "BattleRaidResult",
+    metadata: { contractId: `${commonIdPrefix}BattleRaidResult` },
+  }
+);
 
 export default {
   GameConfig,
@@ -482,4 +498,6 @@ export default {
   BattleDefender,
   BattleSpaceRock,
   BattleResult,
+  BattleBlockNumber,
+  BattleRaidResult,
 };

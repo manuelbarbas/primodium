@@ -15,6 +15,10 @@ export const BattleComponent = () => {
     defenderUnitLevels: Type.NumberArray,
     attackerUnitsLeft: Type.NumberArray,
     defenderUnitsLeft: Type.NumberArray,
+    resources: Type.OptionalEntityArray,
+    defenderValuesBeforeRaid: Type.OptionalNumberArray,
+    raidedAmount: Type.OptionalNumberArray,
+    blockNumber: Type.Number,
     spaceRock: Type.Entity,
   });
 
@@ -46,6 +50,10 @@ export const BattleComponent = () => {
       winner: battle.winner,
       attackerUnits,
       defenderUnits,
+      resources: battle.resources,
+      defenderValuesBeforeRaid: battle.defenderValuesBeforeRaid,
+      raidedAmount: battle.raidedAmount,
+      blockNumber: battle.blockNumber,
       spaceRock: battle.spaceRock,
     };
   };
