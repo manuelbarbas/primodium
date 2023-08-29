@@ -151,12 +151,14 @@ export const UnitTraining: React.FC<{
                 </div>
               )}
               <div className="grid grid-cols-5 gap-2 border-y py-2 my-2 border-cyan-400/30">
-                {getUnitStats(selectedUnit).map((stat) => (
-                  <div key={stat.name} className="flex flex-col items-center">
-                    <p className="text-xs opacity-50">{stat.name}</p>
-                    <p>{stat.value}</p>
-                  </div>
-                ))}
+                {Object.entries(getUnitStats(selectedUnit)).map(
+                  ([name, value]) => (
+                    <div key={name} className="flex flex-col items-center">
+                      <p className="text-xs opacity-50">{name}</p>
+                      <p>{value}</p>
+                    </div>
+                  )
+                )}
               </div>
 
               <NumberInput

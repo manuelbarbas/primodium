@@ -1,35 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-
-const units = [
-  {
-    name: "Drone",
-    count: 1,
-    attack: 1,
-    defense: 1,
-    mining: 1,
-    cargo: 1,
-    population: 1,
-  },
-  {
-    name: "Hammer",
-    count: 1,
-    attack: 1,
-    defense: 1,
-    mining: 1,
-    cargo: 1,
-    population: 1,
-  },
-  {
-    name: "Anvil",
-    count: 1,
-    attack: 1,
-    defense: 1,
-    mining: 1,
-    cargo: 1,
-    population: 1,
-  },
-];
+import { useMemo, useState } from "react";
+import {
+  BlockNumber,
+  Hangar,
+  Send,
+} from "src/network/components/clientComponents";
+import { BlockIdToKey } from "src/util/constants";
+import { getUnitStats } from "src/util/trainUnits";
 
 export const UnitBreakdown = () => {
   const [showUnitBreakdown, setShowUnitBreakdown] = useState(false);
@@ -37,7 +14,19 @@ export const UnitBreakdown = () => {
   function toggleShowUnitBreakdown() {
     setShowUnitBreakdown((prevShowUnitBreakdown) => !prevShowUnitBreakdown);
   }
+  const send = Send.use();
+  const block = BlockNumber.use()?.value;
+  const rawUnits = useMemo(() => {
+    const originEntity = Send.getOrigin()?.entity;
+    if (!originEntity) return;
+    return Hangar.get(originEntity);
+  }, [send?.originX, send?.originY, block]);
 
+  if (!rawUnits) return null;
+  const units = rawUnits.units.map((unit, i) => ({
+    type: unit,
+    count: rawUnits.counts[i],
+  }));
   return (
     <AnimatePresence>
       {showUnitBreakdown && (
@@ -60,19 +49,23 @@ export const UnitBreakdown = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {units.map((unit, index) => (
-                <tr
-                  key={index}
-                  className={index % 2 === 0 ? "bg-slate-800/70" : ""}
-                >
-                  <td>{unit.name}</td>
-                  <td>{unit.count}</td>
-                  <td>{unit.attack}</td>
-                  <td>{unit.defense}</td>
-                  <td>{unit.mining}</td>
-                  <td>{unit.cargo}</td>
-                </tr>
-              ))}
+              {units.map((unit, index) => {
+                const name = BlockIdToKey[unit.type];
+                const stats = getUnitStats(unit.type);
+                return (
+                  <tr
+                    key={index}
+                    className={index % 2 === 0 ? "bg-slate-800/70" : ""}
+                  >
+                    <td>{name}</td>
+                    <td>{unit.count}</td>
+                    <td>{stats.ATK}</td>
+                    <td>{stats.DEF}</td>
+                    <td>{stats.MIN}</td>
+                    <td>{stats.CRG}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </motion.div>
