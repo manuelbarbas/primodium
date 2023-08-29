@@ -38,6 +38,7 @@
     "MaxMovesComponent",
     "GameConfigComponent",
     "ScoreComponent",
+    "BattleBlockNumberComponent",
 
     "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
