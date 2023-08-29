@@ -25,13 +25,10 @@ import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID 
 
 import { MainBaseID } from "../prototypes.sol";
 
-import { ID as UpdateRequiredProductionSystemID } from "./S_UpdateRequiredProductionSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
-import { ID as UpdateConnectedRequiredProductionSystemID } from "./S_UpdateConnectedRequiredProductionSystem.sol";
 import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
 import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
-
+import { ID as S_UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 import { Coord } from "../types.sol";
@@ -40,6 +37,7 @@ import { Coord } from "../types.sol";
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
 import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
@@ -88,6 +86,11 @@ contract DestroySystem is PrimodiumSystem {
 
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
+    require(
+      LibResource.checkCanReduceProduction(world, playerEntity, buildingType, levelComponent.getValue(buildingEntity)),
+      "[Destroy] : can not destroy building if it results in negative production"
+    );
+
     uint256[] memory children = childrenComponent.getValue(buildingEntity);
     childrenComponent.remove(buildingEntity);
     for (uint i = 0; i < children.length; i++) {
@@ -95,51 +98,29 @@ contract DestroySystem is PrimodiumSystem {
     }
     childrenComponent.remove(buildingEntity);
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity));
-    // for node tiles, check for paths that start or end at the current location and destroy associated paths
-    if (pathComponent.has(buildingEntity)) {
-      uint256 toEntity = pathComponent.getValue(buildingEntity);
-      if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(toEntity)) {
-        IOnBuildingSubsystem(getAddressById(world.systems(), UpdateConnectedRequiredProductionSystemID)).executeTyped(
-          msg.sender,
-          buildingEntity,
-          EActionType.Destroy
-        );
-      }
-      //Resource Production Update
-      if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(buildingLevelEntity)) {
-        IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
-          msg.sender,
-          buildingEntity,
-          EActionType.Destroy
-        );
-      }
-      pathComponent.remove(buildingEntity);
-    }
 
-    uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(buildingEntity);
-    if (pathWithEndingTile.length > 0) {
-      for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
-        pathComponent.remove(pathWithEndingTile[i]);
-      }
+    //increase production if was consuming any
+    LibResource.updateRequiredProduction(
+      world,
+      playerEntity,
+      buildingType,
+      levelComponent.getValue(buildingEntity),
+      false
+    );
+
+    //Resource Production Update
+    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), S_UpdatePlayerResourceProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
     }
 
     // for main base tile, remove main base initialized.
     if (buildingType == MainBaseID) {
       MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
       mainBaseComponent.remove(playerEntity);
-    }
-
-    //required production update
-    if (
-      P_ProductionDependenciesComponent(getAddressById(components, P_ProductionDependenciesComponentID)).has(
-        buildingLevelEntity
-      )
-    ) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateRequiredProductionSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity,
-        EActionType.Destroy
-      );
     }
 
     //Utility Production Update

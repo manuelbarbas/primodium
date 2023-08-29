@@ -3,12 +3,11 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld } from "systems/internal/PrimodiumSystem.sol";
 import { getAddressById, addressToEntity } from "solecs/utils.sol";
 
-import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
 import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
 import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
-import { ID as UpdateRequiredProductionSystemID } from "./S_UpdateRequiredProductionSystem.sol";
+import { ID as S_UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
 
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
@@ -78,7 +77,7 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
       "[ResearchSystem] MainBase level requirement not met"
     );
 
-    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(toEntity)) {
+    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingIdLevel)) {
       require(
         LibResource.checkResourceProductionRequirements(
           world,
@@ -108,7 +107,8 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
         world,
         playerEntity,
         buildingType,
-        levelComponent.getValue(buildingEntity) + 1
+        levelComponent.getValue(buildingEntity) + 1,
+        true
       );
     }
 
@@ -132,11 +132,11 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
     }
 
     //Resource Production Update
-    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(fromBuildingTypeLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(buildingIdLevel)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), S_UpdatePlayerResourceProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
-        EActionType.UPGRADE
+        EActionType.Upgrade
       );
     }
 

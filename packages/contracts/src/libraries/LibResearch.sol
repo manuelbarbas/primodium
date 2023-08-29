@@ -42,11 +42,4 @@ library LibResearch {
     uint256 mainLevel = LibBuilding.getBaseLevel(world, playerEntity);
     return mainLevel >= levelComponent.getValue(entity);
   }
-
-  function checkResourceProductionRequirements(
-    IWorld world,
-    uint256 playerEntity,
-    uint256 entityType,
-    uint32 level
-  ) internal view returns (bool) {}
 }

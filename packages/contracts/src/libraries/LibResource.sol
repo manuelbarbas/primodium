@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { getAddressById } from "solecs/utils.sol";
+import { getAddressById, entityToAddress } from "solecs/utils.sol";
 
 import { Uint256Component } from "std-contracts/components/Uint256Component.sol";
 import { ScoreComponent, ID as ScoreComponentID } from "components/ScoreComponent.sol";
@@ -16,7 +16,7 @@ import { P_ProductionComponent, ID as P_ProductionComponentID } from "components
 import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
-import { ResourceValues } from "../types.sol";
+import { ResourceValues, ResourceValue } from "../types.sol";
 
 import { ID as UpdateUnclaimedResourcesSystemID } from "../systems/S_UpdateUnclaimedResourcesSystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -135,7 +135,7 @@ library LibResource {
     );
     uint256 entityTypeLevelEntity = LibEncode.hashKeyEntity(entityType, level);
 
-    if (productionDependenciesComponent.has(entityTypeLevelEntity)) return true;
+    if (!productionDependenciesComponent.has(entityTypeLevelEntity)) return true;
 
     uint256 entityTypeLasteLevelEntity;
 
@@ -148,7 +148,7 @@ library LibResource {
     ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
     for (uint256 i = 0; i < requiredProductions.resources.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredProductions.resources[i], playerEntity);
-      if (!productionComponent.has(resourceEntity)) return false;
+      if (!productionComponent.has(playerResourceEntity)) return false;
       uint256 requiredValue = requiredProductions.values[i];
       if (level > 1) {
         requiredValue -= lastLevelRequiredProductions.values[i];
@@ -169,13 +169,13 @@ library LibResource {
 
     uint256 entityTypeLevelEntity = LibEncode.hashKeyEntity(entityType, level);
 
-    if (p_ProductionComponent.has(entityTypeLevelEntity)) return true;
+    if (!p_ProductionComponent.has(entityTypeLevelEntity)) return true;
 
     uint256 entityTypeLasteLevelEntity;
 
     ResourceValue memory entityLevelProduction = p_ProductionComponent.getValue(entityTypeLevelEntity);
     uint256 playerResourceEntity = LibEncode.hashKeyEntity(entityLevelProduction.resource, playerEntity);
-    return LibMath.getSafe(p_ProductionComponent, playerResourceEntity) >= entityLevelProduction.value;
+    return LibMath.getSafe(productionComponent, playerResourceEntity) >= entityLevelProduction.value;
   }
 
   function updateRequiredProduction(
@@ -184,11 +184,12 @@ library LibResource {
     uint256 entityType,
     uint32 level,
     bool isApply
-  ) {
+  ) internal {
     P_ProductionDependenciesComponent productionDependenciesComponent = P_ProductionDependenciesComponent(
       world.getComponent(P_ProductionDependenciesComponentID)
     );
     uint256 entityTypeLevelEntity = LibEncode.hashKeyEntity(entityType, level);
+    if (!productionDependenciesComponent.has(entityTypeLevelEntity)) return;
     ResourceValues memory requiredProductions = productionDependenciesComponent.getValue(entityTypeLevelEntity);
     ResourceValues memory lastLevelRequiredProductions;
     uint256 entityTypeLasteLevelEntity;
@@ -199,10 +200,17 @@ library LibResource {
     ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
     for (uint256 i = 0; i < requiredProductions.resources.length; i++) {
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredProductions.resources[i], playerEntity);
-      uint256 requiredValue = requiredProductions.values[i];
+      uint32 requiredValue = requiredProductions.values[i];
       if (isApply && level > 1) {
         requiredValue -= lastLevelRequiredProductions.values[i];
       }
+      if (requiredValue == 0) continue;
+
+      IOnEntitySubsystem(getAddressById(world.systems(), UpdateUnclaimedResourcesSystemID)).executeTyped(
+        entityToAddress(playerEntity),
+        requiredProductions.resources[i]
+      );
+
       if (isApply) {
         productionComponent.set(
           playerResourceEntity,

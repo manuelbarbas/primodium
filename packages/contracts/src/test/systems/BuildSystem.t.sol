@@ -6,7 +6,6 @@ import { addressToEntity } from "solecs/utils.sol";
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
-import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { ID as BuildSystemID } from "../../systems/BuildSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";

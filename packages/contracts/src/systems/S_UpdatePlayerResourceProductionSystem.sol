@@ -6,9 +6,6 @@ import { ID as BuildSystemID } from "./BuildSystem.sol";
 import { ID as SpawnSystemID } from "./SpawnSystem.sol";
 import { ID as UpgradeBuildingSystemID } from "./UpgradeBuildingSystem.sol";
 import { ID as DestroySystemID } from "./DestroySystem.sol";
-import { ID as BuildPathSystemID } from "./BuildPathSystem.sol";
-import { ID as DestroyPathSystemID } from "./DestroyPathSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "./S_UpdateActiveStatusSystem.sol";
 import { ID as UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
 
 import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
@@ -31,10 +28,7 @@ contract S_UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodi
       msg.sender == getAddressById(world.systems(), BuildSystemID) ||
         msg.sender == getAddressById(world.systems(), SpawnSystemID) ||
         msg.sender == getAddressById(world.systems(), UpgradeBuildingSystemID) ||
-        msg.sender == getAddressById(world.systems(), DestroySystemID) ||
-        msg.sender == getAddressById(world.systems(), BuildPathSystemID) ||
-        msg.sender == getAddressById(world.systems(), DestroyPathSystemID) ||
-        msg.sender == getAddressById(world.systems(), UpdateActiveStatusSystemID),
+        msg.sender == getAddressById(world.systems(), DestroySystemID),
       "S_UpdatePlayerResourceProductionSystem: Only BuildSystem, SpawnSystem, UpgradeBuildingSystem, DestroySystem, BuildPathSystem and DestroyPathSystem, S_UpdateActiveStatusSystem can call this function"
     );
 

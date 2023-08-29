@@ -20,6 +20,7 @@ import { P_RequiredTileComponent, ID as P_RequiredTileComponentID } from "compon
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
 
@@ -39,11 +40,10 @@ import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { IOnTwoEntitySubsystem } from "../interfaces/IOnTwoEntitySubsystem.sol";
 import { ID as PlaceBuildingTilesSystemID } from "systems/S_PlaceBuildingTilesSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "systems/S_SpendRequiredResourcesSystem.sol";
-import { ID as UpdateActiveStatusSystemID } from "systems/S_UpdateActiveStatusSystem.sol";
 import { ID as UpdateOccupiedUtilitySystemID } from "systems/S_UpdateOccupiedUtilitySystem.sol";
 import { ID as UpdatePlayerStorageSystemID } from "systems/S_UpdatePlayerStorageSystem.sol";
-import { ID as UpdateRequiredProductionSystemID } from "systems/S_UpdateRequiredProductionSystem.sol";
 import { ID as UpdateUtilityProductionSystemID } from "systems/S_UpdateUtilityProductionSystem.sol";
+import { ID as S_UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
 
 library LibBuilding {
   function checkMainBaseLevelRequirement(
@@ -159,8 +159,8 @@ library LibBuilding {
       );
     }
     //Resource Production Update
-    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(fromBuildingTypeLevelEntity)) {
-      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateActiveStatusSystemID)).executeTyped(
+    if (P_ProductionComponent(world.getComponent(P_ProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), S_UpdatePlayerResourceProductionSystemID)).executeTyped(
         msg.sender,
         buildingEntity,
         EActionType.Build
@@ -168,8 +168,6 @@ library LibBuilding {
     }
 
     //required production update
-    if (P_ProductionDependenciesComponent(getC(P_ProductionDependenciesComponentID)).has(buildingLevelEntity)) {
-      LibResource.updateRequiredProduction(world, playerEntity, buildingType, 1);
-    }
+    LibResource.updateRequiredProduction(world, playerEntity, buildingType, 1, true);
   }
 }
