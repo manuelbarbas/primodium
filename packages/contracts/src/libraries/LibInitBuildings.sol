@@ -594,38 +594,28 @@ library LibInitBuildings {
 
     /****************** Required Utility Resources *******************/
 
-    ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
-
-    uint256[] memory utilityResourceIds;
-    uint32[] memory utilityResourceAmounts;
-
+    ResourceValues[] memory allRequiredUtilities = new ResourceValues[](maxLevel);
+    ResourceValues memory requiredUtilities;
     // LEVEL 1
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
-    requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    requiredUtilities = ResourceValues(new uint256[](0), new uint32[](0));
+    allRequiredUtilities[0] = requiredUtilities;
 
     // LEVEL 2
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
-    requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    requiredUtilities = ResourceValues(new uint256[](0), new uint32[](0));
+    allRequiredUtilities[1] = requiredUtilities;
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
+    ResourceValues[] memory allRequiredConnectedProductions = new ResourceValues[](maxLevel);
     // LEVEL 1
-    uint256[] memory mineIds;
-    uint32[] memory mineCounts;
-
-    mineIds = new uint256[](1);
-    mineCounts = new uint32[](1);
-    mineIds[0] = IronResourceItemID;
-    mineCounts[0] = 1;
-    requiredConnectedProductions[0] = ResourceValues(mineIds, mineCounts);
+    requiredUtilities = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.values[0] = 1;
+    allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
-    mineIds = new uint256[](1);
-    mineCounts = new uint32[](1);
-    mineIds[0] = IronResourceItemID;
-    mineCounts[0] = 1;
-    requiredConnectedProductions[1] = ResourceValues(mineIds, mineCounts);
+    requiredUtilities = ResourceValues(new uint256[](1), new uint32[](1));
+    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.values[0] = 1;
+    allRequiredConnectedProductions[1] = requiredUtilities;
 
     /****************** Factory Production *******************/
     uint32[] memory productionRates = new uint32[](maxLevel);
@@ -642,8 +632,8 @@ library LibInitBuildings {
       maxLevel,
       requiredMainBaseLevels,
       requiredResources,
-      requiredUtilities,
-      requiredConnectedProductions,
+      allRequiredUtilities,
+      allRequiredConnectedProductions,
       productionResourceType,
       productionRates
     );
@@ -674,42 +664,34 @@ library LibInitBuildings {
 
     /****************** Required Utility Resources *******************/
 
-    ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
-
-    uint256[] memory utilityResourceIds;
-    uint32[] memory utilityResourceAmounts;
-
+    ResourceValues[] memory allRequiredUtilities = new ResourceValues[](maxLevel);
+    ResourceValues memory requiredUtilities;
     // LEVEL 1
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
-    requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    requiredUtilities = ResourceValues(new uint256[](0), new uint32[](0));
+    allRequiredUtilities[0] = requiredUtilities;
 
     // LEVEL 2
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
-    requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    requiredUtilities = ResourceValues(new uint256[](0), new uint32[](0));
+    allRequiredUtilities[1] = requiredUtilities;
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
-    // LEVEL 1
-    uint256[] memory mineIds;
-    uint32[] memory mineCounts;
+    ResourceValues[] memory allRequiredConnectedProductions = new ResourceValues[](maxLevel);
 
-    mineIds = new uint256[](2);
-    mineCounts = new uint32[](2);
-    mineIds[0] = IronResourceItemID;
-    mineCounts[0] = 1;
-    mineIds[1] = CopperResourceItemID;
-    mineCounts[1] = 1;
-    requiredConnectedProductions[0] = ResourceValues(mineIds, mineCounts);
+    // LEVEL 1
+    requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
+    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.values[0] = 1;
+    requiredUtilities.resources[1] = CopperResourceItemID;
+    requiredUtilities.values[1] = 1;
+    allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
-    mineIds = new uint256[](2);
-    mineCounts = new uint32[](2);
-    mineIds[0] = IronResourceItemID;
-    mineCounts[0] = 1;
-    mineIds[1] = CopperResourceItemID;
-    mineCounts[1] = 1;
-    requiredConnectedProductions[1] = ResourceValues(mineIds, mineCounts);
+
+    requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
+    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.values[0] = 1;
+    requiredUtilities.resources[1] = CopperResourceItemID;
+    requiredUtilities.values[1] = 1;
+    allRequiredConnectedProductions[1] = requiredUtilities;
 
     /****************** Factory Production *******************/
     uint32[] memory productionRates = new uint32[](maxLevel);
@@ -726,8 +708,8 @@ library LibInitBuildings {
       maxLevel,
       requiredMainBaseLevels,
       requiredResources,
-      requiredUtilities,
-      requiredConnectedProductions,
+      allRequiredUtilities,
+      allRequiredConnectedProductions,
       productionResourceType,
       productionRates
     );
@@ -759,42 +741,31 @@ library LibInitBuildings {
 
     /****************** Required Utility Resources *******************/
 
-    ResourceValues[] memory requiredUtilities = new ResourceValues[](maxLevel);
-
-    uint256[] memory utilityResourceIds;
-    uint32[] memory utilityResourceAmounts;
-
+    ResourceValues[] memory allRequiredUtilities = new ResourceValues[](maxLevel);
+    ResourceValues memory requiredUtilities;
     // LEVEL 1
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
-    requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    requiredUtilities = ResourceValues(new uint256[](0), new uint32[](0));
+    allRequiredUtilities[0] = requiredUtilities;
 
     // LEVEL 2
-    utilityResourceIds = new uint256[](0);
-    utilityResourceAmounts = new uint32[](0);
-    requiredUtilities[1] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    requiredUtilities = ResourceValues(new uint256[](0), new uint32[](0));
+    allRequiredUtilities[1] = requiredUtilities;
 
     /****************** Required Mines *******************/
-    ResourceValues[] memory requiredConnectedProductions = new ResourceValues[](maxLevel);
+    ResourceValues[] memory allRequiredConnectedProductions = new ResourceValues[](maxLevel);
     // LEVEL 1
-    uint256[] memory mineIds;
-    uint32[] memory mineCounts;
-
-    mineIds = new uint256[](2);
-    mineCounts = new uint32[](2);
-    mineIds[0] = LithiumResourceItemID;
-    mineCounts[0] = 1;
-    mineIds[1] = CopperResourceItemID;
-    mineCounts[1] = 1;
-    requiredConnectedProductions[0] = ResourceValues(mineIds, mineCounts);
+    requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
+    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.values[0] = 1;
+    requiredUtilities.resources[1] = CopperResourceItemID;
+    requiredUtilities.values[1] = 1;
+    allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
-    mineIds = new uint256[](2);
-    mineCounts = new uint32[](2);
-    mineIds[0] = LithiumResourceItemID;
-    mineCounts[0] = 1;
-    mineIds[1] = CopperResourceItemID;
-    mineCounts[1] = 1;
-    requiredConnectedProductions[1] = ResourceValues(mineIds, mineCounts);
+    requiredUtilities.resources[0] = IronResourceItemID;
+    requiredUtilities.values[0] = 1;
+    requiredUtilities.resources[1] = CopperResourceItemID;
+    requiredUtilities.values[1] = 1;
+    allRequiredConnectedProductions[1] = requiredUtilities;
 
     /****************** Factory Production *******************/
     uint32[] memory productionRates = new uint32[](maxLevel);
@@ -811,8 +782,8 @@ library LibInitBuildings {
       maxLevel,
       requiredMainBaseLevels,
       requiredResources,
-      requiredUtilities,
-      requiredConnectedProductions,
+      allRequiredUtilities,
+      allRequiredConnectedProductions,
       productionResourceType,
       productionRates
     );
