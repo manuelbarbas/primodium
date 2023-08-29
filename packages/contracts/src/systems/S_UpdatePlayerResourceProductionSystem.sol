@@ -29,7 +29,7 @@ contract S_UpdatePlayerResourceProductionSystem is IOnBuildingSubsystem, Primodi
         msg.sender == getAddressById(world.systems(), SpawnSystemID) ||
         msg.sender == getAddressById(world.systems(), UpgradeBuildingSystemID) ||
         msg.sender == getAddressById(world.systems(), DestroySystemID),
-      "S_UpdatePlayerResourceProductionSystem: Only BuildSystem, SpawnSystem, UpgradeBuildingSystem, DestroySystem, BuildPathSystem and DestroyPathSystem, S_UpdateActiveStatusSystem can call this function"
+      "S_UpdatePlayerResourceProductionSystem: Only BuildSystem, SpawnSystem, UpgradeBuildingSystem, DestroySystem, can call this function"
     );
 
     (address playerAddress, uint256 buildingEntity, EActionType actionType) = abi.decode(

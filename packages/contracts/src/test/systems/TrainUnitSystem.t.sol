@@ -22,7 +22,6 @@ import { ChildrenComponent, ID as ChildrenComponentID } from "../../components/C
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "../../components/UnitsComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "../../components/BuildingTypeComponent.sol";
 import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";

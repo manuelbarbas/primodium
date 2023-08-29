@@ -3,18 +3,12 @@ import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
 import { Action } from "src/util/constants";
 import { getBuildingAtCoord } from "src/util/tile";
-import {
-  buildBuilding,
-  buildPath,
-  demolishBuilding,
-  demolishPath,
-} from "src/util/web3";
+import { buildBuilding, demolishBuilding } from "src/util/web3";
 import {
   HoverTile,
   SelectedAction,
   SelectedBuilding,
   SelectedTile,
-  StartSelectedPath,
 } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { Network } from "src/network/layer";
@@ -48,19 +42,6 @@ export const setupMouseInputs = (
         break;
       case Action.DemolishBuilding:
         demolishBuilding(gameCoord, network);
-        break;
-      case Action.DemolishPath:
-        demolishPath(gameCoord, network);
-        break;
-      case Action.Conveyor:
-        const startCoord = StartSelectedPath.get();
-
-        if (!startCoord) {
-          StartSelectedPath.set(gameCoord);
-          return;
-        }
-
-        buildPath(startCoord, gameCoord, network);
         break;
       case Action.PlaceBuilding:
         const selectedBuilding = SelectedBuilding.get()?.value;

@@ -6,7 +6,6 @@ import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddre
 // components
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
-import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
@@ -71,7 +70,6 @@ contract DestroySystem is PrimodiumSystem {
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
     BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
-    PathComponent pathComponent = PathComponent(getC(PathComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
     ChildrenComponent childrenComponent = ChildrenComponent(getC(ChildrenComponentID));
     LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
@@ -88,7 +86,7 @@ contract DestroySystem is PrimodiumSystem {
 
     require(
       LibResource.checkCanReduceProduction(world, playerEntity, buildingType, levelComponent.getValue(buildingEntity)),
-      "[Destroy] : can not destroy building if it results in negative production"
+      "[DestroySystem] can not destroy building if it results in negative production"
     );
 
     uint256[] memory children = childrenComponent.getValue(buildingEntity);

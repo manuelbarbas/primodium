@@ -1,7 +1,7 @@
 import { KeybindActions } from "@game/constants";
 import { useEffect, useState } from "react";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
-import { Action, BlockType } from "src/util/constants";
+import { BlockType } from "src/util/constants";
 import { Hotbar } from "src/util/types";
 
 const mainBaseHotbar: Hotbar = {
@@ -34,11 +34,6 @@ const buildingHotbar: Hotbar = {
     {
       blockType: BlockType.SulfurMine,
       keybind: KeybindActions.Hotbar3,
-    },
-    {
-      blockType: BlockType.Conveyor,
-      keybind: KeybindActions.Hotbar4,
-      action: Action.Conveyor,
     },
     {
       blockType: BlockType.StorageUnit,
@@ -81,55 +76,6 @@ const advancedBuildingHotbar: Hotbar = {
     },
   ],
 };
-
-// const debugHotbar: Hotbar = {
-//   name: "Debug",
-//   icon: "/img/icons/debugicon.png",
-//   items: [
-//     {
-//       blockType: BlockType.DebugIronMine,
-//       keybind: KeybindActions.Hotbar0,
-//     },
-//     {
-//       blockType: BlockType.DebugCopperMine,
-//       keybind: KeybindActions.Hotbar1,
-//     },
-//     {
-//       blockType: BlockType.DebugLithiumMine,
-//       keybind: KeybindActions.Hotbar2,
-//     },
-//     {
-//       blockType: BlockType.DebugIronPlateFactory,
-//       keybind: KeybindActions.Hotbar3,
-//     },
-//     {
-//       blockType: BlockType.DebugStorageBuilding,
-//       keybind: KeybindActions.Hotbar4,
-//     },
-//     {
-//       blockType: BlockType.DebugSolarPanel,
-//       keybind: KeybindActions.Hotbar5,
-//     },
-//     {
-//       blockType: BlockType.DebugLithiumCopperOxideFactory,
-//       keybind: KeybindActions.Hotbar6,
-//     },
-//     {
-//       blockType: BlockType.DebugAlloyFactory,
-//       keybind: KeybindActions.Hotbar7,
-//     },
-//     {
-//       blockType: BlockType.DebugDemolishBuilding,
-//       keybind: KeybindActions.Hotbar8,
-//       action: Action.DemolishBuilding,
-//     },
-//     {
-//       blockType: BlockType.DebugDemolishPath,
-//       keybind: KeybindActions.Hotbar9,
-//       action: Action.DemolishPath,
-//     },
-//   ],
-// };
 
 export const useHotbarContent = () => {
   const mainBase = useMainBaseCoord();

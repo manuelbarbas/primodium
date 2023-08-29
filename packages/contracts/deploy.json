@@ -7,7 +7,6 @@
     "CounterComponent",
     "BuildingTypeComponent",
     "OwnedByComponent",
-    "PathComponent",
     "LastClaimedAtComponent",
     "ItemComponent",
     "HasResearchedComponent",

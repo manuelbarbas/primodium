@@ -9,7 +9,6 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
-import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "../../components/ProductionComponent.sol";
@@ -135,7 +134,6 @@ contract ClaimSystemTest is PrimodiumTest {
     // START CLAIMING
     vm.roll(0);
 
-    console.log("built path from PlatingFactory to MainBase");
     console.log(
       "Iron PLate Production is %s",
       ProductionComponent(component(ProductionComponentID)).getValue(
@@ -200,7 +198,6 @@ contract ClaimSystemTest is PrimodiumTest {
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
 
-    console.log("built path from IronMine to main base");
     vm.roll(10);
 
     claimSystem.executeTyped(mainBaseCoord);
