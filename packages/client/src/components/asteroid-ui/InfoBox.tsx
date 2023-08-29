@@ -18,7 +18,7 @@ import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
 import { FaSpaceAwesome } from "react-icons/fa6";
-import { Fleets } from "./fleets/Fleets";
+import { SpaceRockFleets } from "./fleets/SpaceRockFleets";
 import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 
 export const InfoBox = () => {
@@ -166,11 +166,11 @@ export const InfoBox = () => {
         <ResearchPage />
       </Modal>
       <Modal
-        title="Fleets"
+        title="Asteroid Fleets"
         show={showFleets}
         onClose={() => setShowFleets(!showFleets)}
       >
-        {asteroid && <Fleets spacerock={asteroid} />}
+        {asteroid && <SpaceRockFleets spacerock={asteroid} />}
       </Modal>
     </div>
   );

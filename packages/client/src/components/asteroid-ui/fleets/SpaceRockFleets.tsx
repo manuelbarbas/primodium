@@ -15,10 +15,10 @@ export const LabeledValue: React.FC<{
   );
 };
 
-export const Fleets: React.FC<{ spacerock: EntityID; height?: number }> = ({
-  spacerock,
-  height = 96,
-}) => {
+export const SpaceRockFleets: React.FC<{
+  spacerock: EntityID;
+  height?: number;
+}> = ({ spacerock, height = 96 }) => {
   const [index, setIndex] = useState<number>(0);
 
   return (

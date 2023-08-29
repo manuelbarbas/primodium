@@ -22,7 +22,7 @@ import { shortenAddress } from "src/util/common";
 import { GameButton } from "../shared/GameButton";
 import { FaCircleLeft, FaSpaceAwesome } from "react-icons/fa6";
 import { FaUserAstronaut } from "react-icons/fa";
-import { Fleets } from "../asteroid-ui/fleets/Fleets";
+import { SpaceRockFleets } from "../asteroid-ui/fleets/SpaceRockFleets";
 
 type PaneState = "units" | "arrivals" | "home";
 export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
@@ -108,7 +108,8 @@ const AsteroidTargetInfo: React.FC<{
 
   const image = getAsteroidImage(target);
   if (paneState == "units") return <UnitBreakdown asteroid={target} />;
-  if (paneState == "arrivals") return <Fleets spacerock={target} height={32} />;
+  if (paneState == "arrivals")
+    return <SpaceRockFleets spacerock={target} height={32} />;
   return (
     <div className="relative flex pixel-images h-32">
       <img src={image} className="h-32 w-32 object-cover p-1" />
@@ -167,7 +168,8 @@ const MotherlodeTargetInfo: React.FC<{
   const image = getAsteroidImage(target);
 
   if (paneState == "units") return <UnitBreakdown asteroid={target} />;
-  if (paneState == "arrivals") return <Fleets spacerock={target} height={32} />;
+  if (paneState == "arrivals")
+    return <SpaceRockFleets spacerock={target} height={32} />;
 
   return (
     <div className="relative flex pixel-images h-32 w-full">
