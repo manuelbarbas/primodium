@@ -17,7 +17,11 @@ import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
+import { FaSpaceAwesome } from "react-icons/fa6";
+import { Fleets } from "./fleets/Fleets";
+import { FaFileAlt } from "react-icons/fa";
 import { Send } from "src/network/components/clientComponents";
+import { BattleReports } from "./battle-reports/BattleReports";
 
 export const InfoBox = () => {
   const crtEffect = useGameStore((state) => state.crtEffect);
@@ -26,6 +30,8 @@ export const InfoBox = () => {
   const [showResearchModal, setShowResearchModal] = useState<boolean>(false);
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
+  const [showFleets, setShowFleets] = useState<boolean>(false);
+  const [showReports, setShowReports] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
@@ -112,21 +118,36 @@ export const InfoBox = () => {
                   <div className="absolute bg-rose-500 top-0 -right-2 text-xs px-1 border-2 border-black w-4 h-4 animate-pulse rounded-full" />
                 )}
               </div>
-              {/* <div className="relative">
+              <div className="relative">
                 <GameButton
-                  id="leaderboard"
+                  id="fleets"
                   color="bg-orange-500"
                   className="mt-2 ml-1 text-sm"
                   onClick={() => {
-                    setShowLeaderboard(true);
+                    setShowFleets(true);
                   }}
                   depth={4}
                 >
                   <div className="flex m-1 items-center gap-2 px-1">
-                    <FaList size={18} />
+                    <FaSpaceAwesome size={18} />
                   </div>
                 </GameButton>
-              </div> */}
+              </div>
+              <div className="relative">
+                <GameButton
+                  id="battle-reports"
+                  color="bg-rose-600"
+                  className="mt-2 ml-1 text-sm"
+                  onClick={() => {
+                    setShowReports(true);
+                  }}
+                  depth={4}
+                >
+                  <div className="flex m-1 items-center gap-2 px-1">
+                    <FaFileAlt size={18} />
+                  </div>
+                </GameButton>
+              </div>
               <div className="relative">
                 <GameButton
                   id="research"
@@ -160,6 +181,20 @@ export const InfoBox = () => {
         onClose={() => setShowResearchModal(!showResearchModal)}
       >
         <ResearchPage />
+      </Modal>
+      <Modal
+        title="Fleets"
+        show={showFleets}
+        onClose={() => setShowFleets(!showFleets)}
+      >
+        <Fleets />
+      </Modal>
+      <Modal
+        title="Battle Reports"
+        show={showReports}
+        onClose={() => setShowReports(!showReports)}
+      >
+        <BattleReports />
       </Modal>
     </div>
   );
