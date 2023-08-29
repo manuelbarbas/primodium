@@ -36,6 +36,9 @@ const resources: Record<string, EntityID> = {
   kimberlite: BlockType.Kimberlite,
   uraninite: BlockType.Uraninite,
   bolutite: BlockType.Bolutite,
+  ironplate: BlockType.IronPlateCrafted,
+  alloy: BlockType.AlloyCraftedItem,
+  pvcell: BlockType.PhotovoltaicCellCraftedItem,
 };
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
@@ -101,7 +104,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const playerResource = hashKeyEntity(resource, entity);
 
         await mud.dev.setEntityContractComponentValue(playerResource, Item, {
-          value: count,
+          value: count * 100,
         });
       },
     },

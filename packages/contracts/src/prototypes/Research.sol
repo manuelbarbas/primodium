@@ -39,7 +39,7 @@ uint256 constant AlloyFactoryResearchID = uint256(keccak256("research.AlloyFacto
 uint256 constant AlloyFactory2ResearchID = uint256(keccak256("research.AlloyFactory2"));
 uint256 constant AlloyFactory3ResearchID = uint256(keccak256("research.AlloyFactory3"));
 
-uint256 constant LithiumCopperOxideFactoryResearchID = uint256(keccak256("research.LithiumCopperOxideFactory"));
+uint256 constant LithiumCopperOxideFactoryResearchID = uint256(keccak256("research.PhotovoltaicCellFactory"));
 uint256 constant LithiumCopperOxideFactory2ResearchID = uint256(keccak256("research.LithiumCopperOxideFactory2"));
 uint256 constant LithiumCopperOxideFactory3ResearchID = uint256(keccak256("research.LithiumCopperOxideFactory3"));
 

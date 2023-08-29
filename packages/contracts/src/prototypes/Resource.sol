@@ -29,3 +29,4 @@ uint256 constant MoveCountID = uint256(keccak256("block.MoveCount"));
 
 uint256 constant ElectricityUtilityResourceID = uint256(keccak256("item.ElectricityUtilityResource"));
 uint256 constant HousingUtilityResourceID = uint256(keccak256("item.HousingUtilityResource"));
+uint256 constant VesselUtilityResourceID = uint256(keccak256("item.VesselUtilityResource"));
