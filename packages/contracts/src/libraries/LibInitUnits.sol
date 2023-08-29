@@ -33,7 +33,7 @@ uint32 constant NONE = 0;
 
 library LibInitUnits {
   function init(IWorld world) internal {
-    initAnvileDrone(world);
+    initAnvilDrone(world);
     initAegisDrone(world);
     initHammerDrone(world);
     initStingerDrone(world);
