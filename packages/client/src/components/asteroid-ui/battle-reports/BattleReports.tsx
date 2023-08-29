@@ -101,13 +101,13 @@ export const BattleReports = () => {
                   </LabeledValue>
                 </div>
                 <LabeledValue label="TYPE">
-                  <p>RAID</p>
+                  <p>{!battle.raidedAmount ? "INVASION" : "RAID"}</p>
                 </LabeledValue>
                 <div className="text-right">
                   <LabeledValue label="TIMESTAMP">
                     <div className="flex gap-1">
                       <span className="opacity-50">BLOCK</span>
-                      <p>{123}</p>
+                      <p>{battle.blockNumber}</p>
                     </div>
                   </LabeledValue>
                 </div>
