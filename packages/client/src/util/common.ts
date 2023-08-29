@@ -53,6 +53,15 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
+export function formatNumber(num: number, fractionDigits = 2) {
+  const fixedNum = parseFloat(num.toString()).toFixed(fractionDigits);
+
+  // Convert it back to a number to remove trailing zeroes,
+  const trimmedNum = String(parseFloat(fixedNum));
+
+  return trimmedNum;
+}
+
 export const getBlockTypeName = (blockType: EntityID | undefined) => {
   if (blockType === undefined || BlockIdToKey[blockType] == undefined)
     return "";

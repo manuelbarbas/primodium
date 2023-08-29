@@ -10,6 +10,8 @@ export enum Action {
   PlaceBuilding,
 }
 
+export const RESOURCE_SCALE = 1 / 100;
+
 export const BlockType = {
   // Landscape blocks
   Sandstone: keccak256("block.Sandstone") as EntityID,
