@@ -4,9 +4,6 @@ import { Observable } from "rxjs";
 import { BlockNumber } from "../components/clientComponents";
 import { world } from "../world";
 
-const span = 100;
-const blockTimes: number[] = [];
-
 export const setupBlockNumber = (
   blockNumber$: Observable<number>,
   providers: IComputedValue<{
@@ -14,6 +11,9 @@ export const setupBlockNumber = (
     ws: WebSocketProvider | undefined;
   }>
 ) => {
+  const span = 100;
+  const blockTimes: number[] = [];
+
   const blockListener = blockNumber$.subscribe(async (blockNumber) => {
     const currentBlockTime = (await providers.get().ws?.getBlock(blockNumber))
       ?.timestamp;
