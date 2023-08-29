@@ -81,6 +81,7 @@ export const Leaderboard = newComponent(
     id: "Leaderboard",
   }
 );
+
 export const Battle = BattleComponent();
 
 export default {

@@ -25,6 +25,10 @@ import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "compon
 import { BattleResultComponent, ID as BattleResultComponentID } from "components/BattleResultComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
+import { BattleRaidResultComponent, ID as BattleRaidResultComponentID } from "components/BattleRaidResultComponent.sol";
+import { BattleBlockNumberComponent, ID as BattleBlockNumberComponentID } from "components/BattleBlockNumberComponent.sol";
+
+import { RaidResult } from "src/types.sol";
 
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
@@ -43,13 +47,13 @@ library LibRaid {
   function raid(IWorld world, uint256 invader, uint256 rockEntity) internal {
     OwnedByComponent ownedByComponent = OwnedByComponent(world.getComponent(OwnedByComponentID));
     uint256 battleEntity = LibEncode.hashKeyEntity(rockEntity, block.number);
-    BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).set(battleEntity, rockEntity);
+
     require(
       AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).getValue(rockEntity) ==
         ESpaceRockType.ASTEROID,
       "LibRaid: can only raid asteroids"
     );
-    LibBattle.setupBattleAttacker(world, battleEntity, invader, rockEntity, ESendType.RAID);
+
     //console.log("setup attacker");
     uint256 defenderEntity = 0;
     if (ownedByComponent.has(rockEntity)) {
@@ -58,6 +62,10 @@ library LibRaid {
     } else {
       revert("LibRaid: can not raid unowned rock");
     }
+
+    BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).set(battleEntity, rockEntity);
+    BattleBlockNumberComponent(world.getComponent(BattleBlockNumberComponentID)).set(battleEntity, block.number);
+    LibBattle.setupBattleAttacker(world, battleEntity, invader, rockEntity, ESendType.RAID);
     LibBattle.setupBattleDefender(world, battleEntity, defenderEntity, rockEntity);
     //console.log("setup defender");
     IOnEntitySubsystem(getAddressById(world.systems(), S_ResolveBattleSystemID)).executeTyped(
@@ -176,7 +184,18 @@ library LibRaid {
       world,
       defender.participantEntity
     );
-    if (totalResources == 0) return;
+
+    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
+      .getValue(defender.participantEntity);
+    RaidResult memory raidResult = RaidResult({
+      resources: resourceIds,
+      defenderValuesBeforeRaid: new uint32[](resources.length),
+      raidedAmount: new uint32[](resources.length)
+    });
+    if (totalResources == 0) {
+      BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
+      return;
+    }
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
@@ -189,17 +208,18 @@ library LibRaid {
       entityToAddress(attacker.participantEntity)
     );
 
-    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
-      .getValue(defender.participantEntity);
-
     for (uint256 i = 0; i < resources.length; i++) {
       uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
 
       if (resources[i] < raidAmount) {
         raidAmount = resources[i];
       }
+      raidResult.defenderValuesBeforeRaid[i] = resources[i];
+      raidResult.raidedAmount[i] = raidAmount;
+
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
     }
+    BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
   }
 }
