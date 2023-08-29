@@ -124,17 +124,30 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
           const battle = {
             attacker: account,
             defender: hashEntities(BlockType.DebugUnit3, account, i),
-            attackerUnitCounts: emptyUnits.map(() => Math.random() * 50),
-            defenderUnitCounts: emptyUnits.map(() => Math.random() * 50),
+            attackerUnitCounts: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            defenderUnitCounts: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
             attackerUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
             defenderUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
-            attackerUnitLevels: emptyUnits.map(() => Math.random() * 50),
-            defenderUnitLevels: emptyUnits.map(() => Math.random() * 50),
+            attackerUnitLevels: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            defenderUnitLevels: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
             winner: account,
-            defenderUnitsLeft: emptyUnits.map(() => Math.random() * 50),
-            attackerUnitsLeft: emptyUnits,
+            defenderUnitsLeft: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
+            attackerUnitsLeft: emptyUnits.map(() =>
+              Math.floor(Math.random() * 50)
+            ),
             spaceRock,
           };
+
           world.registerEntity({ id: entityId });
           Battle.set(battle, entityId);
         }
