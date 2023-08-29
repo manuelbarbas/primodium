@@ -15,19 +15,24 @@ export const LabeledValue: React.FC<{
   );
 };
 
-export const Fleets: React.FC<{ spacerock: EntityID }> = ({ spacerock }) => {
+export const Fleets: React.FC<{ spacerock: EntityID; height?: number }> = ({
+  spacerock,
+  height = 96,
+}) => {
   const [index, setIndex] = useState<number>(0);
 
   return (
-    <div className="flex flex-col items-center gap-2 text-white w-96 min-w-full">
-      <div className="w-full flex items-center justify-center gap-2">
+    <div
+      className={`flex flex-col items-center gap-2 text-white w-96 h-${height} min-w-full`}
+    >
+      <div className="w-full flex items-center justify-center mt-2 gap-2">
         <button
           className={`border  p-1 rounded-md text-sm hover:scale-105 transition-all ${
             index === 0 ? "border-cyan-700 bg-slate-800" : "border-slate-700"
           }`}
           onClick={() => setIndex(0)}
         >
-          Incoming Fleets
+          Incoming
         </button>
         <button
           className={`border  p-1 rounded-md text-sm hover:scale-105 transition-all ${
@@ -35,7 +40,7 @@ export const Fleets: React.FC<{ spacerock: EntityID }> = ({ spacerock }) => {
           }`}
           onClick={() => setIndex(1)}
         >
-          Orbiting Fleets
+          Orbiting
         </button>
       </div>
 

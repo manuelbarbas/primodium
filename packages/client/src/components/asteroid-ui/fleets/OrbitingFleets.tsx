@@ -118,7 +118,7 @@ export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
     onlyOrbiting: true,
   });
   return (
-    <div className="w-full text-xs space-y-2 h-96 overflow-y-auto scrollbar">
+    <div className="w-full text-xs space-y-2 h-full overflow-y-auto scrollbar">
       {orbitingFleets.length === 0 && (
         <div className="w-full h-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center font-bold">
           <p className="opacity-50">NO ORBITING FLEETS</p>

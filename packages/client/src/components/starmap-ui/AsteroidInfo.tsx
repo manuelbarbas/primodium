@@ -108,7 +108,7 @@ const AsteroidTargetInfo: React.FC<{
 
   const image = getAsteroidImage(target);
   if (paneState == "units") return <UnitBreakdown asteroid={target} />;
-  if (paneState == "arrivals") return <Fleets spacerock={target} />;
+  if (paneState == "arrivals") return <Fleets spacerock={target} height={32} />;
   return (
     <div className="relative flex pixel-images h-32">
       <img src={image} className="h-32 w-32 object-cover p-1" />
@@ -167,7 +167,7 @@ const MotherlodeTargetInfo: React.FC<{
   const image = getAsteroidImage(target);
 
   if (paneState == "units") return <UnitBreakdown asteroid={target} />;
-  if (paneState == "arrivals") return <Fleets spacerock={target} />;
+  if (paneState == "arrivals") return <Fleets spacerock={target} height={32} />;
 
   return (
     <div className="relative flex pixel-images h-32 w-full">
