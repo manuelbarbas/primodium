@@ -36,6 +36,7 @@ library LibInitBuildings {
     initIronMine(world);
     initCopperMine(world);
     initLithiumMine(world);
+    initSulfurMine(world);
 
     // factories
     initIronPlateFactory(world);
