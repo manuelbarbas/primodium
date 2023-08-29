@@ -12,9 +12,16 @@ import { BattleComponent } from "./customComponents/BattleComponent";
 import { NotificationQueueComponent } from "./customComponents/NotificationQueueComponent";
 
 // todo: organize these alphabetically
-export const BlockNumber = newNumberComponent(world, {
-  id: "BlockNumber",
-});
+export const BlockNumber = newComponent(
+  world,
+  {
+    value: Type.Number,
+    avgBlockTime: Type.Number, //seconds
+  },
+  {
+    id: "BlockNumber",
+  }
+);
 export const Account = newEntityComponent(world, { id: "Account" });
 
 export const GameReady = newBoolComponent(world, { id: "GameReady" });

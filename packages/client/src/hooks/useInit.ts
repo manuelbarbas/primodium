@@ -4,7 +4,6 @@ import { useMud } from "./useMud";
 import { setupActiveAsteroid } from "src/network/systems/setupActiveAsteroid";
 import {
   ActiveAsteroid,
-  BlockNumber,
   Account,
 } from "src/network/components/clientComponents";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
@@ -12,9 +11,10 @@ import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupBattleComponent } from "src/network/systems/setupBattleComponent";
 import { setupNotificationQueue } from "src/network/systems/setupNotificationQueue";
+import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 
 export const useInit = () => {
-  const { world, blockNumber$ } = useMud();
+  const { blockNumber$ } = useMud();
   const { address } = useAccount();
   const activeAsteroid = ActiveAsteroid.use()?.value;
 
@@ -29,15 +29,7 @@ export const useInit = () => {
       setupActiveAsteroid(address);
     }
 
-    const blockListener = blockNumber$.subscribe((blockNumber) => {
-      BlockNumber.set({ value: blockNumber });
-    });
-
     Account.set({ value: address });
-
-    return () => {
-      world.registerDisposer(() => blockListener.unsubscribe());
-    };
   }, [address]);
 
   //initialize systems
@@ -47,6 +39,7 @@ export const useInit = () => {
     setupLeaderboard();
     setupBattleComponent();
     setupNotificationQueue();
+    setupBlockNumber(blockNumber$);
   }, []);
 
   return initialized;
