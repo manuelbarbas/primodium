@@ -1,47 +1,12 @@
 import { useState } from "react";
 import { BiSolidInvader } from "react-icons/bi";
 import { FaCheck, FaShieldAlt } from "react-icons/fa";
-import { BackgroundImage, BlockType } from "src/util/constants";
+import { BackgroundImage } from "src/util/constants";
 import { ESendType } from "src/util/web3/types";
 import { ArrivalUnitStruct } from "../../../../../contracts/types/ethers-contracts/SendUnitsSystem";
 import { EntityID } from "@latticexyz/recs";
 import { getBlockTypeName } from "src/util/common";
-
-const orbitingFleets = [
-  {
-    origin: { x: 0, y: 0 },
-    type: 0,
-  },
-  {
-    origin: { x: 40, y: -6 },
-    units: [
-      {
-        unitType: BlockType.AegisDrone,
-        count: 100,
-      },
-      {
-        unitType: BlockType.StingerDrone,
-        count: 10,
-      },
-    ],
-    type: 1,
-  },
-
-  {
-    origin: { x: 40, y: -6 },
-    units: [
-      {
-        unitType: BlockType.AegisDrone,
-        count: 100,
-      },
-      {
-        unitType: BlockType.StingerDrone,
-        count: 10,
-      },
-    ],
-    type: 1,
-  },
-];
+import { Arrival } from "src/network/components/chainComponents";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -145,9 +110,15 @@ export const ReinforcmentRow: React.FC<{
   );
 };
 
-export const OrbitingFleets = () => {
+export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
+  spaceRock,
+}) => {
+  const orbitingFleets = Arrival.use({
+    destination: spaceRock,
+    onlyOrbiting: true,
+  });
   return (
-    <div className="w-full text-xs space-y-2 h-96 overflow-y-auto scrollbar">
+    <div className="w-full text-xs space-y-2 h-full overflow-y-auto scrollbar">
       {orbitingFleets.length === 0 && (
         <div className="w-full h-full bg-slate-800 border rounded-md border-slate-700 flex items-center justify-center font-bold">
           <p className="opacity-50">NO ORBITING FLEETS</p>
@@ -155,9 +126,14 @@ export const OrbitingFleets = () => {
       )}
       {orbitingFleets.length !== 0 &&
         orbitingFleets.map((fleet, index) => {
-          if (fleet.type === ESendType.INVADE)
+          if (!fleet) return;
+          const units = fleet.unitCounts.map((unit, i) => ({
+            count: unit,
+            unitType: fleet.unitTypes[i],
+          }));
+          if (fleet.sendType === ESendType.INVADE)
             return <InvasionRow key={index} />;
-          else return <ReinforcmentRow key={index} units={fleet.units} />;
+          else return <ReinforcmentRow key={index} units={units} />;
         })}
     </div>
   );

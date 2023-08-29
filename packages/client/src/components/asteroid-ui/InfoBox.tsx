@@ -18,9 +18,9 @@ import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
 import { FaSpaceAwesome } from "react-icons/fa6";
-import { Fleets } from "./fleets/Fleets";
+import { SpaceRockFleets } from "./fleets/SpaceRockFleets";
+import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 import { FaFileAlt } from "react-icons/fa";
-import { Send } from "src/network/components/clientComponents";
 import { BattleReports } from "./battle-reports/BattleReports";
 
 export const InfoBox = () => {
@@ -36,6 +36,7 @@ export const InfoBox = () => {
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
 
+  const asteroid = ActiveAsteroid.use()?.value;
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
     x: mainBaseCoord?.x ?? 0,
     y: mainBaseCoord?.y ?? 0,
@@ -79,7 +80,7 @@ export const InfoBox = () => {
                 <FullStarmap
                   show={showFullStarmap}
                   onClose={() => {
-                    Send.remove();
+                    Send.reset();
                     setShowFullStarmap(false);
                     setTarget("starmap");
                     const position = getPosition();
@@ -183,11 +184,11 @@ export const InfoBox = () => {
         <ResearchPage />
       </Modal>
       <Modal
-        title="Fleets"
+        title="Asteroid Fleets"
         show={showFleets}
         onClose={() => setShowFleets(!showFleets)}
       >
-        <Fleets />
+        {asteroid && <SpaceRockFleets spacerock={asteroid} />}
       </Modal>
       <Modal
         title="Battle Reports"
