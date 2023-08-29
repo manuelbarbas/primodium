@@ -172,11 +172,12 @@ library LibInitResearch {
     dimensionsComponent.set(ExpansionResearch, Dimensions(13, 11));
     ResourceValue[] memory requiredResources = new ResourceValue[](1);
 
-    // Expansion Level II: 1000 iron
+    // Expansion II: 1000 iron
     requiredResources = new ResourceValue[](1);
     requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 1000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch2, requiredResources);
     isTechComponent.set(ExpansionResearch2);
+    levelComponent.set(ExpansionResearch2, 2);
     dimensionsComponent.set(ExpansionResearch2, Dimensions(17, 13));
 
     // Expansion III: 2000 copper
@@ -184,6 +185,7 @@ library LibInitResearch {
     requiredResources[0] = ResourceValue({ resource: CopperResourceItemID, value: 2000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch3, requiredResources);
     isTechComponent.set(ExpansionResearch3);
+    levelComponent.set(ExpansionResearch3, 3);
     dimensionsComponent.set(ExpansionResearch3, Dimensions(21, 15));
 
     // Expansion IV: 3000 iron plates
@@ -191,23 +193,32 @@ library LibInitResearch {
     requiredResources[0] = ResourceValue({ resource: IronResourceItemID, value: 3000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch4, requiredResources);
     isTechComponent.set(ExpansionResearch4);
+    levelComponent.set(ExpansionResearch4, 4);
     dimensionsComponent.set(ExpansionResearch4, Dimensions(25, 17));
 
-    // Expansion V: 4000 lithium, main base level V
+    // Expansion V: 4000 lithium
     requiredResources = new ResourceValue[](1);
     requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 4000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch5, requiredResources);
     isTechComponent.set(ExpansionResearch5);
     levelComponent.set(ExpansionResearch5, 5);
-    dimensionsComponent.set(ExpansionResearch5, Dimensions(33, 23));
+    dimensionsComponent.set(ExpansionResearch5, Dimensions(29, 19));
 
-    // Expansion VI: 5000 lithium, 2000 iron plates, main base level VI
-    requiredResources = new ResourceValue[](2);
+    // Expansion VI: 5000 lithium
+    requiredResources = new ResourceValue[](1);
     requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 5000 });
-    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
     LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch6, requiredResources);
     isTechComponent.set(ExpansionResearch6);
     levelComponent.set(ExpansionResearch6, 6);
-    dimensionsComponent.set(ExpansionResearch6, maxRange);
+    dimensionsComponent.set(ExpansionResearch6, Dimensions(33, 23));
+
+    // Expansion VII: 6000 lithium, 2000 iron plates
+    requiredResources = new ResourceValue[](2);
+    requiredResources[0] = ResourceValue({ resource: LithiumResourceItemID, value: 6000 });
+    requiredResources[1] = ResourceValue({ resource: IronPlateCraftedItemID, value: 2000 });
+    LibSetBuildingReqs.setResourceReqs(world, ExpansionResearch7, requiredResources);
+    isTechComponent.set(ExpansionResearch7);
+    levelComponent.set(ExpansionResearch7, 7);
+    dimensionsComponent.set(ExpansionResearch7, maxRange);
   }
 }

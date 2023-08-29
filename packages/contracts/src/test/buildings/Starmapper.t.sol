@@ -20,7 +20,7 @@ import { LevelComponent, ID as LevelComponentID } from "../../components/LevelCo
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
-
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import "../../prototypes.sol";
 
 import { LibAsteroid } from "../../libraries/LibAsteroid.sol";
@@ -31,6 +31,7 @@ import { Coord, Dimensions } from "../../types.sol";
 contract StarmapperTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
+  PositionComponent public positionComponent;
   ComponentDevSystem public componentDevSystem;
   SendUnitsSystem public sendUnitsSystem;
   BuildSystem public buildSystem;
@@ -43,6 +44,7 @@ contract StarmapperTest is PrimodiumTest {
     spawn(bob);
     spawn(deployer);
 
+    positionComponent = PositionComponent(component(PositionComponentID));
     componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
     sendUnitsSystem = SendUnitsSystem(system(SendUnitsSystemID));
     buildSystem = BuildSystem(system(BuildSystemID));
@@ -55,7 +57,13 @@ contract StarmapperTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
     vm.expectRevert(bytes("you have reached your max move count"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, getHomeAsteroid(alice), getHomeAsteroid(bob), bob);
+    sendUnitsSystem.executeTyped(
+      units,
+      ESendType.INVADE,
+      getHomeAsteroid(alice),
+      getHomeAsteroid(bob),
+      addressToEntity(bob)
+    );
   }
 
   function setupBuildingReqs(uint256 playerEntity, uint256 buildingType, uint256 level) public {
@@ -100,21 +108,19 @@ contract StarmapperTest is PrimodiumTest {
 
     uint32 moves = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(buildingLevelEntity);
     assertEq(moves, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(aliceEntity));
-    uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(
-      DebugUnit,
-      addressToEntity(alice),
-      getHomeAsteroid(alice)
-    );
+
+    uint256 origin = positionComponent.getValue(addressToEntity(alice)).parent;
+    uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(DebugUnit, addressToEntity(alice), origin);
 
     componentDevSystem.executeTyped(UnitsComponentID, unitPlayerAsteroidEntity, abi.encode(20));
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
 
-    uint256 aliceHomeAsteroid = getHomeAsteroid(alice);
-    uint256 bobHomeAsteroid = getHomeAsteroid(bob);
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, bob);
+    Coord memory aliceHomeAsteroid = getHomeAsteroid(alice);
+    Coord memory bobHomeAsteroid = getHomeAsteroid(bob);
+    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     vm.expectRevert(bytes("you have reached your max move count"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, bob);
+    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     return getCoord1(alice);
   }
 

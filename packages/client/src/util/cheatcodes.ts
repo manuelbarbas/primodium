@@ -1,6 +1,7 @@
 import {
   BuildingType,
   Level,
+  MaxMoves,
   MaxUtility,
   OccupiedUtilityResource,
   P_ScoreMultiplier,
@@ -11,10 +12,13 @@ import { Network } from "src/network/layer";
 import { BlockIdToKey, BlockType } from "./constants";
 import {
   Account,
+  ActiveAsteroid,
+  Battle,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
-import { hashKeyEntity } from "./encode";
+import { hashEntities, hashKeyEntity } from "./encode";
 import { train } from "./web3";
+import { world } from "src/network/world";
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
   const setMaxHousing: Cheatcode = {
@@ -95,6 +99,45 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         );
         await train(building, BlockType.DebugUnit, count, mud);
         return `Training ${count} debug units on building ${BlockIdToKey[building]}`;
+      },
+    },
+    increaseMaxMoves: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        const player = Account.get()?.value;
+        if (!player) throw new Error("No player found");
+        await mud.dev.setEntityContractComponentValue(player, MaxMoves, {
+          value,
+        });
+      },
+    },
+    spoofBattles: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        const account = Account.get()?.value!;
+        const spaceRock = ActiveAsteroid.get()?.value!;
+        for (let i = 0; i < value; i++) {
+          const entityId = hashEntities(BlockType.DebugUnit, account, i);
+          const emptyUnits = new Array(Math.floor(Math.random() * 4)).fill(
+            0
+          ) as number[];
+          const battle = {
+            attacker: account,
+            defender: hashEntities(BlockType.DebugUnit3, account, i),
+            attackerUnitCounts: emptyUnits.map(() => Math.random() * 50),
+            defenderUnitCounts: emptyUnits.map(() => Math.random() * 50),
+            attackerUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
+            defenderUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
+            attackerUnitLevels: emptyUnits.map(() => Math.random() * 50),
+            defenderUnitLevels: emptyUnits.map(() => Math.random() * 50),
+            winner: account,
+            defenderUnitsLeft: emptyUnits.map(() => Math.random() * 50),
+            attackerUnitsLeft: emptyUnits,
+            spaceRock,
+          };
+          world.registerEntity({ id: entityId });
+          Battle.set(battle, entityId);
+        }
       },
     },
   };

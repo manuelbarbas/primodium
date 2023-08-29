@@ -84,6 +84,8 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
       uint32 value = resourceValues.values[i];
       componentDevSystem.executeTyped(ItemComponentID, playerResourceEntity, abi.encode(value));
     }
+    uint256 mainBaseEntity = MainBaseComponent(component(MainBaseComponentID)).getValue(aliceEntity);
+    componentDevSystem.executeTyped(LevelComponentID, mainBaseEntity, abi.encode(level + 1));
     upgradeRangeSystem.executeTyped();
     assertEq(levelComponent.getValue(aliceEntity), level + 1);
   }

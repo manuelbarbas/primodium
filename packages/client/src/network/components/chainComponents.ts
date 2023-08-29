@@ -2,9 +2,12 @@ import { Type } from "@latticexyz/recs";
 import { world } from "../world";
 import newComponent, {
   newBoolComponent,
+  newEntityComponent,
   newNumberComponent,
   newStringComponent,
 } from "./customComponents/Component";
+import { newArrivalComponent } from "./customComponents/ArrivalComponent";
+import { BattleParticipantComponent } from "./customComponents/BattleParticipantComponent";
 
 const commonIdPrefix = "component.";
 
@@ -366,6 +369,16 @@ export const UnitProductionQueueIndex = newNumberComponent(world, {
 });
 
 /* -------------------------------------------------------------------------- */
+/*                                  Arrivals                                  */
+/* -------------------------------------------------------------------------- */
+
+export const Arrival = newArrivalComponent();
+export const MaxMoves = newNumberComponent(world, {
+  id: "MaxMoves",
+  metadata: { contractId: `${commonIdPrefix}MaxMoves` },
+});
+
+/* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
 /* -------------------------------------------------------------------------- */
 
@@ -378,6 +391,35 @@ export const P_ScoreMultiplier = newNumberComponent(world, {
   id: "P_ScoreMultiplier",
   metadata: { contractId: `${commonIdPrefix}P_ScoreMultiplier` },
 });
+
+/* -------------------------------------------------------------------------- */
+/*                                   Battle                                   */
+/* -------------------------------------------------------------------------- */
+
+export const BattleAttacker = BattleParticipantComponent({
+  id: "BattleAttacker",
+  metadata: { contractId: `${commonIdPrefix}BattleAttacker` },
+});
+export const BattleDefender = BattleParticipantComponent({
+  id: "BattleDefender",
+  metadata: { contractId: `${commonIdPrefix}BattleDefender` },
+});
+export const BattleSpaceRock = newEntityComponent(world, {
+  id: "BattleSpaceRock",
+  metadata: { contractId: `${commonIdPrefix}BattleSpaceRock` },
+});
+export const BattleResult = newComponent(
+  world,
+  {
+    winner: Type.Entity,
+    attackerUnitsLeft: Type.NumberArray,
+    defenderUnitsLeft: Type.NumberArray,
+  },
+  {
+    id: "BattleResult",
+    metadata: { contractId: `${commonIdPrefix}BattleResult` },
+  }
+);
 
 export default {
   GameConfig,
@@ -409,6 +451,7 @@ export default {
   LoadingState,
   OccupiedUtilityResource,
   MaxUtility,
+  ReversePosition,
 
   // Motherlodes
   Motherlode,
@@ -433,7 +476,17 @@ export default {
   UnitProductionQueue,
   UnitProductionQueueIndex,
 
+  // Arrivals
+  Arrival,
+  MaxMoves,
+
   // Scoreboard
   Score,
   P_ScoreMultiplier,
+
+  // Battle
+  BattleAttacker,
+  BattleDefender,
+  BattleSpaceRock,
+  BattleResult,
 };

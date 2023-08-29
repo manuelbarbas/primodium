@@ -7,7 +7,8 @@ import newComponent, {
   newNumberComponent,
 } from "./customComponents/Component";
 import newMarkerComponent from "./customComponents/MarkerComponent";
-import newFleetComponent from "./customComponents/FleetComponent";
+import newSendComponent from "./customComponents/SendComponent";
+import { BattleComponent } from "./customComponents/BattleComponent";
 
 // todo: organize these alphabetically
 export const BlockNumber = newNumberComponent(world, {
@@ -37,19 +38,13 @@ export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
 });
 
-export const Fleet = newFleetComponent(world, {
-  id: "Fleet",
-});
-
 export const ActiveAsteroid = newComponent(
   world,
   { value: Type.Entity },
   { id: "ActiveAsteroid" }
 );
 
-export const SelectedAsteroid = newEntityComponent(world, {
-  id: "SelectedAsteroid",
-});
+export const Send = newSendComponent(world);
 
 export const TrainingQueue = newComponent(
   world,
@@ -57,6 +52,7 @@ export const TrainingQueue = newComponent(
     units: Type.EntityArray,
     counts: Type.NumberArray,
     progress: Type.NumberArray,
+    timeRemaining: Type.NumberArray,
   },
   {
     id: "TrainingQueue",
@@ -74,9 +70,23 @@ export const Hangar = newComponent(
   }
 );
 
+export const Leaderboard = newComponent(
+  world,
+  {
+    players: Type.EntityArray,
+    playerRank: Type.Number,
+    scores: Type.NumberArray,
+  },
+  {
+    id: "Leaderboard",
+  }
+);
+
+export const Battle = BattleComponent();
+
+
 export default {
   ActiveAsteroid,
-  SelectedAsteroid,
   BlockNumber,
   GameReady,
   DoubleCounter,
@@ -86,7 +96,9 @@ export default {
   SelectedAction,
   StartSelectedPath,
   Marker,
-  Fleet,
   TrainingQueue,
   Hangar,
+  Leaderboard,
+  Send,
+  Battle,
 };
