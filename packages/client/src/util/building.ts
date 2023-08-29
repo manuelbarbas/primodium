@@ -57,7 +57,6 @@ export function getBuildingOrigin(source: Coord, building: EntityID) {
 }
 
 export function getBuildingTopLeft(origin: Coord, buildingType: EntityID) {
-  console.log(BlockIdToKey[buildingType]);
   const rawBlueprint = RawBlueprint.get(buildingType)?.value;
   if (!rawBlueprint) throw new Error("No blueprint found");
   const relativeTopLeft = getTopLeftCoord(convertToCoords(rawBlueprint));
