@@ -410,4 +410,12 @@ contract BuildSystemTest is PrimodiumTest {
 
     vm.stopPrank();
   }
+
+  function testFailProductionRequirementsNotMet() public {
+    vm.startPrank(alice);
+
+    Coord memory coord1 = getCoord3(alice);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, coord1);
+    vm.stopPrank();
+  }
 }

@@ -22,6 +22,7 @@ import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../comp
 import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
+import { LibMath } from "../../libraries/LibMath.sol";
 import { Coord } from "../../types.sol";
 
 contract ClaimSystemTest is PrimodiumTest {
@@ -121,11 +122,16 @@ contract ClaimSystemTest is PrimodiumTest {
         LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1)
       )
     );
-    vm.roll(0);
-    buildSystem.executeTyped(DebugIronMineID, coord);
 
+    uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
+    uint256 hashedAliceIronPlateKey = LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice));
+    vm.roll(0);
+    ProductionComponent productionComponent = ProductionComponent(component(ProductionComponentID));
+    buildSystem.executeTyped(DebugIronMineID, coord);
+    assertEq(LibMath.getSafe(productionComponent, hashedAliceIronKey), 1, "Alice should have 1 Iron Production");
     console.log("built IronMineID");
     buildSystem.executeTyped(DebugIronPlateFactoryID, platingFactoryCoord);
+    assertEq(LibMath.getSafe(productionComponent, hashedAliceIronKey), 0, "Alice should have 0 Iron Production");
     // START CLAIMING
     vm.roll(0);
 
@@ -140,8 +146,6 @@ contract ClaimSystemTest is PrimodiumTest {
 
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base");
-    uint256 hashedAliceIronKey = LibEncode.hashKeyEntity(IronID, addressToEntity(alice));
-    uint256 hashedAliceIronPlateKey = LibEncode.hashKeyEntity(IronPlateCraftedItemID, addressToEntity(alice));
     assertTrue(itemComponent.has(hashedAliceIronPlateKey), "Alice should have IronPlate");
     assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 20, "Alice should have 20 IronPlates");
     vm.roll(20);
@@ -152,7 +156,10 @@ contract ClaimSystemTest is PrimodiumTest {
       LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2),
       abi.encode()
     );
+    upgradeBuildingSystem.executeTyped(coord);
+    assertEq(LibMath.getSafe(productionComponent, hashedAliceIronKey), 1, "Alice should have 1 Iron Production");
     upgradeBuildingSystem.executeTyped(platingFactoryCoord);
+    assertEq(LibMath.getSafe(productionComponent, hashedAliceIronKey), 0, "Alice should have 0 Iron Production");
     console.log("upgraded factory");
     assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 40, "Alice should have 40 IronPlates");
 
@@ -161,7 +168,7 @@ contract ClaimSystemTest is PrimodiumTest {
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed after factory upgrade");
     assertEq(itemComponent.getValue(hashedAliceIronPlateKey), 160, "Alice should have 180 IronPlates");
-    upgradeBuildingSystem.executeTyped(coord);
+
     console.log("upgraded mine");
     vm.roll(100);
     claimSystem.executeTyped(mainBaseCoord);
@@ -250,7 +257,7 @@ contract ClaimSystemTest is PrimodiumTest {
       LibEncode.hashKeyEntity(DebugCopperMineID, 1),
       abi.encode()
     );
-
+    vm.roll(0);
     //gain capacity for all resources so can store copper
     buildSystem.executeTyped(DebugIronMineID, ironCoord);
 

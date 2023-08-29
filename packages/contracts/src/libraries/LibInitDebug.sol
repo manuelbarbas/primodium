@@ -366,7 +366,7 @@ library LibInitDebug {
     //DebugIronPlateFactoryID level 2
     entity = LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 2);
     requiredConnectedProductions.resources[0] = IronResourceItemID;
-    requiredConnectedProductions.values[0] = 1;
+    requiredConnectedProductions.values[0] = 2;
     requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
     buildingProductionComponent.set(entity, ResourceValue({ resource: IronPlateCraftedItemID, value: 4 }));

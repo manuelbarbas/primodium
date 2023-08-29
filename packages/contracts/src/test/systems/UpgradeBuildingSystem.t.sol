@@ -162,4 +162,17 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     upgradeBuildingSystem.executeTyped(coord);
     vm.stopPrank();
   }
+
+  function testFailUpgradeProductionRequirementsNotMet() public {
+    vm.startPrank(alice);
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    Coord memory coord1 = getCoord3(alice);
+    buildSystem.executeTyped(DebugIronMineID, coord1);
+    Coord memory coord2 = getCoord1(alice);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, coord2);
+
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
+    upgradeBuildingSystem.executeTyped(coord2);
+    vm.stopPrank();
+  }
 }
