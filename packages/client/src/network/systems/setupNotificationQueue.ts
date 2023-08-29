@@ -18,9 +18,9 @@ export function setupNotificationQueue() {
       battle.defender === playerAddress
     ) {
       const newNotification: Notification = {
-        id: `${battle.attacker}-${battle.defender}-${Date.now()}`,
+        id: world.entities[update.entity],
         message: "A battle occurred!",
-        icon: "battle-icon",
+        status: battle.winner == playerAddress ? "winner" : "loser",
         timestamp: Date.now(),
       };
 
