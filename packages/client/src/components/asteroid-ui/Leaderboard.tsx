@@ -31,7 +31,7 @@ export const Leaderboard = () => {
               {data.playerRank}
             </p>
             <span>
-              {data.scores.length > data.playerRank
+              {data.scores.length >= data.playerRank
                 ? data.scores[data.playerRank - 1].toLocaleString()
                 : 0}
             </span>
@@ -87,7 +87,7 @@ export const Leaderboard = () => {
                 <div className="col-span-5 flex justify-between">
                   <div className="bg-rose-800 px-2 rounded-md">You</div>
                   <div className="font-bold rounded-md bg-cyan-700 px-2">
-                    {data.scores.length > data.playerRank
+                    {data.scores.length >= data.playerRank
                       ? data.scores[data.playerRank - 1].toLocaleString()
                       : 0}
                   </div>

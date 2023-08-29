@@ -12,7 +12,6 @@ import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/Max
 
 import { OwnedByComponent, ID as OwnedByComponentID } from "../../components/OwnedByComponent.sol";
 import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
-import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
 import "../../prototypes.sol";
@@ -160,6 +159,20 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     assertTrue(levelComponent.getValue(buildingEntity) == 1);
 
     upgradeBuildingSystem.executeTyped(coord);
+    vm.stopPrank();
+  }
+
+  function testFailUpgradeProductionRequirementsNotMet() public {
+    vm.startPrank(alice);
+    BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
+    Coord memory coord1 = getCoord3(alice);
+    buildSystem.executeTyped(DebugIronMineID, coord1);
+    Coord memory coord2 = getCoord1(alice);
+    buildSystem.executeTyped(DebugIronPlateFactoryID, coord2);
+
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
+    upgradeBuildingSystem.executeTyped(coord2);
+
     vm.stopPrank();
   }
 }

@@ -30,9 +30,6 @@ export const SelectedBuilding = newComponent(
 export const SelectedAction = newNumberComponent(world, {
   id: "SelectedAction",
 });
-export const StartSelectedPath = newCoordComponent(world, {
-  id: "StartSelectedPath",
-});
 
 export const Marker = newMarkerComponent(world, {
   id: "MarkerTypeComponent",
@@ -81,6 +78,7 @@ export const Leaderboard = newComponent(
     id: "Leaderboard",
   }
 );
+
 export const Battle = BattleComponent();
 
 export default {
@@ -92,7 +90,6 @@ export default {
   HoverTile,
   SelectedBuilding,
   SelectedAction,
-  StartSelectedPath,
   Marker,
   TrainingQueue,
   Hangar,

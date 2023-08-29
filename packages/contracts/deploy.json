@@ -7,7 +7,6 @@
     "CounterComponent",
     "BuildingTypeComponent",
     "OwnedByComponent",
-    "PathComponent",
     "LastClaimedAtComponent",
     "ItemComponent",
     "HasResearchedComponent",
@@ -28,16 +27,17 @@
     "UnitProductionLastQueueIndexComponent",
     "UnitsComponent",
     "AsteroidTypeComponent",
-    "ActiveComponent",
     "DimensionsComponent",
     "ReversePositionComponent",
     "BattleAttackerComponent",
     "BattleDefenderComponent",
     "BattleResultComponent",
     "BattleSpaceRockComponent",
+    "BattleRaidResultComponent",
     "MaxMovesComponent",
     "GameConfigComponent",
     "ScoreComponent",
+    "BattleBlockNumberComponent",
 
     "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
@@ -99,14 +99,6 @@
     },
 
     {
-      "name": "BuildPathSystem",
-      "writeAccess": ["PathComponent"]
-    },
-    {
-      "name": "DestroyPathSystem",
-      "writeAccess": ["PathComponent"]
-    },
-    {
       "name": "ClaimFromMineSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
@@ -141,7 +133,7 @@
     },
     {
       "name": "S_RaidSystem",
-      "writeAccess": ["ItemComponent", "LastClaimedAtComponent", "ScoreComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "S_PlaceBuildingTilesSystem",
@@ -155,14 +147,7 @@
       "name": "S_SpendRequiredResourcesSystem",
       "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
     },
-    {
-      "name": "S_UpdateActiveStatusSystem",
-      "writeAccess": ["ActiveComponent"]
-    },
-    {
-      "name": "S_SpendRequiredResourcesSystem",
-      "writeAccess": ["ItemComponent", "ScoreComponent"]
-    },
+
     { "name": "S_UpdatePlayerSpaceRockSystem", "writeAccess": ["*"] },
     {
       "name": "S_UpdatePlayerResourceProductionSystem",
@@ -183,14 +168,6 @@
     {
       "name": "S_UpdateUtilityProductionSystem",
       "writeAccess": ["MaxUtilityComponent"]
-    },
-    {
-      "name": "S_UpdateRequiredProductionSystem",
-      "writeAccess": ["P_ProductionDependenciesComponent"]
-    },
-    {
-      "name": "S_UpdateConnectedRequiredProductionSystem",
-      "writeAccess": ["P_ProductionDependenciesComponent"]
     }
   ]
 }

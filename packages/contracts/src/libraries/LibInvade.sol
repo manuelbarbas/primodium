@@ -22,6 +22,7 @@ import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "compon
 import { BattleAttackerComponent, ID as BattleAttackerComponentID } from "components/BattleAttackerComponent.sol";
 import { BattleResultComponent, ID as BattleResultComponentID } from "components/BattleResultComponent.sol";
 import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components/AsteroidTypeComponent.sol";
+import { BattleBlockNumberComponent, ID as BattleBlockNumberComponentID } from "components/BattleBlockNumberComponent.sol";
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -38,12 +39,14 @@ library LibInvade {
   function invade(IWorld world, uint256 invader, uint256 rockEntity) internal {
     OwnedByComponent ownedByComponent = OwnedByComponent(world.getComponent(OwnedByComponentID));
     uint256 battleEntity = LibEncode.hashKeyEntity(rockEntity, block.number);
-    BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).set(battleEntity, rockEntity);
+
     require(
       AsteroidTypeComponent(world.getComponent(AsteroidTypeComponentID)).getValue(rockEntity) ==
         ESpaceRockType.MOTHERLODE,
       "LibInvade: can only invade motherlodes"
     );
+    BattleSpaceRockComponent(world.getComponent(BattleSpaceRockComponentID)).set(battleEntity, rockEntity);
+    BattleBlockNumberComponent(world.getComponent(BattleBlockNumberComponentID)).set(battleEntity, block.number);
     LibBattle.setupBattleAttacker(world, battleEntity, invader, rockEntity, ESendType.INVADE);
     uint256 defenderEntity = 0;
     if (ownedByComponent.has(rockEntity)) {

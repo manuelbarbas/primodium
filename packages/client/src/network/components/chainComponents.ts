@@ -163,12 +163,6 @@ export const Children = newComponent(
   }
 );
 
-export const Path = newStringComponent(world, {
-  id: "Path",
-  metadata: { contractId: `${commonIdPrefix}Path` },
-  overridable: true,
-});
-
 export const OwnedBy = newComponent(
   world,
   { value: Type.Entity },
@@ -420,6 +414,22 @@ export const BattleResult = newComponent(
     metadata: { contractId: `${commonIdPrefix}BattleResult` },
   }
 );
+export const BattleBlockNumber = newNumberComponent(world, {
+  id: "BattleBlockNumber",
+  metadata: { contractId: `${commonIdPrefix}BattleBlockNumber` },
+});
+export const BattleRaidResult = newComponent(
+  world,
+  {
+    resources: Type.EntityArray,
+    defenderValuesBeforeRaid: Type.NumberArray,
+    raidedAmount: Type.NumberArray,
+  },
+  {
+    id: "BattleRaidResult",
+    metadata: { contractId: `${commonIdPrefix}BattleRaidResult` },
+  }
+);
 
 export default {
   GameConfig,
@@ -429,7 +439,6 @@ export default {
   Counter,
   Dimensions,
   BuildingType,
-  Path,
   Position,
   OwnedBy,
   LastClaimedAt,
@@ -489,4 +498,6 @@ export default {
   BattleDefender,
   BattleSpaceRock,
   BattleResult,
+  BattleBlockNumber,
+  BattleRaidResult,
 };
