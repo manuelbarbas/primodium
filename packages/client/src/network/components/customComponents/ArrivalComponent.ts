@@ -24,7 +24,7 @@ export const newArrivalComponent = () => {
     }
   );
 
-  const get = (filters?: {
+  const getAll = (filters?: {
     to?: EntityID;
     from?: EntityID;
     origin?: EntityID;
@@ -66,8 +66,8 @@ export const newArrivalComponent = () => {
     onlyTransit?: boolean;
   }) => {
     const blockNumber = BlockNumber.use()?.value ?? 0;
-    return useMemo(() => get(filters), [blockNumber]);
+    return useMemo(() => getAll(filters), [blockNumber]);
   };
 
-  return { ...component, get, use };
+  return { ...component, getAll, use };
 };

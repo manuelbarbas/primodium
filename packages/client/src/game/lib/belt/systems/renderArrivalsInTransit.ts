@@ -1,33 +1,46 @@
-// import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Has } from "@latticexyz/recs";
+import { ComponentUpdate, EntityID, Has, HasValue } from "@latticexyz/recs";
 import {
   defineEnterSystem,
   defineExitSystem,
-  defineUpdateSystem,
+  // defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Send } from "src/network/components/clientComponents";
+import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
 import { Circle, Line } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { BeltMap } from "@game/constants";
+import { Arrival, Position } from "src/network/components/chainComponents";
 
 const { DepthLayers } = BeltMap;
 
-export const renderUnitSend = (scene: Scene) => {
+export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
-  const objIndexSuffix = "_sendingUnit";
+  const objIndexSuffix = "_arrival";
 
-  const query = [Has(Send)];
+  const query = [
+    Has(Arrival),
+    HasValue(Arrival, {
+      from: player,
+    }),
+  ];
 
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
-    const origin = Send.getOrigin();
-    const destination = Send.getDestination();
     scene.objectPool.removeGroup(entityId + objIndexSuffix);
+    const arrival = Arrival.get(entityId);
+    const blockInfo = BlockNumber.get();
+
+    if (!arrival || !blockInfo) return;
+
+    //don't render if arrival is in orbit
+    if (Number(arrival.arrivalBlock) < blockInfo.value) return;
+
+    const origin = Position.get(arrival.origin);
+    const destination = Position.get(arrival.destination);
 
     if (!origin || !destination) return;
 
@@ -62,25 +75,23 @@ export const renderUnitSend = (scene: Scene) => {
         color: 0xff0000,
       }),
     ]);
+
+    const remainingBlocks = Number(arrival.arrivalBlock) - blockInfo.value;
+
+    setTimeout(() => {
+      scene.objectPool.removeGroup(entityId + objIndexSuffix);
+    }, remainingBlocks * blockInfo.avgBlockTime * 1000);
   };
 
   defineEnterSystem(gameWorld, query, (update) => {
     render(update);
-
-    console.info(
-      "[ENTER SYSTEM](renderSendUnitsTool) Send units tool has been added"
-    );
   });
 
-  defineUpdateSystem(gameWorld, query, render);
+  // defineUpdateSystem(gameWorld, query, render);
 
   defineExitSystem(gameWorld, query, (update) => {
     const objIndex = update.entity + objIndexSuffix;
 
     scene.objectPool.removeGroup(objIndex);
-
-    console.info(
-      "[EXIT SYSTEM](renderSendUnitsTool) Send units tool has been removed"
-    );
   });
 };
