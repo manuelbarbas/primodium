@@ -1,5 +1,4 @@
 import { Send } from "src/network/components/clientComponents";
-import { TestArrivalPane } from "./unit-deployment/TestArrivalPane";
 import { UnitDeployment } from "./unit-deployment/UnitDeployment";
 import { useMemo } from "react";
 import { AsteroidInfo } from "./AsteroidInfo";
@@ -23,7 +22,6 @@ export const StarmapUI: React.FC = () => {
           )}
         </div>
         <UnitDeployment />
-        <TestArrivalPane />
       </div>
     </div>
   );
