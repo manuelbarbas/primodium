@@ -724,8 +724,8 @@ library LibInitBuildings {
 
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
-    requiredMainBaseLevels[0] = 2;
-    requiredMainBaseLevels[1] = 6;
+    requiredMainBaseLevels[0] = 3;
+    requiredMainBaseLevels[1] = 7;
 
     /****************** Required Resources *******************/
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
