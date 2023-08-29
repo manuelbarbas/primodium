@@ -14,7 +14,6 @@ import {
   Account,
   ActiveAsteroid,
   Battle,
-  BlockNumber,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { hashEntities, hashKeyEntity } from "./encode";
@@ -117,8 +116,6 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
       function: async (value: number) => {
         const account = Account.get()?.value!;
         const spaceRock = ActiveAsteroid.get()?.value!;
-        const blockNumber = BlockNumber.get()?.value!;
-
         for (let i = 0; i < value; i++) {
           const entityId = hashEntities(BlockType.DebugUnit, account, i);
           const emptyUnits = new Array(Math.floor(Math.random() * 4)).fill(
@@ -153,13 +150,12 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
             attackerUnitsLeft: emptyUnits.map(() =>
               Math.floor(Math.random() * 50)
             ),
-            blockNumber,
+            blockNumber: Math.floor(Math.random() * 1000),
             resources: isRaid ? [BlockType.Iron, BlockType.Iridium] : undefined,
             defenderValuesBeforeRaid: isRaid ? [1000, 1000] : undefined,
             raidedAmount: isRaid ? [420, 69] : undefined,
             spaceRock,
           };
-
           world.registerEntity({ id: entityId });
           Battle.set(battle, entityId);
         }
