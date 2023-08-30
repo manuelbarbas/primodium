@@ -16,7 +16,7 @@ const BattleNotifications: React.FC = () => {
     <div className="fixed bottom-8 left-8 z-50 p-4 w-96 flex flex-col gap-4">
       {notifications.id.map((id, index) => {
         const battle = Battle.get(id);
-        if (battle == undefined || index > 10) return null;
+        if (battle == undefined || index > 6) return null;
         const notification = {
           id: id,
           timestamp: notifications.timestamp[index],
