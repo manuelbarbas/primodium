@@ -37,7 +37,7 @@ export const OrbitActionButton: React.FC<{
   const isFriendly = destinationOwner === player || !destinationOwner;
 
   return (
-    <div className="flex w-12 gap-1 mr-4">
+    <div className="flex w-12 gap-1">
       <button
         disabled={transactionLoading}
         className={`border p-1 w-full rounded-md hover:scale-105 transition-all ${
@@ -58,7 +58,7 @@ export const OrbitActionButton: React.FC<{
       >
         {isFriendly ? "LAND" : "ATTACK"}
       </button>
-      <button
+      {/* <button
         disabled={transactionLoading}
         onClick={() => {
           recall(destination, network);
@@ -68,7 +68,7 @@ export const OrbitActionButton: React.FC<{
         }`}
       >
         <FaAngleDoubleLeft />
-      </button>
+      </button> */}
     </div>
   );
 };
