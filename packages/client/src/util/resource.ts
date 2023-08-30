@@ -1,29 +1,32 @@
 import { EntityID } from "@latticexyz/recs";
-import { P_RequiredResources } from "src/network/components/chainComponents";
-
-export type ResourceCostData = {
-  name: string;
-  id: EntityID;
-  description?: string;
-  resources: {
-    id: EntityID;
-    amount: number;
-  }[];
-};
+import {
+  P_RequiredResources,
+  P_RequiredUtility,
+} from "src/network/components/chainComponents";
 
 // building a building requires resources
 // fetch directly from component data
-export function getRecipe(entityId: EntityID): ResourceCostData["resources"] {
-  const requiredResources = P_RequiredResources.get(entityId)?.resources;
-
-  if (!requiredResources) return [];
-  return requiredResources.map((resourceId: EntityID, index: number) => {
-    // remove leading zeros due to mudv1 hashing behavior
-    const resourceCost = P_RequiredResources.get(entityId)?.values[index];
-
-    return {
-      id: resourceId,
-      amount: resourceCost ? parseInt(resourceCost.toString()) : -1,
-    };
+export function getRecipe(entityId: EntityID) {
+  const requiredResources = P_RequiredResources.get(entityId, {
+    resources: [],
+    values: [],
   });
+  const requiredUtilities = P_RequiredUtility.get(entityId, {
+    resourceIDs: [],
+    requiredAmounts: [],
+  });
+
+  const resources = requiredResources.resources.map(
+    (resourceId: EntityID, index: number) => ({
+      id: resourceId,
+      amount: requiredResources.values[index],
+    })
+  );
+  const utilities = requiredUtilities.resourceIDs.map(
+    (resourceId: EntityID, index: number) => ({
+      id: resourceId,
+      amount: requiredUtilities.requiredAmounts[index],
+    })
+  );
+  return [...resources, ...utilities];
 }

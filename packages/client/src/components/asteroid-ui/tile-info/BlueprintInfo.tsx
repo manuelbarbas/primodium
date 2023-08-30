@@ -4,19 +4,35 @@ import React, { useMemo } from "react";
 import {
   BackgroundImage,
   BlockIdToKey,
+  RESOURCE_SCALE,
   ResourceImage,
 } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
-import { hashAndTrimKeyEntity } from "src/util/encode";
+import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
+import { formatNumber } from "src/util/common";
+import { Account, BlockNumber } from "src/network/components/clientComponents";
+import { Level, P_Production } from "src/network/components/chainComponents";
 
 export const BlueprintInfo: React.FC<{
   buildingType: EntityID;
 }> = ({ buildingType }) => {
+  const player = Account.use()?.value!;
+  const level = Level.use(hashKeyEntity(buildingType, player), {
+    value: 1,
+  })?.value;
+  const buildingLevelEntity = hashAndTrimKeyEntity(buildingType, level);
   const recipe = useMemo(() => {
-    return getRecipe(hashAndTrimKeyEntity(buildingType, 1));
-  }, [buildingType]);
-
+    return getRecipe(buildingLevelEntity);
+  }, [buildingType, level]);
+  const production = P_Production.use(buildingLevelEntity);
+  const { avgBlockTime } = BlockNumber.use(undefined, {
+    value: 0,
+    avgBlockTime: 1,
+  });
+  const productionRate =
+    ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
+    avgBlockTime;
   return (
     <div className="flex flex-col w-fit">
       <div className="flex flex-col justify-center items-center w-full border border-yellow-400 border-dashed ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
@@ -33,31 +49,40 @@ export const BlueprintInfo: React.FC<{
               className={`absolute bottom-0 w-14 pixel-images rounded-md`}
             />
           </div>
-          <div>
-            <p className="flex items-center text-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm ">
-              <b>
-                {BlockIdToKey[buildingType]
-                  .replace(/([A-Z]+)/g, " $1")
-                  .replace(/([A-Z][a-z])/g, " $1")}
-              </b>
+          <div className="flex flex-col items-center gap-2">
+            <p className="flex justify-center align-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm font-bold w-full">
+              {BlockIdToKey[buildingType]
+                .replace(/([A-Z]+)/g, " $1")
+                .replace(/([A-Z][a-z])/g, " $1")}
             </p>
-            <div className="relative gap-2 px-2">
-              <div className="flex justify-center items-center text-sm bg-slate-900/60 px-2">
-                {recipe.map((resource) => {
-                  const resourceImage = ResourceImage.get(resource.id)!;
-                  const resourceName = BlockIdToKey[resource.id];
-                  return (
-                    <ResourceIconTooltip
-                      key={resource.id}
-                      image={resourceImage}
-                      resourceId={resource.id}
-                      name={resourceName}
-                      inline
-                      amount={resource.amount}
-                    />
-                  );
-                })}
-              </div>
+            <div className="relative gap-2 px-2 flex gap-2">
+              {production && (
+                <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md">
+                  <img
+                    className="inline-block h-4"
+                    src={ResourceImage.get(production.resourceID)}
+                  ></img>
+                  {formatNumber(productionRate)}/MIN
+                </div>
+              )}
+              {recipe.length > 0 && (
+                <div className="flex justify-center items-center text-sm bg-red-800/60 p-1 border border-red-600 rounded-md gap-2">
+                  {recipe.map((resource) => {
+                    const resourceImage = ResourceImage.get(resource.id)!;
+                    const resourceName = BlockIdToKey[resource.id];
+                    return (
+                      <ResourceIconTooltip
+                        key={resource.id}
+                        image={resourceImage}
+                        resourceId={resource.id}
+                        name={resourceName}
+                        amount={resource.amount}
+                        fontSize={"xs"}
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>

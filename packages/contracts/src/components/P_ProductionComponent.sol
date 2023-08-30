@@ -14,10 +14,10 @@ contract P_ProductionComponent is Component {
     keys = new string[](2);
     values = new LibTypes.SchemaValue[](2);
 
-    keys[0] = "ResourceID";
+    keys[0] = "resourceID";
     values[0] = LibTypes.SchemaValue.UINT256;
 
-    keys[1] = "ResourceProductionRate";
+    keys[1] = "resourceProductionRate";
     values[1] = LibTypes.SchemaValue.UINT32;
   }
 
