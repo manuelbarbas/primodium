@@ -49,7 +49,7 @@ library LibInitUnits {
     ResourceValues[] memory requiredUtilities
   ) internal {
     P_IsUnitComponent(world.getComponent(P_IsBuildingTypeComponentID)).set(unitType);
-
+    P_MaxLevelComponent(world.getComponent(P_MaxLevelComponentID)).set(unitType, maxLevel);
     for (uint256 i = 0; i < maxLevel; i++) {
       uint256 level = i;
       uint256 unitLevelEntity = LibEncode.hashKeyEntity(unitType, level);

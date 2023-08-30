@@ -34,6 +34,7 @@ export const BlockType = {
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
   Uraninite: keccak256("block.Uraninite") as EntityID,
   Bolutite: keccak256("block.Bolutite") as EntityID,
+  Platinum: keccak256("block.Platinum") as EntityID,
 
   // Debug buildings
   DebugIronMine: keccak256("block.DebugIronMine") as EntityID,
@@ -136,6 +137,42 @@ export const BlockType = {
   ExpansionResearch5: hashStringEntity("research.Expansion", 5),
   ExpansionResearch6: hashStringEntity("research.Expansion", 6),
   ExpansionResearch7: hashStringEntity("research.Expansion", 7),
+
+  AnvilDroneUpgrade1: hashStringEntity("research.AnvilDroneUpgrade", 1),
+  AnvilDroneUpgrade2: hashStringEntity("research.AnvilDroneUpgrade", 2),
+  AnvilDroneUpgrade3: hashStringEntity("research.AnvilDroneUpgrade", 3),
+  AnvilDroneUpgrade4: hashStringEntity("research.AnvilDroneUpgrade", 4),
+  AnvilDroneUpgrade5: hashStringEntity("research.AnvilDroneUpgrade", 5),
+
+  HammerDroneUpgrade1: hashStringEntity("research.HammerDroneUpgrade", 1),
+  HammerDroneUpgrade2: hashStringEntity("research.HammerDroneUpgrade", 2),
+  HammerDroneUpgrade3: hashStringEntity("research.HammerDroneUpgrade", 3),
+  HammerDroneUpgrade4: hashStringEntity("research.HammerDroneUpgrade", 4),
+  HammerDroneUpgrade5: hashStringEntity("research.HammerDroneUpgrade", 5),
+
+  AegisDroneUpgrade1: hashStringEntity("research.AegisDroneUpgrade", 1),
+  AegisDroneUpgrade2: hashStringEntity("research.AegisDroneUpgrade", 2),
+  AegisDroneUpgrade3: hashStringEntity("research.AegisDroneUpgrade", 3),
+  AegisDroneUpgrade4: hashStringEntity("research.AegisDroneUpgrade", 4),
+  AegisDroneUpgrade5: hashStringEntity("research.AegisDroneUpgrade", 5),
+
+  StingerDroneUpgrade1: hashStringEntity("research.StingerDroneUpgrade", 1),
+  StingerDroneUpgrade2: hashStringEntity("research.StingerDroneUpgrade", 2),
+  StingerDroneUpgrade3: hashStringEntity("research.StingerDroneUpgrade", 3),
+  StingerDroneUpgrade4: hashStringEntity("research.StingerDroneUpgrade", 4),
+  StingerDroneUpgrade5: hashStringEntity("research.StingerDroneUpgrade", 5),
+
+  MiningVesselUpgrade1: hashStringEntity("research.MiningVesselUpgrade", 1),
+  MiningVesselUpgrade2: hashStringEntity("research.MiningVesselUpgrade", 2),
+  MiningVesselUpgrade3: hashStringEntity("research.MiningVesselUpgrade", 3),
+  MiningVesselUpgrade4: hashStringEntity("research.MiningVesselUpgrade", 4),
+  MiningVesselUpgrade5: hashStringEntity("research.MiningVesselUpgrade", 5),
+
+  MiningResearch1: hashStringEntity("research.MiningResearch", 1),
+  MiningResearch2: hashStringEntity("research.MiningResearch", 2),
+  MiningResearch3: hashStringEntity("research.MiningResearch", 3),
+  MiningResearch4: hashStringEntity("research.MiningResearch", 4),
+  MiningResearch5: hashStringEntity("research.MiningResearch", 5),
 
   IronMine2Research: keccak256("research.IronMine2") as EntityID,
   IronMine3Research: keccak256("research.IronMine3") as EntityID,
@@ -512,6 +549,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.Uraninite, "/img/resource/uraninite_resource.png"],
   [BlockType.Bolutite, "/img/resource/bolutite_resource.png"],
   [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
+  [BlockType.Platinum, "/img/resource/platinum_resource.png"],
+
   [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
   [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/photovoltaiccell.png"],
