@@ -20,7 +20,7 @@ import { Leaderboard } from "./Leaderboard";
 import { FaLocationCrosshairs, FaSpaceAwesome } from "react-icons/fa6";
 import { SpaceRockFleets } from "./fleets/SpaceRockFleets";
 import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
-import { FaFileAlt } from "react-icons/fa";
+import { FaFileAlt, FaExpand } from "react-icons/fa";
 import { BattleReports } from "./battle-reports/BattleReports";
 
 export const InfoBox = () => {
@@ -88,7 +88,7 @@ export const InfoBox = () => {
                   }}
                 />
                 <button
-                  className="absolute top-2 right-2 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
+                  className="absolute bottom-2 right-2 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
                   onClick={() => {
                     const asteroid = ActiveAsteroid.get()?.value;
                     const position = Position.get(asteroid);
@@ -100,14 +100,14 @@ export const InfoBox = () => {
                   <FaLocationCrosshairs />
                 </button>
                 <button
-                  className="absolute bottom-2 right-2 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
+                  className="absolute flex gap-1 items-center top-2 left-2 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
                   onClick={() => {
                     setShowFullStarmap(true);
                     const position = getPosition();
                     requestAnimationFrame(() => pan(position, 0));
                   }}
                 >
-                  Open Starmap
+                  <FaExpand /> Starmap
                 </button>
               </motion.div>
             )}
