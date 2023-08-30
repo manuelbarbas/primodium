@@ -18,7 +18,7 @@ import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
 import { FaLocationCrosshairs, FaSpaceAwesome } from "react-icons/fa6";
-import { SpaceRockFleets } from "./fleets/SpaceRockFleets";
+import { HostileFleets } from "./hostile-fleets/HostileFleets";
 import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
 import { FaFileAlt, FaExpand } from "react-icons/fa";
 import { BattleReports } from "./battle-reports/BattleReports";
@@ -133,7 +133,7 @@ export const InfoBox = () => {
               </div>
               <div className="relative">
                 <GameButton
-                  id="fleets"
+                  id="hostile-fleets"
                   color="bg-orange-500"
                   className="mt-2 ml-1 text-sm"
                   onClick={() => {
@@ -196,11 +196,11 @@ export const InfoBox = () => {
         <ResearchPage />
       </Modal>
       <Modal
-        title="Asteroid Fleets"
+        title="Hostile Fleets"
         show={showFleets}
         onClose={() => setShowFleets(!showFleets)}
       >
-        {asteroid && <SpaceRockFleets spacerock={asteroid} />}
+        {asteroid && <HostileFleets spacerock={asteroid} />}
       </Modal>
       <Modal
         title="Battle Reports"

@@ -3,19 +3,7 @@ import { OrbitingFleets } from "./OrbitingFleets";
 import { IncomingFleets } from "./IncomingFleets";
 import { EntityID } from "@latticexyz/recs";
 
-export const LabeledValue: React.FC<{
-  label: string;
-  children: React.ReactNode;
-}> = ({ children, label }) => {
-  return (
-    <div className="flex flex-col gap-1">
-      <p className="text-xs font-bold text-cyan-400">{label}</p>
-      <div className="flex items-center gap-1">{children}</div>
-    </div>
-  );
-};
-
-export const SpaceRockFleets: React.FC<{
+export const HostileFleets: React.FC<{
   spacerock: EntityID;
   height?: number;
 }> = ({ spacerock, height = 96 }) => {
