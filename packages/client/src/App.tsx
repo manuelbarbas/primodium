@@ -42,9 +42,9 @@ export default function App() {
 
   // Amplitude Analytics
   if (DEV) {
-    ampli.load({ environment: "dev" });
+    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_DEV } });
   } else {
-    ampli.load({ environment: "prod" });
+    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_PROD } });
   }
 
   if (networkLayer === undefined) {
