@@ -22,6 +22,7 @@ import { hashEntities, hashKeyEntity } from "./encode";
 import { train } from "./web3";
 import { world } from "src/network/world";
 import { EntityID } from "@latticexyz/recs";
+import { updateSpaceRock } from "./web3/updateSpaceRock";
 
 const resources: Record<string, EntityID> = {
   iron: BlockType.Iron,
@@ -91,6 +92,14 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
             value: multiplier,
           }
         );
+      },
+    },
+    updateSpaceRock: {
+      params: [],
+      function: async () => {
+        const entity = Account.get()?.value;
+        if (!entity) throw new Error("No player found");
+        await updateSpaceRock(entity, mud);
       },
     },
     giveResource: {
