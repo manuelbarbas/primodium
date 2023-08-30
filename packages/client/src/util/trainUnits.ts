@@ -15,9 +15,10 @@ import { hashKeyEntity } from "./encode";
 
 export function useTrainableUnits(buildingEntity: EntityID) {
   const buildingType = BuildingType.get(buildingEntity)?.value;
-  if (!buildingType) return [];
   const level = Level.use(buildingEntity, { value: 0 }).value;
-  const buildingLevelEntity = hashKeyEntity(buildingType, level);
+  const buildingLevelEntity = buildingType
+    ? hashKeyEntity(buildingType, level)
+    : undefined;
   return P_UnitProductionTypes.use(buildingLevelEntity, { value: [] })?.value;
 }
 
