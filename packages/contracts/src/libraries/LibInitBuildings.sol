@@ -610,12 +610,12 @@ library LibInitBuildings {
     // LEVEL 1
     requiredUtilities = ResourceValues(new uint256[](1), new uint32[](1));
     requiredUtilities.resources[0] = IronResourceItemID;
-    requiredUtilities.values[0] = 50;
+    requiredUtilities.values[0] = 35;
     allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
     requiredUtilities = ResourceValues(new uint256[](1), new uint32[](1));
     requiredUtilities.resources[0] = IronResourceItemID;
-    requiredUtilities.values[0] = 60;
+    requiredUtilities.values[0] = 50;
     allRequiredConnectedProductions[1] = requiredUtilities;
 
     /****************** Factory Production *******************/
@@ -681,17 +681,17 @@ library LibInitBuildings {
     // LEVEL 1
     requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
     requiredUtilities.resources[0] = IronResourceItemID;
-    requiredUtilities.values[0] = 50;
+    requiredUtilities.values[0] = 35;
     requiredUtilities.resources[1] = CopperResourceItemID;
-    requiredUtilities.values[1] = 30;
+    requiredUtilities.values[1] = 20;
     allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
 
     requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
     requiredUtilities.resources[0] = IronResourceItemID;
-    requiredUtilities.values[0] = 60;
+    requiredUtilities.values[0] = 50;
     requiredUtilities.resources[1] = CopperResourceItemID;
-    requiredUtilities.values[1] = 40;
+    requiredUtilities.values[1] = 30;
     allRequiredConnectedProductions[1] = requiredUtilities;
 
     /****************** Factory Production *******************/
@@ -757,16 +757,16 @@ library LibInitBuildings {
     // LEVEL 1
     requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
     requiredUtilities.resources[0] = LithiumResourceItemID;
-    requiredUtilities.values[0] = 20;
+    requiredUtilities.values[0] = 10;
     requiredUtilities.resources[1] = CopperResourceItemID;
-    requiredUtilities.values[1] = 30;
+    requiredUtilities.values[1] = 20;
     allRequiredConnectedProductions[0] = requiredUtilities;
     // LEVEL 2
     requiredUtilities = ResourceValues(new uint256[](2), new uint32[](2));
     requiredUtilities.resources[0] = LithiumResourceItemID;
-    requiredUtilities.values[0] = 25;
+    requiredUtilities.values[0] = 20;
     requiredUtilities.resources[1] = CopperResourceItemID;
-    requiredUtilities.values[1] = 40;
+    requiredUtilities.values[1] = 30;
     allRequiredConnectedProductions[1] = requiredUtilities;
 
     /****************** Factory Production *******************/
