@@ -346,6 +346,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/storageunit/storageunit-level1.png",
       "/img/building/storageunit/storageunit-level2.png",
+      "/img/building/storageunit/storageunit-level3.png",
     ],
   ],
   [
