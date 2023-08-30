@@ -47,7 +47,9 @@ library LibInitResearch {
     LibSetBuildingReqs.setResourceReqs(world, researchID, requiredResources);
   }
 
-  // In the current design, MiningResearch increases the number of MiningVessels a player can have and unit upgrades initialized in LibInitUnits.sol increases their mining rates. This function is unused but kept here for future balancing and debugging.
+  // In the current design, MiningResearch increases the number of MiningVessels a player can have
+  // and unit upgrades initialized in LibInitUnits.sol increases their mining rates.
+  // This function is unused but kept here for future balancing and debugging.
   function initMiningVesselUpgrades(IWorld world) internal {
     uint256 unitType = MiningVessel;
     ResourceValue[] memory requiredResources = new ResourceValue[](1);
