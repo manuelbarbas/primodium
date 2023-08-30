@@ -17,8 +17,10 @@ import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMove
 import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
 import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
 import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "components/P_RequiredResourcesComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { LevelComponent, ID as LevelComponentID } from "../../components/LevelComponent.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
+import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "../../components/MaxUtilityComponent.sol";
 import { AsteroidCountComponent, ID as AsteroidCountComponentID } from "components/AsteroidCountComponent.sol";
 import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
@@ -29,7 +31,7 @@ import { LibMath } from "../../libraries/LibMath.sol";
 
 import { Coord, Dimensions } from "../../types.sol";
 
-contract StarmapperTest is PrimodiumTest {
+contract HangarTest is PrimodiumTest {
   constructor() PrimodiumTest() {}
 
   PositionComponent public positionComponent;
@@ -51,20 +53,6 @@ contract StarmapperTest is PrimodiumTest {
     buildSystem = BuildSystem(system(BuildSystemID));
     upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
     destroySystem = DestroySystem(system(DestroySystemID));
-  }
-
-  // testFailSendNoStarmapper
-  function testFailSendNoStarmapper() public {
-    ArrivalUnit[] memory units = new ArrivalUnit[](1);
-    units[0] = ArrivalUnit(DebugUnit, 10);
-    vm.expectRevert(bytes("you have reached your max move count"));
-    sendUnitsSystem.executeTyped(
-      units,
-      ESendType.INVADE,
-      getHomeAsteroid(alice),
-      getHomeAsteroid(bob),
-      addressToEntity(bob)
-    );
   }
 
   function setupBuildingReqs(uint256 playerEntity, uint256 buildingType, uint256 level) public {
@@ -102,57 +90,50 @@ contract StarmapperTest is PrimodiumTest {
         abi.encode(amount)
       );
     }
+
+    ResourceValues memory utility = P_RequiredUtilityComponent(world.getComponent(P_RequiredUtilityComponentID))
+      .getValue(buildingLevelEntity);
+    /* -------------------------------- Utility -------------------------------- */
+    for (uint256 i = 0; i < utility.resources.length; i++) {
+      uint256 resource = utility.resources[i];
+      uint256 amount = utility.values[i];
+      componentDevSystem.executeTyped(
+        MaxUtilityComponentID,
+        LibEncode.hashKeyEntity(resource, playerEntity),
+        abi.encode(amount)
+      );
+    }
   }
 
-  function testBuildStarmapper() public returns (Coord memory) {
+  function testBuildHangar() public returns (Coord memory) {
     vm.startPrank(alice);
     uint256 aliceEntity = addressToEntity(alice);
 
-    uint256 entity = StarmapperID;
+    uint256 entity = HangarID;
     uint32 level = 1;
 
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
     setupBuildingReqs(addressToEntity(alice), entity, level);
     buildSystem.executeTyped(entity, getCoord1(alice));
 
-    uint32 moves = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(buildingLevelEntity);
-    assertEq(moves, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(aliceEntity));
-
-    uint256 origin = positionComponent.getValue(addressToEntity(alice)).parent;
-    uint256 unitPlayerAsteroidEntity = LibEncode.hashEntities(DebugUnit, addressToEntity(alice), origin);
-
-    componentDevSystem.executeTyped(UnitsComponentID, unitPlayerAsteroidEntity, abi.encode(20));
-    ArrivalUnit[] memory units = new ArrivalUnit[](1);
-    units[0] = ArrivalUnit(DebugUnit, 10);
-
-    Coord memory aliceHomeAsteroid = getHomeAsteroid(alice);
-    Coord memory bobHomeAsteroid = getHomeAsteroid(bob);
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
-    vm.expectRevert(bytes("you have reached your max move count"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     return getCoord1(alice);
   }
 
-  // testUpgradeStarmapper
-  function testUpgradeStarmapper() public {
-    Coord memory coord = testBuildStarmapper();
-    uint256 entity = StarmapperID;
+  // testUpgradeHangar
+  function testUpgradeHangar() public {
+    Coord memory coord = testBuildHangar();
+    uint256 entity = HangarID;
     uint32 level = 2;
 
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(entity, level);
     setupBuildingReqs(addressToEntity(alice), entity, level);
 
     upgradeBuildingSystem.executeTyped(coord);
-
-    uint32 moves = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(buildingLevelEntity);
-    assertEq(moves, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(addressToEntity(alice)));
   }
 
-  // testDestroyStarmapper
-  function testDestroyStarmapper() public {
-    Coord memory coord = testBuildStarmapper();
+  // testDestroyHangar
+  function testDestroyHangar() public {
+    Coord memory coord = testBuildHangar();
     destroySystem.executeTyped(coord);
-
-    assertEq(0, MaxMovesComponent(world.getComponent(MaxMovesComponentID)).getValue(addressToEntity(alice)));
   }
 }

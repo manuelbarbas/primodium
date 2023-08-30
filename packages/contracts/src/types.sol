@@ -120,3 +120,12 @@ struct RaidResult {
   uint32[] defenderValuesBeforeRaid;
   uint32[] raidedAmount;
 }
+
+struct UnitDesign {
+  uint32 attack;
+  uint32 defence;
+  uint32 speed;
+  uint32 cargo;
+  uint32 mining;
+  uint32 trainingTime;
+}

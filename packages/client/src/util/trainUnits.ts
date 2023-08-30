@@ -12,17 +12,25 @@ import {
   P_UnitTravelSpeed,
 } from "src/network/components/chainComponents";
 import { hashKeyEntity } from "./encode";
+import { Account } from "src/network/components/clientComponents";
 
 export function useTrainableUnits(buildingEntity: EntityID) {
   const buildingType = BuildingType.get(buildingEntity)?.value;
-  if (!buildingType) return [];
   const level = Level.use(buildingEntity, { value: 0 }).value;
-  const buildingLevelEntity = hashKeyEntity(buildingType, level);
+  const buildingLevelEntity = buildingType
+    ? hashKeyEntity(buildingType, level)
+    : undefined;
   return P_UnitProductionTypes.use(buildingLevelEntity, { value: [] })?.value;
 }
 
 export function getUnitStats(unitEntity: EntityID) {
-  const unitLevelEntity = hashKeyEntity(unitEntity, 1);
+  const player = Account.get()?.value;
+  if (!player) throw new Error("No player account");
+
+  const playerUnitEntity = hashKeyEntity(unitEntity, player);
+  const unitLevel = Level.get(playerUnitEntity, { value: 0 })?.value;
+  const unitLevelEntity = hashKeyEntity(unitEntity, unitLevel);
+
   const attack = P_UnitAttack.get(unitLevelEntity, { value: 0 })?.value;
   const defence = P_UnitDefence.get(unitLevelEntity, { value: 0 })?.value;
   const speed = P_UnitTravelSpeed.get(unitLevelEntity, { value: 0 })?.value;

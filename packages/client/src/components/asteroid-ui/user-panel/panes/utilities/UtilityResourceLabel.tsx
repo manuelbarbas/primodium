@@ -9,7 +9,7 @@ import {
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { formatNumber } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { ResourceImage } from "src/util/constants";
 
 export const UtilityResourceLabel = ({
   name,
@@ -60,45 +60,43 @@ export const UtilityResourceLabel = ({
           </div>
           <p className="text-slate-400">{`${maxStorage} max.`}</p>
         </div>
-        <div className="flex justify-between items-center gap-1">
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between border rounded-md border-cyan-800">
-              <p className="px-1 bg-cyan-700 rounded-md rounded-r-none">
-                {formatNumber(
-                  (maxStorage - resourceCount + resourcesToClaim) *
-                    RESOURCE_SCALE
-                )}
-              </p>
-              <b className="rounded-md rounded-l-none bg-slate-700 px-1">
-                REMAINING
-              </b>
-            </div>
-            <div className={`flex items-center w-full h-1 rounded-md`}>
-              <div
-                className="h-full bg-cyan-600 rounded-md"
-                style={{
-                  width: `${
-                    ((maxStorage - resourceCount + resourcesToClaim) /
-                      maxStorage) *
-                    100
-                  }%`,
-                }}
-              />
+        <div className="flex items-center gap-1">
+          <div className="flex justify-between items-center gap-1">
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between border rounded-md border-cyan-800">
+                <p className="px-1 bg-cyan-700 rounded-md rounded-r-none">
+                  {formatNumber(maxStorage - resourceCount + resourcesToClaim)}
+                </p>
+                <b className="rounded-md rounded-l-none bg-slate-700 px-1">
+                  REMAINING
+                </b>
+              </div>
+              <div className={`flex items-center w-full h-1 rounded-md`}>
+                <div
+                  className="h-full bg-cyan-600 rounded-md"
+                  style={{
+                    width: `${
+                      ((maxStorage - resourceCount + resourcesToClaim) /
+                        maxStorage) *
+                      100
+                    }%`,
+                  }}
+                />
 
-              <div
-                className="h-full bg-gray-900 rounded-md"
-                style={{
-                  width: `${
-                    ((resourceCount + resourcesToClaim) / maxStorage) * 100
-                  }%`,
-                }}
-              ></div>
+                <div
+                  className="h-full bg-gray-900 rounded-md"
+                  style={{
+                    width: `${
+                      ((resourceCount + resourcesToClaim) / maxStorage) * 100
+                    }%`,
+                  }}
+                ></div>
+              </div>
             </div>
-
-            {resourceCount + resourcesToClaim === maxStorage && (
-              <div className="w-2 h-2 bg-rose-600 rounded-full" />
-            )}
           </div>
+          {resourceCount + resourcesToClaim === maxStorage && (
+            <div className="w-2 h-2 bg-rose-600 rounded-sm" />
+          )}
         </div>
       </div>
     );

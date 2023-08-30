@@ -411,9 +411,10 @@ library LibInitDebug {
 
     //DebugLithiumCopperOxideFactoryID
 
-    //level 1
+    //Level 1
     entity = LibEncode.hashKeyEntity(DebugLithiumCopperOxideFactoryID, 1);
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 1000 });
+    resourceValues[0] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 1000 });
+
     LibSetBuildingReqs.setStorageUpgrades(world, entity, resourceValues);
 
     requiredConnectedProductions = ResourceValues(new uint256[](2), new uint32[](2));
@@ -424,7 +425,7 @@ library LibInitDebug {
 
     requiredConnectedProductionComponent.set(entity, requiredConnectedProductions);
 
-    buildingProductionComponent.set(entity, ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 2 }));
+    buildingProductionComponent.set(entity, ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 2 }));
   }
 
   function initializeTechnologies(IWorld world) internal {
@@ -444,7 +445,7 @@ library LibInitDebug {
     /****************** Required Resources *******************/
 
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: LithiumCopperOxideCraftedItemID, value: 500 });
+    resourceValues[0] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 500 });
 
     LibSetBuildingReqs.setResourceReqs(world, DebugSimpleTechnologyResourceReqsID, resourceValues);
 

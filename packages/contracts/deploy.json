@@ -74,7 +74,8 @@
     "LibInitResearch",
     "LibInitDebug",
     "LibInitMotherlode",
-    "LibInitScoreMultipliers"
+    "LibInitScoreMultipliers",
+    "LibInitUnits"
   ],
   "systems": [
     {

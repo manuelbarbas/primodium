@@ -8,14 +8,16 @@ export const TerrainInfo: React.FC<{ coord: Coord }> = ({ coord }) => {
   const resource = getResourceKey(coord);
 
   const name = useMemo(() => {
-    if (!resource) return "Asteroid";
+    if (!resource) return;
 
     const name = getBlockTypeName(resource);
 
-    if (name === "Air") return "Asteroid";
+    if (name === "Air") return;
 
     return name;
   }, [resource]);
+
+  if (!name) return null;
 
   return (
     <div className="flex flex-col w-fit">

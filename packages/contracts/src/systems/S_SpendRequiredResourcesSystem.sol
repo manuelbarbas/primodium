@@ -7,7 +7,7 @@ import { ID as UpgradeBuildingSystemID } from "./UpgradeBuildingSystem.sol";
 import { ID as UpgradeRangeSystemID } from "./UpgradeRangeSystem.sol";
 import { ID as SpawnSystemID } from "./SpawnSystem.sol";
 import { ID as ResearchSystemID } from "./ResearchSystem.sol";
-
+import { ID as TrainUnitsSystemID } from "./TrainUnitsSystem.sol";
 import { ID as UpdateUnclaimedResourcesSystemID } from "./S_UpdateUnclaimedResourcesSystem.sol";
 
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
@@ -32,7 +32,8 @@ contract S_SpendRequiredResourcesSystem is IOnEntitySubsystem, IOnEntityCountSub
         msg.sender == getAddressById(world.systems(), UpgradeBuildingSystemID) ||
         msg.sender == getAddressById(world.systems(), UpgradeRangeSystemID) ||
         msg.sender == getAddressById(world.systems(), ResearchSystemID) ||
-        msg.sender == getAddressById(world.systems(), SpawnSystemID),
+        msg.sender == getAddressById(world.systems(), SpawnSystemID) ||
+        msg.sender == getAddressById(world.systems(), TrainUnitsSystemID),
       "S_SpendRequiredResourcesSystem: Only BuildSystem, UpgradeBuildingSystem, ResearchSystem can call this function"
     );
 
