@@ -308,7 +308,7 @@ contract LibMotherlodeTest is PrimodiumTest {
     spawn(player);
     vm.startPrank(deployer);
     uint256 asteroid = 0xe19384268f063f61ad35763c513b0e482cc607fb876a26a511ae588042cfa35b;
-    Coord memory sourcePosition = Coord(-16, -31, 0);
+    Coord memory sourcePosition = Coord(-16, 28, 0);
     for (uint32 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
       console.log("ANGLE: ", (i * 360) / config.maxMotherlodesPerAsteroid);
       Coord memory targetPositionRelative = LibMotherlode.getCoord(
