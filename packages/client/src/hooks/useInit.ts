@@ -10,6 +10,7 @@ import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupBattleComponent } from "src/network/systems/setupBattleComponent";
+import { setupNotificationQueue } from "src/network/systems/setupNotificationQueue";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 
 export const useInit = () => {
@@ -37,6 +38,7 @@ export const useInit = () => {
     setupHangar();
     setupLeaderboard();
     setupBattleComponent();
+    setupNotificationQueue();
     setupBlockNumber(blockNumber$);
   }, []);
 
