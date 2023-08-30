@@ -10,5 +10,6 @@
   "Platform": "Browser",
   "Language": "TypeScript",
   "SDK": "@amplitude/analytics-browser@^1.0",
-  "Path": "./src/ampli"
+  "Path": "./src/ampli",
+  "OmitApiKeys": true
 }

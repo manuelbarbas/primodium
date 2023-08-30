@@ -22,8 +22,8 @@ import * as amplitude from '@amplitude/analytics-browser';
 export type Environment = 'prod' | 'dev';
 
 export const ApiKey: Record<Environment, string> = {
-  prod: '3a2d21394a5536c8bc7e05efe4d9315e',
-  dev: '3536d68c8547831654db7736a5898114'
+  prod: '',
+  dev: ''
 };
 
 /**
@@ -93,7 +93,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -105,7 +105,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -167,7 +167,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -179,7 +179,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -228,7 +228,7 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -240,7 +240,7 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -289,7 +289,7 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -301,7 +301,7 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -364,7 +364,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -376,7 +376,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -425,7 +425,7 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -437,7 +437,7 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -473,7 +473,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -485,7 +485,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -519,7 +519,7 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -531,7 +531,7 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -565,7 +565,7 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -577,7 +577,7 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -611,7 +611,7 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -623,7 +623,7 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -665,7 +665,7 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -677,7 +677,7 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -711,7 +711,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -723,7 +723,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -773,7 +773,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -785,7 +785,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -831,7 +831,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -843,7 +843,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -877,7 +877,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -889,7 +889,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -962,7 +962,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -974,7 +974,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -1029,7 +1029,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -1041,7 +1041,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */

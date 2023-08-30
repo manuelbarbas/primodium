@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import { SyncState } from "@latticexyz/network";
@@ -9,9 +8,6 @@ import { Game } from "./screens/Game";
 import { LoadingState } from "./network/components/chainComponents";
 import { Landing } from "./screens/Landing";
 import { useInit } from "./hooks/useInit";
-
-import { ampli } from "./ampli";
-import { useAccount } from "./hooks";
 
 export default function AppLoadingState() {
   //initialize global components
@@ -25,17 +21,6 @@ export default function AppLoadingState() {
     msg: "Connecting",
     percentage: 0,
   });
-
-  // The network object and user wallet will have been loaded by the time the loading state is ready
-  // So we can use the user wallet to identify the user
-  const connectedAccountInfo = useAccount();
-  useEffect(() => {
-    ampli.identify(connectedAccountInfo.rawAddress, {
-      extra: {
-        external: connectedAccountInfo.external,
-      },
-    });
-  }, [connectedAccountInfo]);
 
   return (
     <div
