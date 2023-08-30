@@ -15,7 +15,7 @@ const moveResults = [
   { direction: 249, x: -35, y: -93, parent: 0 },
   { direction: 276, x: 10, y: -99, parent: 0 },
   { direction: 304, x: 55, y: -82, parent: 0 },
-  { direction: 332, x: 88, y: -47, parent: 0 },
+  { direction: 332, x: 88, y: -46, parent: 0 },
 ];
 
 test("hashKeyCoord", () => {
@@ -39,4 +39,16 @@ test("sin", () => {
   console.log("angleRads:", angleRads);
   const newY = solSinDegrees(angle);
   console.log("newY:", newY);
+});
+
+test("reverse", () => {
+  for (let i = 0; i < 100; i++) {
+    const angle = Math.floor(Math.random() * 360);
+    const distance = Math.floor(Math.random() * 1000);
+    const coord: Coord = getPositionByVector(distance, angle);
+    const reverseAngle = angle + 180;
+    const origin = getPositionByVector(distance, reverseAngle, coord);
+    expect(origin.x).eq(0);
+    expect(origin.y).eq(0);
+  }
 });

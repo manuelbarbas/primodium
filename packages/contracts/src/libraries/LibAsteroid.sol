@@ -76,15 +76,18 @@ library LibAsteroid {
    * @return Coord Returns a struct containing x and y coordinates.
    */
   function getPositionByVector(uint32 _distance, uint32 direction) internal pure returns (Coord memory) {
+    direction = direction % 360;
+    bool flip = direction >= 180;
+    direction = direction % 180;
     uint256 angleDegsTimes10000 = direction * 1745;
 
     uint256 angleRads = angleDegsTimes10000 * 1e13 + Trig.TWO_PI;
 
     int256 newX = Trig.cos(angleRads) * int32(_distance);
     int256 newY = Trig.sin(angleRads) * int32(_distance);
-    int32 x = int32(newX / 1e18);
-    int32 y = int32(newY / 1e18);
-    return Coord({ x: x, y: y, parent: 0 });
+    int32 x = int32((newX / 1e18));
+    int32 y = int32((newY / 1e18));
+    return Coord({ x: flip ? -x : x, y: flip ? -y : y, parent: 0 });
   }
 
   /**
