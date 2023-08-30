@@ -99,6 +99,7 @@ export const BlockType = {
     "item.ElectricityUtilityResource"
   ) as EntityID,
   HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
+  VesselUtilityResource: keccak256("item.VesselUtilityResource") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
   IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,

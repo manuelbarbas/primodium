@@ -39,6 +39,7 @@ const resources: Record<string, EntityID> = {
   ironplate: BlockType.IronPlateCrafted,
   alloy: BlockType.AlloyCraftedItem,
   pvcell: BlockType.PhotovoltaicCellCraftedItem,
+  platinum: BlockType.Platinum,
 };
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
