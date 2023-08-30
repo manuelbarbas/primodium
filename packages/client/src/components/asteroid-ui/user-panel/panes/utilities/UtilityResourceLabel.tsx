@@ -9,7 +9,6 @@ import {
 } from "src/network/components/chainComponents";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { formatNumber } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
 export const UtilityResourceLabel = ({
   name,
