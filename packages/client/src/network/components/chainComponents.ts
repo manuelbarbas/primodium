@@ -146,6 +146,15 @@ export const P_Production = newComponent(
   }
 );
 
+export const P_ProductionDependencies = newComponent(
+  world,
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
+  {
+    id: "P_ProductionDependencies",
+    metadata: { contractId: `${commonIdPrefix}P_ProductionDependencies` },
+  }
+);
 export const Production = newNumberComponent(world, {
   id: "Production",
   metadata: { contractId: `${commonIdPrefix}Production` },
@@ -477,6 +486,7 @@ export default {
   MaxUtility,
   ReversePosition,
   P_Production,
+  P_ProductionDependencies,
 
   // Motherlodes
   Motherlode,
