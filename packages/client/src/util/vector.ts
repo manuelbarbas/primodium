@@ -7,19 +7,14 @@ export function getPositionByVector(
   direction: number,
   origin: Coord = { x: 0, y: 0 }
 ) {
-  direction = direction % 360;
-  const negY: boolean = direction > 180;
-  const negX: boolean = direction > 90 && direction <= 270;
-  direction = direction % 90;
-
   const newX = solCosDegrees(direction) * BigInt(distance);
   const newY = solSinDegrees(direction) * BigInt(distance);
 
   const finalX = Number(solDiv(newX, TENe18));
   const finalY = Number(solDiv(newY, TENe18));
   return {
-    x: negX ? origin.x - finalX : origin.x + finalX,
-    y: negY ? origin.y - finalY : origin.y + finalY,
+    x: finalX + origin.x,
+    y: finalY + origin.y,
   };
 }
 
@@ -61,7 +56,7 @@ export function solCosDegrees(_angle: number) {
 }
 
 function solDiv(a: bigint, b: bigint) {
-  return ((a >= 0 ? a : a - b + ONE) / b) | ZERO;
+  return (a / b) | ZERO;
 }
 
 export function solSin(angle: bigint): bigint {
