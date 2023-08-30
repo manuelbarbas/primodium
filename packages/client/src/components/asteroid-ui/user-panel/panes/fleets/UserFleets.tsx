@@ -1,8 +1,4 @@
-import {
-  ComponentValue,
-  EntityID,
-  getEntitiesWithValue,
-} from "@latticexyz/recs";
+import { ComponentValue, EntityID } from "@latticexyz/recs";
 import {
   Arrival,
   OwnedBy,
