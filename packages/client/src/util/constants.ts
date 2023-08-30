@@ -34,6 +34,7 @@ export const BlockType = {
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
   Uraninite: keccak256("block.Uraninite") as EntityID,
   Bolutite: keccak256("block.Bolutite") as EntityID,
+  Platinum: keccak256("block.Platinum") as EntityID,
 
   // Debug buildings
   DebugIronMine: keccak256("block.DebugIronMine") as EntityID,
@@ -554,6 +555,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.Uraninite, "/img/resource/uraninite_resource.png"],
   [BlockType.Bolutite, "/img/resource/bolutite_resource.png"],
   [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
+  [BlockType.Platinum, "/img/resource/platinum_resource.png"],
+
   [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
   [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/photovoltaiccell.png"],
