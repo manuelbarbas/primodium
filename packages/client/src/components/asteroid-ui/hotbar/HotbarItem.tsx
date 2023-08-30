@@ -2,24 +2,24 @@ import { primodium } from "@game/api";
 import { AsteroidMap, KeybindActions } from "@game/constants";
 import { isMobile } from "react-device-detect";
 import { EntityID } from "@latticexyz/recs";
-import { SingletonID } from "@latticexyz/network";
 import { motion } from "framer-motion";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Key } from "engine/types";
 import {
   SelectedAction,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
-import { useAccount } from "src/hooks/useAccount";
 import { calcDims, convertToCoords } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
-import { Action, BackgroundImage, KeyImages } from "src/util/constants";
-import { hashAndTrimKeyEntity } from "src/util/encode";
 import {
-  RawBlueprint,
-  P_RequiredResearch,
-  HasResearched,
-} from "src/network/components/chainComponents";
+  Action,
+  BackgroundImage,
+  BlockType,
+  KeyImages,
+} from "src/util/constants";
+import { hashAndTrimKeyCoord, hashKeyEntity } from "src/util/encode";
+import { RawBlueprint, Level } from "src/network/components/chainComponents";
+import { useMainBaseCoord } from "src/hooks/useMainBase";
 
 const HotbarItem: React.FC<{
   blockType: EntityID;
@@ -27,8 +27,7 @@ const HotbarItem: React.FC<{
   index: number;
 }> = ({ blockType, action, index }) => {
   const selectedBuilding = SelectedBuilding.use()?.value;
-  const { address } = useAccount();
-  const [isResearched, setIsResearched] = useState(false);
+  const mainBaseCoord = useMainBaseCoord();
   const {
     hooks: { useKeybinds },
     input: { addListener },
@@ -36,20 +35,19 @@ const HotbarItem: React.FC<{
   const keybinds = useKeybinds();
   let dimensions: { width: number; height: number } | undefined;
 
-  const requiredResearch = P_RequiredResearch.use(blockType)?.value;
+  const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
+    x: mainBaseCoord?.x ?? 0,
+    y: mainBaseCoord?.y ?? 0,
+    parent: mainBaseCoord?.parent ?? ("0" as EntityID),
+  });
 
-  const entity = hashAndTrimKeyEntity(requiredResearch ?? SingletonID, address);
+  const mainBaseLevel = Level.use(coordEntity, {
+    value: 0,
+  }).value;
 
-  const researched = HasResearched.get(entity)?.value;
+  const requiredLevel = Level.use(hashKeyEntity(blockType, 1))?.value;
 
-  useEffect(() => {
-    if (!requiredResearch) {
-      setIsResearched(true);
-      return;
-    }
-
-    setIsResearched(researched ?? false);
-  }, [researched, requiredResearch]);
+  const unlocked = mainBaseLevel >= (requiredLevel ?? 0);
 
   const keybindAction = useMemo(() => {
     if (!keybinds) return;
@@ -69,7 +67,7 @@ const HotbarItem: React.FC<{
   }, [keybinds, keybindAction]);
 
   useEffect(() => {
-    if (!keybinds || !isResearched || !keybindAction) return;
+    if (!keybinds || !unlocked || !keybindAction) return;
 
     const listener = addListener(keybindAction, () => {
       if (selectedBuilding === blockType) {
@@ -85,14 +83,7 @@ const HotbarItem: React.FC<{
     return () => {
       listener.dispose();
     };
-  }, [
-    keybinds,
-    selectedBuilding,
-    action,
-    blockType,
-    isResearched,
-    keybindAction,
-  ]);
+  }, [keybinds, selectedBuilding, action, blockType, unlocked, keybindAction]);
 
   if (blockType) {
     const blueprint = RawBlueprint.get(blockType)?.value;
@@ -113,7 +104,7 @@ const HotbarItem: React.FC<{
     SelectedAction.set({ value: action });
   };
 
-  if (!isResearched) return null;
+  if (!unlocked) return null;
 
   return (
     <motion.div

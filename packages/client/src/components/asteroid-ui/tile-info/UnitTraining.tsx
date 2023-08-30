@@ -130,6 +130,7 @@ export const UnitTraining: React.FC<{
                     image={
                       ResourceImage.get(BlockType.HousingUtilityResource) ?? ""
                     }
+                    scale={1}
                     resourceId={BlockType.HousingUtilityResource}
                     name={BlockIdToKey[BlockType.HousingUtilityResource]}
                     amount={requiredHousing}
@@ -144,7 +145,7 @@ export const UnitTraining: React.FC<{
                       key={`resource-${i}`}
                       image={ResourceImage.get(resource.resource)!}
                       resourceId={resource.resource}
-                      name={resource.resource}
+                      name={getBlockTypeName(resource.resource)}
                       amount={resource.amount}
                     />
                   ))}
