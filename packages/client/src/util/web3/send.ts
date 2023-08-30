@@ -38,7 +38,7 @@ export const send = async (
       { ...destination, parent: 0 },
       to,
       {
-        gasLimit: 30_000_000,
+        gasLimit: 5_000_000,
       }
     ),
     providers,

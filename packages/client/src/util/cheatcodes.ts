@@ -22,6 +22,7 @@ import { hashEntities, hashKeyEntity } from "./encode";
 import { train } from "./web3";
 import { world } from "src/network/world";
 import { EntityID } from "@latticexyz/recs";
+import { updateSpaceRock } from "./web3/updateSpaceRock";
 
 const resources: Record<string, EntityID> = {
   iron: BlockType.Iron,
@@ -37,8 +38,9 @@ const resources: Record<string, EntityID> = {
   uraninite: BlockType.Uraninite,
   bolutite: BlockType.Bolutite,
   ironplate: BlockType.IronPlateCrafted,
-  alloy: BlockType.AlloyCraftedItem,
-  pvcell: BlockType.PhotovoltaicCellCraftedItem,
+  platinum: BlockType.Platinum,
+  alloy: BlockType.Alloy,
+  pvcell: BlockType.PhotovoltaicCell,
 };
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
@@ -90,6 +92,14 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
             value: multiplier,
           }
         );
+      },
+    },
+    updateSpaceRock: {
+      params: [],
+      function: async () => {
+        const entity = Account.get()?.value;
+        if (!entity) throw new Error("No player found");
+        await updateSpaceRock(entity, mud);
       },
     },
     giveResource: {

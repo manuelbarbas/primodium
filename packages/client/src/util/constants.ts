@@ -34,23 +34,7 @@ export const BlockType = {
   Kimberlite: keccak256("block.Kimberlite") as EntityID,
   Uraninite: keccak256("block.Uraninite") as EntityID,
   Bolutite: keccak256("block.Bolutite") as EntityID,
-
-  // Debug buildings
-  DebugIronMine: keccak256("block.DebugIronMine") as EntityID,
-  DebugIronMineNoTileReqID: keccak256(
-    "block.DebugIronMineNoTileReq"
-  ) as EntityID,
-  DebugCopperMine: keccak256("block.DebugCopperMine") as EntityID,
-  DebugLithiumMine: keccak256("block.DebugLithiumMine") as EntityID,
-
-  DebugIronPlateFactory: keccak256("block.DebugIronPlateFactory") as EntityID,
-  DebugAlloyFactory: keccak256("block.DebugAlloyFactory") as EntityID,
-  DebugLithiumCopperOxideFactory: keccak256(
-    "block.DebugLithiumCopperOxideFactory"
-  ) as EntityID,
-  DebugSolarPanel: keccak256("block.DebugSolarPanel") as EntityID,
-  DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
-  DebugDemolishBuilding: keccak256("block.DebugDemolishBuilding") as EntityID,
+  Platinum: keccak256("block.Platinum") as EntityID,
 
   // debug units
   DebugUnit: keccak256("block.DebugUnit") as EntityID,
@@ -88,16 +72,15 @@ export const BlockType = {
   DroneFactory: keccak256("block.DroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
 
-  AlloyCraftedItem: keccak256("item.AlloyCrafted") as EntityID,
-  PhotovoltaicCellCraftedItem: keccak256(
-    "item.PhotovoltaicCellCrafted"
-  ) as EntityID,
+  Alloy: keccak256("item.AlloyCrafted") as EntityID,
+  PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
   ElectricityUtilityResource: keccak256(
     "item.ElectricityUtilityResource"
   ) as EntityID,
   HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
+  VesselUtilityResource: keccak256("item.VesselUtilityResource") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
   IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
@@ -138,6 +121,42 @@ export const BlockType = {
   ExpansionResearch5: hashStringEntity("research.Expansion", 5),
   ExpansionResearch6: hashStringEntity("research.Expansion", 6),
   ExpansionResearch7: hashStringEntity("research.Expansion", 7),
+
+  AnvilDroneUpgrade1: hashStringEntity("research.AnvilDroneUpgrade", 1),
+  AnvilDroneUpgrade2: hashStringEntity("research.AnvilDroneUpgrade", 2),
+  AnvilDroneUpgrade3: hashStringEntity("research.AnvilDroneUpgrade", 3),
+  AnvilDroneUpgrade4: hashStringEntity("research.AnvilDroneUpgrade", 4),
+  AnvilDroneUpgrade5: hashStringEntity("research.AnvilDroneUpgrade", 5),
+
+  HammerDroneUpgrade1: hashStringEntity("research.HammerDroneUpgrade", 1),
+  HammerDroneUpgrade2: hashStringEntity("research.HammerDroneUpgrade", 2),
+  HammerDroneUpgrade3: hashStringEntity("research.HammerDroneUpgrade", 3),
+  HammerDroneUpgrade4: hashStringEntity("research.HammerDroneUpgrade", 4),
+  HammerDroneUpgrade5: hashStringEntity("research.HammerDroneUpgrade", 5),
+
+  AegisDroneUpgrade1: hashStringEntity("research.AegisDroneUpgrade", 1),
+  AegisDroneUpgrade2: hashStringEntity("research.AegisDroneUpgrade", 2),
+  AegisDroneUpgrade3: hashStringEntity("research.AegisDroneUpgrade", 3),
+  AegisDroneUpgrade4: hashStringEntity("research.AegisDroneUpgrade", 4),
+  AegisDroneUpgrade5: hashStringEntity("research.AegisDroneUpgrade", 5),
+
+  StingerDroneUpgrade1: hashStringEntity("research.StingerDroneUpgrade", 1),
+  StingerDroneUpgrade2: hashStringEntity("research.StingerDroneUpgrade", 2),
+  StingerDroneUpgrade3: hashStringEntity("research.StingerDroneUpgrade", 3),
+  StingerDroneUpgrade4: hashStringEntity("research.StingerDroneUpgrade", 4),
+  StingerDroneUpgrade5: hashStringEntity("research.StingerDroneUpgrade", 5),
+
+  MiningVesselUpgrade1: hashStringEntity("research.MiningVesselUpgrade", 1),
+  MiningVesselUpgrade2: hashStringEntity("research.MiningVesselUpgrade", 2),
+  MiningVesselUpgrade3: hashStringEntity("research.MiningVesselUpgrade", 3),
+  MiningVesselUpgrade4: hashStringEntity("research.MiningVesselUpgrade", 4),
+  MiningVesselUpgrade5: hashStringEntity("research.MiningVesselUpgrade", 5),
+
+  MiningResearch1: hashStringEntity("research.MiningResearch", 1),
+  MiningResearch2: hashStringEntity("research.MiningResearch", 2),
+  MiningResearch3: hashStringEntity("research.MiningResearch", 3),
+  MiningResearch4: hashStringEntity("research.MiningResearch", 4),
+  MiningResearch5: hashStringEntity("research.MiningResearch", 5),
 
   IronMine2Research: keccak256("research.IronMine2") as EntityID,
   IronMine3Research: keccak256("research.IronMine3") as EntityID,
@@ -269,33 +288,6 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.Uraninite, ["/img/resource/uraninite_ore_layer.png"]],
   [BlockType.Bolutite, ["/img/resource/bolutite_ore_layer.png"]],
 
-  // debug buildings
-  [BlockType.DebugIronMine, ["/img/building/minerdrill.gif"]],
-  [BlockType.DebugCopperMine, ["/img/building/minerdrill.gif"]],
-  [BlockType.DebugLithiumMine, ["/img/building/minerdrill.gif"]],
-  [BlockType.DebugIronPlateFactory, ["/img/building/newplatingfactory.gif"]],
-  [BlockType.DebugAlloyFactory, ["/img/building/newplatingfactory.gif"]],
-  [
-    BlockType.DebugLithiumCopperOxideFactory,
-    ["/img/building/newplatingfactory.gif"],
-  ],
-  [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
-  [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
-
-  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.gif"]],
-  [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
-  [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
-  [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
-  [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
-  // debug units
-  [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
-  [BlockType.DebugUnit2, ["/img/unit/anvildrone.png"]],
-  [BlockType.DebugUnit3, ["/img/unit/aegisdrone.png"]],
-  [BlockType.DebugUnitMiner, ["/img/unit/miningvessel.png"]],
-  [BlockType.DebugUnitMiner2, ["/img/unit/miningvessel.png"]],
-  [BlockType.DebugUnitBattle1, ["/img/unit/hammerdrone.png"]],
-  [BlockType.DebugUnitBattle2, ["/img/unit/hammerdrone.png"]],
-
   //buildings
   [
     BlockType.MainBase,
@@ -346,6 +338,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
     [
       "/img/building/storageunit/storageunit-level1.png",
       "/img/building/storageunit/storageunit-level2.png",
+      "/img/building/storageunit/storageunit-level3.png",
     ],
   ],
   [
@@ -384,11 +377,20 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   ],
 
   //units
-  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.gif"]],
+  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
   [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
   [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
   [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
+
+  // debug units
+  [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
+  [BlockType.DebugUnit2, ["/img/unit/anvildrone.png"]],
+  [BlockType.DebugUnit3, ["/img/unit/aegisdrone.png"]],
+  [BlockType.DebugUnitMiner, ["/img/unit/miningvessel.png"]],
+  [BlockType.DebugUnitMiner2, ["/img/unit/miningvessel.png"]],
+  [BlockType.DebugUnitBattle1, ["/img/unit/hammerdrone.png"]],
+  [BlockType.DebugUnitBattle2, ["/img/unit/hammerdrone.png"]],
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
@@ -518,6 +520,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.Uraninite, "/img/resource/uraninite_resource.png"],
   [BlockType.Bolutite, "/img/resource/bolutite_resource.png"],
   [BlockType.BulletCrafted, "/img/crafted/ironplate.png"],
+  [BlockType.Platinum, "/img/resource/platinum_resource.png"],
+
   [BlockType.IronPlateCrafted, "/img/crafted/ironplate.png"],
   [BlockType.BasicPowerSourceCrafted, "/img/crafted/basicbattery.png"],
   [BlockType.AdvancedPowerSourceCrafted, "/img/crafted/photovoltaiccell.png"],
@@ -536,12 +540,13 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.ThermobaricWarheadCrafted, "/img/crafted/thermobaricwarhead.png"],
   [BlockType.ThermobaricMissileCrafted, "/img/crafted/thermobaricmissile.png"],
 
-  [BlockType.AlloyCraftedItem, "/img/crafted/iridiumdrillbit.png"],
-  [BlockType.PhotovoltaicCellCraftedItem, "/img/crafted/advancedbattery.png"],
+  [BlockType.Alloy, "/img/resource/alloy_resource.png"],
+  [BlockType.PhotovoltaicCell, "/img/resource/photovoltaiccell_resource.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
   [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
   // todo: update this
   [BlockType.HousingUtilityResource, "/img/crafted/thermobaricwarhead.png"],
+  [BlockType.VesselUtilityResource, "/img/crafted/thermobaricwarhead.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],

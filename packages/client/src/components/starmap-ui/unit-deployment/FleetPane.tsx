@@ -50,6 +50,12 @@ export const FleetPane: React.FC<{
       destination === undefined
     )
       return;
+    Send.update({
+      units: undefined,
+      count: undefined,
+      sendType: undefined,
+      activeButton: ActiveButton.NONE,
+    });
     const to = "0x00" as EntityID;
 
     const arrivalUnits = send.units.map((unit, index) => ({

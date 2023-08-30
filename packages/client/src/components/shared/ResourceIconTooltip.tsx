@@ -7,12 +7,14 @@ export default function ResourceIconTooltip({
   name,
   amount,
   inline,
+  scale = RESOURCE_SCALE,
 }: {
   image: string;
   resourceId: string;
   name: string;
   amount: number;
   inline?: boolean;
+  scale?: number;
 }) {
   function formatString(str: string) {
     // remove ending "Crafted" or "Resource"
@@ -34,7 +36,7 @@ export default function ResourceIconTooltip({
         </div>
         <div>
           <img className="inline-block mr-1" src={image}></img>
-          {formatNumber(amount * RESOURCE_SCALE)}
+          {formatNumber(amount * scale)}
         </div>
       </div>
     );
@@ -47,7 +49,7 @@ export default function ResourceIconTooltip({
       </div>
       <div className="mr-2" key={resourceId}>
         <img src={image} className="w-4 h-4 inline-block mr-1 pixel-images" />
-        {formatNumber(amount * RESOURCE_SCALE)}
+        {formatNumber(amount * scale)}
       </div>
     </div>
   );
