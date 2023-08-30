@@ -25,6 +25,15 @@ export enum ESendType {
   REINFORCE,
 }
 
+export const ESendTypeToLiteral: Record<
+  ESendType,
+  "INVADE" | "RAID" | "REINFORCE"
+> = {
+  [ESendType.INVADE]: "INVADE",
+  [ESendType.RAID]: "RAID",
+  [ESendType.REINFORCE]: "REINFORCE",
+};
+
 export type ArrivalUnit = {
   unitType: EntityID;
   count: number;

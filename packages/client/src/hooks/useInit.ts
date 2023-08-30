@@ -12,10 +12,11 @@ import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupBattleComponent } from "src/network/systems/setupBattleComponent";
 import { setupNotificationQueue } from "src/network/systems/setupNotificationQueue";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
+import { ampli } from "src/ampli";
 
 export const useInit = () => {
   const { blockNumber$ } = useMud();
-  const { address } = useAccount();
+  const { address, rawAddress, external } = useAccount();
   const activeAsteroid = ActiveAsteroid.use()?.value;
 
   const initialized = useMemo(() => {
@@ -41,6 +42,16 @@ export const useInit = () => {
     setupNotificationQueue();
     setupBlockNumber(blockNumber$);
   }, []);
+
+  // The network object and user wallet will have been loaded by the time the loading state is ready
+  // So we can use the user wallet to identify the user
+  useEffect(() => {
+    ampli.identify(rawAddress, {
+      extra: {
+        external,
+      },
+    });
+  }, [rawAddress]);
 
   return initialized;
 };
