@@ -77,6 +77,7 @@ library LibBattle {
           attacker.unitCounts[i] += arrival.units[i].count;
         }
         ArrivalsList.remove(world, playerAsteroidEntity, index);
+        LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), attackerEntity, 1);
         size--;
       } else {
         index++;
