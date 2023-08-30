@@ -46,7 +46,7 @@ export const UserPanel = () => {
               onClick={() => setMenuIndex(menuIndex === 1 ? null : 1)}
             />
             <PanelButton
-              name="My Fleets"
+              name="Fleets"
               icon="/img/icons/attackaircraft.png"
               active={menuIndex === 2}
               onClick={() => setMenuIndex(menuIndex === 2 ? null : 2)}
