@@ -295,4 +295,41 @@ contract LibMotherlodeTest is PrimodiumTest {
       console.log("motherlodeEntity: ", motherlodeEntity);
     }
   }
+
+  function testPrintAsteroidMotherlodes() public {
+    GameConfig memory config = GameConfig({
+      moveSpeed: 100,
+      motherlodeDistance: 10,
+      maxMotherlodesPerAsteroid: 6,
+      motherlodeChanceInv: 4
+    });
+
+    address player = alice;
+    spawn(player);
+    vm.startPrank(deployer);
+    uint256 asteroid = 0xe19384268f063f61ad35763c513b0e482cc607fb876a26a511ae588042cfa35b;
+    Coord memory sourcePosition = Coord(-16, 28, 0);
+    for (uint32 i = 0; i < config.maxMotherlodesPerAsteroid; i++) {
+      console.log("ANGLE: ", (i * 360) / config.maxMotherlodesPerAsteroid);
+      Coord memory targetPositionRelative = LibMotherlode.getCoord(
+        i,
+        config.motherlodeDistance,
+        config.maxMotherlodesPerAsteroid
+      );
+      Coord memory targetPosition = Coord(
+        sourcePosition.x + targetPositionRelative.x,
+        sourcePosition.y + targetPositionRelative.y,
+        0
+      );
+      uint256 motherlodeSeed = uint256(
+        keccak256(abi.encode(asteroid, "motherlode", targetPosition.x, targetPosition.y))
+      );
+      bool found = LibMotherlode.isMotherlode(motherlodeSeed, config.motherlodeChanceInv);
+      if (found) {
+        console.log("motherlode found: ");
+      }
+      logCoord(targetPosition);
+      console.log(" ");
+    }
+  }
 }
