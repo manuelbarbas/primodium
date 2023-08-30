@@ -38,42 +38,40 @@ export const OrbitActionButton: React.FC<{
   const isNeutral = destinationOwner === player || !destinationOwner;
 
   return (
-    <div className="flex w-12 gap-1">
-      <button
-        disabled={transactionLoading}
-        className={`border p-1 w-full rounded-md hover:scale-105 transition-all ${
-          isNeutral || sendType === ESendType.REINFORCE
-            ? "bg-cyan-700 border-cyan-500"
-            : "bg-rose-800 border-rose-600"
-        } ${transactionLoading ? "opacity-50 pointer-events-none" : ""} `}
-        onClick={() => {
-          switch (sendType) {
-            case ESendType.INVADE:
-              invade(destination, network);
+    <button
+      disabled={transactionLoading}
+      className={`border p-1 rounded-md hover:scale-105 transition-all ${
+        isNeutral || sendType === ESendType.REINFORCE
+          ? "bg-cyan-700 border-cyan-500"
+          : "bg-rose-800 border-rose-600"
+      } ${transactionLoading ? "opacity-50 pointer-events-none" : ""} `}
+      onClick={() => {
+        switch (sendType) {
+          case ESendType.INVADE:
+            invade(destination, network);
+            return;
+          case ESendType.RAID:
+            raid(destination, network);
+            return;
+          case ESendType.REINFORCE:
+            if (!isNeutral) {
+              recall(destination, network);
               return;
-            case ESendType.RAID:
-              raid(destination, network);
-              return;
-            case ESendType.REINFORCE:
-              if (isNeutral) {
-                recall(destination, network);
-                return;
-              }
+            }
 
-              const arrivalEntity = Arrival.getAllWith(fleet)?.at(0);
+            const arrivalEntity = Arrival.getAllWith(fleet)?.at(0);
 
-              if (arrivalEntity === undefined) return;
+            if (arrivalEntity === undefined) return;
 
-              const arrivalIndex = Arrival.getAll().indexOf(arrivalEntity);
+            const arrivalIndex = Arrival.getAll().indexOf(arrivalEntity);
 
-              reinforce(destination, arrivalIndex, network);
-          }
-        }}
-      >
-        {isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "LAND")}
-        {!isNeutral && (sendType === ESendType.REINFORCE ? "ACCEPT" : "ATTACK")}
-      </button>
-    </div>
+            reinforce(destination, arrivalIndex, network);
+        }
+      }}
+    >
+      {isNeutral && (sendType === ESendType.REINFORCE ? "ACCEPT" : "LAND")}
+      {!isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "ATTACK")}
+    </button>
   );
 };
 
@@ -88,7 +86,7 @@ const Fleet = ({ fleet }: { fleet: ComponentValue<typeof Arrival.schema> }) => {
   const arrivalTime = Number(fleet.arrivalBlock) - (blockNumber ?? 0);
 
   return (
-    <div className="flex items-center justify-between w-full p-2 border rounded-md border-slate-700 bg-slate-800 ">
+    <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
       <div className="flex gap-1 items-center">
         {fleet.sendType === ESendType.INVADE && (
           <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
@@ -120,7 +118,7 @@ const Fleet = ({ fleet }: { fleet: ComponentValue<typeof Arrival.schema> }) => {
           </p>
         </LabeledValue>
       </div>
-      <div className="text-right">
+      <div className="text-right mr-2">
         {arrivalTime > 0 ? (
           <LabeledValue label="ETA">
             <div className="flex gap-1">
