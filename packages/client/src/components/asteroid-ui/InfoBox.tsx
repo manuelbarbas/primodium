@@ -19,7 +19,11 @@ import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
 import { FaLocationCrosshairs, FaSpaceAwesome } from "react-icons/fa6";
 import { SpaceRockFleets } from "./fleets/SpaceRockFleets";
-import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
+import {
+  ActiveAsteroid,
+  BattleReport,
+  Send,
+} from "src/network/components/clientComponents";
 import { FaFileAlt, FaExpand } from "react-icons/fa";
 import { BattleReports } from "./battle-reports/BattleReports";
 
@@ -31,10 +35,10 @@ export const InfoBox = () => {
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
   const [showFleets, setShowFleets] = useState<boolean>(false);
-  const [showReports, setShowReports] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
+  const battleReport = BattleReport.use();
 
   const asteroid = ActiveAsteroid.use()?.value;
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
@@ -152,7 +156,7 @@ export const InfoBox = () => {
                   color="bg-rose-600"
                   className="mt-2 ml-1 text-sm"
                   onClick={() => {
-                    setShowReports(true);
+                    BattleReport.set({ show: true, battle: undefined });
                   }}
                   depth={4}
                 >
@@ -204,8 +208,8 @@ export const InfoBox = () => {
       </Modal>
       <Modal
         title="Battle Reports"
-        show={showReports}
-        onClose={() => setShowReports(!showReports)}
+        show={battleReport?.show ?? false}
+        onClose={() => BattleReport.set({ show: false, battle: undefined })}
       >
         <BattleReports />
       </Modal>
