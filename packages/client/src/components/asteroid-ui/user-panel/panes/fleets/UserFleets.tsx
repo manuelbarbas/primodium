@@ -31,10 +31,10 @@ export const LabeledValue: React.FC<{
 };
 
 export const OrbitActionButton: React.FC<{
-  destination: EntityID;
-  sendType: ESendType;
-}> = ({ destination, sendType }) => {
+  fleet: ComponentValue<typeof Arrival.schema>;
+}> = ({ fleet }) => {
   const network = useMud();
+  const { destination, sendType } = fleet;
   const destinationOwner = OwnedBy.use(destination)?.value;
   const player = Account.use()?.value ?? SingletonID;
   const transactionLoading = useGameStore((state) => state.transactionLoading);
@@ -64,10 +64,7 @@ export const OrbitActionButton: React.FC<{
                 return;
               }
 
-              const arrivalEntity = Arrival.getAllWith({
-                destination,
-                sendType: ESendType.REINFORCE,
-              })?.at(0);
+              const arrivalEntity = Arrival.getAllWith(fleet)?.at(0);
 
               if (arrivalEntity === undefined) return;
 
@@ -84,13 +81,7 @@ export const OrbitActionButton: React.FC<{
   );
 };
 
-const Fleet = ({
-  fleet,
-}: {
-  fleet: ComponentValue<typeof Arrival.schema>;
-  showOrigin?: boolean;
-  showDestination?: boolean;
-}) => {
+const Fleet = ({ fleet }: { fleet: ComponentValue<typeof Arrival.schema> }) => {
   const blockNumber = BlockNumber.use()?.value;
 
   const destinationPosition = Position.use(fleet.destination, {
@@ -142,10 +133,7 @@ const Fleet = ({
             </div>
           </LabeledValue>
         ) : (
-          <OrbitActionButton
-            destination={fleet.destination}
-            sendType={fleet.sendType}
-          />
+          <OrbitActionButton fleet={fleet} />
         )}
       </div>
     </div>
