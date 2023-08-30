@@ -64,12 +64,10 @@ export const OrbitActionButton: React.FC<{
                 return;
               }
 
-              const arrivalEntity = getEntitiesWithValue(Arrival, {
+              const arrivalEntity = Arrival.getAllWith({
                 destination,
                 sendType: ESendType.REINFORCE,
-              })
-                .entries()
-                .next()?.value[0] as EntityID | undefined;
+              })?.at(0);
 
               if (arrivalEntity === undefined) return;
 
