@@ -142,12 +142,12 @@ export const AllResourceLabels = ({
       <ResourceLabel
         name={"Alloy"}
         entityIndex={entityIndex}
-        resourceId={BlockType.AlloyCraftedItem}
+        resourceId={BlockType.Alloy}
       />
       <ResourceLabel
         name={"Photovoltaic Cell"}
         entityIndex={entityIndex}
-        resourceId={BlockType.PhotovoltaicCellCraftedItem}
+        resourceId={BlockType.PhotovoltaicCell}
       />
     </div>
   );

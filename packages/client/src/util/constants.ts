@@ -88,10 +88,8 @@ export const BlockType = {
   DroneFactory: keccak256("block.DroneFactory") as EntityID,
   StarmapperStation: keccak256("block.Starmapper") as EntityID,
 
-  AlloyCraftedItem: keccak256("item.AlloyCrafted") as EntityID,
-  PhotovoltaicCellCraftedItem: keccak256(
-    "item.PhotovoltaicCellCrafted"
-  ) as EntityID,
+  Alloy: keccak256("item.AlloyCrafted") as EntityID,
+  PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
   ElectricityUtilityResource: keccak256(
@@ -532,8 +530,8 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.ThermobaricWarheadCrafted, "/img/crafted/thermobaricwarhead.png"],
   [BlockType.ThermobaricMissileCrafted, "/img/crafted/thermobaricmissile.png"],
 
-  [BlockType.AlloyCraftedItem, "/img/crafted/iridiumdrillbit.png"],
-  [BlockType.PhotovoltaicCellCraftedItem, "/img/crafted/advancedbattery.png"],
+  [BlockType.Alloy, "/img/resource/alloy_resource.png"],
+  [BlockType.PhotovoltaicCell, "/img/resource/photovoltaiccell_resource.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
   [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
   // todo: update this
