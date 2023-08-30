@@ -59,7 +59,7 @@ uint256 constant StarmapperResearchID = uint256(keccak256("research.Starmapper")
 uint256 constant Starmapper2ResearchID = uint256(keccak256("research.Starmapper2"));
 uint256 constant Starmapper3ResearchID = uint256(keccak256("research.Starmapper3"));
 
-string constant MiningKey = "research.MiningKey";
+string constant MiningKey = "research.MiningResearch";
 uint256 constant MiningResearch = uint256(keccak256(abi.encodePacked(MiningKey, uint256(1))));
 uint256 constant MiningResearch2 = uint256(keccak256(abi.encodePacked(MiningKey, uint256(2))));
 uint256 constant MiningResearch3 = uint256(keccak256(abi.encodePacked(MiningKey, uint256(3))));

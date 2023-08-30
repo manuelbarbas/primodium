@@ -26,7 +26,7 @@ library LibInitResearch {
     initAnvilDroneUpgrades(world);
     initHammerDroneUpgrades(world);
     initStingerDroneUpgrades(world);
-    initMiningVesselUpgrades(world);
+    //initMiningVesselUpgrades(world);
     initMiningResearch(world);
   }
 
