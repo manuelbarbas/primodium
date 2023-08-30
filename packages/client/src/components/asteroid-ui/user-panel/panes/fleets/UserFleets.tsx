@@ -69,7 +69,7 @@ export const OrbitActionButton: React.FC<{
                 sendType: ESendType.REINFORCE,
               })
                 .entries()
-                .next().value[0] as EntityID | undefined;
+                .next()?.value[0] as EntityID | undefined;
 
               if (arrivalEntity === undefined) return;
 
