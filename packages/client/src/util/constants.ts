@@ -36,23 +36,6 @@ export const BlockType = {
   Bolutite: keccak256("block.Bolutite") as EntityID,
   Platinum: keccak256("block.Platinum") as EntityID,
 
-  // Debug buildings
-  DebugIronMine: keccak256("block.DebugIronMine") as EntityID,
-  DebugIronMineNoTileReqID: keccak256(
-    "block.DebugIronMineNoTileReq"
-  ) as EntityID,
-  DebugCopperMine: keccak256("block.DebugCopperMine") as EntityID,
-  DebugLithiumMine: keccak256("block.DebugLithiumMine") as EntityID,
-
-  DebugIronPlateFactory: keccak256("block.DebugIronPlateFactory") as EntityID,
-  DebugAlloyFactory: keccak256("block.DebugAlloyFactory") as EntityID,
-  DebugLithiumCopperOxideFactory: keccak256(
-    "block.DebugLithiumCopperOxideFactory"
-  ) as EntityID,
-  DebugSolarPanel: keccak256("block.DebugSolarPanel") as EntityID,
-  DebugStorageBuilding: keccak256("block.DebugStorageBuilding") as EntityID,
-  DebugDemolishBuilding: keccak256("block.DebugDemolishBuilding") as EntityID,
-
   // debug units
   DebugUnit: keccak256("block.DebugUnit") as EntityID,
   DebugUnit2: keccak256("block.DebugUnit2") as EntityID,
@@ -304,19 +287,6 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.Kimberlite, ["/img/resource/kimberlite_ore_layer.png"]],
   [BlockType.Uraninite, ["/img/resource/uraninite_ore_layer.png"]],
   [BlockType.Bolutite, ["/img/resource/bolutite_ore_layer.png"]],
-
-  // debug buildings
-  [BlockType.DebugIronMine, ["/img/building/minerdrill.gif"]],
-  [BlockType.DebugCopperMine, ["/img/building/minerdrill.gif"]],
-  [BlockType.DebugLithiumMine, ["/img/building/minerdrill.gif"]],
-  [BlockType.DebugIronPlateFactory, ["/img/building/newplatingfactory.gif"]],
-  [BlockType.DebugAlloyFactory, ["/img/building/newplatingfactory.gif"]],
-  [
-    BlockType.DebugLithiumCopperOxideFactory,
-    ["/img/building/newplatingfactory.gif"],
-  ],
-  [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
-  [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
 
   //buildings
   [
@@ -576,6 +546,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
   // todo: update this
   [BlockType.HousingUtilityResource, "/img/crafted/thermobaricwarhead.png"],
+  [BlockType.VesselUtilityResource, "/img/crafted/thermobaricwarhead.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],
