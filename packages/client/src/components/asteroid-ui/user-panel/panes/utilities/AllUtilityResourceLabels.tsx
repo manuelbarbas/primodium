@@ -35,6 +35,11 @@ export const AllUtilityResourceLabels = ({
         entityIndex={entityIndex}
         resourceId={BlockType.HousingUtilityResource}
       />
+      <UtilityResourceLabel
+        name={"Vessel Capacity"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.VesselUtilityResource}
+      />
     </div>
   );
 };
