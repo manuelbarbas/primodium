@@ -312,24 +312,24 @@ library LibInitResearch {
     requiredResources = new ResourceValue[](1);
     requiredResources[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 30000 });
     mainBaseLevel = 5;
-    InitUtilityResearch(world, MiningResearch, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
+    InitUtilityResearch(world, MiningResearch2, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
 
     // MiningResearch III:
     requiredResources = new ResourceValue[](1);
     requiredResources[0] = ResourceValue({ resource: PlatinumResourceItemID, value: 30000 });
     mainBaseLevel = 6;
-    InitUtilityResearch(world, MiningResearch, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
+    InitUtilityResearch(world, MiningResearch3, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
 
     // MiningResearch IV:
     requiredResources = new ResourceValue[](1);
     requiredResources[0] = ResourceValue({ resource: IridiumResourceItemID, value: 30000 });
     mainBaseLevel = 7;
-    InitUtilityResearch(world, MiningResearch, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
+    InitUtilityResearch(world, MiningResearch4, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
 
     // MiningResearch V:
     requiredResources = new ResourceValue[](1);
     requiredResources[0] = ResourceValue({ resource: KimberliteResourceItemID, value: 30000 });
     mainBaseLevel = 8;
-    InitUtilityResearch(world, MiningResearch, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
+    InitUtilityResearch(world, MiningResearch5, ResourceValue(utilityResource, 1), mainBaseLevel, requiredResources);
   }
 }

@@ -32,7 +32,7 @@ export function getBuildingResearchRequirement(
 }
 
 export const MiningResearchTree: ResearchItemType = {
-  name: "Expand Range",
+  name: "Mining Vessel Capacity",
   id: BlockType.MiningResearch1,
   description:
     "Provides Mining Vessel Capacity, allowing you to build more Mining Vessels",
