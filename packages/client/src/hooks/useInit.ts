@@ -16,7 +16,7 @@ import { ampli } from "src/ampli";
 
 export const useInit = () => {
   const { blockNumber$ } = useMud();
-  const { address } = useAccount();
+  const { address, rawAddress, external } = useAccount();
   const activeAsteroid = ActiveAsteroid.use()?.value;
 
   const initialized = useMemo(() => {
@@ -45,14 +45,13 @@ export const useInit = () => {
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user
-  const connectedAccountInfo = useAccount();
   useEffect(() => {
-    ampli.identify(connectedAccountInfo.rawAddress, {
+    ampli.identify(rawAddress, {
       extra: {
-        external: connectedAccountInfo.external,
+        external,
       },
     });
-  }, [connectedAccountInfo]);
+  }, [rawAddress]);
 
   return initialized;
 };
