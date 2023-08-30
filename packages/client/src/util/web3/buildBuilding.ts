@@ -31,10 +31,10 @@ export const buildBuilding = async (
     await execute(
       systems["system.Build"].executeTyped(
         BigNumber.from(blockType),
-        position,
-        {
-          gasLimit: 10_000_000,
-        }
+        position
+        // {
+        //   gasLimit: 10_000_000,
+        // }
       ),
       providers,
       setNotification

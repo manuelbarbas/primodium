@@ -112,6 +112,16 @@ export const animationConfig: Animation<any>[] = [
     suffix: ".png",
   },
   {
+    key: "sulfurmine/level1",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 9,
+    repeat: -1,
+    prefix: "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_",
+    suffix: ".png",
+  },
+  {
     key: "alloyfactory/level1",
     assetKey: "sprite-atlas",
     frameRate: 5,

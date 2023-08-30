@@ -1,19 +1,11 @@
 import { KeybindActions } from "@game/constants";
+import { EntityID } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
+import { Level } from "src/network/components/chainComponents";
 import { BlockType } from "src/util/constants";
+import { hashAndTrimKeyCoord, hashKeyEntity } from "src/util/encode";
 import { Hotbar } from "src/util/types";
-
-const mainBaseHotbar: Hotbar = {
-  name: "Main Base",
-  icon: "/img/icons/mainbaseicon.png",
-  items: [
-    {
-      blockType: BlockType.MainBase,
-      keybind: KeybindActions.Hotbar0,
-    },
-  ],
-};
 
 const buildingHotbar: Hotbar = {
   name: "Buildings",
@@ -78,20 +70,35 @@ const advancedBuildingHotbar: Hotbar = {
 };
 
 export const useHotbarContent = () => {
-  const mainBase = useMainBaseCoord();
+  const mainBaseCoord = useMainBaseCoord();
   const [hotbarContent, setHotbarContent] = useState<Hotbar[]>([
-    mainBase ? buildingHotbar : mainBaseHotbar,
+    buildingHotbar,
   ]);
+  const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
+    x: mainBaseCoord?.x ?? 0,
+    y: mainBaseCoord?.y ?? 0,
+    parent: mainBaseCoord?.parent ?? ("0" as EntityID),
+  });
+
+  const mainBaseLevel = Level.use(coordEntity, {
+    value: 0,
+  }).value;
+
+  const minAdvancedLevel = Level.use(
+    hashKeyEntity(BlockType.IronPlateFactory, 1),
+    {
+      value: 0,
+    }
+  ).value;
 
   useEffect(() => {
     setHotbarContent(
       [
         buildingHotbar,
-        advancedBuildingHotbar,
-        // IsDebug.get() ? debugHotbar : undefined,
+        mainBaseLevel >= minAdvancedLevel ? advancedBuildingHotbar : undefined,
       ].filter(Boolean) as Hotbar[]
     );
-  }, [mainBase]);
+  }, [mainBaseLevel]);
 
   return hotbarContent;
 };
