@@ -280,6 +280,11 @@ export const IsMineableAt = newStringComponent(world, {
 /* -------------------------------------------------------------------------- */
 /*                                    Units                                   */
 /* -------------------------------------------------------------------------- */
+
+export const P_IsUnit = newBoolComponent(world, {
+  id: "P_IsUnit",
+  metadata: { contractId: `${commonIdPrefix}P_IsUnit` },
+});
 export const P_UnitAttack = newNumberComponent(world, {
   id: "P_UnitAttack",
   metadata: { contractId: `${commonIdPrefix}P_UnitAttack` },
@@ -469,6 +474,7 @@ export default {
   IsMineableAt,
 
   // Units
+  P_IsUnit,
   P_UnitAttack,
   P_UnitCargo,
   P_UnitTravelSpeed,
