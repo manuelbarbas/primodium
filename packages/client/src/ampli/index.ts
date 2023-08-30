@@ -761,9 +761,9 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Enum Values | INVADE, REINFORCE |
+   * | Enum Values | INVADE, REINFORCE, RAID |
    */
-  sendType: "INVADE" | "REINFORCE";
+  sendType: "INVADE" | "REINFORCE" | "RAID";
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */

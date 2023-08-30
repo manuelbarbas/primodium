@@ -7,7 +7,7 @@ import { ReversePosition } from "src/network/components/chainComponents";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "../analytics/parseReceipt";
 import { BlockIdToKey } from "../constants";
-import { ArrivalUnit, ESendType } from "./types";
+import { ArrivalUnit, ESendType, ESendTypeToLiteral } from "./types";
 import { Coord } from "@latticexyz/utils";
 import { encodeCoord } from "../encode";
 
@@ -49,7 +49,7 @@ export const send = async (
     asteroidCoord: originAsteroid!,
     destinationAsteroidCoord: destinationAsteroid!,
     destinationAsteroidOwner: to,
-    sendType: enumToLiteralString(sendType),
+    sendType: ESendTypeToLiteral[sendType],
     unitCounts: arrivalUnits.map((unit) => unit.count),
     unitTypes: arrivalUnits.map((unit) => BlockIdToKey[unit.unitType]),
     ...parseReceipt(receipt),
@@ -57,13 +57,3 @@ export const send = async (
 
   setTransactionLoading(false);
 };
-
-function enumToLiteralString(value: ESendType): "INVADE" | "REINFORCE" {
-  if (value === ESendType.INVADE) {
-    return "INVADE";
-  } else if (value === ESendType.REINFORCE) {
-    return "REINFORCE";
-  } else {
-    throw new Error("Invalid ESendType value");
-  }
-}
