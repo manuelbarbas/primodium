@@ -282,20 +282,6 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [BlockType.DebugStorageBuilding, ["/img/building/node.gif"]],
   [BlockType.DebugSolarPanel, ["/img/building/node.gif"]],
 
-  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.gif"]],
-  [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
-  [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
-  [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
-  [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
-  // debug units
-  [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
-  [BlockType.DebugUnit2, ["/img/unit/anvildrone.png"]],
-  [BlockType.DebugUnit3, ["/img/unit/aegisdrone.png"]],
-  [BlockType.DebugUnitMiner, ["/img/unit/miningvessel.png"]],
-  [BlockType.DebugUnitMiner2, ["/img/unit/miningvessel.png"]],
-  [BlockType.DebugUnitBattle1, ["/img/unit/hammerdrone.png"]],
-  [BlockType.DebugUnitBattle2, ["/img/unit/hammerdrone.png"]],
-
   //buildings
   [
     BlockType.MainBase,
@@ -385,11 +371,20 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   ],
 
   //units
-  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.gif"]],
+  [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
   [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
   [BlockType.AnvilLightDrone, ["/img/unit/anvildrone.png"]],
   [BlockType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [BlockType.MiningVessel, ["/img/unit/miningvessel.png"]],
+
+  // debug units
+  [BlockType.DebugUnit, ["/img/unit/stingerdrone.png"]],
+  [BlockType.DebugUnit2, ["/img/unit/anvildrone.png"]],
+  [BlockType.DebugUnit3, ["/img/unit/aegisdrone.png"]],
+  [BlockType.DebugUnitMiner, ["/img/unit/miningvessel.png"]],
+  [BlockType.DebugUnitMiner2, ["/img/unit/miningvessel.png"]],
+  [BlockType.DebugUnitBattle1, ["/img/unit/hammerdrone.png"]],
+  [BlockType.DebugUnitBattle2, ["/img/unit/hammerdrone.png"]],
 ]);
 
 export const ResearchImage = new Map<EntityID, string>([
