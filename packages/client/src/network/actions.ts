@@ -1,9 +1,6 @@
-import {
-  TransactionResponse,
-  WebSocketProvider,
-} from "@ethersproject/providers";
+import { WebSocketProvider } from "@ethersproject/providers";
 import { getRevertReason } from "@latticexyz/network";
-import { ContractTransaction } from "ethers";
+import { ContractReceipt, ContractTransaction } from "ethers";
 import { IComputedValue } from "mobx";
 
 // function that takes in an executeTyped promise that resolves to a completed transaction
@@ -16,11 +13,12 @@ export async function execute(
     ws: WebSocketProvider | undefined;
   }>,
   setNotification?: (title: string, message: string) => void
-) {
+): Promise<ContractReceipt | undefined> {
   try {
     const tx = await txPromise;
-    await tx.wait();
-  } catch (error: TransactionResponse | any) {
+    const txResponse: ContractReceipt = await tx.wait();
+    return txResponse;
+  } catch (error: any) {
     try {
       const reason = await getRevertReason(
         error.transactionHash,
@@ -31,6 +29,7 @@ export async function execute(
       } else {
         alert(reason);
       }
+      return error.receipt as ContractReceipt;
     } catch (error: any) {
       // This is most likely a gas error. i.e.:
       //     TypeError: Cannot set properties of null (setting 'gasPrice')
@@ -40,6 +39,7 @@ export async function execute(
       } else {
         alert(error);
       }
+      return undefined;
     }
   }
 }

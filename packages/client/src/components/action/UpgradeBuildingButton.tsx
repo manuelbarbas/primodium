@@ -22,12 +22,12 @@ import { SingletonID } from "@latticexyz/network";
 
 export default function UpgradeBuildingButton({
   id,
-  coords,
+  coord,
   builtTile,
   buildingEntity,
 }: {
   id: string;
-  coords: Coord;
+  coord: Coord;
   builtTile: EntityID;
   buildingEntity: EntityID;
 }) {
@@ -94,7 +94,7 @@ export default function UpgradeBuildingButton({
       <GameButton
         id={id}
         className="w-44 text-sm"
-        onClick={() => upgradeBuilding(coords, network)}
+        onClick={() => upgradeBuilding(coord, network)}
         color={
           isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined
         }
