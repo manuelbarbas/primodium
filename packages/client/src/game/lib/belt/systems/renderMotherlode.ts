@@ -5,6 +5,7 @@ import {
   defineEnterSystem,
   HasValue,
   defineComponentSystem,
+  EntityID,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -15,6 +16,7 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import {
   AsteroidType,
   Motherlode,
+  OwnedBy,
   Position,
   ReversePosition,
 } from "src/network/components/chainComponents";
@@ -25,8 +27,11 @@ import { Send } from "src/network/components/clientComponents";
 import { encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 import { Coord } from "@latticexyz/utils";
+import { BeltMap } from "@game/constants";
 
-export const renderMotherlode = (scene: Scene) => {
+const { DepthLayers } = BeltMap;
+
+export const renderMotherlode = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
 
@@ -54,6 +59,7 @@ export const renderMotherlode = (scene: Scene) => {
 
     const origin = Send.getOrigin();
     const destination = Send.getDestination();
+    const owner = OwnedBy.get(entityId)?.value;
 
     const originEntity = origin
       ? ReversePosition.get(encodeCoord(origin))
@@ -61,12 +67,16 @@ export const renderMotherlode = (scene: Scene) => {
     const destinationEntity = destination
       ? ReversePosition.get(encodeCoord(destination))
       : undefined;
-    const outline =
-      originEntity?.value === entityId
-        ? Outline({ color: 0x00ff00 })
-        : destinationEntity?.value === entityId
-        ? Outline()
-        : undefined;
+
+    let outline: ReturnType<typeof Outline> | undefined;
+
+    if (originEntity?.value === entityId) {
+      outline = Outline({ color: 0x00ffff });
+    } else if (destinationEntity?.value === entityId) {
+      outline = Outline({ color: 0xffa500 });
+    } else if (owner === player) {
+      outline = Outline({ color: 0xffffff });
+    } else outline = Outline({ color: 0x808080 });
 
     const scale =
       motherlodeData.size == EMotherlodeSize.SMALL
@@ -75,10 +85,13 @@ export const renderMotherlode = (scene: Scene) => {
         ? 2
         : 4;
     motherlodeObjectGroup.add("Sprite").setComponents([
-      ObjectPosition({
-        x: coord.x * tileWidth,
-        y: -coord.y * tileHeight,
-      }),
+      ObjectPosition(
+        {
+          x: coord.x * tileWidth,
+          y: -coord.y * tileHeight,
+        },
+        DepthLayers.Asteroid
+      ),
       outline,
       SetValue({
         originX: 0.5,

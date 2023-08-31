@@ -82,6 +82,8 @@ export const FleetPane: React.FC<{
       to ?? ("0x00" as EntityID),
       network
     );
+
+    Send.reset();
   };
 
   return (

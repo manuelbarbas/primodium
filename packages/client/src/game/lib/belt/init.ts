@@ -7,6 +7,8 @@ import { BeltMap } from "../../constants";
 import { runSystems } from "./systems";
 import { EntityID } from "@latticexyz/recs";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
+import { Account } from "src/network/components/clientComponents";
+import { SingletonID } from "@latticexyz/network";
 
 export const initBeltView = async (_: EntityID, network: Network) => {
   const { Scenes } = BeltMap;
@@ -25,7 +27,8 @@ export const initBeltView = async (_: EntityID, network: Network) => {
     translateKeybind: false,
   });
 
-  runSystems(scene);
+  const player = Account.get()?.value ?? SingletonID;
+  runSystems(scene, player);
 
   world.registerDisposer(() => {
     game.dispose();

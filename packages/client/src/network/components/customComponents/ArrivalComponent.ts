@@ -69,5 +69,5 @@ export const newArrivalComponent = () => {
     return useMemo(() => get(filters), [blockNumber]);
   };
 
-  return { ...component, get, use };
+  return { ...component, get, use, getEntity: component.get };
 };
