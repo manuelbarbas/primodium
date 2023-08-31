@@ -46,7 +46,7 @@ export const renderUnitSend = (scene: Scene) => {
     const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
     sendTrajectory.add("Graphics").setComponents([
-      ObjectPosition(originPixelCoord, DepthLayers.Asteroid),
+      ObjectPosition(originPixelCoord, DepthLayers.Paths),
       Line(destinationPixelCoord, {
         thickness: 2,
         alpha: 0.5,
@@ -59,7 +59,7 @@ export const renderUnitSend = (scene: Scene) => {
       Circle(7, {
         position: destinationPixelCoord,
         alpha: 0.5,
-        color: 0xff0000,
+        color: 0xffa500,
       }),
     ]);
   };
@@ -75,7 +75,8 @@ export const renderUnitSend = (scene: Scene) => {
   defineUpdateSystem(gameWorld, query, render);
 
   defineExitSystem(gameWorld, query, (update) => {
-    const objIndex = update.entity + objIndexSuffix;
+    const entityId = world.entities[update.entity];
+    const objIndex = entityId + objIndexSuffix;
 
     scene.objectPool.removeGroup(objIndex);
 

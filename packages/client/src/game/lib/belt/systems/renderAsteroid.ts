@@ -26,6 +26,9 @@ import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
 import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
+import { BeltMap } from "@game/constants";
+
+const { DepthLayers } = BeltMap;
 
 export const renderAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -72,10 +75,13 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
     } else outline = Outline({ color: 0xff0000 });
 
     asteroidObjectGroup.add("Sprite").setComponents([
-      ObjectPosition({
-        x: coord.x * tileWidth,
-        y: -coord.y * tileHeight,
-      }),
+      ObjectPosition(
+        {
+          x: coord.x * tileWidth,
+          y: -coord.y * tileHeight,
+        },
+        DepthLayers.Asteroid
+      ),
       SetValue({
         originX: 0.5,
         originY: 0.5,

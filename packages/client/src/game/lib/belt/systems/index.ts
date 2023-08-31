@@ -5,12 +5,16 @@ import { renderMotherlode } from "./renderMotherlode";
 import { renderUnitSend } from "./renderUnitSend";
 import { renderArrivalsInTransit } from "./renderArrivalsInTransit";
 import { EntityID } from "@latticexyz/recs";
+import { renderArrivalsInOrbit } from "./renderArrivalsInOrbit";
 
 export const runSystems = (scene: Scene, player: EntityID) => {
-  renderUnitSend(scene);
-  renderAsteroid(scene, player);
   focusAsteroid(scene);
-  renderArrivalsInTransit(scene, player);
 
+  renderUnitSend(scene);
+
+  renderAsteroid(scene, player);
   renderMotherlode(scene, player);
+
+  renderArrivalsInTransit(scene, player);
+  renderArrivalsInOrbit(scene, player);
 };

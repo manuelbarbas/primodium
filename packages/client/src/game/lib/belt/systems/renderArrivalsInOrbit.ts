@@ -15,17 +15,17 @@ import { Scene } from "engine/types";
 import { BlockNumber } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
 import { ObjectPosition } from "../../common/object-components/common";
-import { Circle, Line } from "../../common/object-components/graphics";
+import { Circle } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { BeltMap } from "@game/constants";
 import { Arrival, Position } from "src/network/components/chainComponents";
 
 const { DepthLayers } = BeltMap;
 
-export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
+export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
-  const objIndexSuffix = "_arrival";
+  const objIndexSuffix = "_arrivalOrbit";
 
   const query = [
     Has(Arrival),
@@ -36,25 +36,18 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
 
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
-    scene.objectPool.removeGroup(entityId + objIndexSuffix);
+    scene.objectPool.removeGroup(update.entity + objIndexSuffix);
     const arrival = Arrival.getEntity(entityId);
     const blockInfo = BlockNumber.get();
 
     if (!arrival || !blockInfo) return;
 
-    //don't render if arrival is already in orbit
-    if (Number(arrival.arrivalBlock) < blockInfo.value) return;
+    //don't render if arrival is in orbit
+    if (parseInt(arrival.arrivalBlock) >= blockInfo.value) return;
 
-    const origin = Position.get(arrival.origin);
     const destination = Position.get(arrival.destination);
 
-    if (!origin || !destination) return;
-
-    const originPixelCoord = tileCoordToPixelCoord(
-      { x: origin.x, y: -origin.y },
-      tileWidth,
-      tileHeight
-    );
+    if (!destination) return;
 
     const destinationPixelCoord = tileCoordToPixelCoord(
       { x: destination.x, y: -destination.y },
@@ -62,43 +55,14 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
       tileHeight
     );
 
-    const sendTrajectory = scene.objectPool.getGroup(entityId + objIndexSuffix);
+    const arrivalOrbit = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
-    sendTrajectory.add("Graphics").setComponents([
-      ObjectPosition(originPixelCoord, DepthLayers.Asteroid),
-      Line(destinationPixelCoord, {
-        thickness: 2,
-        alpha: 0.5,
-        color: 0x808080,
-      }),
-      Circle(7, {
-        position: destinationPixelCoord,
-        alpha: 0.5,
-        color: 0xff0000,
+    arrivalOrbit.add("Graphics").setComponents([
+      ObjectPosition(destinationPixelCoord, DepthLayers.Paths),
+      Circle(5, {
+        color: 0x00ff00,
       }),
     ]);
-
-    const remainingBlocks = Number(arrival.arrivalBlock) - blockInfo.value;
-
-    scene.phaserScene.add
-      .timeline({
-        at: remainingBlocks * blockInfo.avgBlockTime * 1000,
-        run: () => {
-          scene.objectPool.removeGroup(entityId + objIndexSuffix);
-
-          const arrivalOrbit = scene.objectPool.getGroup(
-            entityId + objIndexSuffix
-          );
-
-          arrivalOrbit.add("Graphics").setComponents([
-            ObjectPosition(destinationPixelCoord, DepthLayers.Paths),
-            Circle(5, {
-              color: 0x00ff00,
-            }),
-          ]);
-        },
-      })
-      .play();
   };
 
   defineEnterSystem(gameWorld, query, (update) => {

@@ -282,8 +282,8 @@ export namespace BeltMap {
   export const KEY = "BELT_MAP";
 
   export const DepthLayers = {
-    Paths: 1,
-    Asteroid: 100,
+    Asteroid: 1,
+    Paths: 100,
   };
 
   export enum Scenes {

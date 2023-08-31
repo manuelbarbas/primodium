@@ -27,6 +27,9 @@ import { Send } from "src/network/components/clientComponents";
 import { encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 import { Coord } from "@latticexyz/utils";
+import { BeltMap } from "@game/constants";
+
+const { DepthLayers } = BeltMap;
 
 export const renderMotherlode = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -82,10 +85,13 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
         ? 2
         : 4;
     motherlodeObjectGroup.add("Sprite").setComponents([
-      ObjectPosition({
-        x: coord.x * tileWidth,
-        y: -coord.y * tileHeight,
-      }),
+      ObjectPosition(
+        {
+          x: coord.x * tileWidth,
+          y: -coord.y * tileHeight,
+        },
+        DepthLayers.Asteroid
+      ),
       outline,
       SetValue({
         originX: 0.5,
