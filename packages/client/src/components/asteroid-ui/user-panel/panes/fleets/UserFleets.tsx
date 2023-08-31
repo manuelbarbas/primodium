@@ -1,4 +1,4 @@
-import { ComponentValue, EntityID } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import {
   Arrival,
   OwnedBy,
@@ -27,10 +27,12 @@ export const LabeledValue: React.FC<{
 };
 
 export const OrbitActionButton: React.FC<{
-  fleet: ComponentValue<typeof Arrival.schema>;
-}> = ({ fleet }) => {
+  destination: EntityID;
+  sendType: ESendType;
+  arrivalIndex: number;
+}> = ({ destination, sendType, arrivalIndex }) => {
   const network = useMud();
-  const { destination, sendType } = fleet;
+  // const { destination, sendType } = fleet;
   const destinationOwner = OwnedBy.use(destination)?.value;
   const player = Account.use()?.value ?? SingletonID;
   const transactionLoading = useGameStore((state) => state.transactionLoading);
@@ -59,12 +61,6 @@ export const OrbitActionButton: React.FC<{
               return;
             }
 
-            const arrivalEntity = Arrival.getAllWith(fleet)?.at(0);
-
-            if (arrivalEntity === undefined) return;
-
-            const arrivalIndex = Arrival.getAll().indexOf(arrivalEntity);
-
             reinforce(destination, arrivalIndex, network);
         }
       }}
@@ -75,24 +71,25 @@ export const OrbitActionButton: React.FC<{
   );
 };
 
-export const Fleet = ({
-  fleet,
-}: {
-  fleet: ComponentValue<typeof Arrival.schema>;
-}) => {
+export const Fleet: React.FC<{
+  arrivalBlock: string;
+  destination: EntityID;
+  sendType: ESendType;
+  arrivalIndex: number;
+}> = ({ arrivalBlock, destination, sendType, arrivalIndex }) => {
   const blockNumber = BlockNumber.use()?.value;
 
-  const destinationPosition = Position.use(fleet.destination, {
+  const destinationPosition = Position.use(destination, {
     x: 0,
     y: 0,
     parent: "0" as EntityID,
   });
-  const arrivalTime = Number(fleet.arrivalBlock) - (blockNumber ?? 0);
+  const arrivalTime = Number(arrivalBlock) - (blockNumber ?? 0);
 
   return (
     <div className="flex items-center justify-between w-full border rounded-md border-slate-700 bg-slate-800 ">
       <div className="flex gap-1 items-center">
-        {fleet.sendType === ESendType.INVADE && (
+        {sendType === ESendType.INVADE && (
           <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
             <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
@@ -100,7 +97,7 @@ export const Fleet = ({
             </p>
           </div>
         )}
-        {fleet.sendType === ESendType.RAID && (
+        {sendType === ESendType.RAID && (
           <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <BiSolidInvader size={16} />
             <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-[.6rem]">
@@ -108,7 +105,7 @@ export const Fleet = ({
             </p>
           </div>
         )}
-        {fleet.sendType === ESendType.REINFORCE && (
+        {sendType === ESendType.REINFORCE && (
           <div className="rounded-md bg-green-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
             <FaShieldAlt size={16} />
             <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
@@ -131,7 +128,11 @@ export const Fleet = ({
             </div>
           </LabeledValue>
         ) : (
-          <OrbitActionButton fleet={fleet} />
+          <OrbitActionButton
+            arrivalIndex={arrivalIndex}
+            destination={destination}
+            sendType={sendType}
+          />
         )}
       </div>
     </div>
@@ -152,7 +153,15 @@ export const Outgoingfleets: React.FC<{ user: EntityID }> = ({ user }) => {
       ) : (
         fleets.map((fleet, i) => {
           if (!fleet) return null;
-          return <Fleet key={i} fleet={fleet} />;
+          return (
+            <Fleet
+              key={i}
+              arrivalBlock={fleet.arrivalBlock}
+              arrivalIndex={fleet.index}
+              destination={fleet.destination}
+              sendType={fleet.sendType}
+            />
+          );
         })
       )}
     </div>
@@ -174,7 +183,15 @@ export const Reinforcementfleets: React.FC<{ user: EntityID }> = ({ user }) => {
       ) : (
         fleets.map((fleet, i) => {
           if (!fleet) return null;
-          return <Fleet key={i} fleet={fleet} />;
+          return (
+            <Fleet
+              key={i}
+              arrivalBlock={fleet.arrivalBlock}
+              arrivalIndex={fleet.index}
+              destination={fleet.destination}
+              sendType={fleet.sendType}
+            />
+          );
         })
       )}
     </div>
