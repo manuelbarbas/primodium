@@ -70,7 +70,7 @@ library LibInitBuildings {
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 12000 });
-    resourceValues[1] = ResourceValue({ resou rce: PhotovoltaicCellCraftedItemID, value: 6000 });
+    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 6000 });
     requiredResources[2] = resourceValues;
     //LEVEL 4
     resourceValues = new ResourceValue[](3);
