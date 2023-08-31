@@ -5,9 +5,15 @@ import {
   defineComponentSystem,
   runQuery,
 } from "@latticexyz/recs";
-import { BlockNumber, Hangar, Send } from "../components/clientComponents";
+import {
+  Account,
+  BlockNumber,
+  Hangar,
+  Send,
+} from "../components/clientComponents";
 import { world } from "../world";
 import {
+  AsteroidType,
   BuildingType,
   LastClaimedAt,
   OwnedBy,
@@ -20,6 +26,7 @@ import {
 } from "../components/chainComponents";
 import { hashEntities, hashKeyEntity } from "src/util/encode";
 import { getUnitTrainingTime } from "src/util/trainUnits";
+import { ESpaceRockType } from "src/util/web3/types";
 
 export function setupHangar() {
   function getTrainedUnclaimedUnits(
@@ -90,7 +97,12 @@ export function setupHangar() {
       units.set(entity, prev + unitCount);
     });
 
-    getTrainedUnclaimedUnits(units, blockNumber, spaceRock);
+    const type = AsteroidType.get(spaceRock, {
+      value: ESpaceRockType.Motherlode,
+    }).value;
+
+    if (type == ESpaceRockType.Asteroid)
+      getTrainedUnclaimedUnits(units, blockNumber, spaceRock);
 
     Hangar.set(
       {
@@ -116,5 +128,19 @@ export function setupHangar() {
     const destination = Send.getDestination()?.entity;
     if (origin) setupHangar(blockNumber, origin);
     if (destination) setupHangar(blockNumber, destination);
+    // maintain hangars for all player motherlodes
+    const account = Account.get()?.value;
+    if (!account) return;
+    const query = [
+      Has(AsteroidType),
+      HasValue(OwnedBy, { value: account }),
+      HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
+    ];
+
+    const motherlodes = runQuery(query);
+    motherlodes.forEach((rawMotherlode) => {
+      const motherlode = world.entities[rawMotherlode];
+      setupHangar(blockNumber, motherlode);
+    });
   });
 }
