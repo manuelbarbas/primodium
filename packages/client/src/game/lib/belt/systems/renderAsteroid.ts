@@ -71,6 +71,7 @@ export const renderAsteroid = (scene: Scene) => {
       SetValue({
         originX: 0.5,
         originY: 0.5,
+        scale: 1.2,
       }),
       Texture("asteroid-sprite"),
       outline,

@@ -153,7 +153,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     if (isSprite(gameObject, type)) {
       gameObject.clearTint();
       gameObject.setTexture("");
-      gameObject.postFX.clear();
+      gameObject.preFX?.clear();
     }
     if (isRectangle(gameObject, type)) {
       gameObject.width = 0;

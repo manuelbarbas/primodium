@@ -31,7 +31,7 @@ export const renderArrivalsInTransit = (scene: Scene, player: EntityID) => {
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
     scene.objectPool.removeGroup(entityId + objIndexSuffix);
-    const arrival = Arrival.get(entityId);
+    const arrival = Arrival.getEntity(entityId);
     const blockInfo = BlockNumber.get();
 
     if (!arrival || !blockInfo) return;

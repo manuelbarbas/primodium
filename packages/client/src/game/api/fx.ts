@@ -13,13 +13,12 @@ export const createFxApi = () => {
 
     if (!(gameObject instanceof Phaser.GameObjects.Sprite)) return;
 
-    gameObject.postFX.clear();
-
-    gameObject.postFX.addGlow(color, thickness, undefined, knockout);
+    gameObject.clearFX();
+    gameObject.preFX?.addGlow(color, thickness, undefined, knockout);
   }
 
   function removeOutline(gameObject: Phaser.GameObjects.Sprite) {
-    gameObject.postFX.clear();
+    gameObject.clearFX();
   }
 
   return {
