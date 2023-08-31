@@ -24,6 +24,9 @@ export const newArrivalComponent = () => {
     }
   );
 
+  const getWithId = (id: EntityID) => {
+    return component.get(id);
+  };
   const get = (filters?: {
     to?: EntityID;
     from?: EntityID;
@@ -69,5 +72,5 @@ export const newArrivalComponent = () => {
     return useMemo(() => get(filters), [blockNumber]);
   };
 
-  return { ...component, get, use, getEntity: component.get };
+  return { ...component, get, getWithId, use, getEntity: component.get };
 };
