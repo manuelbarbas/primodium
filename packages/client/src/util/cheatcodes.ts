@@ -8,6 +8,7 @@ import {
   OccupiedUtilityResource,
   P_ScoreMultiplier,
   P_TrainingTime,
+  Units,
 } from "src/network/components/chainComponents";
 import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import { Network } from "src/network/layer";
@@ -41,6 +42,14 @@ const resources: Record<string, EntityID> = {
   platinum: BlockType.Platinum,
   alloy: BlockType.Alloy,
   pvcell: BlockType.PhotovoltaicCell,
+};
+
+const units: Record<string, EntityID> = {
+  stinger: BlockType.StingerDrone,
+  aegis: BlockType.AegisDrone,
+  anvillight: BlockType.AnvilLightDrone,
+  hammerlight: BlockType.HammerLightDrone,
+  mining: BlockType.MiningVessel,
 };
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
@@ -114,6 +123,24 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const playerResource = hashKeyEntity(resource, entity);
 
         await mud.dev.setEntityContractComponentValue(playerResource, Item, {
+          value: count * 100,
+        });
+      },
+    },
+    giveUnit: {
+      params: [
+        { name: "name", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (name: string, count: number) => {
+        const entity = Account.get()?.value;
+        const resource = units[name.toLowerCase()];
+        const asteroid = ActiveAsteroid.get()?.value;
+        if (!entity || !asteroid || !resource)
+          throw new Error("No unitwith that name");
+        const playerResource = hashEntities(resource, entity, asteroid);
+
+        await mud.dev.setEntityContractComponentValue(playerResource, Units, {
           value: count * 100,
         });
       },

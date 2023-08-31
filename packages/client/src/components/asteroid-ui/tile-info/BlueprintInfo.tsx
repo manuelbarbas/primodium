@@ -46,8 +46,6 @@ export const BlueprintInfo: React.FC<{
     ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
     avgBlockTime;
 
-  console.log("production", production);
-  console.log("dependencies", dependencies);
   return (
     <div className="flex flex-col w-fit">
       <div className="flex flex-col justify-center items-center w-full border border-yellow-400 border-dashed ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
