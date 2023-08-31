@@ -5,6 +5,7 @@ import { Coord } from "@latticexyz/utils";
 import { Position, ReversePosition } from "../chainComponents";
 import { encodeCoord } from "src/util/encode";
 import { ActiveAsteroid } from "../clientComponents";
+import { ActiveButton } from "src/util/types";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -34,7 +35,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     units: undefined,
     count: undefined,
     sendType: undefined,
-    activeButton: 0,
+    activeButton: ActiveButton.DESTINATION,
   };
 
   const getUnitCount = (entity: EntityID) => {
@@ -61,7 +62,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
       originY: position?.y,
       destinationX: undefined,
       destinationY: undefined,
-      activeButton: 0,
+      activeButton: ActiveButton.DESTINATION,
       units: undefined,
       count: undefined,
       to: undefined,
