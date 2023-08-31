@@ -347,9 +347,9 @@ library LibInitBuildings {
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
     requiredMainBaseLevels[0] = 1;
-    requiredMainBaseLevels[1] = 3;
-    requiredMainBaseLevels[2] = 5;
-    requiredMainBaseLevels[3] = 7;
+    requiredMainBaseLevels[1] = 2;
+    requiredMainBaseLevels[2] = 4;
+    requiredMainBaseLevels[3] = 6;
     requiredMainBaseLevels[4] = 8;
 
     /****************** Production Rates *******************/
@@ -671,9 +671,9 @@ library LibInitBuildings {
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
     requiredMainBaseLevels[0] = 1;
-    requiredMainBaseLevels[1] = 2;
-    requiredMainBaseLevels[2] = 4;
-    requiredMainBaseLevels[3] = 6;
+    requiredMainBaseLevels[1] = 3;
+    requiredMainBaseLevels[2] = 5;
+    requiredMainBaseLevels[3] = 7;
     requiredMainBaseLevels[4] = 8;
 
     /****************** Required Resources *******************/
@@ -683,7 +683,7 @@ library LibInitBuildings {
     // LEVEL 1
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 45000 });
-    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 25000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 10000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
@@ -793,7 +793,7 @@ library LibInitBuildings {
 
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
-    requiredMainBaseLevels[0] = 4;
+    requiredMainBaseLevels[0] = 3;
     requiredMainBaseLevels[1] = 6;
     requiredMainBaseLevels[2] = 8;
 
@@ -896,7 +896,7 @@ library LibInitBuildings {
 
     /****************** Required Main Base Levels *******************/
     uint32[] memory requiredMainBaseLevels = new uint32[](maxLevel);
-    requiredMainBaseLevels[0] = 3;
+    requiredMainBaseLevels[0] = 2;
     requiredMainBaseLevels[1] = 5;
     requiredMainBaseLevels[2] = 8;
 
@@ -914,7 +914,7 @@ library LibInitBuildings {
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 350000 });
     resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 25000 });
     requiredResources[1] = resourceValues;
-    // LEVEL 2
+    // LEVEL 3
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 750000 });
     resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 100000 });
