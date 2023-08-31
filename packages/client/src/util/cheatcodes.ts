@@ -8,6 +8,7 @@ import {
   OccupiedUtilityResource,
   P_ScoreMultiplier,
   P_TrainingTime,
+  Units,
 } from "src/network/components/chainComponents";
 import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import { Network } from "src/network/layer";
@@ -22,6 +23,7 @@ import { hashEntities, hashKeyEntity } from "./encode";
 import { train } from "./web3";
 import { world } from "src/network/world";
 import { EntityID } from "@latticexyz/recs";
+import { updateSpaceRock } from "./web3/updateSpaceRock";
 
 const resources: Record<string, EntityID> = {
   iron: BlockType.Iron,
@@ -37,8 +39,17 @@ const resources: Record<string, EntityID> = {
   uraninite: BlockType.Uraninite,
   bolutite: BlockType.Bolutite,
   ironplate: BlockType.IronPlateCrafted,
-  alloy: BlockType.AlloyCraftedItem,
-  pvcell: BlockType.PhotovoltaicCellCraftedItem,
+  platinum: BlockType.Platinum,
+  alloy: BlockType.Alloy,
+  pvcell: BlockType.PhotovoltaicCell,
+};
+
+const units: Record<string, EntityID> = {
+  stinger: BlockType.StingerDrone,
+  aegis: BlockType.AegisDrone,
+  anvillight: BlockType.AnvilLightDrone,
+  hammerlight: BlockType.HammerLightDrone,
+  mining: BlockType.MiningVessel,
 };
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
@@ -92,6 +103,14 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         );
       },
     },
+    updateSpaceRock: {
+      params: [],
+      function: async () => {
+        const entity = Account.get()?.value;
+        if (!entity) throw new Error("No player found");
+        await updateSpaceRock(entity, mud);
+      },
+    },
     giveResource: {
       params: [
         { name: "name", type: "string" },
@@ -104,6 +123,24 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const playerResource = hashKeyEntity(resource, entity);
 
         await mud.dev.setEntityContractComponentValue(playerResource, Item, {
+          value: count * 100,
+        });
+      },
+    },
+    giveUnit: {
+      params: [
+        { name: "name", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (name: string, count: number) => {
+        const entity = Account.get()?.value;
+        const resource = units[name.toLowerCase()];
+        const asteroid = ActiveAsteroid.get()?.value;
+        if (!entity || !asteroid || !resource)
+          throw new Error("No unitwith that name");
+        const playerResource = hashEntities(resource, entity, asteroid);
+
+        await mud.dev.setEntityContractComponentValue(playerResource, Units, {
           value: count * 100,
         });
       },

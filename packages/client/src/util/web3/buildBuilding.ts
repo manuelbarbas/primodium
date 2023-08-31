@@ -6,39 +6,49 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
+import { ampli } from "src/ampli";
+import { BlockIdToKey } from "../constants";
+import { parseReceipt } from "../analytics/parseReceipt";
 import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 export const buildBuilding = async (
-  pos: Coord,
+  coord: Coord,
   blockType: EntityID,
   address: EntityID,
   network: Network
 ) => {
   const { providers, systems } = network;
-  const { tempPositionId } = addTileOverride(pos, blockType, address);
+  const { tempPositionId } = addTileOverride(coord, blockType, address);
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
+  setTransactionLoading(true);
 
   // todo: find a cleaner way to extract this value in all web3 functions
   const activeAsteroid = ActiveAsteroid.get()?.value;
   if (!activeAsteroid) return;
 
-  const position = { ...pos, parent: activeAsteroid };
+  const position = { ...coord, parent: activeAsteroid };
 
   try {
-    setTransactionLoading(true);
-    console.log("building ", pos);
-    await execute(
+    const receipt = await execute(
       systems["system.Build"].executeTyped(
         BigNumber.from(blockType),
-        position,
-        {
-          gasLimit: 10_000_000,
-        }
+        position
+        // {
+        //   gasLimit: 10_000_000,
+        // }
       ),
       providers,
       setNotification
     );
+
+    ampli.systemBuild({
+      asteroidCoord: BigNumber.from(activeAsteroid).toString(),
+      buildingType: BlockIdToKey[blockType],
+      coord: [coord.x, coord.y],
+      currLevel: 0,
+      ...parseReceipt(receipt),
+    });
   } finally {
     removeTileOverride(tempPositionId);
   }

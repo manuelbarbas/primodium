@@ -10,17 +10,21 @@ import { IoFlaskSharp, IoSettings } from "react-icons/io5";
 import Modal from "../shared/Modal";
 import ResearchPage from "./research-menu/ResearchPage";
 import { MainMenu } from "./MainMenu";
-import { Level } from "src/network/components/chainComponents";
+import { Level, Position } from "src/network/components/chainComponents";
 import { Starmap } from "./user-panel/panes/starmap/Starmap";
 import { TileInfo } from "./tile-info/TileInfo";
 import { primodium } from "@game/api";
 import { BeltMap } from "@game/constants";
 import { FullStarmap } from "./user-panel/panes/starmap/FullStarmap";
 import { Leaderboard } from "./Leaderboard";
-import { FaSpaceAwesome } from "react-icons/fa6";
+import { FaLocationCrosshairs, FaSpaceAwesome } from "react-icons/fa6";
 import { SpaceRockFleets } from "./fleets/SpaceRockFleets";
-import { ActiveAsteroid, Send } from "src/network/components/clientComponents";
-import { FaFileAlt } from "react-icons/fa";
+import {
+  ActiveAsteroid,
+  BattleReport,
+  Send,
+} from "src/network/components/clientComponents";
+import { FaFileAlt, FaExpand } from "react-icons/fa";
 import { BattleReports } from "./battle-reports/BattleReports";
 
 export const InfoBox = () => {
@@ -31,10 +35,10 @@ export const InfoBox = () => {
   const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
   const [showFullStarmap, setShowFullStarmap] = useState<boolean>(false);
   const [showFleets, setShowFleets] = useState<boolean>(false);
-  const [showReports, setShowReports] = useState<boolean>(false);
   const { setTarget } = primodium.api(BeltMap.KEY)!.game;
   const [notify, setNotify] = useState<boolean>(false);
   const { pan, getPosition } = primodium.api(BeltMap.KEY)!.camera;
+  const battleReport = BattleReport.use();
 
   const asteroid = ActiveAsteroid.use()?.value;
   const coordEntity = hashAndTrimKeyCoord(BlockType.BuildingKey, {
@@ -88,14 +92,26 @@ export const InfoBox = () => {
                   }}
                 />
                 <button
-                  className="absolute bottom-1 right-1 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
+                  className="absolute bottom-2 right-2 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
+                  onClick={() => {
+                    const asteroid = ActiveAsteroid.get()?.value;
+                    const position = Position.get(asteroid);
+
+                    if (!position) return;
+                    requestAnimationFrame(() => pan(position));
+                  }}
+                >
+                  <FaLocationCrosshairs />
+                </button>
+                <button
+                  className="absolute flex gap-1 items-center top-2 left-2 text-xs border rounded-md p-1 bg-slate-700 border-cyan-700 outline-none bg-gradient-to-b from-transparent to-slate-900/20"
                   onClick={() => {
                     setShowFullStarmap(true);
                     const position = getPosition();
                     requestAnimationFrame(() => pan(position, 0));
                   }}
                 >
-                  Open Starmap
+                  <FaExpand /> Starmap
                 </button>
               </motion.div>
             )}
@@ -140,7 +156,7 @@ export const InfoBox = () => {
                   color="bg-rose-600"
                   className="mt-2 ml-1 text-sm"
                   onClick={() => {
-                    setShowReports(true);
+                    BattleReport.set({ show: true, battle: undefined });
                   }}
                   depth={4}
                 >
@@ -192,8 +208,8 @@ export const InfoBox = () => {
       </Modal>
       <Modal
         title="Battle Reports"
-        show={showReports}
-        onClose={() => setShowReports(!showReports)}
+        show={battleReport?.show ?? false}
+        onClose={() => BattleReport.set({ show: false, battle: undefined })}
       >
         <BattleReports />
       </Modal>

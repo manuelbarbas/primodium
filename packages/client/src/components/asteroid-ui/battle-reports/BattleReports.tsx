@@ -1,9 +1,13 @@
 import { HasValue } from "@latticexyz/recs";
 import { useEntityQuery } from "@latticexyz/react";
 import { FaArrowLeft, FaGreaterThan, FaTimes, FaTrophy } from "react-icons/fa";
-import { Account, Battle } from "src/network/components/clientComponents";
+import {
+  Account,
+  Battle,
+  BattleReport,
+} from "src/network/components/clientComponents";
 import { SingletonID } from "@latticexyz/network";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { world } from "src/network/world";
 import { Position } from "src/network/components/chainComponents";
 import { BattleDetails } from "./BattleDetails";
@@ -21,8 +25,13 @@ export const LabeledValue: React.FC<{
 };
 
 export const BattleReports = () => {
-  const [selectedBattle, setSelectedBattle] =
-    useState<ReturnType<typeof Battle.format>>();
+  const battleId = BattleReport.use()?.battle;
+  const selectedBattle = useMemo(() => {
+    if (!battleId) return undefined;
+    const rawBattle = Battle.get(battleId);
+    if (!rawBattle) return undefined;
+    return Battle.format(rawBattle);
+  }, [battleId]);
 
   const player = Account.use()?.value;
   const attackingBattles = useEntityQuery([
@@ -41,16 +50,18 @@ export const BattleReports = () => {
     const battles = [];
 
     for (const entityIndex of attackingBattles) {
-      const battle = Battle.get(world.entities[entityIndex]);
+      const entity = world.entities[entityIndex];
+      const battle = Battle.get(entity);
       if (battle) {
-        battles.push(battle);
+        battles.push({ ...battle, entity });
       }
     }
 
     for (const entityIndex of defendingBattles) {
-      const battle = Battle.get(world.entities[entityIndex]);
+      const entity = world.entities[entityIndex];
+      const battle = Battle.get(entity);
       if (battle) {
-        battles.push(battle);
+        battles.push({ ...battle, entity });
       }
     }
 
@@ -75,7 +86,7 @@ export const BattleReports = () => {
             battles.map((battle, index) => (
               <button
                 key={index}
-                onClick={() => setSelectedBattle(Battle.format(battle))}
+                onClick={() => BattleReport.update({ battle: battle.entity })}
                 className="relative flex items-center justify-between w-full p-2 border rounded-md border-slate-700 bg-slate-800 hover:border-cyan-400 outline-none"
               >
                 <div className="flex gap-1 items-center">
@@ -128,7 +139,7 @@ export const BattleReports = () => {
       {selectedBattle && (
         <button
           className="p-1 px-4 border rounded-md gap-2 flex items-center text-md font-bold bg-slate-800 border-slate-600 mt-2"
-          onClick={() => setSelectedBattle(undefined)}
+          onClick={() => BattleReport.update({ battle: undefined })}
         >
           <FaArrowLeft /> Back
         </button>

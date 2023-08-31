@@ -20,7 +20,7 @@ export default function Increment() {
   return (
     <div className="flex flex-col text-white">
       <div className="h-20">
-        Is Debug: <span>{debug?.value ?? "??"}</span>
+        Is Debug: <span>{`${debug?.value}` ?? "??"}</span>
         <br />
         Counter: <span>{counter?.value ?? "??"}</span>
         <br />

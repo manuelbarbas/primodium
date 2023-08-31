@@ -27,6 +27,27 @@ library LibBlueprint {
     blueprint[7] = -1;
   }
 
+  function get3x2Blueprint() internal pure returns (int32[] memory blueprint) {
+    blueprint = new int32[](12);
+    blueprint[0] = 0;
+    blueprint[1] = 0;
+
+    blueprint[2] = -1;
+    blueprint[3] = 0;
+
+    blueprint[4] = 1;
+    blueprint[5] = 0;
+
+    blueprint[6] = 0;
+    blueprint[7] = -1;
+
+    blueprint[8] = -1;
+    blueprint[9] = -1;
+
+    blueprint[10] = 1;
+    blueprint[11] = -1;
+  }
+
   function get3x3Blueprint() internal pure returns (int32[] memory blueprint) {
     blueprint = new int32[](18);
     blueprint[0] = 0;

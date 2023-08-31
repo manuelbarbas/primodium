@@ -7,6 +7,9 @@ import { ArrivalUnitStruct } from "../../../../../contracts/types/ethers-contrac
 import { EntityID } from "@latticexyz/recs";
 import { getBlockTypeName } from "src/util/common";
 import { Arrival } from "src/network/components/chainComponents";
+import { Fleet } from "../user-panel/panes/fleets/UserFleets";
+import { reinforce } from "src/util/web3";
+import { useMud } from "src/hooks";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -47,7 +50,8 @@ export const InvasionRow = () => {
 
 export const ReinforcmentRow: React.FC<{
   units: ArrivalUnitStruct[] | undefined;
-}> = ({ units }) => {
+  executeReinforcement: () => void;
+}> = ({ units, executeReinforcement }) => {
   const [showUnits, setShowUnits] = useState<boolean>(false);
 
   return (
@@ -67,7 +71,10 @@ export const ReinforcmentRow: React.FC<{
         <div className="text-right">
           <LabeledValue label="ACTION">
             <div className="flex gap-1">
-              <button className="bg-cyan-700 px-2 py-1 rounded-md flex items-center gap-1 border border-cyan-500 hover:scale-105 transition-all">
+              <button
+                onClick={executeReinforcement}
+                className="bg-cyan-700 px-2 py-1 rounded-md flex items-center gap-1 border border-cyan-500 hover:scale-105 transition-all"
+              >
                 <FaCheck />
                 ACCEPT UNITS
               </button>
@@ -117,6 +124,7 @@ export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
     destination: spaceRock,
     onlyOrbiting: true,
   });
+  const network = useMud();
   return (
     <div className="w-full text-xs space-y-2 h-full overflow-y-auto scrollbar">
       {orbitingFleets.length === 0 && (
@@ -126,14 +134,24 @@ export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
       )}
       {orbitingFleets.length !== 0 &&
         orbitingFleets.map((fleet, index) => {
+          console.log("fleet:", fleet);
           if (!fleet) return;
           const units = fleet.unitCounts.map((unit, i) => ({
             count: unit,
             unitType: fleet.unitTypes[i],
           }));
           if (fleet.sendType === ESendType.INVADE)
-            return <InvasionRow key={index} />;
-          else return <ReinforcmentRow key={index} units={units} />;
+            return <Fleet key={index} fleet={fleet} />;
+          else
+            return (
+              <ReinforcmentRow
+                key={index}
+                units={units}
+                executeReinforcement={() =>
+                  reinforce(spaceRock, fleet.index, network)
+                }
+              />
+            );
         })}
     </div>
   );

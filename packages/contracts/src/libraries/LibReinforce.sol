@@ -62,23 +62,25 @@ library LibReinforce {
     bool isArrivalResolved = true;
     for (uint i = 0; i < arrival.units.length; i++) {
       if (arrival.units[i].count == 0) continue;
-      uint32 num = LibMath.min(
-        LibUnits.howManyUnitsCanAdd(world, playerEntity, arrival.units[i].unitType),
-        arrival.units[i].count
-      );
+      uint32 num = arrival.units[i].count;
+      if (arrival.from != playerEntity) {
+        num = LibMath.min(LibUnits.howManyUnitsCanAdd(world, playerEntity, arrival.units[i].unitType), num);
+      }
+
       if (num > 0) {
         LibUpdateSpaceRock.addUnitsToAsteroid(world, playerEntity, asteroidEntity, arrival.units[i].unitType, num);
-        LibUnits.updateOccuppiedUtilityResources(world, playerEntity, arrival.units[i].unitType, num, true);
-
+        if (arrival.from != playerEntity) {
+          LibUnits.updateOccuppiedUtilityResources(world, playerEntity, arrival.units[i].unitType, num, true);
+          LibUnits.updateOccuppiedUtilityResources(world, arrival.from, arrival.units[i].unitType, num, false);
+        }
         arrival.units[i].count -= num;
-
-        LibUnits.updateOccuppiedUtilityResources(world, arrival.from, arrival.units[i].unitType, num, false);
       }
       if (arrival.units[i].count > 0) {
         isArrivalResolved = false;
       }
     }
     if (isArrivalResolved) {
+      LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from, 1);
       ArrivalsList.remove(world, playerAsteroidEntity, arrivalIndex);
       return true;
     } else {
@@ -118,6 +120,7 @@ library LibReinforce {
           arrival.units[i].count
         );
       }
+      LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), recallerEntity, 1);
       ArrivalsList.remove(world, playerAsteroidEntity, index);
       size -= 1;
     }
@@ -151,6 +154,7 @@ library LibReinforce {
         );
       }
       ArrivalsList.remove(world, playerAsteroidEntity, index);
+      LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from, 1);
       size -= 1;
     }
   }

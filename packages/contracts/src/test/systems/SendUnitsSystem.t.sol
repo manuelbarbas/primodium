@@ -23,7 +23,7 @@ import { GameConfigComponent, ID as GameConfigComponentID, SingletonID } from "c
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { MaxUtilityComponent, ID as MaxUtilityComponentID } from "components/MaxUtilityComponent.sol";
-
+import { ArrivalsSizeComponent, ID as ArrivalsSizeComponentID } from "components/ArrivalsSizeComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { OccupiedUtilityResourceComponent, ID as OccupiedUtilityResourceComponentID } from "components/OccupiedUtilityResourceComponent.sol";
@@ -129,7 +129,7 @@ contract SendUnitsTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
 
-    vm.expectRevert(bytes("you can only move from an asteroid you own"));
+    vm.expectRevert(bytes("[SendUnitsSystem] You can only move from an asteroid you own."));
     sendUnitsSystem.executeTyped(
       units,
       ESendType.INVADE,
@@ -144,7 +144,7 @@ contract SendUnitsTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
 
-    vm.expectRevert(bytes("origin and destination cannot be the same"));
+    vm.expectRevert(bytes("[SendUnitsSystem] Origin and destination cannot be the same."));
     sendUnitsSystem.executeTyped(
       units,
       ESendType.INVADE,
@@ -159,7 +159,7 @@ contract SendUnitsTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
 
-    vm.expectRevert(bytes("you cannot invade yourself"));
+    vm.expectRevert(bytes("[SendUnitsSystem] You cannot invade yourself."));
     sendUnitsSystem.executeTyped(
       units,
       ESendType.INVADE,
@@ -187,7 +187,7 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function testInvade() public {
-    invade(alice);
+    invade(alice, false);
   }
 
   function reinforce(address reinforcer, address receiver) public returns (Arrival memory) {
@@ -287,13 +287,14 @@ contract SendUnitsTest is PrimodiumTest {
     return (asteroid);
   }
 
-  function invade(address invader) public returns (Arrival memory) {
+  function invade(address invader, bool isNeutral) public returns (Arrival memory) {
     uint256 motherlodeEntity = findMotherlode(bob);
 
-    vm.startPrank(deployer);
-    ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
-    vm.stopPrank();
-
+    if (!isNeutral) {
+      vm.startPrank(deployer);
+      ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
+      vm.stopPrank();
+    }
     setupAttackerUnits(invader, DebugUnit);
     vm.startPrank(invader);
     uint32 attackNumber = 4;
@@ -515,10 +516,28 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function testExecuteInvade() public {
-    Arrival memory invasionArrival = invade(alice);
+    Arrival memory invasionArrival = invade(alice, false);
+
     vm.roll(invasionArrival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
     vm.prank(alice);
     invadeSystem.executeTyped(invasionArrival.destination);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), invasionArrival.destination)),
+      0
+    );
+    assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
+  }
+
+  function testExecuteInvadeNeutral() public {
+    Arrival memory invasionArrival = invade(alice, true);
+
+    vm.roll(invasionArrival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
+    vm.prank(alice);
+    invadeSystem.executeTyped(invasionArrival.destination);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
     assertEq(
       ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), invasionArrival.destination)),
       0
@@ -529,8 +548,10 @@ contract SendUnitsTest is PrimodiumTest {
   function testExecuteRaid() public {
     Arrival memory raidArival = raid(alice);
     vm.roll(raidArival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
     vm.prank(alice);
     raidSystem.executeTyped(raidArival.destination);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
     assertEq(ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), raidArival.destination)), 0);
     assertEq(ownedByComponent.getValue(raidArival.destination), addressToEntity(bob));
   }
@@ -563,7 +584,9 @@ contract SendUnitsTest is PrimodiumTest {
     );
     console.log("execute receive reinforcements");
     vm.startPrank(bob);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
     receiveReinforcementSystem.executeTyped(reinforceArrival.destination, 0);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
     console.log("receive reinforcements sucess");
     assertEq(
       ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), reinforceArrival.destination)),
@@ -633,9 +656,9 @@ contract SendUnitsTest is PrimodiumTest {
     );
     console.log("execute recall reinforcements");
     vm.startPrank(alice);
-
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
     recallReinforcementsSystem.executeTyped(reinforceArrival.destination);
-
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
     console.log("recall reinforcements sucess");
     assertEq(
       ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(bob), reinforceArrival.destination)),

@@ -136,6 +136,25 @@ export const P_MaxStorage = newNumberComponent(world, {
   overridable: true,
 });
 
+export const P_Production = newComponent(
+  world,
+  { resourceID: Type.Entity, resourceProductionRate: Type.Number },
+
+  {
+    id: "P_Production",
+    metadata: { contractId: `${commonIdPrefix}P_Production` },
+  }
+);
+
+export const P_ProductionDependencies = newComponent(
+  world,
+  { resources: Type.EntityArray, values: Type.NumberArray },
+
+  {
+    id: "P_ProductionDependencies",
+    metadata: { contractId: `${commonIdPrefix}P_ProductionDependencies` },
+  }
+);
 export const Production = newNumberComponent(world, {
   id: "Production",
   metadata: { contractId: `${commonIdPrefix}Production` },
@@ -280,6 +299,11 @@ export const IsMineableAt = newStringComponent(world, {
 /* -------------------------------------------------------------------------- */
 /*                                    Units                                   */
 /* -------------------------------------------------------------------------- */
+
+export const P_IsUnit = newBoolComponent(world, {
+  id: "P_IsUnit",
+  metadata: { contractId: `${commonIdPrefix}P_IsUnit` },
+});
 export const P_UnitAttack = newNumberComponent(world, {
   id: "P_UnitAttack",
   metadata: { contractId: `${commonIdPrefix}P_UnitAttack` },
@@ -372,6 +396,16 @@ export const MaxMoves = newNumberComponent(world, {
   metadata: { contractId: `${commonIdPrefix}MaxMoves` },
 });
 
+export const ArrivalsIndex = newEntityComponent(world, {
+  id: "ArrivalsIndex",
+  metadata: { contractId: `${commonIdPrefix}ArrivalsIndex` },
+});
+
+export const ArrivalsSize = newNumberComponent(world, {
+  id: "ArrivalsSize",
+  metadata: { contractId: `${commonIdPrefix}ArrivalsSize` },
+});
+
 /* -------------------------------------------------------------------------- */
 /*                                 Leaderboard                                */
 /* -------------------------------------------------------------------------- */
@@ -461,6 +495,8 @@ export default {
   OccupiedUtilityResource,
   MaxUtility,
   ReversePosition,
+  P_Production,
+  P_ProductionDependencies,
 
   // Motherlodes
   Motherlode,
@@ -469,6 +505,7 @@ export default {
   IsMineableAt,
 
   // Units
+  P_IsUnit,
   P_UnitAttack,
   P_UnitCargo,
   P_UnitTravelSpeed,
@@ -487,6 +524,8 @@ export default {
 
   // Arrivals
   Arrival,
+  ArrivalsIndex,
+  ArrivalsSize,
   MaxMoves,
 
   // Scoreboard

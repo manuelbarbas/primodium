@@ -20,9 +20,39 @@ export const AllResourceLabels = ({
         resourceId={BlockType.Copper}
       />
       <ResourceLabel
-        name={"Bolutite"}
+        name={"Lithium"}
         entityIndex={entityIndex}
-        resourceId={BlockType.Bolutite}
+        resourceId={BlockType.Lithium}
+      />
+      <ResourceLabel
+        name={"Sulfur"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.Sulfur}
+      />
+      <ResourceLabel
+        name={"Iron Plate"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.IronPlateCrafted}
+      />
+      <ResourceLabel
+        name={"Alloy"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.Alloy}
+      />
+      <ResourceLabel
+        name={"Photovoltaic Cell"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.PhotovoltaicCell}
+      />
+      <ResourceLabel
+        name={"Titanium"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.Titanium}
+      />
+      <ResourceLabel
+        name={"Platinum"}
+        entityIndex={entityIndex}
+        resourceId={BlockType.Platinum}
       />
       <ResourceLabel
         name={"Iridium"}
@@ -35,24 +65,14 @@ export const AllResourceLabels = ({
         resourceId={BlockType.Kimberlite}
       />
       <ResourceLabel
-        name={"Lithium"}
+        name={"Bolutite"}
         entityIndex={entityIndex}
-        resourceId={BlockType.Lithium}
-      />
-      <ResourceLabel
-        name={"Sulfur"}
-        entityIndex={entityIndex}
-        resourceId={BlockType.Sulfur}
+        resourceId={BlockType.Bolutite}
       />
       <ResourceLabel
         name={"Osmium"}
         entityIndex={entityIndex}
         resourceId={BlockType.Osmium}
-      />
-      <ResourceLabel
-        name={"Titanium"}
-        entityIndex={entityIndex}
-        resourceId={BlockType.Titanium}
       />
       <ResourceLabel
         name={"Tungsten"}
@@ -68,11 +88,6 @@ export const AllResourceLabels = ({
         name={"Bullet"}
         entityIndex={entityIndex}
         resourceId={BlockType.BulletCrafted}
-      />
-      <ResourceLabel
-        name={"Iron Plate"}
-        entityIndex={entityIndex}
-        resourceId={BlockType.IronPlateCrafted}
       />
       <ResourceLabel
         name={"Basic Power Source"}
@@ -138,16 +153,6 @@ export const AllResourceLabels = ({
         name={"Kimberlite Catalyst"}
         entityIndex={entityIndex}
         resourceId={BlockType.KimberliteCrystalCatalystCrafted}
-      />
-      <ResourceLabel
-        name={"Alloy"}
-        entityIndex={entityIndex}
-        resourceId={BlockType.AlloyCraftedItem}
-      />
-      <ResourceLabel
-        name={"Photovoltaic Cell"}
-        entityIndex={entityIndex}
-        resourceId={BlockType.PhotovoltaicCellCraftedItem}
       />
     </div>
   );

@@ -143,6 +143,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     gameObject.setScrollFactor(1);
     gameObject.clearMask();
     gameObject.setData("objectPoolId", null);
+    gameObject.removeAllListeners();
 
     //set Origin does not exist on graphics
     if (!isGraphics(gameObject, type)) gameObject.setOrigin(0, 0);
@@ -153,6 +154,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     if (isSprite(gameObject, type)) {
       gameObject.clearTint();
       gameObject.setTexture("");
+      gameObject.preFX?.clear();
     }
     if (isRectangle(gameObject, type)) {
       gameObject.width = 0;

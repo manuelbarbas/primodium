@@ -99,6 +99,8 @@ export namespace AsteroidMap {
 
     LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
 
+    SulfurMine1 = "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
+
     StorageUnit1 = "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
     StorageUnit2 = "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
     StorageUnit3 = "sprites/storage-facility/level3/Storage_Facility_LVL3_1.png",
@@ -136,6 +138,8 @@ export namespace AsteroidMap {
     CopperMine3 = "coppermine/level3",
 
     LithiumMine1 = "lithiummine/level1",
+
+    SulfurMine1 = "sulfurmine/level1",
 
     StorageUnit3 = "storageunit/level3",
 
@@ -188,11 +192,14 @@ export namespace AsteroidMap {
       SpriteKeys.IronMine2,
       SpriteKeys.IronMine3,
     ],
+
     [BlockType.CopperMine]: [
       SpriteKeys.CopperMine1,
       SpriteKeys.CopperMine2,
       SpriteKeys.CopperMine3,
     ],
+
+    [BlockType.SulfurMine]: [SpriteKeys.SulfurMine1],
 
     [BlockType.LithiumMine]: [SpriteKeys.LithiumMine1],
 
@@ -243,6 +250,7 @@ export namespace AsteroidMap {
       AnimationKeys.CopperMine3,
     ],
     [BlockType.LithiumMine]: [AnimationKeys.LithiumMine1],
+    [BlockType.SulfurMine]: [AnimationKeys.SulfurMine1],
     [BlockType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
 
     [BlockType.IronPlateFactory]: [
@@ -272,6 +280,11 @@ export namespace AsteroidMap {
 
 export namespace BeltMap {
   export const KEY = "BELT_MAP";
+
+  export const DepthLayers = {
+    Asteroid: 1,
+    Paths: 100,
+  };
 
   export enum Scenes {
     Root = "ROOT",

@@ -6,7 +6,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { KeybindActions } from "@game/constants";
 import { Key } from "engine/types";
 
-const VERSION = 1;
+const VERSION = 2;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;

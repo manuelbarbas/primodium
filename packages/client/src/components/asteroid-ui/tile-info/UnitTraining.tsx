@@ -27,7 +27,7 @@ import { NumberInput } from "src/components/shared/NumberInput";
 export const UnitTraining: React.FC<{
   buildingEntity: EntityID;
   onClose: () => void;
-}> = ({ buildingEntity }) => {
+}> = ({ buildingEntity, onClose }) => {
   const network = useMud();
   const [selectedUnit, setSelectedUnit] = useState<EntityID>();
   const [count, setCount] = useState(0);
@@ -130,6 +130,7 @@ export const UnitTraining: React.FC<{
                     image={
                       ResourceImage.get(BlockType.HousingUtilityResource) ?? ""
                     }
+                    scale={1}
                     resourceId={BlockType.HousingUtilityResource}
                     name={BlockIdToKey[BlockType.HousingUtilityResource]}
                     amount={requiredHousing}
@@ -144,7 +145,7 @@ export const UnitTraining: React.FC<{
                       key={`resource-${i}`}
                       image={ResourceImage.get(resource.resource)!}
                       resourceId={resource.resource}
-                      name={resource.resource}
+                      name={getBlockTypeName(resource.resource)}
                       amount={resource.amount}
                     />
                   ))}
@@ -172,6 +173,7 @@ export const UnitTraining: React.FC<{
                 disabled={maximum - unitsTaken < 0 || transactionLoading}
                 onClick={() => {
                   train(buildingEntity, selectedUnit, count, network);
+                  onClose();
                 }}
               >
                 Train
