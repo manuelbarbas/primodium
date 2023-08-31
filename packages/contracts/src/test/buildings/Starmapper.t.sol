@@ -10,6 +10,7 @@ import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol"
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
 import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
 import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
 import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
@@ -69,20 +70,28 @@ contract StarmapperTest is PrimodiumTest {
   function setupBuildingReqs(uint256 playerEntity, uint256 buildingType, uint256 level) public {
     /* -------------------------------- Research -------------------------------- */
     uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, level);
-    uint256 research = P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).getValue(
-      buildingLevelEntity
+
+    uint256 mainBaseLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(buildingLevelEntity);
+    componentDevSystem.executeTyped(
+      LevelComponentID,
+      MainBaseComponent(world.getComponent(MainBaseComponentID)).getValue(playerEntity),
+      abi.encode(mainBaseLevel)
     );
-    uint256 mainBaseLevel = LevelComponent(world.getComponent(LevelComponentID)).getValue(research);
-    componentDevSystem.executeTyped(LevelComponentID, playerEntity, abi.encode(mainBaseLevel));
+
+    if (P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).has(buildingLevelEntity)) {
+      uint256 research = P_RequiredResearchComponent(world.getComponent(P_RequiredResearchComponentID)).getValue(
+        buildingLevelEntity
+      );
+
+      componentDevSystem.executeTyped(
+        HasResearchedComponentID,
+        LibEncode.hashKeyEntity(research, playerEntity),
+        abi.encode(true)
+      );
+    }
 
     ResourceValues memory resources = P_RequiredResourcesComponent(world.getComponent(P_RequiredResourcesComponentID))
-      .getValue(StarmapperResearchID);
-
-    componentDevSystem.executeTyped(
-      HasResearchedComponentID,
-      LibEncode.hashKeyEntity(research, playerEntity),
-      abi.encode(true)
-    );
+      .getValue(buildingLevelEntity);
     /* -------------------------------- Resources ------------------------------- */
     for (uint256 i = 0; i < resources.resources.length; i++) {
       uint256 resource = resources.resources[i];

@@ -15,6 +15,7 @@ import { BrandingLabel } from "./BrandingLabel";
 import { AiOutlineRotateRight } from "react-icons/ai";
 import { useOrientation } from "src/hooks/useOrientation";
 import { UserPanel } from "./user-panel/UserPanel";
+import BattleNotifications from "./BattleNotifications";
 
 function AsteroidUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -50,6 +51,7 @@ function AsteroidUI() {
               <InfoBox />
               <NotificationBox />
               <UserPanel />
+              <BattleNotifications />
             </motion.div>
           )}
         </AnimatePresence>

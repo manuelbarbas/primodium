@@ -1,5 +1,4 @@
 import {
-  Arrival,
   BuildingType,
   Item,
   Level,
@@ -17,16 +16,13 @@ import {
   Account,
   ActiveAsteroid,
   Battle,
-  BlockNumber,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
 import { hashEntities, hashKeyEntity } from "./encode";
 import { train } from "./web3";
 import { world } from "src/network/world";
 import { EntityID } from "@latticexyz/recs";
-import { ESendType } from "./web3/types";
-import { BigNumber } from "ethers";
-import { keccak256 } from "@latticexyz/utils";
+import { updateSpaceRock } from "./web3/updateSpaceRock";
 
 const resources: Record<string, EntityID> = {
   iron: BlockType.Iron,
@@ -41,6 +37,10 @@ const resources: Record<string, EntityID> = {
   kimberlite: BlockType.Kimberlite,
   uraninite: BlockType.Uraninite,
   bolutite: BlockType.Bolutite,
+  ironplate: BlockType.IronPlateCrafted,
+  platinum: BlockType.Platinum,
+  alloy: BlockType.Alloy,
+  pvcell: BlockType.PhotovoltaicCell,
 };
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
@@ -94,6 +94,14 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         );
       },
     },
+    updateSpaceRock: {
+      params: [],
+      function: async () => {
+        const entity = Account.get()?.value;
+        if (!entity) throw new Error("No player found");
+        await updateSpaceRock(entity, mud);
+      },
+    },
     giveResource: {
       params: [
         { name: "name", type: "string" },
@@ -106,7 +114,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const playerResource = hashKeyEntity(resource, entity);
 
         await mud.dev.setEntityContractComponentValue(playerResource, Item, {
-          value: count,
+          value: count * 100,
         });
       },
     },
@@ -209,35 +217,6 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
           };
           world.registerEntity({ id: entityId });
           Battle.set(battle, entityId);
-        }
-      },
-    },
-    addArrivals: {
-      params: [{ name: "value", type: "number" }],
-      function: async (value: number) => {
-        const account = Account.get()?.value!;
-        const spaceRock = ActiveAsteroid.get()?.value!;
-        for (let i = 0; i < value; i++) {
-          const entityId = hashEntities(keccak256("arrival"), account, i);
-          const emptyUnits = new Array(Math.floor(Math.random() * 4)).fill(
-            0
-          ) as number[];
-
-          world.registerEntity({ id: entityId });
-
-          await mud.dev.setEntityContractComponentValue(entityId, Arrival, {
-            arrivalBlock: BigNumber.from(
-              (BlockNumber.get()?.value ?? 0) + 50
-            ).toString(),
-            from: account,
-            to: hashEntities(BlockType.DebugUnit3, account, i),
-            origin: spaceRock,
-            destination: spaceRock,
-            sendType:
-              Math.random() > 0.5 ? ESendType.INVADE : ESendType.REINFORCE,
-            unitCounts: emptyUnits,
-            unitTypes: emptyUnits.map(() => BlockType.DebugUnit),
-          });
         }
       },
     },

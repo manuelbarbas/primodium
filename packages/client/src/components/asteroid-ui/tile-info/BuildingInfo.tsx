@@ -62,10 +62,14 @@ export const BuildingInfo: React.FC<{
       {/* <Header content={`${ownerName}`} /> */}
       <div className="relative flex flex-col justify-center items-center border border-yellow-400 ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
         <div className="relative flex items-center gap-2">
-          <img
-            src={imageURI}
-            className="w-16 h-16 pixel-images border-2 border-cyan-700 rounded-md"
-          />
+          <div
+            className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400`}
+          >
+            <img
+              src={imageURI}
+              className={`absolute bottom-0 w-14 pixel-images rounded-md`}
+            />
+          </div>
           <p className="flex items-center text-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm ">
             <b>
               {buildingName} {toRomanNumeral(currLevel ?? 1)}
@@ -96,7 +100,7 @@ export const BuildingInfo: React.FC<{
             id="upgrade-building"
             builtTile={buildingType ?? BlockType.Air}
             buildingEntity={building}
-            coords={coord}
+            coord={coord}
           />
         </div>
       )}

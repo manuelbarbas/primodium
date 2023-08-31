@@ -7,10 +7,10 @@ import Spinner from "../shared/Spinner";
 
 export default function ClaimButton({
   id,
-  coords,
+  coord,
 }: {
   id?: string;
-  coords: Coord;
+  coord: Coord;
 }) {
   const network = useMud();
   const [transactionLoading] = useGameStore((state) => [
@@ -22,7 +22,7 @@ export default function ClaimButton({
       <GameButton
         id={id}
         className="mt-2 text-sm"
-        onClick={() => claimFromMine(coords, network)}
+        onClick={() => claimFromMine(coord, network)}
       >
         <div className="font-bold leading-none h-8 flex justify-center items-center crt px-2 w-40">
           {transactionLoading ? <Spinner /> : "Claim Resources"}

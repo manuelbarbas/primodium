@@ -11,7 +11,7 @@ import {
   BuildingType,
   LastClaimedAt,
   OwnedBy,
-  P_UnitTravelSpeed,
+  P_IsUnit,
   Position,
   UnitProductionLastQueueIndex,
   UnitProductionQueue,
@@ -82,7 +82,7 @@ export function setupHangar() {
     const units: Map<EntityID, number> = new Map();
 
     // get all units and find their counts on the space rock
-    P_UnitTravelSpeed.getAll().forEach((entity) => {
+    P_IsUnit.getAll().forEach((entity) => {
       const hashedEntity = hashEntities(entity, player, spaceRock);
       const unitCount = Units.get(hashedEntity)?.value;
       if (!unitCount) return;
