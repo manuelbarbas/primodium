@@ -64,18 +64,17 @@ library LibInitBuildings {
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 12000 });
-    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 6000 });
+    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 6000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 10000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: IronPlateCraftedItemID, value: 12000 });
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 8000 });
+    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 12000 });
+    resourceValues[1] = ResourceValue({ resou rce: PhotovoltaicCellCraftedItemID, value: 6000 });
     requiredResources[2] = resourceValues;
     //LEVEL 4
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 35000 });
-    resourceValues[1] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 10000 });
+    resourceValues = new ResourceValue[](3);
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 10000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](1);
@@ -99,19 +98,21 @@ library LibInitBuildings {
     /****************** Storage Upgrades *******************/
     ResourceValue[][] memory storageUpgrades = new ResourceValue[][](maxLevel);
     // LEVEL 1
-    resourceValues = new ResourceValue[](3);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 275000 });
+    resourceValues = new ResourceValue[](4);
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 175000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 135000 });
     resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 54000 });
+    resourceValues[3] = ResourceValue({ resource: IronPlateCraftedItemID, value: 30000 });
     storageUpgrades[0] = resourceValues;
 
     // LEVEL 2
-    resourceValues = new ResourceValue[](5);
+    resourceValues = new ResourceValue[](6);
     resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 540000 });
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 270000 });
-    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 108000 });
-    resourceValues[3] = ResourceValue({ resource: IronPlateCraftedItemID, value: 43200 });
-    resourceValues[4] = ResourceValue({ resource: AlloyCraftedItemID, value: 27000 });
+    resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 100000 });
+    resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 144000 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 70000 });
+    resourceValues[5] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 27000 });
     storageUpgrades[1] = resourceValues;
 
     // LEVEL 3
@@ -122,7 +123,7 @@ library LibInitBuildings {
     resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 144000 });
     resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 115200 });
     resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 72000 });
-    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 43200 });
+    resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 50000 });
     storageUpgrades[2] = resourceValues;
 
     // LEVEL 4
@@ -681,27 +682,27 @@ library LibInitBuildings {
 
     // LEVEL 1
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 25000 });
-    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 5000 });
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 45000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 25000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 50000 });
-    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 15000 });
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 100000 });
+    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 75000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 250000 });
-    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 100000 });
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 500000 });
+    resourceValues[1] = ResourceValue({ resource: LithiumResourceItemID, value: 250000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 500000 });
-    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 25000 });
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1500000 });
+    resourceValues[1] = ResourceValue({ resource: TitaniumResourceItemID, value: 7000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 1500000 });
+    resourceValues[0] = ResourceValue({ resource: CopperResourceItemID, value: 2500000 });
     resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
     requiredResources[4] = resourceValues;
 
