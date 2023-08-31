@@ -134,6 +134,7 @@ library LibUpdateSpaceRock {
     uint256 unitType,
     uint32 unitCount
   ) internal {
+    if (unitCount == 0) return;
     uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
     LibMath.add(UnitsComponent(world.getComponent(UnitsComponentID)), unitPlayerSpaceRockEntity, unitCount);
   }

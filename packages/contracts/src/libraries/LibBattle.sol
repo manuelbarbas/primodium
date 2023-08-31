@@ -74,9 +74,15 @@ library LibBattle {
       }
       if (arrival.arrivalBlock <= block.number) {
         for (uint i = 0; i < arrival.units.length; i++) {
-          attacker.unitCounts[i] += arrival.units[i].count;
+          for (uint j = 0; j < attacker.unitTypes.length; j++) {
+            if (arrival.units[i].unitType == attacker.unitTypes[j]) {
+              attacker.unitCounts[j] += arrival.units[i].count;
+              break;
+            }
+          }
         }
         ArrivalsList.remove(world, playerAsteroidEntity, index);
+        LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), attackerEntity, 1);
         size--;
       } else {
         index++;

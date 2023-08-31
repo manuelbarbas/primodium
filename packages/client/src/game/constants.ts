@@ -281,6 +281,11 @@ export namespace AsteroidMap {
 export namespace BeltMap {
   export const KEY = "BELT_MAP";
 
+  export const DepthLayers = {
+    Asteroid: 1,
+    Paths: 100,
+  };
+
   export enum Scenes {
     Root = "ROOT",
     Main = "MAIN",

@@ -1,12 +1,16 @@
 import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
+import Spinner from "src/components/shared/Spinner";
 import { TrainingQueue } from "src/network/components/clientComponents";
+import { useGameStore } from "src/store/GameStore";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 
 export const TrainingProgress: React.FC<{ buildingEntity: EntityID }> = ({
   buildingEntity,
 }) => {
+  const transactionLoading = useGameStore((state) => state.transactionLoading);
+
   const rawQueue = TrainingQueue.use(buildingEntity);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
@@ -33,7 +37,9 @@ export const TrainingProgress: React.FC<{ buildingEntity: EntityID }> = ({
       <div className="rounded-md overflow-hidden h-44 border border-slate-500 bg-slate-800 overflow-y-auto flex flex-col items-center justify-center scrollbar">
         {(!queue || queue.length === 0) && (
           <p className="text-sm font-bold text-slate-400 text-center">
-            NO TRAINING ORDERS QUEUED
+            {transactionLoading
+              ? "QUEUING TRAINING ORDER..."
+              : "NO TRAINING ORDERS QUEUED"}
           </p>
         )}
         {queue && queue.length !== 0 && (
@@ -48,6 +54,7 @@ export const TrainingProgress: React.FC<{ buildingEntity: EntityID }> = ({
                 key={`queue-${i + 1}`}
               />
             ))}
+            {transactionLoading && <TrainingProgressSpinner />}
           </div>
         )}
       </div>
@@ -120,6 +127,20 @@ const ProgressBar: React.FC<{
           />
           <p className="rounded-md bg-cyan-700 text-xs p-1">x{count}</p>
         </motion.div>
+      </div>
+    </div>
+  );
+};
+
+// In the style of ProgressBar above, but replace the contents with a Spinner that fits in with previous list items.
+// This is used in packages/client/src/components/asteroid-ui/tile-info/TrainUnits.tsx
+const TrainingProgressSpinner: React.FC = () => {
+  return (
+    <div className="w-full border-b border-b-slate-700 text-xs bg-slate-800 flex items-center justify-center">
+      <div className="flex justify-between p-2">
+        <div className="flex gap-2 items-center justify-center">
+          <Spinner />
+        </div>
       </div>
     </div>
   );

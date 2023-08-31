@@ -5,6 +5,7 @@ import {
   defineEnterSystem,
   defineComponentSystem,
   HasValue,
+  EntityID,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -14,6 +15,7 @@ import {
 import { Outline, Texture } from "../../common/object-components/sprite";
 import {
   AsteroidType,
+  OwnedBy,
   Position,
   ReversePosition,
 } from "src/network/components/chainComponents";
@@ -24,8 +26,11 @@ import { ESpaceRockType } from "src/util/web3/types";
 import { Coord } from "@latticexyz/utils";
 import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
+import { BeltMap } from "@game/constants";
 
-export const renderAsteroid = (scene: Scene) => {
+const { DepthLayers } = BeltMap;
+
+export const renderAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
 
@@ -50,6 +55,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const origin = Send.getOrigin();
     const destination = Send.getDestination();
+    const owner = OwnedBy.get(entityId)?.value;
 
     const originEntity = origin
       ? ReversePosition.get(encodeCoord(origin))
@@ -57,20 +63,29 @@ export const renderAsteroid = (scene: Scene) => {
     const destinationEntity = destination
       ? ReversePosition.get(encodeCoord(destination))
       : undefined;
-    const outline =
-      originEntity?.value === entityId
-        ? Outline({ color: 0x00ff00 })
-        : destinationEntity?.value === entityId
-        ? Outline()
-        : undefined;
+
+    let outline: ReturnType<typeof Outline> | undefined;
+
+    if (originEntity?.value === entityId) {
+      outline = Outline({ color: 0x00ffff });
+    } else if (destinationEntity?.value === entityId) {
+      outline = Outline({ color: 0xffa500 });
+    } else if (owner === player) {
+      outline = Outline({ color: 0x00ff00 });
+    } else outline = Outline({ color: 0xff0000 });
+
     asteroidObjectGroup.add("Sprite").setComponents([
-      ObjectPosition({
-        x: coord.x * tileWidth,
-        y: -coord.y * tileHeight,
-      }),
+      ObjectPosition(
+        {
+          x: coord.x * tileWidth,
+          y: -coord.y * tileHeight,
+        },
+        DepthLayers.Asteroid
+      ),
       SetValue({
         originX: 0.5,
         originY: 0.5,
+        scale: 1.2,
       }),
       Texture("asteroid-sprite"),
       outline,
@@ -78,7 +93,10 @@ export const renderAsteroid = (scene: Scene) => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);
-        } else if (activeButton === ActiveButton.DESTINATION) {
+        } else if (
+          activeButton === ActiveButton.DESTINATION ||
+          activeButton === ActiveButton.NONE
+        ) {
           Send.setDestination(coord);
         }
         Send.update({ activeButton: ActiveButton.NONE });

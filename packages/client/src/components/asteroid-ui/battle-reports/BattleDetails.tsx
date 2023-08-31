@@ -52,7 +52,7 @@ export const BattleDetails: React.FC<{
     player === battle.attacker ? battle.defenderUnits : battle.attackerUnits;
 
   return (
-    <div className="relative flex flex-col items-center text-white w-full">
+    <div className="relative gap-3 flex flex-col items-center text-white w-full">
       <div className="relative bg-slate-800 pixel-images border border-cyan-400 p-3 w-full rounded-md">
         <div className="flex flex-col items-center space-y-3">
           {player === battle.winner && (

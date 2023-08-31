@@ -4,11 +4,16 @@ import { useMemo } from "react";
 import { FaTrash } from "react-icons/fa";
 import Spinner from "src/components/shared/Spinner";
 import { useMud } from "src/hooks";
+import {
+  OwnedBy,
+  ReversePosition,
+} from "src/network/components/chainComponents";
 import { Account, Send } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { getAsteroidImage } from "src/util/asteroid";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
+import { encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 import { send as sendUnits } from "src/util/web3/send";
 import { ESendType } from "src/util/web3/types";
@@ -27,7 +32,7 @@ export const FleetPane: React.FC<{
     destinationY: undefined,
     to: undefined,
     sendType: undefined,
-    activeButton: ActiveButton.NONE,
+    activeButton: ActiveButton.DESTINATION,
   });
 
   const origin = useMemo(() => {
@@ -42,6 +47,7 @@ export const FleetPane: React.FC<{
     const account = Account.get()?.value;
     const origin = Send.getOrigin();
     const destination = Send.getDestination();
+
     if (
       account == undefined ||
       origin == undefined ||
@@ -54,16 +60,30 @@ export const FleetPane: React.FC<{
       units: undefined,
       count: undefined,
       sendType: undefined,
-      activeButton: ActiveButton.NONE,
+      activeButton: ActiveButton.DESTINATION,
     });
-    const to = "0x00" as EntityID;
 
     const arrivalUnits = send.units.map((unit, index) => ({
       unitType: unit,
       count: send.count?.at(index) ?? 0,
     }));
 
-    sendUnits(arrivalUnits, sendType, origin, destination, to, network);
+    const destinationEntityId = ReversePosition.get(
+      encodeCoord(destination)
+    )?.value;
+
+    const to = OwnedBy.get(destinationEntityId)?.value;
+
+    sendUnits(
+      arrivalUnits,
+      sendType,
+      origin,
+      destination,
+      to ?? ("0x00" as EntityID),
+      network
+    );
+
+    Send.reset();
   };
 
   return (
@@ -136,7 +156,7 @@ export const FleetPane: React.FC<{
               }}
               className={`${
                 send.activeButton === ActiveButton.ORIGIN ? "h-full" : ""
-              } flex justify-center items-center gap-3 w-3/4 border border-green-500 w-fit px-2 py-2 rounded-md bg-green-700 bg-gradient-to-br from-transparent to-green-900/30 text-green-100 text-sm font-bold`}
+              } flex justify-center items-center gap-3 border border-green-500 w-fit px-2 py-2 rounded-md bg-green-700 bg-gradient-to-br from-transparent to-green-900/30 text-green-100 text-sm font-bold`}
             >
               {send.activeButton == ActiveButton.ORIGIN ? (
                 <p> SELECT AN ORIGIN...</p>
@@ -165,7 +185,7 @@ export const FleetPane: React.FC<{
               }}
               className={`${
                 send.activeButton === ActiveButton.DESTINATION ? "h-full" : ""
-              } flex justify-center items-center gap-3 w-3/4 border border-yellow-500 w-fit px-2 py-2 rounded-md bg-yellow-600 bg-gradient-to-br from-transparent to-yellow-900/30 text-yellow-100 text-sm font-bold`}
+              } flex justify-center items-center gap-3 border border-yellow-500 w-fit px-2 py-2 rounded-md bg-yellow-600 bg-gradient-to-br from-transparent to-yellow-900/30 text-yellow-100 text-sm font-bold`}
             >
               {send.activeButton == ActiveButton.DESTINATION ? (
                 <p> SELECT A TARGET...</p>
