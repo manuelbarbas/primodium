@@ -4,11 +4,8 @@ import {
   Has,
   HasValue,
   defineUpdateSystem,
-} from "@latticexyz/recs";
-import {
   defineEnterSystem,
   defineExitSystem,
-  // defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";

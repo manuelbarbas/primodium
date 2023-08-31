@@ -2,13 +2,9 @@ import {
   ComponentUpdate,
   EntityID,
   Has,
-  HasValue,
   defineUpdateSystem,
-} from "@latticexyz/recs";
-import {
   defineEnterSystem,
   defineExitSystem,
-  // defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
@@ -19,6 +15,7 @@ import { Circle } from "../../common/object-components/graphics";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { BeltMap } from "@game/constants";
 import { Arrival, Position } from "src/network/components/chainComponents";
+import { ESendType } from "src/util/web3/types";
 
 const { DepthLayers } = BeltMap;
 
@@ -27,12 +24,7 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_arrivalOrbit";
 
-  const query = [
-    Has(Arrival),
-    HasValue(Arrival, {
-      from: player,
-    }),
-  ];
+  const query = [Has(Arrival)];
 
   const render = (update: ComponentUpdate) => {
     const entityId = world.entities[update.entity];
@@ -57,10 +49,18 @@ export const renderArrivalsInOrbit = (scene: Scene, player: EntityID) => {
 
     const arrivalOrbit = scene.objectPool.getGroup(entityId + objIndexSuffix);
 
+    let color: number;
+
+    if (arrival.from === player) color = 0x00ff00;
+    else if (arrival.to === player && arrival.sendType === ESendType.REINFORCE)
+      color = 0x00ff00;
+    else if (arrival.to === player) color = 0xff0000;
+    else color = 0x808080;
+
     arrivalOrbit.add("Graphics").setComponents([
       ObjectPosition(destinationPixelCoord, DepthLayers.Paths),
       Circle(5, {
-        color: 0x00ff00,
+        color,
       }),
     ]);
   };
