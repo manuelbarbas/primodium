@@ -28,7 +28,7 @@ export const upgradeRange = async (network: Network) => {
 
   const receipt = await execute(
     systems["system.UpgradeRange"].executeTyped({
-      gasLimit: 500_000,
+      gasLimit: 5_000_000,
     }),
     providers,
     setNotification
