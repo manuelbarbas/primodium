@@ -6,11 +6,12 @@ import {
   BlockIdToKey,
   RESOURCE_SCALE,
   ResourceImage,
+  ResourceType,
 } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
-import { formatNumber } from "src/util/common";
+import { formatNumber, getBlockTypeName } from "src/util/common";
 import { Account, BlockNumber } from "src/network/components/clientComponents";
 import {
   Level,
@@ -75,7 +76,7 @@ export const BlueprintInfo: React.FC<{
                   <div className="flex justify-center items-center text-sm bg-red-800/60 p-1 border border-red-600 rounded-md gap-2">
                     {recipe.map((resource) => {
                       const resourceImage = ResourceImage.get(resource.id)!;
-                      const resourceName = BlockIdToKey[resource.id];
+                      const resourceName = getBlockTypeName(resource.id);
                       return (
                         <ResourceIconTooltip
                           key={resource.id}
@@ -83,15 +84,30 @@ export const BlueprintInfo: React.FC<{
                           resourceId={resource.id}
                           name={resourceName}
                           amount={resource.amount}
+                          scale={
+                            resource.type === ResourceType.Resource
+                              ? RESOURCE_SCALE
+                              : 1
+                          }
                           fontSize={"xs"}
                         />
                       );
                     })}
                   </div>
+                  {dependencies &&
+                    dependencies.map((dep) => (
+                      <div className="flex items-center gap-2 text-xs bg-red-800/60 p-1 border border-red-600 rounded-md">
+                        <img
+                          className="inline-block h-4"
+                          src={ResourceImage.get(dep.resource)}
+                        ></img>
+                        {formatNumber(dep.value)}/MIN
+                      </div>
+                    ))}
                 </div>
               )}
-              {(!!production || dependencies) && (
-                <div className="relative gap-1 flex flex-col w-18 gap-1 text-xs">
+              {!!production && (
+                <div className="relative flex flex-col w-18 gap-1 text-xs">
                   OUTPUT
                   {production && (
                     <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md">
@@ -102,15 +118,6 @@ export const BlueprintInfo: React.FC<{
                       {formatNumber(productionRate)}/MIN
                     </div>
                   )}
-                  {dependencies.map((dep) => (
-                    <div className="flex items-center gap-2 text-xs bg-red-800/60 p-1 border border-red-600 rounded-md">
-                      <img
-                        className="inline-block h-4"
-                        src={ResourceImage.get(dep.resource)}
-                      ></img>
-                      {formatNumber(dep.value)}/MIN
-                    </div>
-                  ))}
                 </div>
               )}
             </div>

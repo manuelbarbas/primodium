@@ -8,9 +8,12 @@ import { getBuildingResearchRequirement } from "../../util/research";
 import Spinner from "../shared/Spinner";
 import { useMemo } from "react";
 import { getRecipe } from "../../util/resource";
-import { ResourceImage } from "../../util/constants";
+import {
+  RESOURCE_SCALE,
+  ResourceImage,
+  ResourceType,
+} from "../../util/constants";
 import ResourceIconTooltip from "../shared/ResourceIconTooltip";
-import { BlockIdToKey } from "../../util/constants";
 import { GameButton } from "../shared/GameButton";
 import { upgradeBuilding } from "src/util/web3";
 import {
@@ -19,6 +22,7 @@ import {
   HasResearched,
 } from "src/network/components/chainComponents";
 import { SingletonID } from "@latticexyz/network";
+import { getBlockTypeName } from "src/util/common";
 
 export default function UpgradeBuildingButton({
   id,
@@ -107,13 +111,16 @@ export default function UpgradeBuildingButton({
       <div className="mt-2 flex justify-center items-center text-sm bg-slate-900/60 px-2">
         {recipe.map((resource) => {
           const resourceImage = ResourceImage.get(resource.id)!;
-          const resourceName = BlockIdToKey[resource.id];
+          const resourceName = getBlockTypeName(resource.id);
           return (
             <ResourceIconTooltip
               key={resource.id}
               image={resourceImage}
               resourceId={resource.id}
               name={resourceName}
+              scale={
+                resource.type === ResourceType.Resource ? RESOURCE_SCALE : 1
+              }
               amount={resource.amount}
             />
           );

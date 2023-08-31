@@ -10,6 +10,11 @@ export enum Action {
   PlaceBuilding,
 }
 
+export enum ResourceType {
+  Resource,
+  Utility,
+}
+
 export const RESOURCE_SCALE = 1 / 100;
 
 export const BlockType = {
