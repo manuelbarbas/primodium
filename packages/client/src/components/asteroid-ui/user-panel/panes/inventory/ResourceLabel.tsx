@@ -49,7 +49,9 @@ export const ResourceLabel = ({
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
       const entity = world.entities[motherlodeIndex];
       const resource = getMotherlodeResource(entity);
+
       const hangar = Hangar.get(entity);
+
       if (!hangar || resource?.resource !== resourceId) return prev;
 
       let total = 0;
@@ -58,7 +60,7 @@ export const ResourceLabel = ({
       }
       return prev + total;
     }, 0);
-  }, [motherlodes]);
+  }, [motherlodes, resourceId]);
 
   const resourceCount = useResourceCount(Item, resourceId);
 
