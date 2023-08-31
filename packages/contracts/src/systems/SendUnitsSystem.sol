@@ -127,9 +127,15 @@ contract SendUnitsSystem is PrimodiumSystem {
       require(originType != ESpaceRockType.MOTHERLODE, "you cannot move between motherlodes");
     }
 
-    if (sendType == ESendType.INVADE) require(playerEntity != to, "you cannot invade yourself");
-    if (sendType == ESendType.REINFORCE)
+    if (sendType == ESendType.INVADE) {
+      require(playerEntity != to, "you cannot invade yourself");
+      require(destinationType == ESpaceRockType.MOTHERLODE, "you can only invade a motherlode");
+    } else if (sendType == ESendType.RAID) {
+      require(playerEntity != to, "you cannot raid yourself");
+      require(destinationType == ESpaceRockType.MOTHERLODE, "you can only raid a motherlode");
+    } else if (sendType == ESendType.REINFORCE) {
       require(ownedByComponent.getValue(destination) == to, "you can only reinforce the current owner of a motherlode");
+    }
   }
 
   function executeTyped(
