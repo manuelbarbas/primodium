@@ -11,7 +11,7 @@ export const HostileFleets: React.FC<{
 
   return (
     <div
-      className={`flex flex-col items-center gap-2 text-white w-96 h-32 min-w-full ${
+      className={`flex flex-col items-center gap-2 text-white w-96 min-w-full ${
         small ? "h-32" : "h-96"
       }`}
     >
