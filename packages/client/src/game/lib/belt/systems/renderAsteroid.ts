@@ -5,6 +5,7 @@ import {
   defineEnterSystem,
   defineComponentSystem,
   HasValue,
+  EntityID,
 } from "@latticexyz/recs";
 import {
   ObjectPosition,
@@ -14,6 +15,7 @@ import {
 import { Outline, Texture } from "../../common/object-components/sprite";
 import {
   AsteroidType,
+  OwnedBy,
   Position,
   ReversePosition,
 } from "src/network/components/chainComponents";
@@ -25,7 +27,7 @@ import { Coord } from "@latticexyz/utils";
 import { encodeAndTrimCoord, encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 
-export const renderAsteroid = (scene: Scene) => {
+export const renderAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
 
@@ -50,6 +52,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const origin = Send.getOrigin();
     const destination = Send.getDestination();
+    const owner = OwnedBy.get(entityId)?.value;
 
     const originEntity = origin
       ? ReversePosition.get(encodeCoord(origin))
@@ -57,12 +60,17 @@ export const renderAsteroid = (scene: Scene) => {
     const destinationEntity = destination
       ? ReversePosition.get(encodeCoord(destination))
       : undefined;
-    const outline =
-      originEntity?.value === entityId
-        ? Outline({ color: 0x00ff00 })
-        : destinationEntity?.value === entityId
-        ? Outline()
-        : undefined;
+
+    let outline: ReturnType<typeof Outline> | undefined;
+
+    if (originEntity?.value === entityId) {
+      outline = Outline({ color: 0x00ffff });
+    } else if (destinationEntity?.value === entityId) {
+      outline = Outline({ color: 0xffa500 });
+    } else if (owner === player) {
+      outline = Outline({ color: 0x00ff00 });
+    } else outline = Outline({ color: 0xff0000 });
+
     asteroidObjectGroup.add("Sprite").setComponents([
       ObjectPosition({
         x: coord.x * tileWidth,

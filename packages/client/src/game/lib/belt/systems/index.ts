@@ -8,9 +8,9 @@ import { EntityID } from "@latticexyz/recs";
 
 export const runSystems = (scene: Scene, player: EntityID) => {
   renderUnitSend(scene);
-  renderAsteroid(scene);
+  renderAsteroid(scene, player);
   focusAsteroid(scene);
   renderArrivalsInTransit(scene, player);
 
-  renderMotherlode(scene);
+  renderMotherlode(scene, player);
 };
