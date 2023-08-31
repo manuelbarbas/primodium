@@ -7,6 +7,7 @@ import { ArrivalUnitStruct } from "../../../../../contracts/types/ethers-contrac
 import { EntityID } from "@latticexyz/recs";
 import { getBlockTypeName } from "src/util/common";
 import { Arrival } from "src/network/components/chainComponents";
+import { Fleet } from "../user-panel/panes/fleets/UserFleets";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -132,7 +133,7 @@ export const OrbitingFleets: React.FC<{ spaceRock: EntityID }> = ({
             unitType: fleet.unitTypes[i],
           }));
           if (fleet.sendType === ESendType.INVADE)
-            return <InvasionRow key={index} />;
+            return <Fleet key={index} fleet={fleet} />;
           else return <ReinforcmentRow key={index} units={units} />;
         })}
     </div>
