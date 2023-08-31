@@ -33,7 +33,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, children, title }) => {
     <>
       {show && (
         <div
-          className="fixed inset-0 flex items-center justify-center z-[10000] bg-black bg-opacity-60 p-10 text-gray-800 font-mono"
+          className="fixed inset-0 flex items-center justify-center z-[1000] bg-black bg-opacity-60 p-10 text-gray-800 font-mono"
           onClick={handleClickOutside}
         >
           <div
