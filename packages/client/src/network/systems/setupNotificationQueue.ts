@@ -9,7 +9,7 @@ import {
 import { Notification } from "../components/customComponents/NotificationQueueComponent";
 import { Arrival } from "../components/chainComponents";
 
-const LENGTH = 100000;
+const LENGTH = 3500;
 
 export function setupNotificationQueue() {
   defineComponentSystem(world, Battle, (update) => {
@@ -63,7 +63,6 @@ export function setupNotificationQueue() {
         NotificationQueue.removeNotification(id);
       }
     });
-    console.log("orbiting queue:", orbitingQueue);
     orbitingQueue.forEach((arrivalBlock, entityId) => {
       if (blockNumber <= arrivalBlock) {
         const newNotification: Notification = {
