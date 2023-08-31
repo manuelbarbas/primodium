@@ -32,7 +32,6 @@ export const OrbitActionButton: React.FC<{
   arrivalIndex: number;
 }> = ({ destination, sendType, arrivalIndex }) => {
   const network = useMud();
-  // const { destination, sendType } = fleet;
   const destinationOwner = OwnedBy.use(destination)?.value;
   const player = Account.use()?.value ?? SingletonID;
   const transactionLoading = useGameStore((state) => state.transactionLoading);
