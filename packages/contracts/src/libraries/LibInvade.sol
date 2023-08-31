@@ -155,12 +155,13 @@ library LibInvade {
     );
 
     OwnedByComponent(world.getComponent(OwnedByComponentID)).set(rockEntity, attacker.participantEntity);
-    for (uint i = 0; i < attacker.unitTypes.length; i++) {
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    for (uint i = 0; i < unitTypes.length; i++) {
       LibUpdateSpaceRock.addUnitsToAsteroid(
         world,
         attacker.participantEntity,
         rockEntity,
-        attacker.unitTypes[i],
+        unitTypes[i],
         attacker.unitCounts[i]
       );
     }
