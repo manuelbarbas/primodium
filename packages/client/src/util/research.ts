@@ -231,6 +231,40 @@ export const StingerDroneUpgradeTree: ResearchItemType = {
   ],
 };
 
+export const MiningVesselUpgradeTree: ResearchItemType = {
+  name: "Mining Vessel Unit Upgrade",
+  id: BlockType.MiningVesselUpgrade1,
+  description: "Increases the Mining Vessel's Mining Power by 1. ",
+
+  levels: [
+    {
+      id: BlockType.MiningVesselUpgrade1,
+      subtitle: "Level 1",
+      description: "Increases the Mining Vessel's Mining Power by 1. ",
+    },
+    {
+      id: BlockType.MiningVesselUpgrade2,
+      subtitle: "Level 2",
+      description: "Increases the Mining Vessel's Mining Power by 1. ",
+    },
+    {
+      id: BlockType.MiningVesselUpgrade3,
+      subtitle: "Level 3",
+      description: "Increases the Mining Vessel's Mining Power by 1. ",
+    },
+    {
+      id: BlockType.MiningVesselUpgrade4,
+      subtitle: "Level 4",
+      description: "Increases the Mining Vessel's Mining Power by 1. ",
+    },
+    {
+      id: BlockType.MiningVesselUpgrade5,
+      subtitle: "Level 5",
+      description: "Increases the Mining Vessel's Mining Power by 1. ",
+    },
+  ],
+};
+
 // Research resource data should be read from getRecipe() in ../util/resource.ts
 
 export const ResearchTree: ResearchTreeType = [
@@ -245,6 +279,7 @@ export const ResearchTree: ResearchTreeType = [
       HammerDroneUpgradeTree,
       AegisDroneUpgradeTree,
       StingerDroneUpgradeTree,
+      MiningVesselUpgradeTree,
     ],
   },
 ];
