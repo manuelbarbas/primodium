@@ -60,7 +60,7 @@ contract StarmapperTest is PrimodiumTest {
     vm.expectRevert(bytes("you have reached your max move count"));
     sendUnitsSystem.executeTyped(
       units,
-      ESendType.INVADE,
+      ESendType.RAID,
       getHomeAsteroid(alice),
       getHomeAsteroid(bob),
       addressToEntity(bob)
@@ -127,9 +127,9 @@ contract StarmapperTest is PrimodiumTest {
 
     Coord memory aliceHomeAsteroid = getHomeAsteroid(alice);
     Coord memory bobHomeAsteroid = getHomeAsteroid(bob);
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
+    sendUnitsSystem.executeTyped(units, ESendType.RAID, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     vm.expectRevert(bytes("you have reached your max move count"));
-    sendUnitsSystem.executeTyped(units, ESendType.INVADE, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
+    sendUnitsSystem.executeTyped(units, ESendType.RAID, aliceHomeAsteroid, bobHomeAsteroid, addressToEntity(bob));
     return getCoord1(alice);
   }
 
