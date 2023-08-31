@@ -3,7 +3,6 @@ import React, { useMemo } from "react";
 
 import {
   BackgroundImage,
-  BlockIdToKey,
   RESOURCE_SCALE,
   ResourceImage,
   ResourceType,
@@ -65,9 +64,7 @@ export const BlueprintInfo: React.FC<{
           </div>
           <div className="flex flex-col items-center gap-2">
             <p className="flex justify-center align-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm font-bold w-full">
-              {BlockIdToKey[buildingType]
-                .replace(/([A-Z]+)/g, " $1")
-                .replace(/([A-Z][a-z])/g, " $1")}
+              {getBlockTypeName(buildingType)}
             </p>
             <div className="flex gap-2">
               {recipe.length > 0 && (
