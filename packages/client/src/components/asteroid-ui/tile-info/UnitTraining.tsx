@@ -27,7 +27,7 @@ import { NumberInput } from "src/components/shared/NumberInput";
 export const UnitTraining: React.FC<{
   buildingEntity: EntityID;
   onClose: () => void;
-}> = ({ buildingEntity }) => {
+}> = ({ buildingEntity, onClose }) => {
   const network = useMud();
   const [selectedUnit, setSelectedUnit] = useState<EntityID>();
   const [count, setCount] = useState(0);
@@ -173,6 +173,7 @@ export const UnitTraining: React.FC<{
                 disabled={maximum - unitsTaken < 0 || transactionLoading}
                 onClick={() => {
                   train(buildingEntity, selectedUnit, count, network);
+                  onClose();
                 }}
               >
                 Train
