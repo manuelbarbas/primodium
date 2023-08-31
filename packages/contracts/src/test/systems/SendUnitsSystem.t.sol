@@ -494,7 +494,7 @@ contract SendUnitsTest is PrimodiumTest {
     Arrival memory arrival2 = abi.decode(
       sendUnitsSystem.executeTyped(
         units,
-        ESendType.INVADE,
+        ESendType.RAID,
         getHomeAsteroid(alice),
         getHomeAsteroid(bob),
         addressToEntity(bob)
