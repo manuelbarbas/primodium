@@ -90,10 +90,13 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       Texture("asteroid-sprite"),
       outline,
       OnClick(() => {
+        console.log("SELECTED DESTINATION");
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);
         } else if (activeButton === ActiveButton.DESTINATION) {
+          Send.setDestination(coord);
+        } else if (activeButton === ActiveButton.NONE) {
           Send.setDestination(coord);
         }
         Send.update({ activeButton: ActiveButton.NONE });
