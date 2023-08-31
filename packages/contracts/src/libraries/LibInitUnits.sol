@@ -376,32 +376,27 @@ library LibInitUnits {
     ResourceValue[][] memory requiredResources = new ResourceValue[][](maxLevel);
     // LEVEL 1
     ResourceValue[] memory resourceValues = new ResourceValue[](1);
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](1);
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
-    requiredResources[0] = resourceValues;
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
     requiredResources[1] = resourceValues;
     // LEVEL 3
     resourceValues = new ResourceValue[](1);
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
-    requiredResources[0] = resourceValues;
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
     resourceValues = new ResourceValue[](1);
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
-    requiredResources[0] = resourceValues;
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
     requiredResources[3] = resourceValues;
     // LEVEL 5
     resourceValues = new ResourceValue[](1);
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
-    requiredResources[0] = resourceValues;
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
     requiredResources[4] = resourceValues;
     // LEVEL 6
     resourceValues = new ResourceValue[](1);
-    resourceValues[1] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
-    requiredResources[0] = resourceValues;
+    resourceValues[0] = ResourceValue({ resource: AlloyCraftedItemID, value: 4000 });
     requiredResources[5] = resourceValues;
 
     /****************** Required Utility Resources *******************/

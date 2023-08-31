@@ -408,6 +408,10 @@ library LibInitBuildings {
     utilityResourceIds = new uint256[](0);
     utilityResourceAmounts = new uint32[](0);
     requiredUtilities[2] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
+    // LEVEL 3
+    utilityResourceIds = new uint256[](0);
+    utilityResourceAmounts = new uint32[](0);
+    requiredUtilities[3] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
     /* ***********************Set Values ************************* */
     setupMine(
@@ -867,7 +871,7 @@ library LibInitBuildings {
     // LEVEL 2
     productionRates[1] = 7;
     // LEVEL 3
-    productionRates[1] = 9;
+    productionRates[2] = 9;
 
     /* ***********************Set Values ************************* */
     setupFactory(
@@ -886,7 +890,7 @@ library LibInitBuildings {
   // lithium copper oxide
   function initPhotovoltaicCellFactory(IWorld world) internal {
     uint256 factoryBuildingType = PhotovoltaicCellFactoryID;
-    uint32 maxLevel = 2;
+    uint32 maxLevel = 3;
     uint256 productionResourceType = PhotovoltaicCellCraftedItemID;
 
     /****************** Required Main Base Levels *******************/
@@ -963,7 +967,7 @@ library LibInitBuildings {
     // LEVEL 2
     productionRates[1] = 5;
     // LEVEL 3
-    productionRates[1] = 7;
+    productionRates[2] = 7;
 
     /* ***********************Set Values ************************* */
     setupFactory(
@@ -1059,7 +1063,6 @@ library LibInitBuildings {
     // LEVEL 1
     utilityResourceIds = new uint256[](0);
     utilityResourceAmounts = new uint32[](0);
-
     requiredUtilities[0] = ResourceValues(utilityResourceIds, utilityResourceAmounts);
 
     // LEVEL 2
@@ -1223,24 +1226,24 @@ library LibInitBuildings {
     resourceValues[1] = ResourceValue({ resource: IronResourceItemID, value: 20000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
-    resourceValues = new ResourceValue[](1);
+    resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 5000 });
-    resourceValues[2] = ResourceValue({ resource: CopperResourceItemID, value: 175000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 175000 });
     requiredResources[1] = resourceValues;
 
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 15000 });
-    resourceValues[2] = ResourceValue({ resource: CopperResourceItemID, value: 300000 });
+    resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 300000 });
     requiredResources[2] = resourceValues;
 
     // LEVEL 4
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 50000 });
-    resourceValues[2] = ResourceValue({ resource: PlatinumResourceItemID, value: 10000 });
+    resourceValues[1] = ResourceValue({ resource: PlatinumResourceItemID, value: 10000 });
     requiredResources[3] = resourceValues;
 
-    // LEVEL 3
+    // LEVEL 5
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 100000 });
     resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 15000 });
@@ -1508,12 +1511,6 @@ library LibInitBuildings {
     requiredResources[1] = resourceValues;
 
     // LEVEL 3
-    resourceValues = new ResourceValue[](2);
-    resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 125000 });
-    resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
-    requiredResources[2] = resourceValues;
-
-    // LEVEL 4
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 125000 });
     resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
