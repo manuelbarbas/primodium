@@ -32,7 +32,7 @@ export const FleetPane: React.FC<{
     destinationY: undefined,
     to: undefined,
     sendType: undefined,
-    activeButton: ActiveButton.NONE,
+    activeButton: ActiveButton.DESTINATION,
   });
 
   const origin = useMemo(() => {
@@ -60,7 +60,7 @@ export const FleetPane: React.FC<{
       units: undefined,
       count: undefined,
       sendType: undefined,
-      activeButton: ActiveButton.NONE,
+      activeButton: ActiveButton.DESTINATION,
     });
 
     const arrivalUnits = send.units.map((unit, index) => ({
