@@ -482,8 +482,8 @@ library LibInitUnits {
     UnitDesign[] memory unitDesigns = new UnitDesign[](maxLevel);
     /****************** Attacks *******************/
 
-    unitDesigns[0].attack = 147;
-    unitDesigns[1].attack = 144;
+    unitDesigns[0].attack = 140;
+    unitDesigns[1].attack = 147;
     unitDesigns[2].attack = 154;
     unitDesigns[3].attack = 161;
     unitDesigns[4].attack = 168;

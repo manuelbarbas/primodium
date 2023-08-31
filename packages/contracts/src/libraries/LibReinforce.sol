@@ -79,6 +79,7 @@ library LibReinforce {
       }
     }
     if (isArrivalResolved) {
+      LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from, 1);
       ArrivalsList.remove(world, playerAsteroidEntity, arrivalIndex);
       return true;
     } else {
@@ -118,6 +119,7 @@ library LibReinforce {
           arrival.units[i].count
         );
       }
+      LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), recallerEntity, 1);
       ArrivalsList.remove(world, playerAsteroidEntity, index);
       size -= 1;
     }
@@ -151,6 +153,7 @@ library LibReinforce {
         );
       }
       ArrivalsList.remove(world, playerAsteroidEntity, index);
+      LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from, 1);
       size -= 1;
     }
   }

@@ -34,6 +34,12 @@ library LibMath {
     component.set(entity, value - subtractor);
   }
 
+  function subtract(Uint256Component component, uint256 entity, uint32 subtractor) internal {
+    uint256 value = getSafe(component, entity);
+    require(value >= subtractor, "not enough value to subtract");
+    component.set(entity, value - subtractor);
+  }
+
   function abs(int32 input) internal pure returns (int32) {
     return input < 0 ? -input : input;
   }
