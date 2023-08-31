@@ -2,7 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import React, { useMemo, useState } from "react";
 
 import { useMud } from "src/hooks/useMud";
-import { BackgroundImage, BlockIdToKey, BlockType } from "src/util/constants";
+import { BackgroundImage, BlockType } from "src/util/constants";
 import UpgradeBuildingButton from "src/components/action/UpgradeBuildingButton";
 import { useAccount } from "src/hooks/useAccount";
 import { GameButton } from "src/components/shared/GameButton";
@@ -14,7 +14,11 @@ import {
   OwnedBy,
   Position,
 } from "src/network/components/chainComponents";
-import { clampedIndex, toRomanNumeral } from "src/util/common";
+import {
+  clampedIndex,
+  getBlockTypeName,
+  toRomanNumeral,
+} from "src/util/common";
 import { FaTrash } from "react-icons/fa";
 import { TrainUnits } from "./TrainUnits";
 
@@ -35,12 +39,7 @@ export const BuildingInfo: React.FC<{
 
   const buildingName = useMemo(() => {
     if (!buildingType) return;
-
-    const key = BlockIdToKey[buildingType];
-
-    if (!key) return;
-
-    return key.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
+    return getBlockTypeName(buildingType);
   }, [buildingType]);
 
   const imageURI = useMemo(() => {

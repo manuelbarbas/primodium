@@ -10,6 +10,11 @@ export enum Action {
   PlaceBuilding,
 }
 
+export enum ResourceType {
+  Resource,
+  Utility,
+}
+
 export const RESOURCE_SCALE = 1 / 100;
 
 export const BlockType = {
@@ -505,6 +510,44 @@ export const ResearchImage = new Map<EntityID, string>([
   ],
 
   [BlockType.HousingUnitResearch, "/img/building/newplatingfactory.gif"],
+
+  [BlockType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
+  [BlockType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
+  [BlockType.ExpansionResearch3, "/img/icons/mainbaseicon.png"],
+  [BlockType.ExpansionResearch4, "/img/icons/mainbaseicon.png"],
+  [BlockType.ExpansionResearch5, "/img/icons/mainbaseicon.png"],
+  [BlockType.ExpansionResearch6, "/img/icons/mainbaseicon.png"],
+  [BlockType.ExpansionResearch7, "/img/icons/mainbaseicon.png"],
+
+  [BlockType.AnvilDroneUpgrade1, "/img/unit/anvildrone.png"],
+  [BlockType.AnvilDroneUpgrade2, "/img/unit/anvildrone.png"],
+  [BlockType.AnvilDroneUpgrade3, "/img/unit/anvildrone.png"],
+  [BlockType.AnvilDroneUpgrade4, "/img/unit/anvildrone.png"],
+  [BlockType.AnvilDroneUpgrade5, "/img/unit/anvildrone.png"],
+
+  [BlockType.HammerDroneUpgrade1, "/img/unit/hammerdrone.png"],
+  [BlockType.HammerDroneUpgrade2, "/img/unit/hammerdrone.png"],
+  [BlockType.HammerDroneUpgrade3, "/img/unit/hammerdrone.png"],
+  [BlockType.HammerDroneUpgrade4, "/img/unit/hammerdrone.png"],
+  [BlockType.HammerDroneUpgrade5, "/img/unit/hammerdrone.png"],
+
+  [BlockType.AegisDroneUpgrade1, "/img/unit/aegisdrone.png"],
+  [BlockType.AegisDroneUpgrade2, "/img/unit/aegisdrone.png"],
+  [BlockType.AegisDroneUpgrade3, "/img/unit/aegisdrone.png"],
+  [BlockType.AegisDroneUpgrade4, "/img/unit/aegisdrone.png"],
+  [BlockType.AegisDroneUpgrade5, "/img/unit/aegisdrone.png"],
+
+  [BlockType.StingerDroneUpgrade1, "/img/unit/stingerdrone.png"],
+  [BlockType.StingerDroneUpgrade2, "/img/unit/stingerdrone.png"],
+  [BlockType.StingerDroneUpgrade3, "/img/unit/stingerdrone.png"],
+  [BlockType.StingerDroneUpgrade4, "/img/unit/stingerdrone.png"],
+  [BlockType.StingerDroneUpgrade5, "/img/unit/stingerdrone.png"],
+
+  [BlockType.MiningResearch1, "/img/unit/miningvessel.png"],
+  [BlockType.MiningResearch2, "/img/unit/miningvessel.png"],
+  [BlockType.MiningResearch3, "/img/unit/miningvessel.png"],
+  [BlockType.MiningResearch4, "/img/unit/miningvessel.png"],
+  [BlockType.MiningResearch5, "/img/unit/miningvessel.png"],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([
@@ -543,10 +586,10 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.Alloy, "/img/resource/alloy_resource.png"],
   [BlockType.PhotovoltaicCell, "/img/resource/photovoltaiccell_resource.png"],
   [BlockType.SpaceFuelCraftedItem, "/img/crafted/refinedosmium.png"],
-  [BlockType.ElectricityUtilityResource, "/img/crafted/thermobaricwarhead.png"],
-  // todo: update this
-  [BlockType.HousingUtilityResource, "/img/crafted/thermobaricwarhead.png"],
-  [BlockType.VesselUtilityResource, "/img/crafted/thermobaricwarhead.png"],
+
+  [BlockType.ElectricityUtilityResource, "/img/icons/powericon.png"],
+  [BlockType.HousingUtilityResource, "/img/icons/utilitiesicon.png"],
+  [BlockType.VesselUtilityResource, "/img/unit/miningvessel.png"],
 
   // debug
   [BlockType.BulletCrafted, "/img/crafted/bullet.png"],

@@ -42,6 +42,16 @@ export const animationConfig: Animation<any>[] = [
     suffix: ".png",
   },
   {
+    key: "mainbase/level5",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 10,
+    repeat: -1,
+    prefix: "sprites/mainbase/level5/Main_Base_LVL5_",
+    suffix: ".png",
+  },
+  {
     key: "ironmine/level1",
     assetKey: "sprite-atlas",
     frameRate: 5,

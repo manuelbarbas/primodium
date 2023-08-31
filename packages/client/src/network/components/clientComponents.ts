@@ -98,7 +98,7 @@ export const BattleReport = newComponent(
     battle: Type.OptionalEntity,
   },
   {
-    id: "ShowBattle",
+    id: "Battle",
   }
 );
 

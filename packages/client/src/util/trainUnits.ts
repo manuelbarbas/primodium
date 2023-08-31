@@ -13,6 +13,7 @@ import {
 } from "src/network/components/chainComponents";
 import { hashKeyEntity } from "./encode";
 import { Account } from "src/network/components/clientComponents";
+import { RESOURCE_SCALE } from "./constants";
 
 export function useTrainableUnits(buildingEntity: EntityID) {
   const buildingType = BuildingType.get(buildingEntity)?.value;
@@ -41,7 +42,7 @@ export function getUnitStats(unitEntity: EntityID) {
     DEF: defence,
     SPD: speed,
     MIN: mining,
-    CRG: cargo,
+    CRG: cargo * RESOURCE_SCALE,
   };
 }
 

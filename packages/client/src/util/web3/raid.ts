@@ -14,7 +14,9 @@ export const raid = async (rockEntity: EntityID, network: Network) => {
   setTransactionLoading(true);
 
   const receipt = await execute(
-    systems["system.Raid"].executeTyped(rockEntity),
+    systems["system.Raid"].executeTyped(rockEntity, {
+      gasLimit: 4_000_000,
+    }),
     providers,
     setNotification
   );

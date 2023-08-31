@@ -14,7 +14,9 @@ export const invade = async (rockEntity: EntityID, network: Network) => {
   setTransactionLoading(true);
 
   const receipt = await execute(
-    systems["system.Invade"].executeTyped(rockEntity),
+    systems["system.Invade"].executeTyped(rockEntity, {
+      gasLimit: 4_000_000,
+    }),
     providers,
     setNotification
   );

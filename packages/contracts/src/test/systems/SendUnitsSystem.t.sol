@@ -129,7 +129,7 @@ contract SendUnitsTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
 
-    vm.expectRevert(bytes("you can only move from an asteroid you own"));
+    vm.expectRevert(bytes("[SendUnitsSystem] You can only move from an asteroid you own."));
     sendUnitsSystem.executeTyped(
       units,
       ESendType.INVADE,
@@ -144,7 +144,7 @@ contract SendUnitsTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
 
-    vm.expectRevert(bytes("origin and destination cannot be the same"));
+    vm.expectRevert(bytes("[SendUnitsSystem] Origin and destination cannot be the same."));
     sendUnitsSystem.executeTyped(
       units,
       ESendType.INVADE,
@@ -159,7 +159,7 @@ contract SendUnitsTest is PrimodiumTest {
     ArrivalUnit[] memory units = new ArrivalUnit[](1);
     units[0] = ArrivalUnit(DebugUnit, 10);
 
-    vm.expectRevert(bytes("you cannot invade yourself"));
+    vm.expectRevert(bytes("[SendUnitsSystem] You cannot invade yourself."));
     sendUnitsSystem.executeTyped(
       units,
       ESendType.INVADE,
