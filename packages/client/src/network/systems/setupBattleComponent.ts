@@ -28,15 +28,7 @@ export const setupBattleComponent = () => {
     const raid = BattleRaidResult.get(entityId);
     const result = BattleResult.get(entityId);
 
-    if (
-      !attacker ||
-      !defender ||
-      !spaceRock ||
-      !result ||
-      !blockNumber ||
-      !raid
-    )
-      return;
+    if (!attacker || !defender || !spaceRock || !result || !blockNumber) return;
 
     Battle.set({
       attacker: attacker.participantEntity,
