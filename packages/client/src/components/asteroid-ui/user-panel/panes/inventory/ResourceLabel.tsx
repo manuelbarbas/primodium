@@ -17,11 +17,7 @@ import {
   Hangar,
 } from "src/network/components/clientComponents";
 import { formatNumber } from "src/util/common";
-import {
-  BlockIdToKey,
-  RESOURCE_SCALE,
-  ResourceImage,
-} from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 import { ESpaceRockType } from "src/util/web3/types";
 import { world } from "src/network/world";
 import { getUnitStats } from "src/util/trainUnits";
@@ -56,11 +52,6 @@ export const ResourceLabel = ({
       const hangar = Hangar.get(entity);
       if (!hangar || resource?.resource !== resourceId) return prev;
 
-      console.log("resource:", BlockIdToKey[resource.resource]);
-      console.log(
-        "hangar:",
-        hangar.units.map((unit) => BlockIdToKey[unit])
-      );
       let total = 0;
       for (let i = 0; i < hangar.units.length; i++) {
         total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];

@@ -128,7 +128,7 @@ export function setupHangar() {
     const destination = Send.getDestination()?.entity;
     if (origin) setupHangar(blockNumber, origin);
     if (destination) setupHangar(blockNumber, destination);
-    // maintain hangars for all player motherlodes
+    // maintain hangars for all player motherlodes to track mining production
     const account = Account.get()?.value;
     if (!account) return;
     const query = [
