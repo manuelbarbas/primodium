@@ -64,12 +64,6 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
     const destinationEntity = destination
       ? ReversePosition.get(encodeCoord(destination))
       : undefined;
-    // const outline =
-    //   originEntity?.value === entityId
-    //     ? Outline({ color: 0x00ff00 })
-    //     : destinationEntity?.value === entityId
-    //     ? Outline()
-    //     : undefined;
 
     let outline: ReturnType<typeof Outline> | undefined;
 
