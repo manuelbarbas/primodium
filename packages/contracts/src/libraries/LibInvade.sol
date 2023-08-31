@@ -53,17 +53,7 @@ library LibInvade {
       require(ownedByComponent.getValue(rockEntity) != invader, "[Invade]: can not invade your own rock");
       defenderEntity = ownedByComponent.getValue(rockEntity);
     } else {
-      BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID))
-        .getValue(battleEntity);
-      for (uint i = 0; i < attacker.unitTypes.length; i++) {
-        LibUpdateSpaceRock.addUnitsToAsteroid(
-          world,
-          invader,
-          rockEntity,
-          attacker.unitTypes[i],
-          attacker.unitCounts[i]
-        );
-      }
+      resolveInvadeNeutralMotherlode(world, battleEntity, rockEntity);
       return;
     }
     LibBattle.setupBattleDefender(world, battleEntity, defenderEntity, rockEntity);
@@ -143,6 +133,37 @@ library LibInvade {
           battleResult.defenderUnitsLeft[i]
         );
       }
+    }
+  }
+
+  function resolveInvadeNeutralMotherlode(IWorld world, uint256 battleEntity, uint256 rockEntity) internal {
+    BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
+      battleEntity
+    );
+    BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).set(
+      battleEntity,
+      BattleParticipant(
+        0,
+        attacker.unitTypes,
+        new uint32[](attacker.unitCounts.length),
+        new uint32[](attacker.unitCounts.length)
+      )
+    );
+    BattleResultComponent(world.getComponent(BattleResultComponentID)).set(
+      battleEntity,
+      BattleResult(attacker.participantEntity, attacker.unitCounts, new uint32[](attacker.unitCounts.length))
+    );
+
+    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(rockEntity, attacker.participantEntity);
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    for (uint i = 0; i < unitTypes.length; i++) {
+      LibUpdateSpaceRock.addUnitsToAsteroid(
+        world,
+        attacker.participantEntity,
+        rockEntity,
+        unitTypes[i],
+        attacker.unitCounts[i]
+      );
     }
   }
 }

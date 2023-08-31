@@ -187,7 +187,7 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function testInvade() public {
-    invade(alice);
+    invade(alice, false);
   }
 
   function reinforce(address reinforcer, address receiver) public returns (Arrival memory) {
@@ -287,13 +287,14 @@ contract SendUnitsTest is PrimodiumTest {
     return (asteroid);
   }
 
-  function invade(address invader) public returns (Arrival memory) {
+  function invade(address invader, bool isNeutral) public returns (Arrival memory) {
     uint256 motherlodeEntity = findMotherlode(bob);
 
-    vm.startPrank(deployer);
-    ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
-    vm.stopPrank();
-
+    if (!isNeutral) {
+      vm.startPrank(deployer);
+      ownedByComponent.set(motherlodeEntity, addressToEntity(bob));
+      vm.stopPrank();
+    }
     setupAttackerUnits(invader, DebugUnit);
     vm.startPrank(invader);
     uint32 attackNumber = 4;
@@ -515,7 +516,22 @@ contract SendUnitsTest is PrimodiumTest {
   }
 
   function testExecuteInvade() public {
-    Arrival memory invasionArrival = invade(alice);
+    Arrival memory invasionArrival = invade(alice, false);
+
+    vm.roll(invasionArrival.arrivalBlock);
+    uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
+    vm.prank(alice);
+    invadeSystem.executeTyped(invasionArrival.destination);
+    assertEq(ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice)), currMoves - 1);
+    assertEq(
+      ArrivalsList.length(world, LibEncode.hashKeyEntity(addressToEntity(alice), invasionArrival.destination)),
+      0
+    );
+    assertEq(ownedByComponent.getValue(invasionArrival.destination), addressToEntity(alice));
+  }
+
+  function testExecuteInvadeNeutral() public {
+    Arrival memory invasionArrival = invade(alice, true);
 
     vm.roll(invasionArrival.arrivalBlock);
     uint32 currMoves = ArrivalsSizeComponent(component(ArrivalsSizeComponentID)).getValue(addressToEntity(alice));
