@@ -3,27 +3,17 @@ import { OrbitingFleets } from "./OrbitingFleets";
 import { IncomingFleets } from "./IncomingFleets";
 import { EntityID } from "@latticexyz/recs";
 
-export const LabeledValue: React.FC<{
-  label: string;
-  children: React.ReactNode;
-}> = ({ children, label }) => {
-  return (
-    <div className="flex flex-col gap-1">
-      <p className="text-xs font-bold text-cyan-400">{label}</p>
-      <div className="flex items-center gap-1">{children}</div>
-    </div>
-  );
-};
-
-export const SpaceRockFleets: React.FC<{
+export const HostileFleets: React.FC<{
   spacerock: EntityID;
-  height?: number;
-}> = ({ spacerock, height = 96 }) => {
+  small?: boolean;
+}> = ({ spacerock, small }) => {
   const [index, setIndex] = useState<number>(0);
 
   return (
     <div
-      className={`flex flex-col items-center gap-2 text-white w-96 h-${height} min-w-full`}
+      className={`flex flex-col items-center gap-2 text-white w-96 min-w-full ${
+        small ? "h-32" : "h-96"
+      }`}
     >
       <div className="w-full flex items-center justify-center mt-2 gap-2">
         <button
