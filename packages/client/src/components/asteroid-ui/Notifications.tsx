@@ -10,6 +10,10 @@ import {
   BlockNumber,
   NotificationQueue,
 } from "src/network/components/clientComponents";
+import {
+  Notification,
+  NotificationType,
+} from "src/network/components/customComponents/NotificationQueueComponent";
 import { shortenAddress } from "src/util/common";
 import { ESendType, ESendTypeToLiteral } from "src/util/web3/types";
 const Notifications: React.FC = () => {
@@ -20,10 +24,10 @@ const Notifications: React.FC = () => {
     <div className="fixed bottom-8 left-8 z-50 p-4 w-96 flex flex-col gap-4 z-[1001]">
       {notifications.id.map((id, index) => {
         if (index > 6) return null;
-        const notification = {
+        const notification: Notification = {
           id,
           timestamp: notifications.timestamp[index],
-          type: notifications.type[index],
+          type: notifications.type[index] as NotificationType,
         };
 
         if (notification.type == "battle")
@@ -35,7 +39,7 @@ const Notifications: React.FC = () => {
             <TransitNotification id={id} key={`${notifications.id}-${index}`} />
           );
         }
-        if (notification.type == "arrival-orbiting") {
+        if (notification.type == "arrival-orbit") {
           return (
             <OrbitingNotification
               id={id}
@@ -106,9 +110,9 @@ const OrbitingNotification: React.FC<{
   });
   return (
     <button className="relative flex items-center justify-between bg-slate-800 pixel-images border border-cyan-400 p-3 rounded-md text-white">
-      <div className="rounded-md bg-rose-800 gap-1 p-1 mr-2 flex flex-col items-center w-20">
+      <div className="rounded-md bg-orange-600 gap-1 p-1 mr-2 flex flex-col items-center w-20">
         <FaGlobe size={16} />
-        <p className="bg-orange-900 border border-orange-500  rounded-md px-1 text-[.6rem]">
+        <p className="bg-green-900 border border-green-500  rounded-md px-1 text-[.6rem]">
           FLEET ARRIVED
         </p>
       </div>
