@@ -1,4 +1,4 @@
-import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { useMemo } from "react";
 import useResourceCount from "src/hooks/useResourceCount";
 import {
@@ -14,32 +14,22 @@ import { ResourceImage } from "src/util/constants";
 export const UtilityResourceLabel = ({
   name,
   resourceId,
-  entityIndex,
 }: {
   name: string;
   resourceId: EntityID;
-  entityIndex?: EntityIndex;
 }) => {
   const blockNumber = BlockNumber.get(undefined, {
     value: 0,
     avgBlockTime: 1,
   }).value;
 
-  const resourceCount = useResourceCount(
-    OccupiedUtilityResource,
-    resourceId,
-    entityIndex
-  );
+  const resourceCount = useResourceCount(OccupiedUtilityResource, resourceId);
 
-  const maxStorage = useResourceCount(MaxUtility, resourceId, entityIndex);
+  const maxStorage = useResourceCount(MaxUtility, resourceId);
 
-  const production = useResourceCount(Production, resourceId, entityIndex);
+  const production = useResourceCount(Production, resourceId);
 
-  const lastClaimedAt = useResourceCount(
-    LastClaimedAt,
-    resourceId,
-    entityIndex
-  );
+  const lastClaimedAt = useResourceCount(LastClaimedAt, resourceId);
 
   const resourcesToClaim = useMemo(() => {
     const toClaim = (blockNumber - lastClaimedAt) * production;
