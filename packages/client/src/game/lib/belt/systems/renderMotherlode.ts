@@ -103,7 +103,10 @@ export const renderMotherlode = (scene: Scene, player: EntityID) => {
         const activeButton = Send.get()?.activeButton ?? ActiveButton.NONE;
         if (activeButton === ActiveButton.ORIGIN) {
           Send.setOrigin(coord);
-        } else if (activeButton === ActiveButton.DESTINATION) {
+        } else if (
+          activeButton === ActiveButton.DESTINATION ||
+          activeButton === ActiveButton.NONE
+        ) {
           Send.setDestination(coord);
         }
         Send.update({ activeButton: ActiveButton.NONE });
