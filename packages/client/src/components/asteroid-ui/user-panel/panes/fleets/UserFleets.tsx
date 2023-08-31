@@ -75,7 +75,11 @@ export const OrbitActionButton: React.FC<{
   );
 };
 
-const Fleet = ({ fleet }: { fleet: ComponentValue<typeof Arrival.schema> }) => {
+export const Fleet = ({
+  fleet,
+}: {
+  fleet: ComponentValue<typeof Arrival.schema>;
+}) => {
   const blockNumber = BlockNumber.use()?.value;
 
   const destinationPosition = Position.use(fleet.destination, {
