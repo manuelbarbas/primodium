@@ -50,7 +50,7 @@ const PortalModal: React.FC<ModalProps> = ({
     <>
       {show && (
         <div
-          className="fixed inset-0 flex items-center justify-center z-[10000] bg-black bg-opacity-60 text-white font-mono w-full rounded p-2"
+          className="fixed inset-0 flex items-center justify-center z-[1000] bg-black bg-opacity-60 text-white font-mono w-full rounded p-2"
           onClick={handleClickOutside}
         >
           <div

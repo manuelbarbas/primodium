@@ -1,20 +1,14 @@
-import { EntityIndex } from "@latticexyz/recs";
 import { useMud } from "src/hooks";
 import useResourceCount from "src/hooks/useResourceCount";
 import { BlockType } from "src/util/constants";
 import { UtilityResourceLabel } from "./UtilityResourceLabel";
 
-export const AllUtilityResourceLabels = ({
-  entityIndex,
-}: {
-  entityIndex?: EntityIndex;
-}) => {
+export const AllUtilityResourceLabels = () => {
   const { components } = useMud();
 
   const UtilityCapacity = useResourceCount(
     components.MaxUtility,
-    BlockType.ElectricityUtilityResource,
-    entityIndex
+    BlockType.ElectricityUtilityResource
   );
 
   if (!UtilityCapacity)
@@ -27,17 +21,14 @@ export const AllUtilityResourceLabels = ({
     <div className="grid gap-2 min-h-fit max-h-56  overflow-y-auto">
       <UtilityResourceLabel
         name={"Electricity"}
-        entityIndex={entityIndex}
         resourceId={BlockType.ElectricityUtilityResource}
       />
       <UtilityResourceLabel
         name={"Housing"}
-        entityIndex={entityIndex}
         resourceId={BlockType.HousingUtilityResource}
       />
       <UtilityResourceLabel
         name={"Vessel Capacity"}
-        entityIndex={entityIndex}
         resourceId={BlockType.VesselUtilityResource}
       />
     </div>

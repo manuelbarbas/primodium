@@ -2,9 +2,11 @@ import { world } from "src/network/world";
 import newComponent from "./Component";
 import { EntityID, Type } from "@latticexyz/recs";
 
+export type NotificationType = "battle" | "arrival-transit" | "arrival-orbit";
 export type Notification = {
   id: EntityID;
   timestamp: number;
+  type: NotificationType;
 };
 
 export const NotificationQueueComponent = () => {
@@ -13,6 +15,7 @@ export const NotificationQueueComponent = () => {
     {
       id: Type.EntityArray,
       timestamp: Type.NumberArray,
+      type: Type.StringArray,
     },
     {
       id: "NotificationQueue",
@@ -22,11 +25,13 @@ export const NotificationQueueComponent = () => {
 
   const addNotification = (notification: Notification) => {
     const currentData = component.get() || {
-      id: [],
-      timestamp: [],
+      id: new Array<EntityID>(),
+      timestamp: new Array<number>(),
+      type: new Array<NotificationType>(),
     };
     currentData.id.push(notification.id);
     currentData.timestamp.push(notification.timestamp);
+    currentData.type.push(notification.type);
     component.set(currentData);
   };
 
@@ -34,6 +39,7 @@ export const NotificationQueueComponent = () => {
     const currentData = component.get() || {
       id: [],
       timestamp: [],
+      type: [],
     };
     const index = currentData.id.indexOf(id);
     if (index !== -1) {

@@ -15,7 +15,7 @@ import { BrandingLabel } from "./BrandingLabel";
 import { AiOutlineRotateRight } from "react-icons/ai";
 import { useOrientation } from "src/hooks/useOrientation";
 import { UserPanel } from "./user-panel/UserPanel";
-import BattleNotifications from "./BattleNotifications";
+import Notifications from "./Notifications";
 
 function AsteroidUI() {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -37,7 +37,7 @@ function AsteroidUI() {
     <div>
       <div className="screen-container">
         {isMobile && isPortrait && (
-          <div className="fixed flex-col top-0 bottom-0 screen-container pointer-events-none bg-gray-700 z-[10000] flex items-center justify-center font-mono font-bold text-white text-lg space-y-4">
+          <div className="fixed flex-col top-0 bottom-0 screen-container pointer-events-none bg-gray-700 z-[1000] flex items-center justify-center font-mono font-bold text-white text-lg space-y-4">
             <AiOutlineRotateRight size="64" />
             <p> Please play in landscape </p>
           </div>
@@ -51,7 +51,7 @@ function AsteroidUI() {
               <InfoBox />
               <NotificationBox />
               <UserPanel />
-              <BattleNotifications />
+              <Notifications />
             </motion.div>
           )}
         </AnimatePresence>

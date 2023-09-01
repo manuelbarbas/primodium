@@ -20,7 +20,10 @@ export const reinforce = async (
   const receipt = await execute(
     systems["system.ReceiveReinforcement"].executeTyped(
       rockEntity,
-      arrivalIndex
+      arrivalIndex,
+      {
+        gasLimit: 4_000_000,
+      }
     ),
     providers,
     setNotification

@@ -34,17 +34,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
 
-  const query = [
-    Has(AsteroidType),
-    HasValue(AsteroidType, {
-      value: ESpaceRockType.Asteroid,
-    }),
-  ];
-
-  const render = (coord: Coord) => {
-    const entityId = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
-
-    if (!entityId) return;
+  const render = (entityId: EntityID, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entityId);
     const asteroidType = AsteroidType.get(entityId)?.value;
 
@@ -104,6 +94,14 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
     ]);
   };
 
+  const query = [
+    Has(AsteroidType),
+    HasValue(AsteroidType, {
+      value: ESpaceRockType.Asteroid,
+    }),
+    Has(Position),
+  ];
+
   defineEnterSystem(gameWorld, query, ({ entity }) => {
     const entityId = world.entities[entity];
 
@@ -111,7 +109,7 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
 
     if (!coord) return;
 
-    render(coord);
+    render(entityId, coord);
     initializeMotherlodes(entityId, coord);
   });
 
@@ -120,9 +118,12 @@ export const renderAsteroid = (scene: Scene, player: EntityID) => {
       [
         { x: value?.originX, y: value?.originY },
         { x: value?.destinationX, y: value?.destinationY },
-      ].map((coord) => {
-        if (!coord || !coord.x || !coord.y) return;
-        render({ x: coord.x, y: coord.y });
+      ].map((rawCoord) => {
+        if (!rawCoord || !rawCoord.x || !rawCoord.y) return;
+        const coord = { x: rawCoord.x, y: rawCoord.y };
+        const entity = ReversePosition.get(encodeAndTrimCoord(coord))?.value;
+        if (!entity) return;
+        render(entity, coord);
       });
     });
   });

@@ -1,41 +1,75 @@
-import { EntityID, EntityIndex } from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
+import { EntityID, EntityIndex, Has, HasValue } from "@latticexyz/recs";
 import { useMemo } from "react";
 import useResourceCount from "src/hooks/useResourceCount";
 import {
+  AsteroidType,
   Item,
   LastClaimedAt,
+  OwnedBy,
   P_MaxStorage,
   Production,
 } from "src/network/components/chainComponents";
-import { BlockNumber } from "src/network/components/clientComponents";
+
+import {
+  Account,
+  BlockNumber,
+  Hangar,
+} from "src/network/components/clientComponents";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { ESpaceRockType } from "src/util/web3/types";
+import { world } from "src/network/world";
+import { getUnitStats } from "src/util/trainUnits";
+import { getMotherlodeResource, mineableResources } from "src/util/resource";
 
 export const ResourceLabel = ({
   name,
   resourceId,
-  entityIndex,
 }: {
   name: string;
   resourceId: EntityID;
-  entityIndex?: EntityIndex;
 }) => {
   const { value: blockNumber, avgBlockTime } = BlockNumber.use(undefined, {
     value: 0,
     avgBlockTime: 1,
   });
 
-  const resourceCount = useResourceCount(Item, resourceId, entityIndex);
+  const player = Account.use()?.value;
+  const query = [
+    Has(AsteroidType),
+    HasValue(OwnedBy, { value: player }),
+    HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
+  ];
 
-  const maxStorage = useResourceCount(P_MaxStorage, resourceId, entityIndex);
+  const motherlodes = useEntityQuery(query);
 
-  const production = useResourceCount(Production, resourceId, entityIndex);
+  const motherlodeProduction = useMemo(() => {
+    if (!mineableResources.includes(resourceId)) return 0;
+    return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
+      const entity = world.entities[motherlodeIndex];
+      const resource = getMotherlodeResource(entity);
 
-  const lastClaimedAt = useResourceCount(
-    LastClaimedAt,
-    resourceId,
-    entityIndex
-  );
+      const hangar = Hangar.get(entity);
+
+      if (!hangar || resource?.resource !== resourceId) return prev;
+
+      let total = 0;
+      for (let i = 0; i < hangar.units.length; i++) {
+        total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
+      }
+      return prev + total;
+    }, 0);
+  }, [motherlodes, resourceId]);
+
+  const resourceCount = useResourceCount(Item, resourceId);
+
+  const maxStorage = useResourceCount(P_MaxStorage, resourceId);
+
+  const production =
+    useResourceCount(Production, resourceId) + motherlodeProduction;
+
+  const lastClaimedAt = useResourceCount(LastClaimedAt, resourceId);
 
   const resourcesToClaim = useMemo(() => {
     const toClaim = (blockNumber - lastClaimedAt) * production;

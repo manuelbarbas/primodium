@@ -105,26 +105,35 @@ contract SendUnitsSystem is PrimodiumSystem {
     */
     require(
       asteroidTypeComponent.has(origin) && asteroidTypeComponent.has(destination),
-      "must travel between space rocks"
+      "[SendUnitsSystem] Must travel between asteroids or motherlodes"
     );
     ESpaceRockType originType = ESpaceRockType(asteroidTypeComponent.getValue(origin));
     ESpaceRockType destinationType = ESpaceRockType(asteroidTypeComponent.getValue(destination));
     if (sendType == ESendType.REINFORCE || sendType == ESendType.RAID)
-      require(ownedByComponent.has(destination), "reinforce/raid destination must be a owned by player");
+      require(
+        ownedByComponent.has(destination),
+        "[SendUnitsSystem] Reinforce and raid destinations must be a owned by player."
+      );
 
     uint256 moveCount = LibMath.getSafe(ArrivalsSizeComponent(getC(ArrivalsSizeComponentID)), playerEntity);
     uint32 maxMoveCount = LibMath.getSafe(MaxMovesComponent(getC(MaxMovesComponentID)), playerEntity);
 
-    require(moveCount < maxMoveCount, "you have reached your max move count");
+    require(
+      moveCount < maxMoveCount,
+      "[SendUnitsSystem] You have reached your max move count. Build or upgrade your starmapper to make more moves."
+    );
 
-    require(origin != destination, "origin and destination cannot be the same");
+    require(origin != destination, "[SendUnitsSystem] Origin and destination cannot be the same.");
 
     if (originType == ESpaceRockType.ASTEROID) {
-      require(ownedByComponent.getValue(origin) == playerEntity, "you can only move from an asteroid you own");
+      require(
+        ownedByComponent.getValue(origin) == playerEntity,
+        "[SendUnitsSystem] You can only move from an asteroid you own."
+      );
     }
 
     if (destinationType == ESpaceRockType.MOTHERLODE) {
-      require(originType != ESpaceRockType.MOTHERLODE, "you cannot move between motherlodes");
+      require(originType != ESpaceRockType.MOTHERLODE, "[SendUnitsSystem] You cannot move between motherlodes.");
     }
 
     if (sendType == ESendType.INVADE) {

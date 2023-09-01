@@ -3,14 +3,14 @@ import React, { useMemo } from "react";
 
 import {
   BackgroundImage,
-  BlockIdToKey,
   RESOURCE_SCALE,
   ResourceImage,
+  ResourceType,
 } from "src/util/constants";
 import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
-import { formatNumber } from "src/util/common";
+import { formatNumber, getBlockTypeName } from "src/util/common";
 import { Account, BlockNumber } from "src/network/components/clientComponents";
 import {
   Level,
@@ -46,8 +46,6 @@ export const BlueprintInfo: React.FC<{
     ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
     avgBlockTime;
 
-  console.log("production", production);
-  console.log("dependencies", dependencies);
   return (
     <div className="flex flex-col w-fit">
       <div className="flex flex-col justify-center items-center w-full border border-yellow-400 border-dashed ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">
@@ -66,9 +64,7 @@ export const BlueprintInfo: React.FC<{
           </div>
           <div className="flex flex-col items-center gap-2">
             <p className="flex justify-center align-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm font-bold w-full">
-              {BlockIdToKey[buildingType]
-                .replace(/([A-Z]+)/g, " $1")
-                .replace(/([A-Z][a-z])/g, " $1")}
+              {getBlockTypeName(buildingType)}
             </p>
             <div className="flex gap-2">
               {recipe.length > 0 && (
@@ -77,7 +73,7 @@ export const BlueprintInfo: React.FC<{
                   <div className="flex justify-center items-center text-sm bg-red-800/60 p-1 border border-red-600 rounded-md gap-2">
                     {recipe.map((resource) => {
                       const resourceImage = ResourceImage.get(resource.id)!;
-                      const resourceName = BlockIdToKey[resource.id];
+                      const resourceName = getBlockTypeName(resource.id);
                       return (
                         <ResourceIconTooltip
                           key={resource.id}
@@ -85,15 +81,30 @@ export const BlueprintInfo: React.FC<{
                           resourceId={resource.id}
                           name={resourceName}
                           amount={resource.amount}
+                          scale={
+                            resource.type === ResourceType.Resource
+                              ? RESOURCE_SCALE
+                              : 1
+                          }
                           fontSize={"xs"}
                         />
                       );
                     })}
                   </div>
+                  {dependencies &&
+                    dependencies.map((dep) => (
+                      <div className="flex items-center gap-2 text-xs bg-red-800/60 p-1 border border-red-600 rounded-md">
+                        <img
+                          className="inline-block h-4"
+                          src={ResourceImage.get(dep.resource)}
+                        ></img>
+                        {formatNumber(dep.value)}/MIN
+                      </div>
+                    ))}
                 </div>
               )}
-              {(!!production || dependencies) && (
-                <div className="relative gap-1 flex flex-col w-18 gap-1 text-xs">
+              {!!production && (
+                <div className="relative flex flex-col w-18 gap-1 text-xs">
                   OUTPUT
                   {production && (
                     <div className="flex items-center gap-2 text-xs bg-green-800/60 p-1 border border-green-600 rounded-md">
@@ -104,15 +115,6 @@ export const BlueprintInfo: React.FC<{
                       {formatNumber(productionRate)}/MIN
                     </div>
                   )}
-                  {dependencies.map((dep) => (
-                    <div className="flex items-center gap-2 text-xs bg-red-800/60 p-1 border border-red-600 rounded-md">
-                      <img
-                        className="inline-block h-4"
-                        src={ResourceImage.get(dep.resource)}
-                      ></img>
-                      {formatNumber(dep.value)}/MIN
-                    </div>
-                  ))}
                 </div>
               )}
             </div>
