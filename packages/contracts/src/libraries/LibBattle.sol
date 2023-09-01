@@ -94,42 +94,35 @@ library LibBattle {
   function resolveBattle(IWorld world, uint256 battleEntity) internal view returns (BattleResult memory) {
     BattleResult memory battleResult;
 
-    uint32[] memory attackerUnitCounts = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID))
-      .getValue(battleEntity)
-      .unitCounts;
-    uint32[] memory defenderUnitCounts = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID))
-      .getValue(battleEntity)
-      .unitCounts;
+    BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
+      battleEntity
+    );
 
-    battleResult.attackerUnitsLeft = new uint32[](attackerUnitCounts.length);
-    battleResult.defenderUnitsLeft = new uint32[](defenderUnitCounts.length);
+    BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
+      battleEntity
+    );
 
-    (uint32[] memory attackValues, uint32 totalAttackValue) = getTotalAttackValue(world, battleEntity);
+    battleResult.attackerUnitsLeft = new uint32[](attacker.unitCounts.length);
+    battleResult.defenderUnitsLeft = new uint32[](defender.unitCounts.length);
+
+    uint32 totalAttackValue = getTotalAttackValue(world, battleEntity);
     uint32 totalDefenceValue = getTotalDefenceValue(world, battleEntity);
+    bool isAttackerWinner = totalAttackValue > totalDefenceValue;
 
-    for (uint256 i = 0; i < attackerUnitCounts.length; i++) {
-      uint32 attackPercentage = totalAttackValue > 0 ? (attackValues[i] * 100) / totalAttackValue : 0;
-      uint32 defendToward = (totalDefenceValue * attackPercentage) / 100;
-      uint32 battleRatio = 0;
-      if (defendToward > 0) {
-        battleRatio = (defendToward * 100) / totalDefenceValue;
-        if (battleRatio > 100) battleRatio = 0;
-        else battleRatio = 100 - battleRatio;
+    battleResult.winnerEntity = isAttackerWinner ? attacker.participantEntity : defender.participantEntity;
+
+    uint32 lossRatio;
+    if (isAttackerWinner) {
+      lossRatio = 100 - ((totalDefenceValue * 100) / totalAttackValue);
+      for (uint256 i = 0; i < attacker.unitCounts.length; i++) {
+        battleResult.attackerUnitsLeft[i] = (attacker.unitCounts[i] * lossRatio) / 100;
       }
-      uint32 attackerRatio = 0;
-      if (attackValues[i] > 0) {
-        attackerRatio = (defendToward * 100) / attackValues[i];
-        if (attackerRatio > 100) attackerRatio = 0;
-        else attackerRatio = 100 - attackerRatio;
-      }
-      battleResult.attackerUnitsLeft[i] = (attackerRatio * attackerUnitCounts[i]) / 100;
-      for (uint256 j = 0; j < defenderUnitCounts.length; j++) {
-        battleResult.defenderUnitsLeft[j] += (defenderUnitCounts[j] * attackPercentage * battleRatio) / 10000;
+    } else {
+      lossRatio = 100 - ((totalAttackValue * 100) / totalDefenceValue);
+      for (uint256 i = 0; i < defender.unitCounts.length; i++) {
+        battleResult.defenderUnitsLeft[i] = (defender.unitCounts[i] * lossRatio) / 100;
       }
     }
-
-    battleResult.winnerEntity = getWinner(world, battleEntity, battleResult);
-
     return battleResult;
   }
 
@@ -219,26 +212,22 @@ library LibBattle {
     return totalDefenceValue;
   }
 
-  function getTotalAttackValue(
-    IWorld world,
-    uint256 battleEntity
-  ) internal view returns (uint32[] memory attackValues, uint32 totalAttackValue) {
+  function getTotalAttackValue(IWorld world, uint256 battleEntity) internal view returns (uint32 totalAttackValue) {
     P_UnitAttackComponent unitAttackComponent = P_UnitAttackComponent(world.getComponent(P_UnitAttackComponentID));
     BattleAttackerComponent battleAttackerComponent = BattleAttackerComponent(
       world.getComponent(BattleAttackerComponentID)
     );
     BattleParticipant memory attacker = battleAttackerComponent.getValue(battleEntity);
-    attackValues = new uint32[](attacker.unitTypes.length);
+
     totalAttackValue = 0;
     for (uint256 i = 0; i < attacker.unitTypes.length; i++) {
       if (attacker.unitCounts[i] <= 0) continue;
       uint32 level = LibUnits.getPlayerUnitTypeLevel(world, attacker.participantEntity, attacker.unitTypes[i]);
-      attackValues[i] =
+      totalAttackValue +=
         attacker.unitCounts[i] *
         unitAttackComponent.getValue(LibEncode.hashKeyEntity(attacker.unitTypes[i], level));
-      totalAttackValue += attackValues[i];
     }
 
-    return (attackValues, totalAttackValue);
+    return (totalAttackValue);
   }
 }
