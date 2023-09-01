@@ -17,7 +17,7 @@ library LibInitWorld {
   function init(IWorld world) internal {
     // todo: make the universe the correct size
     GameConfig memory config = GameConfig({
-      moveSpeed: 100,
+      moveSpeed: 10000,
       motherlodeDistance: 10,
       maxMotherlodesPerAsteroid: 6,
       motherlodeChanceInv: 4
