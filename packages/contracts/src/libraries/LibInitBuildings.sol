@@ -176,7 +176,7 @@ library LibInitBuildings {
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 8640000 });
     resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 3456000 });
     resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 1728000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 138200 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1382000 });
     resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 864000 });
     resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 700000 });
     resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 700000 });
