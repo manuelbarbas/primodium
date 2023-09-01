@@ -1,7 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import { FaTrash } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import Spinner from "src/components/shared/Spinner";
 import { useMud } from "src/hooks";
 import {
@@ -108,7 +108,7 @@ export const FleetPane: React.FC<{
       }}
       className="relative flex justify-center items-center bg-slate-900/90 pixel-images border border-cyan-400 p-2 rounded-md ring ring-cyan-700"
     >
-      <div className="grid grid-cols-3 items-center h-44">
+      <div className="grid grid-cols-3 items-center h-full">
         {send.units && send.units?.length !== 0 && (
           <div className="relative grid grid-cols-5 grid-rows-2 col-span-2 gap-2 items-center justify-center border p-3 rounded border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-full">
             {send.units.map((unit, index) => {
@@ -138,6 +138,14 @@ export const FleetPane: React.FC<{
                 </button>
               );
             })}
+            <button
+              className="relative flex flex-col items-center group hover:scale-110 transition-transform hover:z-50"
+              onClick={() => setShowHangar(true)}
+            >
+              <div className="relative bg-slate-900 w-14 h-14 border border-yellow-400 rounded-md p-2 flex items-center justify-center">
+                <FaPlus size={14} />
+              </div>
+            </button>
           </div>
         )}
 
@@ -153,35 +161,6 @@ export const FleetPane: React.FC<{
         )}
 
         <div className="flex flex-col gap-3 items-center justify-center ml-2 border rounded-md border-slate-700 bg-slate-800 bg-gradient-t-br from-transparent to-slate-900 min-h-32 h-full p-2">
-          {send.activeButton !== ActiveButton.DESTINATION && (
-            <button
-              onClick={() => {
-                if (send.activeButton == ActiveButton.ORIGIN) {
-                  Send.update({ activeButton: ActiveButton.NONE });
-                  Send.setOrigin(undefined);
-                } else {
-                  Send.update({ activeButton: ActiveButton.ORIGIN });
-                }
-              }}
-              className={`${
-                send.activeButton === ActiveButton.ORIGIN ? "h-full" : ""
-              } flex justify-center items-center gap-3 border border-green-500 w-fit px-2 py-2 rounded-md bg-green-700 bg-gradient-to-br from-transparent to-green-900/30 text-green-100 text-sm font-bold`}
-            >
-              {send.activeButton == ActiveButton.ORIGIN ? (
-                <p> SELECT AN ORIGIN...</p>
-              ) : !origin ? (
-                <b>NO ORIGIN SELECTED</b>
-              ) : (
-                <>
-                  <img
-                    src={getAsteroidImage(origin.entity)}
-                    className="w-[24px] h-[24px] shadow-2xl"
-                  />
-                  ORIGIN LOCKED
-                </>
-              )}
-            </button>
-          )}
           {send.activeButton !== ActiveButton.ORIGIN && (
             <button
               onClick={() => {
@@ -192,13 +171,9 @@ export const FleetPane: React.FC<{
                   Send.update({ activeButton: ActiveButton.DESTINATION });
                 }
               }}
-              className={`${
-                send.activeButton === ActiveButton.DESTINATION ? "h-full" : ""
-              } flex justify-center items-center gap-3 border border-yellow-500 w-fit px-2 py-2 rounded-md bg-yellow-600 bg-gradient-to-br from-transparent to-yellow-900/30 text-yellow-100 text-sm font-bold`}
+              className={`flex justify-center items-center gap-3 border border-yellow-500 w-fit px-2 py-2 rounded-md bg-yellow-600 bg-gradient-to-br from-transparent to-yellow-900/30 text-yellow-100 text-sm font-bold`}
             >
-              {send.activeButton == ActiveButton.DESTINATION ? (
-                <p> SELECT A TARGET...</p>
-              ) : !destination ? (
+              {!destination ? (
                 <b>NO TARGET SELECTED</b>
               ) : (
                 <>
@@ -219,15 +194,15 @@ export const FleetPane: React.FC<{
                 </b>
               )}
               {send.units && send.units.length !== 0 && (
-                <>
+                <div className=" flex space-x-3">
                   <button
-                    className="p-2 border rounded-md border-slate-700 ring ring-slate-900 bg-slate-700 hover:scale-105 transition-all"
+                    className="p-2 border rounded-md border-slate-700 ring ring-slate-900 bg-slate-700 hover:scale-105 transition-all w-24"
                     onClick={() => sendFleet(ESendType.REINFORCE)}
                   >
                     {transactionLoading ? <Spinner /> : "REINFORCE"}
                   </button>
                   <button
-                    className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all"
+                    className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all w-16"
                     onClick={() =>
                       sendFleet(
                         asteroidType === ESpaceRockType.Asteroid
@@ -238,7 +213,7 @@ export const FleetPane: React.FC<{
                   >
                     {transactionLoading ? <Spinner /> : "INVADE"}
                   </button>
-                </>
+                </div>
               )}
             </div>
           )}

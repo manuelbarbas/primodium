@@ -14,12 +14,14 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, children, title }) => {
     const handleEscPress = (event: KeyboardEvent) => {
       if (show && event.key === "Escape") {
         onClose();
+        event.stopPropagation();
       }
     };
 
-    window.addEventListener("keydown", handleEscPress);
+    modalRef.current?.addEventListener("keydown", handleEscPress);
     return () => {
-      window.removeEventListener("keydown", handleEscPress);
+      // Clean up the event listener.
+      modalRef.current?.removeEventListener("keydown", handleEscPress);
     };
   }, [onClose, show]);
 

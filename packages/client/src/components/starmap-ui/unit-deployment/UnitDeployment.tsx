@@ -2,6 +2,7 @@ import { useState } from "react";
 import { HangarPane } from "./HangarPane";
 import { FleetPane } from "./FleetPane";
 import { AnimatePresence } from "framer-motion";
+import Modal from "src/components/shared/Modal";
 
 export const UnitDeployment: React.FC = () => {
   const [showHangar, setShowHangar] = useState(false);
@@ -13,10 +14,17 @@ export const UnitDeployment: React.FC = () => {
           <FleetPane key="fleet" setShowHangar={setShowHangar} />
         </AnimatePresence>
       </div>
-      <div className="absolute top-0 right-0 pointer-events-auto">
-        <AnimatePresence>
+
+      <div className="pointer-events-auto">
+        <Modal
+          title="Hangar"
+          show={showHangar}
+          onClose={() => {
+            setShowHangar(false);
+          }}
+        >
           <HangarPane key="hangar" show={showHangar} setShow={setShowHangar} />
-        </AnimatePresence>
+        </Modal>
       </div>
     </div>
   );

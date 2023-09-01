@@ -10,7 +10,8 @@ export const UnitPane: React.FC<{
   unit: EntityID;
   maximum: number;
   setSelectedUnit: React.Dispatch<React.SetStateAction<EntityID | undefined>>;
-}> = ({ unit, maximum, setSelectedUnit }) => {
+  setShowHangar: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ unit, maximum, setSelectedUnit, setShowHangar }) => {
   const [count, setCount] = useState<number | "">(Send.getUnitCount(unit));
   const fleet = Send.use();
   useEffect(() => {
@@ -99,17 +100,18 @@ export const UnitPane: React.FC<{
       <p className="opacity-50 text-xs">max. {maximum}</p>
 
       <button
-        className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold"
+        className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold rounded-md"
         onClick={() => {
-          if (count === "") return;
+          if (count === "" || count === 0) return;
 
           Send.setUnitCount(unit, count);
+          setShowHangar(false);
         }}
       >
         Add to Fleet
       </button>
       <button
-        className="bg-slate-900 border border-cyan-400 px-2 m-2"
+        className="bg-slate-900 border border-cyan-400 px-2 m-2 rounded-md"
         onClick={() => setSelectedUnit(undefined)}
       >
         Return to Hangar
