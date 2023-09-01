@@ -30,7 +30,8 @@ export const OrbitActionButton: React.FC<{
   destination: EntityID;
   sendType: ESendType;
   arrivalIndex: number;
-}> = ({ destination, sendType, arrivalIndex }) => {
+  outgoing: boolean;
+}> = ({ destination, sendType, arrivalIndex, outgoing }) => {
   const network = useMud();
   const destinationOwner = OwnedBy.use(destination)?.value;
   const player = Account.use()?.value ?? SingletonID;
@@ -55,7 +56,7 @@ export const OrbitActionButton: React.FC<{
             raid(destination, network);
             return;
           case ESendType.REINFORCE:
-            if (!isNeutral) {
+            if (!isNeutral || outgoing) {
               recall(destination, network);
               return;
             }
@@ -64,7 +65,12 @@ export const OrbitActionButton: React.FC<{
         }
       }}
     >
-      {isNeutral && (sendType === ESendType.REINFORCE ? "ACCEPT" : "LAND")}
+      {isNeutral &&
+        (sendType === ESendType.REINFORCE
+          ? !outgoing
+            ? "ACCEPT"
+            : "RECALL"
+          : "LAND")}
       {!isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "ATTACK")}
     </button>
   );
@@ -75,7 +81,8 @@ export const Fleet: React.FC<{
   destination: EntityID;
   sendType: ESendType;
   arrivalIndex: number;
-}> = ({ arrivalBlock, destination, sendType, arrivalIndex }) => {
+  outgoing: boolean;
+}> = ({ arrivalBlock, destination, sendType, arrivalIndex, outgoing }) => {
   const blockNumber = BlockNumber.use()?.value;
 
   const destinationPosition = Position.use(destination, {
@@ -131,6 +138,7 @@ export const Fleet: React.FC<{
             arrivalIndex={arrivalIndex}
             destination={destination}
             sendType={sendType}
+            outgoing={outgoing}
           />
         )}
       </div>
@@ -159,6 +167,7 @@ export const Outgoingfleets: React.FC<{ user: EntityID }> = ({ user }) => {
               arrivalIndex={fleet.index}
               destination={fleet.destination}
               sendType={fleet.sendType}
+              outgoing={true}
             />
           );
         })
@@ -189,6 +198,7 @@ export const Reinforcementfleets: React.FC<{ user: EntityID }> = ({ user }) => {
               arrivalIndex={fleet.index}
               destination={fleet.destination}
               sendType={fleet.sendType}
+              outgoing={false}
             />
           );
         })

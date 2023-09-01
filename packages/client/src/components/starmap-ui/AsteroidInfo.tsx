@@ -20,7 +20,7 @@ import { getAsteroidImage } from "src/util/asteroid";
 import { useState } from "react";
 import { shortenAddress } from "src/util/common";
 import { GameButton } from "../shared/GameButton";
-import { FaCircleLeft, FaSpaceAwesome } from "react-icons/fa6";
+import { FaCircleLeft } from "react-icons/fa6";
 import { FaUserAstronaut } from "react-icons/fa";
 import { HostileFleets } from "../asteroid-ui/hostile-fleets/HostileFleets";
 
@@ -38,7 +38,7 @@ export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
   return (
     <AnimatePresence>
       <motion.div layout key="target-info">
-        <div className="flex flex-col bg-slate-900/90 border border-cyan-400 font-bold w-96">
+        <div className="flex flex-col bg-slate-900/90 border rounded-md overflow-none ring ring-cyan-700 border-cyan-400 font-bold w-96">
           {title && (
             <div className="p-1 border items-center border-t-0 border-r-0 border-l-0 border-cyan-400 flex justify-between">
               {title}
@@ -63,16 +63,6 @@ export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
                   >
                     <div className="flex m-1 items-center gap-2 px-1">
                       <FaUserAstronaut size={12} />
-                    </div>
-                  </GameButton>
-                  <GameButton
-                    id="battle-reports"
-                    color="bg-orange-500"
-                    onClick={() => setPaneState("arrivals")}
-                    depth={1}
-                  >
-                    <div className="flex m-1 items-center gap-2 px-1">
-                      <FaSpaceAwesome size={12} />
                     </div>
                   </GameButton>
                 </div>
@@ -201,7 +191,7 @@ const MotherlodeTargetInfo: React.FC<{
         </div>
         <div className="w-full h-full flex flex-col justify-center px-2">
           <b className="opacity-70">OWNER</b>
-          <p>{owner ? owner : "Neutral"}</p>
+          <p>{owner ? shortenAddress(owner) : "Neutral"}</p>
         </div>
         <div className="bg-slate-800/70 w-full h-full flex flex-col justify-center px-2 capitalize">
           <b className="opacity-70">QTY</b>
