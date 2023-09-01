@@ -317,27 +317,16 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [
     BlockType.IronMine,
     [
-      "/img/building/ironmine/iron-mine-level1.png",
+      "/img/building/ironmine/iron-miner-level1.png",
       "/img/building/ironmine/iron-miner-level2.png",
       "/img/building/ironmine/iron-miner-level3.png",
     ],
   ],
   [
     BlockType.LithiumMine,
-    [
-      "/img/building/lithiummine/lithium-mine-level1.png",
-      "/img/building/lithiummine/lithium-miner-level2.png",
-      "/img/building/lithiummine/lithium-miner-level3.png",
-    ],
+    ["/img/building/lithiummine/lithium-mine-level1.png"],
   ],
-  [
-    BlockType.SulfurMine,
-    [
-      "/img/building/sulfurmine/sulfur-mine-level1.png",
-      "/img/building/sulfurmine/sulfur-miner-level2.png",
-      "/img/building/sulfurmine/sulfur-miner-level3.png",
-    ],
-  ],
+  [BlockType.SulfurMine, ["/img/building/sulfurmine/sulfur-mine-level1.png"]],
   [
     BlockType.StorageUnit,
     [
