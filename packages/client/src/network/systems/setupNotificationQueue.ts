@@ -7,12 +7,15 @@ import {
   BlockNumber,
 } from "../components/clientComponents"; // Update with actual Battle and Player component imports
 import { Notification } from "../components/customComponents/NotificationQueueComponent";
-import { Arrival } from "../components/chainComponents";
+import { Arrival, LoadingState } from "../components/chainComponents";
+import { SyncState } from "@latticexyz/network";
+import { uuid } from "@latticexyz/utils";
 
 const LENGTH = 3500;
 
 export function setupNotificationQueue() {
   defineComponentSystem(world, Battle, (update) => {
+    if (LoadingState.get()?.state !== SyncState.LIVE) return;
     const playerAddress = Account.get()?.value; // Assuming Player component has an 'address' field
     const battle = update.value[0];
     if (!battle) return;
@@ -21,7 +24,8 @@ export function setupNotificationQueue() {
       battle.defender === playerAddress
     ) {
       const newNotification: Notification = {
-        id: world.entities[update.entity],
+        id: uuid(),
+        entity: world.entities[update.entity],
         timestamp: Date.now(),
         type: "battle",
       };
@@ -33,18 +37,29 @@ export function setupNotificationQueue() {
   const usedArrivals = new Set<EntityID>();
   const orbitingQueue = new Map<EntityID, number>();
   defineComponentSystem(world, Arrival, (update) => {
+    if (update.value[0] == undefined && update.value[1] !== undefined) {
+      console.log("removing", world.entities[update.entity]);
+      Arrival.set(update.value[1], world.entities[update.entity]);
+      return;
+    }
+    if (LoadingState.get()?.state !== SyncState.LIVE) return;
     const playerAddress = Account.get()?.value; // Assuming Player component has an 'address' field
     const blockNumber = BlockNumber.get()?.value ?? 0;
     if (!playerAddress) return;
     const entityId = world.entities[update.entity];
-    if (usedArrivals.has(entityId)) return;
+    console.log("entity:", entityId);
+    if (usedArrivals.has(entityId)) {
+      console.log("used arrival");
+      return;
+    }
     usedArrivals.add(entityId);
     const arrival = Arrival.getWithId(entityId);
     if (arrival?.from !== playerAddress && arrival?.to !== playerAddress)
       return;
     if (Number(arrival.arrivalBlock) < blockNumber) return;
     const newNotification: Notification = {
-      id: world.entities[update.entity],
+      id: uuid(),
+      entity: world.entities[update.entity],
       timestamp: Date.now(),
       type: "arrival-transit",
     };
@@ -54,10 +69,11 @@ export function setupNotificationQueue() {
   });
 
   defineComponentSystem(world, BlockNumber, ({ value: [block] }) => {
+    if (LoadingState.get()?.state !== SyncState.LIVE) return;
     const blockNumber = block?.value ?? 0;
     const currentTime = Date.now();
     const notifications = NotificationQueue.get();
-    notifications?.id.forEach((id, index) => {
+    notifications?.ids.forEach((id, index) => {
       const timestamp = notifications.timestamp[index];
       if (currentTime - timestamp >= LENGTH) {
         NotificationQueue.removeNotification(id);
@@ -66,7 +82,8 @@ export function setupNotificationQueue() {
     orbitingQueue.forEach((arrivalBlock, entityId) => {
       if (blockNumber > arrivalBlock) {
         const newNotification: Notification = {
-          id: entityId,
+          id: uuid(),
+          entity: entityId,
           timestamp: Date.now(),
           type: "arrival-orbit",
         };
