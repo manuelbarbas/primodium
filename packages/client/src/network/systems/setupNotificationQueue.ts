@@ -38,7 +38,6 @@ export function setupNotificationQueue() {
   const orbitingQueue = new Map<EntityID, number>();
   defineComponentSystem(world, Arrival, (update) => {
     if (update.value[0] == undefined && update.value[1] !== undefined) {
-      console.log("removing", world.entities[update.entity]);
       Arrival.set(update.value[1], world.entities[update.entity]);
       return;
     }
@@ -47,9 +46,7 @@ export function setupNotificationQueue() {
     const blockNumber = BlockNumber.get()?.value ?? 0;
     if (!playerAddress) return;
     const entityId = world.entities[update.entity];
-    console.log("entity:", entityId);
     if (usedArrivals.has(entityId)) {
-      console.log("used arrival");
       return;
     }
     usedArrivals.add(entityId);
