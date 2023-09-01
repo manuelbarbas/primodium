@@ -543,7 +543,7 @@ library LibInitBuildings {
     ResourceValue[] memory resourceValues;
     // LEVEL 1
     resourceValues = new ResourceValue[](1);
-    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 50000 });
+    resourceValues[0] = ResourceValue({ resource: IronResourceItemID, value: 25000 });
     requiredResources[0] = resourceValues;
     // LEVEL 2
     resourceValues = new ResourceValue[](2);
@@ -964,11 +964,11 @@ library LibInitBuildings {
     uint32[] memory productionRates = new uint32[](maxLevel);
 
     // LEVEL 1
-    productionRates[0] = 3;
+    productionRates[0] = 5;
     // LEVEL 2
-    productionRates[1] = 5;
+    productionRates[1] = 7;
     // LEVEL 3
-    productionRates[2] = 7;
+    productionRates[2] = 9;
 
     /* ***********************Set Values ************************* */
     setupFactory(
