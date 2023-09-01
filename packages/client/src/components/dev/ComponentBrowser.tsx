@@ -22,7 +22,7 @@ export const ComponentBrowser = () => {
   const cheatcodes = setupCheatcodes(mud);
   return (
     <div
-      className={`z-10 fixed bottom-0 right-0 ${
+      className={`z-[1002] fixed bottom-0 right-0 ${
         isVisible ? "w-96" : ""
       } h-full text-xs`}
     >

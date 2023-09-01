@@ -6,22 +6,21 @@ import {
   MaxMoves,
   MaxUtility,
   OccupiedUtilityResource,
+  P_MaxStorage,
   P_ScoreMultiplier,
-  P_TrainingTime,
+  Position,
   Units,
 } from "src/network/components/chainComponents";
 import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import { Network } from "src/network/layer";
-import { BlockIdToKey, BlockType } from "./constants";
+import { BlockType } from "./constants";
 import {
   Account,
   ActiveAsteroid,
-  Battle,
   SelectedBuilding,
+  Send,
 } from "src/network/components/clientComponents";
 import { hashEntities, hashKeyEntity } from "./encode";
-import { train } from "./web3";
-import { world } from "src/network/world";
 import { EntityID } from "@latticexyz/recs";
 import { updateSpaceRock } from "./web3/updateSpaceRock";
 
@@ -42,6 +41,7 @@ const resources: Record<string, EntityID> = {
   platinum: BlockType.Platinum,
   alloy: BlockType.Alloy,
   pvcell: BlockType.PhotovoltaicCell,
+  housing: BlockType.HousingUtilityResource,
 };
 
 const units: Record<string, EntityID> = {
@@ -53,27 +53,53 @@ const units: Record<string, EntityID> = {
 };
 
 export const setupCheatcodes = (mud: Network): Cheatcodes => {
-  const setMaxHousing: Cheatcode = {
-    params: [{ name: "maxHousing", type: "number" }],
-    function: async (maxHousing: number) => {
+  const setMaxUtility: Cheatcode = {
+    params: [
+      { name: "resource", type: "string" },
+      { name: "max", type: "number" },
+    ],
+    function: async (resource: string, max: number) => {
       const player = Account.get()?.value;
       if (!player) throw new Error("No player found");
       const playerResource = hashKeyEntity(
-        BlockType.HousingUtilityResource,
+        resources[resource.toLowerCase()],
         player
       );
       await mud.dev.setEntityContractComponentValue(
         playerResource,
         MaxUtility,
         {
-          value: maxHousing,
+          value: max,
+        }
+      );
+    },
+  };
+
+  const setMaxResource: Cheatcode = {
+    params: [
+      { name: "resource", type: "string" },
+      { name: "max", type: "number" },
+    ],
+    function: async (resource: string, max: number) => {
+      const player = Account.get()?.value;
+      if (!player) throw new Error("No player found");
+      const playerResource = hashKeyEntity(
+        resources[resource.toLowerCase()],
+        player
+      );
+      await mud.dev.setEntityContractComponentValue(
+        playerResource,
+        P_MaxStorage,
+        {
+          value: max,
         }
       );
     },
   };
 
   return {
-    setMaxHousing,
+    setMaxUtility,
+    setMaxResource,
     maxMainBase: {
       params: [],
       function: async () => {
@@ -145,6 +171,22 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         });
       },
     },
+    addMinerToDestination: {
+      params: [{ name: "count", type: "number" }],
+      function: async (count: number) => {
+        const destination = Send.getDestination()?.entity;
+        if (!destination) throw new Error("No destination set");
+        console.log("destination", Position.get(destination));
+        const entity = Account.get()?.value;
+        const resource = BlockType.MiningVessel;
+        if (!entity) throw new Error("No player");
+
+        const playerResource = hashEntities(resource, entity, destination);
+        await mud.dev.setEntityContractComponentValue(playerResource, Units, {
+          value: count,
+        });
+      },
+    },
     setHousing: {
       params: [{ name: "housing", type: "number" }],
       function: (housing: number) => {
@@ -163,30 +205,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         );
       },
     },
-    trainDebugUnits: {
-      params: [
-        { name: "trainingTime", type: "number" },
-        { name: "count", type: "number" },
-      ],
-      function: async (trainingTime: number, count: number) => {
-        const building = SelectedBuilding.get()?.value;
-        if (!building) throw new Error("No building selected");
-        await mud.dev.setEntityContractComponentValue(
-          hashKeyEntity(BlockType.DebugUnit, 1),
-          P_TrainingTime,
-          {
-            value: trainingTime,
-          }
-        );
 
-        await setMaxHousing.function(count);
-        console.log(
-          `Training ${count} debug units on building ${BlockIdToKey[building]}`
-        );
-        await train(building, BlockType.DebugUnit, count, mud);
-        return `Training ${count} debug units on building ${BlockIdToKey[building]}`;
-      },
-    },
     increaseMaxMoves: {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
@@ -195,56 +214,6 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         await mud.dev.setEntityContractComponentValue(player, MaxMoves, {
           value,
         });
-      },
-    },
-    spoofBattles: {
-      params: [{ name: "value", type: "number" }],
-      function: async (value: number) => {
-        const account = Account.get()?.value!;
-        const spaceRock = ActiveAsteroid.get()?.value!;
-        for (let i = 0; i < value; i++) {
-          const entityId = hashEntities(BlockType.DebugUnit, account, i);
-          const emptyUnits = new Array(Math.floor(Math.random() * 4)).fill(
-            0
-          ) as number[];
-          const isRaid = Math.random() > 0.5;
-
-          const battle = {
-            attacker: account,
-            defender: hashEntities(BlockType.DebugUnit3, account, i),
-            attackerUnitCounts: emptyUnits.map(() =>
-              Math.floor(Math.random() * 50)
-            ),
-            defenderUnitCounts: emptyUnits.map(() =>
-              Math.floor(Math.random() * 50)
-            ),
-            attackerUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
-            defenderUnitTypes: emptyUnits.map(() => BlockType.DebugUnit),
-            attackerUnitLevels: emptyUnits.map(() =>
-              Math.floor(Math.random() * 50)
-            ),
-            defenderUnitLevels: emptyUnits.map(() =>
-              Math.floor(Math.random() * 50)
-            ),
-            winner:
-              Math.random() > 0.5
-                ? account
-                : hashEntities(BlockType.DebugUnit3, account, i),
-            defenderUnitsLeft: emptyUnits.map(() =>
-              Math.floor(Math.random() * 50)
-            ),
-            attackerUnitsLeft: emptyUnits.map(() =>
-              Math.floor(Math.random() * 50)
-            ),
-            blockNumber: Math.floor(Math.random() * 1000),
-            resources: isRaid ? [BlockType.Iron, BlockType.Iridium] : undefined,
-            defenderValuesBeforeRaid: isRaid ? [1000, 1000] : undefined,
-            raidedAmount: isRaid ? [420, 69] : undefined,
-            spaceRock,
-          };
-          world.registerEntity({ id: entityId });
-          Battle.set(battle, entityId);
-        }
       },
     },
   };

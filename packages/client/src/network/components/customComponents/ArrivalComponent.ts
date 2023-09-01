@@ -26,6 +26,10 @@ export const newArrivalComponent = () => {
     }
   );
 
+  const getWithId = (id: EntityID) => {
+    return component.get(id);
+  };
+
   function getIndex(
     entity: EntityID,
     arrival: ComponentValue<typeof component.schema>
@@ -98,5 +102,5 @@ export const newArrivalComponent = () => {
     return useMemo(() => get(filters), [blockNumber, ArrivalsSize.update$]);
   };
 
-  return { ...component, get, use, getEntity: component.get };
+  return { ...component, get, getWithId, use, getEntity: component.get };
 };

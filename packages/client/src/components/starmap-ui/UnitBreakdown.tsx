@@ -1,7 +1,8 @@
 import { EntityID } from "@latticexyz/recs";
 import { AnimatePresence, motion } from "framer-motion";
 import { Hangar } from "src/network/components/clientComponents";
-import { BlockIdToKey } from "src/util/constants";
+import { getBlockTypeName } from "src/util/common";
+import { RESOURCE_SCALE } from "src/util/constants";
 import { getUnitStats } from "src/util/trainUnits";
 
 export const UnitBreakdown: React.FC<{ asteroid: EntityID }> = ({
@@ -35,7 +36,7 @@ export const UnitBreakdown: React.FC<{ asteroid: EntityID }> = ({
           </thead>
           <tbody className="text-center">
             {units?.map((unit, index) => {
-              const name = BlockIdToKey[unit.type];
+              const name = getBlockTypeName(unit.type);
               const stats = getUnitStats(unit.type);
               return (
                 <tr
@@ -47,7 +48,7 @@ export const UnitBreakdown: React.FC<{ asteroid: EntityID }> = ({
                   <td>{stats.ATK}</td>
                   <td>{stats.DEF}</td>
                   <td>{stats.MIN}</td>
-                  <td>{stats.CRG}</td>
+                  <td>{stats.CRG * RESOURCE_SCALE}</td>
                 </tr>
               );
             })}

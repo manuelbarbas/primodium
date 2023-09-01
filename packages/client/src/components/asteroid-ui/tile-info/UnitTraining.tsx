@@ -1,9 +1,4 @@
-import {
-  BackgroundImage,
-  BlockIdToKey,
-  BlockType,
-  ResourceImage,
-} from "src/util/constants";
+import { BackgroundImage, BlockType, ResourceImage } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
@@ -132,7 +127,7 @@ export const UnitTraining: React.FC<{
                     }
                     scale={1}
                     resourceId={BlockType.HousingUtilityResource}
-                    name={BlockIdToKey[BlockType.HousingUtilityResource]}
+                    name={getBlockTypeName(BlockType.HousingUtilityResource)}
                     amount={requiredHousing}
                   />
                 </div>
