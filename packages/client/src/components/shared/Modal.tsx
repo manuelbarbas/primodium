@@ -18,10 +18,10 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, children, title }) => {
       }
     };
 
-    modalRef.current?.addEventListener("keydown", handleEscPress);
+    window.addEventListener("keydown", handleEscPress);
     return () => {
       // Clean up the event listener.
-      modalRef.current?.removeEventListener("keydown", handleEscPress);
+      window.removeEventListener("keydown", handleEscPress);
     };
   }, [onClose, show]);
 

@@ -27,7 +27,7 @@ export const GameButton = ({
         id={id}
         onKeyDown={handleKeyDown}
         tabIndex={-1}
-        className={`relative overflow-hidden group active:translate-y-2 outline-none ${color} active:border-b-0 ring rounded-lg ring-black/80 border-b-white/30 text-white pointer ${className} ${
+        className={`relative overflow-hidden group outline-none ${color} active:border-b-0 ring rounded-lg ring-black/80 border-b-white/30 text-white pointer ${className} ${
           disable ? "pointer-events-none opacity-70" : ""
         }`}
         onClick={onClick}
