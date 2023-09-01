@@ -1,8 +1,12 @@
 import { EntityID } from "@latticexyz/recs";
 import {
+  Motherlode,
+  P_MotherlodeResource,
   P_RequiredResources,
   P_RequiredUtility,
 } from "src/network/components/chainComponents";
+import { BlockType } from "./constants";
+import { hashKeyEntity } from "./encode";
 import { ResourceType } from "./constants";
 
 // building a building requires resources
@@ -32,4 +36,21 @@ export function getRecipe(entityId: EntityID) {
     })
   );
   return [...resources, ...utilities];
+}
+
+export const mineableResources = [
+  BlockType.Titanium,
+  BlockType.Iridium,
+  BlockType.Platinum,
+  BlockType.Kimberlite,
+];
+
+export function getMotherlodeResource(entityID: EntityID) {
+  const motherlode = Motherlode.get(entityID);
+  if (!motherlode) return;
+  const motherlodeType = hashKeyEntity(
+    motherlode.motherlodeType,
+    motherlode.size
+  );
+  return P_MotherlodeResource.get(motherlodeType);
 }
