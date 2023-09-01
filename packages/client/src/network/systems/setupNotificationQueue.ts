@@ -64,7 +64,7 @@ export function setupNotificationQueue() {
       }
     });
     orbitingQueue.forEach((arrivalBlock, entityId) => {
-      if (blockNumber <= arrivalBlock) {
+      if (blockNumber > arrivalBlock) {
         const newNotification: Notification = {
           id: entityId,
           timestamp: Date.now(),

@@ -30,23 +30,26 @@ export const setupBattleComponent = () => {
 
     if (!attacker || !defender || !spaceRock || !result || !blockNumber) return;
 
-    Battle.set({
-      attacker: attacker.participantEntity,
-      defender: defender.participantEntity,
-      attackerUnitCounts: attacker.unitCounts,
-      defenderUnitCounts: defender.unitCounts,
-      attackerUnitTypes: attacker.unitTypes,
-      defenderUnitTypes: defender.unitTypes,
-      attackerUnitLevels: attacker.unitLevels,
-      defenderUnitLevels: defender.unitLevels,
-      winner: result.winner,
-      attackerUnitsLeft: result.attackerUnitsLeft,
-      defenderUnitsLeft: result.defenderUnitsLeft,
-      resources: raid?.resources,
-      defenderValuesBeforeRaid: raid?.defenderValuesBeforeRaid,
-      raidedAmount: raid?.raidedAmount,
-      blockNumber,
-      spaceRock,
-    });
+    Battle.set(
+      {
+        attacker: attacker.participantEntity,
+        defender: defender.participantEntity,
+        attackerUnitCounts: attacker.unitCounts,
+        defenderUnitCounts: defender.unitCounts,
+        attackerUnitTypes: attacker.unitTypes,
+        defenderUnitTypes: defender.unitTypes,
+        attackerUnitLevels: attacker.unitLevels,
+        defenderUnitLevels: defender.unitLevels,
+        winner: result.winner,
+        attackerUnitsLeft: result.attackerUnitsLeft,
+        defenderUnitsLeft: result.defenderUnitsLeft,
+        resources: raid?.resources,
+        defenderValuesBeforeRaid: raid?.defenderValuesBeforeRaid,
+        raidedAmount: raid?.raidedAmount,
+        blockNumber,
+        spaceRock,
+      },
+      entityId
+    );
   });
 };
