@@ -26,7 +26,7 @@ const caldera: ChainConfig = {
   snapshotServiceUrl: "https://primodium-services.caldera.gg/ecs-snapshot",
   chainId: 12523,
   initialBlockNumber: 29367,
-  tempFaucetMinDripAmount: 0.001,
+  tempFaucetMinDripAmount: 0.003,
 };
 
 const skystrife: ChainConfig = {
