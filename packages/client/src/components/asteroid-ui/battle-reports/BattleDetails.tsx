@@ -15,7 +15,7 @@ export const UnitStatus: React.FC<{
   count: number;
   level: number;
 }> = ({ unit, unitsLeft, count, level }) => {
-  if (unitsLeft - count <= 0 && count === 0) return;
+  if (unitsLeft - count <= 0 && count === 0) return <></>;
 
   return (
     <div className={`w-full border-b border-b-slate-700 text-xs bg-slate-800`}>
