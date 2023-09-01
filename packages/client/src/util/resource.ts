@@ -5,12 +5,9 @@ import {
   P_RequiredResources,
   P_RequiredUtility,
 } from "src/network/components/chainComponents";
-<<<<<<< HEAD
 import { BlockType } from "./constants";
 import { hashKeyEntity } from "./encode";
-=======
 import { ResourceType } from "./constants";
->>>>>>> origin/release/v0.7.0
 
 // building a building requires resources
 // fetch directly from component data
