@@ -102,7 +102,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.expectRevert(bytes("unit count must be positive"));
     sendUnitsSystem.executeTyped(
       units,
-      ESendType.INVADE,
+      ESendType.RAID,
       getHomeAsteroid(alice),
       getHomeAsteroid(bob),
       addressToEntity(bob)
@@ -117,7 +117,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.expectRevert(bytes("not enough value to subtract"));
     sendUnitsSystem.executeTyped(
       units,
-      ESendType.INVADE,
+      ESendType.RAID,
       getHomeAsteroid(alice),
       getHomeAsteroid(bob),
       addressToEntity(bob)
@@ -132,7 +132,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.expectRevert(bytes("[SendUnitsSystem] You can only move from an asteroid you own."));
     sendUnitsSystem.executeTyped(
       units,
-      ESendType.INVADE,
+      ESendType.RAID,
       getHomeAsteroid(deployer),
       getHomeAsteroid(bob),
       addressToEntity(bob)
@@ -147,7 +147,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.expectRevert(bytes("[SendUnitsSystem] Origin and destination cannot be the same."));
     sendUnitsSystem.executeTyped(
       units,
-      ESendType.INVADE,
+      ESendType.RAID,
       getHomeAsteroid(alice),
       getHomeAsteroid(alice),
       addressToEntity(bob)
@@ -162,7 +162,7 @@ contract SendUnitsTest is PrimodiumTest {
     vm.expectRevert(bytes("[SendUnitsSystem] You cannot invade yourself."));
     sendUnitsSystem.executeTyped(
       units,
-      ESendType.INVADE,
+      ESendType.RAID,
       getHomeAsteroid(alice),
       getHomeAsteroid(bob),
       addressToEntity(alice)
@@ -481,7 +481,7 @@ contract SendUnitsTest is PrimodiumTest {
     Arrival memory slowArrival = abi.decode(
       sendUnitsSystem.executeTyped(
         units,
-        ESendType.INVADE,
+        ESendType.RAID,
         getHomeAsteroid(alice),
         getHomeAsteroid(bob),
         addressToEntity(bob)
@@ -494,7 +494,7 @@ contract SendUnitsTest is PrimodiumTest {
     Arrival memory arrival2 = abi.decode(
       sendUnitsSystem.executeTyped(
         units,
-        ESendType.INVADE,
+        ESendType.RAID,
         getHomeAsteroid(alice),
         getHomeAsteroid(bob),
         addressToEntity(bob)
