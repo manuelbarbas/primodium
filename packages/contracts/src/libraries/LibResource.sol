@@ -17,7 +17,7 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { ResourceValues, ResourceValue } from "../types.sol";
-
+import { TitaniumResourceItemID, PlatinumResourceItemID, IridiumResourceItemID, KimberliteResourceItemID } from "../prototypes/Item.sol";
 import { ID as UpdateUnclaimedResourcesSystemID } from "../systems/S_UpdateUnclaimedResourcesSystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 
@@ -64,11 +64,10 @@ library LibResource {
     uint256 playerEntity
   ) internal view returns (uint32 totalResources, uint32[] memory resources) {
     ItemComponent itemComponent = ItemComponent(world.getComponent(ItemComponentID));
-    P_MaxResourceStorageComponent maxResourceStorageComponent = P_MaxResourceStorageComponent(
-      world.getComponent(P_MaxResourceStorageComponentID)
-    );
-    uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
-    resources = new uint32[](storageResourceIds.length);
+
+    //hotfix
+    //uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
+    uint256[] memory storageResourceIds = getMotherlodeResources();
     totalResources = 0;
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 resourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);
@@ -98,6 +97,15 @@ library LibResource {
       }
       lastClaimedAtComponent.set(playerResourceEntity, block.number);
     }
+  }
+
+  function getMotherlodeResources() internal pure returns (uint256[] memory resourceIds) {
+    resourceIds = new uint256[](4);
+    resourceIds[0] = TitaniumResourceItemID;
+    resourceIds[1] = PlatinumResourceItemID;
+    resourceIds[2] = IridiumResourceItemID;
+    resourceIds[3] = KimberliteResourceItemID;
+    return resourceIds;
   }
 
   function updateResourceAmount(IWorld world, uint256 entity, uint256 resourceType, uint32 value) internal {

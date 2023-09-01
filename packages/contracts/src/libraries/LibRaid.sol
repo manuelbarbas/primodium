@@ -30,6 +30,8 @@ import { BattleBlockNumberComponent, ID as BattleBlockNumberComponentID } from "
 
 import { RaidResult } from "src/types.sol";
 
+import { ID as UpdateUnclaimedResourcesSystemID } from "systems/S_UpdateUnclaimedResourcesSystem.sol";
+
 // libs
 import { ArrivalsList } from "libraries/ArrivalsList.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -179,14 +181,13 @@ library LibRaid {
     BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
       battleEntity
     );
+    uint256[] memory resourceIds = LibResource.getMotherlodeResources();
 
     (uint32 totalResources, uint32[] memory resources) = LibResource.getTotalResources(
       world,
       defender.participantEntity
     );
 
-    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
-      .getValue(defender.participantEntity);
     RaidResult memory raidResult = RaidResult({
       resources: resourceIds,
       defenderValuesBeforeRaid: new uint32[](resources.length),
@@ -200,14 +201,6 @@ library LibRaid {
       battleEntity
     );
 
-    IOnSubsystem(getAddressById(world.systems(), S_ClaimAllResourcesSystemID)).executeTyped(
-      entityToAddress(defender.participantEntity)
-    );
-
-    IOnSubsystem(getAddressById(world.systems(), S_ClaimAllResourcesSystemID)).executeTyped(
-      entityToAddress(attacker.participantEntity)
-    );
-
     for (uint256 i = 0; i < resources.length; i++) {
       uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
 
@@ -216,7 +209,6 @@ library LibRaid {
       }
       raidResult.defenderValuesBeforeRaid[i] = resources[i];
       raidResult.raidedAmount[i] = raidAmount;
-
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
     }
