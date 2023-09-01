@@ -548,6 +548,12 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.MiningResearch3, "/img/unit/miningvessel.png"],
   [BlockType.MiningResearch4, "/img/unit/miningvessel.png"],
   [BlockType.MiningResearch5, "/img/unit/miningvessel.png"],
+
+  [BlockType.MiningVesselUpgrade1, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade2, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade3, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([
