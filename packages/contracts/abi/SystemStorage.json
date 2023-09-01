@@ -28,20 +28,20 @@
     }
   ],
   "bytecode": {
-    "object": "0x61011661003a600b82828239805160001a60731461002d57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe7300000000000000000000000000000000000000003014608060405260043610603d5760003560e01c806330b67baa146042578063ba62fbe41460a4575b600080fd5b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a875473ffffffffffffffffffffffffffffffffffffffff165b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a865473ffffffffffffffffffffffffffffffffffffffff16607b56fea2646970667358221220a587a0db28073e1413b43064a030a940e6d9a84529ff4bee00507820abbf1d6c64736f6c63430008130033",
+    "object": "0x60ef610039600b82828239805160001a60731461002c57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe7300000000000000000000000000000000000000003014608060405260043610603d5760003560e01c806330b67baa146042578063ba62fbe414608a575b600080fd5b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a87546001600160a01b03165b6040516001600160a01b03909116815260200160405180910390f35b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a86546001600160a01b0316606e56fea26469706673582212208020bad287f8108000d20e1d3acbc908df492adffd12b4b805d41f19d899ceb064736f6c63430008130033",
     "sourceMap": "782:1851:58:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;782:1851:58;;;;;;;;;;;;;;;;;",
     "linkReferences": {}
   },
   "deployedBytecode": {
-    "object": "0x7300000000000000000000000000000000000000003014608060405260043610603d5760003560e01c806330b67baa146042578063ba62fbe41460a4575b600080fd5b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a875473ffffffffffffffffffffffffffffffffffffffff165b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a865473ffffffffffffffffffffffffffffffffffffffff16607b56fea2646970667358221220a587a0db28073e1413b43064a030a940e6d9a84529ff4bee00507820abbf1d6c64736f6c63430008130033",
-    "sourceMap": "782:1851:58:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2019:78;2078:14;;;;2019:78;;;214:42:204;202:55;;;184:74;;172:2;157:18;2019:78:58;;;;;;;1876:99;1028:44;1951:19;;;1876:99;",
+    "object": "0x7300000000000000000000000000000000000000003014608060405260043610603d5760003560e01c806330b67baa146042578063ba62fbe414608a575b600080fd5b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a87546001600160a01b03165b6040516001600160a01b03909116815260200160405180910390f35b7ff67304f10c7772c78e439bc5cb07781db345424de8878c18100fdaa64d197a86546001600160a01b0316606e56fea26469706673582212208020bad287f8108000d20e1d3acbc908df492adffd12b4b805d41f19d899ceb064736f6c63430008130033",
+    "sourceMap": "782:1851:58:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2019:78;2078:14;;-1:-1:-1;;;;;2078:14:58;2019:78;;;-1:-1:-1;;;;;202:32:251;;;184:51;;172:2;157:18;2019:78:58;;;;;;;1876:99;1028:44;1951:19;-1:-1:-1;;;;;1951:19:58;1876:99;",
     "linkReferences": {}
   },
   "methodIdentifiers": {
     "components()": "ba62fbe4",
     "world()": "30b67baa"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"components\",\"outputs\":[{\"internalType\":\"contract IUint256Component\",\"name\":\"\",\"type\":\"IUint256Component\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"world\",\"outputs\":[{\"internalType\":\"contract IWorld\",\"name\":\"\",\"type\":\"IWorld\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"components()\":{\"returns\":{\"_0\":\"Component registry contract\"}},\"world()\":{\"returns\":{\"_0\":\"World contract\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Systems contain the address of the components registry and world contract as state variables. SystemStorage ensures that these addresses are stored at deterministic locations in a System contract's storage. Developers can read/write components and access world utilities from any library called by a System. Warning: Library must be initialized (init) by a contract that can access components + world contracts before use. The intialization is done automatically for any contract inheriting System or MudTest.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/SystemStorage.sol\":\"SystemStorage\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[\":@latticexyz/=../../node_modules/@latticexyz/\",\":@rari-capital/=../../node_modules/@rari-capital/\",\":@solidstate/=../../node_modules/@solidstate/\",\":abdk-libraries-solidity/=../../node_modules/abdk-libraries-solidity/\",\":components/=src/components/\",\":ds-test/=../../node_modules/ds-test/src/\",\":forge-std/=../../node_modules/forge-std/src/\",\":libraries/=src/libraries/\",\":memmove/=../../node_modules/memmove/src/\",\":noise/=../../node_modules/@latticexyz/noise/contracts/\",\":packages/=../../../mud/packages/\",\":solecs/=../../node_modules/@latticexyz/solecs/src/\",\":solmate/=../../node_modules/@rari-capital/solmate/src/\",\":std-contracts/=../../node_modules/@latticexyz/std-contracts/src/\",\":systems/=src/systems/\"]},\"sources\":{\"../../node_modules/@solidstate/contracts/interfaces/IERC173.sol\":{\"keccak256\":\"0x9b18a5ad66323c65a81ecd62c3536db99115fe69a30b56a04409de941da7deb6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a93684363c5bfd4e31fa2cc2d3402e9451ba61c7dbb404e8e50658610fb2a555\",\"dweb:/ipfs/QmanFgF5v5GjBBrAEYCpaZyXRFRvzLGgB8SQcSEf9Dkj5Q\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173Internal.sol\":{\"keccak256\":\"0x9644c3e56c9ecd1763f8aaa437d5d573a7f64a8d93ad7bea1a9c44beb5911b89\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c32cfda38b44878ab196d32eeb72823a9f9904e8193286c787caccfb2e5bfa75\",\"dweb:/ipfs/QmfBNKWUSKaJtYL3JJ3YFioXCVFeeakqQ4cR5XzAxxZkCx\"]},\"../../node_modules/memmove/src/Array.sol\":{\"keccak256\":\"0x0d7681d3392c34f811cebc9598c5e8f4eef6aba431dca9e1fa87267ba51a4515\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ffb5179dd40ccacadc2cb26ac99e9ea5148796f6d21413d7e0f37913831bea1\",\"dweb:/ipfs/QmfJogaoqook5JgnUZKib6w6khzViUag3EQb1EZ8aUEasQ\"]},\"../../node_modules/memmove/src/LinkedList.sol\":{\"keccak256\":\"0x2374863d39689178dda92b841e77b835ba8fa550561be23b7861d2e52c0fe8c1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8538ec6ca6be4e1b25b74dfd2139586fa2b9dab8d49d91428ed64dc683884598\",\"dweb:/ipfs/Qma7Z6urenqG5Dzqwe8ouGiFH37mbsJEX83tqjSq1PTnRc\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/LibTypes.sol\":{\"keccak256\":\"0xa3898035fd9fa865bcfc9861e3b5ecce36be3196fb27705e50a02fed9831f102\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://273284a35a950f6d0bc4223d345cf46c59972a00510ddbc4ba695ede38714798\",\"dweb:/ipfs/QmdqzKMaAfKWfBzUsrzsDMWnyxSKJRuEvrc6VTR5VarQaH\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/SystemStorage.sol\":{\"keccak256\":\"0x3adf624854f860099d0911cdc51b29e6690e413f2c260e3536552d223fe77b2b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9fa473135604adb13a95583e6cc8092bc82be534bdcdd915e1f344eb78fc645d\",\"dweb:/ipfs/QmYvRKgZ2iRVmSykLAtrrdsr27Eyg6QorhHGL5ZLE8wTTW\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/constants.sol\":{\"keccak256\":\"0x024a3ff3077a272339b7baa96b826fd75f040d7cd2c6e13b9c8cf7ad16f789b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1ddcb26a7703e9b03b34d5465010a4ae5ced137021c94987053544ad1156a644\",\"dweb:/ipfs/QmYue4gnb8noyoxxTchs5chZji7DKynKMp2x33RgRW6xqZ\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IComponent.sol\":{\"keccak256\":\"0xc25ab58cac1449fcd501ddcc56dade0653a7946adcd9eee2931bc095eda2a6b4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c9505da36322f3b3de4dc0aaf0aec911e76be6cbd091f4d142070a7316df4629\",\"dweb:/ipfs/QmY5aGhwzBV5fXeLRDuzWMUfbPZGGdggbLdARhrkjmPBYW\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol\":{\"keccak256\":\"0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e\",\"dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IOwnableWritable.sol\":{\"keccak256\":\"0x804db2685d65f5d4029431c47276b6ac43d3c329ea4ce75358928dbd4d11ee77\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1d85dfe46f678ce4cf3a788092519251a24c2c015f9e858a81111b506b0ee78\",\"dweb:/ipfs/QmVmE4f8axCeh8V2kcs8nxYd27rSiwvXJbDbNCg3VZHSXY\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol\":{\"keccak256\":\"0xbc1c0b0c72ab5e20ff7eae3cf53627aac367a2f9a65d2e87451a0313869d3bed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b2a7c4c30beb9b96c4e8112b9864f7bac5c761e61765e0dc359d926572feaa5a\",\"dweb:/ipfs/QmVNJbky7itfqBBdDCh8anSWMaHhXs2mKhzuW7hbCVWgj3\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IUint256Component.sol\":{\"keccak256\":\"0x12e2eaa4c5663048343e43a1994c446baacb16a4aacbe314ed5202d878751be9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2d78184a1b1868773f2d5a7cf54bb42bccc666dc75cea14eeed15b8573fd000f\",\"dweb:/ipfs/QmemXPHPB7V8StWR8kZcKt3eDxB78sZFZW4Dp7TcEFTxx9\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IWorld.sol\":{\"keccak256\":\"0x3ac1853f4cade8f432f5b3144e0c914b93f110ea3eabd85438cde39160716114\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1f0ba421b481b66d43c9da4de63171a79ffadc708956893bddf10eec666a0f4a\",\"dweb:/ipfs/QmdSyzQUDrP3MXt8JjgXt1QUgraUKBUPHE2CVzJiEwfMAK\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/Query.sol\":{\"keccak256\":\"0x987e47a4d3f076910382b4e8619f607ea15abdedd786d6095bd27126ff6f941c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8c3d57f9da85917b77e1043a179d3b516bc8c00a8880fdcb1bffca7e53169059\",\"dweb:/ipfs/QmaHxqsT1ZpS8toN88qxgbeaDSMvnhYv9J9FMjVnKrMgoP\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/utils.sol\":{\"keccak256\":\"0x17f7831c03bdd77f0c7d98c94931d830fbbfa1878c365f54b12841c85611e24e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6ae566ee03c5050b239277ef4184b9e5dcb332c8cc65b032f8e0d9e46408ea6d\",\"dweb:/ipfs/QmetdhxahRf7FJk1kn8KgDmizU2zYk3jjt9qo6Gwz2M5YP\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"components\",\"outputs\":[{\"internalType\":\"contract IUint256Component\",\"name\":\"\",\"type\":\"IUint256Component\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"world\",\"outputs\":[{\"internalType\":\"contract IWorld\",\"name\":\"\",\"type\":\"IWorld\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"components()\":{\"returns\":{\"_0\":\"Component registry contract\"}},\"world()\":{\"returns\":{\"_0\":\"World contract\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Systems contain the address of the components registry and world contract as state variables. SystemStorage ensures that these addresses are stored at deterministic locations in a System contract's storage. Developers can read/write components and access world utilities from any library called by a System. Warning: Library must be initialized (init) by a contract that can access components + world contracts before use. The intialization is done automatically for any contract inheriting System or MudTest.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/SystemStorage.sol\":\"SystemStorage\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@latticexyz/=../../node_modules/@latticexyz/\",\":@rari-capital/=../../node_modules/@rari-capital/\",\":@solidstate/=../../node_modules/@solidstate/\",\":abdk-libraries-solidity/=../../node_modules/abdk-libraries-solidity/\",\":components/=src/components/\",\":ds-test/=../../node_modules/ds-test/src/\",\":forge-std/=../../node_modules/forge-std/src/\",\":libraries/=src/libraries/\",\":memmove/=../../node_modules/memmove/src/\",\":noise/=../../node_modules/@latticexyz/noise/contracts/\",\":packages/=../../../mud/packages/\",\":solecs/=../../node_modules/@latticexyz/solecs/src/\",\":solidity-trigonometry/=/Users/emersonhsieh/primodium/primodium/node_modules/solidity-trigonometry/src/\",\":solmate/=../../node_modules/@rari-capital/solmate/src/\",\":src/=src/\",\":std-contracts/=../../node_modules/@latticexyz/std-contracts/src/\",\":systems/=src/systems/\",\":trig/=../../node_modules/solidity-trigonometry/\"]},\"sources\":{\"../../node_modules/@solidstate/contracts/interfaces/IERC173.sol\":{\"keccak256\":\"0x9b18a5ad66323c65a81ecd62c3536db99115fe69a30b56a04409de941da7deb6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a93684363c5bfd4e31fa2cc2d3402e9451ba61c7dbb404e8e50658610fb2a555\",\"dweb:/ipfs/QmanFgF5v5GjBBrAEYCpaZyXRFRvzLGgB8SQcSEf9Dkj5Q\"]},\"../../node_modules/@solidstate/contracts/interfaces/IERC173Internal.sol\":{\"keccak256\":\"0x9644c3e56c9ecd1763f8aaa437d5d573a7f64a8d93ad7bea1a9c44beb5911b89\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c32cfda38b44878ab196d32eeb72823a9f9904e8193286c787caccfb2e5bfa75\",\"dweb:/ipfs/QmfBNKWUSKaJtYL3JJ3YFioXCVFeeakqQ4cR5XzAxxZkCx\"]},\"../../node_modules/memmove/src/Array.sol\":{\"keccak256\":\"0x0d7681d3392c34f811cebc9598c5e8f4eef6aba431dca9e1fa87267ba51a4515\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ffb5179dd40ccacadc2cb26ac99e9ea5148796f6d21413d7e0f37913831bea1\",\"dweb:/ipfs/QmfJogaoqook5JgnUZKib6w6khzViUag3EQb1EZ8aUEasQ\"]},\"../../node_modules/memmove/src/LinkedList.sol\":{\"keccak256\":\"0x2374863d39689178dda92b841e77b835ba8fa550561be23b7861d2e52c0fe8c1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8538ec6ca6be4e1b25b74dfd2139586fa2b9dab8d49d91428ed64dc683884598\",\"dweb:/ipfs/Qma7Z6urenqG5Dzqwe8ouGiFH37mbsJEX83tqjSq1PTnRc\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/LibTypes.sol\":{\"keccak256\":\"0xa3898035fd9fa865bcfc9861e3b5ecce36be3196fb27705e50a02fed9831f102\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://273284a35a950f6d0bc4223d345cf46c59972a00510ddbc4ba695ede38714798\",\"dweb:/ipfs/QmdqzKMaAfKWfBzUsrzsDMWnyxSKJRuEvrc6VTR5VarQaH\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/SystemStorage.sol\":{\"keccak256\":\"0x3adf624854f860099d0911cdc51b29e6690e413f2c260e3536552d223fe77b2b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9fa473135604adb13a95583e6cc8092bc82be534bdcdd915e1f344eb78fc645d\",\"dweb:/ipfs/QmYvRKgZ2iRVmSykLAtrrdsr27Eyg6QorhHGL5ZLE8wTTW\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/constants.sol\":{\"keccak256\":\"0x024a3ff3077a272339b7baa96b826fd75f040d7cd2c6e13b9c8cf7ad16f789b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1ddcb26a7703e9b03b34d5465010a4ae5ced137021c94987053544ad1156a644\",\"dweb:/ipfs/QmYue4gnb8noyoxxTchs5chZji7DKynKMp2x33RgRW6xqZ\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IComponent.sol\":{\"keccak256\":\"0xc25ab58cac1449fcd501ddcc56dade0653a7946adcd9eee2931bc095eda2a6b4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c9505da36322f3b3de4dc0aaf0aec911e76be6cbd091f4d142070a7316df4629\",\"dweb:/ipfs/QmY5aGhwzBV5fXeLRDuzWMUfbPZGGdggbLdARhrkjmPBYW\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IERC173.sol\":{\"keccak256\":\"0x2bd9a729a3bfcfc445bc557a914aee17fcaf1c0f74b909b6a91a5d3755a699e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://203741d681a686fb75f0715332e554083733f349100dfe11252c17fbe9cd094e\",\"dweb:/ipfs/QmaBXDHiU4ZdJ8K5jQZ3FfswMpWEqSPsBWGFkJMU2qmmWi\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IOwnableWritable.sol\":{\"keccak256\":\"0x804db2685d65f5d4029431c47276b6ac43d3c329ea4ce75358928dbd4d11ee77\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1d85dfe46f678ce4cf3a788092519251a24c2c015f9e858a81111b506b0ee78\",\"dweb:/ipfs/QmVmE4f8axCeh8V2kcs8nxYd27rSiwvXJbDbNCg3VZHSXY\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/ISystem.sol\":{\"keccak256\":\"0xbc1c0b0c72ab5e20ff7eae3cf53627aac367a2f9a65d2e87451a0313869d3bed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b2a7c4c30beb9b96c4e8112b9864f7bac5c761e61765e0dc359d926572feaa5a\",\"dweb:/ipfs/QmVNJbky7itfqBBdDCh8anSWMaHhXs2mKhzuW7hbCVWgj3\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IUint256Component.sol\":{\"keccak256\":\"0x12e2eaa4c5663048343e43a1994c446baacb16a4aacbe314ed5202d878751be9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2d78184a1b1868773f2d5a7cf54bb42bccc666dc75cea14eeed15b8573fd000f\",\"dweb:/ipfs/QmemXPHPB7V8StWR8kZcKt3eDxB78sZFZW4Dp7TcEFTxx9\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IWorld.sol\":{\"keccak256\":\"0x3ac1853f4cade8f432f5b3144e0c914b93f110ea3eabd85438cde39160716114\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1f0ba421b481b66d43c9da4de63171a79ffadc708956893bddf10eec666a0f4a\",\"dweb:/ipfs/QmdSyzQUDrP3MXt8JjgXt1QUgraUKBUPHE2CVzJiEwfMAK\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/Query.sol\":{\"keccak256\":\"0x987e47a4d3f076910382b4e8619f607ea15abdedd786d6095bd27126ff6f941c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8c3d57f9da85917b77e1043a179d3b516bc8c00a8880fdcb1bffca7e53169059\",\"dweb:/ipfs/QmaHxqsT1ZpS8toN88qxgbeaDSMvnhYv9J9FMjVnKrMgoP\"]},\"/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/utils.sol\":{\"keccak256\":\"0x17f7831c03bdd77f0c7d98c94931d830fbbfa1878c365f54b12841c85611e24e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6ae566ee03c5050b239277ef4184b9e5dcb332c8cc65b032f8e0d9e46408ea6d\",\"dweb:/ipfs/QmetdhxahRf7FJk1kn8KgDmizU2zYk3jjt9qo6Gwz2M5YP\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
       "version": "0.8.19+commit.7dd6d404"
@@ -112,13 +112,16 @@
         ":noise/=../../node_modules/@latticexyz/noise/contracts/",
         ":packages/=../../../mud/packages/",
         ":solecs/=../../node_modules/@latticexyz/solecs/src/",
+        ":solidity-trigonometry/=/Users/emersonhsieh/primodium/primodium/node_modules/solidity-trigonometry/src/",
         ":solmate/=../../node_modules/@rari-capital/solmate/src/",
+        ":src/=src/",
         ":std-contracts/=../../node_modules/@latticexyz/std-contracts/src/",
-        ":systems/=src/systems/"
+        ":systems/=src/systems/",
+        ":trig/=../../node_modules/solidity-trigonometry/"
       ],
       "optimizer": {
         "enabled": true,
-        "runs": 1000000
+        "runs": 200
       },
       "metadata": {
         "bytecodeHash": "ipfs"
@@ -254,29 +257,29 @@
   },
   "ast": {
     "absolutePath": "/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/SystemStorage.sol",
-    "id": 19290,
+    "id": 19226,
     "exportedSymbols": {
       "IUint256Component": [
-        19607
+        19543
       ],
       "IWorld": [
-        19720
+        19656
       ],
       "SystemStorage": [
-        19289
+        19225
       ],
       "getAddressById": [
-        20059
+        19995
       ],
       "getSystemAddressById": [
-        20135
+        20071
       ]
     },
     "nodeType": "SourceUnit",
     "src": "32:2602:58",
     "nodes": [
       {
-        "id": 19169,
+        "id": 19105,
         "nodeType": "PragmaDirective",
         "src": "32:24:58",
         "nodes": [],
@@ -288,23 +291,23 @@
         ]
       },
       {
-        "id": 19171,
+        "id": 19107,
         "nodeType": "ImportDirective",
         "src": "58:71:58",
         "nodes": [],
         "absolutePath": "/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IUint256Component.sol",
         "file": "./interfaces/IUint256Component.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 19290,
-        "sourceUnit": 19608,
+        "scope": 19226,
+        "sourceUnit": 19544,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 19170,
+              "id": 19106,
               "name": "IUint256Component",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 19607,
+              "referencedDeclaration": 19543,
               "src": "67:17:58",
               "typeDescriptions": {}
             },
@@ -314,23 +317,23 @@
         "unitAlias": ""
       },
       {
-        "id": 19173,
+        "id": 19109,
         "nodeType": "ImportDirective",
         "src": "130:49:58",
         "nodes": [],
         "absolutePath": "/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/interfaces/IWorld.sol",
         "file": "./interfaces/IWorld.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 19290,
-        "sourceUnit": 19721,
+        "scope": 19226,
+        "sourceUnit": 19657,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 19172,
+              "id": 19108,
               "name": "IWorld",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 19720,
+              "referencedDeclaration": 19656,
               "src": "139:6:58",
               "typeDescriptions": {}
             },
@@ -340,23 +343,23 @@
         "unitAlias": ""
       },
       {
-        "id": 19176,
+        "id": 19112,
         "nodeType": "ImportDirective",
         "src": "180:67:58",
         "nodes": [],
         "absolutePath": "/Users/emersonhsieh/primodium/primodium/node_modules/@latticexyz/solecs/src/utils.sol",
         "file": "./utils.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 19290,
-        "sourceUnit": 20247,
+        "scope": 19226,
+        "sourceUnit": 20183,
         "symbolAliases": [
           {
             "foreign": {
-              "id": 19174,
+              "id": 19110,
               "name": "getSystemAddressById",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 20135,
+              "referencedDeclaration": 20071,
               "src": "189:20:58",
               "typeDescriptions": {}
             },
@@ -364,11 +367,11 @@
           },
           {
             "foreign": {
-              "id": 19175,
+              "id": 19111,
               "name": "getAddressById",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 20059,
+              "referencedDeclaration": 19995,
               "src": "211:14:58",
               "typeDescriptions": {}
             },
@@ -378,12 +381,12 @@
         "unitAlias": ""
       },
       {
-        "id": 19289,
+        "id": 19225,
         "nodeType": "ContractDefinition",
         "src": "782:1851:58",
         "nodes": [
           {
-            "id": 19184,
+            "id": 19120,
             "nodeType": "StructDefinition",
             "src": "845:71:58",
             "nodes": [],
@@ -391,36 +394,36 @@
             "members": [
               {
                 "constant": false,
-                "id": 19180,
+                "id": 19116,
                 "mutability": "mutable",
                 "name": "components",
                 "nameLocation": "883:10:58",
                 "nodeType": "VariableDeclaration",
-                "scope": 19184,
+                "scope": 19120,
                 "src": "865:28:58",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                  "typeIdentifier": "t_contract$_IUint256Component_$19543",
                   "typeString": "contract IUint256Component"
                 },
                 "typeName": {
-                  "id": 19179,
+                  "id": 19115,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
-                    "id": 19178,
+                    "id": 19114,
                     "name": "IUint256Component",
                     "nameLocations": [
                       "865:17:58"
                     ],
                     "nodeType": "IdentifierPath",
-                    "referencedDeclaration": 19607,
+                    "referencedDeclaration": 19543,
                     "src": "865:17:58"
                   },
-                  "referencedDeclaration": 19607,
+                  "referencedDeclaration": 19543,
                   "src": "865:17:58",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                    "typeIdentifier": "t_contract$_IUint256Component_$19543",
                     "typeString": "contract IUint256Component"
                   }
                 },
@@ -428,36 +431,36 @@
               },
               {
                 "constant": false,
-                "id": 19183,
+                "id": 19119,
                 "mutability": "mutable",
                 "name": "world",
                 "nameLocation": "906:5:58",
                 "nodeType": "VariableDeclaration",
-                "scope": 19184,
+                "scope": 19120,
                 "src": "899:12:58",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_contract$_IWorld_$19720",
+                  "typeIdentifier": "t_contract$_IWorld_$19656",
                   "typeString": "contract IWorld"
                 },
                 "typeName": {
-                  "id": 19182,
+                  "id": 19118,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
-                    "id": 19181,
+                    "id": 19117,
                     "name": "IWorld",
                     "nameLocations": [
                       "899:6:58"
                     ],
                     "nodeType": "IdentifierPath",
-                    "referencedDeclaration": 19720,
+                    "referencedDeclaration": 19656,
                     "src": "899:6:58"
                   },
-                  "referencedDeclaration": 19720,
+                  "referencedDeclaration": 19656,
                   "src": "899:6:58",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IWorld_$19720",
+                    "typeIdentifier": "t_contract$_IWorld_$19656",
                     "typeString": "contract IWorld"
                   }
                 },
@@ -466,17 +469,17 @@
             ],
             "name": "Layout",
             "nameLocation": "852:6:58",
-            "scope": 19289,
+            "scope": 19225,
             "visibility": "public"
           },
           {
-            "id": 19190,
+            "id": 19126,
             "nodeType": "VariableDeclaration",
             "src": "987:85:58",
             "nodes": [],
             "constant": true,
             "documentation": {
-              "id": 19185,
+              "id": 19121,
               "nodeType": "StructuredDocumentation",
               "src": "920:64:58",
               "text": "Location in memory where the Layout struct will be stored "
@@ -484,7 +487,7 @@
             "mutability": "constant",
             "name": "STORAGE_SLOT",
             "nameLocation": "1013:12:58",
-            "scope": 19289,
+            "scope": 19225,
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -492,7 +495,7 @@
               "typeString": "bytes32"
             },
             "typeName": {
-              "id": 19186,
+              "id": 19122,
               "name": "bytes32",
               "nodeType": "ElementaryTypeName",
               "src": "987:7:58",
@@ -505,7 +508,7 @@
               "arguments": [
                 {
                   "hexValue": "736f6c6563732e636f6e7472616374732e73746f726167652e53797374656d",
-                  "id": 19188,
+                  "id": 19124,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -527,7 +530,7 @@
                     "typeString": "literal_string \"solecs.contracts.storage.System\""
                   }
                 ],
-                "id": 19187,
+                "id": 19123,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -538,7 +541,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 19189,
+              "id": 19125,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -557,29 +560,29 @@
             "visibility": "internal"
           },
           {
-            "id": 19203,
+            "id": 19139,
             "nodeType": "FunctionDefinition",
             "src": "1219:139:58",
             "nodes": [],
             "body": {
-              "id": 19202,
+              "id": 19138,
               "nodeType": "Block",
               "src": "1278:80:58",
               "nodes": [],
               "statements": [
                 {
                   "assignments": [
-                    19198
+                    19134
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 19198,
+                      "id": 19134,
                       "mutability": "mutable",
                       "name": "slot",
                       "nameLocation": "1292:4:58",
                       "nodeType": "VariableDeclaration",
-                      "scope": 19202,
+                      "scope": 19138,
                       "src": "1284:12:58",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -588,7 +591,7 @@
                         "typeString": "bytes32"
                       },
                       "typeName": {
-                        "id": 19197,
+                        "id": 19133,
                         "name": "bytes32",
                         "nodeType": "ElementaryTypeName",
                         "src": "1284:7:58",
@@ -600,13 +603,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 19200,
+                  "id": 19136,
                   "initialValue": {
-                    "id": 19199,
+                    "id": 19135,
                     "name": "STORAGE_SLOT",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 19190,
+                    "referencedDeclaration": 19126,
                     "src": "1299:12:58",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
@@ -642,7 +645,7 @@
                   "evmVersion": "paris",
                   "externalReferences": [
                     {
-                      "declaration": 19195,
+                      "declaration": 19131,
                       "isOffset": false,
                       "isSlot": true,
                       "src": "1334:6:58",
@@ -650,21 +653,21 @@
                       "valueSize": 1
                     },
                     {
-                      "declaration": 19198,
+                      "declaration": 19134,
                       "isOffset": false,
                       "isSlot": false,
                       "src": "1344:4:58",
                       "valueSize": 1
                     }
                   ],
-                  "id": 19201,
+                  "id": 19137,
                   "nodeType": "InlineAssembly",
                   "src": "1317:37:58"
                 }
               ]
             },
             "documentation": {
-              "id": 19191,
+              "id": 19127,
               "nodeType": "StructuredDocumentation",
               "src": "1077:139:58",
               "text": " Utility for accessing the STORAGE_SLOT location in the contract's storage\n @return l Layout struct at storage position l"
@@ -675,47 +678,47 @@
             "name": "layout",
             "nameLocation": "1228:6:58",
             "parameters": {
-              "id": 19192,
+              "id": 19128,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1234:2:58"
             },
             "returnParameters": {
-              "id": 19196,
+              "id": 19132,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19195,
+                  "id": 19131,
                   "mutability": "mutable",
                   "name": "l",
                   "nameLocation": "1275:1:58",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19203,
+                  "scope": 19139,
                   "src": "1260:16:58",
                   "stateVariable": false,
                   "storageLocation": "storage",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                    "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                     "typeString": "struct SystemStorage.Layout"
                   },
                   "typeName": {
-                    "id": 19194,
+                    "id": 19130,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 19193,
+                      "id": 19129,
                       "name": "Layout",
                       "nameLocations": [
                         "1260:6:58"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 19184,
+                      "referencedDeclaration": 19120,
                       "src": "1260:6:58"
                     },
-                    "referencedDeclaration": 19184,
+                    "referencedDeclaration": 19120,
                     "src": "1260:6:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                      "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                       "typeString": "struct SystemStorage.Layout"
                     }
                   },
@@ -724,82 +727,82 @@
               ],
               "src": "1259:18:58"
             },
-            "scope": 19289,
+            "scope": 19225,
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "internal"
           },
           {
-            "id": 19232,
+            "id": 19168,
             "nodeType": "FunctionDefinition",
             "src": "1658:161:58",
             "nodes": [],
             "body": {
-              "id": 19231,
+              "id": 19167,
               "nodeType": "Block",
               "src": "1727:92:58",
               "nodes": [],
               "statements": [
                 {
                   "assignments": [
-                    19215
+                    19151
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 19215,
+                      "id": 19151,
                       "mutability": "mutable",
                       "name": "l",
                       "nameLocation": "1748:1:58",
                       "nodeType": "VariableDeclaration",
-                      "scope": 19231,
+                      "scope": 19167,
                       "src": "1733:16:58",
                       "stateVariable": false,
                       "storageLocation": "storage",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                        "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                         "typeString": "struct SystemStorage.Layout"
                       },
                       "typeName": {
-                        "id": 19214,
+                        "id": 19150,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 19213,
+                          "id": 19149,
                           "name": "Layout",
                           "nameLocations": [
                             "1733:6:58"
                           ],
                           "nodeType": "IdentifierPath",
-                          "referencedDeclaration": 19184,
+                          "referencedDeclaration": 19120,
                           "src": "1733:6:58"
                         },
-                        "referencedDeclaration": 19184,
+                        "referencedDeclaration": 19120,
                         "src": "1733:6:58",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                          "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                           "typeString": "struct SystemStorage.Layout"
                         }
                       },
                       "visibility": "internal"
                     }
                   ],
-                  "id": 19218,
+                  "id": 19154,
                   "initialValue": {
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 19216,
+                      "id": 19152,
                       "name": "layout",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 19203,
+                      "referencedDeclaration": 19139,
                       "src": "1752:6:58",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19184_storage_ptr_$",
+                        "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19120_storage_ptr_$",
                         "typeString": "function () pure returns (struct SystemStorage.Layout storage pointer)"
                       }
                     },
-                    "id": 19217,
+                    "id": 19153,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -811,7 +814,7 @@
                     "src": "1752:8:58",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                      "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                       "typeString": "struct SystemStorage.Layout storage pointer"
                     }
                   },
@@ -820,25 +823,25 @@
                 },
                 {
                   "expression": {
-                    "id": 19223,
+                    "id": 19159,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "expression": {
-                        "id": 19219,
+                        "id": 19155,
                         "name": "l",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 19215,
+                        "referencedDeclaration": 19151,
                         "src": "1766:1:58",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                          "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                           "typeString": "struct SystemStorage.Layout storage pointer"
                         }
                       },
-                      "id": 19221,
+                      "id": 19157,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
@@ -846,58 +849,58 @@
                       "memberLocation": "1768:5:58",
                       "memberName": "world",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 19183,
+                      "referencedDeclaration": 19119,
                       "src": "1766:7:58",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IWorld_$19720",
+                        "typeIdentifier": "t_contract$_IWorld_$19656",
                         "typeString": "contract IWorld"
                       }
                     },
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 19222,
+                      "id": 19158,
                       "name": "_world",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 19207,
+                      "referencedDeclaration": 19143,
                       "src": "1776:6:58",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IWorld_$19720",
+                        "typeIdentifier": "t_contract$_IWorld_$19656",
                         "typeString": "contract IWorld"
                       }
                     },
                     "src": "1766:16:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IWorld_$19720",
+                      "typeIdentifier": "t_contract$_IWorld_$19656",
                       "typeString": "contract IWorld"
                     }
                   },
-                  "id": 19224,
+                  "id": 19160,
                   "nodeType": "ExpressionStatement",
                   "src": "1766:16:58"
                 },
                 {
                   "expression": {
-                    "id": 19229,
+                    "id": 19165,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "expression": {
-                        "id": 19225,
+                        "id": 19161,
                         "name": "l",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 19215,
+                        "referencedDeclaration": 19151,
                         "src": "1788:1:58",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                          "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                           "typeString": "struct SystemStorage.Layout storage pointer"
                         }
                       },
-                      "id": 19227,
+                      "id": 19163,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
@@ -905,41 +908,41 @@
                       "memberLocation": "1790:10:58",
                       "memberName": "components",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 19180,
+                      "referencedDeclaration": 19116,
                       "src": "1788:12:58",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                        "typeIdentifier": "t_contract$_IUint256Component_$19543",
                         "typeString": "contract IUint256Component"
                       }
                     },
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 19228,
+                      "id": 19164,
                       "name": "_components",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 19210,
+                      "referencedDeclaration": 19146,
                       "src": "1803:11:58",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                        "typeIdentifier": "t_contract$_IUint256Component_$19543",
                         "typeString": "contract IUint256Component"
                       }
                     },
                     "src": "1788:26:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                      "typeIdentifier": "t_contract$_IUint256Component_$19543",
                       "typeString": "contract IUint256Component"
                     }
                   },
-                  "id": 19230,
+                  "id": 19166,
                   "nodeType": "ExpressionStatement",
                   "src": "1788:26:58"
                 }
               ]
             },
             "documentation": {
-              "id": 19204,
+              "id": 19140,
               "nodeType": "StructuredDocumentation",
               "src": "1362:293:58",
               "text": " Register this component in the given world.\n @param _world Address of the World contract.\n @param _components Address of the Components registry contract.\n @dev This function must be called at the start of any contract that expects libraries to access SystemStorage!"
@@ -950,41 +953,41 @@
             "name": "init",
             "nameLocation": "1667:4:58",
             "parameters": {
-              "id": 19211,
+              "id": 19147,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19207,
+                  "id": 19143,
                   "mutability": "mutable",
                   "name": "_world",
                   "nameLocation": "1679:6:58",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19232,
+                  "scope": 19168,
                   "src": "1672:13:58",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IWorld_$19720",
+                    "typeIdentifier": "t_contract$_IWorld_$19656",
                     "typeString": "contract IWorld"
                   },
                   "typeName": {
-                    "id": 19206,
+                    "id": 19142,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 19205,
+                      "id": 19141,
                       "name": "IWorld",
                       "nameLocations": [
                         "1672:6:58"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 19720,
+                      "referencedDeclaration": 19656,
                       "src": "1672:6:58"
                     },
-                    "referencedDeclaration": 19720,
+                    "referencedDeclaration": 19656,
                     "src": "1672:6:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IWorld_$19720",
+                      "typeIdentifier": "t_contract$_IWorld_$19656",
                       "typeString": "contract IWorld"
                     }
                   },
@@ -992,36 +995,36 @@
                 },
                 {
                   "constant": false,
-                  "id": 19210,
+                  "id": 19146,
                   "mutability": "mutable",
                   "name": "_components",
                   "nameLocation": "1705:11:58",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19232,
+                  "scope": 19168,
                   "src": "1687:29:58",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                    "typeIdentifier": "t_contract$_IUint256Component_$19543",
                     "typeString": "contract IUint256Component"
                   },
                   "typeName": {
-                    "id": 19209,
+                    "id": 19145,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 19208,
+                      "id": 19144,
                       "name": "IUint256Component",
                       "nameLocations": [
                         "1687:17:58"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 19607,
+                      "referencedDeclaration": 19543,
                       "src": "1687:17:58"
                     },
-                    "referencedDeclaration": 19607,
+                    "referencedDeclaration": 19543,
                     "src": "1687:17:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                      "typeIdentifier": "t_contract$_IUint256Component_$19543",
                       "typeString": "contract IUint256Component"
                     }
                   },
@@ -1031,23 +1034,23 @@
               "src": "1671:46:58"
             },
             "returnParameters": {
-              "id": 19212,
+              "id": 19148,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1727:0:58"
             },
-            "scope": 19289,
+            "scope": 19225,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
-            "id": 19244,
+            "id": 19180,
             "nodeType": "FunctionDefinition",
             "src": "1876:99:58",
             "nodes": [],
             "body": {
-              "id": 19243,
+              "id": 19179,
               "nodeType": "Block",
               "src": "1938:37:58",
               "nodes": [],
@@ -1058,18 +1061,18 @@
                       "arguments": [],
                       "expression": {
                         "argumentTypes": [],
-                        "id": 19239,
+                        "id": 19175,
                         "name": "layout",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 19203,
+                        "referencedDeclaration": 19139,
                         "src": "1951:6:58",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19184_storage_ptr_$",
+                          "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19120_storage_ptr_$",
                           "typeString": "function () pure returns (struct SystemStorage.Layout storage pointer)"
                         }
                       },
-                      "id": 19240,
+                      "id": 19176,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1081,11 +1084,11 @@
                       "src": "1951:8:58",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                        "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                         "typeString": "struct SystemStorage.Layout storage pointer"
                       }
                     },
-                    "id": 19241,
+                    "id": 19177,
                     "isConstant": false,
                     "isLValue": true,
                     "isPure": false,
@@ -1093,22 +1096,22 @@
                     "memberLocation": "1960:10:58",
                     "memberName": "components",
                     "nodeType": "MemberAccess",
-                    "referencedDeclaration": 19180,
+                    "referencedDeclaration": 19116,
                     "src": "1951:19:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                      "typeIdentifier": "t_contract$_IUint256Component_$19543",
                       "typeString": "contract IUint256Component"
                     }
                   },
-                  "functionReturnParameters": 19238,
-                  "id": 19242,
+                  "functionReturnParameters": 19174,
+                  "id": 19178,
                   "nodeType": "Return",
                   "src": "1944:26:58"
                 }
               ]
             },
             "documentation": {
-              "id": 19233,
+              "id": 19169,
               "nodeType": "StructuredDocumentation",
               "src": "1823:50:58",
               "text": " @return Component registry contract"
@@ -1120,47 +1123,47 @@
             "name": "components",
             "nameLocation": "1885:10:58",
             "parameters": {
-              "id": 19234,
+              "id": 19170,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1895:2:58"
             },
             "returnParameters": {
-              "id": 19238,
+              "id": 19174,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19237,
+                  "id": 19173,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19244,
+                  "scope": 19180,
                   "src": "1919:17:58",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                    "typeIdentifier": "t_contract$_IUint256Component_$19543",
                     "typeString": "contract IUint256Component"
                   },
                   "typeName": {
-                    "id": 19236,
+                    "id": 19172,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 19235,
+                      "id": 19171,
                       "name": "IUint256Component",
                       "nameLocations": [
                         "1919:17:58"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 19607,
+                      "referencedDeclaration": 19543,
                       "src": "1919:17:58"
                     },
-                    "referencedDeclaration": 19607,
+                    "referencedDeclaration": 19543,
                     "src": "1919:17:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                      "typeIdentifier": "t_contract$_IUint256Component_$19543",
                       "typeString": "contract IUint256Component"
                     }
                   },
@@ -1169,18 +1172,18 @@
               ],
               "src": "1918:19:58"
             },
-            "scope": 19289,
+            "scope": 19225,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 19256,
+            "id": 19192,
             "nodeType": "FunctionDefinition",
             "src": "2019:78:58",
             "nodes": [],
             "body": {
-              "id": 19255,
+              "id": 19191,
               "nodeType": "Block",
               "src": "2065:32:58",
               "nodes": [],
@@ -1191,18 +1194,18 @@
                       "arguments": [],
                       "expression": {
                         "argumentTypes": [],
-                        "id": 19251,
+                        "id": 19187,
                         "name": "layout",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 19203,
+                        "referencedDeclaration": 19139,
                         "src": "2078:6:58",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19184_storage_ptr_$",
+                          "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19120_storage_ptr_$",
                           "typeString": "function () pure returns (struct SystemStorage.Layout storage pointer)"
                         }
                       },
-                      "id": 19252,
+                      "id": 19188,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1214,11 +1217,11 @@
                       "src": "2078:8:58",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                        "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                         "typeString": "struct SystemStorage.Layout storage pointer"
                       }
                     },
-                    "id": 19253,
+                    "id": 19189,
                     "isConstant": false,
                     "isLValue": true,
                     "isPure": false,
@@ -1226,22 +1229,22 @@
                     "memberLocation": "2087:5:58",
                     "memberName": "world",
                     "nodeType": "MemberAccess",
-                    "referencedDeclaration": 19183,
+                    "referencedDeclaration": 19119,
                     "src": "2078:14:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IWorld_$19720",
+                      "typeIdentifier": "t_contract$_IWorld_$19656",
                       "typeString": "contract IWorld"
                     }
                   },
-                  "functionReturnParameters": 19250,
-                  "id": 19254,
+                  "functionReturnParameters": 19186,
+                  "id": 19190,
                   "nodeType": "Return",
                   "src": "2071:21:58"
                 }
               ]
             },
             "documentation": {
-              "id": 19245,
+              "id": 19181,
               "nodeType": "StructuredDocumentation",
               "src": "1979:37:58",
               "text": " @return World contract"
@@ -1253,47 +1256,47 @@
             "name": "world",
             "nameLocation": "2028:5:58",
             "parameters": {
-              "id": 19246,
+              "id": 19182,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2033:2:58"
             },
             "returnParameters": {
-              "id": 19250,
+              "id": 19186,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19249,
+                  "id": 19185,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19256,
+                  "scope": 19192,
                   "src": "2057:6:58",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_IWorld_$19720",
+                    "typeIdentifier": "t_contract$_IWorld_$19656",
                     "typeString": "contract IWorld"
                   },
                   "typeName": {
-                    "id": 19248,
+                    "id": 19184,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 19247,
+                      "id": 19183,
                       "name": "IWorld",
                       "nameLocations": [
                         "2057:6:58"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 19720,
+                      "referencedDeclaration": 19656,
                       "src": "2057:6:58"
                     },
-                    "referencedDeclaration": 19720,
+                    "referencedDeclaration": 19656,
                     "src": "2057:6:58",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IWorld_$19720",
+                      "typeIdentifier": "t_contract$_IWorld_$19656",
                       "typeString": "contract IWorld"
                     }
                   },
@@ -1302,18 +1305,18 @@
               ],
               "src": "2056:8:58"
             },
-            "scope": 19289,
+            "scope": 19225,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 19272,
+            "id": 19208,
             "nodeType": "FunctionDefinition",
             "src": "2223:135:58",
             "nodes": [],
             "body": {
-              "id": 19271,
+              "id": 19207,
               "nodeType": "Block",
               "src": "2289:69:58",
               "nodes": [],
@@ -1326,18 +1329,18 @@
                           "arguments": [],
                           "expression": {
                             "argumentTypes": [],
-                            "id": 19265,
+                            "id": 19201,
                             "name": "layout",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 19203,
+                            "referencedDeclaration": 19139,
                             "src": "2323:6:58",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19184_storage_ptr_$",
+                              "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19120_storage_ptr_$",
                               "typeString": "function () pure returns (struct SystemStorage.Layout storage pointer)"
                             }
                           },
-                          "id": 19266,
+                          "id": 19202,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1349,11 +1352,11 @@
                           "src": "2323:8:58",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                            "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                             "typeString": "struct SystemStorage.Layout storage pointer"
                           }
                         },
-                        "id": 19267,
+                        "id": 19203,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
@@ -1361,19 +1364,19 @@
                         "memberLocation": "2332:10:58",
                         "memberName": "components",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 19180,
+                        "referencedDeclaration": 19116,
                         "src": "2323:19:58",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                          "typeIdentifier": "t_contract$_IUint256Component_$19543",
                           "typeString": "contract IUint256Component"
                         }
                       },
                       {
-                        "id": 19268,
+                        "id": 19204,
                         "name": "systemID",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 19259,
+                        "referencedDeclaration": 19195,
                         "src": "2344:8:58",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1384,7 +1387,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                          "typeIdentifier": "t_contract$_IUint256Component_$19543",
                           "typeString": "contract IUint256Component"
                         },
                         {
@@ -1392,18 +1395,18 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 19264,
+                      "id": 19200,
                       "name": "getSystemAddressById",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 20135,
+                      "referencedDeclaration": 20071,
                       "src": "2302:20:58",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_contract$_IUint256Component_$19607_$_t_uint256_$returns$_t_address_$",
+                        "typeIdentifier": "t_function_internal_view$_t_contract$_IUint256Component_$19543_$_t_uint256_$returns$_t_address_$",
                         "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                       }
                     },
-                    "id": 19269,
+                    "id": 19205,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1419,15 +1422,15 @@
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 19263,
-                  "id": 19270,
+                  "functionReturnParameters": 19199,
+                  "id": 19206,
                   "nodeType": "Return",
                   "src": "2295:58:58"
                 }
               ]
             },
             "documentation": {
-              "id": 19257,
+              "id": 19193,
               "nodeType": "StructuredDocumentation",
               "src": "2101:119:58",
               "text": " @param systemID ID for a system\n @return address of the System contract from the components registry"
@@ -1438,17 +1441,17 @@
             "name": "system",
             "nameLocation": "2232:6:58",
             "parameters": {
-              "id": 19260,
+              "id": 19196,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19259,
+                  "id": 19195,
                   "mutability": "mutable",
                   "name": "systemID",
                   "nameLocation": "2247:8:58",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19272,
+                  "scope": 19208,
                   "src": "2239:16:58",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1457,7 +1460,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 19258,
+                    "id": 19194,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2239:7:58",
@@ -1472,17 +1475,17 @@
               "src": "2238:18:58"
             },
             "returnParameters": {
-              "id": 19263,
+              "id": 19199,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19262,
+                  "id": 19198,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19272,
+                  "scope": 19208,
                   "src": "2280:7:58",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1491,7 +1494,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 19261,
+                    "id": 19197,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2280:7:58",
@@ -1506,18 +1509,18 @@
               ],
               "src": "2279:9:58"
             },
-            "scope": 19289,
+            "scope": 19225,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "internal"
           },
           {
-            "id": 19288,
+            "id": 19224,
             "nodeType": "FunctionDefinition",
             "src": "2493:138:58",
             "nodes": [],
             "body": {
-              "id": 19287,
+              "id": 19223,
               "nodeType": "Block",
               "src": "2565:66:58",
               "nodes": [],
@@ -1530,18 +1533,18 @@
                           "arguments": [],
                           "expression": {
                             "argumentTypes": [],
-                            "id": 19281,
+                            "id": 19217,
                             "name": "layout",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 19203,
+                            "referencedDeclaration": 19139,
                             "src": "2593:6:58",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19184_storage_ptr_$",
+                              "typeIdentifier": "t_function_internal_pure$__$returns$_t_struct$_Layout_$19120_storage_ptr_$",
                               "typeString": "function () pure returns (struct SystemStorage.Layout storage pointer)"
                             }
                           },
-                          "id": 19282,
+                          "id": 19218,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1553,11 +1556,11 @@
                           "src": "2593:8:58",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_Layout_$19184_storage_ptr",
+                            "typeIdentifier": "t_struct$_Layout_$19120_storage_ptr",
                             "typeString": "struct SystemStorage.Layout storage pointer"
                           }
                         },
-                        "id": 19283,
+                        "id": 19219,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
@@ -1565,19 +1568,19 @@
                         "memberLocation": "2602:10:58",
                         "memberName": "components",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 19180,
+                        "referencedDeclaration": 19116,
                         "src": "2593:19:58",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                          "typeIdentifier": "t_contract$_IUint256Component_$19543",
                           "typeString": "contract IUint256Component"
                         }
                       },
                       {
-                        "id": 19284,
+                        "id": 19220,
                         "name": "componentID",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 19275,
+                        "referencedDeclaration": 19211,
                         "src": "2614:11:58",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1588,7 +1591,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_IUint256Component_$19607",
+                          "typeIdentifier": "t_contract$_IUint256Component_$19543",
                           "typeString": "contract IUint256Component"
                         },
                         {
@@ -1596,18 +1599,18 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 19280,
+                      "id": 19216,
                       "name": "getAddressById",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 20059,
+                      "referencedDeclaration": 19995,
                       "src": "2578:14:58",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_view$_t_contract$_IUint256Component_$19607_$_t_uint256_$returns$_t_address_$",
+                        "typeIdentifier": "t_function_internal_view$_t_contract$_IUint256Component_$19543_$_t_uint256_$returns$_t_address_$",
                         "typeString": "function (contract IUint256Component,uint256) view returns (address)"
                       }
                     },
-                    "id": 19285,
+                    "id": 19221,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1623,15 +1626,15 @@
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 19279,
-                  "id": 19286,
+                  "functionReturnParameters": 19215,
+                  "id": 19222,
                   "nodeType": "Return",
                   "src": "2571:55:58"
                 }
               ]
             },
             "documentation": {
-              "id": 19273,
+              "id": 19209,
               "nodeType": "StructuredDocumentation",
               "src": "2362:128:58",
               "text": " @param componentID ID for a component\n @return address of the Component contract from the components registry"
@@ -1642,17 +1645,17 @@
             "name": "component",
             "nameLocation": "2502:9:58",
             "parameters": {
-              "id": 19276,
+              "id": 19212,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19275,
+                  "id": 19211,
                   "mutability": "mutable",
                   "name": "componentID",
                   "nameLocation": "2520:11:58",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19288,
+                  "scope": 19224,
                   "src": "2512:19:58",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1661,7 +1664,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 19274,
+                    "id": 19210,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2512:7:58",
@@ -1676,17 +1679,17 @@
               "src": "2511:21:58"
             },
             "returnParameters": {
-              "id": 19279,
+              "id": 19215,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 19278,
+                  "id": 19214,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 19288,
+                  "scope": 19224,
                   "src": "2556:7:58",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1695,7 +1698,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 19277,
+                    "id": 19213,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2556:7:58",
@@ -1710,7 +1713,7 @@
               ],
               "src": "2555:9:58"
             },
-            "scope": 19289,
+            "scope": 19225,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "internal"
@@ -1722,18 +1725,18 @@
         "contractDependencies": [],
         "contractKind": "library",
         "documentation": {
-          "id": 19177,
+          "id": 19113,
           "nodeType": "StructuredDocumentation",
           "src": "249:532:58",
           "text": " Systems contain the address of the components registry and world contract as state variables.\n SystemStorage ensures that these addresses are stored at deterministic locations in a System contract's storage.\n Developers can read/write components and access world utilities from any library called by a System.\n Warning: Library must be initialized (init) by a contract that can access components + world contracts before use.\n The intialization is done automatically for any contract inheriting System or MudTest."
         },
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          19289
+          19225
         ],
         "name": "SystemStorage",
         "nameLocation": "790:13:58",
-        "scope": 19290,
+        "scope": 19226,
         "usedErrors": []
       }
     ],

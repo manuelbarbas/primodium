@@ -1,13 +1,11 @@
-import { EntityIndex } from "@latticexyz/recs";
+import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { RawBlueprint } from "src/network/components/chainComponents";
 
 type Dimensions = { width: number; height: number };
-export const blueprintCache = new Map<EntityIndex, Dimensions>();
+export const blueprintCache = new Map<EntityID, Dimensions>();
 
-export function calcDims(
-  entity: EntityIndex,
-  coordinates: Coord[]
-): Dimensions {
+export function calcDims(entity: EntityID, coordinates: Coord[]): Dimensions {
   if (blueprintCache.has(entity)) return blueprintCache.get(entity)!;
   let minX = coordinates[0].x;
   let maxX = coordinates[0].x;
@@ -40,4 +38,52 @@ export function convertToCoords(numbers: number[]): Coord[] {
   }
 
   return coordinates;
+}
+
+export function relCoordToAbs(coordinates: Coord[], origin: Coord): Coord[] {
+  return coordinates.map((coord) => ({
+    x: coord.x + origin.x,
+    y: coord.y + origin.y,
+  }));
+}
+
+export function getBuildingOrigin(source: Coord, building: EntityID) {
+  const blueprint = RawBlueprint.get(building)?.value;
+  if (!blueprint) return;
+  const topLeftCoord = getTopLeftCoord(convertToCoords(blueprint));
+  if (!blueprint) return;
+  return { x: source.x - topLeftCoord.x, y: source.y - topLeftCoord.y };
+}
+
+export function getBuildingTopLeft(origin: Coord, buildingType: EntityID) {
+  const rawBlueprint = RawBlueprint.get(buildingType)?.value;
+  if (!rawBlueprint) throw new Error("No blueprint found");
+  const relativeTopLeft = getTopLeftCoord(convertToCoords(rawBlueprint));
+  return { x: origin.x + relativeTopLeft.x, y: origin.y + relativeTopLeft.y };
+}
+
+export function getTopLeftCoord(coordinates: Coord[]): Coord {
+  if (coordinates.length === 0)
+    throw new Error("Cannot get top left coordinate of empty array");
+  if (coordinates.length === 1) return coordinates[0];
+
+  let minX = coordinates[0].x;
+  let maxY = coordinates[0].y;
+
+  for (let i = 1; i < coordinates.length; i++) {
+    minX = Math.min(minX, coordinates[i].x);
+    maxY = Math.max(maxY, coordinates[i].y);
+  }
+
+  return { x: minX, y: maxY };
+}
+
+export function getBuildingDimensions(building: EntityID) {
+  const blueprint = RawBlueprint.get(building)?.value;
+
+  const dimensions = blueprint
+    ? calcDims(building, convertToCoords(blueprint))
+    : { width: 1, height: 1 };
+
+  return dimensions;
 }

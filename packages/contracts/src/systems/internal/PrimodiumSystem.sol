@@ -6,7 +6,7 @@ import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.s
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 
 import { Coord } from "../../types.sol";
-import { BuildingTileKey } from "../../prototypes/Keys.sol";
+import { BuildingTileKey } from "../../prototypes.sol";
 
 import { LibEncode } from "../../libraries/LibEncode.sol";
 
@@ -19,7 +19,7 @@ contract PrimodiumSystem is System {
 
   function getBuildingFromCoord(Coord memory coord) internal view returns (uint256) {
     OwnedByComponent ownedByComponent = OwnedByComponent(getAddressById(components, OwnedByComponentID));
-    uint256 buildingTile = LibEncode.encodeCoordEntity(coord, BuildingTileKey);
+    uint256 buildingTile = LibEncode.hashKeyCoord(BuildingTileKey, coord);
     if (!ownedByComponent.has(buildingTile)) return 0;
     return ownedByComponent.getValue(buildingTile);
   }

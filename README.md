@@ -1,4 +1,4 @@
-# Primodium v0.6.1
+# Primodium v0.7.0
 
 Initialize with `yarn`. Afterwards, in separate terminal sessions, run the following commands in order:
 
@@ -24,7 +24,11 @@ Deploy the contracts on the local environment using the commands in the previous
 mud test
 ```
 
-For production deployment, Primodium is currently live on the Caldera testnet. Set the `isDebug()` function to return false, then deploy the contracts with the following command in the `packages/contracts` directory.
+For production deployment, Primodium is currently live on the Caldera testnet. To deploy, follow these steps:
+
+1. Switch to the contracts directory with `cd packages/contracts`
+2. Generate `deploy-live.json` with `yarn gen:json`
+3. Deploy with forge:
 
 ```
 mud deploy-contracts --rpc https://primodium-bedrock.calderachain.xyz/replica-http --deployerPrivateKey <testnet key> --config ./deploy-live.json
@@ -38,15 +42,27 @@ To utilize any of the debug utilities `LibDebug.IsDebug` must return `true`. For
 
 - `LibDebugInitializer`: First, configure debug buildings and technologies in this initializer library.
 
-- `DebugSystems`: Then, use the following systems to modify debug data.
+- `ComponentDevSystem`: Then, `ComponentDevSystem` systems to modify debug data. For example, `ComponentDevSystem` can be used to set the level of a building or the amount of a resource. See below and the tests in `packages/contracts/src/test/systems` for further examples.
 
-  - `DebugAcquireResourcesBasedOnRequirementSystem`
-  - `DebugAcquireResourcesSystem`
-  - `DebugAcquireStorageForAllResourcesSystem`
-  - `DebugIgnoreBuildLimitForBuildingSystem`
-  - `DebugRemoveBuildingRequirementsSystem`
-  - `DebugRemoveBuildLimitSystem`
-  - `DebugRemoveUpgradeRequirementsSystem`
+- To set component data for an entity:
+
+```
+componentDevSystem.executeTyped(
+ItemComponentID,
+LibEncode.hashKeyEntity(requiredResources.resources[i], addressToEntity(alice)),
+abi.encode(requiredResources.values[i])
+);
+```
+
+- To remove component data for an entity:
+
+```
+componentDevSystem.executeTyped(
+P_RequiredResourcesComponentID,
+LibEncode.hashKeyEntity(DebugIronPlateFactoryID, 1),
+abi.encode()
+);
+```
 
 # Blueprints
 
@@ -56,132 +72,138 @@ When a building is created, its tiles are determined based on the prototype's bl
 
 # Resource and Research Requirements
 
-The following components are used to store _metadata_ that is read before a building is built by the user. `RequiredResourcesComponent` stores a list of resource IDs that are required by a building, after which the specific resource count is stored in `ItemComponent` as "owned" by the building ID (i.e. `hashKeyEntity(resourceId, buildingId)` as key with count as value). `RequiredResearchComponent` is a boolean that stores the required research objective. `BuildingLimitComponent` stores building limit requirements.
+`P_RequiredResourcesComponent`: stores a list of resource IDs and values that are required for:
 
-```
-  RequiredResearchComponent
-  RequiredResourcesComponent
-  ItemComponent
-  BuildingLimitComponent
-```
+- Building and Upgrading Buildings: `hashKeyEntity(buildingId, buildingLevel)`
+- Research: `researchID`
+  `P_RequiredResearchComponent`: stores the required `researchID` for:
+- Building and Upgrading Buildings: `hashKeyEntity(buildingId, buildingLevel)`
+- Research: `researchID`
 
 # Resource Production
 
-`MineComponent` stores both metadata and player data.
+`P_ProductionComponent` stores the resource production and value for a building level (`hashKeyEntity(buildingId, level)`)
+`ProductionComponent` stores the resource production for `hashKeyEntity(resourceId, entity)` in which the entity can be `playerEntity` or `buildingEntity`
 
-- _Metadata_: with `hashKeyEntity(buildingId, buildingLevel)` as key, stores the production rate of that resource for that level of that building per blockchain block. In `LibBuildingDesignInitializer`, the production rate is set for each level of each building that produces resources.
-- _Player Data_: with `hashKeyEntity(resourceId, playerEntity)` as key, stores the production of that resource per blockchain block.
+`ProductionComponent` for `hashKeyEntity(resourceId, playerEntity)` and `hashKeyEntity(resourceId, buildingEntity)` are both updated by `S_UpdateResourceProduction`.
 
-Player resource production is updated when:
+`S_UpdateResourceProduction` is called by `S_UpdateActiveStatusSystem` when `ActiveComponent` value is updated for a building with `P_ProductionComponent`. this update can take place by the following changes
 
-- a path is built or destroyed from a building with resource production to MainBase
-- a building that has a path to MainBase is upgraded
+- a path is built or destroyed from a building with resource production to MainBase or a building with `P_ProductionDependenciesComponent`
+- a building that has a path to MainBase or a building with `P_ProductionDependenciesComponent` is upgraded
 
-`UnclaimedResourceComponent` tracks how much resource is produced but not claimed. It is updated for the player entity and resource ID before production is changed.
+`P_ProductionDependenciesComponent` stores the resource IDs and value of required connected buildings with `P_ProductionComponent` for a building level (`hashKeyEntity(buildingId, level)`)
 
-`UnclaimedResourceComponent` is always calculated based on the production rate of that resource at that point. The unclaimed resource count will always be less than or equal to the available space for that resource in the players storage, which is stored in `StorageCapacityComponent`.
+example: `IronPlateFactory` level 1 requires 1 building with production of `Iron` to be connected to it so that it can produce `IronPlate`
 
-# Factories
+`IronPlateFactory`:
 
-Factory production is similar to how mining resource production is calculated. However, to produce resources factories require other mines to be connected to them. For a factory to be functional, the level of the mine connected should not be lower then the level of the factory itself.
+- `P_ProductionDependenciesComponent`(`Iron`,1)
+- `P_ProductionComponent`(`IronPlate`,1)
 
-`FactoryMineBuildingsComponent`: with `hashKeyEntity(buildingId, buildingLevel)` as key, contains two arrays:
+`IronMine`
 
-- `MineBuildingId` : a list of mine building ids that has to be connected to the factory for it to be functional
-- `MineBuildingCount`: a list of how many of each mine building that has to be connected to the factory
+- `P_ProductionComponent`(`Iron`,1)
 
-`FactoryProductionComponent`: with `hashKeyEntity(buildingId, buildingLevel)` as key, contains two IDs:
+`ActiveComponent` : tracks if a building with both `P_ProductionComponent` and `P_ProductionDependenciesComponent` is active
+for a building to be active the following conditions must be met:
 
-- `ResourceID` : the resource type this factory produces
-- `ResourceProductionRate` : the production of this factory per block (note for future we should modify the way this value is interpreted so it isn't per block to be able to reduce the tempo. maybe the rate can be per 100 blocks for example)
-
-`FactoryIsFunctionalComponent`: for an existing factory entity, declares if that factory is functional. This value is updated when a player action either results in the factory becoming functional or results in it becoming non-functional.
-
-`LibFactoryDesignInitializer` writes the design data for factories for each of their levels on `FactoryMineBuildingsComponent` and `FactoryProductionComponent`.
-
-`LibFactory` contains the core logic functions for two main purposes:
-
-- updating the `FactoryIsFunctionalComponent` for a factory entity when a player action may result in the factory to become functional or non functional
+- for each `ResourceID` and `Value` in `P_ProductionDependenciesComponent`, `Value` amount of buildings with `P_ProductionComponent` of `ResourceID` must be connected to it
+- all the connected buildings must be at least of the same level as it
+- if any of the connected buildings have `P_ProductionDependenciesComponent` for their current level they must have a `ActiveComponent` value of `true`
 
 # Building Upgrades
 
 Each building can be upgraded to unlock more capabilities. Specifications are located [here](https://www.notion.so/palifer/abe7f4855bb441198acd4bae918b4619?v=54c17e8787e24596bc3d4f94f81761bd&p=96af4ae778304d11b40b773a94a826df&pm=s).
 
-- `MaxLevelComponent` with a building ID (e.g. DebugIronMineID) as key, indicates that that a building can be upgraded and up to what level.
-- `BuildingLevelComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
+- `P_MaxLevelComponent` with a building ID (e.g. DebugIronMineID) as key, indicates that that a building can be upgraded and up to what level.
+- `LevelComponent` with a building entity ID as key (e.g. TODO), stores the current level of the building.
 
-When a building is upgraded, `PostUpgradeSystem` is called to update the building's components and the player's resource production.
+When a building is upgraded, `PostUpgradeBuildingSystem` is called to update the building's components and the player's resource production.
 
 # Building Storage
 
-In `LibStorageDesignInitializer`, buildings which increase storage capacity are designated the Resources they provide capacity for via `StorageCapacityResourcesComponent` for the levels in which they provide that capacity increase. The amount of capacity they provide is set for their designated levels via `StorageCapacityComponent`.
+`P_MaxResourceStorageComponent`: stores the ResourceIds for a building level (`hashKeyEntity(buildingId, level)`) which the building provides storage capacity increase for.
+`P_MaxStorageComponent`: stores the amount of storage capacity increase for `hashKeyEntity(resourceID,hashKeyEntity(buildingId, level)` which the building level provides storage capacity for.
 
 ```
-  buildingLevelId = hashKeyEntity(buildingId, buildingLevel)
-  resourceBuildingLevelId = hashKeyEntity(resourceId, buildingLevelId)
+
+levelId = hashKeyEntity(buildingId, level)
+resourceLevelId = hashKeyEntity(resourceId, levelId)
+
 ```
 
 For example, the amount of Iron storage that is provided by a level 2 MainBase is:
-`storageCapacityComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
-
-When buildings are built with, upgraded, or destroyed, `StorageCapacityComponent` is updated for the player and the resources they modify the capacity for.
+`maxStorageComponent.getValue(hashKeyEntity(Iron,hashKeyEntity(MainBaseID, 2)))`
 
 # Player Storage
 
-`OwnedByComponent` records building ownership while `ItemComponent` records mined and crafted item ownership, with `hashKeyEntity(resourceId, playerEntity)` as key.
+`P_MaxResourceStorageComponent`: stores the Resource Ids the player has storage for using `playerEntity`
+`P_MaxStorageComponent` : stores the amount of storage of each resource the player has using `hashKeyEntity(resourceId, playerEntity)`
+When buildings are built with, upgraded, or destroyed, `P_MaxStorageComponent` is updated for the player and the resources they modify the capacity for.
+
+`OwnedByComponent` records building ownership
+
+`ItemComponent` records mined and crafted item ownership, with `hashKeyEntity(resourceId, playerEntity)` as key.
 
 ```
-  ItemComponent
-  ResearchComponent
+
+ItemComponent
+HasResearchedComponent
+
 ```
 
-`Passive Resources`
+`Utility Resources`
 
-- Passive resources are resources which are not produced but act as capacity to allow buildings which require them to be built. Example:
+- Utility resources are resources which are not produced but act as capacity to allow buildings which require them to be built. Example:
 - Solar Panel increases Electricity Capacity by 4 value
 - Alloy Factory requires and occupies 2 Electricity
 
-`RequiredPassiveResourceComponent`: for `LibHash(BuildingType, Level)` indicates what passive resources it requires and how much.
-`PassiveResourceProductionComponent`: for `LibHash(BuildingType, Level)` indicates what passive resource and how much of it the building produces.
+`P_RequiredUtilityComponent`: for `LibHash(BuildingType, Level)` indicates what Utility resources it requires and how much.
+`P_UtilityProductionComponent`: for `LibHash(BuildingType, Level)` indicates what Utility resource and how much of it the building produces.
 
-- The total amount of `PassiveResourceCapacity` the player has is stored in the `StorageCapacityComponent` for `LibHash(ResourceID, PlayerEntity)`
-- The total amount of used up `PassiveResourceCapacity` for the player is stored in the `ItemComponent` for `LibHash(ResourceID, PlayerEntity)`
+`MaxUtilityComponent`: stores the total amount of `Utility Capacity` the player has for `LibHash(ResourceID, PlayerEntity)`
+`OccupiedUtilityResourceComponent`: stores the total amount of `Utility Capacity` that the player has already used up for `LibHash(ResourceID, PlayerEntity)`
 
-- Passive resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.
-- The player not build a building that requires passive resources if they the total occuppied capacity for that resource will excceed the current capacity after build is complete.
-- The Player can not destroy a `BuildingType` that has `PassiveResourceProductionComponent` if the total capacity of that resource will be less than the total occuped capacity of that resource.
+- Utility resource checks and updates are only processed in the `BuildSystem` and `DestroySystem` meaning upgrades and paths have no effect on them.
+- The player not build a building that requires Utility resources if they the total occuppied capacity for that resource will excceed the current capacity after build is complete.
+- The Player can not destroy a `BuildingType` that has `P_UtilityProductionComponent` if the total capacity of that resource will be less than the total occuped capacity of that resource.
 
 # Building Positions
 
-`TileComponent` stores a packed representation of `int32` by `int32` coordinates as the key with `buildingId` as value. Keys are generated with `encodeCoordEntity(Coord memory coord, string memory key)`. The string passed into `encodeCoordEntity` is padding that ensures that there are no collisions. Implemented in #25.
+`BuildingTypeComponent` stores a packed representation of `int32` by `int32` coordinates as the key with `buildingId` as value. Keys are generated with `encodeCoordEntity(Coord memory coord, string memory key)`. The string passed into `encodeCoordEntity` is padding that ensures that there are no collisions. Implemented in #25.
 
 ## Core Components
 
 `CounterComponent` is a debug component for testing purposes. `GameConfigComponent` is currently unused. It should be used in the future for randomizing the Perlin noise seed and initializing other game state.
 
 ```
-  CounterComponent
-  GameConfigComponent (unused)
-  TileComponent
-  OwnedByComponent
-  PathComponent
-  LastBuiltAtComponent
-  LastClaimedAtComponent
-  LastResearchedAtComponent
-  HealthComponent
+
+CounterComponent
+GameConfigComponent (unused)
+BuildingTypeComponent
+OwnedByComponent
+PathComponent
+LastClaimedAtComponent
+
 ```
 
 # TODO: which systems call systems?
 
 # Game Mechanic Components
 
-`MainBaseInitializedComponent` stores the coordinates of the user's base, where the map is panned to by default. New users are provided 200 free iron in the tutorial, the status of which is recorded by the boolean `StarterPackInitializedComponent`.
+`MainBaseComponent` stores the coordinates of the user's base, where the map is panned to by default.
 
 ```
-  MainBaseInitializedComponent
-  StarterPackInitializedComponent
+
+MainBaseComponent
+
 ```
 
 # Item listing
 
 All the items in the game is listed at https://tiles.primodium.com/.
+
+```
+
+```

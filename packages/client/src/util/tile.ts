@@ -1,17 +1,20 @@
 import { Perlin } from "@latticexyz/noise";
-import {
-  EntityID,
-  Has,
-  HasValue,
-  Not,
-  getComponentValue,
-  runQuery,
-} from "@latticexyz/recs";
-import { NetworkComponents } from "@latticexyz/std-client";
+import { EntityID, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Network } from "src/network/layer";
-import { defineComponents } from "../network/components";
 import { BlockType, DisplayKeyPair } from "./constants";
+import {
+  Position,
+  BuildingType,
+  OwnedBy,
+  P_Terrain,
+} from "src/network/components/chainComponents";
+import { world } from "src/network/world";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { hashKeyCoord } from "./encode";
+import AsteroidTiledMap from "../maps/asteroid_0.7.json";
+import { AsteroidMap } from "@game/constants";
+
+const { TerrainTilesetIdToEntityId } = AsteroidMap;
 
 // TODO: randomize perlinSeed
 const perlinSeed1 = 60194;
@@ -41,79 +44,101 @@ export function getTerrainNormalizedDepth(coord: Coord, perlin: Perlin) {
   return Math.floor(normalizedDepth);
 }
 
-export function getTerrainKey(coord: Coord, perlin: Perlin) {
-  const normalizedDepth = getTerrainNormalizedDepth(coord, perlin);
-  if (normalizedDepth <= 29) return BlockType.Water;
-  if (normalizedDepth <= 32) return BlockType.Biofilm;
-  if (normalizedDepth <= 35) return BlockType.Alluvium;
-  if (normalizedDepth <= 39) return BlockType.Sandstone;
-  if (normalizedDepth <= 48) return BlockType.Regolith;
-  if (normalizedDepth <= 51) return BlockType.Bedrock;
-
-  return BlockType.Bedrock;
-}
-
-//resource blocks terrain gen
-export function getResourceNormalizedDepth(coord: Coord, perlin: Perlin) {
-  const denom = 8;
-  const depth1 = getSingleDepth(coord, perlin, perlinSeed1, denom);
-  const depth2 = getSingleDepth(coord, perlin, perlinSeed2, denom);
-
-  const normalizedDepth = ((depth1 + depth2) / 4) * 10000;
-  return Math.floor(normalizedDepth);
-}
-
-export function getResourceKey(coord: Coord, perlin: Perlin) {
-  const normalizedDepth = getResourceNormalizedDepth(coord, perlin);
-  //base starting materials (most common)
-  if (normalizedDepth >= 1800 && normalizedDepth <= 1820)
-    return BlockType.Copper;
-  if (normalizedDepth >= 2000 && normalizedDepth <= 2006)
-    return BlockType.Lithium;
-  if (normalizedDepth >= 2400 && normalizedDepth <= 2418) return BlockType.Iron;
-
-  //mid game items
-  if (normalizedDepth <= 1350) return BlockType.Titanium;
-  if (normalizedDepth >= 2600 && normalizedDepth <= 2602)
-    return BlockType.Iridium;
-  if (normalizedDepth >= 3095 && normalizedDepth <= 3100)
-    return BlockType.Osmium;
-  if (normalizedDepth >= 3400 && normalizedDepth <= 3430)
-    return BlockType.Tungsten;
-
-  //late game (rarer) items
-  if (normalizedDepth >= 2720 && normalizedDepth <= 2721)
-    return BlockType.Kimberlite;
-  if (normalizedDepth >= 3220 && normalizedDepth <= 3222)
-    return BlockType.Uraninite;
-  if (normalizedDepth >= 3620 && normalizedDepth <= 3622)
-    return BlockType.Bolutite;
-
-  return BlockType.Air;
-}
-
-export function getTopLayerKey(coord: Coord, perlin: Perlin) {
-  const terrainKey = getTerrainKey(coord, perlin);
-  const resourceKey = getResourceKey(coord, perlin);
-
-  if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
-    return terrainKey;
-  } else {
-    return resourceKey;
+export function getTerrainKey(coord: Coord) {
+  if (
+    coord.x < 0 ||
+    coord.x > AsteroidTiledMap.width - 1 ||
+    coord.y < 0 ||
+    coord.y > AsteroidTiledMap.height
+  ) {
+    return null;
   }
+
+  //reverse through the layers
+  for (let i = AsteroidTiledMap.layers.length - 1; i >= 0; i--) {
+    const layer = AsteroidTiledMap.layers[i];
+    const tile =
+      layer.data[
+        coord.x +
+          (AsteroidTiledMap.height - coord.y - 1) * AsteroidTiledMap.width
+      ];
+
+    if (tile > 0) return TerrainTilesetIdToEntityId[tile - 1];
+  }
+
+  return null;
 }
 
-export function getTopLayerKeyPair(
-  coord: Coord,
-  perlin: Perlin
-): DisplayKeyPair {
-  const terrainKey = getTerrainKey(coord, perlin);
-  const resourceKey = getResourceKey(coord, perlin);
+export function getResourceKey(coord: Coord) {
+  const coordEntity = hashKeyCoord("terrain", {
+    ...coord,
+    parent: "0" as EntityID,
+  });
+  // todo: pull this from the Dimensions component
+  const resourceDimensions = { width: 37, length: 25 };
+
+  if (
+    coord.x < 0 ||
+    coord.x > resourceDimensions.width ||
+    coord.y < 0 ||
+    coord.y > resourceDimensions.length
+  ) {
+    return null;
+  }
+
+  const resource = P_Terrain.get(coordEntity, { value: BlockType.Air })?.value;
+
+  // temp: until we have the sprites in the game
+  if (resource == BlockType.Water) {
+    return BlockType.Osmium;
+  }
+
+  return resource;
+}
+const topLayerKeys = new Map<string, EntityID | null>();
+
+export function getTopLayerKey(coord: Coord) {
+  const coordKey = `${coord.x}-${coord.y}`; // Assuming 2D coords. Adjust if needed.
+
+  if (topLayerKeys.has(coordKey)) return topLayerKeys.get(coordKey);
+
+  const terrainKey = getTerrainKey(coord);
+  const resourceKey = getResourceKey(coord);
+  let result;
 
   if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
-    return { terrain: terrainKey, resource: null };
+    result = terrainKey;
   } else {
-    return { terrain: terrainKey, resource: resourceKey };
+    result = resourceKey;
+  }
+
+  topLayerKeys.set(coordKey, result);
+  return result;
+}
+
+const topLayerKeyPair = new Map<
+  string,
+  { terrain: EntityID | null; resource: EntityID | null }
+>();
+
+export function getTopLayerKeyPair(coord: Coord): DisplayKeyPair {
+  const coordKey = `${coord.x}-${coord.y}`; // Assuming 2D coords. Adjust if needed.
+
+  if (topLayerKeyPair.has(coordKey)) {
+    return topLayerKeyPair.get(coordKey)!;
+  }
+
+  const terrainKey = getTerrainKey(coord);
+  const resourceKey = getResourceKey(coord);
+
+  if (resourceKey === BlockType.Air || terrainKey === BlockType.Water) {
+    const pair = { terrain: terrainKey, resource: null };
+    topLayerKeyPair.set(coordKey, pair);
+    return pair;
+  } else {
+    const pair = { terrain: terrainKey, resource: resourceKey };
+    topLayerKeyPair.set(coordKey, pair);
+    return pair;
   }
 }
 
@@ -122,8 +147,7 @@ export function getTilesOfTypeInRange(
   origin: Coord,
   type: EntityID,
   range: number,
-  excludeRange: number,
-  perlin: Perlin
+  excludeRange: number
 ): Coord[] {
   const tiles: Coord[] = [];
 
@@ -135,7 +159,7 @@ export function getTilesOfTypeInRange(
       }
 
       const currentCoord = { x: origin.x + x, y: origin.y + y };
-      const keyPair = getTopLayerKeyPair(currentCoord, perlin);
+      const keyPair = getTopLayerKeyPair(currentCoord);
       if (keyPair.resource === type || keyPair.terrain === type) {
         tiles.push(currentCoord);
       }
@@ -148,8 +172,7 @@ export function getTilesOfTypeInRange(
 export function getBuildingsOfTypeInRange(
   origin: Coord,
   type: EntityID,
-  range: number,
-  components: NetworkComponents<ReturnType<typeof defineComponents>>
+  range: number
 ) {
   const tiles: Coord[] = [];
 
@@ -159,16 +182,15 @@ export function getBuildingsOfTypeInRange(
 
       //get entity at coord
       const entities = runQuery([
-        HasValue(components.Position, currentCoord),
-        Has(components.BuildingType),
+        HasValue(Position, currentCoord),
+        Has(BuildingType),
       ]);
 
-      const comp = getComponentValue(
-        components.BuildingType,
+      const buildingType = BuildingType.get(
         entities.values().next().value
-      );
+      )?.value;
 
-      if (type === (comp?.value as EntityID)) {
+      if (type === buildingType) {
         tiles.push(currentCoord);
       }
     }
@@ -177,32 +199,32 @@ export function getBuildingsOfTypeInRange(
   return tiles;
 }
 
-export const getEntityTileAtCoord = (coord: Coord, network: Network) => {
-  const { components } = network;
-
+export const getEntityTileAtCoord = (coord: Coord) => {
   const entities = runQuery([
-    HasValue(components.Position, coord),
-    Has(components.BuildingType),
+    Has(BuildingType),
+    Has(OwnedBy),
+    HasValue(Position, coord),
   ]);
-
   if (!entities.size) return undefined;
 
   const tileEntityID = entities.values().next().value;
 
-  return getComponentValue(components.BuildingType, tileEntityID)
-    ?.value as EntityID;
+  return BuildingType.get(tileEntityID)?.value;
 };
 
-export const getBuildingAtCoord = (coord: Coord, network: Network) => {
-  const { components } = network;
-
+export const getBuildingAtCoord = (coord: Coord) => {
   const entities = runQuery([
-    HasValue(components.Position, coord),
-    Not(components.BuildingType),
+    HasValue(Position, {
+      x: coord.x,
+      y: coord.y,
+      parent: ActiveAsteroid.get()?.value,
+    }),
+    Not(BuildingType),
   ]);
 
   if (entities.size === 0) return undefined;
   const tileEntity = [...entities][0];
 
-  return getComponentValue(components.OwnedBy, tileEntity)?.value as EntityID;
+  const entity = OwnedBy.get(world.entities[tileEntity])?.value;
+  return entity;
 };

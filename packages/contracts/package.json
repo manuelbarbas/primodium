@@ -11,6 +11,8 @@
     "types": "mud types",
     "dev": "mud deploy-contracts --dev --watch --openUrl http://localhost:3000?dev=true",
     "deploy": "mud deploy-contracts",
+    "gen:json": "node prod-json-gen.mjs",
+    "gen:terrain": "node scripts/terrain-gen/csvToJson.mjs && node scripts/terrain-gen/jsonToSol.mjs",
     "lint": "yarn prettier && yarn solhint",
     "----- INTERNAL -----": "---------------------------",
     "prettier": "prettier --write 'src/**/*.sol'",
@@ -43,5 +45,8 @@
     "typescript": "^4.6.2",
     "wait-on": "^6.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "solidity-trigonometry": "https://github.com/mds1/solidity-trigonometry.git",
+    "trig": "^1.0.0"
+  }
 }

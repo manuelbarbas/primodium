@@ -1,274 +1,174 @@
 {
   "components": [
+    "ArrivalComponent",
+    "ArrivalsIndexComponent",
+    "ArrivalsSizeComponent",
+    "AsteroidCountComponent",
     "CounterComponent",
-    "GameConfigComponent",
-    "TileComponent",
+    "BuildingTypeComponent",
     "OwnedByComponent",
-    "PathComponent",
-    "LastBuiltAtComponent",
     "LastClaimedAtComponent",
-    "LastResearchedAtComponent",
-    "HealthComponent",
-
     "ItemComponent",
-    "ResearchComponent",
-    "MainBaseInitializedComponent",
-    "StarterPackInitializedComponent",
-    "BuildingLevelComponent",
-    "RequiredResearchComponent",
-    "RequiredResourcesComponent",
-    "BuildingLimitComponent",
-    "IgnoreBuildLimitComponent",
-    "BuildingTilesComponent",
-    "BlueprintComponent",
-    "StorageCapacityComponent",
-    "StorageCapacityResourcesComponent",
-    "MineComponent",
-    "UnclaimedResourceComponent",
-    "FactoryIsFunctionalComponent",
-    "FactoryMineBuildingsComponent",
-    "FactoryProductionComponent",
-    "MaxLevelComponent",
-    "RequiredTileComponent",
-    "RequiredPassiveResourceComponent",
-    "PassiveResourceProductionComponent",
-    "IsDebugComponent"
+    "HasResearchedComponent",
+    "MainBaseComponent",
+    "LevelComponent",
+    "ChildrenComponent",
+    "ProductionComponent",
+    "MotherlodeResourceComponent",
+    "IsDebugComponent",
+    "PositionComponent",
+    "MaxUtilityComponent",
+    "MineableAtComponent",
+    "MotherlodeComponent",
+    "OccupiedUtilityResourceComponent",
+    "UnitProductionOwnedByComponent",
+    "UnitProductionQueueComponent",
+    "UnitProductionQueueIndexComponent",
+    "UnitProductionLastQueueIndexComponent",
+    "UnitsComponent",
+    "AsteroidTypeComponent",
+    "DimensionsComponent",
+    "ReversePositionComponent",
+    "BattleAttackerComponent",
+    "BattleDefenderComponent",
+    "BattleResultComponent",
+    "BattleSpaceRockComponent",
+    "BattleRaidResultComponent",
+    "MaxMovesComponent",
+    "GameConfigComponent",
+    "ScoreComponent",
+    "BattleBlockNumberComponent",
+
+    "P_MaxMovesComponent",
+    "P_ProductionDependenciesComponent",
+    "P_ProductionComponent",
+    "P_MaxLevelComponent",
+    "P_MotherlodeResourceComponent",
+    "P_RequiredTileComponent",
+    "P_RequiredUtilityComponent",
+    "P_UtilityProductionComponent",
+    "P_BlueprintComponent",
+    "P_MaxStorageComponent",
+    "P_MaxResourceStorageComponent",
+    "P_IsTechComponent",
+    "P_RequiredResearchComponent",
+    "P_RequiredResourcesComponent",
+    "P_IsBuildingTypeComponent",
+    "P_UnitAttackComponent",
+    "P_UnitCargoComponent",
+    "P_UnitDefenceComponent",
+    "P_UnitMiningComponent",
+    "P_UnitProductionMultiplierComponent",
+    "P_UnitProductionTypesComponent",
+    "P_UnitTrainingTimeComponent",
+    "P_UnitTravelSpeedComponent",
+    "P_TerrainComponent",
+    "P_IsUnitComponent",
+    "P_ScoreMultiplierComponent",
+    "P_UnitLevelUpgradeComponent"
   ],
   "initializers": [
-    "LibBuildingDesignInitializer",
-    "LibBuildingLimitDesignInitializer",
-    "LibTechnologyDesignInitializer",
-    "LibBlueprintInitializer",
-    "LibDebugInitializer"
+    "LibInitWorld",
+    "LibInitTerrain",
+    "LibInitBuildings",
+    "LibInitResearch",
+    "LibInitDebug",
+    "LibInitMotherlode",
+    "LibInitScoreMultipliers",
+    "LibInitUnits"
   ],
   "systems": [
     {
       "name": "ResearchSystem",
-      "writeAccess": ["ItemComponent", "ResearchComponent", "LastResearchedAtComponent"]
-    },
-    {
-      "name": "StarterPackSystem",
-      "writeAccess": ["ItemComponent", "StarterPackInitializedComponent"]
-    },
-    {
-      "name": "AttackSystem",
-      "writeAccess": [
-        "HealthComponent",
-        "ItemComponent",
-        "TileComponent",
-        "OwnedByComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent"
-      ]
+      "writeAccess": ["*"]
     },
     {
       "name": "IncrementSystem",
       "writeAccess": ["CounterComponent"]
     },
     {
-      "name": "BuildSystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent",
-        "ItemComponent",
-
-        "MainBaseInitializedComponent",
-        "BuildingLevelComponent",
-        "MainBaseInitializedComponent",
-        "BuildingTilesComponent"
-      ]
+      "name": "SpawnSystem",
+      "writeAccess": ["*"]
     },
     {
-      "name": "PostBuildSystem",
-      "writeAccess": [
-        "ItemComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent",
-        "FactoryMineBuildingsComponent",
-        "LastClaimedAtComponent",
-        "BuildingLimitComponent"
-      ]
+      "name": "BuildSystem",
+      "writeAccess": ["*"]
     },
     {
       "name": "DestroySystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent",
-        "HealthComponent",
-        "PathComponent",
+      "writeAccess": ["*"]
+    },
 
-        "MainBaseInitializedComponent",
-        "BuildingTilesComponent",
-        "BuildingLevelComponent",
-        "BuildingLimitComponent",
-        "BuildingTilesComponent"
-      ]
-    },
-    {
-      "name": "PostDestroySystem",
-      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent", "ItemComponent"]
-    },
-    {
-      "name": "BuildPathSystem",
-      "writeAccess": []
-    },
-    {
-      "name": "BuildPathFromFactoryToMainBaseSystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent"
-      ]
-    },
-    {
-      "name": "BuildPathFromMineToFactorySystem",
-      "writeAccess": [
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryMineBuildingsComponent",
-        "FactoryProductionComponent"
-      ]
-    },
-    {
-      "name": "BuildPathFromMineToMainBaseSystem",
-      "writeAccess": ["PathComponent", "LastClaimedAtComponent", "UnclaimedResourceComponent", "MineComponent"]
-    },
-    {
-      "name": "DestroyPathSystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryMineBuildingsComponent",
-        "FactoryProductionComponent"
-      ]
-    },
-    {
-      "name": "PostDestroyPathSystem",
-      "writeAccess": [
-        "StorageCapacityComponent",
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent",
-        "FactoryMineBuildingsComponent"
-      ]
-    },
     {
       "name": "ClaimFromMineSystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent",
-        "ItemComponent",
-        "UnclaimedResourceComponent"
-      ]
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent"]
     },
     {
-      "name": "ClaimFromFactorySystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent",
-
-        "ItemComponent"
-      ]
+      "name": "UpgradeBuildingSystem",
+      "writeAccess": ["*"]
     },
     {
-      "name": "CraftSystem",
-      "writeAccess": [
-        "TileComponent",
-        "OwnedByComponent",
-        "PathComponent",
-        "LastBuiltAtComponent",
-        "LastClaimedAtComponent",
-
-        "ItemComponent"
-      ]
+      "name": "UpgradeRangeSystem",
+      "writeAccess": ["LevelComponent"]
     },
     {
-      "name": "UpgradeSystem",
-      "writeAccess": [
-        "BuildingLevelComponent",
-        "ItemComponent",
-        "StorageCapacityComponent",
-        "StorageCapacityResourcesComponent"
-      ]
+      "name": "TrainUnitsSystem",
+      "writeAccess": ["*"]
     },
-    {
-      "name": "PostUpgradeMineSystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent"
-      ]
-    },
-    {
-      "name": "PostUpgradeFactorySystem",
-      "writeAccess": [
-        "LastClaimedAtComponent",
-        "UnclaimedResourceComponent",
-        "MineComponent",
-        "FactoryIsFunctionalComponent",
-        "FactoryProductionComponent"
-      ]
-    },
-
-    {
-      "name": "DebugAcquireResourcesSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
-      "name": "DebugAcquireResourcesBasedOnRequirementSystem",
-      "writeAccess": ["ItemComponent"]
-    },
-    {
-      "name": "DebugIgnoreBuildLimitForBuildingSystem",
-      "writeAccess": ["IgnoreBuildLimitComponent"]
-    },
-    {
-      "name": "DebugRemoveBuildingRequirementsSystem",
-      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
-    },
-    {
-      "name": "DebugRemoveUpgradeRequirementsSystem",
-      "writeAccess": ["RequiredResearchComponent", "RequiredResourcesComponent"]
-    },
-    {
-      "name": "DebugRemoveBuildLimitSystem",
-      "writeAccess": ["IgnoreBuildLimitComponent"]
-    },
-    {
-      "name": "BlueprintSystem",
-      "writeAccess": ["BlueprintComponent"]
-    },
-    {
-      "name": "DebugAcquireStorageForAllResourcesSystem",
-      "writeAccess": ["StorageCapacityComponent", "StorageCapacityResourcesComponent"]
-    },
+    { "name": "SendUnitsSystem", "writeAccess": ["*"] },
+    { "name": "InvadeSystem", "writeAccess": ["*"] },
+    { "name": "RecallReinforcementsSystem", "writeAccess": ["*"] },
+    { "name": "ReceiveReinforcementSystem", "writeAccess": ["*"] },
+    { "name": "RaidSystem", "writeAccess": ["*"] },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
+    },
+    {
+      "name": "S_ResolveBattleSystem",
+      "writeAccess": ["BattleResultComponent"]
+    },
+    {
+      "name": "S_ResolveRaidUnitsSystem",
+      "writeAccess": ["*"]
+    },
+    {
+      "name": "S_RaidSystem",
+      "writeAccess": ["*"]
+    },
+    {
+      "name": "S_PlaceBuildingTilesSystem",
+      "writeAccess": ["ChildrenComponent", "OwnedByComponent", "PositionComponent"]
+    },
+    {
+      "name": "S_UpdatePlayerStorageSystem",
+      "writeAccess": ["ItemComponent", "P_MaxStorageComponent", "P_MaxResourceStorageComponent", "ScoreComponent"]
+    },
+    {
+      "name": "S_SpendRequiredResourcesSystem",
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
+    },
+
+    { "name": "S_UpdatePlayerSpaceRockSystem", "writeAccess": ["*"] },
+    {
+      "name": "S_UpdatePlayerResourceProductionSystem",
+      "writeAccess": ["ProductionComponent", "ProductionComponent"]
+    },
+    {
+      "name": "S_UpdateUnclaimedResourcesSystem",
+      "writeAccess": ["LastClaimedAtComponent", "ItemComponent", "ScoreComponent"]
+    },
+    {
+      "name": "S_ClaimAllResourcesSystem",
+      "writeAccess": ["ItemComponent", "LastClaimedAtComponent", "ScoreComponent"]
+    },
+    {
+      "name": "S_UpdateOccupiedUtilitySystem",
+      "writeAccess": ["OccupiedUtilityResourceComponent"]
+    },
+    {
+      "name": "S_UpdateUtilityProductionSystem",
+      "writeAccess": ["MaxUtilityComponent"]
     }
   ]
 }

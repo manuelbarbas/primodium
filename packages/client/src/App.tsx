@@ -10,9 +10,10 @@ import { getNetworkLayerConfig } from "./network/config/config";
 import { Network, createNetworkLayer } from "./network/layer";
 
 import AppLoadingState from "./AppLoadingState";
-import { MudProvider } from "./context/MudContext";
+import { MudProvider } from "./hooks/providers/MudProvider";
 import wagmiClient from "./network/wagmi";
-import { ComponentBrowser } from "./components/ComponentBrowser";
+import { ComponentBrowser } from "./components/dev/ComponentBrowser";
+import { ampli } from "./ampli";
 
 const DEV = import.meta.env.VITE_DEV === "true";
 
@@ -39,16 +40,26 @@ export default function App() {
     setupNetworkLayerOnChange(address, activeConnector);
   }, [activeConnector, address]);
 
+  // Amplitude Analytics
+  if (DEV) {
+    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_DEV } });
+  } else {
+    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_PROD } });
+  }
+
   if (networkLayer === undefined) {
     return (
-      <>
-        <div className="flex items-center justify-center h-screen bg-gray-700 text-white font-mono">
+      <div
+        style={{
+          backgroundImage: "url(/img/backgrounds/star.png)",
+        }}
+      >
+        <div className="flex items-center justify-center h-screen text-white font-mono">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Primodium</h1>
             <p className="text-lg">Initializing...</p>
           </div>
         </div>
-      </>
+      </div>
     );
   } else {
     return (

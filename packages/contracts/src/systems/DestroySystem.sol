@@ -4,126 +4,164 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem, IWorld, getAddressById, addressToEntity, entityToAddress } from "systems/internal/PrimodiumSystem.sol";
 
 // components
-import { TileComponent, ID as TileComponentID } from "components/TileComponent.sol";
-import { PathComponent, ID as PathComponentID } from "components/PathComponent.sol";
+import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
+import { BuildingTypeComponent, ID as BuildingTypeComponentID } from "components/BuildingTypeComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "components/BuildingLevelComponent.sol";
-import { IgnoreBuildLimitComponent, ID as IgnoreBuildLimitComponentID } from "components/IgnoreBuildLimitComponent.sol";
-import { BuildingLimitComponent, ID as BuildingLimitComponentID } from "components/BuildingLimitComponent.sol";
-import { LastBuiltAtComponent, ID as LastBuiltAtComponentID } from "components/LastBuiltAtComponent.sol";
-import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
-import { MainBaseInitializedComponent, ID as MainBaseInitializedComponentID } from "components/MainBaseInitializedComponent.sol";
-import { BuildingTilesComponent, ID as BuildingTilesComponentID } from "components/BuildingTilesComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
+import { MainBaseComponent, ID as MainBaseComponentID } from "components/MainBaseComponent.sol";
+import { ChildrenComponent, ID as ChildrenComponentID } from "components/ChildrenComponent.sol";
+import { P_MaxMovesComponent, ID as P_MaxMovesComponentID } from "components/P_MaxMovesComponent.sol";
+import { MaxMovesComponent, ID as MaxMovesComponentID } from "components/MaxMovesComponent.sol";
 
+import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID, ResourceValues } from "components/P_RequiredUtilityComponent.sol";
+import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } from "components/P_UtilityProductionComponent.sol";
+import { P_ProductionDependenciesComponent, ID as P_ProductionDependenciesComponentID } from "components/P_ProductionDependenciesComponent.sol";
+import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
+import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
+import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
 // types
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "components/StorageCapacityComponent.sol";
-import { StorageCapacityResourcesComponent, ID as StorageCapacityResourcesComponentID } from "components/StorageCapacityResourcesComponent.sol";
-import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
-import { RequiredPassiveResourceComponent, ID as RequiredPassiveResourceComponentID, RequiredPassiveResourceData } from "components/RequiredPassiveResourceComponent.sol";
-import { PassiveResourceProductionComponent, ID as PassiveResourceProductionComponentID } from "components/PassiveResourceProductionComponent.sol";
-import { MainBaseID } from "../prototypes/Tiles.sol";
 
-import { ID as PostDestroyPathSystemID } from "./PostDestroyPathSystem.sol";
-import { ID as PostDestroySystemID } from "./PostDestroySystem.sol";
-import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { MainBaseID } from "../prototypes.sol";
+
+import { ID as UpdatePlayerStorageSystemID } from "./S_UpdatePlayerStorageSystem.sol";
+import { ID as UpdateOccupiedUtilitySystemID } from "./S_UpdateOccupiedUtilitySystem.sol";
+import { ID as UpdateUtilityProductionSystemID } from "./S_UpdateUtilityProductionSystem.sol";
+import { ID as S_UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
+import { IOnBuildingSubsystem, EActionType } from "../interfaces/IOnBuildingSubsystem.sol";
 
 import { Coord } from "../types.sol";
 
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
-import { LibStorage } from "../libraries/LibStorage.sol";
-import { LibStorageUpdate } from "../libraries/LibStorageUpdate.sol";
+import { LibUtilityResource } from "../libraries/LibUtilityResource.sol";
+import { LibResource } from "../libraries/LibResource.sol";
 
 uint256 constant ID = uint256(keccak256("system.Destroy"));
 
 contract DestroySystem is PrimodiumSystem {
   constructor(IWorld _world, address _components) PrimodiumSystem(_world, _components) {}
 
-  function checkPassiveResourceRequirementsMetAfterDestroy(uint256 blockType) internal view returns (bool) {
-    PassiveResourceProductionComponent passiveResourceProductionComponent = PassiveResourceProductionComponent(
-      getAddressById(components, PassiveResourceProductionComponentID)
+  function checkUtilityResourceReqsMetAfterDestroy(uint256 buildingEntity) internal view returns (bool) {
+    P_UtilityProductionComponent UtilityProductionComponent = P_UtilityProductionComponent(
+      getAddressById(components, P_UtilityProductionComponentID)
     );
-    if (passiveResourceProductionComponent.has(blockType)) {
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(
+      getAddressById(components, BuildingTypeComponentID)
+    );
+
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(
+      buildingTypeComponent.getValue(buildingEntity),
+      levelComponent.getValue(buildingEntity)
+    );
+    if (UtilityProductionComponent.has(buildingLevelEntity)) {
       return
-        LibStorage.getAvailableSpaceInStorageForResource(
-          StorageCapacityComponent(getAddressById(components, StorageCapacityComponentID)),
-          ItemComponent(getAddressById(components, ItemComponentID)),
+        LibUtilityResource.getAvailableUtilityCapacity(
+          world,
           addressToEntity(msg.sender),
-          passiveResourceProductionComponent.getValue(blockType).ResourceID
-        ) >= passiveResourceProductionComponent.getValue(blockType).ResourceProduction;
+          UtilityProductionComponent.getValue(buildingLevelEntity).resource
+        ) >= UtilityProductionComponent.getValue(buildingLevelEntity).value;
     }
     return true;
   }
 
   function execute(bytes memory args) public override returns (bytes memory) {
     Coord memory coord = abi.decode(args, (Coord));
-    TileComponent tileComponent = TileComponent(getC(TileComponentID));
-    PathComponent pathComponent = PathComponent(getC(PathComponentID));
+    BuildingTypeComponent buildingTypeComponent = BuildingTypeComponent(getC(BuildingTypeComponentID));
     OwnedByComponent ownedByComponent = OwnedByComponent(getC(OwnedByComponentID));
-    BuildingTilesComponent buildingTilesComponent = BuildingTilesComponent(getC(BuildingTilesComponentID));
-
-    BuildingLimitComponent buildingLimitComponent = BuildingLimitComponent(getC(BuildingLimitComponentID));
-    BuildingLevelComponent buildingLevelComponent = BuildingLevelComponent(
-      getAddressById(components, BuildingComponentID)
-    );
+    ChildrenComponent childrenComponent = ChildrenComponent(getC(ChildrenComponentID));
+    LevelComponent levelComponent = LevelComponent(getAddressById(components, LevelComponentID));
 
     uint256 buildingEntity = getBuildingFromCoord(coord);
     uint256 playerEntity = addressToEntity(msg.sender);
-    uint256 buildingType = tileComponent.getValue(buildingEntity);
+    uint256 buildingType = buildingTypeComponent.getValue(buildingEntity);
     require(
-      checkPassiveResourceRequirementsMetAfterDestroy(buildingType),
-      "[DestroySystem] can not destory passive resource production building if requirements are not met, destroy passive resource consumers first or increase passive resource production"
+      checkUtilityResourceReqsMetAfterDestroy(buildingEntity),
+      "[DestroySystem] can not destory Utility resource production building if requirements are not met, destroy Utility resource consumers first or increase Utility resource production"
     );
 
     require(ownedByComponent.getValue(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
-    uint256[] memory buildingTiles = buildingTilesComponent.getValue(buildingEntity);
-    buildingTilesComponent.remove(buildingEntity);
-    for (uint i = 0; i < buildingTiles.length; i++) {
-      clearBuildingTile(ownedByComponent, buildingTiles[i]);
-    }
-    buildingTilesComponent.remove(buildingEntity);
-    // for node tiles, check for paths that start or end at the current location and destroy associated paths
-    if (pathComponent.has(buildingEntity)) {
-      IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
-        msg.sender,
-        buildingEntity
-      );
-      pathComponent.remove(buildingEntity);
-    }
+    require(
+      LibResource.checkCanReduceProduction(world, playerEntity, buildingType, levelComponent.getValue(buildingEntity)),
+      "[DestroySystem] can not destroy building if it results in negative production"
+    );
 
-    uint256[] memory pathWithEndingTile = pathComponent.getEntitiesWithValue(buildingEntity);
-    if (pathWithEndingTile.length > 0) {
-      for (uint256 i = 0; i < pathWithEndingTile.length; i++) {
-        IOnEntitySubsystem(getAddressById(world.systems(), PostDestroyPathSystemID)).executeTyped(
-          msg.sender,
-          pathWithEndingTile[i]
-        );
-        pathComponent.remove(pathWithEndingTile[i]);
-      }
+    uint256[] memory children = childrenComponent.getValue(buildingEntity);
+    childrenComponent.remove(buildingEntity);
+    for (uint i = 0; i < children.length; i++) {
+      clearBuildingTile(ownedByComponent, children[i]);
+    }
+    childrenComponent.remove(buildingEntity);
+    uint256 buildingLevelEntity = LibEncode.hashKeyEntity(buildingType, levelComponent.getValue(buildingEntity));
+
+    //increase production if was consuming any
+    LibResource.updateRequiredProduction(
+      world,
+      playerEntity,
+      buildingType,
+      levelComponent.getValue(buildingEntity),
+      false
+    );
+
+    //Resource Production Update
+    if (P_ProductionComponent(getAddressById(components, P_ProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), S_UpdatePlayerResourceProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
     }
 
     // for main base tile, remove main base initialized.
     if (buildingType == MainBaseID) {
-      MainBaseInitializedComponent mainBaseInitializedComponent = MainBaseInitializedComponent(
-        getC(MainBaseInitializedComponentID)
+      MainBaseComponent mainBaseComponent = MainBaseComponent(getC(MainBaseComponentID));
+      mainBaseComponent.remove(playerEntity);
+    }
+
+    //Utility Production Update
+    if (P_UtilityProductionComponent(getC(P_UtilityProductionComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateUtilityProductionSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
       );
-      mainBaseInitializedComponent.remove(playerEntity);
+    }
+    //Occupied Utility Update
+    if (P_RequiredUtilityComponent(getC(P_RequiredUtilityComponentID)).has(buildingLevelEntity)) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdateOccupiedUtilitySystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+    //Resource Storage Update
+    if (
+      P_MaxResourceStorageComponent(getC(P_MaxResourceStorageComponentID)).has(LibEncode.hashKeyEntity(buildingType, 1))
+    ) {
+      IOnBuildingSubsystem(getAddressById(world.systems(), UpdatePlayerStorageSystemID)).executeTyped(
+        msg.sender,
+        buildingEntity,
+        EActionType.Destroy
+      );
+    }
+    if (P_UnitProductionTypesComponent(getC(P_UnitProductionTypesComponentID)).has(buildingLevelEntity)) {
+      UnitProductionOwnedByComponent(getC(UnitProductionOwnedByComponentID)).remove(buildingEntity);
     }
 
-    if (!IgnoreBuildLimitComponent(getC(IgnoreBuildLimitComponentID)).has(buildingType)) {
-      buildingLimitComponent.set(playerEntity, LibMath.getSafeUint256Value(buildingLimitComponent, playerEntity) - 1);
+    if (P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).has(buildingLevelEntity)) {
+      uint32 movesToSubtract = P_MaxMovesComponent(world.getComponent(P_MaxMovesComponentID)).getValue(
+        buildingLevelEntity
+      );
+      LibMath.subtract(MaxMovesComponent(world.getComponent(MaxMovesComponentID)), playerEntity, movesToSubtract);
     }
-
-    IOnEntitySubsystem(getAddressById(world.systems(), PostDestroySystemID)).executeTyped(msg.sender, buildingEntity);
-
-    buildingLevelComponent.remove(buildingEntity);
-    tileComponent.remove(buildingEntity);
+    levelComponent.remove(buildingEntity);
+    buildingTypeComponent.remove(buildingEntity);
     ownedByComponent.remove(buildingEntity);
-    LastBuiltAtComponent(getC(LastBuiltAtComponentID)).remove(buildingEntity);
-    LastClaimedAtComponent(getC(LastClaimedAtComponentID)).remove(buildingEntity);
-    buildingTilesComponent.remove(buildingEntity);
+    childrenComponent.remove(buildingEntity);
+    PositionComponent(getC(PositionComponentID)).remove(buildingEntity);
     return abi.encode(buildingEntity);
   }
 

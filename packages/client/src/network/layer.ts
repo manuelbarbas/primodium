@@ -1,5 +1,5 @@
 import { createFaucetService } from "@latticexyz/network";
-import { defineComponentSystem, setComponent } from "@latticexyz/recs";
+import { defineComponentSystem } from "@latticexyz/recs";
 import { setupMUDNetwork } from "@latticexyz/std-client";
 import { utils } from "ethers";
 
@@ -7,14 +7,10 @@ import { createPerlin } from "@latticexyz/noise";
 import { NetworkConfig } from "src/util/types";
 import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
 import { SystemTypes } from "../../../contracts/types/SystemTypes";
-import { syncPositionComponent } from "./syncPositionComponent";
-import {
-  contractComponents,
-  offChainComponents,
-  singletonIndex,
-  world,
-} from "./world";
-import setupDevSystems from "./setupDevSystems";
+import { singletonIndex, world } from "./world";
+import chainComponents, { Counter } from "./components/chainComponents";
+import { DoubleCounter } from "./components/clientComponents";
+import setupDevSystems from "./systems/setupDevSystems";
 
 export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
 
@@ -24,10 +20,10 @@ export async function createNetworkLayer(config: NetworkConfig) {
   // component contract (in this case `CounterComponent.sol`)
 
   const { startSync, systems, encoders, components, network, gasPriceInput$ } =
-    await setupMUDNetwork<typeof contractComponents, SystemTypes>(
+    await setupMUDNetwork<typeof chainComponents, SystemTypes>(
       config,
       world,
-      contractComponents,
+      chainComponents,
       SystemAbis
     );
 
@@ -45,12 +41,13 @@ export async function createNetworkLayer(config: NetworkConfig) {
 
   world.registerDisposer(() => clearInterval(intervalId));
 
-  defineComponentSystem(world, components.Counter, (update) => {
-    setComponent(offChainComponents.DoubleCounter, singletonIndex, {
-      value: update.value[0]!.value * 2,
-    });
+  // TODO: move this functionality into runSystems()
+  defineComponentSystem(world, Counter, (update) => {
+    const value = update?.value[0]?.value ?? 0;
+    DoubleCounter.set({ value: value * 2 });
   });
 
+  // TODO: create a createFaucet helper function
   if (!config.devMode) {
     // Faucet setup
     const faucet = config.faucetUrl
@@ -92,9 +89,9 @@ export async function createNetworkLayer(config: NetworkConfig) {
     world,
     systems,
     components,
-    offChainComponents,
     singletonIndex,
     providers: network.providers,
+    blockNumber$: network.blockNumber$,
     defaultWalletAddress: config.defaultWalletAddress,
     perlin,
     dev: setupDevSystems(
@@ -107,19 +104,6 @@ export async function createNetworkLayer(config: NetworkConfig) {
   };
 
   startSync();
-  syncPositionComponent(context);
-
-  setComponent(offChainComponents.BlockNumber, singletonIndex, {
-    value: (await network.providers.get().ws?.getBlockNumber()) ?? 0,
-  });
-
-  const blockListener = network.blockNumber$.subscribe((blockNumber) => {
-    setComponent(offChainComponents.BlockNumber, singletonIndex, {
-      value: blockNumber,
-    });
-  });
-
-  world.registerDisposer(() => blockListener.unsubscribe());
 
   return context;
 }

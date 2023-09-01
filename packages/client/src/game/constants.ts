@@ -1,64 +1,309 @@
+import { EntityID } from "@latticexyz/recs";
 import { BlockType } from "../util/constants";
+import AsteroidTiledMap from "../maps/asteroid_0.7.json";
+import { find } from "lodash";
+export const ASSET_PACK = "/assets/pack.json";
+export namespace AsteroidMap {
+  export const TILE_HEIGHT = 16;
+  export const TILE_WIDTH = 16;
+  export const RENDER_INTERVAL = 30;
+  export const ANIMATION_INTERVAL = 200;
+  export const KEY = "ASTEROID_MAP";
 
-export enum Scenes {
-  Main = "MAIN",
-  Test = "TEST",
+  export enum Scenes {
+    Root = "ROOT",
+    Main = "MAIN",
+  }
+
+  export enum Assets {
+    SpriteAtlas = "sprite-atlas",
+    ResourceTileset = "resource",
+  }
+
+  export enum Tilesets {
+    Terrain = "Terrain",
+    Resource = "Resource",
+    Fog = "Fog",
+  }
+
+  export enum DepthLayers {
+    Terrain = 0,
+    Path = 1,
+    Building = 4000,
+    Marker = 5000,
+    Tooltip = 5001,
+  }
+
+  export enum TerrainTilekeys {
+    Air,
+    Alluvium,
+    Bedrock,
+    Biofilm,
+    Regolith,
+    Sandstone,
+    Water,
+  }
+
+  export enum ResourceTilekeys {
+    Iron,
+    Copper,
+    Lithium,
+    Sulfur,
+  }
+
+  const FogTilekeysGID =
+    find(AsteroidTiledMap.tilesets, {
+      name: "fog",
+    })?.firstgid ?? 0;
+
+  export enum FogTilekeys {
+    Empty = FogTilekeysGID,
+    BottomRight = FogTilekeysGID + 10,
+    OuterBottomRight = FogTilekeysGID + 15,
+    TopLeft = FogTilekeysGID + 2,
+    OuterTopLeft = FogTilekeysGID + 17,
+    TopRight = FogTilekeysGID + 3,
+    OuterTopRight = FogTilekeysGID + 1,
+    Top = FogTilekeysGID + 14,
+    OuterTop = FogTilekeysGID + 16,
+    Left = FogTilekeysGID + 8,
+    OuterLeft = FogTilekeysGID + 6,
+    Right = FogTilekeysGID + 6,
+    OuterRight = FogTilekeysGID + 8,
+    BottomLeft = FogTilekeysGID + 9,
+    OuterBottomLeft = FogTilekeysGID + 13,
+    Bottom = FogTilekeysGID + 16,
+    OuterBottom = FogTilekeysGID + 14,
+    Base = FogTilekeysGID + 7,
+  }
+
+  export const TileKeys = { ...TerrainTilekeys, ...ResourceTilekeys };
+
+  export enum TileAnimationKeys {
+    Water = "Water",
+  }
+
+  export enum SpriteKeys {
+    Mainbase1 = "sprites/mainbase/level1/Main_Base_LVL1_1.png",
+    Mainbase2 = "sprites/mainbase/level2/Main_Base_LVL2_1.png",
+    Mainbase3 = "sprites/mainbase/level3/Main_Base_LVL3_1.png",
+    Mainbase4 = "sprites/mainbase/level4/Main_Base_LVL4_1.png",
+    Mainbase5 = "sprites/mainbase/level5/Main_Base_LVL5_1.png",
+
+    IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
+    IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
+    IronMine3 = "sprites/miners/ironmine/level3/Miner_Iron_LVL3_1.png",
+
+    CopperMine1 = "sprites/miners/coppermine/level1/Miner_Copper_LVL1_1.png",
+    CopperMine2 = "sprites/miners/coppermine/level2/Miner_Copper_LVL2_1.png",
+    CopperMine3 = "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
+
+    LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
+
+    SulfurMine1 = "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
+
+    StorageUnit1 = "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
+    StorageUnit2 = "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
+    StorageUnit3 = "sprites/storage-facility/level3/Storage_Facility_LVL3_1.png",
+
+    IronPlateFactory1 = "sprites/plating-factory/level1/Plating_Factory_LVL1_1.png",
+    IronPlateFactory2 = "sprites/plating-factory/level1/Plating_Factory_LVL1_2.png",
+
+    AlloyFactory1 = "sprites/alloy-factory/level1/Alloy_Factory1.png",
+
+    SolarPanel1 = "sprites/solar-panels/level1/Solar_Panels_LVL1_1.png",
+    SolarPanel2 = "sprites/solar-panels/level2/Solar_Panels_LVL2_1.png",
+
+    PhotovoltaicCellFactory1 = "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
+    PhotovoltaicCellFactory2 = "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
+
+    StarmapperStation1 = "sprites/starmapper-station/level1/Starmapper1.png",
+
+    Hangar1 = "sprites/hangar/level1/Hangar1.png",
+
+    DroneFactory1 = "sprites/drone-factory/normal/Drone_Factory1.png",
+  }
+
+  export enum AnimationKeys {
+    Mainbase1 = "mainbase/level1",
+    Mainbase2 = "mainbase/level2",
+    Mainbase3 = "mainbase/level3",
+    Mainbase4 = "mainbase/level4",
+    Mainbase5 = "mainbase/level5",
+
+    IronMine1 = "ironmine/level1",
+    IronMine2 = "ironmine/level2",
+    IronMine3 = "ironmine/level3",
+
+    CopperMine1 = "coppermine/level1",
+    CopperMine2 = "coppermine/level2",
+    CopperMine3 = "coppermine/level3",
+
+    LithiumMine1 = "lithiummine/level1",
+
+    SulfurMine1 = "sulfurmine/level1",
+
+    StorageUnit3 = "storageunit/level3",
+
+    IronPlateFactory1 = "ironplatefactory/level1",
+    IronPlateFactory2 = "ironplatefactory/level2",
+
+    AlloyFactory1 = "alloyfactory/level1",
+
+    PhotovoltaicCellFactory1 = "pvcfactory/level1",
+    PhotovoltaicCellFactory2 = "pvcfactory/level2",
+
+    SolarPanel1 = "solarpanel/level1",
+    SolarPanel2 = "solarpanel/level2",
+
+    StarmapperStation1 = "starmapperstation/level1",
+
+    Hangar1 = "hangar/level1",
+
+    DroneFactory1 = "dronefactory/level1",
+  }
+
+  export const EntityIDToResourceTilesetKey = {
+    [BlockType.Iron]: ResourceTilekeys.Iron,
+    [BlockType.Copper]: ResourceTilekeys.Copper,
+    [BlockType.Lithium]: ResourceTilekeys.Lithium,
+    [BlockType.Sulfur]: ResourceTilekeys.Sulfur,
+  };
+
+  export const TerrainTilesetIdToEntityId: {
+    [key: number]: EntityID;
+  } = {
+    [TileKeys.Air]: BlockType.Air,
+    [TileKeys.Biofilm]: BlockType.Biofilm,
+    [TileKeys.Sandstone]: BlockType.Sandstone,
+    [TileKeys.Water]: BlockType.Water,
+    [TileKeys.Bedrock]: BlockType.Bedrock,
+    [TileKeys.Regolith]: BlockType.Regolith,
+  };
+
+  export const EntityIDtoSpriteKey = {
+    [BlockType.MainBase]: [
+      SpriteKeys.Mainbase1,
+      SpriteKeys.Mainbase2,
+      SpriteKeys.Mainbase3,
+      SpriteKeys.Mainbase4,
+      SpriteKeys.Mainbase5,
+    ],
+
+    [BlockType.IronMine]: [
+      SpriteKeys.IronMine1,
+      SpriteKeys.IronMine2,
+      SpriteKeys.IronMine3,
+    ],
+
+    [BlockType.CopperMine]: [
+      SpriteKeys.CopperMine1,
+      SpriteKeys.CopperMine2,
+      SpriteKeys.CopperMine3,
+    ],
+
+    [BlockType.SulfurMine]: [SpriteKeys.SulfurMine1],
+
+    [BlockType.LithiumMine]: [SpriteKeys.LithiumMine1],
+
+    [BlockType.StorageUnit]: [
+      SpriteKeys.StorageUnit1,
+      SpriteKeys.StorageUnit2,
+      SpriteKeys.StorageUnit3,
+    ],
+
+    [BlockType.IronPlateFactory]: [
+      SpriteKeys.IronPlateFactory1,
+      SpriteKeys.IronPlateFactory2,
+    ],
+
+    [BlockType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
+
+    [BlockType.PhotovoltaicCellFactory]: [
+      SpriteKeys.PhotovoltaicCellFactory1,
+      SpriteKeys.PhotovoltaicCellFactory2,
+    ],
+
+    [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
+
+    [BlockType.StarmapperStation]: [SpriteKeys.StarmapperStation1],
+
+    [BlockType.Hangar]: [SpriteKeys.Hangar1],
+
+    [BlockType.DroneFactory]: [SpriteKeys.DroneFactory1],
+  };
+
+  // Array index corresponds to lvl
+  export const EntityIDtoAnimationKey = {
+    [BlockType.MainBase]: [
+      AnimationKeys.Mainbase1,
+      AnimationKeys.Mainbase2,
+      AnimationKeys.Mainbase3,
+      AnimationKeys.Mainbase4,
+      AnimationKeys.Mainbase5,
+    ],
+
+    [BlockType.IronMine]: [
+      AnimationKeys.IronMine1,
+      AnimationKeys.IronMine2,
+      AnimationKeys.IronMine3,
+    ],
+    [BlockType.CopperMine]: [
+      AnimationKeys.CopperMine1,
+      AnimationKeys.CopperMine2,
+      AnimationKeys.CopperMine3,
+    ],
+    [BlockType.LithiumMine]: [AnimationKeys.LithiumMine1],
+    [BlockType.SulfurMine]: [AnimationKeys.SulfurMine1],
+    [BlockType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
+
+    [BlockType.IronPlateFactory]: [
+      AnimationKeys.IronPlateFactory1,
+      AnimationKeys.IronPlateFactory2,
+    ],
+
+    [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
+
+    [BlockType.PhotovoltaicCellFactory]: [
+      AnimationKeys.PhotovoltaicCellFactory1,
+      AnimationKeys.PhotovoltaicCellFactory2,
+    ],
+
+    [BlockType.SolarPanel]: [
+      AnimationKeys.SolarPanel1,
+      AnimationKeys.SolarPanel2,
+    ],
+
+    [BlockType.StarmapperStation]: [AnimationKeys.StarmapperStation1],
+
+    [BlockType.Hangar]: [AnimationKeys.Hangar1],
+
+    [BlockType.DroneFactory]: [AnimationKeys.DroneFactory1],
+  };
 }
 
-export const TILE_HEIGHT = 16;
-export const TILE_WIDTH = 16;
-export const RENDER_INTERVAL = 35;
-export const ANIMATION_INTERVAL = 200;
+export namespace BeltMap {
+  export const KEY = "BELT_MAP";
 
-export enum Assets {
-  Pack = "/assets/pack.json",
-  SpriteAtlas = "sprite-atlas",
-  BaseAtlas = "base-atlas",
-  ResourceTileset = "resource-tileset",
-  TerrainTileset = "terrain-tileset",
+  export const DepthLayers = {
+    Asteroid: 1,
+    Paths: 100,
+  };
+
+  export enum Scenes {
+    Root = "ROOT",
+    Main = "MAIN",
+  }
+
+  export enum Assets {
+    GridTileset = "grid-tileset",
+  }
+
+  export enum Tilesets {
+    Grid = "Grid",
+  }
 }
 
-export enum Tilesets {
-  Terrain = "Terrain",
-  Resource = "Resource",
-}
-
-export enum DepthLayers {
-  Terrain = 0,
-  Building = 10,
-  Path = 20,
-  Tooltip = 30,
-  Marker = 40,
-}
-
-export enum TerrainTilekeys {
-  Air,
-  Alluvium,
-  Bedrock,
-  Biofilm,
-  Regolith,
-  Sandstone,
-  Water,
-}
-
-export enum ResourceTilekeys {
-  Bolutite,
-  Copper,
-  Iridium,
-  Iron,
-  Kimberlite,
-  Lithium,
-  Osmium,
-  Titanium,
-  Tungsten,
-  Uraninite,
-}
-
-export const Tilekeys = { ...TerrainTilekeys, ...ResourceTilekeys };
-
-export enum TileAnimationKeys {
-  Water = "Water",
-}
 export enum KeybindActions {
   Up,
   Down,
@@ -91,221 +336,8 @@ export enum KeybindActions {
   Esc,
   Debug,
   DeleteBuilding,
-  DeletePath,
   Modifier,
   ToggleUI,
   NextHotbar,
   PrevHotbar,
 }
-
-export enum SpriteKeys {
-  Mainbase1 = "sprites/mainbase/level1/bigmainbase-level1-0.png",
-  Mainbase2 = "sprites/mainbase/level2/bigmainbase-level2-0.png",
-  Mainbase3 = "sprites/mainbase/level3/bigmainbase-level3-0.png",
-  Mainbase4 = "sprites/mainbase/level4/bigmainbase-level4-0.png",
-  Mainbase5 = "sprites/mainbase/level5/bigmainbase-level5-0.png",
-
-  IronMine1 = "sprites/ironmine/level1/iron-miner-0.png",
-  IronMine2 = "sprites/ironmine/level2/iron-miner-level2-0.png",
-  IronMine3 = "sprites/ironmine/level3/iron-miner-level3-0.png",
-
-  CopperMine1 = "sprites/coppermine/level1/copper-miner-0.png",
-  CopperMine2 = "sprites/coppermine/level2/copper-miner-level2-0.png",
-  CopperMine3 = "sprites/coppermine/level3/copper-miner-level3-0.png",
-
-  LithiumMine1 = "sprites/lithiummine/level1/lithium-miner-0.png",
-  LithiumMine2 = "sprites/lithiummine/level2/lithium-miner-level2-0.png",
-  LithiumMine3 = "sprites/lithiummine/level3/lithium-miner-level3-0.png",
-
-  StorageUnit1 = "sprites/storageunit/level1/storagefacility-level1-0.png",
-  StorageUnit2 = "sprites/storageunit/level2/storagefacility-level2-0.png",
-
-  IronPlateFactory1 = "sprites/ironplatefactory/level1/platingfactory-level1-0.png",
-  IronPlateFactory2 = "sprites/ironplatefactory/level2/platingfactory-level2-0.png",
-
-  AlloyFactory1 = "sprites/alloyfactory/level1/alloyfactory-level1-0.png",
-
-  PropulsionFuelFactory = "sprites/propulsionfuelfactory/propulsionfuelfactory-0.png",
-
-  SolarPanel1 = "sprites/solarpanel/level1/solarpanel-level1-0.png",
-  SolarPanel2 = "sprites/solarpanel/level2/solarpanel-level2-0.png",
-
-  PhotovoltaicCellFactory1 = "sprites/pvcfactory/level1/pvcfactory-level1-0.png",
-  PhotovoltaicCellFactory2 = "sprites/pvcfactory/level2/pvcfactory-level2-0.png",
-
-  Node = "sprites/node/node-0.png",
-  BasicMiner = "sprites/minerdrill/minerdrill-0.png",
-  Miner = "sprites/miner/miner.png",
-  BasicBatteryFactory = "sprites/basicbatteryfactory/basicbatteryfactory-0.png",
-  AdvancedBatteryFactory = "sprites/advancedbatteryfactory/advancedbatteryfactory-0.png",
-  BulletFactory = "sprites/bulletfactory/bulletfactory.png",
-  DenseMetalRefinery = "sprites/densemetalrefinery/densemetalrefinery-0.png",
-  HardenedDrill = "sprites/hardeneddrill/hardeneddrill-0.png",
-  HighTempFoundry = "sprites/hightempfoundry/hightempfoundry-0.png",
-  IridiumDrillBitFactory = "sprites/iridiumdrillbitfactory/iridiumdrillbitfactory-0.png",
-  KimberliteCatalyst = "sprites/kimberlitecatalyst/kimberlitecatalyst-0.png",
-  KineticMissileFactory = "kineticmissilefactory/kineticmissilefactory.png",
-  LaserFactory = "sprites/laserfactory/laserfactory-0.png",
-  MissileLaunchComplex = "sprites/missilelaunchcomplex/missilelaunchcomplex-0.png",
-  PlatingFactory = "sprites/platingfactory/platingfactory-0.png",
-  PrecisionMachineryFactory = "sprites/precisionmachineryfactory/precisionmachineryfactory-0.png",
-  PrecisionPneumaticDrill = "sprites/precisionpneumaticdrill/precisionpneumaticdrill-0.png",
-  ProjectileLauncher = "sprites/projectilelauncher/projectilelauncher.png",
-  Silo = "sprites/silo/silo.png",
-  ThermobaricMissileFactory = "sprites/thermobaricmissilefactory/thermobaricmissilefactory.png",
-  ThermobaricWarheadFactory = "sprites/thermobaricwarheadfactory/thermobaricwarheadfactory.png",
-}
-
-export enum AnimationKeys {
-  IronMine1 = "ironmine/level1",
-  IronMine2 = "ironmine/level2",
-
-  CopperMine1 = "coppermine/level1",
-  CopperMine2 = "coppermine/level2",
-
-  LithiumMine1 = "lithiummine/level1",
-  LithiumMine2 = "lithiummine/level2",
-
-  StorageUnit1 = "storageunit/level1",
-  StorageUnit2 = "storageunit/level2",
-
-  IronPlateFactory1 = "ironplatefactory/level1",
-  IronPlateFactory2 = "ironplatefactory/level2",
-
-  AlloyFactory1 = "alloyfactory/level1",
-
-  PhotovoltaicCellFactory1 = "pvcfactory/level1",
-  PhotovoltaicCellFactory2 = "pvcfactory/level2",
-
-  Node = "node",
-  AdvancedBatteryFactory = "advancedbatteryfactory",
-  BasicBatteryFactory = "basicbatteryfactory",
-  BasicMiner = "minerdrill",
-  DenseMetalRefinery = "densemetalrefinery",
-  HardenedDrill = "hardeneddrill",
-  Hightempfoundry = "hightempfoundry",
-  IridiumDrillbitFactory = "iridiumdrillbitfactory",
-  KimberliteCatalyst = "kimberlitecatalyst",
-  LaserFactory = "laserfactory",
-  MissileLaunchComplex = "missilelaunchcomplex",
-  PlatingFactory = "platingfactory",
-  PrecisionMachineryFactory = "precisionmachineryfactory",
-  PrecisionPneumaticDrill = "precisionpneumaticdrill",
-}
-
-export const EntityIdtoTilesetId = {
-  [BlockType.Air]: Tilekeys.Air,
-  [BlockType.Iron]: Tilekeys.Iron,
-  [BlockType.Biofilm]: Tilekeys.Biofilm,
-  [BlockType.Sandstone]: Tilekeys.Sandstone,
-  [BlockType.Water]: Tilekeys.Water,
-  [BlockType.Bedrock]: Tilekeys.Bedrock,
-  [BlockType.Regolith]: Tilekeys.Regolith,
-  [BlockType.Copper]: Tilekeys.Copper,
-  [BlockType.Lithium]: Tilekeys.Lithium,
-  [BlockType.Titanium]: Tilekeys.Titanium,
-  [BlockType.Osmium]: Tilekeys.Osmium,
-  [BlockType.Tungsten]: Tilekeys.Tungsten,
-  [BlockType.Iridium]: Tilekeys.Iridium,
-  [BlockType.Kimberlite]: Tilekeys.Kimberlite,
-  [BlockType.Uraninite]: Tilekeys.Uraninite,
-  [BlockType.Bolutite]: Tilekeys.Bolutite,
-};
-
-export const EntityIDtoSpriteKey = {
-  [BlockType.MainBase]: [
-    SpriteKeys.Mainbase1,
-    SpriteKeys.Mainbase2,
-    SpriteKeys.Mainbase3,
-    SpriteKeys.Mainbase4,
-    SpriteKeys.Mainbase5,
-  ],
-
-  [BlockType.IronMine]: [
-    SpriteKeys.IronMine1,
-    SpriteKeys.IronMine2,
-    SpriteKeys.IronMine3,
-  ],
-  [BlockType.CopperMine]: [
-    SpriteKeys.CopperMine1,
-    SpriteKeys.CopperMine2,
-    SpriteKeys.CopperMine3,
-  ],
-  [BlockType.LithiumMine]: [SpriteKeys.BasicMiner],
-  [BlockType.StorageUnit]: [SpriteKeys.Node],
-
-  [BlockType.StorageUnit]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2],
-  [BlockType.IronPlateFactory]: [
-    SpriteKeys.IronPlateFactory1,
-    SpriteKeys.IronPlateFactory2,
-  ],
-  [BlockType.AlloyFactory]: [SpriteKeys.AlloyFactory1],
-  [BlockType.PhotovoltaicCellFactory]: [
-    SpriteKeys.PhotovoltaicCellFactory1,
-    SpriteKeys.PhotovoltaicCellFactory2,
-  ],
-  [BlockType.PropulsionFuelFactory]: [SpriteKeys.PropulsionFuelFactory],
-  [BlockType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
-  [BlockType.PropulsionFuelFactory]: [SpriteKeys.PropulsionFuelFactory],
-
-  [BlockType.Node]: [SpriteKeys.Node],
-
-  [BlockType.Miner]: [SpriteKeys.Miner],
-  [BlockType.BasicBatteryFactory]: [SpriteKeys.BasicBatteryFactory],
-  [BlockType.AdvancedBatteryFactory]: [SpriteKeys.AdvancedBatteryFactory],
-  [BlockType.BulletFactory]: [SpriteKeys.BulletFactory],
-  [BlockType.DenseMetalRefinery]: [SpriteKeys.DenseMetalRefinery],
-  [BlockType.HardenedDrill]: [SpriteKeys.HardenedDrill],
-  [BlockType.HighTempFoundry]: [SpriteKeys.HighTempFoundry],
-  [BlockType.IridiumDrillbitFactory]: [SpriteKeys.IridiumDrillBitFactory],
-  [BlockType.KimberliteCatalystFactory]: [SpriteKeys.KimberliteCatalyst],
-  [BlockType.KineticMissileFactory]: [SpriteKeys.KineticMissileFactory],
-  [BlockType.HighEnergyLaserFactory]: [SpriteKeys.LaserFactory],
-  [BlockType.MissileLaunchComplex]: [SpriteKeys.MissileLaunchComplex],
-  [BlockType.PlatingFactory]: [SpriteKeys.PlatingFactory],
-  [BlockType.PrecisionMachineryFactory]: [SpriteKeys.PrecisionMachineryFactory],
-  [BlockType.PrecisionPneumaticDrill]: [SpriteKeys.PrecisionPneumaticDrill],
-  [BlockType.ProjectileLauncher]: [SpriteKeys.ProjectileLauncher],
-  [BlockType.Silo]: [SpriteKeys.Silo],
-  [BlockType.ThermobaricMissileFactory]: [SpriteKeys.ThermobaricMissileFactory],
-  [BlockType.ThermobaricWarheadFactory]: [SpriteKeys.ThermobaricWarheadFactory],
-};
-
-// Array index corresponds to lvl
-export const EntityIDtoAnimationKey = {
-  [BlockType.Node]: [AnimationKeys.Node],
-  [BlockType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2],
-  [BlockType.CopperMine]: [
-    AnimationKeys.CopperMine1,
-    AnimationKeys.CopperMine2,
-  ],
-  [BlockType.LithiumMine]: [
-    AnimationKeys.LithiumMine1,
-    AnimationKeys.LithiumMine2,
-  ],
-  [BlockType.StorageUnit]: [undefined, AnimationKeys.StorageUnit2],
-  [BlockType.IronPlateFactory]: [
-    AnimationKeys.IronPlateFactory1,
-    AnimationKeys.IronPlateFactory2,
-  ],
-  [BlockType.AlloyFactory]: [AnimationKeys.AlloyFactory1],
-  [BlockType.PhotovoltaicCellFactory]: [
-    AnimationKeys.PhotovoltaicCellFactory1,
-    AnimationKeys.PhotovoltaicCellFactory2,
-  ],
-  [BlockType.Miner]: [AnimationKeys.BasicMiner],
-  [BlockType.BasicBatteryFactory]: [AnimationKeys.BasicBatteryFactory],
-  [BlockType.AdvancedBatteryFactory]: [AnimationKeys.AdvancedBatteryFactory],
-  [BlockType.BulletFactory]: [AnimationKeys.BasicBatteryFactory],
-  [BlockType.DenseMetalRefinery]: [AnimationKeys.DenseMetalRefinery],
-  [BlockType.HardenedDrill]: [AnimationKeys.HardenedDrill],
-  [BlockType.HighTempFoundry]: [AnimationKeys.Hightempfoundry],
-  [BlockType.IridiumDrillbitFactory]: [AnimationKeys.IridiumDrillbitFactory],
-  [BlockType.KimberliteCatalystFactory]: [AnimationKeys.KimberliteCatalyst],
-  [BlockType.HighEnergyLaserFactory]: [AnimationKeys.LaserFactory],
-  [BlockType.MissileLaunchComplex]: [AnimationKeys.MissileLaunchComplex],
-  [BlockType.PrecisionMachineryFactory]: [
-    AnimationKeys.PrecisionMachineryFactory,
-  ],
-  [BlockType.PrecisionPneumaticDrill]: [AnimationKeys.PrecisionPneumaticDrill],
-};

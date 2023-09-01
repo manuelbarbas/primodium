@@ -7,70 +7,47 @@ import "../PrimodiumTest.t.sol";
 import { addressToEntity, entityToAddress } from "solecs/utils.sol";
 
 import { BuildSystem, ID as BuildSystemID } from "../../systems/BuildSystem.sol";
-import { BuildPathSystem, ID as BuildPathSystemID } from "../../systems/BuildPathSystem.sol";
-import { DestroyPathSystem, ID as DestroyPathSystemID } from "../../systems/DestroyPathSystem.sol";
 import { ClaimFromMineSystem, ID as ClaimFromMineSystemID } from "../../systems/ClaimFromMineSystem.sol";
-import { UpgradeSystem, ID as UpgradeSystemID } from "../../systems/UpgradeSystem.sol";
+import { UpgradeBuildingSystem, ID as UpgradeBuildingSystemID } from "../../systems/UpgradeBuildingSystem.sol";
 import { DestroySystem, ID as DestroySystemID } from "../../systems/DestroySystem.sol";
-import { DebugRemoveBuildingRequirementsSystem, ID as DebugRemoveBuildingRequirementsSystemID } from "../../systems/DebugRemoveBuildingRequirementsSystem.sol";
-import { DebugRemoveUpgradeRequirementsSystem, ID as DebugRemoveUpgradeRequirementsSystemID } from "../../systems/DebugRemoveUpgradeRequirementsSystem.sol";
-import { DebugAcquireStorageForAllResourcesSystem, ID as DebugAcquireStorageForAllResourcesSystemID } from "../../systems/DebugAcquireStorageForAllResourcesSystem.sol";
-import { PathComponent, ID as PathComponentID } from "../../components/PathComponent.sol";
+import { ComponentDevSystem, ID as ComponentDevSystemID } from "../../systems/ComponentDevSystem.sol";
 import { ItemComponent, ID as ItemComponentID } from "../../components/ItemComponent.sol";
-import { BuildingLevelComponent, ID as BuildingComponentID } from "../../components/BuildingLevelComponent.sol";
-import { MineComponent, ID as MineComponentID } from "../../components/MineComponent.sol";
-import { StorageCapacityComponent, ID as StorageCapacityComponentID } from "../../components/StorageCapacityComponent.sol";
-// import { MainBaseID, DebugNodeID, RegolithID, IronID, LithiumMinerID } from "../../prototypes/Tiles.sol";
-
-import { MainBaseID } from "../../prototypes/Tiles.sol";
-import { DebugCopperMineID, DebugIronMineID, DebugIronPlateFactoryID, DebugStorageBuildingID } from "../../libraries/LibDebugInitializer.sol";
-import { WaterID, RegolithID, SandstoneID, AlluviumID, BiofilmID, BedrockID, AirID, CopperID, LithiumID, IronID, TitaniumID, IridiumID, OsmiumID, TungstenID, KimberliteID, UraniniteID, BolutiteID } from "../../prototypes/Tiles.sol";
-import { IronPlateCraftedItemID } from "../../prototypes/Keys.sol";
-import { BuildingKey } from "../../prototypes/Keys.sol";
+import { LevelComponent, ID as BuildingComponentID } from "../../components/LevelComponent.sol";
+import { P_MaxStorageComponent, ID as P_MaxStorageComponentID } from "../../components/P_MaxStorageComponent.sol";
+import { P_RequiredResourcesComponent, ID as P_RequiredResourcesComponentID } from "../../components/P_RequiredResourcesComponent.sol";
+import "../../prototypes.sol";
 import { LibTerrain } from "../../libraries/LibTerrain.sol";
 import { LibEncode } from "../../libraries/LibEncode.sol";
 import { LibStorage } from "../../libraries/LibStorage.sol";
 import { Coord } from "../../types.sol";
 
-contract Storage is MudTest {
-  constructor() MudTest(new Deploy()) {}
+contract Storage is PrimodiumTest {
+  constructor() PrimodiumTest() {}
 
   function setUp() public override {
     super.setUp();
-    vm.startPrank(deployer);
-    vm.stopPrank();
+    spawn(alice);
   }
 
   function testStorage() public {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    StorageCapacityComponent storageComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    Coord memory coord = getIronCoord(alice);
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
     // START CLAIMING
     vm.roll(0);
 
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
-    buildPathSystem.executeTyped(coord, mainBaseCoord);
-    console.log("built path from IronMine to main base");
 
-    uint256 ironCapacity = LibStorage.getAvailableSpaceInStorageForResource(
-      storageComponent,
-      itemComponent,
-      addressToEntity(alice),
-      IronID
-    );
+    uint256 ironCapacity = LibStorage.getResourceStorageSpace(world, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
 
     vm.roll(ironCapacity);
@@ -79,17 +56,17 @@ contract Storage is MudTest {
     assertTrue(itemComponent.has(hashedAliceKey), "Alice should have iron");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    vm.roll(10);
+    vm.roll(ironCapacity + 10);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    vm.roll(20);
+    vm.roll(ironCapacity + 20);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    vm.roll(30);
+    vm.roll(ironCapacity + 30);
     claimSystem.executeTyped(mainBaseCoord);
     console.log("claimed from main base after capacity full");
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
@@ -101,23 +78,15 @@ contract Storage is MudTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    StorageCapacityComponent storageComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    Coord memory coord = getIronCoord(alice);
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
-    uint256 ironCapacity = LibStorage.getEntityStorageCapacityForResource(
-      storageComponent,
-      addressToEntity(alice),
-      IronID
-    );
+    uint256 ironCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
     // START CLAIMING
     uint256 currBlockNum = 0;
@@ -125,8 +94,6 @@ contract Storage is MudTest {
 
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
-    buildPathSystem.executeTyped(coord, mainBaseCoord);
-    console.log("built path from IronMine to main base");
 
     console.log("alice has ironCapacity of %s", ironCapacity);
 
@@ -145,17 +112,17 @@ contract Storage is MudTest {
     console.log("claimed from main base after capacity full %s", itemComponent.getValue(hashedAliceKey));
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
-    UpgradeSystem upgradeSystem = UpgradeSystem(system(UpgradeSystemID));
-    DebugRemoveUpgradeRequirementsSystem removeUpgradeRequirementsSystem = DebugRemoveUpgradeRequirementsSystem(
-      system(DebugRemoveUpgradeRequirementsSystemID)
+    UpgradeBuildingSystem upgradeBuildingSystem = UpgradeBuildingSystem(system(UpgradeBuildingSystemID));
+
+    ComponentDevSystem componentDevSystem = ComponentDevSystem(system(ComponentDevSystemID));
+    componentDevSystem.executeTyped(
+      P_RequiredResourcesComponentID,
+      LibEncode.hashKeyEntity(MainBaseID, 2),
+      abi.encode()
     );
-    removeUpgradeRequirementsSystem.executeTyped(MainBaseID);
-    upgradeSystem.executeTyped(mainBaseCoord);
-    uint256 newIronCapacity = LibStorage.getEntityStorageCapacityForResource(
-      storageComponent,
-      addressToEntity(alice),
-      IronID
-    );
+
+    upgradeBuildingSystem.executeTyped(mainBaseCoord);
+    uint256 newIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("alice has newIronCapacity of %s", newIronCapacity);
     currBlockNum += 10;
     vm.roll(currBlockNum);
@@ -202,23 +169,15 @@ contract Storage is MudTest {
     vm.startPrank(alice);
 
     BuildSystem buildSystem = BuildSystem(system(BuildSystemID));
-    BuildPathSystem buildPathSystem = BuildPathSystem(system(BuildPathSystemID));
     ClaimFromMineSystem claimSystem = ClaimFromMineSystem(system(ClaimFromMineSystemID));
     ItemComponent itemComponent = ItemComponent(component(ItemComponentID));
-    StorageCapacityComponent storageComponent = StorageCapacityComponent(component(StorageCapacityComponentID));
     // TEMP: tile -5, 2 has iron according to current generation seed
-    Coord memory coord = Coord({ x: -5, y: 2 });
-    assertEq(LibTerrain.getTopLayerKey(coord), IronID, "Tile should have iron");
+    Coord memory coord = getIronCoord(alice);
+    assertEq(LibTerrain.getResourceByCoord(world, coord), IronID, "Tile should have iron");
 
-    Coord memory mainBaseCoord = Coord({ x: 0, y: 0 });
+    Coord memory mainBaseCoord = getMainBaseCoord(alice);
 
-    buildSystem.executeTyped(MainBaseID, mainBaseCoord);
-    console.log("built main base");
-    uint256 ironCapacity = LibStorage.getEntityStorageCapacityForResource(
-      storageComponent,
-      addressToEntity(alice),
-      IronID
-    );
+    uint256 ironCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("alice has ironCapacity of %s", ironCapacity);
     // START CLAIMING
     uint256 currBlockNum = 0;
@@ -226,8 +185,6 @@ contract Storage is MudTest {
 
     buildSystem.executeTyped(DebugIronMineID, coord);
     console.log("built IronMineID");
-    buildPathSystem.executeTyped(coord, mainBaseCoord);
-    console.log("built path from IronMine to main base");
 
     console.log("alice has ironCapacity of %s", ironCapacity);
 
@@ -242,13 +199,9 @@ contract Storage is MudTest {
     assertEq(itemComponent.getValue(hashedAliceKey), ironCapacity, "Alice should have max storage capacity iron");
 
     console.log("building storage ");
-    Coord memory storageBuildingCoord = Coord({ x: 1, y: 1 });
+    Coord memory storageBuildingCoord = getCoord1(alice);
     buildSystem.executeTyped(DebugStorageBuildingID, storageBuildingCoord);
-    uint256 newIronCapacity = LibStorage.getEntityStorageCapacityForResource(
-      storageComponent,
-      addressToEntity(alice),
-      IronID
-    );
+    uint256 newIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
     console.log("after building storage building alice has newIronCapacity of %s", newIronCapacity);
     assertTrue(newIronCapacity > ironCapacity, "new capacity should be greater then old capacity");
     currBlockNum += newIronCapacity;
@@ -266,11 +219,7 @@ contract Storage is MudTest {
     DestroySystem destroySystem = DestroySystem(system(DestroySystemID));
     destroySystem.executeTyped(storageBuildingCoord);
     console.log("destroyed storage building");
-    uint256 afterDestroyIronCapacity = LibStorage.getEntityStorageCapacityForResource(
-      storageComponent,
-      addressToEntity(alice),
-      IronID
-    );
+    uint256 afterDestroyIronCapacity = LibStorage.getResourceMaxStorage(world, addressToEntity(alice), IronID);
 
     console.log("after destroying storage building alice has Iron capacity of %s", afterDestroyIronCapacity);
     console.log(
@@ -283,6 +232,7 @@ contract Storage is MudTest {
       afterDestroyIronCapacity,
       "Alice should have lost excess iron from storage decrease"
     );
+
     vm.stopPrank();
   }
 }

@@ -2,38 +2,44 @@
 pragma solidity >=0.8.0;
 
 import { IWorld } from "solecs/System.sol";
+import { SingletonID } from "solecs/SingletonID.sol";
 import { getAddressById, addressToEntity, entityToAddress } from "solecs/utils.sol";
 
-import { RequiredResearchComponent, ID as RequiredResearchComponentID } from "components/RequiredResearchComponent.sol";
-import { ResearchComponent, ID as ResearchComponentID } from "components/ResearchComponent.sol";
-import { LastResearchedAtComponent, ID as LastResearchedAtComponentID } from "components/LastResearchedAtComponent.sol";
+import { P_RequiredResearchComponent, ID as P_RequiredResearchComponentID } from "components/P_RequiredResearchComponent.sol";
+import { HasResearchedComponent, ID as HasResearchedComponentID } from "components/HasResearchedComponent.sol";
+import { DimensionsComponent, ID as DimensionsComponentID } from "components/DimensionsComponent.sol";
+import { LevelComponent, ID as LevelComponentID } from "components/LevelComponent.sol";
 
-import { LibMath } from "./LibMath.sol";
-import { LibEncode } from "./LibEncode.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
+
+import { Bounds, Dimensions } from "src/types.sol";
+import { ExpansionResearch } from "src/prototypes.sol";
 
 library LibResearch {
-  // ###########################################################################
   // Check that the user has researched a given component
-
   function hasResearched(IWorld world, uint256 entity, uint256 playerEntity) internal view returns (bool) {
-    RequiredResearchComponent requiredResearchComponent = RequiredResearchComponent(
-      getAddressById(world.components(), RequiredResearchComponentID)
+    P_RequiredResearchComponent requiredResearchComponent = P_RequiredResearchComponent(
+      getAddressById(world.components(), P_RequiredResearchComponentID)
     );
-    ResearchComponent researchComponent = ResearchComponent(getAddressById(world.components(), ResearchComponentID));
 
     if (!requiredResearchComponent.has(entity)) return true;
 
-    return researchComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
+    HasResearchedComponent hasResearchedComponent = HasResearchedComponent(
+      getAddressById(world.components(), HasResearchedComponentID)
+    );
+    return
+      hasResearchedComponent.has(LibEncode.hashKeyEntity(requiredResearchComponent.getValue(entity), playerEntity));
   }
 
-  // ###########################################################################
-  // Write last researched time into LastResearchedComponent
-
-  function setResearchTime(IWorld world, uint256 researchKey, uint256 entity) internal {
-    LastResearchedAtComponent lastResearchedAtComponent = LastResearchedAtComponent(
-      getAddressById(world.components(), LastResearchedAtComponentID)
-    );
-    uint256 hashedResearchKey = LibEncode.hashKeyEntity(researchKey, entity);
-    lastResearchedAtComponent.set(hashedResearchKey, block.number);
+  function checkMainBaseLevelRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entity
+  ) internal view returns (bool) {
+    LevelComponent levelComponent = LevelComponent(getAddressById(world.components(), LevelComponentID));
+    if (!levelComponent.has(entity)) return true;
+    uint256 mainLevel = LibBuilding.getBaseLevel(world, playerEntity);
+    return mainLevel >= levelComponent.getValue(entity);
   }
 }
