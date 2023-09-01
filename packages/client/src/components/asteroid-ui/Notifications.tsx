@@ -22,28 +22,35 @@ const Notifications: React.FC = () => {
 
   return (
     <div className="fixed bottom-8 left-8 z-50 p-4 w-96 flex flex-col gap-4 z-[1001]">
-      {notifications.id.map((id, index) => {
+      {notifications.ids.map((id, index) => {
         if (index > 6) return null;
         const notification: Notification = {
           id,
+          entity: notifications.entities[index],
           timestamp: notifications.timestamp[index],
           type: notifications.type[index] as NotificationType,
         };
 
         if (notification.type == "battle")
           return (
-            <BattleNotification id={id} key={`${notifications.id}-${index}`} />
+            <BattleNotification
+              id={notification.entity}
+              key={`${notification.id}-${index}`}
+            />
           );
         if (notification.type == "arrival-transit") {
           return (
-            <TransitNotification id={id} key={`${notifications.id}-${index}`} />
+            <TransitNotification
+              id={notification.entity}
+              key={`${notification.id}-${index}`}
+            />
           );
         }
         if (notification.type == "arrival-orbit") {
           return (
             <OrbitingNotification
-              id={id}
-              key={`${notifications.id}-${index}`}
+              id={notification.entity}
+              key={`${notification.id}-${index}`}
             />
           );
         }
@@ -101,6 +108,7 @@ const OrbitingNotification: React.FC<{
   id: EntityID;
 }> = ({ id }) => {
   const arrival = Arrival.getWithId(id);
+  console.log("arrival:", arrival);
   if (!arrival) return null;
 
   const destination = Position.get(arrival.destination, {
