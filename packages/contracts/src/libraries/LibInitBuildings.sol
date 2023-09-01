@@ -1383,7 +1383,7 @@ library LibInitBuildings {
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 100000 });
-    resourceValues[0] = ResourceValue({ resource: IridiumResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IridiumResourceItemID, value: 20000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
     resourceValues = new ResourceValue[](2);
