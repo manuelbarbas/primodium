@@ -2,11 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { EntityID } from "@latticexyz/recs";
 
 import { getRecipe } from "../../../util/resource";
-import {
-  BlockIdToKey,
-  ResearchImage,
-  ResourceImage,
-} from "../../../util/constants";
+import { ResearchImage, ResourceImage } from "../../../util/constants";
 import { useAccount } from "../../../hooks/useAccount";
 import { hashAndTrimKeyEntity } from "../../../util/encode";
 import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
@@ -26,6 +22,7 @@ import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
 import { useMud } from "src/hooks";
 import Spinner from "src/components/shared/Spinner";
+import { getBlockTypeName } from "src/util/common";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {
@@ -138,7 +135,7 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
                 <div className="mt-2 flex justify-center items-center text-sm">
                   {recipe.map((resource) => {
                     const resourceImage = ResourceImage.get(resource.id)!;
-                    const resourceName = BlockIdToKey[resource.id];
+                    const resourceName = getBlockTypeName(resource.id);
                     return (
                       <ResourceIconTooltip
                         key={resource.id}

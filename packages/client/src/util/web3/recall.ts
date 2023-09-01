@@ -14,7 +14,9 @@ export const recall = async (rockEntity: EntityID, network: Network) => {
   setTransactionLoading(true);
 
   const receipt = await execute(
-    systems["system.RecallReinforcements"].executeTyped(rockEntity),
+    systems["system.RecallReinforcements"].executeTyped(rockEntity, {
+      gasLimit: 4_000_000,
+    }),
     providers,
     setNotification
   );

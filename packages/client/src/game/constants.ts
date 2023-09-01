@@ -88,6 +88,7 @@ export namespace AsteroidMap {
     Mainbase2 = "sprites/mainbase/level2/Main_Base_LVL2_1.png",
     Mainbase3 = "sprites/mainbase/level3/Main_Base_LVL3_1.png",
     Mainbase4 = "sprites/mainbase/level4/Main_Base_LVL4_1.png",
+    Mainbase5 = "sprites/mainbase/level5/Main_Base_LVL5_1.png",
 
     IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
     IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
@@ -128,6 +129,7 @@ export namespace AsteroidMap {
     Mainbase2 = "mainbase/level2",
     Mainbase3 = "mainbase/level3",
     Mainbase4 = "mainbase/level4",
+    Mainbase5 = "mainbase/level5",
 
     IronMine1 = "ironmine/level1",
     IronMine2 = "ironmine/level2",
@@ -185,6 +187,7 @@ export namespace AsteroidMap {
       SpriteKeys.Mainbase2,
       SpriteKeys.Mainbase3,
       SpriteKeys.Mainbase4,
+      SpriteKeys.Mainbase5,
     ],
 
     [BlockType.IronMine]: [
@@ -237,6 +240,7 @@ export namespace AsteroidMap {
       AnimationKeys.Mainbase2,
       AnimationKeys.Mainbase3,
       AnimationKeys.Mainbase4,
+      AnimationKeys.Mainbase5,
     ],
 
     [BlockType.IronMine]: [

@@ -5,6 +5,7 @@ import { FaTrash } from "react-icons/fa";
 import Spinner from "src/components/shared/Spinner";
 import { useMud } from "src/hooks";
 import {
+  AsteroidType,
   OwnedBy,
   ReversePosition,
 } from "src/network/components/chainComponents";
@@ -16,7 +17,7 @@ import { BackgroundImage } from "src/util/constants";
 import { encodeCoord } from "src/util/encode";
 import { ActiveButton } from "src/util/types";
 import { send as sendUnits } from "src/util/web3/send";
-import { ESendType } from "src/util/web3/types";
+import { ESendType, ESpaceRockType } from "src/util/web3/types";
 
 export const FleetPane: React.FC<{
   setShowHangar: React.Dispatch<React.SetStateAction<boolean>>;
@@ -85,6 +86,14 @@ export const FleetPane: React.FC<{
 
     Send.reset();
   };
+
+  const asteroidType = useMemo(() => {
+    const destinationEntityId = ReversePosition.get(
+      encodeCoord(destination ?? { x: 0, y: 0 })
+    )?.value;
+
+    return AsteroidType.get(destinationEntityId)?.value;
+  }, [destination]);
 
   return (
     <motion.div
@@ -219,7 +228,13 @@ export const FleetPane: React.FC<{
                   </button>
                   <button
                     className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all"
-                    onClick={() => sendFleet(ESendType.INVADE)}
+                    onClick={() =>
+                      sendFleet(
+                        asteroidType === ESpaceRockType.Asteroid
+                          ? ESendType.RAID
+                          : ESendType.INVADE
+                      )
+                    }
                   >
                     {transactionLoading ? <Spinner /> : "INVADE"}
                   </button>

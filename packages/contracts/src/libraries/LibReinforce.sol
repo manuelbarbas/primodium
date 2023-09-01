@@ -19,35 +19,15 @@ import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { Coord, Arrival, ArrivalUnit, ESendType } from "src/types.sol";
 
 library LibReinforce {
-  function receiveReinforcements(IWorld world, uint256 receiver, uint256 rockEntity) internal {
-    uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(receiver, rockEntity);
-    OwnedByComponent ownedByComponent = OwnedByComponent(world.getComponent(OwnedByComponentID));
-    require(
-      ownedByComponent.has(rockEntity),
-      "[Reinforcement]: request reinforcement can not be done on a rock that is not owned"
-    );
-    require(
-      ownedByComponent.getValue(rockEntity) == receiver,
-      "[Reinforcement]: only the owner of a rock can receive reinforcements"
-    );
-
-    uint256 size = LibMath.getSafe(
-      ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)),
-      playerAsteroidEntity
-    );
-    uint256 index = 0;
-    while (index < size) {
-      Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, index);
-      if (arrival.sendType != ESendType.REINFORCE || arrival.to != receiver) {
-        index++;
-        continue;
-      }
-      if (arrival.arrivalBlock <= block.number) {
-        if (!receiveReinforcementsFromArrival(world, receiver, rockEntity, index)) index++;
-        else size -= 1;
-      }
+  function checkPlayerUtilityRequirementsForReinforcements(
+    IWorld world,
+    uint256 playerEntity,
+    ArrivalUnit[] memory units
+  ) internal view returns (bool) {
+    for (uint256 i = 0; i < units.length; i++) {
+      if (!LibUnits.checkUtilityResourceReqs(world, playerEntity, units[i].unitType, units[i].count)) return false;
     }
-    //ArrivalsList.get(world, playerAsteroidEntity, arrival);
+    return true;
   }
 
   // will return true if the arrival is resolved
@@ -56,37 +36,27 @@ library LibReinforce {
     uint256 playerEntity,
     uint256 asteroidEntity,
     uint256 arrivalIndex
-  ) internal returns (bool) {
+  ) internal {
     uint256 playerAsteroidEntity = LibEncode.hashKeyEntity(playerEntity, asteroidEntity);
     Arrival memory arrival = ArrivalsList.get(world, playerAsteroidEntity, arrivalIndex);
-    bool isArrivalResolved = true;
+
+    // if receiver is not sender they must have the required capacity
+    if (arrival.from != playerEntity)
+      require(
+        checkPlayerUtilityRequirementsForReinforcements(world, playerEntity, arrival.units),
+        "[Reinforcement]: You do not have the required Housing and/or Vessels to receive reinforcements"
+      );
     for (uint i = 0; i < arrival.units.length; i++) {
       if (arrival.units[i].count == 0) continue;
       uint32 num = arrival.units[i].count;
+      LibUpdateSpaceRock.addUnitsToAsteroid(world, playerEntity, asteroidEntity, arrival.units[i].unitType, num);
       if (arrival.from != playerEntity) {
-        num = LibMath.min(LibUnits.howManyUnitsCanAdd(world, playerEntity, arrival.units[i].unitType), num);
-      }
-
-      if (num > 0) {
-        LibUpdateSpaceRock.addUnitsToAsteroid(world, playerEntity, asteroidEntity, arrival.units[i].unitType, num);
-        if (arrival.from != playerEntity) {
-          LibUnits.updateOccuppiedUtilityResources(world, playerEntity, arrival.units[i].unitType, num, true);
-          LibUnits.updateOccuppiedUtilityResources(world, arrival.from, arrival.units[i].unitType, num, false);
-        }
-        arrival.units[i].count -= num;
-      }
-      if (arrival.units[i].count > 0) {
-        isArrivalResolved = false;
+        LibUnits.updateOccuppiedUtilityResources(world, playerEntity, arrival.units[i].unitType, num, true);
+        LibUnits.updateOccuppiedUtilityResources(world, arrival.from, arrival.units[i].unitType, num, false);
       }
     }
-    if (isArrivalResolved) {
-      LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from, 1);
-      ArrivalsList.remove(world, playerAsteroidEntity, arrivalIndex);
-      return true;
-    } else {
-      ArrivalsList.set(world, playerAsteroidEntity, arrivalIndex, arrival);
-      return false;
-    }
+    LibMath.subtract(ArrivalsSizeComponent(world.getComponent(ArrivalsSizeComponentID)), arrival.from, 1);
+    ArrivalsList.remove(world, playerAsteroidEntity, arrivalIndex);
   }
 
   function recallReinforcements(IWorld world, uint256 recallerEntity, uint256 rockEntity) internal {
