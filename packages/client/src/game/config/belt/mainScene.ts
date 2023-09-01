@@ -36,7 +36,7 @@ const mainSceneConfig: SceneConfig = {
       },
       defaultLayer: Tilesets.Grid,
     },
-    backgroundTile: [0],
+    backgroundTile: [1],
     tileAnimations: tileAnimationConfig,
     animationInterval: 100,
   },
