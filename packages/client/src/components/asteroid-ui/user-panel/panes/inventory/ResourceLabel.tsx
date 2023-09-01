@@ -44,6 +44,8 @@ export const ResourceLabel = ({
 
   const motherlodes = useEntityQuery(query);
 
+  const block = BlockNumber.use()?.value;
+  // todo: only update whenever any motherlode's hangar changes. I cannot figure this out rn so im using block
   const motherlodeProduction = useMemo(() => {
     if (!mineableResources.includes(resourceId)) return 0;
     return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
@@ -60,7 +62,7 @@ export const ResourceLabel = ({
       }
       return prev + total;
     }, 0);
-  }, [motherlodes, resourceId]);
+  }, [motherlodes, resourceId, block]);
 
   const resourceCount = useResourceCount(Item, resourceId);
 
