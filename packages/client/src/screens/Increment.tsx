@@ -1,15 +1,25 @@
 import { SingletonID } from "@latticexyz/network";
-import { Counter, IsDebug } from "src/network/components/chainComponents";
+import {
+  Counter,
+  IsDebug,
+  P_RequiredResources,
+} from "src/network/components/chainComponents";
 import { DoubleCounter } from "src/network/components/clientComponents";
 import { Fragment, useMemo, useState } from "react";
 import {
   BackgroundImage,
+  BlockType,
   ResearchImage,
   ResourceImage,
 } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useMud } from "src/hooks";
 import { increment } from "src/util/web3";
+import { ethers } from "ethers";
+import { getNetworkLayerConfig } from "src/network/config/config";
+import P_RequiredResourcesJson from "../../../contracts/abi/P_RequiredResourcesComponent.json";
+import { hashKeyEntity } from "src/util/encode";
+import { defaultAbiCoder } from "ethers/lib/utils.js";
 
 export default function Increment() {
   const network = useMud();
@@ -36,10 +46,47 @@ export default function Increment() {
         Increment
       </button>
 
+      <SavePrimodium />
       <ImageGrid />
     </div>
   );
 }
+// drone factory level 3 required resources:
+// resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 275000 });
+// resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
+
+async function executeContractFunction() {
+  const privateKey =
+    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+  const contractAddress = P_RequiredResources.metadata.contractId;
+  console.log("contract address:", contractAddress);
+  const config = getNetworkLayerConfig();
+  const provider = new ethers.providers.JsonRpcProvider(
+    config.provider.jsonRpcUrl
+  );
+  const wallet = new ethers.Wallet(privateKey, provider);
+  const abi = P_RequiredResourcesJson.abi;
+
+  console.log("abi:", abi);
+  const contract = new ethers.Contract(contractAddress, abi, wallet);
+
+  console.log("contract:", contract);
+  const entityID = hashKeyEntity(BlockType.DroneFactory, 3);
+  const data = [
+    { resource: BlockType.Sulfur, value: 275000 },
+    { resource: BlockType.Kimberlite, value: 10000 },
+  ];
+  const dataType = "tuple(string resource, uint256 value)[]";
+  const hashedData = defaultAbiCoder.encode([dataType], [data]);
+  const tx = await contract["set"](entityID, data);
+  await tx.wait();
+
+  return tx.hash;
+}
+
+const SavePrimodium = () => {
+  return <button onClick={executeContractFunction}>SAVE PRIMODIUM</button>;
+};
 
 const ImageGrid: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
