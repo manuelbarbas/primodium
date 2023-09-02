@@ -91,6 +91,7 @@ export async function createNetworkLayer(config: NetworkConfig) {
     components,
     singletonIndex,
     providers: network.providers,
+    signer: network.signer,
     blockNumber$: network.blockNumber$,
     defaultWalletAddress: config.defaultWalletAddress,
     perlin,

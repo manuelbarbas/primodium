@@ -13,6 +13,7 @@ import { useGameStore } from "src/store/GameStore";
 import { invade, raid, recall, reinforce } from "src/util/web3";
 import { useMud } from "src/hooks/useMud";
 import { useState } from "react";
+import { getIndex } from "src/util/arrival";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -27,11 +28,11 @@ export const LabeledValue: React.FC<{
 };
 
 export const OrbitActionButton: React.FC<{
+  entity: EntityID;
   destination: EntityID;
   sendType: ESendType;
-  arrivalIndex: number;
   outgoing: boolean;
-}> = ({ destination, sendType, arrivalIndex, outgoing }) => {
+}> = ({ entity, destination, sendType, outgoing }) => {
   const network = useMud();
   const destinationOwner = OwnedBy.use(destination)?.value;
   const player = Account.use()?.value ?? SingletonID;
@@ -39,9 +40,10 @@ export const OrbitActionButton: React.FC<{
 
   const isNeutral = destinationOwner === player || !destinationOwner;
 
+  const index = getIndex(entity);
   return (
     <button
-      disabled={transactionLoading}
+      disabled={transactionLoading || index == undefined}
       className={`border p-1 rounded-md hover:scale-105 transition-all ${
         isNeutral || sendType === ESendType.REINFORCE
           ? "bg-cyan-700 border-cyan-500"
@@ -61,7 +63,8 @@ export const OrbitActionButton: React.FC<{
               return;
             }
 
-            reinforce(destination, arrivalIndex, network);
+            if (!index) return;
+            reinforce(destination, index, network);
         }
       }}
     >
@@ -77,12 +80,12 @@ export const OrbitActionButton: React.FC<{
 };
 
 export const Fleet: React.FC<{
+  arrivalEntity: EntityID;
   arrivalBlock: string;
   destination: EntityID;
   sendType: ESendType;
-  arrivalIndex: number;
   outgoing: boolean;
-}> = ({ arrivalBlock, destination, sendType, arrivalIndex, outgoing }) => {
+}> = ({ arrivalBlock, arrivalEntity, destination, sendType, outgoing }) => {
   const blockNumber = BlockNumber.use()?.value;
 
   const destinationPosition = Position.use(destination, {
@@ -135,7 +138,7 @@ export const Fleet: React.FC<{
           </LabeledValue>
         ) : (
           <OrbitActionButton
-            arrivalIndex={arrivalIndex}
+            entity={arrivalEntity}
             destination={destination}
             sendType={sendType}
             outgoing={outgoing}
@@ -163,8 +166,8 @@ export const Outgoingfleets: React.FC<{ user: EntityID }> = ({ user }) => {
           return (
             <Fleet
               key={i}
+              arrivalEntity={fleet.entity}
               arrivalBlock={fleet.arrivalBlock}
-              arrivalIndex={fleet.index}
               destination={fleet.destination}
               sendType={fleet.sendType}
               outgoing={true}
@@ -194,8 +197,8 @@ export const Reinforcementfleets: React.FC<{ user: EntityID }> = ({ user }) => {
           return (
             <Fleet
               key={i}
+              arrivalEntity={fleet.entity}
               arrivalBlock={fleet.arrivalBlock}
-              arrivalIndex={fleet.index}
               destination={fleet.destination}
               sendType={fleet.sendType}
               outgoing={false}

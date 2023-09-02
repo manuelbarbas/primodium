@@ -42,6 +42,7 @@ const resources: Record<string, EntityID> = {
   alloy: BlockType.Alloy,
   pvcell: BlockType.PhotovoltaicCell,
   housing: BlockType.HousingUtilityResource,
+  electricity: BlockType.ElectricityUtilityResource,
 };
 
 const units: Record<string, EntityID> = {
@@ -187,20 +188,20 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         });
       },
     },
-    setHousing: {
-      params: [{ name: "housing", type: "number" }],
-      function: (housing: number) => {
+    setUtility: {
+      params: [
+        { name: "utility", type: "string" },
+        { name: "value", type: "number" },
+      ],
+      function: (name: string, value: number) => {
         const player = Account.get()?.value;
         if (!player) throw new Error("No player found");
-        const playerResource = hashKeyEntity(
-          BlockType.HousingUtilityResource,
-          player
-        );
+        const playerResource = hashKeyEntity(resources[name], player);
         mud.dev.setEntityContractComponentValue(
           playerResource,
           OccupiedUtilityResource,
           {
-            value: housing,
+            value,
           }
         );
       },

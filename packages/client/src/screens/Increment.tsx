@@ -1,15 +1,27 @@
 import { SingletonID } from "@latticexyz/network";
-import { Counter, IsDebug } from "src/network/components/chainComponents";
+import {
+  Counter,
+  IsDebug,
+  P_RequiredResources,
+} from "src/network/components/chainComponents";
 import { DoubleCounter } from "src/network/components/clientComponents";
 import { Fragment, useMemo, useState } from "react";
 import {
   BackgroundImage,
+  BlockType,
   ResearchImage,
   ResourceImage,
 } from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useMud } from "src/hooks";
 import { increment } from "src/util/web3";
+import { ethers } from "ethers";
+import { getNetworkLayerConfig } from "src/network/config/config";
+import P_RequiredResourcesJson from "../../../contracts/abi/P_RequiredResourcesComponent.json";
+import { ResourceValuesStruct } from "../../../contracts/types/ethers-contracts/P_RequiredResourcesComponent";
+import World from "../../../contracts/abi/World.json";
+import { hashKeyEntity } from "src/util/encode";
+import { keccak256 } from "@latticexyz/utils";
 
 export default function Increment() {
   const network = useMud();
@@ -36,10 +48,57 @@ export default function Increment() {
         Increment
       </button>
 
+      <SavePrimodium />
       <ImageGrid />
     </div>
   );
 }
+// drone factory level 3 required resources:
+// resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 275000 });
+// resourceValues[1] = ResourceValue({ resource: KimberliteResourceItemID, value: 10000 });
+
+async function executeContractFunction() {
+  const privateKey =
+    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+  const contractId = P_RequiredResources.metadata.contractId;
+  const config = getNetworkLayerConfig();
+  const provider = new ethers.providers.JsonRpcProvider(
+    config.provider.jsonRpcUrl
+  );
+  const wallet = new ethers.Wallet(privateKey, provider);
+
+  const worldAddress = getNetworkLayerConfig().worldAddress;
+  const world = new ethers.Contract(worldAddress, World.abi, wallet);
+
+  const componentAddress = await world.getComponent(keccak256(contractId));
+
+  const abi = P_RequiredResourcesJson.abi;
+  const component = new ethers.Contract(componentAddress, abi, wallet);
+
+  let contractWithSigner = component.connect(wallet);
+
+  const entityID = hashKeyEntity(BlockType.DroneFactory, 3);
+  const resources = [BlockType.Sulfur, BlockType.Kimberlite];
+  const values = [275000, 10000];
+
+  const resourceValues: ResourceValuesStruct = {
+    resources,
+    values,
+  };
+
+  const tx = await contractWithSigner["set(uint256,(uint256[],uint32[]))"](
+    entityID,
+    resourceValues
+  );
+
+  await tx.wait();
+
+  return tx.hash;
+}
+
+const SavePrimodium = () => {
+  return <button onClick={executeContractFunction}>SAVE PRIMODIUM</button>;
+};
 
 const ImageGrid: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
