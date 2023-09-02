@@ -120,7 +120,7 @@ library LibInvade {
         if (defender.unitCounts[i] <= 0) continue;
         LibUnits.updateOccuppiedUtilityResources(
           world,
-          attacker.participantEntity,
+          defender.participantEntity,
           unitTypes[i],
           defender.unitCounts[i] - battleResult.defenderUnitsLeft[i],
           false
