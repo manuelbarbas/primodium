@@ -18,8 +18,10 @@ import { increment } from "src/util/web3";
 import { ethers } from "ethers";
 import { getNetworkLayerConfig } from "src/network/config/config";
 import P_RequiredResourcesJson from "../../../contracts/abi/P_RequiredResourcesComponent.json";
+import { ResourceValuesStruct } from "../../../contracts/types/ethers-contracts/P_RequiredResourcesComponent";
+import World from "../../../contracts/abi/World.json";
 import { hashKeyEntity } from "src/util/encode";
-import { defaultAbiCoder } from "ethers/lib/utils.js";
+import { keccak256 } from "@latticexyz/utils";
 
 export default function Increment() {
   const network = useMud();
@@ -58,27 +60,37 @@ export default function Increment() {
 async function executeContractFunction() {
   const privateKey =
     "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-  const contractAddress = P_RequiredResources.metadata.contractId;
-  console.log("contract address:", contractAddress);
+  const contractId = P_RequiredResources.metadata.contractId;
   const config = getNetworkLayerConfig();
   const provider = new ethers.providers.JsonRpcProvider(
     config.provider.jsonRpcUrl
   );
   const wallet = new ethers.Wallet(privateKey, provider);
+
+  const worldAddress = getNetworkLayerConfig().worldAddress;
+  const world = new ethers.Contract(worldAddress, World.abi, wallet);
+
+  const componentAddress = await world.getComponent(keccak256(contractId));
+
   const abi = P_RequiredResourcesJson.abi;
+  const component = new ethers.Contract(componentAddress, abi, wallet);
 
-  console.log("abi:", abi);
-  const contract = new ethers.Contract(contractAddress, abi, wallet);
+  let contractWithSigner = component.connect(wallet);
 
-  console.log("contract:", contract);
   const entityID = hashKeyEntity(BlockType.DroneFactory, 3);
-  const data = [
-    { resource: BlockType.Sulfur, value: 275000 },
-    { resource: BlockType.Kimberlite, value: 10000 },
-  ];
-  const dataType = "tuple(string resource, uint256 value)[]";
-  const hashedData = defaultAbiCoder.encode([dataType], [data]);
-  const tx = await contract["set"](entityID, data);
+  const resources = [BlockType.Sulfur, BlockType.Kimberlite];
+  const values = [275000, 10000];
+
+  const resourceValues: ResourceValuesStruct = {
+    resources,
+    values,
+  };
+
+  const tx = await contractWithSigner["set(uint256,(uint256[],uint32[]))"](
+    entityID,
+    resourceValues
+  );
+
   await tx.wait();
 
   return tx.hash;
