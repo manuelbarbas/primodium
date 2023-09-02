@@ -159,7 +159,7 @@ export const Outgoingfleets: React.FC<{ user: EntityID }> = ({ user }) => {
         </div>
       ) : (
         fleets.map((fleet, i) => {
-          if (!fleet) return null;
+          if (!fleet || !fleet.index) return null;
           return (
             <Fleet
               key={i}
@@ -190,7 +190,7 @@ export const Reinforcementfleets: React.FC<{ user: EntityID }> = ({ user }) => {
         </div>
       ) : (
         fleets.map((fleet, i) => {
-          if (!fleet) return null;
+          if (!fleet || !fleet.index) return null;
           return (
             <Fleet
               key={i}

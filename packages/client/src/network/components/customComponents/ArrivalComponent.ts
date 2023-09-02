@@ -45,7 +45,7 @@ export const newArrivalComponent = () => {
       )?.value;
       if (arrivalEntity == entity) return i;
     }
-    throw new Error("Arrival has no index");
+    return;
   }
   const get = (filters?: {
     to?: EntityID;
