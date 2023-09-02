@@ -26,18 +26,16 @@ export const Starmap: React.FC<StarmapViewProps> = ({ id }) => {
 
   return (
     <div className="relative w-full h-full bg-gray-800">
-      <div className="absolute inset-0 pointer-events-none" />
-
-      {/* Tile Background */}
       <div
-        id={id}
-        ref={elementRef}
-        className="w-full h-full"
         style={{
-          opacity: 1,
+          opacity: 0.75,
           backgroundImage: "url(/img/backgrounds/star.png)",
         }}
+        className="absolute inset-0 pointer-events-none w-full h-full"
       />
+
+      {/* Tile Background */}
+      <div id={id} ref={elementRef} className="relative w-full h-full" />
     </div>
   );
 };

@@ -317,27 +317,16 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   [
     BlockType.IronMine,
     [
-      "/img/building/ironmine/iron-mine-level1.png",
+      "/img/building/ironmine/iron-miner-level1.png",
       "/img/building/ironmine/iron-miner-level2.png",
       "/img/building/ironmine/iron-miner-level3.png",
     ],
   ],
   [
     BlockType.LithiumMine,
-    [
-      "/img/building/lithiummine/lithium-mine-level1.png",
-      "/img/building/lithiummine/lithium-miner-level2.png",
-      "/img/building/lithiummine/lithium-miner-level3.png",
-    ],
+    ["/img/building/lithiummine/lithium-mine-level1.png"],
   ],
-  [
-    BlockType.SulfurMine,
-    [
-      "/img/building/sulfurmine/sulfur-mine-level1.png",
-      "/img/building/sulfurmine/sulfur-miner-level2.png",
-      "/img/building/sulfurmine/sulfur-miner-level3.png",
-    ],
-  ],
+  [BlockType.SulfurMine, ["/img/building/sulfurmine/sulfur-mine-level1.png"]],
   [
     BlockType.StorageUnit,
     [
@@ -548,6 +537,12 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.MiningResearch3, "/img/unit/miningvessel.png"],
   [BlockType.MiningResearch4, "/img/unit/miningvessel.png"],
   [BlockType.MiningResearch5, "/img/unit/miningvessel.png"],
+
+  [BlockType.MiningVesselUpgrade1, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade2, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade3, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
+  [BlockType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
 ]);
 //images of resource items (think of them like minecraft entities)
 export const ResourceImage = new Map<EntityID, string>([
