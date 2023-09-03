@@ -6,11 +6,12 @@ import { ID as UpdatePlayerStorageSystemID } from "systems/S_UpdatePlayerStorage
 import { ID as UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "systems/S_SpendRequiredResourcesSystem.sol";
 import { ID as ClaimFromMineSystemID } from "systems/ClaimFromMineSystem.sol";
+import { ID as UpdatePlayerSpaceRockSystemID } from "systems/S_UpdatePlayerSpaceRockSystem.sol";
 // components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { ProductionComponent, ID as ProductionComponentID } from "components/ProductionComponent.sol";
-
+import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "components/PlayerMotherlodeComponent.sol";
 // libraries
 import { LibMath } from "../libraries/LibMath.sol";
 import { LibEncode } from "../libraries/LibEncode.sol";
@@ -50,6 +51,15 @@ contract S_UpdateUnclaimedResourcesSystem is IOnEntitySubsystem, PrimodiumSystem
 
     unclaimedResource = LibStorage.addResourceToStorage(world, playerEntity, resourceID, unclaimedResource);
     lastClaimedAtComponent.set(playerResourceProductionEntity, block.number);
+
+    uint256[] memory motherlodes = PlayerMotherlodeComponent(world.getComponent(PlayerMotherlodeComponentID))
+      .getEntitiesWithValue(playerResourceProductionEntity);
+    for (uint256 i = 0; i < motherlodes.length; i++) {
+      IOnEntitySubsystem(getAddressById(world.systems(), UpdatePlayerSpaceRockSystemID)).executeTyped(
+        playerAddress,
+        motherlodes[i]
+      );
+    }
 
     return abi.encode(unclaimedResource);
   }

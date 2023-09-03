@@ -59,6 +59,7 @@ contract S_UpdatePlayerStorageSystem is IOnBuildingSubsystem, PrimodiumSystem {
       uint32 maxStorageIncrease = LibStorage.getResourceMaxStorage(world, buildingIdNewLevel, storageResources[i]);
       if (actionType == EActionType.Upgrade) {
         uint256 buildingIdOldLevel = LibEncode.hashKeyEntity(buildingType, buildingLevel - 1);
+
         maxStorageIncrease =
           maxStorageIncrease -
           LibStorage.getResourceMaxStorage(world, buildingIdOldLevel, storageResources[i]);

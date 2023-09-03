@@ -273,12 +273,20 @@ contract LibMotherlodeTest is PrimodiumTest {
     assertEq(lastClaimedAtComponent.getValue(motherlodeEntity), lastClaimed);
 
     vm.roll(block.number + timeElapsed);
-
+    lastClaimed = block.number;
     LibUpdateSpaceRock.claimMotherlodeResource(world, playerEntity, motherlodeEntity, block.number);
     totalMined = maxResource.value;
-    assertEq(LibMath.getSafe(itemComponent, resourcePlayerEntity), totalMined);
-    assertEq(LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity), totalMined);
-    assertEq(lastClaimedAtComponent.getValue(motherlodeEntity), lastClaimed);
+    assertEq(
+      LibMath.getSafe(itemComponent, resourcePlayerEntity),
+      totalMined,
+      "player resource does not match total mined"
+    );
+    assertEq(
+      LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity),
+      totalMined,
+      "motherlode resource does not match total mined"
+    );
+    assertEq(lastClaimedAtComponent.getValue(motherlodeEntity), lastClaimed, "last claimed does not match");
 
     uint256 score = scoreMultiplierComponent.getValue(maxResource.resource) *
       itemComponent.getValue(resourcePlayerEntity);
