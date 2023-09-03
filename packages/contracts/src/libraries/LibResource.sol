@@ -17,9 +17,10 @@ import { IWorld } from "solecs/interfaces/IWorld.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
 import { ResourceValues, ResourceValue } from "../types.sol";
-
+import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "../components/PlayerMotherlodeComponent.sol";
 import { ID as UpdateUnclaimedResourcesSystemID } from "../systems/S_UpdateUnclaimedResourcesSystem.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
+import { LibUpdateSpaceRock } from "./LibUpdateSpaceRock.sol";
 
 library LibResource {
   //checks all required conditions for a factory to be functional and updates factory is functional status
@@ -41,22 +42,54 @@ library LibResource {
     LastClaimedAtComponent lastClaimedAtComponent = LastClaimedAtComponent(
       world.getComponent(LastClaimedAtComponentID)
     );
-
     ResourceValues memory requiredResources = requiredResourcesComponent.getValue(entity);
+
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       uint32 resourceCost = requiredResources.values[i] * count;
       uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredResources.resources[i], playerEntity);
       uint32 playerResourceCount = LibMath.getSafe(itemComponent, playerResourceEntity);
+      if (resourceCost <= playerResourceCount) continue;
 
       if (LibMath.getSafe(productionComponent, playerResourceEntity) > 0) {
         playerResourceCount +=
           productionComponent.getValue(playerResourceEntity) *
           uint32(block.number - LibMath.getSafe(lastClaimedAtComponent, playerResourceEntity));
       }
+      if (resourceCost <= playerResourceCount) continue;
 
+      playerResourceCount += getTotalUnclaimedMotherlodeResources(
+        world,
+        playerEntity,
+        requiredResources.resources[i],
+        block.number
+      );
       if (resourceCost > playerResourceCount) return false;
     }
     return true;
+  }
+
+  function getTotalUnclaimedMotherlodeResources(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 resourceEntity,
+    uint256 blockNumber
+  ) internal view returns (uint32) {
+    PlayerMotherlodeComponent playerMotherlodeComponent = PlayerMotherlodeComponent(
+      world.getComponent(PlayerMotherlodeComponentID)
+    );
+    uint256[] memory motherlodes = playerMotherlodeComponent.getEntitiesWithValue(
+      LibEncode.hashKeyEntity(resourceEntity, playerEntity)
+    );
+    uint32 totalUnclaimedResources = 0;
+    for (uint256 i = 0; i < motherlodes.length; i++) {
+      totalUnclaimedResources += LibUpdateSpaceRock.getUnclaimedMotherlodeResourceAmount(
+        world,
+        playerEntity,
+        motherlodes[i],
+        blockNumber
+      );
+    }
+    return totalUnclaimedResources;
   }
 
   function getTotalResources(

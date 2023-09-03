@@ -68,9 +68,7 @@ library LibInvade {
     if (ownedByComponent.has(rockEntity) && ownedByComponent.getValue(rockEntity) != winnerEntity) {
       LibReinforce.recallAllReinforcements(world, rockEntity);
     }
-    ownedByComponent.set(rockEntity, winnerEntity);
-
-    //ArrivalsList.get(world, playerAsteroidEntity, arrival);
+    if (winnerEntity == invader) LibUpdateSpaceRock.updateMotherlodeOwnership(world, rockEntity, winnerEntity);
   }
 
   function updatePlayerUnitsAfterBattle(IWorld world, uint256 battleEntity, uint256 rockEntity) internal {
@@ -154,7 +152,7 @@ library LibInvade {
       BattleResult(attacker.participantEntity, attacker.unitCounts, new uint32[](attacker.unitCounts.length))
     );
 
-    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(rockEntity, attacker.participantEntity);
+    LibUpdateSpaceRock.updateMotherlodeOwnership(world, rockEntity, attacker.participantEntity);
     uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
     for (uint i = 0; i < unitTypes.length; i++) {
       LibUpdateSpaceRock.addUnitsToAsteroid(
