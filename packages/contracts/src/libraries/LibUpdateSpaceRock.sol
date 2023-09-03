@@ -116,12 +116,12 @@ library LibUpdateSpaceRock {
     uint256 fromSpaceRockEntity,
     uint256 toSpaceRockEntity
   ) internal {
-    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntities();
     UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
     for (uint256 i = 0; i < unitTypes.length; i++) {
       uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitTypes[i], playerEntity, fromSpaceRockEntity);
       if (unitsComponent.has(unitPlayerSpaceRockEntity)) {
-        setUnitsOnAsteroid(
+        addUnitsToAsteroid(
           world,
           playerEntity,
           toSpaceRockEntity,
