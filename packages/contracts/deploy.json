@@ -121,6 +121,10 @@
     { "name": "ReceiveReinforcementSystem", "writeAccess": ["*"] },
     { "name": "RaidSystem", "writeAccess": ["*"] },
     {
+      "name": "RecallUnitsFromMotherlodeSystem",
+      "writeAccess": ["*"]
+    },
+    {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
     },
