@@ -110,6 +110,29 @@ library LibUpdateSpaceRock {
     }
   }
 
+  function moveUnitsFromTo(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 fromSpaceRockEntity,
+    uint256 toSpaceRockEntity
+  ) internal {
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntitiesWithValue(true);
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    for (uint256 i = 0; i < unitTypes.length; i++) {
+      uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitTypes[i], playerEntity, fromSpaceRockEntity);
+      if (unitsComponent.has(unitPlayerSpaceRockEntity)) {
+        setUnitsOnAsteroid(
+          world,
+          playerEntity,
+          toSpaceRockEntity,
+          unitTypes[i],
+          LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity)
+        );
+        setUnitsOnAsteroid(world, playerEntity, fromSpaceRockEntity, unitTypes[i], 0);
+      }
+    }
+  }
+
   function destroyUnitsOnAsteroid(
     IWorld world,
     uint256 playerEntity,
@@ -147,7 +170,8 @@ library LibUpdateSpaceRock {
     uint32 unitCount
   ) internal {
     uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
-    UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
+    if (unitCount > 0) UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
+    else UnitsComponent(world.getComponent(UnitsComponentID)).remove(unitPlayerSpaceRockEntity);
   }
 
   function claimUnits(IWorld world, uint256 playerEntity, uint256 blockNumber) internal {
