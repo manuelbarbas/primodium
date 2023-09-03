@@ -1,4 +1,4 @@
-# Primodium v0.7.0
+# Primodium v0.7.1
 
 Initialize with `yarn`. Afterwards, in separate terminal sessions, run the following commands in order:
 
