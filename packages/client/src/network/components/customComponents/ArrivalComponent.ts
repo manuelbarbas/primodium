@@ -4,7 +4,6 @@ import { EntityID, Type } from "@latticexyz/recs";
 import { BlockNumber } from "../clientComponents";
 import { useMemo } from "react";
 import { ESendType } from "src/util/web3/types";
-import { ArrivalsSize } from "../chainComponents";
 
 export const newArrivalComponent = () => {
   const component = newComponent(
@@ -79,7 +78,7 @@ export const newArrivalComponent = () => {
   }) => {
     const blockNumber = BlockNumber.use()?.value ?? 0;
 
-    return useMemo(() => get(filters), [blockNumber, ArrivalsSize.update$]);
+    return useMemo(() => get(filters), [blockNumber]);
   };
 
   return { ...component, get, getWithId, use, getEntity: component.get };
