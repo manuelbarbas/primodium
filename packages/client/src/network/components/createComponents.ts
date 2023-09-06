@@ -1,21 +1,14 @@
-import { Component } from "@latticexyz/recs";
 import { SetupNetworkResult } from "../types";
-import { ExtendedComponent, extendComponent } from "./customComponents/Component";
+import { world } from "../world";
+import { createExtendedNumberComponent } from "./customComponents/ExtendedComponent";
+import { extendComponents } from "./customComponents/extendComponents";
 
+export const DoubleCounter = createExtendedNumberComponent(world);
 export function createComponents({ components }: SetupNetworkResult) {
-  const extendedComponents = Object.fromEntries(
-    Object.entries(components).map(([key, value]) => [key, extendComponent(value)])
-  ) as ExtendedComponents<typeof components>;
+  const contractComponents = extendComponents(components);
   return {
-    ...extendedComponents,
+    ...contractComponents,
+    DoubleCounter,
     // add your client components or overrides here
   };
 }
-
-type Components = SetupNetworkResult["components"];
-
-type TransformComponent<T> = T extends Component<infer S, infer M, infer T> ? ExtendedComponent<S, M, T> : never;
-
-export type ExtendedComponents<C extends Components> = {
-  [K in keyof C]: TransformComponent<C[K]>;
-};

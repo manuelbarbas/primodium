@@ -152,11 +152,13 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   };
   return context;
 }
-function newComponent<Overridable extends boolean, S extends Schema, M extends Metadata = Metadata, T = unknown>(
-  world: World,
-  schema: S,
-  options?: Options<Overridable, M>
-) {
+
+export function createExtendedComponent<
+  Overridable extends boolean,
+  S extends Schema,
+  M extends Metadata = Metadata,
+  T = unknown
+>(world: World, schema: S, options?: Options<Overridable, M>) {
   const rawComponent = defineComponent(world, schema, options);
   const component: OverridableType<Overridable, S, M> = options?.overridable
     ? overridableComponent(rawComponent)
@@ -165,40 +167,37 @@ function newComponent<Overridable extends boolean, S extends Schema, M extends M
   return extendComponent(component);
 }
 
-export default newComponent;
-
-export type NewNumberComponent = ReturnType<typeof newNumberComponent>;
-export function newNumberComponent<Overridable extends boolean, M extends Metadata>(
+export function createExtendedNumberComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
   options?: Options<Overridable, M>
 ) {
-  return newComponent(world, { value: Type.Number }, options);
+  return createExtendedComponent(world, { value: Type.Number }, options);
 }
 
-export function newStringComponent<Overridable extends boolean, M extends Metadata>(
+export function createExtendedStringComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
   options?: Options<Overridable, M>
 ) {
-  return newComponent(world, { value: Type.String }, options);
+  return createExtendedComponent(world, { value: Type.String }, options);
 }
 
-export function newCoordComponent<Overridable extends boolean, M extends Metadata>(
+export function createExtendedCoordComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
   options?: Options<Overridable, M>
 ) {
-  return newComponent(world, { x: Type.Number, y: Type.Number }, options);
+  return createExtendedComponent(world, { x: Type.Number, y: Type.Number }, options);
 }
 
-export function newBoolComponent<Overridable extends boolean, M extends Metadata>(
+export function createExtendedBoolComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
   options?: Options<Overridable, M>
 ) {
-  return newComponent(world, { value: Type.Boolean }, options);
+  return createExtendedComponent(world, { value: Type.Boolean }, options);
 }
 
-export function newEntityComponent<Overridable extends boolean, M extends Metadata>(
+export function createExtendedEntityComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
   options?: Options<Overridable, M>
 ) {
-  return newComponent(world, { value: Type.Entity }, options);
+  return createExtendedComponent(world, { value: Type.Entity }, options);
 }
