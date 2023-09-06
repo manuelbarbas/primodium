@@ -1,20 +1,22 @@
-import worldsJson from "contracts/worlds.json";
-
 import { getBurnerPrivateKey } from "@latticexyz/common";
+import worldsJson from "contracts/worlds.json";
 import { chainConfigs } from "./chainConfigs";
+
 const params = new URLSearchParams(window.location.search);
 
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 
 const DEV = import.meta.env.VITE_DEV === "true";
 export const getNetworkConfig = () => {
-  const worldAddress = params.get("worldAddress");
-  if (!worldAddress) throw new Error("No world address provided");
   const chainId = params.get("chainid") || import.meta.env.VITE_CHAIN_ID || 31337;
 
   const chain = chainConfigs[chainId];
 
   const world = worlds[chain.id];
+  const worldAddress = params.get("worldAddress") || world?.address;
+  if (!worldAddress) {
+    throw new Error(`No world address found for chain ${chainId}. `);
+  }
   const initialBlockNumber = params.has("initialBlockNumber")
     ? Number(params.get("initialBlockNumber"))
     : world?.blockNumber ?? 0;

@@ -1,17 +1,17 @@
 import { useMud } from "src/hooks";
-import { DoubleCounter } from "src/network/components/clientComponents";
 
 export default function Increment() {
   const { components, systems } = useMud();
+  console.log("gm");
 
   const counter = components.Counter.use();
-  const doubleCounter = DoubleCounter.use();
+  // const doubleCounter = DoubleCounter.use();
   return (
     <div className="flex flex-col text-white">
       <div className="h-20">
         Counter: <span>{counter?.value ?? "??"}</span>
         <br />
-        Double Counter!: <span>{doubleCounter?.value ?? "??"}</span>
+        {/* Double Counter!: <span>{doubleCounter?.value ?? "??"}</span> */}
       </div>
       <button type="button" onClick={systems.increment}>
         Increment

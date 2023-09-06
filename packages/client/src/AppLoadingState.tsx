@@ -1,16 +1,12 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import { SyncStep } from "@latticexyz/store-sync";
 import { useMud } from "./hooks";
-import { useInit } from "./hooks/useInit";
 import Increment from "./screens/Increment";
-import { Landing } from "./screens/Landing";
 
 export default function AppLoadingState() {
   //initialize global components
-  const initialized = useInit();
+  // const initialized = useInit();
   const {
-    components: { SyncProgress },
+    components: { SyncProgress, Counter },
   } = useMud();
 
   // setup loading component, after setting up the network layer and syncing the block state (per emojimon)
@@ -23,14 +19,14 @@ export default function AppLoadingState() {
     latestBlockNumber: 0n,
     lastBlockNumberProcessed: 0n,
   });
-
+  console.log("loading state is live:", loadingState.step, SyncStep.LIVE, loadingState.state === SyncStep.LIVE);
   return (
     <div
       style={{
         backgroundImage: "url(/img/backgrounds/star.png)",
       }}
     >
-      {loadingState.state !== SyncStep.LIVE && (
+      {loadingState.step !== SyncStep.LIVE && (
         <div className="flex items-center justify-center h-screen text-white font-mono">
           <div className="flex flex-col items-center">
             {/* <h1 className="text-4xl font-bold mb-4">Primodium</h1> */}
@@ -43,16 +39,16 @@ export default function AppLoadingState() {
           </div>
         </div>
       )}
-      {loadingState.state === SyncStep.LIVE && (
+      {loadingState.step === SyncStep.LIVE && <Increment />}
+      {/* {loadingState.step === SyncStep.LIVE && (
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Landing />} />
-            {/* <Route path="/game" element={initialized ? <Game /> : <Landing />} /> */}
+            <Route path="/game" element={initialized ? <Game /> : <Landing />} />
             <Route path="/increment" element={<Increment />} />
-            {/* <Route path="/map" element={<Map />} /> */}
+            <Route path="/map" element={<Map />} />
           </Routes>
         </BrowserRouter>
-      )}
+      )} */}
     </div>
   );
 }

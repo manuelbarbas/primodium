@@ -20,6 +20,7 @@ import {
   setComponent,
   updateComponent,
 } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { overridableComponent } from "./overridableComponent";
 type OverridableType<
@@ -38,6 +39,7 @@ export interface Options<Overridable extends boolean, M extends Metadata> {
 
 export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(component: Component<S, M, T>) {
   function set(value: ComponentValue<S, T>, entity?: Entity) {
+    entity = entity ?? singletonEntity;
     if (entity == undefined) throw new Error(`[set ${entity} for ${component.id}] no entity registered`);
     setComponent(component, entity, value);
   }
@@ -47,6 +49,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   function get(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
 
   function get(entity?: Entity, defaultValue?: ComponentValue<S>) {
+    entity = entity ?? singletonEntity;
     if (entity == undefined) return defaultValue;
     const value = getComponentValue(component, entity);
     return value ?? defaultValue;
@@ -68,6 +71,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   }
 
   function remove(entity?: Entity) {
+    entity = entity ?? singletonEntity;
     if (entity == undefined) return;
     removeComponent(component, entity);
   }
@@ -78,6 +82,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   }
 
   function update(value: Partial<ComponentValue<S, T>>, entity?: Entity) {
+    entity = entity ?? singletonEntity;
     if (entity == undefined) throw new Error(`[update ${component.id}] no entity registered`);
     updateComponent(component, entity, value);
   }
@@ -97,15 +102,18 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   function use(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
 
   function use(entity?: Entity, defaultValue?: ComponentValue<S>) {
+    entity = entity ?? singletonEntity;
     const comp = component as Component<S>;
     const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);
     useEffect(() => {
+      console.log("entity:", entity);
       // component or entity changed, update state to latest value
       setValue(entity != null ? getComponentValue(component, entity) : undefined);
       if (entity == null) return;
       // fix: if pre-populated with state, useComponentValue doesn’t update when there’s a component that has been removed.
       const queryResult = defineQuery([Has(component)], { runOnInit: false });
       const subscription = queryResult.update$.subscribe((update) => {
+        console.log("subscribed to update", update);
         if (isComponentUpdate(update, component) && update.entity === entity) {
           const [nextValue] = update.value;
           setValue(nextValue);

@@ -26,6 +26,9 @@ importers:
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
+      run-pty:
+        specifier: 4.0.4
+        version: 4.0.4
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -5149,6 +5152,10 @@ packages:
     resolution: {integrity: sha512-r65nCZhrbXXb6dXOACihYApHw2Q6pV0M3V0PSxd74N0+D8nzAdEAITq2oAjA1jVnKI+tGvEBUpqiMh0+rW6zDQ==}
     dev: true
 
+  /nan@2.17.0:
+    resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==}
+    dev: true
+
   /nanoid@3.3.6:
     resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -5205,6 +5212,13 @@ packages:
     dependencies:
       whatwg-url: 5.0.0
     dev: false
+
+  /node-pty@1.0.0:
+    resolution: {integrity: sha512-wtBMWWS7dFZm/VgqElrTvtfMq4GzJ6+edFI0Y0zyzygUSZMgZdraDUMUhCIvkjhJjme15qWmbyJbtAx4ot4uZA==}
+    requiresBuild: true
+    dependencies:
+      nan: 2.17.0
+    dev: true
 
   /node-releases@2.0.13:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
@@ -6044,6 +6058,14 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
+  /run-pty@4.0.4:
+    resolution: {integrity: sha512-VLykjALcr5PyCPqVWZEqyqyGiHBnLaZmfelCvMfcFNOiKSif1bt0e4XoJSQtoX+ilKP80DWVNLfeDUnk9SWArA==}
+    hasBin: true
+    dependencies:
+      node-pty: 1.0.0
+      tiny-decoders: 7.0.1
+    dev: true
+
   /rxjs@6.6.7:
     resolution: {integrity: sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==}
     engines: {npm: '>=2.0.0'}
@@ -6556,6 +6578,10 @@ packages:
     dependencies:
       promise-nodeify: 3.0.1
       proxying-agent: 2.4.0
+    dev: true
+
+  /tiny-decoders@7.0.1:
+    resolution: {integrity: sha512-P1LaHTLASl/lCrdtwgAAVwxt4bEAPmxpf9HMQrlCkAseaT8oH8oxm8ndy4nx5rLTcL5U/Qxp1a+FDoQfS/ZgQQ==}
     dev: true
 
   /tiny-worker@2.3.0:
