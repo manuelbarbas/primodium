@@ -10,9 +10,9 @@ export function useHasEnoughResources(entityId: EntityID) {
   );
 
   for (const [index, resource] of recipe.entries()) {
-    const resourceAmount = resourcesAmounts[index];
+    const { resourceCount, resourcesToClaim } = resourcesAmounts[index];
 
-    if (resourceAmount < resource.amount) return false;
+    if (resourceCount + resourcesToClaim < resource.amount) return false;
   }
 
   return true;

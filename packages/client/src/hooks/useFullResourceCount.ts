@@ -76,5 +76,5 @@ export function useFullResourceCount(
     return toClaim;
   }, [lastClaimedAt, blockNumber]);
 
-  return resourceCount + resourcesToClaim;
+  return { resourceCount, resourcesToClaim, maxStorage, production };
 }

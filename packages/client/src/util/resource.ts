@@ -151,15 +151,20 @@ export function getFullResourceCount(
     return toClaim;
   })();
 
-  return resourceCount + resourcesToClaim;
+  return { resourceCount, resourcesToClaim, maxStorage, production };
 }
 
 export function hasEnoughResources(entityId: EntityID) {
   const recipe = getRecipe(entityId);
 
-  const resourcesAmounts = recipe.map((resource) =>
-    getFullResourceCount(resource.id, resource.type)
-  );
+  const resourcesAmounts = recipe.map((resource) => {
+    const { resourceCount, resourcesToClaim } = getFullResourceCount(
+      resource.id,
+      resource.type
+    );
+
+    return resourceCount + resourcesToClaim;
+  });
 
   for (const [index, resource] of recipe.entries()) {
     const resourceAmount = resourcesAmounts[index];
