@@ -91,6 +91,7 @@ export const BattleReport = createExtendedComponent(
   }
 );
 
+const DevHighlight = createExtendedComponent(world, { value: Type.OptionalNumber }, { id: "DevHighlight" });
 export default {
   Account,
   ActiveAsteroid,
@@ -105,4 +106,5 @@ export default {
   Hangar,
   Leaderboard,
   BattleReport,
+  DevHighlight,
 };
