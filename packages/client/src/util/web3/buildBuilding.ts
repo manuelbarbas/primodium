@@ -10,6 +10,7 @@ import { ampli } from "src/ampli";
 import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
 import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { updateSpaceRock } from "./updateSpaceRock";
 
 export const buildBuilding = async (
   coord: Coord,
@@ -30,6 +31,8 @@ export const buildBuilding = async (
   const position = { ...coord, parent: activeAsteroid };
 
   try {
+    await updateSpaceRock(network);
+
     const receipt = await execute(
       systems["system.Build"].executeTyped(
         BigNumber.from(blockType),

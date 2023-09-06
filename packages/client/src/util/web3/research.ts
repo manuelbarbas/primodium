@@ -6,12 +6,15 @@ import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
+import { updateSpaceRock } from "./updateSpaceRock";
 
 export const research = async (item: EntityID, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
+
+  await updateSpaceRock(network);
 
   const receipt = await execute(
     systems["system.Research"].executeTyped(item, {

@@ -11,12 +11,15 @@ import { EntityID } from "@latticexyz/recs";
 import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
 import { BigNumber } from "ethers";
+import { updateSpaceRock } from "./updateSpaceRock";
 
 export const upgradeBuilding = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
+
+  await updateSpaceRock(network);
 
   const building = SelectedBuilding.get()?.value;
   const buildingType = BuildingType.get(building, {
