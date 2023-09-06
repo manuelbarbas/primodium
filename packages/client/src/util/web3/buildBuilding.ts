@@ -1,21 +1,15 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
-import { addTileOverride, removeTileOverride } from "./override";
-import { execute } from "src/network/actions";
-import { Network } from "src/network/layer";
-import { useGameStore } from "src/store/GameStore";
 import { ampli } from "src/ampli";
-import { BlockIdToKey } from "../constants";
+import { execute } from "src/network/actions";
+import { Network } from "src/network/setupNetworkOld";
+import { useGameStore } from "src/store/GameStore";
 import { parseReceipt } from "../analytics/parseReceipt";
-import { HomeAsteroid } from "src/network/components/clientComponents";
+import { BlockIdToKey } from "../constants";
+import { addTileOverride, removeTileOverride } from "./override";
 
-export const buildBuilding = async (
-  coord: Coord,
-  blockType: EntityID,
-  address: EntityID,
-  network: Network
-) => {
+export const buildBuilding = async (coord: Coord, blockType: EntityID, address: EntityID, network: Network) => {
   const { providers, systems } = network;
   const { tempPositionId } = addTileOverride(coord, blockType, address);
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
@@ -29,13 +23,9 @@ export const buildBuilding = async (
 
   try {
     const receipt = await execute(
-      systems["system.Build"].executeTyped(
-        BigNumber.from(blockType),
-        position,
-        {
-          gasLimit: 15_000_000,
-        }
-      ),
+      systems["system.Build"].executeTyped(BigNumber.from(blockType), position, {
+        gasLimit: 15_000_000,
+      }),
       providers
     );
 

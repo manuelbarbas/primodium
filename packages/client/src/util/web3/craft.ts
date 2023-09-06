@@ -1,11 +1,10 @@
 import { Coord } from "@latticexyz/utils";
+import { BigNumber } from "ethers";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { HomeAsteroid } from "src/network/components/clientComponents";
-import { Network } from "src/network/layer";
+import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
 import { parseReceipt } from "../analytics/parseReceipt";
-import { BigNumber } from "ethers";
 
 export const craft = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;
@@ -17,10 +16,7 @@ export const craft = async (coord: Coord, network: Network) => {
 
   const position = { ...coord, parent: activeAsteroid };
 
-  const receipt = await execute(
-    systems["system.Craft"].executeTyped(position),
-    providers
-  );
+  const receipt = await execute(systems["system.Craft"].executeTyped(position), providers);
 
   ampli.systemCraft({
     asteroidCoord: BigNumber.from(activeAsteroid).toString(),

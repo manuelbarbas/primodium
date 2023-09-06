@@ -47,6 +47,9 @@ importers:
       '@latticexyz/dev-tools':
         specifier: 2.0.0-next.5
         version: 2.0.0-next.5(@latticexyz/common@2.0.0-next.5)(@latticexyz/recs@2.0.0-next.5)(@latticexyz/store-sync@2.0.0-next.5)(@latticexyz/store@2.0.0-next.5)(@latticexyz/utils@2.0.0-next.5)(@latticexyz/world@2.0.0-next.5)(typescript@4.7.4)(zod@3.22.2)
+      '@latticexyz/noise':
+        specifier: 2.0.0-next.5
+        version: 2.0.0-next.5
       '@latticexyz/phaserx':
         specifier: 2.0.0-next.5
         version: 2.0.0-next.5
@@ -152,6 +155,9 @@ importers:
       threads:
         specifier: ^1.7.0
         version: 1.7.0
+      viem:
+        specifier: 1.6.0
+        version: 1.6.0(typescript@4.7.4)(zod@3.22.2)
       wagmi:
         specifier: ^0.10.10
         version: 0.10.10(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(typescript@4.7.4)(zod@3.22.2)
@@ -1298,7 +1304,7 @@ packages:
       '@json-rpc-tools/utils': 1.7.6
       axios: 0.21.4
       safe-json-utils: 1.1.1
-      ws: 7.4.6
+      ws: 7.5.9
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -1507,6 +1513,14 @@ packages:
       strip-ansi: 7.1.0
       table: 6.8.1
       yargs: 17.7.2
+
+  /@latticexyz/noise@2.0.0-next.5:
+    resolution: {integrity: sha512-KMiLZNY+Dft//cRJ9+u4K3IET8HEr4FT7tF5W/o9LYatjCYn3HvbVOxT+qkHwxgNYp2zVcDB6M/2Ddb2W5n+uw==}
+    dependencies:
+      abdk-libraries-solidity: 3.2.0
+      ds-test: github.com/dapphub/ds-test/e282159d5170298eb2455a6c05280ab5a73a4ef0
+      forge-std: github.com/foundry-rs/forge-std/74cfb77e308dd188d2f58864aaf44963ae6b88b1
+    dev: false
 
   /@latticexyz/phaserx@1.43.0(@latticexyz/utils@1.43.0)(mobx@6.10.2)(phaser@3.61.0-beta.1)(rxjs@7.8.1):
     resolution: {integrity: sha512-J2P0VLAmIp6E89lI/wn0X9KLylPaLC5+qnrbtNon0OD2TJ8Y8AuD372iLNe+7KEShkSCJssVKVbCeBzvSRcw1Q==}
@@ -1892,7 +1906,7 @@ packages:
     resolution: {integrity: sha512-bcKpo1oj54hGholplGLpqPHRbIsnbixFtc06nwuNM5/dwSXOq/AAYoIBRsBmnZJSdfeNW5rnff7NTAz3ZCqR9Q==}
     dependencies:
       '@noble/curves': 1.0.0
-      '@noble/hashes': 1.3.0
+      '@noble/hashes': 1.3.1
       '@scure/base': 1.1.3
 
   /@scure/bip32@1.3.1:
@@ -1906,7 +1920,7 @@ packages:
   /@scure/bip39@1.2.0:
     resolution: {integrity: sha512-SX/uKq52cuxm4YFXWFaVByaSHJh2w3BnokVSeUJVCv6K7WulT9u2BuNRBhuFl8vAuYnzx9bEu9WgpcNYTrYieg==}
     dependencies:
-      '@noble/hashes': 1.3.0
+      '@noble/hashes': 1.3.1
       '@scure/base': 1.1.3
 
   /@scure/bip39@1.2.1:
@@ -3099,6 +3113,10 @@ packages:
     dependencies:
       jsonparse: 1.3.1
       through: 2.3.8
+    dev: false
+
+  /abdk-libraries-solidity@3.2.0:
+    resolution: {integrity: sha512-JyedKxyqsszb9qCTX+YCOQHA4m0YAq9p77Qvumiy8LJLLrm1FfA9D3pdSAZN5wrmi3PSv0y3Svy8c/C+8S9K8g==}
     dev: false
 
   /abitype@0.1.8(typescript@4.7.4):
@@ -5759,12 +5777,12 @@ packages:
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  /isomorphic-ws@4.0.1(ws@7.4.6):
+  /isomorphic-ws@4.0.1(ws@7.5.9):
     resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 7.4.6
+      ws: 7.5.9
     dev: false
 
   /isomorphic-ws@5.0.0(ws@8.12.0):
@@ -5801,10 +5819,10 @@ packages:
       delay: 5.0.0
       es6-promisify: 5.0.0
       eyes: 0.1.8
-      isomorphic-ws: 4.0.1(ws@7.4.6)
+      isomorphic-ws: 4.0.1(ws@7.5.9)
       json-stringify-safe: 5.0.1
       uuid: 8.3.2
-      ws: 7.4.6
+      ws: 7.5.9
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -8972,10 +8990,8 @@ packages:
     resolution: {tarball: https://codeload.github.com/dapphub/ds-test/tar.gz/e282159d5170298eb2455a6c05280ab5a73a4ef0}
     name: ds-test
     version: 1.0.0
-    dev: true
 
   github.com/foundry-rs/forge-std/74cfb77e308dd188d2f58864aaf44963ae6b88b1:
     resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/74cfb77e308dd188d2f58864aaf44963ae6b88b1}
     name: forge-std
     version: 1.6.0
-    dev: true

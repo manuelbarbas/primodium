@@ -1,7 +1,7 @@
 import { execute } from "src/network/actions";
-import { Network } from "src/network/layer";
+import { Account } from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
-import { Account, HomeAsteroid } from "src/network/components/clientComponents";
 
 export const updateSpaceRock = async (network: Network) => {
   const { providers, systems } = network;
@@ -15,13 +15,9 @@ export const updateSpaceRock = async (network: Network) => {
   try {
     setTransactionLoading(true);
     await execute(
-      systems["system.S_UpdatePlayerSpaceRock"].executeTyped(
-        address,
-        activeAsteroid,
-        {
-          gasLimit: 10_000_000,
-        }
-      ),
+      systems["system.S_UpdatePlayerSpaceRock"].executeTyped(address, activeAsteroid, {
+        gasLimit: 10_000_000,
+      }),
       providers
     );
   } finally {

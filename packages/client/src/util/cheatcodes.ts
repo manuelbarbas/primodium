@@ -1,3 +1,6 @@
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import {
   BuildingType,
   Item,
@@ -8,25 +11,16 @@ import {
   OccupiedUtilityResource,
   P_MaxStorage,
   P_ScoreMultiplier,
+  P_WorldSpeed,
   Position,
   Units,
-  P_WorldSpeed,
 } from "src/network/components/chainComponents";
-import { SingletonID } from "@latticexyz/network";
-import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
-import { Network } from "src/network/layer";
-import { BlockType, ResourceStorages } from "./constants";
-import {
-  Account,
-  HomeAsteroid,
-  SelectedBuilding,
-  Send,
-} from "src/network/components/clientComponents";
+import { Account, HomeAsteroid, SelectedBuilding, Send } from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
+import { BlockType, ResourceStorages, SPEED_SCALE } from "./constants";
 import { hashEntities, hashKeyEntity } from "./encode";
-import { EntityID } from "@latticexyz/recs";
 import { updateSpaceRock } from "./web3/updateSpaceRock";
-import { SPEED_SCALE } from "./constants";
-const resources: Record<string, EntityID> = {
+const resources: Record<string, Entity> = {
   iron: BlockType.Iron,
   copper: BlockType.Copper,
   lithium: BlockType.Lithium,
@@ -48,7 +42,7 @@ const resources: Record<string, EntityID> = {
   electricity: BlockType.Electricity,
 };
 
-const units: Record<string, EntityID> = {
+const units: Record<string, Entity> = {
   stinger: BlockType.StingerDrone,
   aegis: BlockType.AegisDrone,
   anvillight: BlockType.AnvilLightDrone,
@@ -65,17 +59,10 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
     function: async (resource: string, max: number) => {
       const player = Account.get()?.value;
       if (!player) throw new Error("No player found");
-      const playerResource = hashKeyEntity(
-        resources[resource.toLowerCase()],
-        player
-      );
-      await mud.dev.setEntityContractComponentValue(
-        playerResource,
-        MaxUtility,
-        {
-          value: max,
-        }
-      );
+      const playerResource = hashKeyEntity(resources[resource.toLowerCase()], player);
+      await mud.dev.setEntityContractComponentValue(playerResource, MaxUtility, {
+        value: max,
+      });
     },
   };
 
@@ -87,17 +74,10 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
     function: async (resource: string, max: number) => {
       const player = Account.get()?.value;
       if (!player) throw new Error("No player found");
-      const playerResource = hashKeyEntity(
-        resources[resource.toLowerCase()],
-        player
-      );
-      await mud.dev.setEntityContractComponentValue(
-        playerResource,
-        P_MaxStorage,
-        {
-          value: max,
-        }
-      );
+      const playerResource = hashKeyEntity(resources[resource.toLowerCase()], player);
+      await mud.dev.setEntityContractComponentValue(playerResource, P_MaxStorage, {
+        value: max,
+      });
     },
   };
 
@@ -109,13 +89,9 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         if (!player) throw new Error("No player found");
         const playerResource = hashKeyEntity(resource, player);
 
-        await mud.dev.setEntityContractComponentValue(
-          playerResource,
-          P_MaxStorage,
-          {
-            value: 100000 * 100,
-          }
-        );
+        await mud.dev.setEntityContractComponentValue(playerResource, P_MaxStorage, {
+          value: 100000 * 100,
+        });
 
         await mud.dev.setEntityContractComponentValue(playerResource, Item, {
           value: 100000 * 100,
@@ -132,21 +108,13 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         if (!player) throw new Error("No player found");
         const playerResource = hashKeyEntity(resource, player);
 
-        await mud.dev.setEntityContractComponentValue(
-          playerResource,
-          MaxUtility,
-          {
-            value: 10000,
-          }
-        );
+        await mud.dev.setEntityContractComponentValue(playerResource, MaxUtility, {
+          value: 10000,
+        });
 
-        mud.dev.setEntityContractComponentValue(
-          playerResource,
-          OccupiedUtilityResource,
-          {
-            value: 0,
-          }
-        );
+        mud.dev.setEntityContractComponentValue(playerResource, OccupiedUtilityResource, {
+          value: 0,
+        });
       });
     },
   };
@@ -176,13 +144,9 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const level = Level.get(building)?.value;
         if (!type || !level) throw new Error("No player found");
 
-        await mud.dev.setEntityContractComponentValue(
-          hashKeyEntity(type, level),
-          P_ScoreMultiplier,
-          {
-            value: multiplier,
-          }
-        );
+        await mud.dev.setEntityContractComponentValue(hashKeyEntity(type, level), P_ScoreMultiplier, {
+          value: multiplier,
+        });
       },
     },
     updateSpaceRock: {
@@ -216,8 +180,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const entity = Account.get()?.value;
         const resource = units[name.toLowerCase()];
         const asteroid = HomeAsteroid.get()?.value;
-        if (!entity || !asteroid || !resource)
-          throw new Error("No unitwith that name");
+        if (!entity || !asteroid || !resource) throw new Error("No unitwith that name");
         const playerResource = hashEntities(resource, entity, asteroid);
 
         await mud.dev.setEntityContractComponentValue(playerResource, Units, {
@@ -250,13 +213,9 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
         const player = Account.get()?.value;
         if (!player) throw new Error("No player found");
         const playerResource = hashKeyEntity(resources[name], player);
-        mud.dev.setEntityContractComponentValue(
-          playerResource,
-          OccupiedUtilityResource,
-          {
-            value,
-          }
-        );
+        mud.dev.setEntityContractComponentValue(playerResource, OccupiedUtilityResource, {
+          value,
+        });
       },
     },
 
@@ -275,13 +234,9 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
         value = SPEED_SCALE / value;
-        await mud.dev.setEntityContractComponentValue(
-          SingletonID,
-          P_WorldSpeed,
-          {
-            value,
-          }
-        );
+        await mud.dev.setEntityContractComponentValue(singletonEntity, P_WorldSpeed, {
+          value,
+        });
       },
     },
   };

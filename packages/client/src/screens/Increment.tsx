@@ -1,27 +1,27 @@
 import { SingletonID } from "@latticexyz/network";
+import { keccak256 } from "@latticexyz/utils";
+import { ethers } from "ethers";
+import { Fragment, useMemo, useState } from "react";
+import { useMud } from "src/hooks";
 import {
   Counter,
   IsDebug,
   P_RequiredResources,
 } from "src/network/components/chainComponents";
 import { DoubleCounter } from "src/network/components/clientComponents";
-import { Fragment, useMemo, useState } from "react";
+import { getNetworkLayerConfig } from "src/network/config/getNetworkConfig";
+import { getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
   BlockType,
   ResearchImage,
   ResourceImage,
 } from "src/util/constants";
-import { getBlockTypeName } from "src/util/common";
-import { useMud } from "src/hooks";
-import { increment } from "src/util/web3";
-import { ethers } from "ethers";
-import { getNetworkLayerConfig } from "src/network/config/config";
-import P_RequiredResourcesJson from "../../../contracts/abi/P_RequiredResourcesComponent.json";
-import { ResourceValuesStruct } from "../../../contracts/types/ethers-contracts/P_RequiredResourcesComponent";
-import World from "../../../contracts/abi/World.json";
 import { hashKeyEntity } from "src/util/encode";
-import { keccak256 } from "@latticexyz/utils";
+import { increment } from "src/util/web3";
+import P_RequiredResourcesJson from "../../../contracts/abi/P_RequiredResourcesComponent.json";
+import World from "../../../contracts/abi/World.json";
+import { ResourceValuesStruct } from "../../../contracts/types/ethers-contracts/P_RequiredResourcesComponent";
 
 export default function Increment() {
   const network = useMud();

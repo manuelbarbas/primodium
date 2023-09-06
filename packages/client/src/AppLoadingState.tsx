@@ -1,13 +1,10 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { SyncState } from "@latticexyz/network";
-
-import Increment from "./screens/Increment";
-import { Game } from "./screens/Game";
-import { LoadingState } from "./network/components/chainComponents";
-import { Landing } from "./screens/Landing";
 import { useInit } from "./hooks/useInit";
-import { Progress } from "./components/core/Progress";
+import { LoadingState } from "./network/components/chainComponents";
+import { Game } from "./screens/Game";
+import Increment from "./screens/Increment";
+import { Landing } from "./screens/Landing";
 
 export default function AppLoadingState() {
   //initialize global components
@@ -41,10 +38,7 @@ export default function AppLoadingState() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route
-                path="/game"
-                element={initialized ? <Game /> : <Landing />}
-              />
+              <Route path="/game" element={initialized ? <Game /> : <Landing />} />
               <Route path="/increment" element={<Increment />} />
             </Routes>
           </BrowserRouter>

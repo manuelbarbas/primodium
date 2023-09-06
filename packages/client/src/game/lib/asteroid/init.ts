@@ -1,17 +1,13 @@
 // ASTEROID MAP ENTRY POINT
 import engine from "engine";
-import { Network } from "../../../network/layer";
-import { asteroidSceneConfig } from "../../config/asteroidScene";
-import { runSystems } from "./systems";
-import { setupTileManager } from "./setup/setupTileManager";
+import { Network } from "../../../network/setupNetworkOld";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { setupMouseInputs } from "./setup/setupMouseInputs";
 import { setupKeybinds } from "./setup/setupKeybinds";
+import { setupMouseInputs } from "./setup/setupMouseInputs";
+import { setupTileManager } from "./setup/setupTileManager";
+import { runSystems } from "./systems";
 
-export const initAsteroidScene = async (
-  game: Awaited<ReturnType<typeof engine.createGame>>,
-  network: Network
-) => {
+export const initAsteroidScene = async (game: Awaited<ReturnType<typeof engine.createGame>>, network: Network) => {
   const { world } = network;
 
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);

@@ -1,0 +1,30 @@
+import worldsJson from "contracts/worlds.json";
+
+import { getBurnerPrivateKey } from "@latticexyz/common";
+import { chainConfigs } from "./chainConfigs";
+const params = new URLSearchParams(window.location.search);
+
+const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
+
+const DEV = import.meta.env.VITE_DEV === "true";
+export const getNetworkConfig = () => {
+  const worldAddress = params.get("worldAddress");
+  if (!worldAddress) throw new Error("No world address provided");
+  const chainId = params.get("chainid") || import.meta.env.VITE_CHAIN_ID || 31337;
+
+  const chain = chainConfigs[chainId];
+
+  const world = worlds[chain.id];
+  const initialBlockNumber = params.has("initialBlockNumber")
+    ? Number(params.get("initialBlockNumber"))
+    : world?.blockNumber ?? 0;
+
+  return {
+    privateKey: getBurnerPrivateKey(),
+    chainId,
+    chain,
+    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
+    worldAddress,
+    initialBlockNumber: BigInt(initialBlockNumber),
+  };
+};

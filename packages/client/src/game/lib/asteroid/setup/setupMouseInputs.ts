@@ -1,8 +1,5 @@
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
-import { Action } from "src/util/constants";
-import { getBuildingAtCoord } from "src/util/tile";
-import { demolishBuilding } from "src/util/web3";
 import {
   Account,
   HoverTile,
@@ -10,9 +7,12 @@ import {
   SelectedBuilding,
   SelectedTile,
 } from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
 import { world } from "src/network/world";
-import { Network } from "src/network/layer";
+import { Action } from "src/util/constants";
 import { outOfBounds } from "src/util/outOfBounds";
+import { getBuildingAtCoord } from "src/util/tile";
+import { demolishBuilding } from "src/util/web3";
 
 export const setupMouseInputs = (scene: Scene, network: Network) => {
   const player = Account.get()?.value!;

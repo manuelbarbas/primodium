@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext } from "react";
 
-import { Network } from "src/network/layer";
+import { Network } from "src/network/setupNetworkOld";
 
 export const MudContext = createContext<Network | null>(null);
 

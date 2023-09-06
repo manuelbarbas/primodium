@@ -1,20 +1,16 @@
-import { createFaucetService } from "@latticexyz/network";
 import { defineComponentSystem } from "@latticexyz/recs";
-import { setupMUDNetwork } from "@latticexyz/std-client";
 import { utils } from "ethers";
 
 import { createPerlin } from "@latticexyz/noise";
 import { NetworkConfig } from "src/util/types";
-import { SystemAbis } from "../../../contracts/types/SystemAbis.mjs";
-import { SystemTypes } from "../../../contracts/types/SystemTypes";
-import { singletonIndex, world } from "./world";
 import chainComponents, { Counter } from "./components/chainComponents";
 import { DoubleCounter } from "./components/clientComponents";
 import setupDevSystems from "./systems/setupDevSystems";
+import { singletonIndex, world } from "./world";
 
-export type Network = Awaited<ReturnType<typeof createNetworkLayer>>;
+export type Network = Awaited<ReturnType<typeof setupNetwork>>;
 
-export async function createNetworkLayer(config: NetworkConfig) {
+export async function setupNetwork(config: NetworkConfig) {
   // Components contain the application state.
   // If a contractId is provided, MUD syncs the state with the corresponding
   // component contract (in this case `CounterComponent.sol`)
