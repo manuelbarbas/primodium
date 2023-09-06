@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 
-import mudConfig from "contracts/mud.config";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
 import { ComponentBrowser } from "./components/dev/ComponentBrowser";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
-import { world } from "./network/world";
 
 const DEV = import.meta.env.VITE_DEV === "true";
 
@@ -24,24 +22,24 @@ export default function App() {
 
   useEffect(() => {
     return;
-    if (!networkLayer) return;
+    // if (!networkLayer) return;
 
-    // https://vitejs.dev/guide/env-and-mode.html
-    if (DEV) {
-      import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
-        mountDevTools({
-          config: mudConfig,
-          publicClient: networkLayer.network.publicClient,
-          walletClient: networkLayer.network.walletClient,
-          latestBlock$: networkLayer.network.latestBlock$,
-          blockStorageOperations$: networkLayer.network.blockStorageOperations$,
-          worldAddress: networkLayer.network.worldContract.address,
-          worldAbi: networkLayer.network.worldContract.abi,
-          write$: networkLayer.network.write$,
-          recsWorld: world,
-        })
-      );
-    }
+    // // https://vitejs.dev/guide/env-and-mode.html
+    // if (DEV) {
+    //   import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
+    //     mountDevTools({
+    //       config: mudConfig,
+    //       publicClient: networkLayer.network.publicClient,
+    //       walletClient: networkLayer.network.walletClient,
+    //       latestBlock$: networkLayer.network.latestBlock$,
+    //       blockStorageOperations$: networkLayer.network.blockStorageOperations$,
+    //       worldAddress: networkLayer.network.worldContract.address,
+    //       worldAbi: networkLayer.network.worldContract.abi,
+    //       write$: networkLayer.network.write$,
+    //       recsWorld: world,
+    //     })
+    //   );
+    // }
   }, [networkLayer]);
 
   // Amplitude Analytics
