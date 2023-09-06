@@ -12,6 +12,7 @@ export enum Action {
 
 export enum ResourceType {
   Resource,
+  ResourceRate,
   Utility,
 }
 
