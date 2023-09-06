@@ -3,7 +3,6 @@ import { execute } from "src/network/actions";
 import { Network } from "src/network/layer";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { updateSpaceRock } from "./updateSpaceRock";
 
 export const train = async (
   buildingEntity: EntityID,
@@ -14,8 +13,6 @@ export const train = async (
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
   const setNotification = useNotificationStore.getState().setNotification;
-
-  await updateSpaceRock(network);
 
   setTransactionLoading(true);
   await execute(
