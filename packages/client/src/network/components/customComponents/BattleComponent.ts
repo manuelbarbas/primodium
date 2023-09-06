@@ -1,6 +1,6 @@
-import { world } from "src/network/world";
-import newComponent from "./Component";
 import { ComponentValue, Type } from "@latticexyz/recs";
+import { world } from "src/network/world";
+import newComponent from "./ExtendedComponent";
 
 export const BattleComponent = () => {
   const component = newComponent(world, {
@@ -27,9 +27,7 @@ export const BattleComponent = () => {
     const attackerUnits = [];
     const defenderUnits = [];
     if (battle.attackerUnitTypes.length !== battle.attackerUnitCounts.length)
-      throw new Error(
-        "attackerUnitTypes and attackerUnitCounts must be the same length"
-      );
+      throw new Error("attackerUnitTypes and attackerUnitCounts must be the same length");
 
     for (let i = 0; i < battle.attackerUnitTypes.length; i++) {
       attackerUnits.push({

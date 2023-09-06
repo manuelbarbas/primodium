@@ -11,14 +11,11 @@ import {
   withValue,
 } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import {
-  getBuildingsOfTypeInRange,
-  getTilesOfTypeInRange,
-} from "src/util/tile";
+import { getBuildingsOfTypeInRange, getTilesOfTypeInRange } from "src/util/tile";
+import { ContractCoord } from "src/util/types";
 import { Position } from "../chainComponents";
 import { Marker } from "../clientComponents";
-import { Options, newStringComponent } from "./Component";
-import { ContractCoord } from "src/util/types";
+import { Options, newStringComponent } from "./ExtendedComponent";
 
 function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -30,10 +27,7 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
     //check if there is an entity with given coord, if not create one and add position
     if (entities.length == 0) {
       //create entity
-      const entity = createEntity(world, [
-        withValue(Position, coord),
-        withValue(Marker, { value: type }),
-      ]);
+      const entity = createEntity(world, [withValue(Position, coord), withValue(Marker, { value: type })]);
 
       return entity;
     } else {
@@ -63,10 +57,7 @@ function newMarkerComponent<Overridable extends boolean, M extends Metadata>(
 
     //handle buildings
     for (const building of buildings) {
-      Position.set(
-        { ...addCoords(building, offset), parent: origin.parent },
-        type
-      );
+      Position.set({ ...addCoords(building, offset), parent: origin.parent }, type);
     }
   };
 

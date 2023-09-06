@@ -19,7 +19,7 @@ export default function AppLoadingState() {
     latestBlockNumber: 0n,
     lastBlockNumberProcessed: 0n,
   });
-  console.log("loading state is live:", loadingState.step, SyncStep.LIVE, loadingState.step === SyncStep.LIVE);
+
   return (
     <div
       style={{

@@ -1,38 +1,19 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import newComponent, {
-  newBoolComponent,
-  newCoordComponent,
-  newEntityComponent,
-  newNumberComponent,
-} from "./customComponents/Component";
-import newMarkerComponent from "./customComponents/MarkerComponent";
-import newSendComponent from "./customComponents/SendComponent";
 import { BattleComponent } from "./customComponents/BattleComponent";
+import {
+  createExtendedBoolComponent,
+  createExtendedComponent,
+  createExtendedCoordComponent,
+  createExtendedEntityComponent,
+  createExtendedNumberComponent,
+} from "./customComponents/ExtendedComponent";
+import createExtendedMarkerComponent from "./customComponents/MarkerComponent";
 import { NotificationQueueComponent } from "./customComponents/NotificationQueueComponent";
+import createExtendedSendComponent from "./customComponents/SendComponent";
 
-export const Account = newEntityComponent(world, { id: "Account" });
-
-export const HomeAsteroid = newComponent(
-  world,
-  { value: Type.Entity },
-  { id: "HomeAsteroid" }
-);
-
-export const Battle = BattleComponent();
-
-export const BattleReport = newComponent(
-  world,
-  {
-    show: Type.Boolean,
-    battle: Type.OptionalEntity,
-  },
-  {
-    id: "Battle",
-  }
-);
-
-export const BlockNumber = newComponent(
+// todo: organize these alphabetically
+export const BlockNumber = createExtendedComponent(
   world,
   {
     value: Type.Number,
@@ -42,14 +23,41 @@ export const BlockNumber = newComponent(
     id: "BlockNumber",
   }
 );
+export const Account = createExtendedEntityComponent(world, { id: "Account" });
 
-export const DoubleCounter = newNumberComponent(world, {
+export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
+export const DoubleCounter = createExtendedNumberComponent(world, {
   id: "DoubleCounter",
 });
+export const SelectedTile = createExtendedCoordComponent(world, { id: "SelectedTile" });
+export const HoverTile = createExtendedCoordComponent(world, { id: "HoverTile" });
+export const SelectedBuilding = createExtendedComponent(world, { value: Type.Entity }, { id: "SelectedBuilding" });
+export const SelectedAction = createExtendedNumberComponent(world, {
+  id: "SelectedAction",
+});
 
-export const GameReady = newBoolComponent(world, { id: "GameReady" });
+export const Marker = createExtendedMarkerComponent(world, {
+  id: "MarkerTypeComponent",
+});
 
-export const Hangar = newComponent(
+export const ActiveAsteroid = createExtendedComponent(world, { value: Type.Entity }, { id: "ActiveAsteroid" });
+
+export const Send = createExtendedSendComponent(world);
+
+export const TrainingQueue = createExtendedComponent(
+  world,
+  {
+    units: Type.EntityArray,
+    counts: Type.NumberArray,
+    progress: Type.NumberArray,
+    timeRemaining: Type.NumberArray,
+  },
+  {
+    id: "TrainingQueue",
+  }
+);
+
+export const Hangar = createExtendedComponent(
   world,
   {
     units: Type.EntityArray,
@@ -60,9 +68,7 @@ export const Hangar = newComponent(
   }
 );
 
-export const HoverTile = newCoordComponent(world, { id: "HoverTile" });
-
-export const Leaderboard = newComponent(
+export const Leaderboard = createExtendedComponent(
   world,
   {
     players: Type.EntityArray,
@@ -74,40 +80,18 @@ export const Leaderboard = newComponent(
   }
 );
 
-export const MapOpen = newBoolComponent(world, {
-  id: "MapOpen",
-});
-
-export const Marker = newMarkerComponent(world, {
-  id: "MarkerTypeComponent",
-});
+export const Battle = BattleComponent();
 
 export const NotificationQueue = NotificationQueueComponent();
 
-export const SelectedAction = newNumberComponent(world, {
-  id: "SelectedAction",
-});
-
-export const SelectedBuilding = newComponent(
-  world,
-  { value: Type.Entity },
-  { id: "SelectedBuilding" }
-);
-
-export const SelectedTile = newCoordComponent(world, { id: "SelectedTile" });
-
-export const Send = newSendComponent(world);
-
-export const TrainingQueue = newComponent(
+export const BattleReport = createExtendedComponent(
   world,
   {
-    units: Type.EntityArray,
-    counts: Type.NumberArray,
-    progress: Type.NumberArray,
-    timeRemaining: Type.NumberArray,
+    show: Type.Boolean,
+    battle: Type.OptionalEntity,
   },
   {
-    id: "TrainingQueue",
+    id: "Battle",
   }
 );
 

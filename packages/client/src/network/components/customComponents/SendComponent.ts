@@ -1,8 +1,9 @@
-import { EntityID, Metadata, World, Type } from "@latticexyz/recs";
+import { EntityID, Metadata, Type, World } from "@latticexyz/recs";
 
-import newComponent, { Options } from "./Component";
-import { Position } from "../chainComponents";
-import { HomeAsteroid } from "../clientComponents";
+import { Coord } from "@latticexyz/utils";
+import { encodeCoord } from "src/util/encode";
+import { Position, ReversePosition } from "../chainComponents";
+import newComponent, { Options } from "./ExtendedComponent";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -77,8 +78,48 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
     component.update({ origin: spaceRock });
   };
 
-  const setDestination = (spaceRock: EntityID | undefined) => {
-    component.update({ destination: spaceRock });
+  const setDestination = (position: Coord | undefined) => {
+    if (!position)
+      return component.update({
+        destinationX: undefined,
+        destinationY: undefined,
+      });
+    component.set({
+      ...(component.get() || emptyComponent),
+      destinationX: position.x,
+      destinationY: position.y,
+    });
+  };
+
+  const getOrigin = () => {
+    const componentValue = component.get();
+    if (!componentValue || !componentValue.originX || !componentValue.originY) return undefined;
+    const coord = { x: componentValue.originX, y: componentValue.originY };
+    const entities = Position.getAllWith(coord);
+    if (entities.length === 0) return;
+
+    const entityId = entities[0];
+    if (!entityId) return;
+
+    const entity = ReversePosition.get(encodeCoord(coord))?.value;
+    if (!entity) return undefined;
+    return { ...coord, entity };
+  };
+
+  const getDestination = () => {
+    const componentValue = component.get();
+    if (!componentValue || !componentValue.destinationX || !componentValue.destinationY) return undefined;
+    const coord = {
+      x: componentValue.destinationX,
+      y: componentValue.destinationY,
+    };
+    const entities = Position.getAllWith(coord);
+    if (entities.length === 0) return;
+
+    const entity = entities[0];
+    if (!entity) return;
+
+    return { ...coord, entity };
   };
 
   const setUnitCount = (entity: EntityID, count: number) => {
