@@ -95,23 +95,11 @@ export const BattleReport = createExtendedComponent(
   }
 );
 
+const DevHighlight = createExtendedComponent(world, { value: Type.OptionalNumber }, { id: "DevHighlight" });
 export default {
   Account,
   HomeAsteroid,
   Battle,
   BattleReport,
-  BlockNumber,
-  DoubleCounter,
-  GameReady,
-  Hangar,
-  HoverTile,
-  Leaderboard,
-  MapOpen,
-  Marker,
-  NotificationQueue,
-  SelectedAction,
-  SelectedBuilding,
-  SelectedTile,
-  Send,
-  TrainingQueue,
+  DevHighlight,
 };

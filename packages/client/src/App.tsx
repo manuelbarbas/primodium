@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import mudConfig from "contracts/mud.config";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
+import { ComponentBrowser } from "./components/dev/ComponentBrowser";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
@@ -22,6 +23,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    return;
     if (!networkLayer) return;
 
     // https://vitejs.dev/guide/env-and-mode.html
@@ -64,6 +66,7 @@ export default function App() {
     return (
       <MudProvider {...networkLayer}>
         <AppLoadingState />
+        {DEV && <ComponentBrowser />}
       </MudProvider>
     );
   }
