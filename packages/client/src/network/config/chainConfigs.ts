@@ -1,8 +1,4 @@
-import {
-  MUDChain,
-  latticeTestnet,
-  mudFoundry,
-} from "@latticexyz/common/chains";
+import { MUDChain, latticeTestnet, mudFoundry } from "@latticexyz/common/chains";
 
 export const caldera = {
   name: "Caldera",
@@ -20,17 +16,12 @@ export const caldera = {
     },
   },
   faucetUrl: "https://primodium-services.caldera.gg/faucet",
-  // TODO @emersonhsieh fill this out
-  // blockExplorers: {
-  //   otterscan: {
-  //     name: "Otterscan",
-  //     url: "https://explorer.testnet-chain.linfra.xyz",
-  //   },
-  //   default: {
-  //     name: "Otterscan",
-  //     url: "https://explorer.testnet-chain.linfra.xyz",
-  //   },
-  // },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://primodium-bedrock.calderaexplorer.xyz/",
+    },
+  },
 } as const satisfies MUDChain;
 
 interface ChainConfigs {
