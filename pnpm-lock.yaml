@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      husky:
-        specifier: ^8.0.3
-        version: 8.0.3
     devDependencies:
       '@latticexyz/cli':
         specifier: 2.0.0-next.5
@@ -27,6 +23,9 @@ importers:
       eslint:
         specifier: 8.29.0
         version: 8.29.0
+      husky:
+        specifier: '>=6'
+        version: 8.0.3
       lint-staged:
         specifier: ^14.0.1
         version: 14.0.1
@@ -4468,7 +4467,7 @@ packages:
     resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
     engines: {node: '>=14'}
     hasBin: true
-    dev: false
+    dev: true
 
   /i18next-http-backend@2.2.2:
     resolution: {integrity: sha512-mJu4ZqzDtBiU3O4GV9AbK5ekEqoDMdMnCl3pkdXmb5b8yoIH//u8FsmIe6C5qXb3teZu+j6VMi20tjUgzeABiw==}
