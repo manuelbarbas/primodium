@@ -1,10 +1,9 @@
 import { ReactNode, createContext, useContext } from "react";
+import { SetupResult } from "src/network/types";
 
-import { Network } from "src/network/setupNetworkOld";
+export const MudContext = createContext<SetupResult | null>(null);
 
-export const MudContext = createContext<Network | null>(null);
-
-type Props = Network & {
+type Props = SetupResult & {
   children: ReactNode;
 };
 

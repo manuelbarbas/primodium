@@ -2,8 +2,7 @@ import {
   Component,
   ComponentUpdate,
   ComponentValue,
-  EntityID,
-  EntityIndex,
+  Entity,
   Has,
   HasValue,
   Metadata,
@@ -21,17 +20,14 @@ import {
   setComponent,
   updateComponent,
 } from "@latticexyz/recs";
-import { singletonIndex } from "../../world";
 import { useEffect, useState } from "react";
 import { overridableComponent } from "./overridableComponent";
 type OverridableType<
   Overridable extends boolean,
   S extends Schema,
   M extends Metadata = Metadata,
-  T = undefined
-> = Overridable extends true
-  ? OverridableComponent<S, M, T>
-  : Component<S, M, T>;
+  T = unknown
+> = Overridable extends true ? OverridableComponent<S, M, T> : Component<S, M, T>;
 
 export interface Options<Overridable extends boolean, M extends Metadata> {
   id: string;
@@ -40,41 +36,17 @@ export interface Options<Overridable extends boolean, M extends Metadata> {
   overridable?: Overridable;
 }
 
-function newComponent<
-  Overridable extends boolean,
-  S extends Schema,
-  M extends Metadata = Metadata,
-  T = undefined
->(world: World, schema: S, options?: Options<Overridable, M>) {
-  const rawComponent = defineComponent(world, schema, options);
-  const component: OverridableType<Overridable, S, M> = options?.overridable
-    ? overridableComponent(rawComponent)
-    : (rawComponent as OverridableType<Overridable, S, M>);
-
-  function getEntity(entityID: EntityID) {
-    const entity = world.entityToIndex.get(entityID);
-    if (entity == undefined) return;
-    return entity;
-  }
-
-  function set(value: ComponentValue<S, T>, entityID?: EntityID) {
-    const entity = entityID ? getEntity(entityID) : singletonIndex;
-    if (entity == undefined)
-      throw new Error(
-        `[set ${entityID} for ${component.id}] no entity registered`
-      );
+export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(component: Component<S, M, T>) {
+  function set(value: ComponentValue<S, T>, entity?: Entity) {
+    if (entity == undefined) throw new Error(`[set ${entity} for ${component.id}] no entity registered`);
     setComponent(component, entity, value);
   }
 
   function get(): ComponentValue<S> | undefined;
-  function get(entityID: EntityID | undefined): ComponentValue<S> | undefined;
-  function get(
-    entityID: EntityID | undefined,
-    defaultValue?: ComponentValue<S>
-  ): ComponentValue<S>;
+  function get(entity: Entity | undefined): ComponentValue<S> | undefined;
+  function get(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
 
-  function get(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
-    const entity = entityID ? getEntity(entityID) : singletonIndex;
+  function get(entity?: Entity, defaultValue?: ComponentValue<S>) {
     if (entity == undefined) return defaultValue;
     const value = getComponentValue(component, entity);
     return value ?? defaultValue;
@@ -82,21 +54,20 @@ function newComponent<
 
   function getAll() {
     const entities = runQuery([Has(component)]);
-    return [...entities].map((entity) => world.entities[entity]);
+    return [...entities];
   }
 
   function getAllWith(value: Partial<ComponentValue<S>>) {
     const entities = runQuery([HasValue(component, value)]);
-    return [...entities].map((entity) => world.entities[entity]);
+    return [...entities];
   }
 
   function getAllWithout(value: Partial<ComponentValue<S>>) {
     const entities = runQuery([NotValue(component, value)]);
-    return [...entities].map((entity) => world.entities[entity]);
+    return [...entities];
   }
 
-  function remove(entityID?: EntityID) {
-    const entity = entityID ? getEntity(entityID) : singletonIndex;
+  function remove(entity?: Entity) {
     if (entity == undefined) return;
     removeComponent(component, entity);
   }
@@ -106,15 +77,12 @@ function newComponent<
     entities.forEach((entity) => removeComponent(component, entity));
   }
 
-  function update(value: Partial<ComponentValue<S, T>>, entityID?: EntityID) {
-    const entity = entityID ? getEntity(entityID) : singletonIndex;
-    if (entity == undefined)
-      throw new Error(`[update ${component.id}] no entity registered`);
+  function update(value: Partial<ComponentValue<S, T>>, entity?: Entity) {
+    if (entity == undefined) throw new Error(`[update ${component.id}] no entity registered`);
     updateComponent(component, entity, value);
   }
 
-  function has(entityID?: EntityID) {
-    const entity = entityID ? getEntity(entityID) : singletonIndex;
+  function has(entity?: Entity) {
     if (entity == undefined) return false;
     return hasComponent(component, entity);
   }
@@ -125,27 +93,18 @@ function newComponent<
     return update.component.id === component.id;
   }
 
-  function use(entityID?: EntityID | undefined): ComponentValue<S> | undefined;
-  function use(
-    entityID: EntityID | undefined,
-    defaultValue?: ComponentValue<S>
-  ): ComponentValue<S>;
+  function use(entity?: Entity | undefined): ComponentValue<S> | undefined;
+  function use(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
 
-  function use(entityID?: EntityID, defaultValue?: ComponentValue<S>) {
-    const rawEntity = entityID ? getEntity(entityID) : singletonIndex;
-
-    const entity = rawEntity !== undefined ? rawEntity : (-1 as EntityIndex);
-    const [value, setValue] = useState(
-      entity != null ? getComponentValue(component, entity) : undefined
-    );
+  function use(entity?: Entity, defaultValue?: ComponentValue<S>) {
+    const comp = component as Component<S>;
+    const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);
     useEffect(() => {
       // component or entity changed, update state to latest value
-      setValue(
-        entity != null ? getComponentValue(component, entity) : undefined
-      );
+      setValue(entity != null ? getComponentValue(component, entity) : undefined);
       if (entity == null) return;
       // fix: if pre-populated with state, useComponentValue doesn’t update when there’s a component that has been removed.
-      const queryResult = defineQuery([Has(component)], { runOnInit: true });
+      const queryResult = defineQuery([Has(component)], { runOnInit: false });
       const subscription = queryResult.update$.subscribe((update) => {
         if (isComponentUpdate(update, component) && update.entity === entity) {
           const [nextValue] = update.value;
@@ -172,41 +131,53 @@ function newComponent<
   };
   return context;
 }
+function newComponent<Overridable extends boolean, S extends Schema, M extends Metadata = Metadata, T = unknown>(
+  world: World,
+  schema: S,
+  options?: Options<Overridable, M>
+) {
+  const rawComponent = defineComponent(world, schema, options);
+  const component: OverridableType<Overridable, S, M> = options?.overridable
+    ? overridableComponent(rawComponent)
+    : (rawComponent as OverridableType<Overridable, S, M>);
+
+  return extendComponent(component);
+}
 
 export default newComponent;
 
 export type NewNumberComponent = ReturnType<typeof newNumberComponent>;
-export function newNumberComponent<
-  Overridable extends boolean,
-  M extends Metadata
->(world: World, options?: Options<Overridable, M>) {
+export function newNumberComponent<Overridable extends boolean, M extends Metadata>(
+  world: World,
+  options?: Options<Overridable, M>
+) {
   return newComponent(world, { value: Type.Number }, options);
 }
 
-export function newStringComponent<
-  Overridable extends boolean,
-  M extends Metadata
->(world: World, options?: Options<Overridable, M>) {
+export function newStringComponent<Overridable extends boolean, M extends Metadata>(
+  world: World,
+  options?: Options<Overridable, M>
+) {
   return newComponent(world, { value: Type.String }, options);
 }
 
-export function newCoordComponent<
-  Overridable extends boolean,
-  M extends Metadata
->(world: World, options?: Options<Overridable, M>) {
+export function newCoordComponent<Overridable extends boolean, M extends Metadata>(
+  world: World,
+  options?: Options<Overridable, M>
+) {
   return newComponent(world, { x: Type.Number, y: Type.Number }, options);
 }
 
-export function newBoolComponent<
-  Overridable extends boolean,
-  M extends Metadata
->(world: World, options?: Options<Overridable, M>) {
+export function newBoolComponent<Overridable extends boolean, M extends Metadata>(
+  world: World,
+  options?: Options<Overridable, M>
+) {
   return newComponent(world, { value: Type.Boolean }, options);
 }
 
-export function newEntityComponent<
-  Overridable extends boolean,
-  M extends Metadata
->(world: World, options?: Options<Overridable, M>) {
+export function newEntityComponent<Overridable extends boolean, M extends Metadata>(
+  world: World,
+  options?: Options<Overridable, M>
+) {
   return newComponent(world, { value: Type.Entity }, options);
 }

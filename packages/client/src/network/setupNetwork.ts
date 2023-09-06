@@ -8,8 +8,6 @@ import { ClientConfig, Hex, createPublicClient, createWalletClient, fallback, ht
 import { NetworkConfig } from "./types";
 import { world } from "./world";
 
-export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
-
 export async function setupNetwork(networkConfig: NetworkConfig) {
   const clientOptions = {
     chain: networkConfig.chain,
@@ -56,7 +54,6 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
       if (lowBalance) {
         console.info("[Dev Faucet]: Balance is low, dripping funds to player");
         // Double drip
-        await faucet.dripDev({ address });
         await faucet.dripDev({ address });
       }
     };

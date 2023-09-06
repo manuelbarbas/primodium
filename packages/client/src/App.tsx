@@ -1,38 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-
-import {
-  Address,
-  Connector,
-  WagmiConfig,
-  useAccount as useWagmiAccount,
-} from "wagmi";
-import { getNetworkLayerConfig } from "./network/config/getNetworkConfig";
-import { Network, createNetworkLayer } from "./network/setupNetworkOld";
+import { useEffect, useState } from "react";
 
 import mudConfig from "contracts/mud.config";
+import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
-import wagmiClient from "./network/wagmi";
+import { MudProvider } from "./hooks/providers/MudProvider";
+import { setup } from "./network/setup";
+import { SetupResult } from "./network/types";
+import { world } from "./network/world";
 
 const DEV = import.meta.env.VITE_DEV === "true";
 
 export default function App() {
-  // Setup network layer
-  const { connector: activeConnector, address } = useWagmiAccount();
-  const prevAddressRef = useRef<Address | undefined>();
+  const [networkLayer, setNetworkLayer] = useState<SetupResult>();
 
-  const [networkLayer, setNetworkLayer] = useState<Network>();
-
-  const setupNetworkLayerOnChange = async (
-    address: Address | undefined,
-    activeConnector: Connector | undefined
-  ) => {
-    if (prevAddressRef.current && address === prevAddressRef.current) return;
-    const provider = await activeConnector?.getProvider();
-    const networkLayerConfig = getNetworkLayerConfig(provider);
-    const network = await createNetworkLayer(networkLayerConfig);
-    setNetworkLayer(network);
-    prevAddressRef.current = address;
-  };
+  useEffect(() => {
+    async function setupNetwork() {
+      const result = await setup();
+      setNetworkLayer(result);
+    }
+    setupNetwork();
+  }, []);
 
   useEffect(() => {
     if (!networkLayer) return;
@@ -49,15 +36,11 @@ export default function App() {
           worldAddress: networkLayer.network.worldContract.address,
           worldAbi: networkLayer.network.worldContract.abi,
           write$: networkLayer.network.write$,
-          recsWorld: networkLayer.world,
+          recsWorld: world,
         })
       );
     }
   }, [networkLayer]);
-
-  useEffect(() => {
-    setupNetworkLayerOnChange(address, activeConnector);
-  }, [activeConnector, address]);
 
   // Amplitude Analytics
   if (DEV) {
@@ -79,25 +62,9 @@ export default function App() {
     );
   } else {
     return (
-      <WagmiConfig client={wagmiClient}>
-        <MudProvider {...networkLayer}>
-          <ToastContainer
-            toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
-            progressClassName={"bg-accent"}
-            position="top-left"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-          />
-          <AppLoadingState />
-        </MudProvider>
-      </WagmiConfig>
+      <MudProvider {...networkLayer}>
+        <AppLoadingState />
+      </MudProvider>
     );
   }
 }
