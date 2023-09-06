@@ -22,23 +22,28 @@ export const RecipeDisplay: React.FC<{
   if (recipe.length === 0) return <></>;
 
   return (
-    <div className="flex justify-center items-center text-sm bg-slate-800/60 p-1 border border-slate-500 rounded-md gap-2 flex-wrap">
-      {recipe.map((resource) => {
-        const resourceImage = ResourceImage.get(resource.id)!;
-        const resourceName = getBlockTypeName(resource.id);
-        return (
-          <ResourceIconTooltip
-            key={resource.id + resource.type}
-            image={resourceImage}
-            resourceId={resource.id}
-            resourceType={resource.type}
-            name={resourceName}
-            amount={resource.amount}
-            scale={resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1}
-            fontSize={"xs"}
-          />
-        );
-      })}
+    <div className="flex flex-col items-center gap-1">
+      <div className="flex justify-center items-center text-sm bg-slate-800/60 p-1 border border-slate-500 rounded-md gap-2 flex-wrap w-full">
+        {recipe.map((resource) => {
+          const resourceImage = ResourceImage.get(resource.id)!;
+          const resourceName = getBlockTypeName(resource.id);
+          return (
+            <ResourceIconTooltip
+              key={resource.id + resource.type}
+              image={resourceImage}
+              resourceId={resource.id}
+              resourceType={resource.type}
+              name={resourceName}
+              amount={resource.amount}
+              scale={
+                resource.type !== ResourceType.Utility ? RESOURCE_SCALE : 1
+              }
+              fontSize={"xs"}
+            />
+          );
+        })}
+      </div>
+      <p className="text-[.6rem] opacity-50">COST</p>
     </div>
   );
 };
@@ -92,25 +97,24 @@ export const BlueprintInfo: React.FC<{
                       ></img>
                       {formatNumber(productionRate)}/MIN
                     </div>
+                    <p className="text-[.6rem] opacity-50">OUTPUT</p>
                   </>
                 )}
               </div>
             )}
-            <p className="text-[.6rem] opacity-50">OUTPUT</p>
           </div>
 
           <div className="flex flex-col items-center gap-2">
             <p className="flex justify-center align-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm font-bold w-full text-center">
               {getBlockTypeName(buildingType)}
             </p>
-            <div className="flex gap-1">
+            <div className="flex gap-1 w-full">
               {
-                <div className="flex flex-col gap-1 w-18 text-xs">
+                <div className="flex flex-col gap-1 w-18 text-xs w-full">
                   <RecipeDisplay entity={buildingLevelEntity} />
                 </div>
               }
             </div>
-            <p className="text-[.6rem] opacity-50">COST</p>
           </div>
         </div>
       </div>
