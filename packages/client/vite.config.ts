@@ -19,7 +19,6 @@ export default defineConfig({
       target: "es2020",
     },
 
-    exclude: ["@latticexyz/network", "@latticexyz/noise"],
     include: [
       "proxy-deep",
       "ethers/lib/utils",

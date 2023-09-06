@@ -3,10 +3,9 @@ cache/
 node_modules/
 bindings/
 artifacts/
-deployments
-# abi/
-# types/
+abi/
+types/
 broadcast/
-.env
 
-deploy-live.json
+# Ignore MUD deploy artifacts
+deploys/**/*.json
