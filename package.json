@@ -15,17 +15,33 @@
     "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "run-pty": "4.0.4",
     "@latticexyz/cli": "2.0.0-next.5",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",
     "concurrently": "^8.0.1",
     "eslint": "8.29.0",
+    "lint-staged": "^14.0.1",
     "rimraf": "^3.0.2",
+    "run-pty": "4.0.4",
     "typescript": "5.1.6"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
   },
   "engines": {
     "node": "18.x",
     "pnpm": "8.x"
+  },
+  "dependencies": {
+    "husky": "^8.0.3"
   }
 }
