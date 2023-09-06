@@ -1,4 +1,10 @@
-import { EntityID, EntityIndex, Has, HasValue } from "@latticexyz/recs";
+import {
+  EntityID,
+  EntityIndex,
+  Has,
+  HasValue,
+  runQuery,
+} from "@latticexyz/recs";
 import {
   AsteroidType,
   Item,
@@ -8,6 +14,7 @@ import {
   OwnedBy,
   P_MaxStorage,
   P_MotherlodeResource,
+  P_ProductionDependencies,
   P_RequiredResources,
   P_RequiredUtility,
   Production,
@@ -20,7 +27,6 @@ import {
   BlockNumber,
   Hangar,
 } from "src/network/components/clientComponents";
-import { useEntityQuery } from "@latticexyz/react";
 import { world } from "src/network/world";
 import { getUnitStats } from "./trainUnits";
 import { ESpaceRockType } from "./web3/types";
@@ -38,6 +44,11 @@ export function getRecipe(entityId: EntityID) {
     requiredAmounts: [],
   });
 
+  const requiredProduction = P_ProductionDependencies.get(entityId, {
+    resources: [],
+    values: [],
+  });
+
   const resources = requiredResources.resources.map(
     (resourceId: EntityID, index: number) => ({
       id: resourceId,
@@ -45,6 +56,7 @@ export function getRecipe(entityId: EntityID) {
       amount: requiredResources.values[index],
     })
   );
+
   const utilities = requiredUtilities.resourceIDs.map(
     (resourceId: EntityID, index: number) => ({
       id: resourceId,
@@ -52,7 +64,14 @@ export function getRecipe(entityId: EntityID) {
       amount: requiredUtilities.requiredAmounts[index],
     })
   );
-  return [...resources, ...utilities];
+
+  const resourceRate = requiredProduction.resources.map((resource, index) => ({
+    id: resource,
+    type: ResourceType.ResourceRate,
+    amount: requiredProduction.values[index],
+  }));
+
+  return [...resources, ...utilities, ...resourceRate];
 }
 
 export const mineableResources = [
@@ -112,7 +131,7 @@ export function getFullResourceCount(
     HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
   ];
 
-  const motherlodes = useEntityQuery(query);
+  const motherlodes = Array.from(runQuery(query));
 
   let motherlodeProduction = 0;
 
@@ -157,19 +176,27 @@ export function getFullResourceCount(
 export function hasEnoughResources(entityId: EntityID) {
   const recipe = getRecipe(entityId);
 
-  const resourcesAmounts = recipe.map((resource) => {
-    const { resourceCount, resourcesToClaim } = getFullResourceCount(
-      resource.id,
-      resource.type
-    );
-
-    return resourceCount + resourcesToClaim;
+  const resourceAmounts = recipe.map((resource) => {
+    return getFullResourceCount(resource.id, resource.type);
   });
 
   for (const [index, resource] of recipe.entries()) {
-    const resourceAmount = resourcesAmounts[index];
+    const resourceAmount = resourceAmounts[index];
+    const { resourceCount, resourcesToClaim, production } = resourceAmount;
 
-    if (resourceAmount < resource.amount) return false;
+    switch (resource.type) {
+      case ResourceType.Resource:
+        if (resourceCount + resourcesToClaim < resource.amount) return false;
+        break;
+      case ResourceType.ResourceRate:
+        if (production < resource.amount) return false;
+        break;
+      case ResourceType.Utility:
+        if (resourceCount + resourcesToClaim >= resource.amount) return false;
+        break;
+      default:
+        return false;
+    }
   }
 
   return true;

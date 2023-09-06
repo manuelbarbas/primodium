@@ -9,6 +9,7 @@ import {
   Production,
   LastClaimedAt,
   OccupiedUtilityResource,
+  MaxUtility,
 } from "src/network/components/chainComponents";
 import {
   BlockNumber,
@@ -63,7 +64,10 @@ export function useFullResourceCount(
     resourceID
   );
 
-  const maxStorage = useResourceCount(P_MaxStorage, resourceID);
+  const maxStorage = useResourceCount(
+    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
+    resourceID
+  );
 
   const production =
     useResourceCount(Production, resourceID) + motherlodeProduction;
