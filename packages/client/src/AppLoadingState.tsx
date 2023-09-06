@@ -19,7 +19,7 @@ export default function AppLoadingState() {
     latestBlockNumber: 0n,
     lastBlockNumberProcessed: 0n,
   });
-  console.log("loading state is live:", loadingState.step, SyncStep.LIVE, loadingState.state === SyncStep.LIVE);
+  console.log("loading state is live:", loadingState.step, SyncStep.LIVE, loadingState.step === SyncStep.LIVE);
   return (
     <div
       style={{
@@ -33,6 +33,9 @@ export default function AppLoadingState() {
             <div className="w-72 ring-2 ring-cyan-400 h-4 relative mb-4">
               <div style={{ width: `${loadingState.percentage}%` }} className="absolute top-0 left-0 bg-cyan-700 h-4" />
             </div>
+            <p className="text-lg">
+              {loadingState.message} ({Math.floor(loadingState.percentage)}%)
+            </p>
           </div>
         </div>
       )}

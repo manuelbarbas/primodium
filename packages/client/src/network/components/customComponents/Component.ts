@@ -37,16 +37,32 @@ export interface Options<Overridable extends boolean, M extends Metadata> {
   overridable?: Overridable;
 }
 
-export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(component: Component<S, M, T>) {
+export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown> = Component<S, M, T> & {
+  get(): ComponentValue<S> | undefined;
+  get(entity: Entity | undefined): ComponentValue<S> | undefined;
+  get(entity?: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S> | undefined;
+
+  set: (value: ComponentValue<S, T>, entity?: Entity) => void;
+  getAll: () => Entity[];
+  getAllWith: (value: Partial<ComponentValue<S>>) => Entity[];
+  getAllWithout: (value: Partial<ComponentValue<S>>) => Entity[];
+  remove: (entity?: Entity) => void;
+  clear: () => void;
+  update: (value: Partial<ComponentValue<S, T>>, entity?: Entity) => void;
+  has: (entity?: Entity) => boolean;
+
+  use(entity?: Entity | undefined): ComponentValue<S> | undefined;
+  use(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
+};
+
+export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(
+  component: Component<S, M, T>
+): ExtendedComponent<S, M, T> {
   function set(value: ComponentValue<S, T>, entity?: Entity) {
     entity = entity ?? singletonEntity;
     if (entity == undefined) throw new Error(`[set ${entity} for ${component.id}] no entity registered`);
     setComponent(component, entity, value);
   }
-
-  function get(): ComponentValue<S> | undefined;
-  function get(entity: Entity | undefined): ComponentValue<S> | undefined;
-  function get(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
 
   function get(entity?: Entity, defaultValue?: ComponentValue<S>) {
     entity = entity ?? singletonEntity;
@@ -100,20 +116,17 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
 
   function use(entity?: Entity | undefined): ComponentValue<S> | undefined;
   function use(entity: Entity | undefined, defaultValue?: ComponentValue<S>): ComponentValue<S>;
-
   function use(entity?: Entity, defaultValue?: ComponentValue<S>) {
     entity = entity ?? singletonEntity;
     const comp = component as Component<S>;
     const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);
     useEffect(() => {
-      console.log("entity:", entity);
       // component or entity changed, update state to latest value
       setValue(entity != null ? getComponentValue(component, entity) : undefined);
       if (entity == null) return;
       // fix: if pre-populated with state, useComponentValue doesn’t update when there’s a component that has been removed.
       const queryResult = defineQuery([Has(component)], { runOnInit: false });
       const subscription = queryResult.update$.subscribe((update) => {
-        console.log("subscribed to update", update);
         if (isComponentUpdate(update, component) && update.entity === entity) {
           const [nextValue] = update.value;
           setValue(nextValue);
