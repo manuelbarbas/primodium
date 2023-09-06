@@ -10,10 +10,9 @@ import { getNetworkLayerConfig } from "./network/config/config";
 import { Network, createNetworkLayer } from "./network/layer";
 
 import AppLoadingState from "./AppLoadingState";
+import { ampli } from "./ampli";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import wagmiClient from "./network/wagmi";
-import { ComponentBrowser } from "./components/dev/ComponentBrowser";
-import { ampli } from "./ampli";
 
 const DEV = import.meta.env.VITE_DEV === "true";
 
@@ -66,7 +65,6 @@ export default function App() {
       <WagmiConfig client={wagmiClient}>
         <MudProvider {...networkLayer}>
           <AppLoadingState />
-          {DEV && <ComponentBrowser />}
         </MudProvider>
       </WagmiConfig>
     );

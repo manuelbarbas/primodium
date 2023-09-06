@@ -1,4 +1,4 @@
-# Primodium v0.7.1-MUDv2
+# Primodium v0.7.1
 
 Initialize with `yarn`. Afterwards, in separate terminal sessions, run the following commands in order:
 
@@ -187,6 +187,8 @@ PathComponent
 LastClaimedAtComponent
 
 ```
+
+# TODO: which systems call systems?
 
 # Game Mechanic Components
 

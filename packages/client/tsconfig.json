@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["vite/client"],
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -10,16 +11,13 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
       "@game/api": ["src/game/api"],
-      "@game/constants": ["src/game/constants"],
+      "@game/constants": ["src/game/constants"]
     }
   },
   "include": ["src"]
