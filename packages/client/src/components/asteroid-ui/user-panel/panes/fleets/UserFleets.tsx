@@ -43,8 +43,8 @@ export const OrbitActionButton: React.FC<{
   const index = getIndex(entity);
   return (
     <button
-      disabled={transactionLoading || index == undefined}
-      className={`border p-1 rounded-md hover:scale-105 transition-all ${
+      disabled={transactionLoading || index === undefined}
+      className={`border p-1 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
         isNeutral || sendType === ESendType.REINFORCE
           ? "bg-cyan-700 border-cyan-500"
           : "bg-rose-800 border-rose-600"
@@ -63,7 +63,7 @@ export const OrbitActionButton: React.FC<{
               return;
             }
 
-            if (!index) return;
+            if (index == undefined) return;
             reinforce(destination, index, network);
         }
       }}
