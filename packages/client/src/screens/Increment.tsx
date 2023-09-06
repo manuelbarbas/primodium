@@ -2,7 +2,6 @@ import { useMud } from "src/hooks";
 
 export default function Increment() {
   const { components, systems } = useMud();
-  console.log("gm");
 
   const counter = components.Counter.use();
   // const doubleCounter = DoubleCounter.use();
