@@ -1,15 +1,15 @@
 {
   "name": "client",
-  "license": "MIT",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
+    "dev": "vite",
     "lint": "eslint ./src --ext .js,.ts,.tsx",
     "lint:fix": "eslint ./src --ext .js,.ts,.tsx --fix",
+    "preview": "vite preview",
     "test": "vitest"
   },
   "dependencies": {
@@ -18,8 +18,8 @@
     "@improbable-eng/grpc-web": "^0.15.0",
     "@latticexyz/common": "2.0.0-next.5",
     "@latticexyz/dev-tools": "2.0.0-next.5",
-    "@latticexyz/phaserx": "2.0.0-next.5",
     "@latticexyz/noise": "2.0.0-next.5",
+    "@latticexyz/phaserx": "2.0.0-next.5",
     "@latticexyz/react": "2.0.0-next.5",
     "@latticexyz/recs": "2.0.0-next.5",
     "@latticexyz/schema-type": "2.0.0-next.5",
@@ -55,8 +55,8 @@
     "react-zoom-pan-pinch": "^2.5.0",
     "rxjs": "^7.5.5",
     "threads": "^1.7.0",
-    "walktour": "^5.2.0",
     "viem": "1.6.0",
+    "walktour": "^5.2.0",
     "zustand": "^4.3.9"
   },
   "devDependencies": {
