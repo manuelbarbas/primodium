@@ -1,16 +1,18 @@
+import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { BigNumber } from "ethers";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
-import { Network } from "src/network/layer";
+import { BuildingType, Level } from "src/network/components/chainComponents";
+import {
+  ActiveAsteroid,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { SelectedBuilding } from "src/network/components/clientComponents";
-import { BuildingType, Level } from "src/network/components/chainComponents";
-import { EntityID } from "@latticexyz/recs";
-import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
-import { BigNumber } from "ethers";
+import { BlockIdToKey } from "../constants";
 
 export const upgradeBuilding = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;

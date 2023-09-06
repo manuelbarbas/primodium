@@ -1,19 +1,19 @@
-import { EntityID } from "@latticexyz/recs";
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { EntityID } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { Action } from "src/util/constants";
-import { getBuildingAtCoord } from "src/util/tile";
-import { buildBuilding, demolishBuilding } from "src/util/web3";
 import {
   HoverTile,
   SelectedAction,
   SelectedBuilding,
   SelectedTile,
 } from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
 import { world } from "src/network/world";
-import { Network } from "src/network/layer";
-import { outOfBounds } from "src/util/outOfBounds";
 import { getBuildingOrigin } from "src/util/building";
+import { Action } from "src/util/constants";
+import { outOfBounds } from "src/util/outOfBounds";
+import { getBuildingAtCoord } from "src/util/tile";
+import { buildBuilding, demolishBuilding } from "src/util/web3";
 
 export const setupMouseInputs = (
   scene: Scene,

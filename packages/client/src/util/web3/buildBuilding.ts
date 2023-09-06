@@ -1,15 +1,15 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
-import { addTileOverride, removeTileOverride } from "./override";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { Network } from "src/network/layer";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { ampli } from "src/ampli";
-import { BlockIdToKey } from "../constants";
 import { parseReceipt } from "../analytics/parseReceipt";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
+import { BlockIdToKey } from "../constants";
+import { addTileOverride, removeTileOverride } from "./override";
 
 export const buildBuilding = async (
   coord: Coord,

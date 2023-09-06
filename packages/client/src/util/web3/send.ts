@@ -1,15 +1,15 @@
 import { EntityID } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { Network } from "src/network/layer";
+import { ReversePosition } from "src/network/components/chainComponents";
+import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { ReversePosition } from "src/network/components/chainComponents";
-import { ampli } from "src/ampli";
 import { parseReceipt } from "../analytics/parseReceipt";
 import { BlockIdToKey } from "../constants";
-import { ArrivalUnit, ESendType, ESendTypeToLiteral } from "./types";
-import { Coord } from "@latticexyz/utils";
 import { encodeCoord } from "../encode";
+import { ArrivalUnit, ESendType, ESendTypeToLiteral } from "./types";
 
 export const send = async (
   arrivalUnits: ArrivalUnit[],

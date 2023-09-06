@@ -1,15 +1,15 @@
 // ASTEROID MAP ENTRY POINT
+import { EntityID } from "@latticexyz/recs";
 import engine from "engine";
-import { Network } from "../../../network/layer";
+import { Network } from "../../../network/setupNetworkOld";
 import gameConfig from "../../config/asteroid/game";
 import mainSceneConfig from "../../config/asteroid/mainScene";
 import { AsteroidMap } from "../../constants";
-import { runSystems } from "./systems";
-import { setupTileManager } from "./setup/setupTileManager";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { setupMouseInputs } from "./setup/setupMouseInputs";
-import { EntityID } from "@latticexyz/recs";
 import { setupKeybinds } from "./setup/setupKeybinds";
+import { setupMouseInputs } from "./setup/setupMouseInputs";
+import { setupTileManager } from "./setup/setupTileManager";
+import { runSystems } from "./systems";
 
 export const initAsteroidView = async (player: EntityID, network: Network) => {
   const { Scenes } = AsteroidMap;

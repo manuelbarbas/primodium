@@ -1,15 +1,15 @@
 import { BigNumber } from "ethers";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
-import { Network } from "src/network/layer";
-import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
-import { parseReceipt } from "../analytics/parseReceipt";
+import { Level } from "src/network/components/chainComponents";
 import {
   Account,
   ActiveAsteroid,
 } from "src/network/components/clientComponents";
-import { Level } from "src/network/components/chainComponents";
+import { Network } from "src/network/setupNetworkOld";
+import { useGameStore } from "src/store/GameStore";
+import { useNotificationStore } from "src/store/NotificationStore";
+import { parseReceipt } from "../analytics/parseReceipt";
 import { getPlayerBounds } from "../outOfBounds";
 
 export const upgradeRange = async (network: Network) => {

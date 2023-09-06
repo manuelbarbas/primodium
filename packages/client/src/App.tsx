@@ -6,12 +6,11 @@ import {
   WagmiConfig,
   useAccount as useWagmiAccount,
 } from "wagmi";
-import { getNetworkLayerConfig } from "./network/config/config";
-import { Network, createNetworkLayer } from "./network/layer";
+import { getNetworkLayerConfig } from "./network/config/getNetworkConfig";
+import { Network, createNetworkLayer } from "./network/setupNetworkOld";
 
-import AppLoadingState from "./AppLoadingState";
+import mudConfig from "contracts/mud.config";
 import { ampli } from "./ampli";
-import { MudProvider } from "./hooks/providers/MudProvider";
 import wagmiClient from "./network/wagmi";
 
 const DEV = import.meta.env.VITE_DEV === "true";
@@ -34,6 +33,27 @@ export default function App() {
     setNetworkLayer(network);
     prevAddressRef.current = address;
   };
+
+  useEffect(() => {
+    if (!networkLayer) return;
+
+    // https://vitejs.dev/guide/env-and-mode.html
+    if (DEV) {
+      import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
+        mountDevTools({
+          config: mudConfig,
+          publicClient: networkLayer.network.publicClient,
+          walletClient: networkLayer.network.walletClient,
+          latestBlock$: networkLayer.network.latestBlock$,
+          blockStorageOperations$: networkLayer.network.blockStorageOperations$,
+          worldAddress: networkLayer.network.worldContract.address,
+          worldAbi: networkLayer.network.worldContract.abi,
+          write$: networkLayer.network.write$,
+          recsWorld: networkLayer.world,
+        })
+      );
+    }
+  }, [networkLayer]);
 
   useEffect(() => {
     setupNetworkLayerOnChange(address, activeConnector);

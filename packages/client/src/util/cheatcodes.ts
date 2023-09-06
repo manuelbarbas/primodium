@@ -1,3 +1,5 @@
+import { EntityID } from "@latticexyz/recs";
+import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
 import {
   BuildingType,
   Item,
@@ -11,17 +13,15 @@ import {
   Position,
   Units,
 } from "src/network/components/chainComponents";
-import { Cheatcode, Cheatcodes } from "src/components/dev/Cheatcodes";
-import { Network } from "src/network/layer";
-import { BlockType } from "./constants";
 import {
   Account,
   ActiveAsteroid,
   SelectedBuilding,
   Send,
 } from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
+import { BlockType } from "./constants";
 import { hashEntities, hashKeyEntity } from "./encode";
-import { EntityID } from "@latticexyz/recs";
 import { updateSpaceRock } from "./web3/updateSpaceRock";
 
 const resources: Record<string, EntityID> = {

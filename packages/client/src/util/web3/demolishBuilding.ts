@@ -1,16 +1,18 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { BigNumber } from "ethers";
+import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { BuildingType, Level } from "src/network/components/chainComponents";
-import { SelectedBuilding } from "src/network/components/clientComponents";
-import { ActiveAsteroid } from "src/network/components/clientComponents";
-import { Network } from "src/network/layer";
+import {
+  ActiveAsteroid,
+  SelectedBuilding,
+} from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
-import { BlockIdToKey } from "../constants";
-import { ampli } from "src/ampli";
 import { parseReceipt } from "../analytics/parseReceipt";
-import { BigNumber } from "ethers";
+import { BlockIdToKey } from "../constants";
 
 export const demolishBuilding = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;

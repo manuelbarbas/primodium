@@ -2,15 +2,15 @@ import { EntityID, namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
-import { Network } from "../../network/layer";
+import { world } from "src/network/world";
+import { Network } from "../../network/setupNetworkOld";
 import _init from "../init";
 import { createCameraApi } from "./camera";
+import { createFxApi } from "./fx";
 import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
-import { createFxApi } from "./fx";
-import { world } from "src/network/world";
 
 async function init(
   player: EntityID,

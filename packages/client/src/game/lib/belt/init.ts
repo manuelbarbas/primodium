@@ -1,14 +1,14 @@
 // STAR MAP ENTRY POINT
+import { SingletonID } from "@latticexyz/network";
+import { EntityID } from "@latticexyz/recs";
 import engine from "engine";
-import { Network } from "../../../network/layer";
+import { Account } from "src/network/components/clientComponents";
+import { Network } from "../../../network/setupNetworkOld";
 import gameConfig from "../../config/belt/game";
 import mainSceneConfig from "../../config/belt/mainScene";
 import { BeltMap } from "../../constants";
-import { runSystems } from "./systems";
-import { EntityID } from "@latticexyz/recs";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { Account } from "src/network/components/clientComponents";
-import { SingletonID } from "@latticexyz/network";
+import { runSystems } from "./systems";
 
 export const initBeltView = async (_: EntityID, network: Network) => {
   const { Scenes } = BeltMap;
