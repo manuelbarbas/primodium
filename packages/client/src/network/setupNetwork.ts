@@ -32,13 +32,14 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     onWrite: (write) => write$.next(write),
   });
 
-  const { components, latestBlock$, blockStorageOperations$, waitForTransaction } = await syncToRecs({
-    world,
-    config: mudConfig,
-    address: networkConfig.worldAddress as Hex,
-    publicClient,
-    startBlock: BigInt(networkConfig.initialBlockNumber),
-  });
+  const { components, latestBlock$, latestBlockNumber$, blockStorageOperations$, waitForTransaction } =
+    await syncToRecs({
+      world,
+      config: mudConfig,
+      address: networkConfig.worldAddress as Hex,
+      publicClient,
+      startBlock: BigInt(networkConfig.initialBlockNumber),
+    });
 
   // Request drip from faucet
   if (networkConfig.faucetServiceUrl) {
@@ -67,9 +68,11 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     world,
     components,
     playerEntity: encodeEntity({ address: "address" }, { address: burnerWalletClient.account.address }),
+    address: burnerWalletClient.account.address,
     publicClient,
     walletClient: burnerWalletClient,
     latestBlock$,
+    latestBlockNumber$,
     blockStorageOperations$,
     waitForTransaction,
     worldContract,

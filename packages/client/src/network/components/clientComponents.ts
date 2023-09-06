@@ -1,6 +1,5 @@
 import { Type } from "@latticexyz/recs";
 import { world } from "../world";
-import { BattleComponent } from "./customComponents/BattleComponent";
 import {
   createExtendedBoolComponent,
   createExtendedComponent,
@@ -8,15 +7,12 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
-import createExtendedMarkerComponent from "./customComponents/MarkerComponent";
-import { NotificationQueueComponent } from "./customComponents/NotificationQueueComponent";
-import createExtendedSendComponent from "./customComponents/SendComponent";
 
 // todo: organize these alphabetically
 export const BlockNumber = createExtendedComponent(
   world,
   {
-    value: Type.Number,
+    value: Type.BigInt,
     avgBlockTime: Type.Number, //seconds
   },
   {
@@ -36,13 +32,13 @@ export const SelectedAction = createExtendedNumberComponent(world, {
   id: "SelectedAction",
 });
 
-export const Marker = createExtendedMarkerComponent(world, {
-  id: "MarkerTypeComponent",
-});
+// export const Marker = createExtendedMarkerComponent(world, {
+//   id: "MarkerTypeComponent",
+// });
 
 export const ActiveAsteroid = createExtendedComponent(world, { value: Type.Entity }, { id: "ActiveAsteroid" });
 
-export const Send = createExtendedSendComponent(world);
+// export const Send = createExtendedSendComponent(world);
 
 export const TrainingQueue = createExtendedComponent(
   world,
@@ -80,9 +76,9 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
-export const Battle = BattleComponent();
+// export const Battle = BattleComponent();
 
-export const NotificationQueue = NotificationQueueComponent();
+// export const NotificationQueue = NotificationQueueComponent();
 
 export const BattleReport = createExtendedComponent(
   world,
@@ -96,6 +92,7 @@ export const BattleReport = createExtendedComponent(
 );
 
 export default {
+  Account,
   ActiveAsteroid,
   BlockNumber,
   GameReady,
@@ -104,12 +101,8 @@ export default {
   HoverTile,
   SelectedBuilding,
   SelectedAction,
-  Marker,
   TrainingQueue,
   Hangar,
   Leaderboard,
-  Send,
-  Battle,
-  NotificationQueue,
   BattleReport,
 };

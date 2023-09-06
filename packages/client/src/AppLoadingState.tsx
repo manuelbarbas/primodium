@@ -1,16 +1,13 @@
 import { SyncStep } from "@latticexyz/store-sync";
 import { useMud } from "./hooks";
-import Increment from "./screens/Increment";
+import { useInit } from "./hooks/useInit";
+import { Increment } from "./screens/Increment";
 
 export default function AppLoadingState() {
-  //initialize global components
-  // const initialized = useInit();
   const {
-    components: { SyncProgress, Counter },
+    components: { SyncProgress },
   } = useMud();
-
-  // setup loading component, after setting up the network layer and syncing the block state (per emojimon)
-  // Loading state component needs to be below the mud context
+  useInit();
 
   const loadingState = SyncProgress.use(undefined, {
     message: "Connecting",
