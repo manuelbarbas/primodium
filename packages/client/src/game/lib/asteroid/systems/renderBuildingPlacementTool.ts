@@ -1,5 +1,5 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ComponentUpdate, Has, HasValue } from "@latticexyz/recs";
+import { ComponentUpdate, EntityID, Has, HasValue } from "@latticexyz/recs";
 import {
   defineEnterSystem,
   defineExitSystem,
@@ -25,6 +25,9 @@ import {
   Outline,
 } from "../../common/object-components/sprite";
 import { getBuildingDimensions } from "src/util/building";
+import { hasEnoughResources } from "src/util/resource";
+import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
+import { Level } from "src/network/components/chainComponents";
 
 const {
   EntityIDtoAnimationKey,
@@ -34,7 +37,7 @@ const {
   DepthLayers,
 } = AsteroidMap;
 
-export const renderBuildingPlacementTool = (scene: Scene) => {
+export const renderBuildingPlacementTool = (scene: Scene, player: EntityID) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const gameWorld = namespaceWorld(world, "game");
   const objIndexSuffix = "_buildingPlacement";
@@ -76,6 +79,12 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
+    const level =
+      Level.get(hashKeyEntity(selectedBuilding, player))?.value ?? 1;
+    const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
+
+    const hasEnough = hasEnoughResources(buildingLevelEntity);
+
     buildingTool.setComponents([
       ObjectPosition(
         {
@@ -87,15 +96,13 @@ export const renderBuildingPlacementTool = (scene: Scene) => {
       SetValue({
         alpha: 0.9,
         originY: 1,
+        tint: hasEnough ? 0xffffff : 0xff0000,
       }),
       Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.IronMine1),
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
-        color: 0x000000,
-      }),
-      Outline({
-        thickness: 5,
+        color: hasEnough ? undefined : 0xff0000,
       }),
     ]);
   };

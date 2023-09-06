@@ -14,7 +14,7 @@ export const runSystems = (scene: Scene, player: EntityID) => {
   // Render map utility elements, placement indicators, etc
   renderSelectedTile(scene);
   renderHoverTile(scene);
-  renderBuildingPlacementTool(scene);
+  renderBuildingPlacementTool(scene, player);
   focusMainbase(scene, player);
   renderFog(scene, player);
 };
