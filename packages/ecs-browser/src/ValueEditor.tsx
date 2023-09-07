@@ -1,28 +1,26 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  Entity,
-  getComponentValueStrict,
-  Layers,
-  Type,
-  updateComponent,
-} from "@latticexyz/recs";
 import {
   AnyComponent,
   ComponentValue,
+  Entity,
+  Layers,
+  Schema,
+  Type,
+  getComponentValueStrict,
   isArrayType,
   isEntityType,
   isNumberType,
   isOptionalType,
-  Schema,
+  updateComponent,
 } from "@latticexyz/recs";
 import startCase from "lodash/startCase";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { DraggableNumberLabel } from "./DraggableNumberLabel";
 import {
   ComponentBrowserInput,
   ComponentBrowserSelect,
   ValueForm,
 } from "./StyledComponents";
-import { DraggableNumberLabel } from "./DraggableNumberLabel";
-import { hasContract, SetContractComponentFunction } from "./types";
+import { SetField, hasContract } from "./types";
 
 export const ValueEditor = ({
   entity,
@@ -30,14 +28,14 @@ export const ValueEditor = ({
   componentValue,
   valueProp,
   layers,
-  setContractComponentValue,
+  setField,
 }: {
   entity: Entity;
   component: AnyComponent;
   componentValue: ComponentValue<Schema>;
   valueProp: string;
   layers: Layers;
-  setContractComponentValue?: SetContractComponentFunction<Schema>;
+  setField?: SetField<Schema>;
 }) => {
   const [value, setValue] = useState<string | null>(
     componentValue[valueProp]?.toString() as string | null
@@ -87,9 +85,11 @@ export const ValueEditor = ({
         parsedValue = value;
       }
 
-      if (hasContract(component) && setContractComponentValue) {
+      console.log("has contract", hasContract(component));
+      console.log("set field:", setField);
+      if (hasContract(component) && setField) {
         const currentValue = getComponentValueStrict(component, entity);
-        setContractComponentValue(entity, component, {
+        setField(entity, component, {
           ...currentValue,
           [valueProp]: parsedValue,
         });

@@ -20,6 +20,7 @@
     "@latticexyz/dev-tools": "2.0.0-next.5",
     "@latticexyz/noise": "2.0.0-next.5",
     "@latticexyz/phaserx": "2.0.0-next.5",
+    "@latticexyz/protocol-parser": "2.0.0-next.5",
     "@latticexyz/react": "2.0.0-next.5",
     "@latticexyz/recs": "2.0.0-next.5",
     "@latticexyz/schema-type": "2.0.0-next.5",

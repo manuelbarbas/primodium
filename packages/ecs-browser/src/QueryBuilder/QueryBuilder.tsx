@@ -44,14 +44,12 @@ export const QueryBuilder = ({
   setFilteredEntities,
   layers,
   devHighlightComponent,
-  clearDevHighlights,
   setOverflow,
 }: {
   layers: Layers;
   allEntities: Entity[];
   setFilteredEntities: (es: Entity[]) => void;
   devHighlightComponent: Component<{ value: Type.OptionalNumber }>;
-  clearDevHighlights: () => void;
   setOverflow: (overflow: number) => void;
 }) => {
   const queryInputRef = useRef<HTMLInputElement>(null);
@@ -154,7 +152,6 @@ export const QueryBuilder = ({
             );
             setOverflow(queryResult.matching.size - selectedEntities.length);
             setFilteredEntities(selectedEntities);
-            clearDevHighlights();
             selectedEntities.forEach((idx) =>
               setComponent(devHighlightComponent, idx, { value: 0x0000ff })
             );

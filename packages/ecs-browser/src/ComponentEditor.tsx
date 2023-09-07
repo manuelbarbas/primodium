@@ -12,18 +12,18 @@ import {
   ComponentEditorContainer,
   ComponentTitle,
 } from "./StyledComponents";
-import { SetContractComponentFunction, hasContract } from "./types";
+import { SetField, hasContract } from "./types";
 
 export const ComponentEditor = ({
   entity,
   component,
   layers,
-  setContractComponentValue,
+  setField,
 }: {
   entity: Entity;
   component: Component<Schema, Metadata, unknown>;
   layers: Layers;
-  setContractComponentValue?: SetContractComponentFunction<Schema>;
+  setField?: SetField<Schema>;
 }) => {
   const value = useComponentValue(component, entity);
   if (!value) return null;
@@ -36,8 +36,8 @@ export const ComponentEditor = ({
           onClick={() => {
             removeComponent(component, entity);
 
-            if (setContractComponentValue && hasContract(component))
-              setContractComponentValue(entity, component, {});
+            if (setField && hasContract(component))
+              setField(entity, component, {});
           }}
         >
           Remove
@@ -48,7 +48,7 @@ export const ComponentEditor = ({
         component={component}
         componentValue={value}
         layers={layers}
-        setContractComponentValue={setContractComponentValue}
+        setField={setField}
       />
     </ComponentEditorContainer>
   );

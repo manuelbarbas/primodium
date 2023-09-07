@@ -1,24 +1,24 @@
-import {
-  AnyComponent,
-  Component,
-  ComponentValue,
-  Entity,
-  Schema,
-} from "@latticexyz/recs";
+import { Component, ComponentValue, Entity, Schema } from "@latticexyz/recs";
+import { StaticAbiType } from "@latticexyz/schema-type";
 
-export type SetContractComponentFunction<T extends Schema> = (
+export type SetField<S extends Schema> = (
   entity: Entity,
-  component: Component<T, { contractId: string }>,
-  newValue: ComponentValue<T>
+  component: AnyComponentWithContract<S>,
+  newValue: ComponentValue<S>
 ) => void;
 
-export type AnyComponentWithContract = Component<
-  Schema,
-  { contractId: string }
+export type AnyComponentWithContract<S extends Schema> = Component<
+  S,
+  {
+    componentName: string;
+    tableName: `${string}:${string}`;
+    keySchema: Record<string, StaticAbiType>;
+    valueSchema: Record<string, StaticAbiType>;
+  }
 >;
 
-export function hasContract(
-  component: AnyComponent
-): component is AnyComponentWithContract {
-  return component.metadata?.contractId !== undefined;
+export function hasContract<S extends Schema>(
+  component: Component<S>
+): component is AnyComponentWithContract<S> {
+  return component.metadata?.tableName !== undefined;
 }
