@@ -72,7 +72,6 @@ export const Browser = ({
         allEntities={[...world.getEntities()]}
         setFilteredEntities={setFilteredEntities}
         layers={layers}
-        world={world}
         clearDevHighlights={clearDevHighlights}
         setOverflow={setOverflow}
       />

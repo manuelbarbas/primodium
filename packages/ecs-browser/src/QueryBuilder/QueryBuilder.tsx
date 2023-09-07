@@ -1,29 +1,27 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import * as recs from "@latticexyz/recs";
 import {
-  Layers,
-  setComponent,
-  Type,
   AnyComponent,
   Component,
-  World,
-  defineQuery,
-  EntityQueryFragment,
   Entity,
+  EntityQueryFragment,
+  Layers,
+  Type,
+  defineQuery,
+  setComponent,
 } from "@latticexyz/recs";
+import { uniqBy } from "lodash";
+import flatten from "lodash/flatten";
+import orderBy from "lodash/orderBy";
+import throttle from "lodash/throttle";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ComponentBrowserButton,
   ComponentBrowserInput,
   SyntaxHighlighterWrapper,
 } from "../StyledComponents";
-import { QueryBuilderForm, QueryShortcutContainer } from "./StyledComponents";
-import * as recs from "@latticexyz/recs";
-import flatten from "lodash/flatten";
-import orderBy from "lodash/orderBy";
-import throttle from "lodash/throttle";
 import { MAX_ENTITIES } from "../constants";
-import { observe } from "mobx";
 import { useShiki } from "../hooks";
-import { uniqBy } from "lodash";
+import { QueryBuilderForm, QueryShortcutContainer } from "./StyledComponents";
 
 const SyntaxHighlighter = ({ code }: { code: string }) => {
   const { html } = useShiki(code, "js");
@@ -45,12 +43,10 @@ export const QueryBuilder = ({
   allEntities,
   setFilteredEntities,
   layers,
-  world,
   devHighlightComponent,
   clearDevHighlights,
   setOverflow,
 }: {
-  world: World;
   layers: Layers;
   allEntities: Entity[];
   setFilteredEntities: (es: Entity[]) => void;
@@ -92,14 +88,6 @@ export const QueryBuilder = ({
     setIsManuallyEditing(true);
     setEntityQueryText(text);
     setComponentFilters([]);
-  }, []);
-
-  const cancelObserver = useRef<() => void>(() => void 0);
-  // Cancel outstanding observers on unmount
-  useEffect(() => {
-    return () => {
-      if (cancelObserver.current) cancelObserver.current();
-    };
   }, []);
 
   const executeFilter = useCallback(
@@ -157,9 +145,7 @@ export const QueryBuilder = ({
           throw new Error("Invalid query");
         }
 
-        cancelObserver.current();
         const queryResult = defineQuery(queryArray, { runOnInit: true });
-        const subscription = queryResult.update$.subscribe();
         const selectEntities = throttle(
           () => {
             const selectedEntities = [...queryResult.matching].slice(
@@ -177,12 +163,6 @@ export const QueryBuilder = ({
           { leading: true }
         );
         selectEntities();
-        const cancelObserve = observe(queryResult.matching, selectEntities);
-        cancelObserver.current = () => {
-          cancelObserve();
-          selectEntities.cancel();
-          subscription?.unsubscribe();
-        };
       } catch (e: unknown) {
         setErrorMessage((e as Error).message);
         console.error(e);
