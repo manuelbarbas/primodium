@@ -1,5 +1,14 @@
+import {
+  Component,
+  ComponentUpdate,
+  Metadata,
+  Schema,
+  defineComponentSystem,
+  namespaceWorld,
+} from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
 import { GameObjectComponent, GameObjectTypes } from "engine/types";
+import { world } from "src/network/world";
 
 type GameObjectInstances = {
   [K in keyof GameObjectTypes]: InstanceType<GameObjectTypes[K]>;
@@ -53,6 +62,48 @@ export const OnClick = <T extends keyof GameObjectTypes>(
       gameObject.on("pointerdown", () => {
         callback(gameObject as GameObjectInstances[T]);
       });
+    },
+  };
+};
+
+export const OnHover = <T extends keyof GameObjectTypes>(
+  callback: (gameObject?: GameObjectInstances[T]) => void
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      gameObject.setInteractive();
+      gameObject.on("pointerover", () => {
+        callback(gameObject as GameObjectInstances[T]);
+      });
+    },
+  };
+};
+
+export const OnComponentUpdate = <T extends keyof GameObjectTypes>(
+  component: Component<Schema, Metadata, undefined>,
+  callback: (
+    gameObject: GameObjectInstances[T],
+    update: ComponentUpdate<Schema>
+  ) => void,
+  options?: { runOnInit?: boolean }
+): GameObjectComponent<T> => {
+  const id = uuid();
+  const entityWorld = namespaceWorld(world, id);
+  return {
+    id,
+    once: (gameObject) => {
+      defineComponentSystem(
+        entityWorld,
+        component,
+        (update) => {
+          callback(gameObject as GameObjectInstances[T], update);
+        },
+        options
+      );
+    },
+    exit: () => {
+      entityWorld.dispose();
     },
   };
 };

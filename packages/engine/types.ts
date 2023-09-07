@@ -75,6 +75,7 @@ export type GameObjectComponent<Type extends keyof GameObjectTypes> = {
   now?: GameObjectFunction<Type>;
   once?: GameObjectFunction<Type>;
   update?: GameObjectFunction<Type>;
+  exit?: GameObjectFunction<Type>;
 };
 
 export declare type ObjectPool = ReturnType<typeof createObjectPool>;
