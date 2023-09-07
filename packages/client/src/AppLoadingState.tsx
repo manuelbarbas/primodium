@@ -18,8 +18,8 @@ export default function AppLoadingState() {
     message: "Connecting",
     percentage: 0,
     step: SyncStep.INITIALIZE,
-    latestBlockNumber: 0n,
-    lastBlockNumberProcessed: 0n,
+    latestBlockNumber: BigInt(0),
+    lastBlockNumberProcessed: BigInt(0),
   });
 
   return (

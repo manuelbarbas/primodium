@@ -14,9 +14,36 @@ export default defineConfig({
   worker: {
     plugins: [comlink()],
   },
+  build: {
+    rollupOptions: {
+      external: ["#ansi-styles", "#supports-color"],
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          mud: [
+            "ecs-browser",
+            "@latticexyz/common",
+            "@latticexyz/protocol-parser",
+            "@latticexyz/dev-tools",
+            "@latticexyz/react",
+            "@latticexyz/recs",
+            "@latticexyz/schema-type",
+            "@latticexyz/store",
+            "@latticexyz/store-sync",
+            "@latticexyz/utils",
+            "@latticexyz/world",
+          ],
+        },
+      },
+    },
+    target: "ES2022",
+  },
+
   optimizeDeps: {
     esbuildOptions: {
-      target: "es2020",
+      supported: {
+        bigint: true,
+      },
     },
 
     include: [
