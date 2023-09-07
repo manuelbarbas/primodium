@@ -1,18 +1,17 @@
 import { WebSocketProvider } from "@ethersproject/providers";
 import { getRevertReason } from "@latticexyz/network";
 import { ContractReceipt, ContractTransaction } from "ethers";
-import { IComputedValue } from "mobx";
-import { toast } from "react-toastify";
 
 // function that takes in an executeTyped promise that resolves to a completed transaction
 // providers are returned from the useMud hook
 // alerts user if transaction fails
 export async function execute(
   txPromise: Promise<ContractTransaction>,
-  providers: IComputedValue<{
+  providers: {
     json: any;
     ws: WebSocketProvider | undefined;
-  }>
+  },
+  setNotification?: (title: string, message: string) => void
 ): Promise<ContractReceipt | undefined> {
   try {
     const tx = await txPromise;
@@ -20,11 +19,12 @@ export async function execute(
     return txResponse;
   } catch (error: any) {
     try {
-      const reason = await getRevertReason(
-        error.transactionHash,
-        providers.get().json
-      );
-      toast.warn(reason);
+      const reason = await getRevertReason(error.transactionHash, providers.json);
+      if (setNotification) {
+        setNotification("Warning", reason);
+      } else {
+        alert(reason);
+      }
       return error.receipt as ContractReceipt;
     } catch (error: any) {
       // This is most likely a gas error. i.e.:

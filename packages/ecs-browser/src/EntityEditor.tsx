@@ -7,7 +7,6 @@ import {
   Type,
   World,
   hasComponent,
-  setComponent,
 } from "@latticexyz/recs";
 import { flatten, truncate } from "lodash";
 import { useEffect, useState } from "react";
@@ -44,6 +43,7 @@ export const EntityEditor = ({
     Component<Schema, Metadata, unknown>[]
   >([]);
   useEffect(() => {
+    console.log("opened:", opened);
     if (opened) {
       const allComponents = flatten(
         Object.values(layers).map((layer) => Object.values(layer.components))
@@ -54,16 +54,8 @@ export const EntityEditor = ({
   }, [opened, world, entityId, setEntityComponents]);
 
   return (
-    <EntityEditorContainer
-      onMouseEnter={() => {
-        clearDevHighlights();
-        setComponent(devHighlightComponent, entityId, {
-          value: undefined,
-        });
-      }}
-      onMouseLeave={() => clearDevHighlights()}
-    >
-      <div onClick={() => setOpened(!opened)} style={{ cursor: "pointer" }}>
+    <EntityEditorContainer>
+      <div style={{ cursor: "pointer" }}>
         <div
           style={{
             display: "flex",
