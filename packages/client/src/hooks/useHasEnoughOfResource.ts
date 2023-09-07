@@ -7,10 +7,8 @@ export function useHasEnoughOfResource(
   amount: number,
   resourceType = ResourceType.Resource
 ) {
-  const { resourceCount, resourcesToClaim, production } = useFullResourceCount(
-    resourceID,
-    resourceType
-  );
+  const { resourceCount, resourcesToClaim, production, maxStorage } =
+    useFullResourceCount(resourceID, resourceType);
 
   switch (resourceType) {
     case ResourceType.Resource:
@@ -18,7 +16,7 @@ export function useHasEnoughOfResource(
     case ResourceType.ResourceRate:
       return production >= amount;
     case ResourceType.Utility:
-      return resourceCount + resourcesToClaim <= amount;
+      return maxStorage - (resourceCount + resourcesToClaim) >= amount;
     default:
       return false;
   }

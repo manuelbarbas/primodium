@@ -9,6 +9,7 @@ import {
   AsteroidType,
   Item,
   LastClaimedAt,
+  MaxUtility,
   Motherlode,
   OccupiedUtilityResource,
   OwnedBy,
@@ -119,10 +120,10 @@ export function getFullResourceCount(
   resourceID: EntityID,
   type = ResourceType.Resource
 ) {
-  const { value: blockNumber } = BlockNumber.get(undefined, {
+  const blockNumber = BlockNumber.get(undefined, {
     value: 0,
     avgBlockTime: 1,
-  });
+  }).value;
   const player = Account.get()?.value;
 
   const query = [
@@ -159,7 +160,10 @@ export function getFullResourceCount(
     ResourceType.Resource === type ? Item : OccupiedUtilityResource,
     resourceID
   );
-  const maxStorage = getResourceCount(P_MaxStorage, resourceID);
+  const maxStorage = getResourceCount(
+    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
+    resourceID
+  );
   const production =
     getResourceCount(Production, resourceID) + motherlodeProduction;
   const lastClaimedAt = getResourceCount(LastClaimedAt, resourceID);
@@ -173,7 +177,7 @@ export function getFullResourceCount(
   return { resourceCount, resourcesToClaim, maxStorage, production };
 }
 
-export function hasEnoughResources(entityId: EntityID) {
+export function hasEnoughResources(entityId: EntityID, count = 1) {
   const recipe = getRecipe(entityId);
 
   const resourceAmounts = recipe.map((resource) => {
@@ -182,17 +186,23 @@ export function hasEnoughResources(entityId: EntityID) {
 
   for (const [index, resource] of recipe.entries()) {
     const resourceAmount = resourceAmounts[index];
-    const { resourceCount, resourcesToClaim, production } = resourceAmount;
+    const { resourceCount, resourcesToClaim, production, maxStorage } =
+      resourceAmount;
 
     switch (resource.type) {
       case ResourceType.Resource:
-        if (resourceCount + resourcesToClaim < resource.amount) return false;
+        if (resourceCount + resourcesToClaim < resource.amount * count)
+          return false;
         break;
       case ResourceType.ResourceRate:
-        if (production < resource.amount) return false;
+        if (production < resource.amount * count) return false;
         break;
       case ResourceType.Utility:
-        if (resourceCount + resourcesToClaim >= resource.amount) return false;
+        if (
+          maxStorage - (resourceCount + resourcesToClaim) <
+          resource.amount * count
+        )
+          return false;
         break;
       default:
         return false;
