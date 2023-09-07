@@ -117,9 +117,9 @@ export const Browser = ({
       {isVisible === 0 && <Browser />}
       {tabs.map(({ component }, i) => (isVisible === i + 1 ? component : null))}
 
-      {!isVisible && (
+      {isVisible === undefined && (
         <button
-          className="absolute bottom-0 right-0 bg-blue-500 w-32 text-white text-xs px-2 py-1 rounded"
+          className="absolute top-2 right-1 bg-blue-500 w-24 text-white text-xs px-1 py-1 rounded"
           onClick={() => setIsVisible(0)}
         >
           Show Browser
