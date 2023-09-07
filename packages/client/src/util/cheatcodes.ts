@@ -7,7 +7,7 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
         console.log("value:", value);
-        mud.systems.increment();
+        mud.contractCalls.increment();
       },
     },
   };
