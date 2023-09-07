@@ -7,12 +7,13 @@ import {
   ResourceImage,
   ResourceType,
 } from "src/util/constants";
-import { getRecipe, hasEnoughResources } from "src/util/resource";
+import { getRecipe } from "src/util/resource";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { formatNumber, getBlockTypeName } from "src/util/common";
 import { Account, BlockNumber } from "src/network/components/clientComponents";
 import { Level, P_Production } from "src/network/components/chainComponents";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 
 export const RecipeDisplay: React.FC<{
   entity: EntityID;
@@ -56,7 +57,7 @@ export const BlueprintInfo: React.FC<{
     value: 1,
   })?.value;
   const buildingLevelEntity = hashAndTrimKeyEntity(buildingType, level);
-  const { avgBlockTime } = BlockNumber.use(undefined, {
+  const { avgBlockTime } = BlockNumber.get(undefined, {
     value: 0,
     avgBlockTime: 1,
   });
@@ -66,8 +67,7 @@ export const BlueprintInfo: React.FC<{
     ((production?.resourceProductionRate ?? 0) * RESOURCE_SCALE * 60) /
     avgBlockTime;
 
-  //TODO: replace with hook
-  const hasEnough = hasEnoughResources(buildingLevelEntity);
+  const hasEnough = useHasEnoughResources(buildingLevelEntity);
 
   return (
     <div className="flex flex-col items-center gap-3">
