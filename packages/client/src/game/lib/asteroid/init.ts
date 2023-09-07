@@ -8,10 +8,9 @@ import { runSystems } from "./systems";
 import { setupTileManager } from "./setup/setupTileManager";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
-import { EntityID } from "@latticexyz/recs";
 import { setupKeybinds } from "./setup/setupKeybinds";
 
-export const initAsteroidView = async (player: EntityID, network: Network) => {
+export const initAsteroidView = async (network: Network) => {
   const { Scenes } = AsteroidMap;
   const { world } = network;
 
@@ -45,11 +44,11 @@ export const initAsteroidView = async (player: EntityID, network: Network) => {
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  setupMouseInputs(scene, network, player);
+  setupMouseInputs(scene, network);
   setupBasicCameraMovement(scene);
-  setupKeybinds(scene, player);
+  setupKeybinds(scene);
 
-  runSystems(scene, player);
+  runSystems(scene, network);
 
   world.registerDisposer(() => {
     game.dispose();
