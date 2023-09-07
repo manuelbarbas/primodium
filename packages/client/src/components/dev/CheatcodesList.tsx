@@ -1,19 +1,16 @@
 import { useState } from "react";
-import { BrowserContainer, ComponentTitle } from "./StyledComponents";
-import { Cheatcodes } from "./types";
+export type Cheatcodes = Record<string, Cheatcode>;
 
-const CheatcodesList: React.FC<{ cheatcodes: Cheatcodes }> = ({
-  cheatcodes,
-}) => {
-  const [params, setParams] = useState<Record<string, Record<string, unknown>>>(
-    {}
-  );
+export type Cheatcode = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function: (...args: any[]) => unknown;
+  params: { name: string; type: "number" | "string" | "boolean" }[];
+};
 
-  const handleParamChange = (
-    funcName: string,
-    paramKey: string,
-    value: unknown
-  ) => {
+const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
+  const [params, setParams] = useState<Record<string, Record<string, unknown>>>({});
+
+  const handleParamChange = (funcName: string, paramKey: string, value: unknown) => {
     setParams((prevParams) => ({
       ...prevParams,
       [funcName]: {
@@ -44,11 +41,13 @@ const CheatcodesList: React.FC<{ cheatcodes: Cheatcodes }> = ({
   };
 
   return (
-    <BrowserContainer style={{ padding: "6px" }}>
+    <div className="overflow-auto p-6 bg-gray-900 text-gray-400 h-full pointer-events-auto">
       {Object.entries(cheatcodes).map(([funcName], i) => {
         return (
-          <div key={funcName + i} className="border-b-1 border-white">
-            <ComponentTitle className="text-sm mb-2">{funcName}</ComponentTitle>
+          <div key={funcName + i} className="py-2 border-b border-gray-400">
+            <div className="text-white font-bold text-sm mb-2 flex flex-row items-center justify-between">
+              {funcName}
+            </div>
             {(cheatcodes[funcName].params || []).map((param, index) => (
               <div key={index} className="mb-2 flex items-center">
                 <p className="mr-2">{param.name}</p>
@@ -62,9 +61,7 @@ const CheatcodesList: React.FC<{ cheatcodes: Cheatcodes }> = ({
                     handleParamChange(
                       funcName,
                       param.name,
-                      e.target.type === "checkbox"
-                        ? e.target.checked
-                        : e.target.value
+                      e.target.type === "checkbox" ? e.target.checked : e.target.value
                     )
                   }
                   className="border rounded py-1 px-2 focus:outline-none focus:ring focus:border-blue-300 text-black"
@@ -80,7 +77,7 @@ const CheatcodesList: React.FC<{ cheatcodes: Cheatcodes }> = ({
           </div>
         );
       })}
-    </BrowserContainer>
+    </div>
   );
 };
 

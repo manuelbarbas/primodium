@@ -22,10 +22,3 @@ export function hasContract(
 ): component is AnyComponentWithContract {
   return component.metadata?.contractId !== undefined;
 }
-
-export type Cheatcodes = Record<string, Cheatcode>;
-
-export type Cheatcode = {
-  function: (...args: unknown[]) => unknown;
-  params: { name: string; type: "number" | "string" | "boolean" }[];
-};

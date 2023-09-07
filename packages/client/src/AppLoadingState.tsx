@@ -1,5 +1,6 @@
 import { SyncStep } from "@latticexyz/store-sync";
 import { Browser as ECSBrowser } from "ecs-browser";
+import CheatcodesList from "./components/dev/CheatcodesList";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { world } from "./network/world";
@@ -60,7 +61,7 @@ export default function AppLoadingState() {
             },
           }}
           devHighlightComponent={components.DevHighlight}
-          cheatcodes={setupCheatcodes(mud)}
+          tabs={[{ name: "Cheatcodes", component: <CheatcodesList cheatcodes={setupCheatcodes(mud)} /> }]}
         />
       )}
     </div>
