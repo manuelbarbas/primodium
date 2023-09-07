@@ -1,6 +1,9 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { RawBlueprint } from "src/network/components/chainComponents";
+import { getBuildingAtCoord } from "./tile";
+import { Account } from "src/network/components/clientComponents";
+import { outOfBounds } from "./outOfBounds";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -87,3 +90,21 @@ export function getBuildingDimensions(building: EntityID) {
 
   return dimensions;
 }
+
+export const validateBuildingPlacement = (coord: Coord, bulding: EntityID) => {
+  //get building dimesions
+  const buildingDimensions = getBuildingDimensions(bulding);
+  const player = Account.get()?.value;
+
+  //iterate over dimensions and check if there is a building there
+  for (let x = 0; x < buildingDimensions.width; x++) {
+    for (let y = 0; y < buildingDimensions.height; y++) {
+      const buildingCoord = { x: coord.x + x, y: coord.y - y };
+      if (getBuildingAtCoord(buildingCoord)) return true;
+
+      if (outOfBounds(buildingCoord, player)) return true;
+    }
+  }
+
+  return false;
+};

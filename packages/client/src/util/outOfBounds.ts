@@ -5,6 +5,7 @@ import { hashStringEntity, trim } from "./encode";
 
 export function outOfBounds(coord: Coord, player?: EntityID) {
   const bounds = player ? getPlayerBounds(player) : getAsteroidBounds();
+  // console.log(bounds);
   return (
     coord.x > bounds.maxX ||
     coord.x < bounds.minX ||

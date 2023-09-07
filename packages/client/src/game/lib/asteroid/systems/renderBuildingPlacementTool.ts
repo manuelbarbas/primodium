@@ -26,7 +26,11 @@ import {
   Animation,
   Outline,
 } from "../../common/object-components/sprite";
-import { getBuildingDimensions, getBuildingOrigin } from "src/util/building";
+import {
+  validateBuildingPlacement,
+  getBuildingDimensions,
+  getBuildingOrigin,
+} from "src/util/building";
 import { hasEnoughResources } from "src/util/resource";
 import { hashAndTrimKeyEntity, hashKeyEntity } from "src/util/encode";
 import { Level } from "src/network/components/chainComponents";
@@ -89,6 +93,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
     const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
 
     const hasEnough = hasEnoughResources(buildingLevelEntity);
+    const collides = validateBuildingPlacement(tileCoord, selectedBuilding);
 
     buildingTool.setComponents([
       ObjectPosition(
@@ -96,7 +101,9 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
           x: pixelCoord.x,
           y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        DepthLayers.Building - tileCoord.y + buildingDimensions.height
+        collides
+          ? DepthLayers.Building
+          : DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
       SetValue({
         alpha: 0.9,
@@ -107,10 +114,10 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
-        color: hasEnough ? undefined : 0xff0000,
+        color: hasEnough && !collides ? undefined : 0xff0000,
       }),
       OnClick(() => {
-        if (!hasEnough) {
+        if (!hasEnough || collides) {
           scene.camera.phaserCamera.shake(200, 0.001);
           return;
         }
