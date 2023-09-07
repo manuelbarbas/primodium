@@ -1,4 +1,9 @@
-import { BackgroundImage, BlockType, ResourceImage } from "src/util/constants";
+import {
+  BackgroundImage,
+  BlockType,
+  ResourceImage,
+  ResourceType,
+} from "src/util/constants";
 import { getBlockTypeName } from "src/util/common";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
@@ -18,6 +23,8 @@ import ResourceIconTooltip from "../../shared/ResourceIconTooltip";
 import { Account } from "src/network/components/clientComponents";
 import { useGameStore } from "src/store/GameStore";
 import { NumberInput } from "src/components/shared/NumberInput";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { SingletonID } from "@latticexyz/network";
 
 export const UnitTraining: React.FC<{
   buildingEntity: EntityID;
@@ -25,12 +32,12 @@ export const UnitTraining: React.FC<{
 }> = ({ buildingEntity, onClose }) => {
   const network = useMud();
   const [selectedUnit, setSelectedUnit] = useState<EntityID>();
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const transactionLoading = useGameStore((state) => state.transactionLoading);
   const account = Account.use(undefined, { value: "0" as EntityID }).value;
 
   useEffect(() => {
-    setCount(0);
+    setCount(1);
   }, [selectedUnit]);
 
   const playerResourceEntity = hashKeyEntity(
@@ -76,6 +83,11 @@ export const UnitTraining: React.FC<{
   const unitsTaken = useMemo(() => {
     return totalUnits + count * (requiredHousing ?? 0);
   }, [count, requiredHousing, totalUnits]);
+
+  const hasEnough = useHasEnoughResources(
+    unitLevelEntity ?? SingletonID,
+    count
+  );
 
   if (trainableUnits.length == 0 || maximum == 0) return null;
   return (
@@ -128,7 +140,8 @@ export const UnitTraining: React.FC<{
                     scale={1}
                     resourceId={BlockType.HousingUtilityResource}
                     name={getBlockTypeName(BlockType.HousingUtilityResource)}
-                    amount={requiredHousing}
+                    amount={requiredHousing * count}
+                    resourceType={ResourceType.Utility}
                   />
                 </div>
               )}
@@ -141,7 +154,7 @@ export const UnitTraining: React.FC<{
                       image={ResourceImage.get(resource.resource)!}
                       resourceId={resource.resource}
                       name={getBlockTypeName(resource.resource)}
-                      amount={resource.amount}
+                      amount={resource.amount * count}
                     />
                   ))}
                 </div>
@@ -158,14 +171,16 @@ export const UnitTraining: React.FC<{
               </div>
 
               <NumberInput
-                min={0}
+                min={1}
                 max={(maximum - totalUnits) / requiredHousing}
                 onChange={(val) => setCount(val)}
               />
 
               <button
                 className="bg-cyan-600 px-2 border-cyan-400 mt-4 font-bold disabled:opacity-50 disabled:cursor-not-allowed rounded-md hover:scale-105"
-                disabled={maximum - unitsTaken < 0 || transactionLoading}
+                disabled={
+                  maximum - unitsTaken < 0 || transactionLoading || !hasEnough
+                }
                 onClick={() => {
                   train(buildingEntity, selectedUnit, count, network);
                   onClose();
