@@ -1,9 +1,9 @@
-import { namespaceWorld } from "@latticexyz/recs";
+import { Network } from "@ethersproject/providers";
+import { Entity, namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
 import { world } from "src/network/world";
-import { Network } from "../../network/setupNetworkOld";
 import _init from "../init";
 import { createCameraApi } from "./camera";
 import { createFxApi } from "./fx";
@@ -13,7 +13,7 @@ import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
 
-async function init(network: Network, version = "v1") {
+async function init(player: Entity, network: Network, version = "v1") {
   const asciiArt = `
                                                                           
                                                                           
@@ -32,7 +32,13 @@ async function init(network: Network, version = "v1") {
 
   namespaceWorld(world, "game");
 
-  await _init(network);
+  await _init(player, network);
+
+  //expose api to window for debugging
+  if (import.meta.env.PRI_DEV === "true") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).network = network;
+  }
 
   GameReady.set({ value: true });
 }
@@ -50,7 +56,7 @@ function destroy() {
   world.dispose("game");
 }
 
-function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
+function api(instance: string | Game, sceneKey = "MAIN") {
   const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {

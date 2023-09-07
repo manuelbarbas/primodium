@@ -7,7 +7,7 @@ import { world } from "./network/world";
 import { Increment } from "./screens/Increment";
 import { setupCheatcodes } from "./util/cheatcodes";
 
-const DEV = import.meta.env.VITE_DEV === "true";
+const DEV = import.meta.env.PRI_DEV === "true";
 
 export default function AppLoadingState() {
   const mud = useMud();

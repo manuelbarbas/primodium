@@ -6,9 +6,10 @@ const params = new URLSearchParams(window.location.search);
 
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 
-const DEV = import.meta.env.VITE_DEV === "true";
+const envChainId = import.meta.env.PRI_CHAIN_ID;
+console.log("envChainId", envChainId);
 export const getNetworkConfig = () => {
-  const chainId = params.get("chainid") || import.meta.env.VITE_CHAIN_ID || 31337;
+  const chainId = params.get("chainid") || import.meta.env.PRI_CHAIN_ID || "dev";
 
   const chain = chainConfigs[chainId];
 

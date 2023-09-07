@@ -18,16 +18,12 @@ export const useInit = () => {
   useEffect(() => {
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
-  }, []);
+  }, [mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user
   useEffect(() => {
-    ampli.identify(mud.network.address, {
-      extra: {
-        external,
-      },
-    });
+    ampli.identify(mud.network.address, {});
   }, [mud.network.address]);
 
   return initialized;

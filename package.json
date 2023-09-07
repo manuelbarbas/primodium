@@ -2,7 +2,7 @@
   "name": "mud-template-phaser",
   "private": true,
   "scripts": {
-    "build": "pnpm recursive run build",
+    "build": "git submodule update --init --recursive && pnpm recursive run build",
     "clean": "bash clean.sh",
     "dev": "concurrently -n contracts,client -c cyan,magenta \"cd packages/contracts && pnpm run dev\" \"cd packages/client && pnpm run dev\"",
     "dev:client": "pnpm --filter 'client' run dev",

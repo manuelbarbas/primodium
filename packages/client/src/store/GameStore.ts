@@ -1,7 +1,7 @@
-import { create } from "zustand";
 import { EntityID } from "@latticexyz/recs";
-import { mountStoreDevtool } from "simple-zustand-devtools";
 import { Coord } from "@latticexyz/utils";
+import { mountStoreDevtool } from "simple-zustand-devtools";
+import { create } from "zustand";
 
 type UpdateFunction = <T>(ctx?: T) => void;
 
@@ -47,8 +47,7 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
   setNavigateToTile: (navigate: boolean) => set({ navigateToTile: navigate }),
   setSelectedBlock: (block: EntityID | null) => set({ selectedBlock: block }),
   setHoveredTile: (tile: Coord) => set({ hoveredTile: tile }),
-  setTransactionLoading: (loading: boolean) =>
-    set({ transactionLoading: loading }),
+  setTransactionLoading: (loading: boolean) => set({ transactionLoading: loading }),
   setGameStateToDefault: () => set({ ...defaults }),
   setShowUI: (show: boolean) => set({ showUI: show }),
   addUpdateFunction: (updateFunction: UpdateFunction) =>
@@ -57,15 +56,13 @@ export const useGameStore = create<GameState & GameActions>()((set) => ({
     })),
   removeUpdateFunction: (updateFunction: UpdateFunction) =>
     set((state) => ({
-      updateFunctions: state.updateFunctions.filter(
-        (fn) => fn !== updateFunction
-      ),
+      updateFunctions: state.updateFunctions.filter((fn) => fn !== updateFunction),
     })),
   toggleShowUI: () => set((state) => ({ showUI: !state.showUI })),
   setCrtEffect: (crtEffect: boolean) => set({ crtEffect }),
 }));
 
 // store dev tools
-if (import.meta.env.VITE_DEV === "true") {
+if (import.meta.env.PRI_DEV === "true") {
   mountStoreDevtool("GameStore", useGameStore);
 }
