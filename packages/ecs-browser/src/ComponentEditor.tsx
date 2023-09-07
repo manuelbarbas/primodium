@@ -3,16 +3,16 @@ import { Layers, removeComponent } from "@latticexyz/recs";
 import {
   Component,
   Entity,
-  Schema,
   Metadata,
+  Schema,
 } from "@latticexyz/recs/src/types";
+import { ComponentValueEditor } from "./ComponentValueEditor";
 import {
   ComponentBrowserButton,
   ComponentEditorContainer,
   ComponentTitle,
 } from "./StyledComponents";
-import { ComponentValueEditor } from "./ComponentValueEditor";
-import { hasContract, SetContractComponentFunction } from "./types";
+import { SetContractComponentFunction, hasContract } from "./types";
 
 export const ComponentEditor = ({
   entity,
@@ -21,7 +21,7 @@ export const ComponentEditor = ({
   setContractComponentValue,
 }: {
   entity: Entity;
-  component: Component<Schema, Metadata, undefined>;
+  component: Component<Schema, Metadata, unknown>;
   layers: Layers;
   setContractComponentValue?: SetContractComponentFunction<Schema>;
 }) => {

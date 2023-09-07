@@ -1,5 +1,10 @@
-import { Component, ComponentValue, Entity, Schema } from "@latticexyz/recs";
-import { AnyComponent } from "@latticexyz/recs";
+import {
+  AnyComponent,
+  Component,
+  ComponentValue,
+  Entity,
+  Schema,
+} from "@latticexyz/recs";
 
 export type SetContractComponentFunction<T extends Schema> = (
   entity: Entity,
@@ -17,3 +22,10 @@ export function hasContract(
 ): component is AnyComponentWithContract {
   return component.metadata?.contractId !== undefined;
 }
+
+export type Cheatcodes = Record<string, Cheatcode>;
+
+export type Cheatcode = {
+  function: (...args: unknown[]) => unknown;
+  params: { name: string; type: "number" | "string" | "boolean" }[];
+};

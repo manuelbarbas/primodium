@@ -1,15 +1,19 @@
 import { SyncStep } from "@latticexyz/store-sync";
+import { Browser as ECSBrowser } from "ecs-browser";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
+import { world } from "./network/world";
 import { Increment } from "./screens/Increment";
+import { setupCheatcodes } from "./util/cheatcodes";
+
+const DEV = import.meta.env.VITE_DEV === "true";
 
 export default function AppLoadingState() {
-  const {
-    components: { SyncProgress },
-  } = useMud();
+  const mud = useMud();
+  const { components } = mud;
   useInit();
 
-  const loadingState = SyncProgress.use(undefined, {
+  const loadingState = components.SyncProgress.use(undefined, {
     message: "Connecting",
     percentage: 0,
     step: SyncStep.INITIALIZE,
@@ -46,6 +50,19 @@ export default function AppLoadingState() {
           </Routes>
         </BrowserRouter>
       )} */}
+      {DEV && (
+        <ECSBrowser
+          world={world}
+          layers={{
+            react: {
+              world,
+              components,
+            },
+          }}
+          devHighlightComponent={components.DevHighlight}
+          cheatcodes={setupCheatcodes(mud)}
+        />
+      )}
     </div>
   );
 }

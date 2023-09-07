@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
-import { ComponentBrowser } from "./components/dev/ComponentBrowser";
 import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
@@ -19,28 +18,6 @@ export default function App() {
     }
     setupNetwork();
   }, []);
-
-  useEffect(() => {
-    return;
-    // if (!networkLayer) return;
-
-    // // https://vitejs.dev/guide/env-and-mode.html
-    // if (DEV) {
-    //   import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
-    //     mountDevTools({
-    //       config: mudConfig,
-    //       publicClient: networkLayer.network.publicClient,
-    //       walletClient: networkLayer.network.walletClient,
-    //       latestBlock$: networkLayer.network.latestBlock$,
-    //       blockStorageOperations$: networkLayer.network.blockStorageOperations$,
-    //       worldAddress: networkLayer.network.worldContract.address,
-    //       worldAbi: networkLayer.network.worldContract.abi,
-    //       write$: networkLayer.network.write$,
-    //       recsWorld: world,
-    //     })
-    //   );
-    // }
-  }, [networkLayer]);
 
   // Amplitude Analytics
   if (DEV) {
@@ -64,7 +41,6 @@ export default function App() {
     return (
       <MudProvider {...networkLayer}>
         <AppLoadingState />
-        {DEV && <ComponentBrowser />}
       </MudProvider>
     );
   }
