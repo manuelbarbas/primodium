@@ -104,6 +104,9 @@ importers:
       contracts:
         specifier: workspace:*
         version: link:../contracts
+      ecs-browser:
+        specifier: workspace:*
+        version: link:../ecs-browser
       engine:
         specifier: ^1.0.0
         version: link:../engine
@@ -207,9 +210,6 @@ importers:
       autoprefixer:
         specifier: ^10.4.13
         version: 10.4.13(postcss@8.4.29)
-      ecs-browser:
-        specifier: workspace:*
-        version: link:../ecs-browser
       eslint:
         specifier: ^8.29.0
         version: 8.29.0
