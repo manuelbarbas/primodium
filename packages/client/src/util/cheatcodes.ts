@@ -1,4 +1,4 @@
-import { Cheatcodes } from "src/components/dev/Cheatcodes";
+import { Cheatcodes } from "src/components/dev/CheatcodesList";
 import { SetupResult } from "src/network/types";
 
 export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
