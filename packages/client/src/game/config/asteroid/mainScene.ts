@@ -36,9 +36,9 @@ for (const layer of asteroidMap.layers) {
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
   camera: {
-    minZoom: Math.max(1, window.devicePixelRatio),
-    maxZoom: window.devicePixelRatio * 5,
-    defaultZoom: Math.max(1, window.devicePixelRatio),
+    minZoom: 1,
+    maxZoom: 5,
+    defaultZoom: 1,
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },
