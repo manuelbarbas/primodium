@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import React, { useEffect, useMemo } from "react";
 import { Key } from "engine/types";
 import {
+  Account,
   SelectedAction,
   SelectedBuilding,
 } from "src/network/components/clientComponents";
@@ -17,15 +18,21 @@ import {
   BlockType,
   KeyImages,
 } from "src/util/constants";
-import { hashAndTrimKeyCoord, hashKeyEntity } from "src/util/encode";
+import {
+  hashAndTrimKeyCoord,
+  hashAndTrimKeyEntity,
+  hashKeyEntity,
+} from "src/util/encode";
 import { RawBlueprint, Level } from "src/network/components/chainComponents";
 import { useMainBaseCoord } from "src/hooks/useMainBase";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 
 const HotbarItem: React.FC<{
   blockType: EntityID;
   action: Action;
   index: number;
 }> = ({ blockType, action, index }) => {
+  const player = Account.use()?.value!;
   const selectedBuilding = SelectedBuilding.use()?.value;
   const mainBaseCoord = useMainBaseCoord();
   const {
@@ -65,6 +72,13 @@ const HotbarItem: React.FC<{
       keybinds[keybindAction]?.entries().next().value[0] as Key
     );
   }, [keybinds, keybindAction]);
+
+  const level = Level.use(hashKeyEntity(blockType, player), {
+    value: 1,
+  })?.value;
+  const buildingLevelEntity = hashAndTrimKeyEntity(blockType, level);
+
+  const hasEnough = useHasEnoughResources(buildingLevelEntity);
 
   useEffect(() => {
     if (!keybinds || !unlocked || !keybindAction) return;
@@ -119,9 +133,9 @@ const HotbarItem: React.FC<{
         onClick={handleSelectBuilding}
         className={`relative flex flex-col text-sm items-center cursor-pointer w-16 h-12 border rounded border-cyan-400 ${
           selectedBuilding === blockType
-            ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100"
+            ? "scale-110 ring-4 ring-amber-400 transistion-all duration-100 z-50"
             : ""
-        }`}
+        } ${hasEnough ? "" : " border-rose-500"}`}
       >
         <img
           src={
