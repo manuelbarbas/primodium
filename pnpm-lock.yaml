@@ -283,6 +283,9 @@ importers:
       forge-std:
         specifier: https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1
         version: github.com/foundry-rs/forge-std/74cfb77e308dd188d2f58864aaf44963ae6b88b1
+      prefab:
+        specifier: workspace:*
+        version: link:../prefab
       prettier:
         specifier: ^2.6.2
         version: 2.6.2
@@ -363,6 +366,8 @@ importers:
       typescript:
         specifier: ^4.7.4
         version: 4.7.4
+
+  packages/prefab: {}
 
   packages/sprites:
     devDependencies:
