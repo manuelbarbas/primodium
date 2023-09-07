@@ -9,9 +9,9 @@ const { Assets, Scenes, Tilesets } = BeltMap;
 const mainSceneConfig: SceneConfig = {
   key: Scenes.Main,
   camera: {
-    minZoom: Math.max(1, window.devicePixelRatio) * 0.25,
-    maxZoom: window.devicePixelRatio * 3,
-    defaultZoom: Math.max(1, window.devicePixelRatio) * 0.5,
+    minZoom: 0.25,
+    maxZoom: 3,
+    defaultZoom: 0.5,
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },

@@ -18,10 +18,7 @@ export const Starmap: React.FC<StarmapViewProps> = ({ id }) => {
   useEffect(() => {
     if (!width || !height) return;
 
-    setResolution(
-      width * window.devicePixelRatio,
-      height * window.devicePixelRatio
-    );
+    setResolution(width, height);
   }, [width, height]);
 
   return (
