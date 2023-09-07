@@ -5,12 +5,10 @@ import gameConfig from "../../config/belt/game";
 import mainSceneConfig from "../../config/belt/mainScene";
 import { BeltMap } from "../../constants";
 import { runSystems } from "./systems";
-import { EntityID } from "@latticexyz/recs";
-import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { Account } from "src/network/components/clientComponents";
-import { SingletonID } from "@latticexyz/network";
 
-export const initBeltView = async (_: EntityID, network: Network) => {
+import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
+
+export const initBeltView = async (network: Network) => {
   const { Scenes } = BeltMap;
   const { world } = network;
 
@@ -27,8 +25,7 @@ export const initBeltView = async (_: EntityID, network: Network) => {
     translateKeybind: false,
   });
 
-  const player = Account.get()?.value ?? SingletonID;
-  runSystems(scene, player);
+  runSystems(scene);
 
   world.registerDisposer(() => {
     game.dispose();

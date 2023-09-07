@@ -18,11 +18,11 @@ import {
   MainBase,
   HasResearched,
 } from "src/network/components/chainComponents";
-import { useObservableValue } from "@latticexyz/react";
 import { SingletonID } from "@latticexyz/network";
 import { useMud } from "src/hooks";
 import Spinner from "src/components/shared/Spinner";
 import { getBlockTypeName } from "src/util/common";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 
 export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
   ({ data }) => {
@@ -32,14 +32,13 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
     const { name, levels, description } = data;
 
     //we assume the order of this loop will never change. TODO: pull out into component since this is a nono
-    useObservableValue(HasResearched.update$);
     const levelsResearched = levels.map(({ id }) => {
       const entity = hashAndTrimKeyEntity(id, address);
       const isResearched = HasResearched.get(entity);
       return isResearched?.value ?? false;
     });
 
-    let currentLevel =
+    const currentLevel =
       levelsResearched.filter(Boolean).length >= levels.length
         ? levels.length
         : levelsResearched.filter(Boolean).length;
@@ -100,7 +99,9 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
       await research(researchId, network);
 
       setUserClickedLoading(false);
-    }, []);
+    }, [researchId, network]);
+
+    const hasEnough = useHasEnoughResources(researchId);
 
     const recipe = getRecipe(researchId);
 
@@ -173,7 +174,12 @@ export const ResearchItem: React.FC<{ data: ResearchItemType }> = React.memo(
                 </p>
               </GameButton>
             )}
-            {!isLocked && !isResearched && (
+            {!hasEnough && !isLocked && !isResearched && (
+              <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+                <p className="px-2 py-1">Not Enough Resources</p>
+              </GameButton>
+            )}
+            {!isLocked && !isResearched && hasEnough && (
               <GameButton
                 id={`${name}-research`}
                 onClick={executeResearch}

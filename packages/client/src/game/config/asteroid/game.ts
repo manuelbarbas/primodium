@@ -9,7 +9,8 @@ const gameConfig: GameConfig = {
   width: window.innerWidth * window.devicePixelRatio,
   height: window.innerHeight * window.devicePixelRatio,
   scale: {
-    mode: Phaser.Scale.NONE,
+    mode: Phaser.Scale.ENVELOP,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   antialias: false,
   antialiasGL: false,
