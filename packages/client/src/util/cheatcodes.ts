@@ -133,9 +133,7 @@ export const setupCheatcodes = (mud: Network): Cheatcodes => {
     updateSpaceRock: {
       params: [],
       function: async () => {
-        const entity = Account.get()?.value;
-        if (!entity) throw new Error("No player found");
-        await updateSpaceRock(entity, mud);
+        await updateSpaceRock(mud);
       },
     },
     giveResource: {
