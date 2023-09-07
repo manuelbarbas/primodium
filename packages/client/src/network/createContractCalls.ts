@@ -1,5 +1,6 @@
 import { abiTypesToSchema, encodeField, schemaToHex } from "@latticexyz/protocol-parser";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs/src/types";
+import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
 import { AnyComponentWithContract } from "ecs-browser/src/types";
 import { Hex } from "viem";
@@ -23,18 +24,18 @@ export function createContractCalls(
     await waitForTransaction(tx);
   };
 
-  async function setFields<S extends Schema>(
-    entity: Entity,
+  async function setComponentValue<S extends Schema>(
     component: AnyComponentWithContract<S>,
+    entity: Entity,
     newValues: Partial<ComponentValue<S>>
   ) {
     const tableId = component.id as Hex;
     const key = entityToHexKeyTuple(entity);
-    const valueSchema = schemaToHex(abiTypesToSchema(Object.values(component.metadata.valueSchema)));
+    const valueSchema = schemaToHex(abiTypesToSchema(Object.values(component.metadata.valueSchema) as StaticAbiType[]));
 
     const schema = Object.keys(component.metadata.valueSchema);
     Object.entries(newValues).forEach(async ([name, value]) => {
-      const type = component.metadata.valueSchema[name];
+      const type = component.metadata.valueSchema[name] as StaticAbiType;
       const data = encodeField(type, value);
       const schemaIndex = schema.indexOf(name);
       const tx = await worldContract.write.devSetField([tableId, key, schemaIndex, data, valueSchema]);
@@ -66,7 +67,7 @@ export function createContractCalls(
     /* ------------------------------- dev systems ------------------------------ */
     increment,
     setRecord,
-    setFields,
+    setComponentValue,
     // pushToField,
     // popFromField,
     // updateInField,

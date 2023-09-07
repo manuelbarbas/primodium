@@ -13,7 +13,9 @@ import { SetField } from "./types";
 
 /**
  * An Entity Browser for viewing/editing Component values.
+ * TODO: Generate setField within the browser, refactor this entire disgusting component
  */
+
 export const Browser = ({
   layers,
   setField,
