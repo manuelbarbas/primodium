@@ -60,7 +60,7 @@ export default function AppLoadingState() {
               components,
             },
           }}
-          setField={mud.contractCalls.setFields}
+          setField={mud.contractCalls.setComponentValue}
           devHighlightComponent={components.DevHighlight}
           tabs={[{ name: "Cheatcodes", component: <CheatcodesList cheatcodes={setupCheatcodes(mud)} /> }]}
         />
