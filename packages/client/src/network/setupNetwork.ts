@@ -4,7 +4,7 @@ import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
 import { IWorld__factory } from "contracts/types/ethers-contracts/factories/IWorld__factory";
 import { Subject, share } from "rxjs";
-import { ClientConfig, Hex, createPublicClient, createWalletClient, fallback, http, parseEther, webSocket } from "viem";
+import { Hex, createPublicClient, createWalletClient, fallback, http, parseEther, webSocket } from "viem";
 import { NetworkConfig } from "./types";
 import { world } from "./world";
 
@@ -13,7 +13,7 @@ export async function setupNetwork(networkConfig: NetworkConfig) {
     chain: networkConfig.chain,
     transport: transportObserver(fallback([webSocket(), http()])),
     pollingInterval: 1000,
-  } as const satisfies ClientConfig;
+  };
 
   const publicClient = createPublicClient(clientOptions);
 

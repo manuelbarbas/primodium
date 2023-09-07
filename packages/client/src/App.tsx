@@ -6,7 +6,7 @@ import { MudProvider } from "./hooks/providers/MudProvider";
 import { setup } from "./network/setup";
 import { SetupResult } from "./network/types";
 
-const DEV = import.meta.env.VITE_DEV === "true";
+const DEV = import.meta.env.PRI_DEV === "true";
 
 export default function App() {
   const [networkLayer, setNetworkLayer] = useState<SetupResult>();
@@ -21,9 +21,9 @@ export default function App() {
 
   // Amplitude Analytics
   if (DEV) {
-    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_DEV } });
+    ampli.load({ client: { apiKey: import.meta.env.PRI_AMPLI_API_KEY_DEV } });
   } else {
-    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_PROD } });
+    ampli.load({ client: { apiKey: import.meta.env.PRI_AMPLI_API_KEY_PROD } });
   }
 
   if (networkLayer === undefined) {

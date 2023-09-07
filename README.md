@@ -15,7 +15,7 @@ The test page is located at `localhost:3000/increment?dev=true&worldAddress=<add
 For testing, set the `isDebug()` function to return true in `packages/contracts/src/libraries/LibDebug.sol`. Then, create an empty environment file at `packages/client/.env` and set the following:
 
 ```
-VITE_DEV=true
+PRI_DEV=true
 ```
 
 Deploy the contracts on the local environment using the commands in the previous section. This enables debug buildings to be built, which are free. Additional unit tests is provided by the mud cli and can be accessed below from the `packages/contracts` directory.

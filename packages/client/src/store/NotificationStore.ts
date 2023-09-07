@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import { create } from "zustand";
 
 type NotificationState = {
   title: string;
@@ -18,16 +18,13 @@ const defaults: NotificationState = {
   showUI: false,
 };
 
-export const useNotificationStore = create<
-  NotificationState & NotificationActions
->()((set) => ({
+export const useNotificationStore = create<NotificationState & NotificationActions>()((set) => ({
   ...defaults,
-  setNotification: (title: string, message: string) =>
-    set({ title, message, showUI: true }),
+  setNotification: (title: string, message: string) => set({ title, message, showUI: true }),
   setShowUI: (show: boolean) => set({ showUI: show }),
 }));
 
 // store dev tools
-if (import.meta.env.VITE_DEV === "true") {
+if (import.meta.env.PRI_DEV === "true") {
   mountStoreDevtool("NotificationStore", useNotificationStore);
 }

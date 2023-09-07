@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -34,4 +34,6 @@ export default defineConfig({
       "@improbable-eng/grpc-web",
     ],
   },
+  envPrefix: "PRI_",
+  envDir: "../../",
 });
