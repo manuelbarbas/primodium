@@ -108,7 +108,7 @@ export const Browser = ({
         color: "white",
       }}
     >
-      {isVisible !== undefined && <TopBar />}
+      {tabs.length > 0 && isVisible !== undefined && <TopBar />}
       {isVisible === 0 && <Browser />}
       {tabs.map(({ component }, i) => (isVisible === i + 1 ? component : null))}
 
