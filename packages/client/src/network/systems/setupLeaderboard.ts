@@ -1,20 +1,10 @@
 import { EntityID, defineComponentSystem } from "@latticexyz/recs";
 import { Score } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import { OrderedMap } from "js-sdsl";
 import { Account, Leaderboard } from "../components/clientComponents";
 
 export const setupLeaderboard = () => {
-  const leaderboard = new OrderedMap<EntityID, number>(
-    undefined,
-    (x, y) => {
-      const xScore = Score.get(x)?.value ?? 0;
-      const yScore = Score.get(y)?.value ?? 0;
-
-      return yScore - xScore;
-    },
-    true
-  );
+  const leaderboardMap = new Map<EntityID, number>();
 
   defineComponentSystem(world, Score, ({ entity, value }) => {
     const entityId = world.entities[entity];
@@ -22,34 +12,28 @@ export const setupLeaderboard = () => {
 
     if (!entityId) return;
 
-    leaderboard.setElement(
-      entityId,
-      parseInt(value?.at(0)?.value.toString() ?? "0")
+    const scoreValue = parseInt(value?.at(0)?.value.toString() ?? "0");
+    leaderboardMap.set(entityId, scoreValue);
+
+    const leaderboardArray = [...leaderboardMap.entries()].sort(
+      (a, b) => b[1] - a[1]
     );
 
-    let scores: number[] = [];
-    let players: EntityID[] = [];
-
-    for (const [player, score] of leaderboard) {
-      scores.push(score);
-      players.push(player);
-    }
+    const scores = leaderboardArray.map((entry) => entry[1]);
+    const players = leaderboardArray.map((entry) => entry[0]);
 
     if (!player) {
       Leaderboard.set({
         scores,
         players,
-        playerRank: leaderboard.size() + 1,
+        playerRank: leaderboardArray.length + 1,
       });
-
       return;
     }
 
-    const playerNode = leaderboard.find(player);
+    const playerIndex = players.indexOf(player);
     const playerRank =
-      player === leaderboard.getElementByPos(playerNode.index)[0]
-        ? playerNode.index + 1
-        : leaderboard.size() + 1;
+      playerIndex !== -1 ? playerIndex + 1 : leaderboardArray.length + 1;
 
     Leaderboard.set({
       scores,
@@ -58,5 +42,5 @@ export const setupLeaderboard = () => {
     });
   });
 
-  return leaderboard;
+  return leaderboardMap;
 };
