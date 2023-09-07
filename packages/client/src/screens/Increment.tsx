@@ -1,7 +1,7 @@
 import { useMud } from "src/hooks";
 
 export function Increment() {
-  const { components, systems } = useMud();
+  const { components, contractCalls } = useMud();
 
   const counter = components.Counter.use();
   const doubleCounter = components.DoubleCounter.use();
@@ -18,7 +18,7 @@ export function Increment() {
         <br />
         Double Counter!: <span>{doubleCounter?.value ?? "??"}</span>
       </div>
-      <button type="button" onClick={systems.increment}>
+      <button type="button" onClick={contractCalls.increment}>
         Increment
       </button>
     </div>

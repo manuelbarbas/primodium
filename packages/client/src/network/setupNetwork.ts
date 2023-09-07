@@ -2,7 +2,7 @@ import { ContractWrite, createBurnerAccount, createContract, transportObserver }
 import { createFaucetService } from "@latticexyz/services/faucet";
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
 import mudConfig from "contracts/mud.config";
-import { IWorld__factory } from "contracts/types/ethers-contracts/factories/IWorld__factory";
+import { IWorld__factory } from "contracts/types/ethers-contracts";
 import { Subject, share } from "rxjs";
 import { Hex, createPublicClient, createWalletClient, fallback, http, parseEther, webSocket } from "viem";
 import { NetworkConfig } from "./types";
