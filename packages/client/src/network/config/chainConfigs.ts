@@ -22,7 +22,7 @@ export const caldera = {
       url: "https://primodium-bedrock.calderaexplorer.xyz/",
     },
   },
-} as const satisfies MUDChain;
+};
 
 interface ChainConfigs {
   [x: string]: MUDChain;

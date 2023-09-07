@@ -1,25 +1,25 @@
 import {
   AnyComponent,
   ComponentValue,
-  Schema,
-  Layers,
   Entity,
+  Layers,
+  Schema,
 } from "@latticexyz/recs";
-import { SetContractComponentFunction } from "./types";
 import { ValueEditor } from "./ValueEditor";
+import { SetField } from "./types";
 
 export const ComponentValueEditor = ({
   entity,
   component,
   componentValue,
   layers,
-  setContractComponentValue,
+  setField,
 }: {
   entity: Entity;
   component: AnyComponent;
   componentValue: ComponentValue<Schema>;
   layers: Layers;
-  setContractComponentValue?: SetContractComponentFunction<Schema>;
+  setField?: SetField<Schema>;
 }) => {
   return (
     <div>
@@ -32,7 +32,7 @@ export const ComponentValueEditor = ({
             componentValue={componentValue}
             valueProp={propName}
             layers={layers}
-            setContractComponentValue={setContractComponentValue}
+            setField={setField}
           />
         );
       })}

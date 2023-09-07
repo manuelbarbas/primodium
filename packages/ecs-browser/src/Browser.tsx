@@ -9,21 +9,20 @@ import {
   SmallHeadline,
 } from "./StyledComponents";
 import { createBrowserDevComponents } from "./createBrowserDevComponents";
-import { useClearDevHighlights } from "./hooks";
-import { SetContractComponentFunction } from "./types";
+import { SetField } from "./types";
 
 /**
  * An Entity Browser for viewing/editing Component values.
  */
 export const Browser = ({
   layers,
-  setContractComponentValue,
+  setField,
   world,
   devHighlightComponent,
   tabs = [],
 }: {
   layers: Layers;
-  setContractComponentValue?: SetContractComponentFunction<Schema>;
+  setField?: SetField<Schema>;
   world: World;
   devHighlightComponent: ReturnType<
     typeof createBrowserDevComponents
@@ -33,26 +32,32 @@ export const Browser = ({
   const [filteredEntities, setFilteredEntities] = useState<Entity[]>([]);
   const [overflow, setOverflow] = useState(0);
   const [isVisible, setIsVisible] = useState<number>();
-  const clearDevHighlights = useClearDevHighlights(devHighlightComponent);
   const TopBar = () => (
     <div className="flex justify-between bg-gray-400 p-2">
       <div className="flex gap-1">
-        <button
-          className={`px-1 ${isVisible === 0 ? "bg-blue-500 text-white" : ""}`}
-          onClick={() => setIsVisible(0)}
-        >
-          Browser
-        </button>
-        {tabs.map(({ name }, i) => (
-          <button
-            className={`p-1 ${
-              isVisible === i + 1 ? "bg-blue-500 text-white" : ""
-            }`}
-            onClick={() => setIsVisible(i + 1)}
-          >
-            {name}
-          </button>
-        ))}
+        {tabs.length > 0 && (
+          <>
+            <button
+              className={`px-1 ${
+                isVisible === 0 ? "bg-blue-500 text-white" : ""
+              }`}
+              onClick={() => setIsVisible(0)}
+            >
+              Browser
+            </button>
+            {tabs.map(({ name }, i) => (
+              <button
+                key={`tab-${i + 1}`}
+                className={`p-1 ${
+                  isVisible === i + 1 ? "bg-blue-500 text-white" : ""
+                }`}
+                onClick={() => setIsVisible(i + 1)}
+              >
+                {name}
+              </button>
+            ))}
+          </>
+        )}
       </div>
       <button className="px-4 py-2" onClick={() => setIsVisible(undefined)}>
         X
@@ -67,7 +72,6 @@ export const Browser = ({
         allEntities={[...world.getEntities()]}
         setFilteredEntities={setFilteredEntities}
         layers={layers}
-        clearDevHighlights={clearDevHighlights}
         setOverflow={setOverflow}
       />
 
@@ -90,9 +94,8 @@ export const Browser = ({
           key={`entity-editor-${entity}`}
           entityId={entity}
           layers={layers}
-          setContractComponentValue={setContractComponentValue}
+          setField={setField}
           devHighlightComponent={devHighlightComponent}
-          clearDevHighlights={clearDevHighlights}
         />
       ))}
     </BrowserContainer>
@@ -108,7 +111,7 @@ export const Browser = ({
         color: "white",
       }}
     >
-      {tabs.length > 0 && isVisible !== undefined && <TopBar />}
+      {isVisible !== undefined && <TopBar />}
       {isVisible === 0 && <Browser />}
       {tabs.map(({ component }, i) => (isVisible === i + 1 ? component : null))}
 

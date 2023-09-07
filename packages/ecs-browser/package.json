@@ -24,6 +24,7 @@
   "dependencies": {
     "@latticexyz/react": "2.0.0-next.5",
     "@latticexyz/recs": "2.0.0-next.5",
+    "@latticexyz/schema-type": "2.0.0-next.5",
     "@latticexyz/utils": "2.0.0-next.5",
     "goober": "^2.1.13",
     "lodash": "^4.17.21",

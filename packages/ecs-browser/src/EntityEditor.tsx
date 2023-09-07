@@ -16,7 +16,7 @@ import {
   ComponentBrowserButton,
   EntityEditorContainer,
 } from "./StyledComponents";
-import { SetContractComponentFunction } from "./types";
+import { SetField } from "./types";
 
 function replaceLotsOf0sWithEllipses(str: string) {
   return str.replace(/0{10,}/g, "...");
@@ -25,17 +25,15 @@ function replaceLotsOf0sWithEllipses(str: string) {
 export const EntityEditor = ({
   entityId,
   layers,
-  setContractComponentValue,
+  setField,
   devHighlightComponent,
   world,
-  clearDevHighlights,
 }: {
   entityId: Entity;
   layers: Layers;
-  setContractComponentValue?: SetContractComponentFunction<Schema>;
+  setField?: SetField<Schema>;
   devHighlightComponent: Component<{ value: Type.OptionalNumber }>;
   world: World;
-  clearDevHighlights: () => void;
 }) => {
   const [opened, setOpened] = useState(false);
 
@@ -43,7 +41,6 @@ export const EntityEditor = ({
     Component<Schema, Metadata, unknown>[]
   >([]);
   useEffect(() => {
-    console.log("opened:", opened);
     if (opened) {
       const allComponents = flatten(
         Object.values(layers).map((layer) => Object.values(layer.components))
@@ -88,7 +85,7 @@ export const EntityEditor = ({
               entity={entityId}
               component={c}
               layers={layers}
-              setContractComponentValue={setContractComponentValue}
+              setField={setField}
             />
           ))}
       </Collapse>
