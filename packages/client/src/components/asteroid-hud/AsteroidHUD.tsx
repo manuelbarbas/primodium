@@ -23,9 +23,14 @@ export const AsteroidHUD = () => {
   }, []);
 
   return (
-    <div className="star-background">
+    <div className="star-background screen-container font-mono">
       {showUI && (
-        <HUD>
+        <HUD scale={1}>
+          <HUD.BottomMiddle>Asteroid Tooltip</HUD.BottomMiddle>
+          <HUD.TopRight>Panes</HUD.TopRight>
+          <HUD.TopLeft>Menu</HUD.TopLeft>
+          <HUD.TopMiddle>Top Middle</HUD.TopMiddle>
+          <HUD.BottomLeft>Bottom Left</HUD.BottomLeft>
           <HUD.BottomRight>
             <BrandingLabel />
           </HUD.BottomRight>
