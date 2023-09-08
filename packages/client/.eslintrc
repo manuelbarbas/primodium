@@ -21,5 +21,10 @@
     "react": {
       "version": "detect"
     }
+  },
+  "env": {
+    "browser": false,
+    "amd": true,
+    "node": true
   }
 }
