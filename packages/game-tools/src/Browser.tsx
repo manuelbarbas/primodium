@@ -1,7 +1,7 @@
 import { Layers, Schema, World } from "@latticexyz/recs";
 import { Fragment, useState } from "react";
-import CheatcodesList from "./CheatcodesList";
-import { Editor } from "./Editor/Editor";
+import { CheatcodesList } from "./CheatcodesList";
+import { Editor } from "./Editor";
 import { BrowserContainer } from "./StyledComponents";
 import { Cheatcodes, SetContractComponentFunction } from "./types";
 

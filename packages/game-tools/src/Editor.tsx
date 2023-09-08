@@ -1,9 +1,9 @@
 import { Entity, Layers, Schema, World } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
-import { BrowserContainer, SmallHeadline } from "../StyledComponents";
-import { SetContractComponentFunction } from "../types";
-import { EntityEditor } from "./EntityEditor";
-import { QueryBuilder } from "./QueryBuilder";
+import { EntityEditor } from "./Editor/EntityEditor";
+import { QueryBuilder } from "./Editor/QueryBuilder";
+import { BrowserContainer, SmallHeadline } from "./StyledComponents";
+import { SetContractComponentFunction } from "./types";
 
 /**
  * An Entity Browser for viewing/editiing Component values.
