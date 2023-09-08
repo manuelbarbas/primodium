@@ -1,11 +1,7 @@
 import { SyncStep } from "@latticexyz/store-sync";
-import { Browser as ECSBrowser } from "ecs-browser";
-import CheatcodesList from "./components/dev/CheatcodesList";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
-import { world } from "./network/world";
 import { Increment } from "./screens/Increment";
-import { setupCheatcodes } from "./util/cheatcodes";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -51,20 +47,6 @@ export default function AppLoadingState() {
           </Routes>
         </BrowserRouter>
       )} */}
-      {DEV && (
-        <ECSBrowser
-          world={world}
-          layers={{
-            react: {
-              world,
-              components,
-            },
-          }}
-          setField={mud.contractCalls.setComponentValue}
-          devHighlightComponent={components.DevHighlight}
-          tabs={[{ name: "Cheatcodes", component: <CheatcodesList cheatcodes={setupCheatcodes(mud)} /> }]}
-        />
-      )}
     </div>
   );
 }
