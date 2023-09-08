@@ -21,7 +21,6 @@ export default defineConfig({
         manualChunks: {
           react: ["react", "react-dom"],
           mud: [
-            "ecs-browser",
             "@latticexyz/common",
             "@latticexyz/protocol-parser",
             "@latticexyz/dev-tools",

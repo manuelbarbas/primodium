@@ -2,9 +2,8 @@ import { abiTypesToSchema, encodeField, schemaToHex } from "@latticexyz/protocol
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs/src/types";
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
-import { AnyComponentWithContract } from "ecs-browser/src/types";
 import { Hex } from "viem";
-import { Components, SetupNetworkResult } from "./types";
+import { Components, ContractComponent, SetupNetworkResult } from "./types";
 export function createContractCalls(
   { worldContract, waitForTransaction }: SetupNetworkResult,
   { Counter }: Components
@@ -25,7 +24,7 @@ export function createContractCalls(
   };
 
   async function setComponentValue<S extends Schema>(
-    component: AnyComponentWithContract<S>,
+    component: ContractComponent<S>,
     entity: Entity,
     newValues: Partial<ComponentValue<S>>
   ) {
