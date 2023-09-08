@@ -1,17 +1,16 @@
 import { WebSocketProvider } from "@ethersproject/providers";
 import { getRevertReason } from "@latticexyz/network";
 import { ContractReceipt, ContractTransaction } from "ethers";
-import { IComputedValue } from "mobx";
 
 // function that takes in an executeTyped promise that resolves to a completed transaction
 // providers are returned from the useMud hook
 // alerts user if transaction fails
 export async function execute(
   txPromise: Promise<ContractTransaction>,
-  providers: IComputedValue<{
+  providers: {
     json: any;
     ws: WebSocketProvider | undefined;
-  }>,
+  },
   setNotification?: (title: string, message: string) => void
 ): Promise<ContractReceipt | undefined> {
   try {
@@ -20,10 +19,7 @@ export async function execute(
     return txResponse;
   } catch (error: any) {
     try {
-      const reason = await getRevertReason(
-        error.transactionHash,
-        providers.get().json
-      );
+      const reason = await getRevertReason(error.transactionHash, providers.json);
       if (setNotification) {
         setNotification("Warning", reason);
       } else {

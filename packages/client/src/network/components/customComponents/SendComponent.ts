@@ -1,11 +1,11 @@
-import { EntityID, Metadata, World, Type } from "@latticexyz/recs";
+import { EntityID, Metadata, Type, World } from "@latticexyz/recs";
 
-import newComponent, { Options } from "./Component";
 import { Coord } from "@latticexyz/utils";
-import { Position, ReversePosition } from "../chainComponents";
 import { encodeCoord } from "src/util/encode";
-import { ActiveAsteroid } from "../clientComponents";
 import { ActiveButton } from "src/util/types";
+import { Position, ReversePosition } from "../chainComponents";
+import { ActiveAsteroid } from "../clientComponents";
+import newComponent, { Options } from "./ExtendedComponent";
 
 function newSendComponent<Overridable extends boolean, M extends Metadata>(
   world: World,
@@ -114,8 +114,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
 
   const getOrigin = () => {
     const componentValue = component.get();
-    if (!componentValue || !componentValue.originX || !componentValue.originY)
-      return undefined;
+    if (!componentValue || !componentValue.originX || !componentValue.originY) return undefined;
     const coord = { x: componentValue.originX, y: componentValue.originY };
     const entities = Position.getAllWith(coord);
     if (entities.length === 0) return;
@@ -130,12 +129,7 @@ function newSendComponent<Overridable extends boolean, M extends Metadata>(
 
   const getDestination = () => {
     const componentValue = component.get();
-    if (
-      !componentValue ||
-      !componentValue.destinationX ||
-      !componentValue.destinationY
-    )
-      return undefined;
+    if (!componentValue || !componentValue.destinationX || !componentValue.destinationY) return undefined;
     const coord = {
       x: componentValue.destinationX,
       y: componentValue.destinationY,

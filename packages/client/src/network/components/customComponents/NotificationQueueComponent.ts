@@ -1,6 +1,6 @@
-import { world } from "src/network/world";
-import newComponent from "./Component";
 import { EntityID, Type } from "@latticexyz/recs";
+import { world } from "src/network/world";
+import newComponent from "./ExtendedComponent";
 
 export type NotificationType = "battle" | "arrival-transit" | "arrival-orbit";
 export type Notification = {

@@ -1,11 +1,10 @@
 import { Metadata, Type } from "@latticexyz/recs";
 import { world } from "src/network/world";
-import newComponent, { Options } from "./Component";
+import newComponent, { Options } from "./ExtendedComponent";
 
-export function BattleParticipantComponent<
-  Overridable extends boolean,
-  M extends Metadata
->(options?: Options<Overridable, M>) {
+export function BattleParticipantComponent<Overridable extends boolean, M extends Metadata>(
+  options?: Options<Overridable, M>
+) {
   return newComponent(
     world,
     {

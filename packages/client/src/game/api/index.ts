@@ -1,22 +1,18 @@
-import { EntityID, namespaceWorld } from "@latticexyz/recs";
+import { Network } from "@ethersproject/providers";
+import { Entity, namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
-import { Network } from "../../network/layer";
+import { world } from "src/network/world";
 import _init from "../init";
 import { createCameraApi } from "./camera";
+import { createFxApi } from "./fx";
 import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
-import { createFxApi } from "./fx";
-import { world } from "src/network/world";
 
-async function init(
-  player: EntityID,
-  network: Network,
-  version: string = "v1"
-) {
+async function init(player: Entity, network: Network, version = "v1") {
   const asciiArt = `
                                                                           
                                                                           
@@ -31,20 +27,16 @@ async function init(
 
   console.log("%c" + asciiArt, "color: white; background-color: brown;");
 
-  console.log(
-    `%cPrimodium ${version}`,
-    "color: white; background-color: black;",
-    "https://twitter.com/primodiumgame"
-  );
+  console.log(`%cPrimodium ${version}`, "color: white; background-color: black;", "https://twitter.com/primodiumgame");
 
   namespaceWorld(world, "game");
 
   await _init(player, network);
 
   //expose api to window for debugging
-  if (import.meta.env.VITE_DEV === "true") {
-    // @ts-ignore
-    window.network = network;
+  if (import.meta.env.PRI_DEV === "true") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).network = network;
   }
 
   GameReady.set({ value: true });
@@ -63,9 +55,8 @@ function destroy() {
   world.dispose("game");
 }
 
-function api(instance: string | Game, sceneKey: string = "MAIN") {
-  const _instance =
-    typeof instance === "string" ? engine.getGame().get(instance) : instance;
+function api(instance: string | Game, sceneKey = "MAIN") {
+  const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
     console.warn("No instance found with key " + instance);

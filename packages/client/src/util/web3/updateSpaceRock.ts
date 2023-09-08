@@ -1,11 +1,11 @@
 import { execute } from "src/network/actions";
-import { Network } from "src/network/layer";
-import { useGameStore } from "src/store/GameStore";
-import { useNotificationStore } from "src/store/NotificationStore";
 import {
   Account,
   ActiveAsteroid,
 } from "src/network/components/clientComponents";
+import { Network } from "src/network/setupNetworkOld";
+import { useGameStore } from "src/store/GameStore";
+import { useNotificationStore } from "src/store/NotificationStore";
 
 export const updateSpaceRock = async (network: Network) => {
   const { providers, systems } = network;

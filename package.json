@@ -1,24 +1,40 @@
 {
-  "name": "primodium",
-  "version": "1.0.0",
+  "name": "mud-template-phaser",
   "private": true,
-  "license": "MIT",
-  "workspaces": [
-    "packages/contracts",
-    "packages/client",
-    "packages/sprites",
-    "packages/engine"
-  ],
   "scripts": {
-    "dev": "run-pty % yarn dev:node % yarn dev:client % yarn dev:contracts",
-    "dev:client": "yarn workspace client run dev",
-    "dev:node": "yarn workspace contracts run devnode",
-    "dev:contracts": "yarn workspace contracts run dev",
+    "build": "pnpm recursive run build",
     "clean": "bash clean.sh",
-    "test": "yarn workspace contracts run test"
+    "deploy:caldera": "pnpm --filter 'contracts' deploy:caldera",
+    "dev": "concurrently -n contracts,client -c cyan,magenta \"cd packages/contracts && pnpm run dev\" \"cd packages/client && pnpm run dev\"",
+    "dev:client": "pnpm --filter 'client' run dev",
+    "dev:contracts": "pnpm --filter 'contracts' deploy:local",
+    "dev:node": "pnpm --filter 'contracts' devnode",
+    "dev:pty": "run-pty % pnpm dev:node % pnpm dev:client % pnpm dev:contracts",
+    "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
+    "mud:up": "pnpm mud set-version --tag main && pnpm install",
+    "prepare": "husky install && (forge --version || pnpm foundry:up)",
+    "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json'",
+    "test": "pnpm recursive run test"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{ts,tsx,css,md,mdx,sol}": "prettier --write",
+    "package.json": "pnpm sort-package-json"
   },
   "devDependencies": {
-    "run-pty": "^4.0.3"
+    "@latticexyz/cli": "2.0.0-next.5",
+    "@typescript-eslint/eslint-plugin": "5.46.1",
+    "@typescript-eslint/parser": "5.46.1",
+    "concurrently": "^8.0.1",
+    "eslint": "8.29.0",
+    "husky": ">=6",
+    "lint-staged": "^14.0.1",
+    "rimraf": "^3.0.2",
+    "run-pty": "4.0.4",
+    "typescript": "5.1.6"
   },
-  "dependencies": {}
+  "engines": {
+    "node": "18.x",
+    "pnpm": "8.x"
+  }
 }

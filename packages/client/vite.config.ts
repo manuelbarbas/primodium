@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -14,12 +14,37 @@ export default defineConfig({
   worker: {
     plugins: [comlink()],
   },
+  build: {
+    rollupOptions: {
+      external: ["#ansi-styles", "#supports-color"],
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          mud: [
+            "@latticexyz/common",
+            "@latticexyz/protocol-parser",
+            "@latticexyz/dev-tools",
+            "@latticexyz/react",
+            "@latticexyz/recs",
+            "@latticexyz/schema-type",
+            "@latticexyz/store",
+            "@latticexyz/store-sync",
+            "@latticexyz/utils",
+            "@latticexyz/world",
+          ],
+        },
+      },
+    },
+    target: "ES2022",
+  },
+
   optimizeDeps: {
     esbuildOptions: {
-      target: "es2020",
+      supported: {
+        bigint: true,
+      },
     },
 
-    exclude: ["@latticexyz/network", "@latticexyz/noise"],
     include: [
       "proxy-deep",
       "ethers/lib/utils",
@@ -35,4 +60,6 @@ export default defineConfig({
       "@improbable-eng/grpc-web",
     ],
   },
+  envPrefix: "PRI_",
+  envDir: "../../",
 });

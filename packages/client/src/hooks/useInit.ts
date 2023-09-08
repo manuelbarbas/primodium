@@ -1,57 +1,30 @@
 import { useEffect, useMemo } from "react";
-import { useAccount } from "./useAccount";
-import { useMud } from "./useMud";
-import { setupActiveAsteroid } from "src/network/systems/setupActiveAsteroid";
-import {
-  ActiveAsteroid,
-  Account,
-} from "src/network/components/clientComponents";
-import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
-import { setupHangar } from "src/network/systems/setupHangar";
-import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
-import { setupBattleComponent } from "src/network/systems/setupBattleComponent";
-import { setupNotificationQueue } from "src/network/systems/setupNotificationQueue";
-import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { ampli } from "src/ampli";
+import { Account } from "src/network/components/clientComponents";
+import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
+import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
+import { useMud } from "./useMud";
 
 export const useInit = () => {
-  const { blockNumber$ } = useMud();
-  const { address, rawAddress, external } = useAccount();
-  const activeAsteroid = ActiveAsteroid.use()?.value;
+  const mud = useMud();
+
+  Account.set({ value: mud.network.playerEntity });
 
   const initialized = useMemo(() => {
-    if (!address) return false;
-
-    return !!activeAsteroid;
-  }, [address, activeAsteroid]);
-
-  useEffect(() => {
-    if (address) {
-      setupActiveAsteroid(address);
-    }
-
-    Account.set({ value: address });
-  }, [address]);
+    return true;
+  }, []);
 
   //initialize systems
   useEffect(() => {
-    setupTrainingQueues();
-    setupHangar();
-    setupLeaderboard();
-    setupBattleComponent();
-    setupNotificationQueue();
-    setupBlockNumber(blockNumber$);
-  }, []);
+    setupBlockNumber(mud.network.latestBlockNumber$);
+    setupDoubleCounter(mud);
+  }, [mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user
   useEffect(() => {
-    ampli.identify(rawAddress, {
-      extra: {
-        external,
-      },
-    });
-  }, [rawAddress]);
+    ampli.identify(mud.network.address, {});
+  }, [mud.network.address]);
 
   return initialized;
 };

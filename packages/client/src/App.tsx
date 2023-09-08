@@ -1,51 +1,51 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-import {
-  Address,
-  Connector,
-  WagmiConfig,
-  useAccount as useWagmiAccount,
-} from "wagmi";
-import { getNetworkLayerConfig } from "./network/config/config";
-import { Network, createNetworkLayer } from "./network/layer";
-
+import mudConfig from "contracts/mud.config";
 import AppLoadingState from "./AppLoadingState";
-import { MudProvider } from "./hooks/providers/MudProvider";
-import wagmiClient from "./network/wagmi";
-import { ComponentBrowser } from "./components/dev/ComponentBrowser";
 import { ampli } from "./ampli";
+import { MudProvider } from "./hooks/providers/MudProvider";
+import { setup } from "./network/setup";
+import { SetupResult } from "./network/types";
+import { world } from "./network/world";
 
-const DEV = import.meta.env.VITE_DEV === "true";
+const DEV = import.meta.env.PRI_DEV === "true";
 
 export default function App() {
-  // Setup network layer
-  const { connector: activeConnector, address } = useWagmiAccount();
-  const prevAddressRef = useRef<Address | undefined>();
-
-  const [networkLayer, setNetworkLayer] = useState<Network>();
-
-  const setupNetworkLayerOnChange = async (
-    address: Address | undefined,
-    activeConnector: Connector | undefined
-  ) => {
-    if (prevAddressRef.current && address === prevAddressRef.current) return;
-    const provider = await activeConnector?.getProvider();
-    const networkLayerConfig = getNetworkLayerConfig(provider);
-    const network = await createNetworkLayer(networkLayerConfig);
-    setNetworkLayer(network);
-    prevAddressRef.current = address;
-  };
+  const [networkLayer, setNetworkLayer] = useState<SetupResult>();
 
   useEffect(() => {
-    setupNetworkLayerOnChange(address, activeConnector);
-  }, [activeConnector, address]);
+    async function setupNetwork() {
+      const result = await setup();
+      setNetworkLayer(result);
+    }
+    setupNetwork();
+  }, []);
 
   // Amplitude Analytics
   if (DEV) {
-    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_DEV } });
+    ampli.load({ client: { apiKey: import.meta.env.PRI_AMPLI_API_KEY_DEV } });
   } else {
-    ampli.load({ client: { apiKey: import.meta.env.VITE_AMPLI_API_KEY_PROD } });
+    ampli.load({ client: { apiKey: import.meta.env.PRI_AMPLI_API_KEY_PROD } });
   }
+  useEffect(() => {
+    if (!networkLayer) return;
+    // https://vitejs.dev/guide/env-and-mode.html
+    if (import.meta.env.DEV) {
+      import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
+        mountDevTools({
+          config: mudConfig,
+          publicClient: networkLayer.network.publicClient,
+          walletClient: networkLayer.network.walletClient,
+          latestBlock$: networkLayer.network.latestBlock$,
+          blockStorageOperations$: networkLayer.network.blockStorageOperations$,
+          worldAddress: networkLayer.network.worldContract.address,
+          worldAbi: networkLayer.network.worldContract.abi,
+          write$: networkLayer.network.write$,
+          recsWorld: world,
+        })
+      );
+    }
+  }, [networkLayer]);
 
   if (networkLayer === undefined) {
     return (
@@ -63,12 +63,9 @@ export default function App() {
     );
   } else {
     return (
-      <WagmiConfig client={wagmiClient}>
-        <MudProvider {...networkLayer}>
-          <AppLoadingState />
-          {DEV && <ComponentBrowser />}
-        </MudProvider>
-      </WagmiConfig>
+      <MudProvider {...networkLayer}>
+        <AppLoadingState />
+      </MudProvider>
     );
   }
 }

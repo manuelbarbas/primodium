@@ -1,5 +1,5 @@
 import { EntityID } from "@latticexyz/recs";
-import { Network } from "src/network/layer";
+import { Network } from "src/network/setupNetworkOld";
 
 import { initAsteroidView } from "./lib/asteroid/init";
 import { initBeltView } from "./lib/belt/init";

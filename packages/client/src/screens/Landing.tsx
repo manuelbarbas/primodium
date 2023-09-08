@@ -1,24 +1,21 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MouseEvent, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAccount } from "src/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMud } from "src/hooks/useMud";
-import { Position } from "src/network/components/chainComponents";
 import { spawn } from "src/util/web3/spawn";
 
 export const Landing: React.FC = () => {
   const [message, setMessage] = useState<string | null>();
   const network = useMud();
-  const { address } = useAccount();
   const navigate = useNavigate();
   const location = useLocation();
-  const hasSpawned = !!Position.use(address);
+  // const hasSpawned = !!Position.use(address);
 
   const handlePlay = async (e: MouseEvent<HTMLButtonElement>) => {
-    if (hasSpawned) {
-      navigate("/game" + location.search);
-      return;
-    }
+    // if (hasSpawned) {
+    //   navigate("/game" + location.search);
+    //   return;
+    // }
 
     setMessage("Spawning Player Asteroid...");
     e.preventDefault();

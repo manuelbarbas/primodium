@@ -1,7 +1,7 @@
+import { Coord } from "@latticexyz/utils";
+import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { mountStoreDevtool } from "simple-zustand-devtools";
-import { Coord } from "@latticexyz/utils";
 import { TourStep } from "../util/types";
 
 type TourState = {
@@ -34,14 +34,12 @@ export const useTourStore = create<TourState & TourActions>()(
   persist(
     (set, get) => ({
       ...defaults,
-      setCompletedTutorial: (completed: boolean) =>
-        set({ completedTutorial: completed }),
+      setCompletedTutorial: (completed: boolean) => set({ completedTutorial: completed }),
       setSpawn: (spawn: Coord) =>
         set({
           spawn,
         }),
-      setCheckpoint: (checkpoint: TourStep | null) =>
-        set({ prevCheckpoint: get().checkpoint, checkpoint }),
+      setCheckpoint: (checkpoint: TourStep | null) => set({ prevCheckpoint: get().checkpoint, checkpoint }),
       setCurrentStep: (currentStep: TourStep | null) => set({ currentStep }),
     }),
     {
@@ -56,6 +54,6 @@ export const useTourStore = create<TourState & TourActions>()(
 );
 
 //store dev tools
-if (import.meta.env.VITE_DEV === "true") {
+if (import.meta.env.PRI_DEV === "true") {
   mountStoreDevtool("TourStore", useTourStore);
 }

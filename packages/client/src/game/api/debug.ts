@@ -2,7 +2,7 @@ import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { BytesLike } from "ethers";
 import { Position } from "src/network/components/chainComponents";
-import { Network } from "src/network/layer";
+import { Network } from "src/network/setupNetworkOld";
 import { debugComponentDevSystem } from "src/util/web3/debug";
 
 export const debug = (network: Network) => {

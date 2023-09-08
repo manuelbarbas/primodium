@@ -1,7 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
 import { BytesLike } from "ethers";
 import { execute } from "src/network/actions";
-import { Network } from "src/network/layer";
+import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 
