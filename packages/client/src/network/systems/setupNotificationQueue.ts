@@ -37,10 +37,6 @@ export function setupNotificationQueue() {
   const usedArrivals = new Set<EntityID>();
   const orbitingQueue = new Map<EntityID, number>();
   defineComponentSystem(world, Arrival, (update) => {
-    if (update.value[0] == undefined && update.value[1] !== undefined) {
-      Arrival.set(update.value[1], world.entities[update.entity]);
-      return;
-    }
     if (LoadingState.get()?.state !== SyncState.LIVE) return;
     const playerAddress = Account.get()?.value; // Assuming Player component has an 'address' field
     const blockNumber = BlockNumber.get()?.value ?? 0;

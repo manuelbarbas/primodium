@@ -13,6 +13,7 @@ import { useGameStore } from "src/store/GameStore";
 import { invade, raid, recall, reinforce } from "src/util/web3";
 import { useMud } from "src/hooks/useMud";
 import { useState } from "react";
+import { getIndex } from "src/util/arrival";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -27,10 +28,11 @@ export const LabeledValue: React.FC<{
 };
 
 export const OrbitActionButton: React.FC<{
+  entity: EntityID;
   destination: EntityID;
   sendType: ESendType;
-  arrivalIndex: number;
-}> = ({ destination, sendType, arrivalIndex }) => {
+  outgoing: boolean;
+}> = ({ entity, destination, sendType, outgoing }) => {
   const network = useMud();
   const destinationOwner = OwnedBy.use(destination)?.value;
   const player = Account.use()?.value ?? SingletonID;
@@ -38,10 +40,11 @@ export const OrbitActionButton: React.FC<{
 
   const isNeutral = destinationOwner === player || !destinationOwner;
 
+  const index = getIndex(entity);
   return (
     <button
-      disabled={transactionLoading}
-      className={`border p-1 rounded-md hover:scale-105 transition-all ${
+      disabled={transactionLoading || index === undefined}
+      className={`border p-1 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
         isNeutral || sendType === ESendType.REINFORCE
           ? "bg-cyan-700 border-cyan-500"
           : "bg-rose-800 border-rose-600"
@@ -55,27 +58,34 @@ export const OrbitActionButton: React.FC<{
             raid(destination, network);
             return;
           case ESendType.REINFORCE:
-            if (!isNeutral) {
+            if (!isNeutral || outgoing) {
               recall(destination, network);
               return;
             }
 
-            reinforce(destination, arrivalIndex, network);
+            if (index == undefined) return;
+            reinforce(destination, index, network);
         }
       }}
     >
-      {isNeutral && (sendType === ESendType.REINFORCE ? "ACCEPT" : "LAND")}
+      {isNeutral &&
+        (sendType === ESendType.REINFORCE
+          ? !outgoing
+            ? "ACCEPT"
+            : "RECALL"
+          : "LAND")}
       {!isNeutral && (sendType === ESendType.REINFORCE ? "RECALL" : "ATTACK")}
     </button>
   );
 };
 
 export const Fleet: React.FC<{
+  arrivalEntity: EntityID;
   arrivalBlock: string;
   destination: EntityID;
   sendType: ESendType;
-  arrivalIndex: number;
-}> = ({ arrivalBlock, destination, sendType, arrivalIndex }) => {
+  outgoing: boolean;
+}> = ({ arrivalBlock, arrivalEntity, destination, sendType, outgoing }) => {
   const blockNumber = BlockNumber.use()?.value;
 
   const destinationPosition = Position.use(destination, {
@@ -128,9 +138,10 @@ export const Fleet: React.FC<{
           </LabeledValue>
         ) : (
           <OrbitActionButton
-            arrivalIndex={arrivalIndex}
+            entity={arrivalEntity}
             destination={destination}
             sendType={sendType}
+            outgoing={outgoing}
           />
         )}
       </div>
@@ -155,10 +166,11 @@ export const Outgoingfleets: React.FC<{ user: EntityID }> = ({ user }) => {
           return (
             <Fleet
               key={i}
+              arrivalEntity={fleet.entity}
               arrivalBlock={fleet.arrivalBlock}
-              arrivalIndex={fleet.index}
               destination={fleet.destination}
               sendType={fleet.sendType}
+              outgoing={true}
             />
           );
         })
@@ -185,10 +197,11 @@ export const Reinforcementfleets: React.FC<{ user: EntityID }> = ({ user }) => {
           return (
             <Fleet
               key={i}
+              arrivalEntity={fleet.entity}
               arrivalBlock={fleet.arrivalBlock}
-              arrivalIndex={fleet.index}
               destination={fleet.destination}
               sendType={fleet.sendType}
+              outgoing={false}
             />
           );
         })

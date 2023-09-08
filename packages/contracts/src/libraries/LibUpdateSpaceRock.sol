@@ -19,6 +19,8 @@ import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexCompon
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { LastClaimedAtComponent, ID as LastClaimedAtComponentID } from "components/LastClaimedAtComponent.sol";
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
+import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
+import { PlayerMotherlodeComponent, ID as PlayerMotherlodeComponentID } from "components/PlayerMotherlodeComponent.sol";
 // libs
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -110,6 +112,29 @@ library LibUpdateSpaceRock {
     }
   }
 
+  function moveUnitsFromTo(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 fromSpaceRockEntity,
+    uint256 toSpaceRockEntity
+  ) internal {
+    uint256[] memory unitTypes = P_IsUnitComponent(world.getComponent(P_IsUnitComponentID)).getEntities();
+    UnitsComponent unitsComponent = UnitsComponent(world.getComponent(UnitsComponentID));
+    for (uint256 i = 0; i < unitTypes.length; i++) {
+      uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitTypes[i], playerEntity, fromSpaceRockEntity);
+      if (unitsComponent.has(unitPlayerSpaceRockEntity)) {
+        addUnitsToAsteroid(
+          world,
+          playerEntity,
+          toSpaceRockEntity,
+          unitTypes[i],
+          LibMath.getSafe(unitsComponent, unitPlayerSpaceRockEntity)
+        );
+        setUnitsOnAsteroid(world, playerEntity, fromSpaceRockEntity, unitTypes[i], 0);
+      }
+    }
+  }
+
   function destroyUnitsOnAsteroid(
     IWorld world,
     uint256 playerEntity,
@@ -147,7 +172,8 @@ library LibUpdateSpaceRock {
     uint32 unitCount
   ) internal {
     uint256 unitPlayerSpaceRockEntity = LibEncode.hashEntities(unitType, playerEntity, asteroidEntity);
-    UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
+    if (unitCount > 0) UnitsComponent(world.getComponent(UnitsComponentID)).set(unitPlayerSpaceRockEntity, unitCount);
+    else UnitsComponent(world.getComponent(UnitsComponentID)).remove(unitPlayerSpaceRockEntity);
   }
 
   function claimUnits(IWorld world, uint256 playerEntity, uint256 blockNumber) internal {
@@ -179,16 +205,30 @@ library LibUpdateSpaceRock {
     }
   }
 
-  function claimMotherlodeResource(
+  function updateMotherlodeOwnership(IWorld world, uint256 motherlodeEntity, uint256 playerEntity) internal {
+    Motherlode memory motherlode = MotherlodeComponent(world.getComponent(MotherlodeComponentID)).getValue(
+      motherlodeEntity
+    );
+    ResourceValue memory resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
+      .getValue(LibEncode.hashKeyEntity(uint256(motherlode.motherlodeType), uint256(motherlode.size)));
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resource.resource, playerEntity);
+    PlayerMotherlodeComponent(world.getComponent(PlayerMotherlodeComponentID)).set(
+      motherlodeEntity,
+      playerResourceEntity
+    );
+    OwnedByComponent(world.getComponent(OwnedByComponentID)).set(motherlodeEntity, playerEntity);
+  }
+
+  function getUnclaimedMotherlodeResourceAmount(
     IWorld world,
     uint256 playerEntity,
     uint256 motherlodeEntity,
     uint256 blockNumber
-  ) internal {
+  ) internal view returns (uint32) {
     MineableAtComponent mineableAtComponent = MineableAtComponent(world.getComponent(MineableAtComponentID));
     // cannot claim during cooldown
 
-    if (blockNumber < mineableAtComponent.getValue(motherlodeEntity)) return;
+    if (blockNumber < mineableAtComponent.getValue(motherlodeEntity)) return 0;
 
     uint32 blocksSinceLastClaim = uint32(
       blockNumber - LastClaimedAtComponent(world.getComponent(LastClaimedAtComponentID)).getValue(motherlodeEntity)
@@ -196,7 +236,7 @@ library LibUpdateSpaceRock {
 
     // cannot claim if no mining power
     uint32 miningPower = getMiningPower(world, playerEntity, motherlodeEntity);
-    if (miningPower == 0) return;
+    if (miningPower == 0) return 0;
 
     MotherlodeResourceComponent motherlodeResourceComponent = MotherlodeResourceComponent(
       world.getComponent(MotherlodeResourceComponentID)
@@ -210,14 +250,38 @@ library LibUpdateSpaceRock {
     uint32 prevMotherlodeResources = LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity);
 
     // cannot claim if resources are maxed out
-    if (resource.value == prevMotherlodeResources) return;
+    if (resource.value == prevMotherlodeResources) return 0;
 
     // get the amount of resources that have been mined
     uint32 rawIncrease = miningPower * blocksSinceLastClaim;
     if (rawIncrease + prevMotherlodeResources > resource.value) {
       rawIncrease = resource.value - prevMotherlodeResources;
     }
-    motherlodeResourceComponent.set(motherlodeEntity, rawIncrease + prevMotherlodeResources);
+
+    return rawIncrease;
+  }
+
+  function claimMotherlodeResource(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 motherlodeEntity,
+    uint256 blockNumber
+  ) internal {
+    MotherlodeResourceComponent motherlodeResourceComponent = MotherlodeResourceComponent(
+      world.getComponent(MotherlodeResourceComponentID)
+    );
+    Motherlode memory motherlode = MotherlodeComponent(world.getComponent(MotherlodeComponentID)).getValue(
+      motherlodeEntity
+    );
+    ResourceValue memory resource = P_MotherlodeResourceComponent(world.getComponent(P_MotherlodeResourceComponentID))
+      .getValue(LibEncode.hashKeyEntity(uint256(motherlode.motherlodeType), uint256(motherlode.size)));
+
+    uint32 rawIncrease = getUnclaimedMotherlodeResourceAmount(world, playerEntity, motherlodeEntity, blockNumber);
+
+    motherlodeResourceComponent.set(
+      motherlodeEntity,
+      rawIncrease + LibMath.getSafe(motherlodeResourceComponent, motherlodeEntity)
+    );
 
     LibStorage.addResourceToStorage(world, playerEntity, resource.resource, rawIncrease);
 

@@ -176,7 +176,7 @@ library LibInitBuildings {
     resourceValues[1] = ResourceValue({ resource: CopperResourceItemID, value: 8640000 });
     resourceValues[2] = ResourceValue({ resource: LithiumResourceItemID, value: 3456000 });
     resourceValues[3] = ResourceValue({ resource: SulfurResourceItemID, value: 1728000 });
-    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 138200 });
+    resourceValues[4] = ResourceValue({ resource: IronPlateCraftedItemID, value: 1382000 });
     resourceValues[5] = ResourceValue({ resource: AlloyCraftedItemID, value: 864000 });
     resourceValues[6] = ResourceValue({ resource: PhotovoltaicCellCraftedItemID, value: 700000 });
     resourceValues[7] = ResourceValue({ resource: TitaniumResourceItemID, value: 700000 });
@@ -1383,7 +1383,7 @@ library LibInitBuildings {
     // LEVEL 3
     resourceValues = new ResourceValue[](2);
     resourceValues[0] = ResourceValue({ resource: SulfurResourceItemID, value: 100000 });
-    resourceValues[0] = ResourceValue({ resource: IridiumResourceItemID, value: 20000 });
+    resourceValues[1] = ResourceValue({ resource: IridiumResourceItemID, value: 20000 });
     requiredResources[2] = resourceValues;
     // LEVEL 4
     resourceValues = new ResourceValue[](2);

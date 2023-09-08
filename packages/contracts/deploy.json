@@ -38,6 +38,7 @@
     "GameConfigComponent",
     "ScoreComponent",
     "BattleBlockNumberComponent",
+    "PlayerMotherlodeComponent",
 
     "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
@@ -120,6 +121,10 @@
     { "name": "RecallReinforcementsSystem", "writeAccess": ["*"] },
     { "name": "ReceiveReinforcementSystem", "writeAccess": ["*"] },
     { "name": "RaidSystem", "writeAccess": ["*"] },
+    {
+      "name": "RecallUnitsFromMotherlodeSystem",
+      "writeAccess": ["*"]
+    },
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]

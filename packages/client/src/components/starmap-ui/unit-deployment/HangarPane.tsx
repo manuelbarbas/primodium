@@ -36,9 +36,9 @@ export const HangarPane: React.FC<{
   }, [selectedUnit, hangar]);
 
   if (!hangar) return null;
-  const totalUnits =
-    hangar.counts.reduce((a, b) => a + b, 0) -
-    (send?.count ? send.count.reduce((a, b) => a + b, 0) : 0);
+  // const totalUnits =
+  //   hangar.counts.reduce((a, b) => a + b, 0) -
+  //   (send?.count ? send.count.reduce((a, b) => a + b, 0) : 0);
   const availableUnits = hangar.units.map((unit, i) => ({
     type: unit,
     count: hangar.counts[i],
@@ -55,22 +55,10 @@ export const HangarPane: React.FC<{
         stiffness: 500,
         damping: 30,
       }}
-      className="relative flex flex-col justify-between items-center"
+      className="relative flex flex-col justify-between items-center text-white"
     >
-      <motion.button
-        layout="position"
-        className="border border-cyan-400 px-4 py-2 bg-slate-900 hover:bg-cyan-600 hover:scale-105 font-bold flex items-center gap-2 transition-all"
-        onClick={() => setShow(show ? false : true)}
-      >
-        <img src="/img/icons/debugicon.png" className="w-[24px] h-[24px]" />
-        <div className="flex flex-col justify-end">
-          <p>{!show ? "Origin Hangar" : "Hangar"}</p>
-          {!show && <p className="text-xs opacity-50">{totalUnits} unit(s)</p>}
-        </div>
-      </motion.button>
-
       {show && (
-        <div className="bg-slate-900/90 pixel-images border border-cyan-400 p-3 w-80">
+        <div className="bg-slate-900/90 pixel-images border rounded-md border-cyan-400 p-3 w-80">
           {selectedUnit === undefined && (
             <div className="flex flex-col items-center space-y-3">
               <div className="flex flex-wrap gap-2 items-center justify-center">
@@ -112,6 +100,7 @@ export const HangarPane: React.FC<{
               unit={selectedUnit}
               setSelectedUnit={setSelectedUnit}
               maximum={selectedCount}
+              setShowHangar={setShow}
             />
           )}
         </div>

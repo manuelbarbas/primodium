@@ -1,4 +1,4 @@
-import { EntityID, namespaceWorld } from "@latticexyz/recs";
+import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { GameReady } from "src/network/components/clientComponents";
@@ -12,11 +12,7 @@ import { createSceneApi } from "./scene";
 import { createFxApi } from "./fx";
 import { world } from "src/network/world";
 
-async function init(
-  player: EntityID,
-  network: Network,
-  version: string = "v1"
-) {
+async function init(network: Network, version: string = "v1") {
   const asciiArt = `
                                                                           
                                                                           
@@ -39,7 +35,7 @@ async function init(
 
   namespaceWorld(world, "game");
 
-  await _init(player, network);
+  await _init(network);
 
   //expose api to window for debugging
   if (import.meta.env.VITE_DEV === "true") {

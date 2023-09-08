@@ -1,11 +1,9 @@
 import { world } from "src/network/world";
 import newComponent from "./Component";
-import { ComponentValue, EntityID, Type } from "@latticexyz/recs";
+import { EntityID, Type } from "@latticexyz/recs";
 import { BlockNumber } from "../clientComponents";
 import { useMemo } from "react";
 import { ESendType } from "src/util/web3/types";
-import { ArrivalsIndex, ArrivalsSize } from "../chainComponents";
-import { hashKeyEntity } from "src/util/encode";
 
 export const newArrivalComponent = () => {
   const component = newComponent(
@@ -30,23 +28,6 @@ export const newArrivalComponent = () => {
     return component.get(id);
   };
 
-  function getIndex(
-    entity: EntityID,
-    arrival: ComponentValue<typeof component.schema>
-  ) {
-    const playerAsteroidEntity =
-      arrival.sendType == ESendType.REINFORCE
-        ? hashKeyEntity(arrival.to, arrival.destination)
-        : hashKeyEntity(arrival.from, arrival.destination);
-    const size = ArrivalsSize.get(playerAsteroidEntity)?.value ?? 0;
-    for (let i = 0; i < size + 1; i++) {
-      const arrivalEntity = ArrivalsIndex.get(
-        hashKeyEntity(playerAsteroidEntity, i)
-      )?.value;
-      if (arrivalEntity == entity) return i;
-    }
-    throw new Error("Arrival has no index");
-  }
   const get = (filters?: {
     to?: EntityID;
     from?: EntityID;
@@ -62,9 +43,7 @@ export const newArrivalComponent = () => {
     let all = component.getAll().map((entity) => {
       const comp = component.get(entity);
       if (!comp) return undefined;
-      const index = getIndex(entity, comp);
       return {
-        index,
         entity,
         ...comp,
       };
@@ -99,7 +78,7 @@ export const newArrivalComponent = () => {
   }) => {
     const blockNumber = BlockNumber.use()?.value ?? 0;
 
-    return useMemo(() => get(filters), [blockNumber, ArrivalsSize.update$]);
+    return useMemo(() => get(filters), [blockNumber]);
   };
 
   return { ...component, get, getWithId, use, getEntity: component.get };

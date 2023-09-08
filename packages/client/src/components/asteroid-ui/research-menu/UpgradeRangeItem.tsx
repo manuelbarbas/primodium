@@ -22,6 +22,7 @@ import { SingletonID } from "@latticexyz/network";
 import { useMud } from "src/hooks";
 import Spinner from "src/components/shared/Spinner";
 import { getBlockTypeName } from "src/util/common";
+import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 
 export const UpgradeRangeItem = React.memo(() => {
   // fetch whether research is completed
@@ -84,6 +85,8 @@ export const UpgradeRangeItem = React.memo(() => {
     await upgradeRange(network);
     setUserClickedLoading(false);
   }, []);
+
+  const hasEnough = useHasEnoughResources(researchId);
 
   const recipe = getRecipe(researchId);
 
@@ -157,11 +160,16 @@ export const UpgradeRangeItem = React.memo(() => {
               </p>
             </GameButton>
           )}
-          {!isLocked && !isResearched && (
+          {!hasEnough && !isLocked && !isResearched && (
+            <GameButton className=" bg-slate-400 text-sm w-3/4" disable>
+              <p className="px-2 py-1">Not Enough Resources</p>
+            </GameButton>
+          )}
+          {!isLocked && !isResearched && hasEnough && (
             <GameButton
               id={`${name}-research`}
               onClick={executeResearch}
-              className=" bg-cyan-600 text-sm w-1/2"
+              className=" bg-cyan-600 text-sm w-3/4"
             >
               <div className="px-2 py-1">
                 {userClickedLoading ? <Spinner /> : "Research"}

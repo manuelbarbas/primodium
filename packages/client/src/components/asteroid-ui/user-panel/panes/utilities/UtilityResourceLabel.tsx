@@ -1,15 +1,7 @@
 import { EntityID } from "@latticexyz/recs";
-import { useMemo } from "react";
-import useResourceCount from "src/hooks/useResourceCount";
-import {
-  LastClaimedAt,
-  MaxUtility,
-  OccupiedUtilityResource,
-  Production,
-} from "src/network/components/chainComponents";
-import { BlockNumber } from "src/network/components/clientComponents";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { formatNumber } from "src/util/common";
-import { ResourceImage } from "src/util/constants";
+import { ResourceImage, ResourceType } from "src/util/constants";
 
 export const UtilityResourceLabel = ({
   name,
@@ -18,24 +10,10 @@ export const UtilityResourceLabel = ({
   name: string;
   resourceId: EntityID;
 }) => {
-  const blockNumber = BlockNumber.get(undefined, {
-    value: 0,
-    avgBlockTime: 1,
-  }).value;
-
-  const resourceCount = useResourceCount(OccupiedUtilityResource, resourceId);
-
-  const maxStorage = useResourceCount(MaxUtility, resourceId);
-
-  const production = useResourceCount(Production, resourceId);
-
-  const lastClaimedAt = useResourceCount(LastClaimedAt, resourceId);
-
-  const resourcesToClaim = useMemo(() => {
-    const toClaim = (blockNumber - lastClaimedAt) * production;
-    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
-    return toClaim;
-  }, [lastClaimedAt, blockNumber]);
+  const { resourceCount, maxStorage, resourcesToClaim } = useFullResourceCount(
+    resourceId,
+    ResourceType.Utility
+  );
 
   const resourceIcon = ResourceImage.get(resourceId);
 

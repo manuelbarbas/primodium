@@ -104,6 +104,7 @@ library LibInitDebug {
     isBuildingTypeComponent.set(DebugUnitProductionBuilding);
     isBuildingTypeComponent.set(DebugHousingBuilding);
     isBuildingTypeComponent.set(DebugSimpleBuildingMainBaseLevelReqID);
+    isBuildingTypeComponent.set(DebugSimpleBuildingRequiresTitanium);
   }
 
   function registerUnitType(IWorld world) internal {
@@ -155,6 +156,8 @@ library LibInitDebug {
     blueprintComponent.set(DebugUnitProductionBuilding, coords);
     blueprintComponent.set(DebugHousingBuilding, coords);
     blueprintComponent.set(DebugSimpleBuildingMainBaseLevelReqID, coords);
+
+    blueprintComponent.set(DebugSimpleBuildingRequiresTitanium, coords);
   }
 
   function initializeSimpleBuildings(IWorld world) internal {
@@ -240,6 +243,12 @@ library LibInitDebug {
     //DebugSimpleBuildingWithUpgradeResourceReqsID level 2
     entity = LibEncode.hashKeyEntity(DebugSimpleBuildingMainBaseLevelReqID, 2);
     levelComponent.set(entity, 3);
+
+    //DebugSimpleBuildingRequiresTitanium
+    entity = LibEncode.hashKeyEntity(DebugSimpleBuildingRequiresTitanium, 1);
+    resourceValues = new ResourceValue[](1);
+    resourceValues[0] = ResourceValue({ resource: TitaniumResourceItemID, value: 100 });
+    LibSetBuildingReqs.setResourceReqs(world, entity, resourceValues);
   }
 
   function initializeMines(IWorld world) internal {

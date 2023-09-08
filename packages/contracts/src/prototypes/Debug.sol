@@ -24,6 +24,8 @@ uint256 constant DebugSimpleBuildingWithUpgradeResearchReqsID = uint256(
 
 uint256 constant DebugSimpleBuilding3x3 = uint256(keccak256("block.DebugSimpleBuilding3x3"));
 
+uint256 constant DebugSimpleBuildingRequiresTitanium = uint256(keccak256("block.DebugSimpleBuildingRequiresTitanium"));
+
 // mines
 uint256 constant DebugIronMineID = uint256(keccak256("block.DebugIronMine"));
 uint256 constant DebugCopperMineID = uint256(keccak256("block.DebugCopperMine"));

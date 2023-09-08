@@ -15,6 +15,8 @@ export const UnitStatus: React.FC<{
   count: number;
   level: number;
 }> = ({ unit, unitsLeft, count, level }) => {
+  if (unitsLeft - count <= 0 && count === 0) return <></>;
+
   return (
     <div className={`w-full border-b border-b-slate-700 text-xs bg-slate-800`}>
       <div className="flex justify-between p-2">
@@ -159,7 +161,7 @@ export const BattleDetails: React.FC<{
         </div>
         <div className="absolute top-0 right-0 flex gap-1 text-xs p-2">
           <p className="opacity-30">BLOCK</p>
-          <p className="opacity-50 font-bold">{battle.blockNumber}</p>
+          <p className="opacity-50 font-bold">{Number(battle.blockNumber)}</p>
         </div>
         <div className="absolute top-0 left-0 flex gap-1 text-xs p-2">
           <p className="opacity-50 font-bold">

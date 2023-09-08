@@ -1,27 +1,8 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { EntityID, EntityIndex, Has, HasValue } from "@latticexyz/recs";
-import { useMemo } from "react";
-import useResourceCount from "src/hooks/useResourceCount";
-import {
-  AsteroidType,
-  Item,
-  LastClaimedAt,
-  OwnedBy,
-  P_MaxStorage,
-  Production,
-} from "src/network/components/chainComponents";
-
-import {
-  Account,
-  BlockNumber,
-  Hangar,
-} from "src/network/components/clientComponents";
+import { EntityID } from "@latticexyz/recs";
+import { BlockNumber } from "src/network/components/clientComponents";
 import { formatNumber } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
-import { ESpaceRockType } from "src/util/web3/types";
-import { world } from "src/network/world";
-import { getUnitStats } from "src/util/trainUnits";
-import { getMotherlodeResource, mineableResources } from "src/util/resource";
+import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 
 export const ResourceLabel = ({
   name,
@@ -30,54 +11,12 @@ export const ResourceLabel = ({
   name: string;
   resourceId: EntityID;
 }) => {
-  const { value: blockNumber, avgBlockTime } = BlockNumber.use(undefined, {
+  const { maxStorage, production, resourceCount, resourcesToClaim } =
+    useFullResourceCount(resourceId);
+  const { avgBlockTime } = BlockNumber.use(undefined, {
     value: 0,
     avgBlockTime: 1,
   });
-
-  const player = Account.use()?.value;
-  const query = [
-    Has(AsteroidType),
-    HasValue(OwnedBy, { value: player }),
-    HasValue(AsteroidType, { value: ESpaceRockType.Motherlode }),
-  ];
-
-  const motherlodes = useEntityQuery(query);
-
-  const block = BlockNumber.use()?.value;
-  // todo: only update whenever any motherlode's hangar changes. I cannot figure this out rn so im using block
-  const motherlodeProduction = useMemo(() => {
-    if (!mineableResources.includes(resourceId)) return 0;
-    return motherlodes.reduce((prev: number, motherlodeIndex: EntityIndex) => {
-      const entity = world.entities[motherlodeIndex];
-      const resource = getMotherlodeResource(entity);
-
-      const hangar = Hangar.get(entity);
-
-      if (!hangar || resource?.resource !== resourceId) return prev;
-
-      let total = 0;
-      for (let i = 0; i < hangar.units.length; i++) {
-        total += getUnitStats(hangar.units[i]).MIN * hangar.counts[i];
-      }
-      return prev + total;
-    }, 0);
-  }, [motherlodes, resourceId, block]);
-
-  const resourceCount = useResourceCount(Item, resourceId);
-
-  const maxStorage = useResourceCount(P_MaxStorage, resourceId);
-
-  const production =
-    useResourceCount(Production, resourceId) + motherlodeProduction;
-
-  const lastClaimedAt = useResourceCount(LastClaimedAt, resourceId);
-
-  const resourcesToClaim = useMemo(() => {
-    const toClaim = (blockNumber - lastClaimedAt) * production;
-    if (toClaim > maxStorage - resourceCount) return maxStorage - resourceCount;
-    return toClaim;
-  }, [lastClaimedAt, blockNumber]);
 
   const resourceIcon = ResourceImage.get(resourceId);
 

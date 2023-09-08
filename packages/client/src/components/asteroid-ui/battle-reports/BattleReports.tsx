@@ -121,7 +121,7 @@ export const BattleReports = () => {
                   <LabeledValue label="TIMESTAMP">
                     <div className="flex gap-1">
                       <span className="opacity-50">BLOCK</span>
-                      <p>{battle.blockNumber}</p>
+                      <p>{Number(battle.blockNumber)}</p>
                     </div>
                   </LabeledValue>
                 </div>
