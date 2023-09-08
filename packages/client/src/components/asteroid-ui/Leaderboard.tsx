@@ -107,7 +107,7 @@ const LeaderboardItem = ({
   score: number;
 }) => {
   const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
-    address: string;
+    address: string | null;
     ensName: string | null;
   }>({ address: player, ensName: null });
 
@@ -130,11 +130,13 @@ const LeaderboardItem = ({
   }, [player]);
 
   const playerDisplay: string = useMemo(() => {
-    return (
-      fetchedExternalWallet.ensName ||
-      shortenAddress(fetchedExternalWallet.address) ||
-      shortenAddress(player)
-    );
+    if (fetchedExternalWallet.ensName) {
+      return fetchedExternalWallet.ensName;
+    } else if (fetchedExternalWallet.address) {
+      return shortenAddress(fetchedExternalWallet.address);
+    } else {
+      return shortenAddress(player);
+    }
   }, [fetchedExternalWallet]);
 
   return (
