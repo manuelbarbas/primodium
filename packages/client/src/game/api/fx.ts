@@ -9,7 +9,7 @@ export const createFxApi = () => {
       knockout?: boolean;
     } = {}
   ) {
-    const { thickness = 5, color = 0xffff00, knockout } = options;
+    const { thickness = 3, color = 0xffff00, knockout } = options;
 
     if (!(gameObject instanceof Phaser.GameObjects.Sprite)) return;
 
