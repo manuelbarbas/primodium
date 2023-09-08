@@ -1,13 +1,7 @@
 import { useState } from "react";
-export type Cheatcodes = Record<string, Cheatcode>;
+import { Cheatcodes } from "./types";
 
-export type Cheatcode = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function: (...args: any[]) => unknown;
-  params: { name: string; type: "number" | "string" | "boolean" }[];
-};
-
-const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
+export const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
   const [params, setParams] = useState<Record<string, Record<string, unknown>>>(
     {}
   );
@@ -55,7 +49,7 @@ const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
               {funcName}
             </div>
             {(cheatcodes[funcName].params || []).map((param, index) => (
-              <div key={index} className="mb-2 flex items-center">
+              <div key={param.name + index} className="mb-2 flex items-center">
                 <p className="mr-2">{param.name}</p>
                 <input
                   type={getTypeInput(param.type)}
@@ -72,7 +66,7 @@ const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
                         : e.target.value
                     )
                   }
-                  className="border rounded py-1 px-2 focus:outline-none focus:ring focus:border-blue-300 text-black"
+                  className="border rounded py-1 px-2 focus:outline-none focus:ring focus:border-blue-300 text-gray-800"
                 />
               </div>
             ))}
@@ -88,5 +82,3 @@ const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
     </div>
   );
 };
-
-export default CheatcodesList;
