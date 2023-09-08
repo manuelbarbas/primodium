@@ -8,9 +8,15 @@ export type Cheatcode = {
 };
 
 const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
-  const [params, setParams] = useState<Record<string, Record<string, unknown>>>({});
+  const [params, setParams] = useState<Record<string, Record<string, unknown>>>(
+    {}
+  );
 
-  const handleParamChange = (funcName: string, paramKey: string, value: unknown) => {
+  const handleParamChange = (
+    funcName: string,
+    paramKey: string,
+    value: unknown
+  ) => {
     setParams((prevParams) => ({
       ...prevParams,
       [funcName]: {
@@ -61,7 +67,9 @@ const CheatcodesList = ({ cheatcodes }: { cheatcodes: Cheatcodes }) => {
                     handleParamChange(
                       funcName,
                       param.name,
-                      e.target.type === "checkbox" ? e.target.checked : e.target.value
+                      e.target.type === "checkbox"
+                        ? e.target.checked
+                        : e.target.value
                     )
                   }
                   className="border rounded py-1 px-2 focus:outline-none focus:ring focus:border-blue-300 text-black"

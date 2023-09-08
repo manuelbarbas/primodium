@@ -13,13 +13,13 @@ import {
   updateComponent,
 } from "@latticexyz/recs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { DraggableNumberLabel } from "./DraggableNumberLabel";
 import {
   ComponentBrowserInput,
   ComponentBrowserSelect,
   ValueForm,
-} from "./StyledComponents";
-import { SetContractComponentFunction, hasContract } from "./types";
+} from "../StyledComponents";
+import { SetContractComponentFunction, hasContract } from "../types";
+import { DraggableNumberLabel } from "./DraggableNumberLabel";
 
 export const ValueEditor = ({
   entity,
@@ -85,9 +85,7 @@ export const ValueEditor = ({
       }
 
       if (hasContract(component) && setContractComponentValue) {
-        const currentValue = getComponentValueStrict(component, entity);
-        setContractComponentValue(entity, component, {
-          ...currentValue,
+        setContractComponentValue(component, entity, {
           [valueProp]: parsedValue,
         });
       } else {

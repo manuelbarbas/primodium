@@ -1,18 +1,9 @@
-import {
-  Component,
-  Entity,
-  Layers,
-  Schema,
-  Type,
-  World,
-} from "@latticexyz/recs";
-import { useState } from "react";
-import { EntityEditor } from "./EntityEditor";
-import { QueryBuilder } from "./QueryBuilder";
-import { BrowserContainer, SmallHeadline } from "./StyledComponents";
-import { createBrowserDevComponents } from "./createBrowserDevComponents";
-import { useClearDevHighlights } from "./hooks";
-import { SetContractComponentFunction } from "./types";
+import { Layers, Schema, World } from "@latticexyz/recs";
+import { Fragment, useState } from "react";
+import CheatcodesList from "./CheatcodesList";
+import { Editor } from "./Editor/Editor";
+import { BrowserContainer } from "./StyledComponents";
+import { Cheatcodes, SetContractComponentFunction } from "./types";
 
 /**
  * An Entity Browser for viewing/editiing Component values.
@@ -21,50 +12,106 @@ export const Browser = ({
   layers,
   setContractComponentValue,
   world,
-  devHighlightComponent,
+  showEditor = true,
+  cheatcodes = undefined,
+  tabs = [],
 }: {
   layers: Layers;
   setContractComponentValue?: SetContractComponentFunction<Schema>;
-  prototypeComponent?: Component<{ value: Type.StringArray }>;
-  nameComponent?: Component<{ value: Type.String }>;
   world: World;
-  devHighlightComponent: ReturnType<
-    typeof createBrowserDevComponents
-  >["devHighlightComponent"];
-  hoverHighlightComponent: ReturnType<
-    typeof createBrowserDevComponents
-  >["hoverHighlightComponent"];
+  showEditor?: boolean;
+  cheatcodes?: Cheatcodes;
+  tabs?: { name: string; content: JSX.Element }[];
 }) => {
-  const [filteredEntities, setFilteredEntities] = useState<Entity[]>([]);
-  const [overflow, setOverflow] = useState(0);
-  const clearDevHighlights = useClearDevHighlights(devHighlightComponent);
+  const [isVisible, setIsVisible] = useState<number>();
+  const cheatcodesTab =
+    cheatcodes && Object.keys(cheatcodes).length > 0
+      ? [
+          {
+            name: "Cheatcodes",
+            content: <CheatcodesList cheatcodes={cheatcodes} />,
+          },
+        ]
+      : [];
+  const editorTab = showEditor
+    ? [
+        {
+          name: "Editor",
+          content: (
+            <Editor
+              world={world}
+              layers={layers}
+              setContractComponentValue={setContractComponentValue}
+            />
+          ),
+        },
+      ]
+    : [];
+  tabs = [...cheatcodesTab, ...editorTab, ...tabs];
+  const TopBar = () => (
+    <div className="flex justify-between bg-gray-400 p-2">
+      <div className="flex gap-1">
+        {tabs.length > 0 &&
+          tabs.map(({ name }, i) => (
+            <button
+              style={{
+                paddingInline: 8,
+                background: isVisible === i ? "royalblue" : "darkgray",
+                opacity: isVisible === i ? "1" : ".5",
+              }}
+              key={`tab-${i}`}
+              onClick={() => setIsVisible(i)}
+            >
+              {name}
+            </button>
+          ))}
+      </div>
+      <button className="px-4 py-2" onClick={() => setIsVisible(undefined)}>
+        X
+      </button>
+    </div>
+  );
 
   return (
-    <BrowserContainer>
-      <QueryBuilder
-        devHighlightComponent={devHighlightComponent}
-        allEntities={[...world.getEntities()]}
-        setFilteredEntities={setFilteredEntities}
-        layers={layers}
-        world={world}
-        clearDevHighlights={clearDevHighlights}
-        setOverflow={setOverflow}
-      />
-      <SmallHeadline>
-        Showing {filteredEntities.length} of{" "}
-        {filteredEntities.length + overflow} entities
-      </SmallHeadline>
-      {filteredEntities.map((entity) => (
-        <EntityEditor
-          world={world}
-          key={`entity-editor-${entity}`}
-          entityId={entity}
-          layers={layers}
-          setContractComponentValue={setContractComponentValue}
-          devHighlightComponent={devHighlightComponent}
-          clearDevHighlights={clearDevHighlights}
-        />
-      ))}
+    <BrowserContainer
+      style={{
+        zIndex: 1002,
+        position: "fixed",
+        bottom: 0,
+        right: 0,
+        width: isVisible !== undefined ? "24rem" : 0,
+        height: "100vh",
+        fontSize: "10pt",
+        display: "flex",
+        flexDirection: "column",
+        background: "dark-gray",
+        color: "white",
+      }}
+    >
+      {isVisible !== undefined && <TopBar />}
+      {tabs.map(({ content }, i) =>
+        isVisible === i ? <Fragment key={i}>{content}</Fragment> : null
+      )}
+
+      {isVisible === undefined && (
+        <button
+          style={{
+            position: "fixed",
+            zIndex: 1003,
+            top: "4px",
+            right: "4px",
+            backgroundColor: "royalblue",
+            width: "6rem",
+            color: "white",
+            fontSize: "12px",
+            padding: "1px",
+            borderRadius: "4px",
+          }}
+          onClick={() => setIsVisible(0)}
+        >
+          Show Browser
+        </button>
+      )}
     </BrowserContainer>
   );
 };

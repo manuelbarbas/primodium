@@ -1,37 +1,30 @@
 import {
   AnyComponent,
-  Component,
   Entity,
   Layers,
   Schema,
-  Type,
   World,
   getEntityComponents,
-  setComponent,
 } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
-import { ComponentEditor } from "./ComponentEditor";
 import {
   Collapse,
   ComponentBrowserButton,
   EntityEditorContainer,
-} from "./StyledComponents";
-import { SetContractComponentFunction } from "./types";
+} from "../StyledComponents";
+import { SetContractComponentFunction } from "../types";
+import { ComponentEditor } from "./ComponentEditor";
 
 export const EntityEditor = ({
   entityId,
   layers,
   setContractComponentValue,
-  devHighlightComponent,
   world,
-  clearDevHighlights,
 }: {
   entityId: Entity;
   layers: Layers;
   setContractComponentValue?: SetContractComponentFunction<Schema>;
-  devHighlightComponent: Component<{ value: Type.OptionalNumber }>;
   world: World;
-  clearDevHighlights: () => void;
 }) => {
   const [opened, setOpened] = useState(false);
 
@@ -44,15 +37,7 @@ export const EntityEditor = ({
   }, [opened, world, entityId, setEntityComponents]);
 
   return (
-    <EntityEditorContainer
-      onMouseEnter={() => {
-        clearDevHighlights();
-        setComponent(devHighlightComponent, entityId, {
-          value: undefined,
-        });
-      }}
-      onMouseLeave={() => clearDevHighlights()}
-    >
+    <EntityEditorContainer>
       <div onClick={() => setOpened(!opened)} style={{ cursor: "pointer" }}>
         <div
           style={{
@@ -76,17 +61,15 @@ export const EntityEditor = ({
         </ComponentBrowserButton>
       </div>
       <Collapse aria-hidden={opened ? "false" : "true"} opened={String(opened)}>
-        {[...entityComponents.values()]
-          .filter((c) => c.id !== devHighlightComponent.id)
-          .map((c) => (
-            <ComponentEditor
-              key={`component-editor-${entityId}-${c.id}`}
-              entity={entityId}
-              component={c}
-              layers={layers}
-              setContractComponentValue={setContractComponentValue}
-            />
-          ))}
+        {[...entityComponents.values()].map((c) => (
+          <ComponentEditor
+            key={`component-editor-${entityId}-${c.id}`}
+            entity={entityId}
+            component={c}
+            layers={layers}
+            setContractComponentValue={setContractComponentValue}
+          />
+        ))}
       </Collapse>
     </EntityEditorContainer>
   );

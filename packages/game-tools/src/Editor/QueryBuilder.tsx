@@ -1,28 +1,27 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import * as recs from "@latticexyz/recs";
 import {
-  Layers,
-  setComponent,
-  Type,
   AnyComponent,
-  Component,
+  Entity,
+  EntityQueryFragment,
+  Layers,
   World,
   defineQuery,
-  EntityQueryFragment,
-  Entity,
 } from "@latticexyz/recs";
+import flatten from "lodash/flatten";
+import orderBy from "lodash/orderBy";
+import throttle from "lodash/throttle";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ComponentBrowserButton,
   ComponentBrowserInput,
   SyntaxHighlighterWrapper,
 } from "../StyledComponents";
-import { QueryBuilderForm, QueryShortcutContainer } from "./StyledComponents";
-import * as recs from "@latticexyz/recs";
-import flatten from "lodash/flatten";
-import orderBy from "lodash/orderBy";
-import throttle from "lodash/throttle";
-import { MAX_ENTITIES } from "../constants";
-import { observe } from "mobx";
-import { useShiki } from "../hooks";
+import {
+  QueryBuilderForm,
+  QueryShortcutContainer,
+} from "./QueryBuilder/StyledComponents";
+import { MAX_ENTITIES } from "./constants";
+import { useShiki } from "./hooks";
 
 const SyntaxHighlighter = ({ code }: { code: string }) => {
   const { html } = useShiki(code, "js");
@@ -44,17 +43,12 @@ export const QueryBuilder = ({
   allEntities,
   setFilteredEntities,
   layers,
-  world,
-  devHighlightComponent,
-  clearDevHighlights,
   setOverflow,
 }: {
   world: World;
   layers: Layers;
   allEntities: Entity[];
   setFilteredEntities: (es: Entity[]) => void;
-  devHighlightComponent: Component<{ value: Type.OptionalNumber }>;
-  clearDevHighlights: () => void;
   setOverflow: (overflow: number) => void;
 }) => {
   const queryInputRef = useRef<HTMLInputElement>(null);
@@ -71,26 +65,24 @@ export const QueryBuilder = ({
     setFilteredEntities([]);
     setComponentFilters([]);
     setErrorMessage("");
-  }, [setFilteredEntities, setErrorMessage, allEntities]);
+  }, [allEntities]);
 
   // If there is no filter present, view no entities.
   useEffect(() => {
+    console.log("hello");
     if (!entityQueryText) {
       resetFilteredEntities();
     }
-  }, [
-    setFilteredEntities,
-    resetFilteredEntities,
-    allEntities,
-    entityQueryText,
-  ]);
+  }, [entityQueryText]);
 
   // If the user is not manually typing a query, build a query
   // based on the selected Component filters
   useEffect(() => {
     if (isManuallyEditing) return;
 
-    const hasFilters = componentFilters.map((c) => `Has(${c.id})`);
+    const hasFilters = componentFilters.map(
+      (c) => `Has(${c.metadata?.componentName ?? c.id})`
+    );
     const query = `[${hasFilters.join(",")}]`;
     setEntityQueryText(query);
   }, [componentFilters, isManuallyEditing]);
@@ -101,14 +93,6 @@ export const QueryBuilder = ({
     setIsManuallyEditing(true);
     setEntityQueryText(text);
     setComponentFilters([]);
-  }, []);
-
-  const cancelObserver = useRef<() => void>(() => void 0);
-  // Cancel outstanding observers on unmount
-  useEffect(() => {
-    return () => {
-      if (cancelObserver.current) cancelObserver.current();
-    };
   }, []);
 
   const executeFilter = useCallback(
@@ -166,9 +150,7 @@ export const QueryBuilder = ({
           throw new Error("Invalid query");
         }
 
-        cancelObserver.current();
         const queryResult = defineQuery(queryArray, { runOnInit: true });
-        const subscription = queryResult.update$.subscribe();
         const selectEntities = throttle(
           () => {
             const selectedEntities = [...queryResult.matching].slice(
@@ -177,21 +159,11 @@ export const QueryBuilder = ({
             );
             setOverflow(queryResult.matching.size - selectedEntities.length);
             setFilteredEntities(selectedEntities);
-            clearDevHighlights();
-            selectedEntities.forEach((idx) =>
-              setComponent(devHighlightComponent, idx, { value: 0x0000ff })
-            );
           },
           1000,
           { leading: true }
         );
         selectEntities();
-        const cancelObserve = observe(queryResult.matching, selectEntities);
-        cancelObserver.current = () => {
-          cancelObserve();
-          selectEntities.cancel();
-          subscription?.unsubscribe();
-        };
       } catch (e: unknown) {
         setErrorMessage((e as Error).message);
         console.error(e);
@@ -261,7 +233,10 @@ export const QueryBuilder = ({
                     }
                   }}
                 >
-                  Has({component.id})
+                  Has(
+                  {(component.metadata?.componentName as string) ??
+                    component.id}
+                  )
                 </ComponentBrowserButton>
               );
             })}

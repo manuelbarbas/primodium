@@ -1,6 +1,5 @@
 import { setup, styled } from "goober";
-import React from "react";
-import { createElement } from "react";
+import React, { createElement } from "react";
 
 setup(createElement);
 
@@ -74,7 +73,7 @@ export const EntityEditorContainer = styled("div")`
 
 export const BrowserContainer = styled("div")`
   overflow: auto;
-  background-color: rgba(27, 28, 32, 1);
+  background-color: rgba(17, 24, 39, 1);
   color: #8c91a0;
   height: 100%;
   pointer-events: all;

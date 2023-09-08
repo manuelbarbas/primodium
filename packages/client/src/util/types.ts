@@ -1,10 +1,10 @@
 import { KeybindActions } from "@game/constants";
 import { EntityID } from "@latticexyz/recs";
 import { SetupContractConfig } from "@latticexyz/std-client";
+import { Coord } from "@latticexyz/utils";
 import { Address } from "wagmi";
 import { Step } from "walktour";
 import { Action } from "./constants";
-import { Coord } from "@latticexyz/utils";
 
 export type ContractCoord = Coord & { parent: EntityID };
 
