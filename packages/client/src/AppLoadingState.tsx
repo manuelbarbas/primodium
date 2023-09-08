@@ -1,5 +1,5 @@
 import { SyncStep } from "@latticexyz/store-sync";
-import { Browser } from "game-tools";
+import { Browser } from "@primodiumxyz/mud-game-tools";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { world } from "./network/world";
