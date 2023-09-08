@@ -17,11 +17,14 @@ export function createContractCalls(
     await waitForTransaction(tx);
     return Counter.get();
   };
+  async function removeComponent<S extends Schema>(component: ContractComponent<S>, entity: Entity) {
+    const tableId = component.id as Hex;
+    const key = entityToHexKeyTuple(entity);
+    const valueSchema = schemaToHex(abiTypesToSchema(Object.values(component.metadata.valueSchema) as StaticAbiType[]));
 
-  const setRecord = async (tableId: Hex, key: Hex[], data: Hex, schema: Hex) => {
-    const tx = await worldContract.write.devSetRecord([tableId, key, data, schema]);
+    const tx = await worldContract.write.devDeleteRecord([tableId, key, valueSchema]);
     await waitForTransaction(tx);
-  };
+  }
 
   async function setComponentValue<S extends Schema>(
     component: ContractComponent<S>,
@@ -42,30 +45,10 @@ export function createContractCalls(
     });
   }
 
-  // const pushToField = async (tableId: string, key: string[], schemaIndex: number, dataToPush: string) => {
-  //   const tx = await worldContract.write.devPushToField([tableId, key, schemaIndex, dataToPush]);
-  //   await waitForTransaction(tx);
-  // };
-
-  // const popFromField = async (tableId: string, key: string[], schemaIndex: number, dataToPush: string) => {
-  //   const tx = await worldContract.write.devPopFromField([tableId, key, schemaIndex, dataToPush]);
-  //   await waitForTransaction(tx);
-  // };
-
-  // const updateInField = async (tableId: string, key: string[], schemaIndex: number, dataToPush: string) => {
-  //   const tx = await worldContract.write.devUpdateInField([tableId, key, schemaIndex, dataToPush]);
-  //   await waitForTransaction(tx);
-  // };
-
-  // const deleteRecord = async (tableId: string, key: string[], schemaIndex: number, dataToPush: string) => {
-  //   const tx = await worldContract.write.devDeleteRecord([tableId, key, schemaIndex, dataToPush]);
-  //   await waitForTransaction(tx);
-  // };
-
   return {
     /* ------------------------------- dev systems ------------------------------ */
     increment,
-    setRecord,
+    removeComponent,
     setComponentValue,
     // pushToField,
     // popFromField,
