@@ -95,6 +95,12 @@
     background-color: rgb(100 116 139);
   }
 
+  .star-background {
+    background-image: url("/img/star-background.png");
+    background-repeat: repeat;
+    background-size: 100px;
+  }
+
   /* remove outline on waltour tooltip containers */
   #walktour-tooltip-container[tabindex] {
     @apply focus:outline-none;

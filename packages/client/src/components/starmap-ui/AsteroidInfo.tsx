@@ -22,7 +22,7 @@ import { shortenAddress } from "src/util/common";
 import { GameButton } from "../shared/GameButton";
 import { FaCircleLeft } from "react-icons/fa6";
 import { FaUserAstronaut } from "react-icons/fa";
-import { HostileFleets } from "../asteroid-ui/hostile-fleets/HostileFleets";
+import { HostileFleets } from "../asteroid-hud/hostile-fleets/HostileFleets";
 
 type PaneState = "units" | "arrivals" | "home";
 export const AsteroidInfo: React.FC<{ asteroid: EntityID; title?: string }> = ({
