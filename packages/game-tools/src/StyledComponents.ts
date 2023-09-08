@@ -94,23 +94,3 @@ export const Collapse = styled("div")<{ opened: string }>`
   height: ${({ opened }) => (opened === "true" ? "auto" : "0px")};
   overflow: ${({ opened }) => (opened === "true" ? "initial" : "hidden")};
 `;
-
-export const SyntaxHighlighterWrapper = styled("div")`
-  .shiki {
-    background-color: #282a36;
-
-    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-
-    line-height: 1.5;
-    tab-size: 4;
-    hyphens: none;
-    padding: 1em;
-    margin: 0.5em 0px;
-    overflow: auto;
-    border-radius: 0.3em;
-    overflow: auto;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    text-shadow: rgba(0, 0, 0, 0.3) 0px 1px;
-  }
-`;

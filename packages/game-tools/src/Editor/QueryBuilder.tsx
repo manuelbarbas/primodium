@@ -14,30 +14,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ComponentBrowserButton,
   ComponentBrowserInput,
-  SyntaxHighlighterWrapper,
 } from "../StyledComponents";
 import {
   QueryBuilderForm,
   QueryShortcutContainer,
 } from "./QueryBuilder/StyledComponents";
 import { MAX_ENTITIES } from "./constants";
-import { useShiki } from "./hooks";
-
-const SyntaxHighlighter = ({ code }: { code: string }) => {
-  const { html } = useShiki(code, "js");
-
-  if (!html) {
-    return (
-      <SyntaxHighlighterWrapper>
-        <pre className="shiki" />
-      </SyntaxHighlighterWrapper>
-    );
-  }
-
-  return (
-    <SyntaxHighlighterWrapper dangerouslySetInnerHTML={{ __html: html }} />
-  );
-};
 
 export const QueryBuilder = ({
   allEntities,
@@ -182,8 +164,6 @@ export const QueryBuilder = ({
   return (
     <>
       <QueryBuilderForm onSubmit={executeFilter}>
-        <SyntaxHighlighter code={entityQueryText} />
-        {errorMessage && <SyntaxHighlighter code={`Error: ${errorMessage}`} />}
         <label style={{ cursor: "pointer" }} htmlFor={`query-input`}>
           <h3>Filter Entities</h3>
         </label>
