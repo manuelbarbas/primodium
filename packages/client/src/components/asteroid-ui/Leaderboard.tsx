@@ -4,12 +4,15 @@ import {
 } from "src/network/components/clientComponents";
 import { shortenAddress } from "src/util/common";
 import Modal from "../shared/Modal";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaList, FaSync } from "react-icons/fa";
 import { claimFromMine } from "src/util/web3";
 import { useMud } from "src/hooks/useMud";
 import { useMainBaseCoord } from "src/hooks";
 import { useGameStore } from "src/store/GameStore";
+import { linkAddress } from "src/util/web2/linkAddress";
+import { EntityID } from "@latticexyz/recs";
+import { getAddress } from "ethers/lib/utils.js";
 
 export const Leaderboard = () => {
   const network = useMud();
@@ -63,20 +66,12 @@ export const Leaderboard = () => {
         <div className="flex flex-col items-center gap-2 text-white w-96 min-w-full">
           <div className="w-full h-96 overflow-y-auto rounded-md bg-slate-900 text-sm space-y-2 scrollbar">
             {data.players.map((player, index) => (
-              <div
+              <LeaderboardItem
                 key={index}
-                className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30"
-              >
-                <div>{index + 1}.</div>
-                <div className="col-span-5 flex justify-between">
-                  <div>
-                    {address === player ? "You" : shortenAddress(player)}
-                  </div>
-                  <div className="font-bold rounded-md bg-cyan-700 px-2">
-                    {data.scores[index].toLocaleString()}
-                  </div>
-                </div>
-              </div>
+                player={player}
+                index={index}
+                score={data.scores[index]}
+              />
             ))}
           </div>
           <hr className="w-full border-t border-cyan-800" />
@@ -86,6 +81,7 @@ export const Leaderboard = () => {
                 <div>{data.playerRank}.</div>
                 <div className="col-span-5 flex justify-between">
                   <div className="bg-rose-800 px-2 rounded-md">You</div>
+                  <button onClick={linkAddress}>Link Wallet</button>
                   <div className="font-bold rounded-md bg-cyan-700 px-2">
                     {data.scores.length >= data.playerRank
                       ? data.scores[data.playerRank - 1].toLocaleString()
@@ -98,5 +94,58 @@ export const Leaderboard = () => {
         </div>
       </Modal>
     </>
+  );
+};
+
+const LeaderboardItem = ({
+  player,
+  index,
+  score,
+}: {
+  player: EntityID;
+  index: number;
+  score: number;
+}) => {
+  const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
+    address: string;
+    ens: string | null;
+  }>({ address: "0x0", ens: null });
+
+  useEffect(() => {
+    const fetchLocalLinkedAddress = async () => {
+      try {
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL
+          }/linked-address/local-to-external/${getAddress(player)}`
+        );
+        const jsonRes = await res.json();
+        console.log(jsonRes);
+        setFetchedExternalWallet(jsonRes);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLocalLinkedAddress();
+  }, [player]);
+
+  const playerDisplay: string = useMemo(() => {
+    return (
+      fetchedExternalWallet.ens ||
+      shortenAddress(fetchedExternalWallet.address) ||
+      shortenAddress(player)
+    );
+  }, [fetchedExternalWallet]);
+
+  return (
+    <div className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30">
+      <div>{index + 1}.</div>
+      <div className="col-span-5 flex justify-between">
+        <div>{playerDisplay}</div>
+        <div className="font-bold rounded-md bg-cyan-700 px-2">
+          {score.toLocaleString()}
+        </div>
+      </div>
+    </div>
   );
 };
