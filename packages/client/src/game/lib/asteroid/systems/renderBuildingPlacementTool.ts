@@ -93,7 +93,10 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
     const buildingLevelEntity = hashAndTrimKeyEntity(selectedBuilding, level);
 
     const hasEnough = hasEnoughResources(buildingLevelEntity);
-    const collides = validateBuildingPlacement(tileCoord, selectedBuilding);
+    const validPlacement = validateBuildingPlacement(
+      tileCoord,
+      selectedBuilding
+    );
 
     buildingTool.setComponents([
       ObjectPosition(
@@ -101,7 +104,7 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
           x: pixelCoord.x,
           y: -pixelCoord.y + buildingDimensions.height * tileHeight,
         },
-        collides
+        validPlacement
           ? DepthLayers.Building
           : DepthLayers.Building - tileCoord.y + buildingDimensions.height
       ),
@@ -114,10 +117,10 @@ export const renderBuildingPlacementTool = (scene: Scene, network: Network) => {
       animation ? Animation(animation) : undefined,
       Outline({
         thickness: 3,
-        color: hasEnough && !collides ? undefined : 0xff0000,
+        color: hasEnough && !validPlacement ? undefined : 0xff0000,
       }),
       OnClick(() => {
-        if (!hasEnough || collides) {
+        if (!hasEnough || validPlacement) {
           scene.camera.phaserCamera.shake(200, 0.001);
           return;
         }

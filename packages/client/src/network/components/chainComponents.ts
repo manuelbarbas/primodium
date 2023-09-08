@@ -258,6 +258,17 @@ export const P_Terrain = newComponent(
   }
 );
 
+export const P_RequiredTile = newComponent(
+  world,
+  {
+    value: Type.Entity,
+  },
+  {
+    id: "P_RequiredTile",
+    metadata: { contractId: `${commonIdPrefix}P_RequiredTile` },
+  }
+);
+
 /* -------------------------------------------------------------------------- */
 /*                                 Motherlode                                 */
 /* -------------------------------------------------------------------------- */
@@ -497,6 +508,7 @@ export default {
   ReversePosition,
   P_Production,
   P_ProductionDependencies,
+  P_RequiredTile,
 
   // Motherlodes
   Motherlode,
