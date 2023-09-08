@@ -1,0 +1,30 @@
+{
+  "name": "game-tools",
+  "version": "2.0.0-next.5",
+  "description": "Tools for MUD Games",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "pnpm run build:js",
+    "build:js": "tsup",
+    "clean": "pnpm run clean:js",
+    "clean:js": "rimraf dist",
+    "dev": "tsup --watch",
+    "test": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@latticexyz/react": "2.0.0-next.5",
+    "@latticexyz/recs": "2.0.0-next.5",
+    "@latticexyz/utils": "2.0.0-next.5",
+    "goober": "^2.1.13",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.6",
+    "tsup": "^6.7.0"
+  }
+}
