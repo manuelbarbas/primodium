@@ -1,5 +1,5 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Cheatcodes } from "src/components/dev/CheatcodesList";
+import { Cheatcodes } from "game-tools";
 import { SetupResult } from "src/network/types";
 
 export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {

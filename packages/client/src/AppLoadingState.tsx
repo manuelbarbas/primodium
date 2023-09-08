@@ -1,7 +1,10 @@
 import { SyncStep } from "@latticexyz/store-sync";
+import { Browser } from "game-tools";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
+import { world } from "./network/world";
 import { Increment } from "./screens/Increment";
+import { setupCheatcodes } from "./util/cheatcodes";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 
@@ -27,7 +30,6 @@ export default function AppLoadingState() {
       {loadingState.step !== SyncStep.LIVE && (
         <div className="flex items-center justify-center h-screen text-white font-mono">
           <div className="flex flex-col items-center">
-            {/* <h1 className="text-4xl font-bold mb-4">Primodium</h1> */}
             <div className="w-72 ring-2 ring-cyan-400 h-4 relative mb-4">
               <div style={{ width: `${loadingState.percentage}%` }} className="absolute top-0 left-0 bg-cyan-700 h-4" />
             </div>
@@ -47,6 +49,14 @@ export default function AppLoadingState() {
           </Routes>
         </BrowserRouter>
       )} */}
+      {DEV && (
+        <Browser
+          layers={{ react: { world, components: mud.components } }}
+          setContractComponentValue={mud.contractCalls.setComponentValue}
+          world={world}
+          cheatcodes={setupCheatcodes(mud)}
+        />
+      )}
     </div>
   );
 }

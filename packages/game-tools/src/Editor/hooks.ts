@@ -1,18 +1,5 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Component, Has, removeComponent } from "@latticexyz/recs";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { IThemedToken, Lang } from "shiki";
-
-export function useClearDevHighlights(devHighlightComponent: Component) {
-  const highlightedEntities = useEntityQuery([Has(devHighlightComponent)]);
-
-  return useCallback(() => {
-    if (!highlightedEntities) return;
-    for (const entity of highlightedEntities) {
-      removeComponent(devHighlightComponent, entity);
-    }
-  }, [highlightedEntities]);
-}
 
 export function useShiki(code: string, lang: Lang) {
   const [html, htmlSet] = useState<string>();

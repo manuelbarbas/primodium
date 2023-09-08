@@ -1,6 +1,5 @@
-import React, { useMemo } from "react";
-import { useCallback, useEffect, useState } from "react";
-import { DraggableNumberLabelContainer } from "./StyledComponents";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { DraggableNumberLabelContainer } from "../StyledComponents";
 
 export function DraggableNumberLabel({
   label,
