@@ -11,7 +11,6 @@ import {
 } from "src/network/components/clientComponents";
 import { Level } from "src/network/components/chainComponents";
 import { getPlayerBounds } from "../outOfBounds";
-import { updateSpaceRock } from "./updateSpaceRock";
 
 export const upgradeRange = async (network: Network) => {
   const { providers, systems } = network;
@@ -26,8 +25,6 @@ export const upgradeRange = async (network: Network) => {
   const bounds = getPlayerBounds(player!);
 
   if (!activeAsteroid) return;
-
-  await updateSpaceRock(network);
 
   const receipt = await execute(
     systems["system.UpgradeRange"].executeTyped({

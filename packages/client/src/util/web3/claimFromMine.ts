@@ -7,7 +7,6 @@ import { useGameStore } from "src/store/GameStore";
 import { useNotificationStore } from "src/store/NotificationStore";
 import { parseReceipt } from "../analytics/parseReceipt";
 import { BigNumber } from "ethers";
-import { updateSpaceRock } from "./updateSpaceRock";
 
 export const claimFromMine = async (coord: Coord, network: Network) => {
   const { providers, systems } = network;
@@ -19,8 +18,6 @@ export const claimFromMine = async (coord: Coord, network: Network) => {
   if (!activeAsteroid) return;
 
   const position = { ...coord, parent: activeAsteroid };
-
-  await updateSpaceRock(network);
 
   const receipt = await execute(
     systems["system.ClaimFromMine"].executeTyped(position, {
