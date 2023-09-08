@@ -109,7 +109,7 @@ const LeaderboardItem = ({
   const [fetchedExternalWallet, setFetchedExternalWallet] = useState<{
     address: string;
     ensName: string | null;
-  }>({ address: "0x0", ensName: null });
+  }>({ address: player, ensName: null });
 
   useEffect(() => {
     const fetchLocalLinkedAddress = async () => {
