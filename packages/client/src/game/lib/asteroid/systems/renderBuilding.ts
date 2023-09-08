@@ -119,13 +119,15 @@ export const renderBuilding = (scene: Scene) => {
       SetValue({ depth: DepthLayers.Building, alpha: 0 }),
       OnComponentSystem(SelectedBuilding, (gameObject) => {
         if (SelectedBuilding.get()?.value === entityId) {
-          buildingSpriteOutline.setComponent(Outline({ knockout: true }));
+          buildingSpriteOutline.setComponent(
+            Outline({ knockout: true, color: 0x00ffff })
+          );
           gameObject.setAlpha(1);
           return;
         }
 
-        if (buildingSpriteOutline.hasComponent("outline")) {
-          buildingSpriteOutline.removeComponent("outline");
+        if (buildingSpriteOutline.hasComponent(Outline().id)) {
+          buildingSpriteOutline.removeComponent(Outline().id);
           gameObject.setAlpha(0);
         }
       }),
