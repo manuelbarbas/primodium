@@ -23,23 +23,24 @@ export const AsteroidHUD = () => {
   }, []);
 
   return (
-    <div
-      className="star-background screen-container font-mono
-    "
-    >
+    <div className="star-background screen-container font-mono">
       {showUI && (
-        <HUD scale={1}>
-          <HUD.BottomMiddle>
-            <button className="btn pointer-events-auto">Primary</button>
-          </HUD.BottomMiddle>
-          <HUD.TopRight>Panes</HUD.TopRight>
-          <HUD.TopLeft>Menu</HUD.TopLeft>
-          <HUD.TopMiddle>Top Middle</HUD.TopMiddle>
-          <HUD.BottomLeft>Bottom Left</HUD.BottomLeft>
-          <HUD.BottomRight>
-            <BrandingLabel />
-          </HUD.BottomRight>
-        </HUD>
+        <>
+          <HUD pad>
+            <HUD.BottomMiddle>
+              <button className="btn pointer-events-auto">Primary</button>
+            </HUD.BottomMiddle>
+            <HUD.TopRight>Panes</HUD.TopRight>
+            <HUD.TopLeft>Menu</HUD.TopLeft>
+            <HUD.TopMiddle>Top Middle</HUD.TopMiddle>
+            <HUD.BottomLeft>Bottom Left</HUD.BottomLeft>
+          </HUD>
+          <HUD>
+            <HUD.BottomRight>
+              <BrandingLabel />
+            </HUD.BottomRight>
+          </HUD>
+        </>
       )}
     </div>
   );

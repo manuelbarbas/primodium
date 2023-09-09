@@ -3,6 +3,7 @@ import { ReactNode, memo, createContext, useContext, FC } from "react";
 interface HUDProps {
   children?: ReactNode;
   scale?: number;
+  pad?: boolean;
 }
 
 const ScaleContext = createContext<number | undefined>(undefined);
@@ -100,11 +101,14 @@ export const HUD: FC<HUDProps> & {
   BottomLeft: typeof BottomLeft;
   TopMiddle: typeof TopMiddle;
   BottomMiddle: typeof BottomMiddle;
-} = ({ children, scale = 1 }) => {
+} = ({ children, scale = 1, pad = false }) => {
+  const paddingClass = pad ? "p-3" : "";
   return (
     <ScaleContext.Provider value={scale}>
-      <div className="screen-container relative pointer-events-none">
-        {children}
+      <div
+        className={`screen-container ${paddingClass} absolute top-0 right-0 pointer-events-none`}
+      >
+        <div className={`h-full relative`}>{children}</div>
       </div>
     </ScaleContext.Provider>
   );
