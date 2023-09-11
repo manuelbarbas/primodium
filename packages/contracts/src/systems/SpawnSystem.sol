@@ -11,13 +11,12 @@ contract SpawnSystem is PrimodiumSystem {
   function spawn() public returns (bytes32) {
     bytes32 playerEntity = LibEncode.addressToEntity(_msgSender());
 
-    bool spawned = Player.get(playerEntity);
+    bool spawned = Player.getSpawned(playerEntity);
     require(!spawned, "[SpawnSystem] Player already spawned");
-
-    bytes32 asteroid = LibAsteroid.createAsteroid(_world(), playerEntity);
 
     Level.set(playerEntity, 1);
 
+    bytes32 asteroid = LibAsteroid.createAsteroid(_world(), playerEntity);
     return asteroid;
   }
 }

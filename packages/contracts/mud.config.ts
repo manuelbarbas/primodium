@@ -68,6 +68,7 @@ export default mudConfig({
       keySchema: { entity: "bytes32" },
       schema: {
         spawned: "bool",
+        homeAsteroid: "bytes32",
       },
     },
     /* -------------------------------------------------------------------------- */
