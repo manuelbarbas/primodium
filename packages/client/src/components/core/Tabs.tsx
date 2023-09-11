@@ -23,7 +23,7 @@ const IndexContext = createContext<IndexContextValue | undefined>(undefined);
 const useIndex = (): IndexContextValue => {
   const context = useContext(IndexContext);
   if (!context) {
-    throw new Error("useIndex must be used within a Tabs");
+    throw new Error("useIndex must be used within Tabs");
   }
   return context;
 };
