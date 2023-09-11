@@ -17,7 +17,9 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("RockType")));
+bytes32 constant _tableId = bytes32(
+  abi.encodePacked(bytes16(""), bytes16("RockType"))
+);
 bytes32 constant RockTypeTableId = _tableId;
 
 library RockType {
@@ -51,12 +53,24 @@ library RockType {
 
   /** Register the table's key schema, value schema, key names and value names */
   function register() internal {
-    StoreSwitch.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
+    StoreSwitch.registerTable(
+      _tableId,
+      getKeySchema(),
+      getValueSchema(),
+      getKeyNames(),
+      getFieldNames()
+    );
   }
 
   /** Register the table's key schema, value schema, key names and value names (using the specified store) */
   function register(IStore _store) internal {
-    _store.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
+    _store.registerTable(
+      _tableId,
+      getKeySchema(),
+      getValueSchema(),
+      getKeyNames(),
+      getFieldNames()
+    );
   }
 
   /** Get value */
@@ -64,16 +78,30 @@ library RockType {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
+    bytes memory _blob = StoreSwitch.getField(
+      _tableId,
+      _keyTuple,
+      0,
+      getValueSchema()
+    );
     return (uint8(Bytes.slice1(_blob, 0)));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, bytes32 entity) internal view returns (uint8 value) {
+  function get(IStore _store, bytes32 entity)
+    internal
+    view
+    returns (uint8 value)
+  {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
+    bytes memory _blob = _store.getField(
+      _tableId,
+      _keyTuple,
+      0,
+      getValueSchema()
+    );
     return (uint8(Bytes.slice1(_blob, 0)));
   }
 
@@ -82,7 +110,13 @@ library RockType {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)), getValueSchema());
+    StoreSwitch.setField(
+      _tableId,
+      _keyTuple,
+      0,
+      abi.encodePacked((value)),
+      getValueSchema()
+    );
   }
 
   /** Set value (using the specified store) */
@@ -94,7 +128,13 @@ library RockType {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)), getValueSchema());
+    _store.setField(
+      _tableId,
+      _keyTuple,
+      0,
+      abi.encodePacked((value)),
+      getValueSchema()
+    );
   }
 
   /** Tightly pack full data using this table's schema */
@@ -103,7 +143,11 @@ library RockType {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(bytes32 entity) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(bytes32 entity)
+    internal
+    pure
+    returns (bytes32[] memory)
+  {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
