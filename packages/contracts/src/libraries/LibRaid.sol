@@ -181,7 +181,9 @@ library LibRaid {
     BattleParticipant memory defender = BattleDefenderComponent(world.getComponent(BattleDefenderComponentID)).getValue(
       battleEntity
     );
-    uint256[] memory resourceIds = LibResource.getMotherlodeResources();
+    //uint256[] memory resourceIds = LibResource.getMotherlodeResources();
+    uint256[] memory resourceIds = P_MaxResourceStorageComponent(world.getComponent(P_MaxResourceStorageComponentID))
+      .getValue(defender.participantEntity);
 
     (uint32 totalResources, uint32[] memory defenderResources) = LibResource.getTotalResources(
       world,
@@ -200,7 +202,6 @@ library LibRaid {
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
-    console.log(1);
     for (uint256 i = 0; i < defenderResources.length; i++) {
       uint32 raidAmount = (totalCargo * defenderResources[i]);
 
