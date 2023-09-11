@@ -5,7 +5,7 @@ import { AsteroidMap, KeybindActions } from "@game/constants";
 
 import { useGameStore } from "../../store/GameStore";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { HUD } from "../shared/HUD";
+import { HUD } from "../core/HUD";
 
 export const AsteroidHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [
