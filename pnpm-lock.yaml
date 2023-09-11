@@ -283,6 +283,9 @@ importers:
       '@types/node':
         specifier: ^18.15.11
         version: 18.15.11
+      abdk-libraries-solidity:
+        specifier: ^3.2.0
+        version: 3.2.0
       ds-test:
         specifier: https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0
         version: github.com/dapphub/ds-test/e282159d5170298eb2455a6c05280ab5a73a4ef0
@@ -304,6 +307,9 @@ importers:
       solhint-plugin-mud:
         specifier: 2.0.0-next.5
         version: 2.0.0-next.5
+      solidity-trigonometry:
+        specifier: https://github.com/mds1/solidity-trigonometry.git
+        version: github.com/mds1/solidity-trigonometry/58af3a912ab3e2203cf21189012caefe24471e29
       typechain:
         specifier: ^8.1.1
         version: 8.1.1(typescript@4.7.4)
@@ -2404,7 +2410,6 @@ packages:
 
   /abdk-libraries-solidity@3.2.0:
     resolution: {integrity: sha512-JyedKxyqsszb9qCTX+YCOQHA4m0YAq9p77Qvumiy8LJLLrm1FfA9D3pdSAZN5wrmi3PSv0y3Svy8c/C+8S9K8g==}
-    dev: false
 
   /abitype@0.9.3(typescript@4.7.4)(zod@3.22.2):
     resolution: {integrity: sha512-dz4qCQLurx97FQhnb/EIYTk/ldQ+oafEDUqC0VVIeQS1Q48/YWt/9YNfMmp9SLFqN41ktxny3c8aYxHjmFIB/w==}
@@ -7715,3 +7720,9 @@ packages:
     resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/74cfb77e308dd188d2f58864aaf44963ae6b88b1}
     name: forge-std
     version: 1.6.0
+
+  github.com/mds1/solidity-trigonometry/58af3a912ab3e2203cf21189012caefe24471e29:
+    resolution: {tarball: https://codeload.github.com/mds1/solidity-trigonometry/tar.gz/58af3a912ab3e2203cf21189012caefe24471e29}
+    name: solidity-trigonometry.git
+    version: 0.0.0
+    dev: true

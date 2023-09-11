@@ -13,7 +13,7 @@ export default mudConfig({
   excludeSystems: [...dev],
 
   enums: {
-    Rock: ["Null", "Asteroid", "Motherlode"],
+    ERock: ["Null", "Asteroid", "Motherlode"],
   },
   tables: {
     /* -------------------------------------------------------------------------- */
@@ -50,6 +50,26 @@ export default mudConfig({
       },
     },
 
+    OwnedBy: {
+      keySchema: { entity: "bytes32" },
+      schema: {
+        owner: "bytes32",
+      },
+    },
+
+    Level: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint32",
+    },
+    /* -------------------------------------------------------------------------- */
+    /*                                   Player                                   */
+    /* -------------------------------------------------------------------------- */
+    Player: {
+      keySchema: { entity: "bytes32" },
+      schema: {
+        spawned: "bool",
+      },
+    },
     /* -------------------------------------------------------------------------- */
     /*                                    Rocks                                   */
     /* -------------------------------------------------------------------------- */
