@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "forge-std/console.sol";
 import { getAddressById, entityToAddress } from "solecs/utils.sol";
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
@@ -203,22 +202,22 @@ library LibRaid {
     );
     console.log(1);
     for (uint256 i = 0; i < defenderResources.length; i++) {
-      console.log(1);
-      uint32 raidAmount = (totalCargo * defenderResources[i]) / totalResources;
-      console.log(2);
+      uint32 raidAmount = (totalCargo * defenderResources[i]);
+
+      raidAmount = raidAmount / totalResources;
+
       if (defenderResources[i] < raidAmount) {
         raidAmount = defenderResources[i];
       }
-      console.log(3);
+
       if (raidAmount == 0) continue;
-      console.log(4);
+
       raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
-      console.log(5);
+
       raidResult.raidedAmount[i] = raidAmount;
-      console.log(6);
+
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
-      console.log(7);
     }
     BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
   }
