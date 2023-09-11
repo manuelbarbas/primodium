@@ -27,12 +27,6 @@ export default mudConfig({
     /* -------------------------------------------------------------------------- */
     /*                                   Common                                   */
     /* -------------------------------------------------------------------------- */
-    GameConfig: {
-      keySchema: {},
-      schema: {
-        spawnSpace: "uint32",
-      },
-    },
 
     Position: {
       keySchema: { entity: "bytes32" },

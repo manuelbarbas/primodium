@@ -1,8 +1,8 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
-import { hashStringEntity } from "./encode";
 import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
+import { hashStringEntity } from "./encode";
 
 export enum Action {
   DemolishBuilding,
@@ -68,9 +68,7 @@ export const BlockType = {
 
   //Advanced Buildings
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
-  PhotovoltaicCellFactory: keccak256(
-    "block.PhotovoltaicCellFactory"
-  ) as EntityID,
+  PhotovoltaicCellFactory: keccak256("block.PhotovoltaicCellFactory") as EntityID,
   AlloyFactory: keccak256("block.AlloyFactory") as EntityID,
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
   Hangar: keccak256("block.Hangar") as EntityID,
@@ -81,43 +79,25 @@ export const BlockType = {
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
-  ElectricityUtilityResource: keccak256(
-    "item.ElectricityUtilityResource"
-  ) as EntityID,
+  ElectricityUtilityResource: keccak256("item.ElectricityUtilityResource") as EntityID,
   HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
   VesselUtilityResource: keccak256("item.VesselUtilityResource") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
   IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
-  BasicPowerSourceCrafted: keccak256(
-    "item.BasicPowerSourceCrafted"
-  ) as EntityID,
+  BasicPowerSourceCrafted: keccak256("item.BasicPowerSourceCrafted") as EntityID,
   KineticMissileCrafted: keccak256("item.KineticMissileCrafted") as EntityID,
   RefinedOsmiumCrafted: keccak256("item.RefinedOsmiumCrafted") as EntityID,
-  AdvancedPowerSourceCrafted: keccak256(
-    "item.AdvancedPowerSourceCrafted"
-  ) as EntityID,
-  PenetratingWarheadCrafted: keccak256(
-    "item.PenetratingWarheadCrafted"
-  ) as EntityID,
-  PenetratingMissileCrafted: keccak256(
-    "item.PenetratingMissileCrafted"
-  ) as EntityID,
+  AdvancedPowerSourceCrafted: keccak256("item.AdvancedPowerSourceCrafted") as EntityID,
+  PenetratingWarheadCrafted: keccak256("item.PenetratingWarheadCrafted") as EntityID,
+  PenetratingMissileCrafted: keccak256("item.PenetratingMissileCrafted") as EntityID,
   TungstenRodsCrafted: keccak256("item.TungstenRodsCrafted") as EntityID,
   IridiumCrystalCrafted: keccak256("item.IridiumCrystalCrafted") as EntityID,
   IridiumDrillbitCrafted: keccak256("item.IridiumDrillbitCrafted") as EntityID,
-  LaserPowerSourceCrafted: keccak256(
-    "item.LaserPowerSourceCrafted"
-  ) as EntityID,
-  ThermobaricWarheadCrafted: keccak256(
-    "item.ThermobaricWarheadCrafted"
-  ) as EntityID,
-  ThermobaricMissileCrafted: keccak256(
-    "item.ThermobaricMissileCrafted"
-  ) as EntityID,
-  KimberliteCrystalCatalystCrafted: keccak256(
-    "item.KimberliteCrystalCatalystCrafted"
-  ) as EntityID,
+  LaserPowerSourceCrafted: keccak256("item.LaserPowerSourceCrafted") as EntityID,
+  ThermobaricWarheadCrafted: keccak256("item.ThermobaricWarheadCrafted") as EntityID,
+  ThermobaricMissileCrafted: keccak256("item.ThermobaricMissileCrafted") as EntityID,
+  KimberliteCrystalCatalystCrafted: keccak256("item.KimberliteCrystalCatalystCrafted") as EntityID,
 
   ExpansionResearch1: hashStringEntity("research.Expansion", 1),
   ExpansionResearch2: hashStringEntity("research.Expansion", 2),
@@ -176,15 +156,9 @@ export const BlockType = {
   StorageUnit3Research: keccak256("research.StorageUnit3") as EntityID,
 
   IronPlateFactoryResearch: keccak256("research.IronPlateFactory") as EntityID,
-  IronPlateFactory2Research: keccak256(
-    "research.IronPlateFactory2"
-  ) as EntityID,
-  IronPlateFactory3Research: keccak256(
-    "research.IronPlateFactory3"
-  ) as EntityID,
-  IronPlateFactory4Research: keccak256(
-    "research.IronPlateFactory4"
-  ) as EntityID,
+  IronPlateFactory2Research: keccak256("research.IronPlateFactory2") as EntityID,
+  IronPlateFactory3Research: keccak256("research.IronPlateFactory3") as EntityID,
+  IronPlateFactory4Research: keccak256("research.IronPlateFactory4") as EntityID,
 
   LithiumMineResearch: keccak256("research.LithiumMine") as EntityID,
   LithiumMine2Research: keccak256("research.LithiumMine2") as EntityID,
@@ -194,23 +168,13 @@ export const BlockType = {
   AlloyFactory2Research: keccak256("research.AlloyFactory2") as EntityID,
   AlloyFactory3Research: keccak256("research.AlloyFactory3") as EntityID,
 
-  PhotovoltaicCellResearch: keccak256(
-    "research.PhotovoltaicCellFactory"
-  ) as EntityID,
-  PhotovoltaicCell2Research: keccak256(
-    "research.LithiumCopperOxideFactory2"
-  ) as EntityID,
-  PhotovoltaicCell3Research: keccak256(
-    "research.LithiumCopperOxideFactory3"
-  ) as EntityID,
+  PhotovoltaicCellResearch: keccak256("research.PhotovoltaicCellFactory") as EntityID,
+  PhotovoltaicCell2Research: keccak256("research.LithiumCopperOxideFactory2") as EntityID,
+  PhotovoltaicCell3Research: keccak256("research.LithiumCopperOxideFactory3") as EntityID,
 
   SpaceFuelFactoryResearch: keccak256("research.SpaceFuelFactory") as EntityID,
-  SpaceFuelFactory2Research: keccak256(
-    "research.SpaceFuelFactory2"
-  ) as EntityID,
-  SpaceFuelFactory3Research: keccak256(
-    "research.SpaceFuelFactory3"
-  ) as EntityID,
+  SpaceFuelFactory2Research: keccak256("research.SpaceFuelFactory2") as EntityID,
+  SpaceFuelFactory3Research: keccak256("research.SpaceFuelFactory3") as EntityID,
 
   SolarPanelResearch: keccak256("research.SolarPanel") as EntityID,
   SolarPanel2Research: keccak256("research.SolarPanel2") as EntityID,
@@ -237,36 +201,6 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
   acc[id] = key;
   return acc;
 }, {});
-
-// Terrain Tile colors
-//todo: pick ore block colors
-export const BlockColors = new Map<EntityID, string>([
-  //landscape blocks
-  [BlockType.Water, "#0369a1"],
-  [BlockType.Sandstone, "#a8a29e"],
-  [BlockType.Biofilm, "#10b981"],
-  [BlockType.Alluvium, "#34d399"],
-  [BlockType.Regolith, "#71717a"],
-  [BlockType.Bedrock, "#52525b"],
-  [BlockType.Air, "#FFFFFF00"],
-
-  //metal ores
-  [BlockType.Lithium, "#d8b4fe"],
-  [BlockType.Iron, "#44403c"],
-  [BlockType.Copper, "#047857"],
-  [BlockType.Titanium, "#60a5fa"],
-  [BlockType.Iridium, "#fce7f3"],
-  [BlockType.Osmium, "#164e63"],
-  [BlockType.Tungsten, "#94a3b8"],
-
-  //mineral ores
-  [BlockType.Kimberlite, "#e0f2fe"],
-  [BlockType.Uraninite, "#d9f99d"],
-  [BlockType.Bolutite, "#a21caf"],
-
-  // Resource
-  [BlockType.MainBase, "#8676c0"],
-]);
 
 export const BackgroundImage = new Map<EntityID, string[]>([
   //landscape blocks
@@ -322,10 +256,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
       "/img/building/ironmine/iron-miner-level3.png",
     ],
   ],
-  [
-    BlockType.LithiumMine,
-    ["/img/building/lithiummine/lithium-mine-level1.png"],
-  ],
+  [BlockType.LithiumMine, ["/img/building/lithiummine/lithium-mine-level1.png"]],
   [BlockType.SulfurMine, ["/img/building/sulfurmine/sulfur-mine-level1.png"]],
   [
     BlockType.StorageUnit,
@@ -342,10 +273,7 @@ export const BackgroundImage = new Map<EntityID, string[]>([
       "/img/building/ironplatingfactory/ironplatingfactory-level2.png",
     ],
   ],
-  [
-    BlockType.AlloyFactory,
-    ["/img/building/alloyfactory/alloyfactory-level1.png"],
-  ],
+  [BlockType.AlloyFactory, ["/img/building/alloyfactory/alloyfactory-level1.png"]],
   [
     BlockType.PhotovoltaicCellFactory,
     [
@@ -355,20 +283,11 @@ export const BackgroundImage = new Map<EntityID, string[]>([
   ],
   [
     BlockType.SolarPanel,
-    [
-      "/img/building/solarpanels/solarpanel-level1.png",
-      "/img/building/solarpanels/solarpanel-level2.png",
-    ],
+    ["/img/building/solarpanels/solarpanel-level1.png", "/img/building/solarpanels/solarpanel-level2.png"],
   ],
   [BlockType.Hangar, ["/img/building/hangar/level1/Hangar1.png"]],
-  [
-    BlockType.DroneFactory,
-    ["/img/building/drone-factory/normal/Drone_Factory1.png"],
-  ],
-  [
-    BlockType.StarmapperStation,
-    ["/img/building/starmapper-station/level1/Starmapper1.png"],
-  ],
+  [BlockType.DroneFactory, ["/img/building/drone-factory/normal/Drone_Factory1.png"]],
+  [BlockType.StarmapperStation, ["/img/building/starmapper-station/level1/Starmapper1.png"]],
 
   //units
   [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
@@ -403,100 +322,37 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.IronMine4Research, "/img/building/ironmine/iron-miner-level3.png"],
 
   [BlockType.CopperMineResearch, "/img/building/coppermine/copper-miner.gif"],
-  [
-    BlockType.CopperMine2Research,
-    "/img/building/coppermine/copper-miner-level2.gif",
-  ],
-  [
-    BlockType.CopperMine3Research,
-    "/img/building/coppermine/copper-miner-level3.png",
-  ],
+  [BlockType.CopperMine2Research, "/img/building/coppermine/copper-miner-level2.gif"],
+  [BlockType.CopperMine3Research, "/img/building/coppermine/copper-miner-level3.png"],
 
-  [
-    BlockType.StorageUnitResearch,
-    "/img/building/storageunit/storageunit-level1.png",
-  ],
-  [
-    BlockType.StorageUnit2Research,
-    "/img/building/storageunit/storageunit-level2.gif",
-  ],
-  [
-    BlockType.StorageUnit3Research,
-    "/img/building/storageunit/storageunit-level2.gif",
-  ],
+  [BlockType.StorageUnitResearch, "/img/building/storageunit/storageunit-level1.png"],
+  [BlockType.StorageUnit2Research, "/img/building/storageunit/storageunit-level2.gif"],
+  [BlockType.StorageUnit3Research, "/img/building/storageunit/storageunit-level2.gif"],
 
-  [
-    BlockType.LithiumMineResearch,
-    "/img/building/lithiummine/lithium-miner.gif",
-  ],
-  [
-    BlockType.LithiumMine2Research,
-    "/img/building/lithiummine/lithium-miner-level2.gif",
-  ],
-  [
-    BlockType.LithiumMine3Research,
-    "/img/building/lithiummine/lithium-miner-level3.png",
-  ],
+  [BlockType.LithiumMineResearch, "/img/building/lithiummine/lithium-miner.gif"],
+  [BlockType.LithiumMine2Research, "/img/building/lithiummine/lithium-miner-level2.gif"],
+  [BlockType.LithiumMine3Research, "/img/building/lithiummine/lithium-miner-level3.png"],
 
-  [
-    BlockType.IronPlateFactoryResearch,
-    "/img/building/ironplatingfactory/ironplatingfactory-level1.gif",
-  ],
-  [
-    BlockType.IronPlateFactory2Research,
-    "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
-  ],
-  [
-    BlockType.IronPlateFactory3Research,
-    "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
-  ],
-  [
-    BlockType.IronPlateFactory4Research,
-    "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
-  ],
+  [BlockType.IronPlateFactoryResearch, "/img/building/ironplatingfactory/ironplatingfactory-level1.gif"],
+  [BlockType.IronPlateFactory2Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
+  [BlockType.IronPlateFactory3Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
+  [BlockType.IronPlateFactory4Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
 
-  [
-    BlockType.AlloyFactoryResearch,
-    "/img/building/alloyfactory/alloyfactory-level1.gif",
-  ],
-  [
-    BlockType.AlloyFactory2Research,
-    "/img/building/alloyfactory/alloyfactory-level1.gif",
-  ],
-  [
-    BlockType.AlloyFactory3Research,
-    "/img/building/alloyfactory/alloyfactory-level1.gif",
-  ],
+  [BlockType.AlloyFactoryResearch, "/img/building/alloyfactory/alloyfactory-level1.gif"],
+  [BlockType.AlloyFactory2Research, "/img/building/alloyfactory/alloyfactory-level1.gif"],
+  [BlockType.AlloyFactory3Research, "/img/building/alloyfactory/alloyfactory-level1.gif"],
 
-  [
-    BlockType.PhotovoltaicCellResearch,
-    "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
-  ],
-  [
-    BlockType.PhotovoltaicCell2Research,
-    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
-  ],
-  [
-    BlockType.PhotovoltaicCell3Research,
-    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
-  ],
+  [BlockType.PhotovoltaicCellResearch, "/img/building/photovoltaiccell/photovoltaiccell-level1.gif"],
+  [BlockType.PhotovoltaicCell2Research, "/img/building/photovoltaiccell/photovoltaiccell-level2.gif"],
+  [BlockType.PhotovoltaicCell3Research, "/img/building/photovoltaiccell/photovoltaiccell-level2.gif"],
 
   [BlockType.SpaceFuelFactoryResearch, "/img/building/spacefuel.gif"],
   [BlockType.SpaceFuelFactory2Research, "/img/building/spacefuel.gif"],
   [BlockType.SpaceFuelFactory3Research, "/img/building/spacefuel.gif"],
 
-  [
-    BlockType.SolarPanelResearch,
-    "/img/building/solarpanels/solarpanel-level1.png",
-  ],
-  [
-    BlockType.SolarPanel2Research,
-    "/img/building/solarpanels/solarpanel-level2.png",
-  ],
-  [
-    BlockType.SolarPanel2Research,
-    "/img/building/solarpanels/solarpanel-level2.png",
-  ],
+  [BlockType.SolarPanelResearch, "/img/building/solarpanels/solarpanel-level1.png"],
+  [BlockType.SolarPanel2Research, "/img/building/solarpanels/solarpanel-level2.png"],
+  [BlockType.SolarPanel2Research, "/img/building/solarpanels/solarpanel-level2.png"],
 
   [BlockType.HousingUnitResearch, "/img/building/newplatingfactory.gif"],
 
@@ -566,10 +422,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
   [BlockType.IridiumDrillbitCrafted, "/img/crafted/iridiumdrillbit.png"],
   [BlockType.LaserPowerSourceCrafted, "/img/crafted/laserbattery.png"],
-  [
-    BlockType.KimberliteCrystalCatalystCrafted,
-    "/img/crafted/kimberlitecatalyst.png",
-  ],
+  [BlockType.KimberliteCrystalCatalystCrafted, "/img/crafted/kimberlitecatalyst.png"],
   [BlockType.RefinedOsmiumCrafted, "/img/crafted/refinedosmium.png"],
   [BlockType.TungstenRodsCrafted, "/img/crafted/tungstenrod.png"],
   [BlockType.KineticMissileCrafted, "/img/crafted/kineticmissile.png"],

@@ -1,9 +1,11 @@
 import { SyncStep } from "@latticexyz/store-sync";
 import { Browser } from "@primodiumxyz/mud-game-tools";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { world } from "./network/world";
 import { Increment } from "./screens/Increment";
+import { Landing } from "./screens/Landing";
 import { setupCheatcodes } from "./util/cheatcodes";
 
 const DEV = import.meta.env.PRI_DEV === "true";
@@ -39,16 +41,15 @@ export default function AppLoadingState() {
           </div>
         </div>
       )}
-      {loadingState.step === SyncStep.LIVE && <Increment />}
-      {/* {loadingState.step === SyncStep.LIVE && (
+      {loadingState.step === SyncStep.LIVE && (
         <BrowserRouter>
           <Routes>
-            <Route path="/game" element={initialized ? <Game /> : <Landing />} />
+            <Route path="/" element={<Landing />} />
+            {/* <Route path="/game" element={<Game />} /> */}
             <Route path="/increment" element={<Increment />} />
-            <Route path="/map" element={<Map />} />
           </Routes>
         </BrowserRouter>
-      )} */}
+      )}
       {DEV && (
         <Browser
           layers={{ react: { world, components: mud.components } }}
