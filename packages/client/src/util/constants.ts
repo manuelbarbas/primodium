@@ -1,12 +1,8 @@
 import { EntityID } from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { Key } from "engine/types";
+import { EMotherlodeSize, EMotherlodeType } from "src/util/web3/types";
 import { hashStringEntity } from "./encode";
-import {
-  EMotherlodeSize,
-  EMotherlodeType,
-  ESpaceRockType,
-} from "src/util/web3/types";
 
 export enum Action {
   DemolishBuilding,
@@ -96,9 +92,7 @@ export const BlockType = {
 
   //Advanced Buildings
   IronPlateFactory: keccak256("block.IronPlateFactory") as EntityID,
-  PhotovoltaicCellFactory: keccak256(
-    "block.PhotovoltaicCellFactory"
-  ) as EntityID,
+  PhotovoltaicCellFactory: keccak256("block.PhotovoltaicCellFactory") as EntityID,
   AlloyFactory: keccak256("block.AlloyFactory") as EntityID,
   SolarPanel: keccak256("block.SolarPanel") as EntityID,
   Hangar: keccak256("block.Hangar") as EntityID,
@@ -114,43 +108,25 @@ export const BlockType = {
   PhotovoltaicCell: keccak256("item.PhotovoltaicCellCrafted") as EntityID,
 
   SpaceFuelCraftedItem: keccak256("item.SpaceFuelCrafted") as EntityID,
-
-  Electricity: keccak256("item.ElectricityUtilityResource") as EntityID,
-  Housing: keccak256("item.HousingUtilityResource") as EntityID,
-  VesselCapacity: keccak256("item.VesselUtilityResource") as EntityID,
-  FleetMoves: keccak256("block.MoveCount") as EntityID,
+  ElectricityUtilityResource: keccak256("item.ElectricityUtilityResource") as EntityID,
+  HousingUtilityResource: keccak256("item.HousingUtilityResource") as EntityID,
+  VesselUtilityResource: keccak256("item.VesselUtilityResource") as EntityID,
 
   BulletCrafted: keccak256("item.BulletCrafted") as EntityID,
-  IronPlate: keccak256("item.IronPlateCrafted") as EntityID,
-  BasicPowerSourceCrafted: keccak256(
-    "item.BasicPowerSourceCrafted"
-  ) as EntityID,
+  IronPlateCrafted: keccak256("item.IronPlateCrafted") as EntityID,
+  BasicPowerSourceCrafted: keccak256("item.BasicPowerSourceCrafted") as EntityID,
   KineticMissileCrafted: keccak256("item.KineticMissileCrafted") as EntityID,
   RefinedOsmiumCrafted: keccak256("item.RefinedOsmiumCrafted") as EntityID,
-  AdvancedPowerSourceCrafted: keccak256(
-    "item.AdvancedPowerSourceCrafted"
-  ) as EntityID,
-  PenetratingWarheadCrafted: keccak256(
-    "item.PenetratingWarheadCrafted"
-  ) as EntityID,
-  PenetratingMissileCrafted: keccak256(
-    "item.PenetratingMissileCrafted"
-  ) as EntityID,
+  AdvancedPowerSourceCrafted: keccak256("item.AdvancedPowerSourceCrafted") as EntityID,
+  PenetratingWarheadCrafted: keccak256("item.PenetratingWarheadCrafted") as EntityID,
+  PenetratingMissileCrafted: keccak256("item.PenetratingMissileCrafted") as EntityID,
   TungstenRodsCrafted: keccak256("item.TungstenRodsCrafted") as EntityID,
   IridiumCrystalCrafted: keccak256("item.IridiumCrystalCrafted") as EntityID,
   IridiumDrillbitCrafted: keccak256("item.IridiumDrillbitCrafted") as EntityID,
-  LaserPowerSourceCrafted: keccak256(
-    "item.LaserPowerSourceCrafted"
-  ) as EntityID,
-  ThermobaricWarheadCrafted: keccak256(
-    "item.ThermobaricWarheadCrafted"
-  ) as EntityID,
-  ThermobaricMissileCrafted: keccak256(
-    "item.ThermobaricMissileCrafted"
-  ) as EntityID,
-  KimberliteCrystalCatalystCrafted: keccak256(
-    "item.KimberliteCrystalCatalystCrafted"
-  ) as EntityID,
+  LaserPowerSourceCrafted: keccak256("item.LaserPowerSourceCrafted") as EntityID,
+  ThermobaricWarheadCrafted: keccak256("item.ThermobaricWarheadCrafted") as EntityID,
+  ThermobaricMissileCrafted: keccak256("item.ThermobaricMissileCrafted") as EntityID,
+  KimberliteCrystalCatalystCrafted: keccak256("item.KimberliteCrystalCatalystCrafted") as EntityID,
 
   ExpansionResearch1: hashStringEntity("research.Expansion", 1),
   ExpansionResearch2: hashStringEntity("research.Expansion", 2),
@@ -190,26 +166,11 @@ export const BlockType = {
   MiningVesselUpgrade4: hashStringEntity("research.MiningVesselUpgrade", 4),
   MiningVesselUpgrade5: hashStringEntity("research.MiningVesselUpgrade", 5),
 
-  MinutemanMarineUpgrade1: hashStringEntity(
-    "research.MinutemanMarineUpgrade",
-    1
-  ),
-  MinutemanMarineUpgrade2: hashStringEntity(
-    "research.MinutemanMarineUpgrade",
-    2
-  ),
-  MinutemanMarineUpgrade3: hashStringEntity(
-    "research.MinutemanMarineUpgrade",
-    3
-  ),
-  MinutemanMarineUpgrade4: hashStringEntity(
-    "research.MinutemanMarineUpgrade",
-    4
-  ),
-  MinutemanMarineUpgrade5: hashStringEntity(
-    "research.MinutemanMarineUpgrade",
-    5
-  ),
+  MinutemanMarineUpgrade1: hashStringEntity("research.MinutemanMarineUpgrade", 1),
+  MinutemanMarineUpgrade2: hashStringEntity("research.MinutemanMarineUpgrade", 2),
+  MinutemanMarineUpgrade3: hashStringEntity("research.MinutemanMarineUpgrade", 3),
+  MinutemanMarineUpgrade4: hashStringEntity("research.MinutemanMarineUpgrade", 4),
+  MinutemanMarineUpgrade5: hashStringEntity("research.MinutemanMarineUpgrade", 5),
 
   TridentMarineUpgrade1: hashStringEntity("research.TridentMarineUpgrade", 1),
   TridentMarineUpgrade2: hashStringEntity("research.TridentMarineUpgrade", 2),
@@ -236,15 +197,9 @@ export const BlockType = {
   StorageUnit3Research: keccak256("research.StorageUnit3") as EntityID,
 
   IronPlateFactoryResearch: keccak256("research.IronPlateFactory") as EntityID,
-  IronPlateFactory2Research: keccak256(
-    "research.IronPlateFactory2"
-  ) as EntityID,
-  IronPlateFactory3Research: keccak256(
-    "research.IronPlateFactory3"
-  ) as EntityID,
-  IronPlateFactory4Research: keccak256(
-    "research.IronPlateFactory4"
-  ) as EntityID,
+  IronPlateFactory2Research: keccak256("research.IronPlateFactory2") as EntityID,
+  IronPlateFactory3Research: keccak256("research.IronPlateFactory3") as EntityID,
+  IronPlateFactory4Research: keccak256("research.IronPlateFactory4") as EntityID,
 
   LithiumMineResearch: keccak256("research.LithiumMine") as EntityID,
   LithiumMine2Research: keccak256("research.LithiumMine2") as EntityID,
@@ -254,23 +209,13 @@ export const BlockType = {
   AlloyFactory2Research: keccak256("research.AlloyFactory2") as EntityID,
   AlloyFactory3Research: keccak256("research.AlloyFactory3") as EntityID,
 
-  PhotovoltaicCellResearch: keccak256(
-    "research.PhotovoltaicCellFactory"
-  ) as EntityID,
-  PhotovoltaicCell2Research: keccak256(
-    "research.LithiumCopperOxideFactory2"
-  ) as EntityID,
-  PhotovoltaicCell3Research: keccak256(
-    "research.LithiumCopperOxideFactory3"
-  ) as EntityID,
+  PhotovoltaicCellResearch: keccak256("research.PhotovoltaicCellFactory") as EntityID,
+  PhotovoltaicCell2Research: keccak256("research.LithiumCopperOxideFactory2") as EntityID,
+  PhotovoltaicCell3Research: keccak256("research.LithiumCopperOxideFactory3") as EntityID,
 
   SpaceFuelFactoryResearch: keccak256("research.SpaceFuelFactory") as EntityID,
-  SpaceFuelFactory2Research: keccak256(
-    "research.SpaceFuelFactory2"
-  ) as EntityID,
-  SpaceFuelFactory3Research: keccak256(
-    "research.SpaceFuelFactory3"
-  ) as EntityID,
+  SpaceFuelFactory2Research: keccak256("research.SpaceFuelFactory2") as EntityID,
+  SpaceFuelFactory3Research: keccak256("research.SpaceFuelFactory3") as EntityID,
 
   SolarPanelResearch: keccak256("research.SolarPanel") as EntityID,
   SolarPanel2Research: keccak256("research.SolarPanel2") as EntityID,
@@ -295,84 +240,38 @@ export const BlockType = {
 
   //Objectives
   DebugFreeObjectiveID: keccak256("block.DebugFreeObjective") as EntityID,
-  DebugHavResourcesObjectiveID: keccak256(
-    "block.DebugHavResourcesObjective"
-  ) as EntityID,
-  DebugHaveUnitsObjectiveID: keccak256(
-    "block.DebugHaveUnitsObjective"
-  ) as EntityID,
-  DebugHaveMaxUtilityObjectiveID: keccak256(
-    "block.DebugHaveMaxUtilityObjective"
-  ) as EntityID,
-  DebugCompletedPriorObjectiveID: keccak256(
-    "block.DebugCompletedPriorObjective"
-  ) as EntityID,
-  DebugMainBaseLevelObjectiveID: keccak256(
-    "block.DebugMainBaseLevelObjective"
-  ) as EntityID,
-  DebugTechnologyResearchedObjectiveID: keccak256(
-    "block.DebugTechnologyResearchedObjective"
-  ) as EntityID,
-  DebugResourceProductionObjectiveID: keccak256(
-    "block.DebugResourceProductionObjective"
-  ) as EntityID,
-  DebugBuiltBuildingTypeObjectiveID: keccak256(
-    "block.DebugBuiltBuildingTypeObjective"
-  ) as EntityID,
-  DebugNumberOfBuiltBuildingTypeObjectiveID: keccak256(
-    "block.DebugNumberOfBuiltBuildingTypeObjective"
-  ) as EntityID,
+  DebugHavResourcesObjectiveID: keccak256("block.DebugHavResourcesObjective") as EntityID,
+  DebugHaveUnitsObjectiveID: keccak256("block.DebugHaveUnitsObjective") as EntityID,
+  DebugHaveMaxUtilityObjectiveID: keccak256("block.DebugHaveMaxUtilityObjective") as EntityID,
+  DebugCompletedPriorObjectiveID: keccak256("block.DebugCompletedPriorObjective") as EntityID,
+  DebugMainBaseLevelObjectiveID: keccak256("block.DebugMainBaseLevelObjective") as EntityID,
+  DebugTechnologyResearchedObjectiveID: keccak256("block.DebugTechnologyResearchedObjective") as EntityID,
+  DebugResourceProductionObjectiveID: keccak256("block.DebugResourceProductionObjective") as EntityID,
+  DebugBuiltBuildingTypeObjectiveID: keccak256("block.DebugBuiltBuildingTypeObjective") as EntityID,
+  DebugNumberOfBuiltBuildingTypeObjectiveID: keccak256("block.DebugNumberOfBuiltBuildingTypeObjective") as EntityID,
   DebugRaidObjectiveID: keccak256("block.DebugRaidObjective") as EntityID,
-  DebugMotherlodeMiningTitaniumObjectiveID: keccak256(
-    "block.DebugMotherlodeMiningTitaniumObjective"
-  ) as EntityID,
-  DebugMotherlodeMiningPlatinumObjectiveID: keccak256(
-    "block.DebugMotherlodeMiningPlatinumObjective"
-  ) as EntityID,
-  DebugMotherlodeMiningIridiumObjectiveID: keccak256(
-    "block.DebugMotherlodeMiningIridiumObjective"
-  ) as EntityID,
-  DebugMotherlodeMiningKimberliteObjectiveID: keccak256(
-    "block.DebugMotherlodeMiningKimberliteObjective"
-  ) as EntityID,
-  DebugDestroyedUnitsObjectiveID: keccak256(
-    "block.DebugDestroyedUnitsObjective"
-  ) as EntityID,
-  DebugResourceRewardObjectiveID: keccak256(
-    "block.DebugResourceRewardObjective"
-  ) as EntityID,
-  DebugUnitsRewardObjectiveID: keccak256(
-    "block.DebugUnitsRewardObjectiveID"
-  ) as EntityID,
+  DebugMotherlodeMiningTitaniumObjectiveID: keccak256("block.DebugMotherlodeMiningTitaniumObjective") as EntityID,
+  DebugMotherlodeMiningPlatinumObjectiveID: keccak256("block.DebugMotherlodeMiningPlatinumObjective") as EntityID,
+  DebugMotherlodeMiningIridiumObjectiveID: keccak256("block.DebugMotherlodeMiningIridiumObjective") as EntityID,
+  DebugMotherlodeMiningKimberliteObjectiveID: keccak256("block.DebugMotherlodeMiningKimberliteObjective") as EntityID,
+  DebugDestroyedUnitsObjectiveID: keccak256("block.DebugDestroyedUnitsObjective") as EntityID,
+  DebugResourceRewardObjectiveID: keccak256("block.DebugResourceRewardObjective") as EntityID,
+  DebugUnitsRewardObjectiveID: keccak256("block.DebugUnitsRewardObjectiveID") as EntityID,
 
-  DebugSpawnPirateAsteroid: keccak256(
-    "block.DebugSpawnPirateAsteroid"
-  ) as EntityID,
+  DebugSpawnPirateAsteroid: keccak256("block.DebugSpawnPirateAsteroid") as EntityID,
 
-  DebugSpawnPirateAsteroidObjective: keccak256(
-    "block.DebugSpawnPirateAsteroidObjective"
-  ) as EntityID,
+  DebugSpawnPirateAsteroidObjective: keccak256("block.DebugSpawnPirateAsteroidObjective") as EntityID,
 
-  DebugDefeatedPirateAsteroidObjective: keccak256(
-    "block.DebugDefeatedPirateAsteroidObjective"
-  ) as EntityID,
+  DebugDefeatedPirateAsteroidObjective: keccak256("block.DebugDefeatedPirateAsteroidObjective") as EntityID,
 
   BuildFirstIronMine: keccak256("objective.BuildFirstIronMine") as EntityID,
   BuildFirstCopperMine: keccak256("objective.BuildFirstCopperMine") as EntityID,
-  BuildFirstLithiumMine: keccak256(
-    "objective.BuildFirstLithiumMine"
-  ) as EntityID,
+  BuildFirstLithiumMine: keccak256("objective.BuildFirstLithiumMine") as EntityID,
   BuildFirstSulfurMine: keccak256("objective.BuildFirstSulfurMine") as EntityID,
 
-  BuildFirstIronPlateFactory: keccak256(
-    "objective.BuildFirstIronPlateFactory"
-  ) as EntityID,
-  BuildFirstAlloyFactory: keccak256(
-    "objective.BuildFirstAlloyFactory"
-  ) as EntityID,
-  BuildFirstPVCellFactory: keccak256(
-    "objective.BuildFirstPVCellFactory"
-  ) as EntityID,
+  BuildFirstIronPlateFactory: keccak256("objective.BuildFirstIronPlateFactory") as EntityID,
+  BuildFirstAlloyFactory: keccak256("objective.BuildFirstAlloyFactory") as EntityID,
+  BuildFirstPVCellFactory: keccak256("objective.BuildFirstPVCellFactory") as EntityID,
 
   BuildGarage: keccak256("objective.BuildGarage") as EntityID,
   BuildDroneFactory: keccak256("objective.BuildDroneFactory") as EntityID,
@@ -381,12 +280,8 @@ export const BlockType = {
   BuildHangar: keccak256("objective.BuildHangar") as EntityID,
 
   TrainMinutemanMarine: keccak256("objective.TrainMinutemanMarine") as EntityID,
-  TrainMinutemanMarine2: keccak256(
-    "objective.TrainMinutemanMarine2"
-  ) as EntityID,
-  TrainMinutemanMarine3: keccak256(
-    "objective.TrainMinutemanMarine3"
-  ) as EntityID,
+  TrainMinutemanMarine2: keccak256("objective.TrainMinutemanMarine2") as EntityID,
+  TrainMinutemanMarine3: keccak256("objective.TrainMinutemanMarine3") as EntityID,
 
   TrainTridentMarine: keccak256("objective.TrainTridentMarine") as EntityID,
   TrainTridentMarine2: keccak256("objective.TrainTridentMarine2") as EntityID,
@@ -395,39 +290,17 @@ export const BlockType = {
   TrainAnvilDrone2: keccak256("objective.TrainAnvilDrone2") as EntityID,
   TrainAnvilDrone3: keccak256("objective.TrainAnvilDrone3") as EntityID,
 
-  DefeatFirstPirateBase: keccak256(
-    "objective.DefeatFirstPirateBase"
-  ) as EntityID,
-  DefeatSecondPirateBase: keccak256(
-    "objective.DefeatSecondPirateBase"
-  ) as EntityID,
-  DefeatThirdPirateBase: keccak256(
-    "objective.DefeatThirdPirateBase"
-  ) as EntityID,
-  DefeatFourthPirateBase: keccak256(
-    "objective.DefeatFourthPirateBase"
-  ) as EntityID,
-  DefeatFifthPirateBase: keccak256(
-    "objective.DefeatFifthPirateBase"
-  ) as EntityID,
-  DefeatSixthPirateBase: keccak256(
-    "objective.DefeatSixthPirateBase"
-  ) as EntityID,
-  DefeatSeventhPirateBase: keccak256(
-    "objective.DefeatSeventhPirateBase"
-  ) as EntityID,
-  DefeatEighthPirateBase: keccak256(
-    "objective.DefeatEighthPirateBase"
-  ) as EntityID,
-  DefeatNinthPirateBase: keccak256(
-    "objective.DefeatNinthPirateBase"
-  ) as EntityID,
-  DefeatTenthPirateBase: keccak256(
-    "objective.DefeatTenthPirateBase"
-  ) as EntityID,
-  DefeatEleventhPirateBase: keccak256(
-    "objective.DefeatEleventhPirateBase"
-  ) as EntityID,
+  DefeatFirstPirateBase: keccak256("objective.DefeatFirstPirateBase") as EntityID,
+  DefeatSecondPirateBase: keccak256("objective.DefeatSecondPirateBase") as EntityID,
+  DefeatThirdPirateBase: keccak256("objective.DefeatThirdPirateBase") as EntityID,
+  DefeatFourthPirateBase: keccak256("objective.DefeatFourthPirateBase") as EntityID,
+  DefeatFifthPirateBase: keccak256("objective.DefeatFifthPirateBase") as EntityID,
+  DefeatSixthPirateBase: keccak256("objective.DefeatSixthPirateBase") as EntityID,
+  DefeatSeventhPirateBase: keccak256("objective.DefeatSeventhPirateBase") as EntityID,
+  DefeatEighthPirateBase: keccak256("objective.DefeatEighthPirateBase") as EntityID,
+  DefeatNinthPirateBase: keccak256("objective.DefeatNinthPirateBase") as EntityID,
+  DefeatTenthPirateBase: keccak256("objective.DefeatTenthPirateBase") as EntityID,
+  DefeatEleventhPirateBase: keccak256("objective.DefeatEleventhPirateBase") as EntityID,
 
   ExpandBase: keccak256("objective.ExpandBase") as EntityID,
   ExpandBase2: keccak256("objective.ExpandBase2") as EntityID,
@@ -436,9 +309,7 @@ export const BlockType = {
   ExpandBase5: keccak256("objective.ExpandBase5") as EntityID,
   ExpandBase6: keccak256("objective.ExpandBase6") as EntityID,
 
-  RaiseIronPlateProduction: keccak256(
-    "objective.RaiseIronPlateProduction"
-  ) as EntityID,
+  RaiseIronPlateProduction: keccak256("objective.RaiseIronPlateProduction") as EntityID,
 
   MineTitanium1: keccak256("objective.MineTitanium1") as EntityID,
   MineTitanium2: keccak256("objective.MineTitanium2") as EntityID,
@@ -473,22 +344,12 @@ export const BlockType = {
   RaidRawResources3: keccak256("objective.RaidRawResources3") as EntityID,
 
   RaidFactoryResources: keccak256("objective.RaidFactoryResources") as EntityID,
-  RaidFactoryResources2: keccak256(
-    "objective.RaidFactoryResources2"
-  ) as EntityID,
-  RaidFactoryResources3: keccak256(
-    "objective.RaidFactoryResources3"
-  ) as EntityID,
+  RaidFactoryResources2: keccak256("objective.RaidFactoryResources2") as EntityID,
+  RaidFactoryResources3: keccak256("objective.RaidFactoryResources3") as EntityID,
 
-  RaidMotherlodeResources: keccak256(
-    "objective.RaidMotherlodeResources"
-  ) as EntityID,
-  RaidMotherlodeResources2: keccak256(
-    "objective.RaidMotherlodeResources2"
-  ) as EntityID,
-  RaidMotherlodeResources3: keccak256(
-    "objective.RaidMotherlodeResources3"
-  ) as EntityID,
+  RaidMotherlodeResources: keccak256("objective.RaidMotherlodeResources") as EntityID,
+  RaidMotherlodeResources2: keccak256("objective.RaidMotherlodeResources2") as EntityID,
+  RaidMotherlodeResources3: keccak256("objective.RaidMotherlodeResources3") as EntityID,
 
   DestroyEnemyUnits: keccak256("objective.DestroyEnemyUnits") as EntityID,
   DestroyEnemyUnits2: keccak256("objective.DestroyEnemyUnits2") as EntityID,
@@ -497,9 +358,7 @@ export const BlockType = {
   DestroyEnemyUnits5: keccak256("objective.DestroyEnemyUnits5") as EntityID,
 
   UpgradeMainBase: keccak256("objective.UpgradeMainBase") as EntityID,
-  CommissionMiningVessel: keccak256(
-    "objective.CommissionMiningVessel"
-  ) as EntityID,
+  CommissionMiningVessel: keccak256("objective.CommissionMiningVessel") as EntityID,
 
   BuildStarmap: keccak256("objective.BuildStarmap") as EntityID,
   BuildSAMLauncher: keccak256("objective.BuildSAMLauncher") as EntityID,
@@ -521,362 +380,93 @@ export const BlockIdToKey = Object.entries(BlockType).reduce<{
   return acc;
 }, {});
 
-export const BlockDescriptions = new Map<EntityID, string>([
+export const BackgroundImage = new Map<EntityID, string[]>([
   //landscape blocks
-  [
-    BlockType.BuildFirstIronMine,
-    "Select the iron mine on the building menu below and place it on the iron ore tile. Iron mines produce iron.",
-  ],
-  [
-    BlockType.BuildFirstCopperMine,
-    "Select the copper mine on the building menu below and place it on the copper ore tile. Copper mines produce copper.",
-  ],
-  [
-    BlockType.BuildFirstLithiumMine,
-    "Select the lithium mine on the building menu below and place it on the lithium ore tile. Lithium mines produce lithium.",
-  ],
-  [
-    BlockType.BuildFirstSulfurMine,
-    "Select the sulfur mine on the building menu below and place it on the sulfur ore tile. Sulfur mines produce sulfur.",
-  ],
-  [
-    BlockType.BuildFirstIronPlateFactory,
-    "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
-  ],
-  [
-    BlockType.BuildFirstAlloyFactory,
-    "Select the alloy factory on the building menu and place it on an empty tile. It produces alloy by consuming iron and copper production.",
-  ],
-  [
-    BlockType.BuildFirstPVCellFactory,
-    "Select the photovoltaic cell factory on the building menu and place it on an empty tile. It produces photovoltaic cells by consuming copper and lithium production.",
-  ],
-  [
-    BlockType.BuildGarage,
-    "Select the garage from the building menu and place it on an empty tile. Garages provide housing for units. ",
-  ],
-  [
-    BlockType.BuildWorkshop,
-    "Select the workshop from the building menu and place it on an empty tile. Workshops train basic units, like marines.",
-  ],
-  [
-    BlockType.BuildSolarPanel,
-    "Select the solar panel from the building menu and place it on an empty tile. Solar panels provide electricity, which is used for advanced buildings.",
-  ],
-  [
-    BlockType.BuildDroneFactory,
-    "Select the drone factory from the building menu and place it on an empty tile. Drone factories train drones, which travel faster and are stronger.",
-  ],
-  [
-    BlockType.BuildHangar,
-    "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing than garages for units.",
-  ],
-  [
-    BlockType.TrainMinutemanMarine,
-    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
-  ],
-  [
-    BlockType.TrainMinutemanMarine2,
-    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
-  ],
-  [
-    BlockType.TrainMinutemanMarine3,
-    "Select the workshop you placed on the map to train Minuteman marines. Minutemen are basic defensive marines.",
-  ],
-
-  [
-    BlockType.TrainTridentMarine,
-    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
-  ],
-  [
-    BlockType.TrainTridentMarine2,
-    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
-  ],
-  [
-    BlockType.TrainTridentMarine3,
-    "Select the workshop you placed on the map to train Trident marines. Trident marines are basic offensive units.",
-  ],
-  [
-    BlockType.TrainAnvilDrone,
-    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
-  ],
-  [
-    BlockType.TrainAnvilDrone2,
-    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
-  ],
-  [
-    BlockType.TrainAnvilDrone3,
-    "Select the drone factory you placed on the map to train anvil drones. Anvil drones are basic defensive drones.",
-  ],
-  [
-    BlockType.DefeatFirstPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatSecondPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatThirdPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatFourthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatFifthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatSixthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatSeventhPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatEighthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatNinthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatTenthPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.DefeatEleventhPirateBase,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
-    BlockType.ExpandBase,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase2,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase3,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase4,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase5,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.ExpandBase6,
-    "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  ],
-  [
-    BlockType.MineTitanium1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-  [
-    BlockType.MineTitanium2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-  [
-    BlockType.MineTitanium3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Titanium motherlode. ",
-  ],
-
-  [
-    BlockType.MinePlatinum1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-  [
-    BlockType.MinePlatinum2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-  [
-    BlockType.MinePlatinum3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Platinum motherlode. ",
-  ],
-
-  [
-    BlockType.MineIridium1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-  [
-    BlockType.MineIridium2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-  [
-    BlockType.MineIridium3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Iridium motherlode. ",
-  ],
-
-  [
-    BlockType.MineKimberlite1,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-  [
-    BlockType.MineKimberlite2,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-  [
-    BlockType.MineKimberlite3,
-    "Go to the star map and send a mining vessel along with a few defending units to a Kimberlite motherlode. ",
-  ],
-
-  [
-    BlockType.TrainHammerDrone,
-    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
-  ],
-  [
-    BlockType.TrainHammerDrone2,
-    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
-  ],
-  [
-    BlockType.TrainHammerDrone3,
-    "Select the drone factory you placed on the map to train hammer drones. Hammer drones are used for attacking.",
-  ],
-
-  [
-    BlockType.TrainAegisDrone,
-    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainAegisDrone2,
-    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainAegisDrone3,
-    "Select the drone factory you placed on the map to train aegis drones. Aegis drones are strong defensive units, but take up more housing.",
-  ],
-
-  [
-    BlockType.TrainStingerDrone,
-    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainStingerDrone2,
-    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
-  ],
-  [
-    BlockType.TrainStingerDrone3,
-    "Select the drone factory you placed on the map to train aegis drones. Stinger drones are strong and fast offensive units, but take up more housing.",
-  ],
-
-  [
-    BlockType.UpgradeMainBase,
-    "Upgrade your main base by clicking on the upgrade button in your main base.",
-  ],
-
-  [
-    BlockType.CommissionMiningVessel,
-    "Commission one mining vessel at your main base by first adding a slot and then building one mining vessel.",
-  ],
-
-  [
-    BlockType.BuildStarmap,
-    "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
-  ],
-
-  [
-    BlockType.BuildSAMLauncher,
-    "Construct a SAM site. SAM sites protect you from enemy attacks and raids by providing a base level of defense.",
-  ],
-  [
-    BlockType.RaidRawResources,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidRawResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidRawResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-
-  [
-    BlockType.RaidFactoryResources,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidFactoryResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidFactoryResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-
-  [
-    BlockType.RaidMotherlodeResources,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidMotherlodeResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.RaidMotherlodeResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    BlockType.DestroyEnemyUnits,
-    "Attack and defend against enemy units and destroy your enemies' armies.",
-  ],
-  [
-    BlockType.DestroyEnemyUnits2,
-    "Attack and defend against enemy units and destroy your enemies' armies.",
-  ],
-  [
-    BlockType.DestroyEnemyUnits3,
-    "Attack and defend against enemy units and destroy your enemies' armies.",
-  ],
-  [
-    BlockType.DestroyEnemyUnits4,
-    "Attack and defend against enemy units and destroy your enemies' armies.",
-  ],
-  [
-    BlockType.DestroyEnemyUnits5,
-    "Attack and defend against enemy units and destroy your enemies' armies.",
-  ],
-]);
-
-// Terrain Tile colors
-//todo: pick ore block colors
-export const BlockColors = new Map<EntityID, string>([
-  //landscape blocks
-  [BlockType.Water, "#0369a1"],
-  [BlockType.Sandstone, "#a8a29e"],
-  [BlockType.Biofilm, "#10b981"],
-  [BlockType.Alluvium, "#34d399"],
-  [BlockType.Regolith, "#71717a"],
-  [BlockType.Bedrock, "#52525b"],
-  [BlockType.Air, "#FFFFFF00"],
+  [BlockType.Water, ["/img/terrain/water.gif"]],
+  [BlockType.Sandstone, ["/img/terrain/sandstone.png"]],
+  [BlockType.Biofilm, ["/img/terrain/biofilm.png"]],
+  [BlockType.Alluvium, ["/img/terrain/alluvium.png"]],
+  [BlockType.Regolith, ["/img/terrain/regolith.png"]],
+  [BlockType.Bedrock, ["/img/terrain/bedrock.png"]],
+  [BlockType.Air, ["/img/terrain/air.png"]],
 
   //metal ores
-  [BlockType.Lithium, "#d8b4fe"],
-  [BlockType.Iron, "#44403c"],
-  [BlockType.Copper, "#047857"],
-  [BlockType.Titanium, "#60a5fa"],
-  [BlockType.Iridium, "#fce7f3"],
-  [BlockType.Osmium, "#164e63"],
-  [BlockType.Tungsten, "#94a3b8"],
+  [BlockType.Lithium, ["/img/resource/lithium_ore_layer.png"]],
+  [BlockType.Iron, ["/img/resource/iron_ore_layer.png"]],
+  [BlockType.Copper, ["/img/resource/copper_ore_layer.png"]],
+  [BlockType.Sulfur, ["/img/resource/sulfur_ore_layer.png"]],
+  [BlockType.Titanium, ["/img/resource/titanium_ore_layer.png"]],
+  [BlockType.Iridium, ["/img/resource/iridium_ore_layer.png"]],
+  [BlockType.Osmium, ["/img/resource/osmium_ore_layer.png"]],
+  [BlockType.Tungsten, ["/img/resource/tungsten_ore_layer.png"]],
 
   //mineral ores
-  [BlockType.Kimberlite, "#e0f2fe"],
-  [BlockType.Uraninite, "#d9f99d"],
-  [BlockType.Bolutite, "#a21caf"],
+  [BlockType.Kimberlite, ["/img/resource/kimberlite_ore_layer.png"]],
+  [BlockType.Uraninite, ["/img/resource/uraninite_ore_layer.png"]],
+  [BlockType.Bolutite, ["/img/resource/bolutite_ore_layer.png"]],
 
-  // Resource
-  [BlockType.MainBase, "#8676c0"],
-]);
+  //buildings
+  [
+    BlockType.MainBase,
+    [
+      "/img/building/mainbase/mainbase.png",
+      "/img/building/mainbase/mainbase-level2.png",
+      "/img/building/mainbase/mainbase-level3.png",
+      "/img/building/mainbase/mainbase-level4.png",
+      "/img/building/mainbase/mainbase-level5.png",
+    ],
+  ],
+  [BlockType.DebugNode, ["/img/building/node.gif"]],
+  //new buildings
+  [
+    BlockType.CopperMine,
+    [
+      "/img/building/coppermine/copper-miner-level1.png",
+      "/img/building/coppermine/copper-miner-level2.png",
+      "/img/building/coppermine/copper-miner-level3.png",
+    ],
+  ],
+  [
+    BlockType.IronMine,
+    [
+      "/img/building/ironmine/iron-miner-level1.png",
+      "/img/building/ironmine/iron-miner-level2.png",
+      "/img/building/ironmine/iron-miner-level3.png",
+    ],
+  ],
+  [BlockType.LithiumMine, ["/img/building/lithiummine/lithium-mine-level1.png"]],
+  [BlockType.SulfurMine, ["/img/building/sulfurmine/sulfur-mine-level1.png"]],
+  [
+    BlockType.StorageUnit,
+    [
+      "/img/building/storageunit/storageunit-level1.png",
+      "/img/building/storageunit/storageunit-level2.png",
+      "/img/building/storageunit/storageunit-level3.png",
+    ],
+  ],
+  [
+    BlockType.IronPlateFactory,
+    [
+      "/img/building/ironplatingfactory/ironplatingfactory-level1.png",
+      "/img/building/ironplatingfactory/ironplatingfactory-level2.png",
+    ],
+  ],
+  [BlockType.AlloyFactory, ["/img/building/alloyfactory/alloyfactory-level1.png"]],
+  [
+    BlockType.PhotovoltaicCellFactory,
+    [
+      "/img/building/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
+      "/img/building/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
+    ],
+  ],
+  [
+    BlockType.SolarPanel,
+    ["/img/building/solarpanels/solarpanel-level1.png", "/img/building/solarpanels/solarpanel-level2.png"],
+  ],
+  [BlockType.Hangar, ["/img/building/hangar/level1/Hangar1.png"]],
+  [BlockType.DroneFactory, ["/img/building/drone-factory/normal/Drone_Factory1.png"]],
+  [BlockType.StarmapperStation, ["/img/building/starmapper-station/level1/Starmapper1.png"]],
 
-export const BackgroundImage = new Map<EntityID, string[]>([
   //units
   [BlockType.HammerLightDrone, ["/img/unit/hammerdrone.png"]],
   [BlockType.StingerDrone, ["/img/unit/stingerdrone.png"]],
@@ -913,100 +503,37 @@ export const ResearchImage = new Map<EntityID, string>([
   [BlockType.IronMine4Research, "/img/building/ironmine/iron-miner-level3.png"],
 
   [BlockType.CopperMineResearch, "/img/building/coppermine/copper-miner.gif"],
-  [
-    BlockType.CopperMine2Research,
-    "/img/building/coppermine/copper-miner-level2.gif",
-  ],
-  [
-    BlockType.CopperMine3Research,
-    "/img/building/coppermine/copper-miner-level3.png",
-  ],
+  [BlockType.CopperMine2Research, "/img/building/coppermine/copper-miner-level2.gif"],
+  [BlockType.CopperMine3Research, "/img/building/coppermine/copper-miner-level3.png"],
 
-  [
-    BlockType.StorageUnitResearch,
-    "/img/building/storageunit/storageunit-level1.png",
-  ],
-  [
-    BlockType.StorageUnit2Research,
-    "/img/building/storageunit/storageunit-level2.gif",
-  ],
-  [
-    BlockType.StorageUnit3Research,
-    "/img/building/storageunit/storageunit-level2.gif",
-  ],
+  [BlockType.StorageUnitResearch, "/img/building/storageunit/storageunit-level1.png"],
+  [BlockType.StorageUnit2Research, "/img/building/storageunit/storageunit-level2.gif"],
+  [BlockType.StorageUnit3Research, "/img/building/storageunit/storageunit-level2.gif"],
 
-  [
-    BlockType.LithiumMineResearch,
-    "/img/building/lithiummine/lithium-miner.gif",
-  ],
-  [
-    BlockType.LithiumMine2Research,
-    "/img/building/lithiummine/lithium-miner-level2.gif",
-  ],
-  [
-    BlockType.LithiumMine3Research,
-    "/img/building/lithiummine/lithium-miner-level3.png",
-  ],
+  [BlockType.LithiumMineResearch, "/img/building/lithiummine/lithium-miner.gif"],
+  [BlockType.LithiumMine2Research, "/img/building/lithiummine/lithium-miner-level2.gif"],
+  [BlockType.LithiumMine3Research, "/img/building/lithiummine/lithium-miner-level3.png"],
 
-  [
-    BlockType.IronPlateFactoryResearch,
-    "/img/building/ironplatingfactory/ironplatingfactory-level1.gif",
-  ],
-  [
-    BlockType.IronPlateFactory2Research,
-    "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
-  ],
-  [
-    BlockType.IronPlateFactory3Research,
-    "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
-  ],
-  [
-    BlockType.IronPlateFactory4Research,
-    "/img/building/ironplatingfactory/ironplatingfactory-level2.gif",
-  ],
+  [BlockType.IronPlateFactoryResearch, "/img/building/ironplatingfactory/ironplatingfactory-level1.gif"],
+  [BlockType.IronPlateFactory2Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
+  [BlockType.IronPlateFactory3Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
+  [BlockType.IronPlateFactory4Research, "/img/building/ironplatingfactory/ironplatingfactory-level2.gif"],
 
-  [
-    BlockType.AlloyFactoryResearch,
-    "/img/building/alloyfactory/alloyfactory-level1.gif",
-  ],
-  [
-    BlockType.AlloyFactory2Research,
-    "/img/building/alloyfactory/alloyfactory-level1.gif",
-  ],
-  [
-    BlockType.AlloyFactory3Research,
-    "/img/building/alloyfactory/alloyfactory-level1.gif",
-  ],
+  [BlockType.AlloyFactoryResearch, "/img/building/alloyfactory/alloyfactory-level1.gif"],
+  [BlockType.AlloyFactory2Research, "/img/building/alloyfactory/alloyfactory-level1.gif"],
+  [BlockType.AlloyFactory3Research, "/img/building/alloyfactory/alloyfactory-level1.gif"],
 
-  [
-    BlockType.PhotovoltaicCellResearch,
-    "/img/building/photovoltaiccell/photovoltaiccell-level1.gif",
-  ],
-  [
-    BlockType.PhotovoltaicCell2Research,
-    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
-  ],
-  [
-    BlockType.PhotovoltaicCell3Research,
-    "/img/building/photovoltaiccell/photovoltaiccell-level2.gif",
-  ],
+  [BlockType.PhotovoltaicCellResearch, "/img/building/photovoltaiccell/photovoltaiccell-level1.gif"],
+  [BlockType.PhotovoltaicCell2Research, "/img/building/photovoltaiccell/photovoltaiccell-level2.gif"],
+  [BlockType.PhotovoltaicCell3Research, "/img/building/photovoltaiccell/photovoltaiccell-level2.gif"],
 
   [BlockType.SpaceFuelFactoryResearch, "/img/building/spacefuel.gif"],
   [BlockType.SpaceFuelFactory2Research, "/img/building/spacefuel.gif"],
   [BlockType.SpaceFuelFactory3Research, "/img/building/spacefuel.gif"],
 
-  [
-    BlockType.SolarPanelResearch,
-    "/img/building/solarpanels/solarpanel-level1.png",
-  ],
-  [
-    BlockType.SolarPanel2Research,
-    "/img/building/solarpanels/solarpanel-level2.png",
-  ],
-  [
-    BlockType.SolarPanel2Research,
-    "/img/building/solarpanels/solarpanel-level2.png",
-  ],
+  [BlockType.SolarPanelResearch, "/img/building/solarpanels/solarpanel-level1.png"],
+  [BlockType.SolarPanel2Research, "/img/building/solarpanels/solarpanel-level2.png"],
+  [BlockType.SolarPanel2Research, "/img/building/solarpanels/solarpanel-level2.png"],
 
   [BlockType.HousingUnitResearch, "/img/building/newplatingfactory.gif"],
 
@@ -1088,10 +615,7 @@ export const ResourceImage = new Map<EntityID, string>([
   [BlockType.IridiumCrystalCrafted, "/img/crafted/iridiumcrystal.png"],
   [BlockType.IridiumDrillbitCrafted, "/img/crafted/iridiumdrillbit.png"],
   [BlockType.LaserPowerSourceCrafted, "/img/crafted/laserbattery.png"],
-  [
-    BlockType.KimberliteCrystalCatalystCrafted,
-    "/img/crafted/kimberlitecatalyst.png",
-  ],
+  [BlockType.KimberliteCrystalCatalystCrafted, "/img/crafted/kimberlitecatalyst.png"],
   [BlockType.RefinedOsmiumCrafted, "/img/crafted/refinedosmium.png"],
   [BlockType.TungstenRodsCrafted, "/img/crafted/tungstenrod.png"],
   [BlockType.KineticMissileCrafted, "/img/crafted/kineticmissile.png"],
