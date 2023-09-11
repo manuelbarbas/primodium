@@ -7,5 +7,8 @@ import { Counter, CounterTableId } from "./tables/Counter.sol";
 import { GameConfig, GameConfigTableId } from "./tables/GameConfig.sol";
 import { Position, PositionData, PositionTableId } from "./tables/Position.sol";
 import { ReversePosition, ReversePositionTableId } from "./tables/ReversePosition.sol";
+import { OwnedBy, OwnedByTableId } from "./tables/OwnedBy.sol";
+import { Level, LevelTableId } from "./tables/Level.sol";
+import { Player, PlayerTableId } from "./tables/Player.sol";
 import { AsteroidCount, AsteroidCountTableId } from "./tables/AsteroidCount.sol";
 import { RockType, RockTypeTableId } from "./tables/RockType.sol";
