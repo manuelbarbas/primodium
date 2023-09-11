@@ -104,7 +104,9 @@ library LibResource {
 
     //hotfix
     //uint256[] memory storageResourceIds = maxResourceStorageComponent.getValue(playerEntity);
+
     uint256[] memory storageResourceIds = getMotherlodeResources();
+    resources = new uint32[](storageResourceIds.length);
     totalResources = 0;
     for (uint256 i = 0; i < storageResourceIds.length; i++) {
       uint256 resourceEntity = LibEncode.hashKeyEntity(storageResourceIds[i], playerEntity);

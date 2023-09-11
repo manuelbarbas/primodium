@@ -31,7 +31,7 @@ export const upgradeBuilding = async (coord: Coord, network: Network) => {
 
   const receipt = await execute(
     systems["system.UpgradeBuilding"].executeTyped(position, {
-      gasLimit: 5_000_000,
+      gasLimit: 10_000_000,
     }),
     providers,
     setNotification

@@ -193,30 +193,28 @@ export const FleetPane: React.FC<{
                   NO UNITS SELECTED
                 </b>
               )}
-              {send.units &&
-                send.units.length !== 0 &&
-                asteroidType !== ESpaceRockType.Asteroid && (
-                  <div className=" flex space-x-3">
-                    <button
-                      className="p-2 border rounded-md border-slate-700 ring ring-slate-900 bg-slate-700 hover:scale-105 transition-all w-24"
-                      onClick={() => sendFleet(ESendType.REINFORCE)}
-                    >
-                      {transactionLoading ? <Spinner /> : "REINFORCE"}
-                    </button>
-                    <button
-                      className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all w-16"
-                      onClick={() =>
-                        sendFleet(
-                          asteroidType === ESpaceRockType.Asteroid
-                            ? ESendType.RAID
-                            : ESendType.INVADE
-                        )
-                      }
-                    >
-                      {transactionLoading ? <Spinner /> : "INVADE"}
-                    </button>
-                  </div>
-                )}
+              {send.units && send.units.length !== 0 && (
+                <div className=" flex space-x-3">
+                  <button
+                    className="p-2 border rounded-md border-slate-700 ring ring-slate-900 bg-slate-700 hover:scale-105 transition-all w-24"
+                    onClick={() => sendFleet(ESendType.REINFORCE)}
+                  >
+                    {transactionLoading ? <Spinner /> : "REINFORCE"}
+                  </button>
+                  <button
+                    className="p-2 border rounded-md border-rose-700 ring ring-rose-900 bg-rose-700 hover:scale-105 transition-all w-16"
+                    onClick={() =>
+                      sendFleet(
+                        asteroidType === ESpaceRockType.Asteroid
+                          ? ESendType.RAID
+                          : ESendType.INVADE
+                      )
+                    }
+                  >
+                    {transactionLoading ? <Spinner /> : "INVADE"}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

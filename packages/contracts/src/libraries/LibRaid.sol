@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import "forge-std/console.sol";
 import { getAddressById, entityToAddress } from "solecs/utils.sol";
 // external
 import { IWorld } from "solecs/interfaces/IWorld.sol";
@@ -183,34 +184,41 @@ library LibRaid {
     );
     uint256[] memory resourceIds = LibResource.getMotherlodeResources();
 
-    (uint32 totalResources, uint32[] memory resources) = LibResource.getTotalResources(
+    (uint32 totalResources, uint32[] memory defenderResources) = LibResource.getTotalResources(
       world,
       defender.participantEntity
     );
 
     RaidResult memory raidResult = RaidResult({
       resources: resourceIds,
-      defenderValuesBeforeRaid: new uint32[](resources.length),
-      raidedAmount: new uint32[](resources.length)
+      defenderValuesBeforeRaid: new uint32[](defenderResources.length),
+      raidedAmount: new uint32[](defenderResources.length)
     });
-    if (totalResources == 0) {
+    if (totalResources == 0 || resourceIds.length == 0) {
       BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
       return;
     }
     BattleParticipant memory attacker = BattleAttackerComponent(world.getComponent(BattleAttackerComponentID)).getValue(
       battleEntity
     );
-
-    for (uint256 i = 0; i < resources.length; i++) {
-      uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
-
-      if (resources[i] < raidAmount) {
-        raidAmount = resources[i];
+    console.log(1);
+    for (uint256 i = 0; i < defenderResources.length; i++) {
+      console.log(1);
+      uint32 raidAmount = (totalCargo * defenderResources[i]) / totalResources;
+      console.log(2);
+      if (defenderResources[i] < raidAmount) {
+        raidAmount = defenderResources[i];
       }
-      raidResult.defenderValuesBeforeRaid[i] = resources[i];
+      console.log(3);
+      if (raidAmount == 0) continue;
+      console.log(4);
+      raidResult.defenderValuesBeforeRaid[i] = defenderResources[i];
+      console.log(5);
       raidResult.raidedAmount[i] = raidAmount;
+      console.log(6);
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
+      console.log(7);
     }
     BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
   }
