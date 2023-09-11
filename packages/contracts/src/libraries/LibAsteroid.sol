@@ -21,17 +21,14 @@ library LibAsteroid {
 
   function createAsteroid(address world, bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
     asteroidEntity = LibEncode.getHash(world, ownerEntity);
-
-    uint32 asteroidCount = AsteroidCount.get() + 1;
-
     require(RockType.get(asteroidEntity) == uint8(ERock.Null), "[LibAsteroid] asteroid already exists");
 
+    uint32 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory position = getUniqueAsteroidPosition(asteroidCount);
 
     Position.set(asteroidEntity, position);
     RockType.set(asteroidEntity, uint8(ERock.Asteroid));
     Player.set(ownerEntity, true);
-
     // Mark the asteroid's position as active in the ReversePositionComponent.
     ReversePosition.set(position.x, position.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
