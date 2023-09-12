@@ -1,4 +1,6 @@
 import { mudConfig } from "@latticexyz/world/register";
+import { PrototypesConfig } from "./ts/prototypes/prototypeConfig";
+import { getBlueprint } from "./ts/util/blueprints";
 
 // Exclude dev systems if not in dev PRI_DEV
 let dev: string[] = [];
@@ -9,7 +11,7 @@ if (typeof process != undefined && typeof process != "undefined") {
   });
 }
 
-export default mudConfig({
+const config = mudConfig({
   excludeSystems: [...dev],
 
   structs: {},
@@ -148,12 +150,12 @@ export default mudConfig({
     },
 
     P_MaxLevel: {
-      keySchema: { entity: "bytes32" },
+      keySchema: { entity: "uint8" },
       schema: "uint32",
     },
 
     P_RequiredTile: {
-      keySchema: { entity: "bytes32" },
+      keySchema: { entity: "uint8" },
       schema: "bytes32",
     },
 
@@ -170,3 +172,24 @@ export default mudConfig({
     },
   },
 });
+
+const prototypes: PrototypesConfig<typeof config> = {
+  MainBase: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 2) },
+      P_MaxLevel: { value: 8 },
+    },
+    levels: {
+      P_Blueprint: {
+        1: { value: getBlueprint(3, 2) },
+        2: { value: getBlueprint(3, 2) },
+        3: { value: getBlueprint(3, 2) },
+      },
+    },
+  },
+};
+
+export default {
+  ...config,
+  prototypes,
+};

@@ -17,9 +17,7 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(
-  abi.encodePacked(bytes16(""), bytes16("Dimensions"))
-);
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Dimensions")));
 bytes32 constant DimensionsTableId = _tableId;
 
 struct DimensionsData {
@@ -62,24 +60,12 @@ library Dimensions {
 
   /** Register the table's key schema, value schema, key names and value names */
   function register() internal {
-    StoreSwitch.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    StoreSwitch.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Register the table's key schema, value schema, key names and value names (using the specified store) */
   function register(IStore _store) internal {
-    _store.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    _store.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Get x */
@@ -88,12 +74,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    bytes memory _blob = StoreSwitch.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -107,12 +88,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    bytes memory _blob = _store.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -126,13 +102,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    StoreSwitch.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((x)),
-      getValueSchema()
-    );
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((x)), getValueSchema());
   }
 
   /** Set x (using the specified store) */
@@ -146,13 +116,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    _store.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((x)),
-      getValueSchema()
-    );
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((x)), getValueSchema());
   }
 
   /** Get y */
@@ -161,12 +125,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    bytes memory _blob = StoreSwitch.getField(
-      _tableId,
-      _keyTuple,
-      1,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -180,12 +139,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    bytes memory _blob = _store.getField(
-      _tableId,
-      _keyTuple,
-      1,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -199,13 +153,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    StoreSwitch.setField(
-      _tableId,
-      _keyTuple,
-      1,
-      abi.encodePacked((y)),
-      getValueSchema()
-    );
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((y)), getValueSchema());
   }
 
   /** Set y (using the specified store) */
@@ -219,30 +167,16 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    _store.setField(
-      _tableId,
-      _keyTuple,
-      1,
-      abi.encodePacked((y)),
-      getValueSchema()
-    );
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((y)), getValueSchema());
   }
 
   /** Get the full data */
-  function get(bytes32 key, uint32 level)
-    internal
-    view
-    returns (DimensionsData memory _table)
-  {
+  function get(bytes32 key, uint32 level) internal view returns (DimensionsData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    bytes memory _blob = StoreSwitch.getRecord(
-      _tableId,
-      _keyTuple,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
@@ -256,11 +190,7 @@ library Dimensions {
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));
 
-    bytes memory _blob = _store.getRecord(
-      _tableId,
-      _keyTuple,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
@@ -317,11 +247,7 @@ library Dimensions {
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob)
-    internal
-    pure
-    returns (DimensionsData memory _table)
-  {
+  function decode(bytes memory _blob) internal pure returns (DimensionsData memory _table) {
     _table.x = (int32(uint32(Bytes.slice4(_blob, 0))));
 
     _table.y = (int32(uint32(Bytes.slice4(_blob, 4))));
@@ -333,11 +259,7 @@ library Dimensions {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(bytes32 key, uint32 level)
-    internal
-    pure
-    returns (bytes32[] memory)
-  {
+  function encodeKeyTuple(bytes32 key, uint32 level) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = key;
     _keyTuple[1] = bytes32(uint256(level));

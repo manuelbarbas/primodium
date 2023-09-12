@@ -17,9 +17,7 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(
-  abi.encodePacked(bytes16(""), bytes16("P_Asteroid"))
-);
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("P_Asteroid")));
 bytes32 constant P_AsteroidTableId = _tableId;
 
 struct P_AsteroidData {
@@ -58,36 +56,19 @@ library P_Asteroid {
 
   /** Register the table's key schema, value schema, key names and value names */
   function register() internal {
-    StoreSwitch.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    StoreSwitch.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Register the table's key schema, value schema, key names and value names (using the specified store) */
   function register(IStore _store) internal {
-    _store.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    _store.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Get xBounds */
   function getXBounds() internal view returns (int32 xBounds) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -95,12 +76,7 @@ library P_Asteroid {
   function getXBounds(IStore _store) internal view returns (int32 xBounds) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -108,38 +84,21 @@ library P_Asteroid {
   function setXBounds(int32 xBounds) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((xBounds)),
-      getValueSchema()
-    );
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((xBounds)), getValueSchema());
   }
 
   /** Set xBounds (using the specified store) */
   function setXBounds(IStore _store, int32 xBounds) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((xBounds)),
-      getValueSchema()
-    );
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((xBounds)), getValueSchema());
   }
 
   /** Get yBounds */
   function getYBounds() internal view returns (int32 yBounds) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(
-      _tableId,
-      _keyTuple,
-      1,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -147,12 +106,7 @@ library P_Asteroid {
   function getYBounds(IStore _store) internal view returns (int32 yBounds) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(
-      _tableId,
-      _keyTuple,
-      1,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (int32(uint32(Bytes.slice4(_blob, 0))));
   }
 
@@ -160,53 +114,29 @@ library P_Asteroid {
   function setYBounds(int32 yBounds) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(
-      _tableId,
-      _keyTuple,
-      1,
-      abi.encodePacked((yBounds)),
-      getValueSchema()
-    );
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((yBounds)), getValueSchema());
   }
 
   /** Set yBounds (using the specified store) */
   function setYBounds(IStore _store, int32 yBounds) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(
-      _tableId,
-      _keyTuple,
-      1,
-      abi.encodePacked((yBounds)),
-      getValueSchema()
-    );
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((yBounds)), getValueSchema());
   }
 
   /** Get the full data */
   function get() internal view returns (P_AsteroidData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getRecord(
-      _tableId,
-      _keyTuple,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store)
-    internal
-    view
-    returns (P_AsteroidData memory _table)
-  {
+  function get(IStore _store) internal view returns (P_AsteroidData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getRecord(
-      _tableId,
-      _keyTuple,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
@@ -243,22 +173,14 @@ library P_Asteroid {
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob)
-    internal
-    pure
-    returns (P_AsteroidData memory _table)
-  {
+  function decode(bytes memory _blob) internal pure returns (P_AsteroidData memory _table) {
     _table.xBounds = (int32(uint32(Bytes.slice4(_blob, 0))));
 
     _table.yBounds = (int32(uint32(Bytes.slice4(_blob, 4))));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(int32 xBounds, int32 yBounds)
-    internal
-    pure
-    returns (bytes memory)
-  {
+  function encode(int32 xBounds, int32 yBounds) internal pure returns (bytes memory) {
     return abi.encodePacked(xBounds, yBounds);
   }
 

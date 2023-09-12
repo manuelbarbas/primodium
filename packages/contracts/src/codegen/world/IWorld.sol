@@ -15,13 +15,6 @@ import { ISpawnSystem } from "./ISpawnSystem.sol";
  * The IWorld interface includes all systems dynamically added to the World
  * during the deploy process.
  */
-interface IWorld is
-  IBaseWorld,
-  IBuildSystem,
-  IDevSystem,
-  IIncrementSystem,
-  IPrimodiumSystem,
-  ISpawnSystem
-{
+interface IWorld is IBaseWorld, IBuildSystem, IDevSystem, IIncrementSystem, IPrimodiumSystem, ISpawnSystem {
 
 }

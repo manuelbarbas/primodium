@@ -17,9 +17,7 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(
-  abi.encodePacked(bytes16(""), bytes16("P_Blueprint"))
-);
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("P_Blueprint")));
 bytes32 constant P_BlueprintTableId = _tableId;
 
 library P_Blueprint {
@@ -53,59 +51,29 @@ library P_Blueprint {
 
   /** Register the table's key schema, value schema, key names and value names */
   function register() internal {
-    StoreSwitch.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    StoreSwitch.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Register the table's key schema, value schema, key names and value names (using the specified store) */
   function register(IStore _store) internal {
-    _store.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    _store.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Get value */
-  function get(uint8 buildingType)
-    internal
-    view
-    returns (int32[] memory value)
-  {
+  function get(uint8 buildingType) internal view returns (int32[] memory value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    bytes memory _blob = StoreSwitch.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_int32());
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, uint8 buildingType)
-    internal
-    view
-    returns (int32[] memory value)
-  {
+  function get(IStore _store, uint8 buildingType) internal view returns (int32[] memory value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    bytes memory _blob = _store.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_int32());
   }
 
@@ -114,13 +82,7 @@ library P_Blueprint {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    StoreSwitch.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      EncodeArray.encode((value)),
-      getValueSchema()
-    );
+    StoreSwitch.setField(_tableId, _keyTuple, 0, EncodeArray.encode((value)), getValueSchema());
   }
 
   /** Set value (using the specified store) */
@@ -132,13 +94,7 @@ library P_Blueprint {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    _store.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      EncodeArray.encode((value)),
-      getValueSchema()
-    );
+    _store.setField(_tableId, _keyTuple, 0, EncodeArray.encode((value)), getValueSchema());
   }
 
   /** Get the length of value */
@@ -146,32 +102,18 @@ library P_Blueprint {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    uint256 _byteLength = StoreSwitch.getFieldLength(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 0, getValueSchema());
     unchecked {
       return _byteLength / 4;
     }
   }
 
   /** Get the length of value (using the specified store) */
-  function length(IStore _store, uint8 buildingType)
-    internal
-    view
-    returns (uint256)
-  {
+  function length(IStore _store, uint8 buildingType) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    uint256 _byteLength = _store.getFieldLength(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 0, getValueSchema());
     unchecked {
       return _byteLength / 4;
     }
@@ -181,11 +123,7 @@ library P_Blueprint {
    * Get an item of value
    * (unchecked, returns invalid data if index overflows)
    */
-  function getItem(uint8 buildingType, uint256 _index)
-    internal
-    view
-    returns (int32)
-  {
+  function getItem(uint8 buildingType, uint256 _index) internal view returns (int32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
@@ -215,14 +153,7 @@ library P_Blueprint {
     _keyTuple[0] = bytes32(uint256(buildingType));
 
     unchecked {
-      bytes memory _blob = _store.getFieldSlice(
-        _tableId,
-        _keyTuple,
-        0,
-        getValueSchema(),
-        _index * 4,
-        (_index + 1) * 4
-      );
+      bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 0, getValueSchema(), _index * 4, (_index + 1) * 4);
       return (int32(uint32(Bytes.slice4(_blob, 0))));
     }
   }
@@ -232,13 +163,7 @@ library P_Blueprint {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    StoreSwitch.pushToField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((_element)),
-      getValueSchema()
-    );
+    StoreSwitch.pushToField(_tableId, _keyTuple, 0, abi.encodePacked((_element)), getValueSchema());
   }
 
   /** Push an element to value (using the specified store) */
@@ -250,13 +175,7 @@ library P_Blueprint {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 
-    _store.pushToField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((_element)),
-      getValueSchema()
-    );
+    _store.pushToField(_tableId, _keyTuple, 0, abi.encodePacked((_element)), getValueSchema());
   }
 
   /** Pop an element from value */
@@ -288,14 +207,7 @@ library P_Blueprint {
     _keyTuple[0] = bytes32(uint256(buildingType));
 
     unchecked {
-      StoreSwitch.updateInField(
-        _tableId,
-        _keyTuple,
-        0,
-        _index * 4,
-        abi.encodePacked((_element)),
-        getValueSchema()
-      );
+      StoreSwitch.updateInField(_tableId, _keyTuple, 0, _index * 4, abi.encodePacked((_element)), getValueSchema());
     }
   }
 
@@ -313,14 +225,7 @@ library P_Blueprint {
     _keyTuple[0] = bytes32(uint256(buildingType));
 
     unchecked {
-      _store.updateInField(
-        _tableId,
-        _keyTuple,
-        0,
-        _index * 4,
-        abi.encodePacked((_element)),
-        getValueSchema()
-      );
+      _store.updateInField(_tableId, _keyTuple, 0, _index * 4, abi.encodePacked((_element)), getValueSchema());
     }
   }
 
@@ -332,16 +237,11 @@ library P_Blueprint {
       _encodedLengths = PackedCounterLib.pack(value.length * 4);
     }
 
-    return
-      abi.encodePacked(_encodedLengths.unwrap(), EncodeArray.encode((value)));
+    return abi.encodePacked(_encodedLengths.unwrap(), EncodeArray.encode((value)));
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(uint8 buildingType)
-    internal
-    pure
-    returns (bytes32[] memory)
-  {
+  function encodeKeyTuple(uint8 buildingType) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = bytes32(uint256(buildingType));
 

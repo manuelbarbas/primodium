@@ -37,11 +37,7 @@ library LibMath {
   /// @param _distance Distance to asteroid
   /// @param direction Direction angle in degrees
   /// @return position Calculated position
-  function getPositionByVector(uint32 _distance, uint32 direction)
-    internal
-    pure
-    returns (PositionData memory)
-  {
+  function getPositionByVector(uint32 _distance, uint32 direction) internal pure returns (PositionData memory) {
     direction = direction % 360;
     bool flip = direction >= 180;
     direction = direction % 180;
