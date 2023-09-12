@@ -5,8 +5,9 @@ pragma solidity >=0.8.0;
 
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 
-import { MainBasePrototype } from "../Prototypes.sol";
+import { Prototype, MainBasePrototype } from "../Prototypes.sol";
 
 function createPrototypes(IStore store) {
+  Prototype(store);
   MainBasePrototype(store);
 }
