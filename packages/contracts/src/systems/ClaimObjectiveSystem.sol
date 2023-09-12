@@ -12,10 +12,13 @@ import { HasCompletedObjectiveComponent, ID as HasCompletedObjectiveComponentID 
 import { P_UnitLevelUpgradeComponent, ID as P_UnitLevelUpgradeComponentID } from "components/P_UnitLevelUpgradeComponent.sol";
 import { LibResearch } from "libraries/LibResearch.sol";
 import { LibResource } from "libraries/LibResource.sol";
+import { LibObjective } from "libraries/LibObjective.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
+import { LibReward } from "libraries/LibReward.sol";
+
 import { ResourceValue } from "../types.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
@@ -75,8 +78,14 @@ contract ClaimObjectiveSystem is System {
       "[ClaimObjectiveSystem] You do not have the required Utility resources"
     );
 
+    require(
+      LibReward.canReceiveRewards(world, playerEntity, objective),
+      "[ClaimObjectiveSystem] Cannot receive rewards"
+    );
+
     hasCompletedObjective.set(LibEncode.hashKeyEntity(objective, playerEntity));
 
+    LibReward.receiveRewards(world, playerEntity, objective);
     return abi.encode(true);
   }
 

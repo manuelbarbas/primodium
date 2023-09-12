@@ -36,11 +36,20 @@ library LibUtilityResource {
         requiredAmount -= requiredUtilityComponent.getValue(buildingPastLevelEntity).values[i];
       }
 
-      if (getAvailableUtilityCapacity(world, playerEntity, resourceIDs[i]) < requiredAmount) {
+      if (!checkRequiredUtility(world, playerEntity, resourceIDs[i], requiredAmount)) {
         return false;
       }
     }
     return true;
+  }
+
+  function checkRequiredUtility(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 resourceID,
+    uint32 requiredAmount
+  ) internal view returns (bool) {
+    return getAvailableUtilityCapacity(world, playerEntity, resourceID) >= requiredAmount;
   }
 
   function checkMaxUtilityResourceReqs(IWorld world, uint256 playerEntity, uint256 entity) internal returns (bool) {
@@ -59,8 +68,8 @@ library LibUtilityResource {
     return true;
   }
 
-  function getMaxUtility(IWorld world, uint256 playerEntity, uint256 resourceID) internal {
-    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceId, playerEntity);
+  function getMaxUtility(IWorld world, uint256 playerEntity, uint256 resourceID) internal view returns (uint32) {
+    uint256 playerResourceEntity = LibEncode.hashKeyEntity(resourceID, playerEntity);
     MaxUtilityComponent maxUtilityComponent = MaxUtilityComponent(world.getComponent(MaxUtilityComponentID));
     return LibMath.getSafe(maxUtilityComponent, playerResourceEntity);
   }

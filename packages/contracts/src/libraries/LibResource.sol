@@ -191,6 +191,31 @@ library LibResource {
     return true;
   }
 
+  function checkResourceProductionRequirements(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 entityType
+  ) internal view returns (bool) {
+    P_ProductionDependenciesComponent productionDependenciesComponent = P_ProductionDependenciesComponent(
+      world.getComponent(P_ProductionDependenciesComponentID)
+    );
+
+    if (!productionDependenciesComponent.has(entityType)) return true;
+
+    ResourceValues memory requiredProductions = productionDependenciesComponent.getValue(entityType);
+    ResourceValues memory lastLevelRequiredProductions;
+
+    ProductionComponent productionComponent = ProductionComponent(world.getComponent(ProductionComponentID));
+    for (uint256 i = 0; i < requiredProductions.resources.length; i++) {
+      uint256 playerResourceEntity = LibEncode.hashKeyEntity(requiredProductions.resources[i], playerEntity);
+      if (!productionComponent.has(playerResourceEntity)) return false;
+      uint256 requiredValue = requiredProductions.values[i];
+
+      if (LibMath.getSafe(productionComponent, playerResourceEntity) < requiredValue) return false;
+    }
+    return true;
+  }
+
   function checkCanReduceProduction(
     IWorld world,
     uint256 playerEntity,
