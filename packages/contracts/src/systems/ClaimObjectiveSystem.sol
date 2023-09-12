@@ -78,6 +78,19 @@ contract ClaimObjectiveSystem is System {
       "[ClaimObjectiveSystem] You do not have the required Utility resources"
     );
 
+    // has built building
+    require(
+      LibBuilding.checkHasBuiltBuildingRequirement(world, playerEntity, objective),
+      "[ClaimObjectiveSystem] You have not built the required building"
+    );
+
+    // has the amount of buildings built
+    require(
+      LibBuilding.checkBuildingCountRequirement(world, playerEntity, objective),
+      "[ClaimObjectiveSystem] You do not have the required building count"
+    );
+
+    //can receive rewards
     require(
       LibReward.canReceiveRewards(world, playerEntity, objective),
       "[ClaimObjectiveSystem] Cannot receive rewards"

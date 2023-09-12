@@ -23,7 +23,10 @@ import { P_UtilityProductionComponent, ID as P_UtilityProductionComponentID } fr
 import { P_ProductionComponent, ID as P_ProductionComponentID } from "components/P_ProductionComponent.sol";
 import { PositionComponent, ID as PositionComponentID } from "components/PositionComponent.sol";
 import { UnitProductionOwnedByComponent, ID as UnitProductionOwnedByComponentID } from "components/UnitProductionOwnedByComponent.sol";
-
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
+import { HasBuiltBuildingComponent, ID as HasBuiltBuildingComponentID } from "components/HasBuiltBuildingComponent.sol";
+import { P_BuildingCountRequirementComponent, ID as P_BuildingCountRequirementComponentID } from "components/P_BuildingCountRequirementComponent.sol";
+import { BuildingCountComponent, ID as BuildingCountComponentID } from "components/BuildingCountComponent.sol";
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -46,6 +49,42 @@ import { ID as UpdateUtilityProductionSystemID } from "systems/S_UpdateUtilityPr
 import { ID as S_UpdatePlayerResourceProductionSystemID } from "systems/S_UpdatePlayerResourceProductionSystem.sol";
 
 library LibBuilding {
+  function checkHasBuiltBuildingRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 buildingType
+  ) internal view returns (bool) {
+    return
+      HasBuiltBuildingComponent(getAddressById(world.components(), HasBuiltBuildingComponentID)).has(
+        LibEncode.hashKeyEntity(buildingType, playerEntity)
+      );
+  }
+
+  function checkBuildingCountRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_BuildingCountRequirementComponent buildingCountRequirementComponent = P_BuildingCountRequirementComponent(
+      getAddressById(world.components(), P_BuildingCountRequirementComponentID)
+    );
+    if (!buildingCountRequirementComponent.has(objectiveEntity)) return true;
+
+    ResourceValues memory buildingCountRequirement = buildingCountRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < buildingCountRequirement.resources.length; i++) {
+      uint256 buildingType = buildingCountRequirement.resources[i];
+      uint32 requiredBuildingCount = buildingCountRequirement.values[i];
+
+      uint32 currBuildingCount = LibMath.getSafe(
+        BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
+        LibEncode.hashKeyEntity(buildingType, playerEntity)
+      );
+
+      if (currBuildingCount < requiredBuildingCount) return false;
+    }
+    return true;
+  }
+
   function checkMainBaseLevelRequirement(
     IWorld world,
     uint256 playerEntity,
@@ -167,6 +206,15 @@ library LibBuilding {
       );
     }
 
+    HasBuiltBuildingComponent(getAddressById(world.components(), HasBuiltBuildingComponentID)).set(
+      LibEncode.hashKeyEntity(buildingType, playerEntity)
+    );
+
+    LibMath.add(
+      BuildingCountComponent(getAddressById(world.components(), BuildingCountComponentID)),
+      LibEncode.hashKeyEntity(buildingType, playerEntity),
+      1
+    );
     //required production update
     LibResource.updateRequiredProduction(world, playerEntity, buildingType, 1, true);
   }

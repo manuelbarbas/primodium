@@ -40,7 +40,11 @@
     "BattleBlockNumberComponent",
     "PlayerMotherlodeComponent",
     "HasCompletedObjectiveComponent",
+    "HasBuiltBuildingComponent",
+    "BuildingCountComponent",
 
+    "P_BuildingCountRequirementComponent",
+    "P_HasBuiltBuildingComponent",
     "P_IsObjectiveComponent",
     "P_ObjectiveRequirementComponent",
     "P_ResourceRewardComponent",
