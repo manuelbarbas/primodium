@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm run build:lib && pnpm run build:mud && pnpm run build:abi &&  pnpm run build:typechain",
     "build:abi": "forge clean && forge build",
-    "build:lib": "node ts/libgen.mjs",
+    "build:lib": "tsx ts/libgen.ts",
     "build:mud": "mud tablegen && mud worldgen",
     "build:typechain": "rimraf types && typechain --target=ethers-v5 out/IWorld.sol/IWorld.json",
     "deploy:caldera": "pnpm run build && mud deploy --profile=caldera",
@@ -24,11 +24,14 @@
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@latticexyz/cli": "2.0.0-next.5",
+    "@latticexyz/common": "2.0.0-next.5",
+    "@latticexyz/config": "2.0.0-next.5",
     "@latticexyz/schema-type": "2.0.0-next.5",
     "@latticexyz/store": "2.0.0-next.5",
     "@latticexyz/world": "2.0.0-next.5",
     "dotenv": "^16.3.1",
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "tsx": "^3.12.8"
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^10.2.0",

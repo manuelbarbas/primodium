@@ -1,16 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { PositionData } from "codegen/Tables.sol";
+
 library LibEncode {
   function getHash(bytes32 entity) internal pure returns (bytes32) {
     return keccak256(abi.encode(entity));
   }
 
-  function getHash(address world, bytes32 entity) internal pure returns (bytes32) {
+  function getHash(address world, bytes32 entity)
+    internal
+    pure
+    returns (bytes32)
+  {
     return keccak256(abi.encode(address(world), entity));
   }
 
-  function getHash(bytes32 entity1, bytes32 entity2) internal pure returns (bytes32) {
+  function getHash(bytes32 entity1, bytes32 entity2)
+    internal
+    pure
+    returns (bytes32)
+  {
     return keccak256(abi.encode(entity1, entity2));
   }
 
@@ -22,8 +32,12 @@ library LibEncode {
     return keccak256(abi.encode(entity1, entity2, entity3));
   }
 
-  function addressToEntity(address a) internal pure returns (bytes32) {
-    return bytes32(uint256(uint160((a))));
+  function getHash(bytes32 key, PositionData memory position)
+    internal
+    pure
+    returns (bytes32)
+  {
+    return keccak256(abi.encode(key, position.x, position.y, position.parent));
   }
 
   /**

@@ -31,6 +31,10 @@ contract PrimodiumTest is MudTest {
     eve = getUser();
   }
 
+  function addressToEntity(address a) internal pure returns (bytes32) {
+    return bytes32(uint256(uint160((a))));
+  }
+
   function getUser() internal returns (address payable) {
     address payable user = payable(
       address(uint160(uint256(keccak256(abi.encodePacked(userNonce++)))))
@@ -140,7 +144,7 @@ contract PrimodiumTest is MudTest {
     view
     returns (PositionData memory coord)
   {
-    bytes32 playerEntity = LibEncode.addressToEntity(player);
+    bytes32 playerEntity = addressToEntity(player);
     bytes32 asteroid = LibEncode.getHash(worldAddress, playerEntity);
 
     coord = PositionData(coord2D.x, coord2D.y, asteroid);
@@ -149,7 +153,7 @@ contract PrimodiumTest is MudTest {
   function spawn(address player) internal returns (bytes32) {
     vm.prank(player);
     world.spawn();
-    bytes32 playerEntity = LibEncode.addressToEntity(player);
-    return Player.getHomeAsteroid(world, playerEntity);
+    bytes32 playerEntity = addressToEntity(player);
+    return HomeAsteroid.get(world, playerEntity);
   }
 }
