@@ -1,5 +1,5 @@
 import { mudConfig } from "@latticexyz/world/register";
-import prototypesConfig from "./config/prototypes";
+import prototypesConfig from "./config/prototypesConfig";
 
 // Exclude dev systems if not in dev PRI_DEV
 let dev: string[] = [];

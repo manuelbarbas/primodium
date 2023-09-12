@@ -72,7 +72,7 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
     )}
   `;
   const renderLevels = Object.entries(values)
-    .map(([level, value], i) => {
+    .map(([level, value]) => {
       return `
     /* ----------------------------- LEVEL ${level} ----------------------------- */
     levelKeys = ${name}LevelKeys(${level});
@@ -139,7 +139,7 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
 
 export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
   const prototype = config.prototypes[name];
-  const keys = prototype.keys ? prototype.keys : { prototypeId: "bytes32" };
+  const keys = prototype.keys ? prototype.keys : name == "" ? {} : { prototypeId: "bytes32" };
   const values = prototype.tables;
   const levelTables = Object.values(prototype.levels ?? {})
     .map((v) => {
@@ -211,7 +211,7 @@ export function renderValueTypeToBytes32(
   const innerText = typeUnwrap.length ? `${typeUnwrap}(${name})` : name;
   console.log("name:", name, "typeUnwrap:", typeUnwrap, "internalTypeId:", internalTypeId);
   if (internalTypeId === "bytes32") {
-    return innerText;
+    return innerText.startsWith("0x") ? innerText.slice(2) : innerText;
   } else if (internalTypeId.match(/^bytes\d{1,2}$/)) {
     return `bytes32(${innerText})`;
   } else if (internalTypeId.match(/^uint\d{1,3}$/)) {
