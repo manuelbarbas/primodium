@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 // world
 import { IWorld } from "../codegen/world/IWorld.sol";
 // tables
-import { Player, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/Tables.sol";
+import { HomeAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/Tables.sol";
 
 // types
 import { ERock } from "codegen/Types.sol";
@@ -26,7 +26,7 @@ library LibAsteroid {
   {
     asteroidEntity = LibEncode.getHash(world, ownerEntity);
     require(
-      RockType.get(asteroidEntity) == uint8(ERock.Null),
+      RockType.get(asteroidEntity) == uint8(ERock.NULL),
       "[LibAsteroid] asteroid already exists"
     );
 
@@ -35,8 +35,8 @@ library LibAsteroid {
 
     Position.set(asteroidEntity, position);
     RockType.set(asteroidEntity, uint8(ERock.Asteroid));
-    Player.set(ownerEntity, true, asteroidEntity);
-    // Mark the asteroid's position as active in the ReversePositionComponent.
+    Spawned.set(ownerEntity, true);
+    HomeAsteroid.set(ownerEntity, asteroidEntity);
     ReversePosition.set(position.x, position.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidCount.set(asteroidCount);

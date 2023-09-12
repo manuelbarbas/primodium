@@ -18,11 +18,11 @@ import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
 bytes32 constant _tableId = bytes32(
-  abi.encodePacked(bytes16(""), bytes16("LastClaimedAt"))
+  abi.encodePacked(bytes16(""), bytes16("Spawned"))
 );
-bytes32 constant LastClaimedAtTableId = _tableId;
+bytes32 constant SpawnedTableId = _tableId;
 
-library LastClaimedAt {
+library Spawned {
   /** Get the table's key schema */
   function getKeySchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
@@ -34,7 +34,7 @@ library LastClaimedAt {
   /** Get the table's value schema */
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.UINT256;
+    _schema[0] = SchemaType.BOOL;
 
     return SchemaLib.encode(_schema);
   }
@@ -74,7 +74,7 @@ library LastClaimedAt {
   }
 
   /** Get value */
-  function get(bytes32 entity) internal view returns (uint256 value) {
+  function get(bytes32 entity) internal view returns (bool value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
@@ -84,14 +84,14 @@ library LastClaimedAt {
       0,
       getValueSchema()
     );
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
   /** Get value (using the specified store) */
   function get(IStore _store, bytes32 entity)
     internal
     view
-    returns (uint256 value)
+    returns (bool value)
   {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
@@ -102,11 +102,11 @@ library LastClaimedAt {
       0,
       getValueSchema()
     );
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
   /** Set value */
-  function set(bytes32 entity, uint256 value) internal {
+  function set(bytes32 entity, bool value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
@@ -123,7 +123,7 @@ library LastClaimedAt {
   function set(
     IStore _store,
     bytes32 entity,
-    uint256 value
+    bool value
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
@@ -138,7 +138,7 @@ library LastClaimedAt {
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint256 value) internal pure returns (bytes memory) {
+  function encode(bool value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -168,5 +168,11 @@ library LastClaimedAt {
     _keyTuple[0] = entity;
 
     _store.deleteRecord(_tableId, _keyTuple, getValueSchema());
+  }
+}
+
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

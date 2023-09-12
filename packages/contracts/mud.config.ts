@@ -12,9 +12,11 @@ if (typeof process != undefined && typeof process != "undefined") {
 export default mudConfig({
   excludeSystems: [...dev],
 
+  structs: {},
   enums: {
-    ERock: ["Null", "Asteroid", "Motherlode"],
+    ERock: ["NULL", "Asteroid", "Motherlode", "LENGTH"],
     EBuilding: [
+      "NULL",
       // Special
       "MainBase",
       "StarMapper",
@@ -43,6 +45,7 @@ export default mudConfig({
       // Utilities
       "SolarPanel",
       "Hangar",
+      "LENGTH",
     ],
   },
   tables: {
@@ -88,22 +91,28 @@ export default mudConfig({
 
     LastClaimedAt: {
       keySchema: { entity: "bytes32" },
-      schema: "uint32",
+      schema: "uint256",
     },
 
     /* -------------------------------------------------------------------------- */
     /*                                   Player                                   */
     /* -------------------------------------------------------------------------- */
-    Player: {
+    HomeAsteroid: {
       keySchema: { entity: "bytes32" },
       schema: {
-        spawned: "bool",
-        homeAsteroid: "bytes32",
+        value: "bytes32",
       },
     },
     /* -------------------------------------------------------------------------- */
     /*                                    Rocks                                   */
     /* -------------------------------------------------------------------------- */
+    P_Asteroid: {
+      keySchema: {},
+      schema: {
+        xBounds: "int32",
+        yBounds: "int32",
+      },
+    },
     AsteroidCount: {
       keySchema: {},
       schema: "uint32",
@@ -114,13 +123,27 @@ export default mudConfig({
       schema: "uint8",
     },
 
+    // note: dimensions will always be positive, but are int32s so they work with coords
+    Dimensions: {
+      keySchema: { key: "bytes32", level: "uint32" },
+      schema: {
+        x: "int32",
+        y: "int32",
+      },
+    },
+
+    Spawned: {
+      keySchema: { entity: "bytes32" },
+      schema: "bool",
+    },
+
     /* -------------------------------------------------------------------------- */
     /*                                  Buildings                                 */
     /* -------------------------------------------------------------------------- */
     /* -------------------------------- Prototype ------------------------------- */
 
     P_Blueprint: {
-      keySchema: { entity: "bytes32" },
+      keySchema: { buildingType: "uint8" },
       schema: "int32[]",
     },
 

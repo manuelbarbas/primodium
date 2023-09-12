@@ -26,7 +26,7 @@ library P_Blueprint {
   /** Get the table's key schema */
   function getKeySchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.BYTES32;
+    _schema[0] = SchemaType.UINT8;
 
     return SchemaLib.encode(_schema);
   }
@@ -42,7 +42,7 @@ library P_Blueprint {
   /** Get the table's key names */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](1);
-    keyNames[0] = "entity";
+    keyNames[0] = "buildingType";
   }
 
   /** Get the table's field names */
@@ -74,9 +74,13 @@ library P_Blueprint {
   }
 
   /** Get value */
-  function get(bytes32 entity) internal view returns (int32[] memory value) {
+  function get(uint8 buildingType)
+    internal
+    view
+    returns (int32[] memory value)
+  {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     bytes memory _blob = StoreSwitch.getField(
       _tableId,
@@ -88,13 +92,13 @@ library P_Blueprint {
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, bytes32 entity)
+  function get(IStore _store, uint8 buildingType)
     internal
     view
     returns (int32[] memory value)
   {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     bytes memory _blob = _store.getField(
       _tableId,
@@ -106,9 +110,9 @@ library P_Blueprint {
   }
 
   /** Set value */
-  function set(bytes32 entity, int32[] memory value) internal {
+  function set(uint8 buildingType, int32[] memory value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     StoreSwitch.setField(
       _tableId,
@@ -122,11 +126,11 @@ library P_Blueprint {
   /** Set value (using the specified store) */
   function set(
     IStore _store,
-    bytes32 entity,
+    uint8 buildingType,
     int32[] memory value
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     _store.setField(
       _tableId,
@@ -138,9 +142,9 @@ library P_Blueprint {
   }
 
   /** Get the length of value */
-  function length(bytes32 entity) internal view returns (uint256) {
+  function length(uint8 buildingType) internal view returns (uint256) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     uint256 _byteLength = StoreSwitch.getFieldLength(
       _tableId,
@@ -154,13 +158,13 @@ library P_Blueprint {
   }
 
   /** Get the length of value (using the specified store) */
-  function length(IStore _store, bytes32 entity)
+  function length(IStore _store, uint8 buildingType)
     internal
     view
     returns (uint256)
   {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     uint256 _byteLength = _store.getFieldLength(
       _tableId,
@@ -177,13 +181,13 @@ library P_Blueprint {
    * Get an item of value
    * (unchecked, returns invalid data if index overflows)
    */
-  function getItem(bytes32 entity, uint256 _index)
+  function getItem(uint8 buildingType, uint256 _index)
     internal
     view
     returns (int32)
   {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     unchecked {
       bytes memory _blob = StoreSwitch.getFieldSlice(
@@ -204,11 +208,11 @@ library P_Blueprint {
    */
   function getItem(
     IStore _store,
-    bytes32 entity,
+    uint8 buildingType,
     uint256 _index
   ) internal view returns (int32) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     unchecked {
       bytes memory _blob = _store.getFieldSlice(
@@ -224,9 +228,9 @@ library P_Blueprint {
   }
 
   /** Push an element to value */
-  function push(bytes32 entity, int32 _element) internal {
+  function push(uint8 buildingType, int32 _element) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     StoreSwitch.pushToField(
       _tableId,
@@ -240,11 +244,11 @@ library P_Blueprint {
   /** Push an element to value (using the specified store) */
   function push(
     IStore _store,
-    bytes32 entity,
+    uint8 buildingType,
     int32 _element
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     _store.pushToField(
       _tableId,
@@ -256,17 +260,17 @@ library P_Blueprint {
   }
 
   /** Pop an element from value */
-  function pop(bytes32 entity) internal {
+  function pop(uint8 buildingType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     StoreSwitch.popFromField(_tableId, _keyTuple, 0, 4, getValueSchema());
   }
 
   /** Pop an element from value (using the specified store) */
-  function pop(IStore _store, bytes32 entity) internal {
+  function pop(IStore _store, uint8 buildingType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     _store.popFromField(_tableId, _keyTuple, 0, 4, getValueSchema());
   }
@@ -276,12 +280,12 @@ library P_Blueprint {
    * (checked only to prevent modifying other tables; can corrupt own data if index overflows)
    */
   function update(
-    bytes32 entity,
+    uint8 buildingType,
     uint256 _index,
     int32 _element
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     unchecked {
       StoreSwitch.updateInField(
@@ -301,12 +305,12 @@ library P_Blueprint {
    */
   function update(
     IStore _store,
-    bytes32 entity,
+    uint8 buildingType,
     uint256 _index,
     int32 _element
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     unchecked {
       _store.updateInField(
@@ -333,29 +337,29 @@ library P_Blueprint {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(bytes32 entity)
+  function encodeKeyTuple(uint8 buildingType)
     internal
     pure
     returns (bytes32[] memory)
   {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     return _keyTuple;
   }
 
   /* Delete all data for given keys */
-  function deleteRecord(bytes32 entity) internal {
+  function deleteRecord(uint8 buildingType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }
 
   /* Delete all data for given keys (using the specified store) */
-  function deleteRecord(IStore _store, bytes32 entity) internal {
+  function deleteRecord(IStore _store, uint8 buildingType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = entity;
+    _keyTuple[0] = bytes32(uint256(buildingType));
 
     _store.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }

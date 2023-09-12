@@ -9,14 +9,14 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testSpawnu() public {
-    bytes32 playerEntity = LibEncode.addressToEntity(alice);
+    bytes32 playerEntity = addressToEntity(alice);
     bytes32 asteroidEntity = LibEncode.getHash(worldAddress, playerEntity);
     spawn(alice);
 
-    bool spawned = Player.getSpawned(world, playerEntity);
+    bool spawned = Spawned.get(world, playerEntity);
     assertTrue(spawned, "Player should have spawned");
     assertEq(
-      Player.getHomeAsteroid(world, playerEntity),
+      HomeAsteroid.get(world, playerEntity),
       asteroidEntity,
       "Player should have spawned on their own asteroid"
     );
@@ -42,10 +42,10 @@ contract SpawnSystemTest is PrimodiumTest {
       address newAddress = address(
         uint160(uint256(keccak256(abi.encodePacked(i * 12345))))
       );
-      bytes32 playerEntity = LibEncode.addressToEntity(newAddress);
+      bytes32 playerEntity = addressToEntity(newAddress);
       PositionData memory position = LibAsteroid.getUniqueAsteroidPosition(i);
       spawn(newAddress);
-      bytes32 asteroid = Player.getHomeAsteroid(world, playerEntity);
+      bytes32 asteroid = HomeAsteroid.get(world, playerEntity);
       PositionData memory retrievedPosition = Position.get(world, asteroid);
       assertEq(position, retrievedPosition);
     }
