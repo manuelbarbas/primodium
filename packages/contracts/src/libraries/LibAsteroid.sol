@@ -20,15 +20,9 @@ library LibAsteroid {
   /// @param world World address
   /// @param ownerEntity Owner's entity ID
   /// @return asteroidEntity Created asteroid's entity ID
-  function createAsteroid(address world, bytes32 ownerEntity)
-    internal
-    returns (bytes32 asteroidEntity)
-  {
+  function createAsteroid(address world, bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
     asteroidEntity = LibEncode.getHash(world, ownerEntity);
-    require(
-      RockType.get(asteroidEntity) == uint8(ERock.Null),
-      "[LibAsteroid] asteroid already exists"
-    );
+    require(RockType.get(asteroidEntity) == uint8(ERock.Null), "[LibAsteroid] asteroid already exists");
 
     uint32 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory position = getUniqueAsteroidPosition(asteroidCount);
@@ -45,15 +39,8 @@ library LibAsteroid {
   /// @notice Generates unique asteroid position
   /// @dev Ensures asteroid positions do not overlap
   /// @return position Generated unique position
-  function getUniqueAsteroidPosition(uint32 asteroidCount)
-    internal
-    view
-    returns (PositionData memory position)
-  {
-    position = LibMath.getPositionByVector(
-      LibMath.getDistance(asteroidCount),
-      LibMath.getDirection(asteroidCount)
-    );
+  function getUniqueAsteroidPosition(uint32 asteroidCount) internal view returns (PositionData memory position) {
+    position = LibMath.getPositionByVector(LibMath.getDistance(asteroidCount), LibMath.getDirection(asteroidCount));
     while (ReversePosition.get(position.x, position.y) != 0) {
       position.y += 5;
     }

@@ -17,9 +17,7 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(
-  abi.encodePacked(bytes16(""), bytes16("Player"))
-);
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Player")));
 bytes32 constant PlayerTableId = _tableId;
 
 struct PlayerData {
@@ -60,24 +58,12 @@ library Player {
 
   /** Register the table's key schema, value schema, key names and value names */
   function register() internal {
-    StoreSwitch.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    StoreSwitch.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Register the table's key schema, value schema, key names and value names (using the specified store) */
   function register(IStore _store) internal {
-    _store.registerTable(
-      _tableId,
-      getKeySchema(),
-      getValueSchema(),
-      getKeyNames(),
-      getFieldNames()
-    );
+    _store.registerTable(_tableId, getKeySchema(), getValueSchema(), getKeyNames(), getFieldNames());
   }
 
   /** Get spawned */
@@ -85,30 +71,16 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = StoreSwitch.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
   /** Get spawned (using the specified store) */
-  function getSpawned(IStore _store, bytes32 entity)
-    internal
-    view
-    returns (bool spawned)
-  {
+  function getSpawned(IStore _store, bytes32 entity) internal view returns (bool spawned) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = _store.getField(
-      _tableId,
-      _keyTuple,
-      0,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
@@ -117,13 +89,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    StoreSwitch.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((spawned)),
-      getValueSchema()
-    );
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((spawned)), getValueSchema());
   }
 
   /** Set spawned (using the specified store) */
@@ -135,48 +101,24 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    _store.setField(
-      _tableId,
-      _keyTuple,
-      0,
-      abi.encodePacked((spawned)),
-      getValueSchema()
-    );
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((spawned)), getValueSchema());
   }
 
   /** Get homeAsteroid */
-  function getHomeAsteroid(bytes32 entity)
-    internal
-    view
-    returns (bytes32 homeAsteroid)
-  {
+  function getHomeAsteroid(bytes32 entity) internal view returns (bytes32 homeAsteroid) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = StoreSwitch.getField(
-      _tableId,
-      _keyTuple,
-      1,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (Bytes.slice32(_blob, 0));
   }
 
   /** Get homeAsteroid (using the specified store) */
-  function getHomeAsteroid(IStore _store, bytes32 entity)
-    internal
-    view
-    returns (bytes32 homeAsteroid)
-  {
+  function getHomeAsteroid(IStore _store, bytes32 entity) internal view returns (bytes32 homeAsteroid) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = _store.getField(
-      _tableId,
-      _keyTuple,
-      1,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1, getValueSchema());
     return (Bytes.slice32(_blob, 0));
   }
 
@@ -185,13 +127,7 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    StoreSwitch.setField(
-      _tableId,
-      _keyTuple,
-      1,
-      abi.encodePacked((homeAsteroid)),
-      getValueSchema()
-    );
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((homeAsteroid)), getValueSchema());
   }
 
   /** Set homeAsteroid (using the specified store) */
@@ -203,46 +139,24 @@ library Player {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    _store.setField(
-      _tableId,
-      _keyTuple,
-      1,
-      abi.encodePacked((homeAsteroid)),
-      getValueSchema()
-    );
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((homeAsteroid)), getValueSchema());
   }
 
   /** Get the full data */
-  function get(bytes32 entity)
-    internal
-    view
-    returns (PlayerData memory _table)
-  {
+  function get(bytes32 entity) internal view returns (PlayerData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = StoreSwitch.getRecord(
-      _tableId,
-      _keyTuple,
-      getValueSchema()
-    );
+    bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, bytes32 entity)
-    internal
-    view
-    returns (PlayerData memory _table)
-  {
+  function get(IStore _store, bytes32 entity) internal view returns (PlayerData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
-    bytes memory _blob = _store.getRecord(
-      _tableId,
-      _keyTuple,
-      getValueSchema()
-    );
+    bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getValueSchema());
     return decode(_blob);
   }
 
@@ -290,31 +204,19 @@ library Player {
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob)
-    internal
-    pure
-    returns (PlayerData memory _table)
-  {
+  function decode(bytes memory _blob) internal pure returns (PlayerData memory _table) {
     _table.spawned = (_toBool(uint8(Bytes.slice1(_blob, 0))));
 
     _table.homeAsteroid = (Bytes.slice32(_blob, 1));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(bool spawned, bytes32 homeAsteroid)
-    internal
-    pure
-    returns (bytes memory)
-  {
+  function encode(bool spawned, bytes32 homeAsteroid) internal pure returns (bytes memory) {
     return abi.encodePacked(spawned, homeAsteroid);
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(bytes32 entity)
-    internal
-    pure
-    returns (bytes32[] memory)
-  {
+  function encodeKeyTuple(bytes32 entity) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
