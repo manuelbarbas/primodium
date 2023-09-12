@@ -1,18 +1,20 @@
+import { useEffect, useMemo, useState } from "react";
+import { FaList, FaSync } from "react-icons/fa";
+import { FixedSizeList as List } from "react-window";
+import { EntityID } from "@latticexyz/recs";
+import { getAddress } from "ethers/lib/utils.js";
+
 import {
   Account,
   Leaderboard as _Leaderboard,
 } from "src/network/components/clientComponents";
 import { shortenAddress } from "src/util/common";
-import Modal from "../shared/Modal";
-import { useEffect, useMemo, useState } from "react";
-import { FaList, FaSync } from "react-icons/fa";
 import { claimFromMine } from "src/util/web3";
 import { useMud } from "src/hooks/useMud";
 import { useMainBaseCoord } from "src/hooks";
 import { useGameStore } from "src/store/GameStore";
 import { linkAddress } from "src/util/web2/linkAddress";
-import { EntityID } from "@latticexyz/recs";
-import { getAddress } from "ethers/lib/utils.js";
+import Modal from "../shared/Modal";
 
 export const Leaderboard = () => {
   const network = useMud();
@@ -64,16 +66,27 @@ export const Leaderboard = () => {
         onClose={() => setShowLeaderboard(false)}
       >
         <div className="flex flex-col items-center gap-2 text-white w-96 min-w-full">
-          <div className="w-full h-96 overflow-y-auto rounded-md bg-slate-900 text-sm space-y-2 scrollbar">
-            {data.players.map((player, index) => (
-              <LeaderboardItem
-                key={index}
-                player={player}
-                index={index}
-                score={data.scores[index]}
-              />
-            ))}
-          </div>
+          <List
+            height={384} // Height of the list viewport
+            width="100%" // Width of the list viewport
+            itemCount={data.players.length} // Total number of items in list
+            itemSize={50} // Height of individual items
+          >
+            {({ index, style }) => {
+              const player = data.players[index];
+              const score = data.scores[index];
+              return (
+                <div style={style}>
+                  <LeaderboardItem
+                    key={index}
+                    player={player}
+                    index={index}
+                    score={score}
+                  />
+                </div>
+              );
+            }}
+          </List>
           <hr className="w-full border-t border-cyan-800" />
           <div className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800 text-sm">
             {address && (
@@ -81,7 +94,13 @@ export const Leaderboard = () => {
                 <div>{data.playerRank}.</div>
                 <div className="col-span-5 flex justify-between">
                   <div className="bg-rose-800 px-2 rounded-md">You</div>
-                  <button onClick={linkAddress}>Link Wallet</button>
+                  <button
+                    disabled={transactionLoading}
+                    className="px-2 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-700 border-cyan-500"
+                    onClick={linkAddress}
+                  >
+                    Link Wallet
+                  </button>
                   <div className="font-bold rounded-md bg-cyan-700 px-2">
                     {data.scores.length >= data.playerRank
                       ? data.scores[data.playerRank - 1].toLocaleString()
@@ -137,7 +156,7 @@ const LeaderboardItem = ({
     } else {
       return shortenAddress(player);
     }
-  }, [fetchedExternalWallet]);
+  }, [fetchedExternalWallet, player]);
 
   return (
     <div className="grid grid-cols-6 w-full border rounded-md border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30">

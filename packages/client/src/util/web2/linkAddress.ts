@@ -16,6 +16,7 @@ export const linkAddress = async () => {
   const localAddress = wallet.address;
   const localSignature = await wallet.signMessage(localAddress);
 
+  // Opens the linking page in a new window served from the following repo: account-link-vercel
   return window.open(
     `${
       import.meta.env.VITE_ACCOUNT_LINK_VERCEL_URL
