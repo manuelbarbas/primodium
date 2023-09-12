@@ -1,8 +1,8 @@
 // Visit https://aka.ms/tsconfig.json for all config options
 {
   "compilerOptions": {
-    "target": "es2022",
-    "module": "es2022",
+    "target": "es2020",
+    "module": "ESNext",
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
