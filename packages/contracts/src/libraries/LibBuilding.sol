@@ -13,11 +13,7 @@ import { Bounds } from "src/PrimodiumTypes.sol";
 import { EBuilding } from "codegen/Types.sol";
 
 library LibBuilding {
-  function canBuildOnTile(EBuilding buildingType, PositionData memory coord)
-    internal
-    view
-    returns (bool)
-  {
+  function canBuildOnTile(EBuilding buildingType, PositionData memory coord) internal view returns (bool) {
     return true;
     // P_RequiredTile.get(buildingType) == LibTerrain.getResourceByPositionData(world, coord);
   }
@@ -51,11 +47,7 @@ library LibBuilding {
 
     bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
-      PositionData memory relativeCoord = PositionData(
-        blueprint[i],
-        blueprint[i + 1],
-        0
-      );
+      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
       PositionData memory absoluteCoord = PositionData(
         position.x + relativeCoord.x,
         position.y + relativeCoord.y,
@@ -72,26 +64,16 @@ library LibBuilding {
     PositionData memory coord
   ) private returns (bytes32 tileEntity) {
     tileEntity = LibEncode.getHash(BuildingTileKey, coord);
+    require(OwnedBy.get(tileEntity) == 0, "[BuildSystem] Cannot build tile on a non-empty coordinate");
     require(
-      OwnedBy.get(tileEntity) == 0,
-      "[BuildSystem] Cannot build tile on a non-empty coordinate"
-    );
-    require(
-      bounds.minX <= coord.x &&
-        bounds.minY <= coord.y &&
-        bounds.maxX >= coord.x &&
-        bounds.maxY >= coord.y,
+      bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,
       "[BuildSystem] Building out of bounds"
     );
     OwnedBy.set(tileEntity, buildingEntity);
     Position.set(tileEntity, coord);
   }
 
-  function getPlayerBounds(bytes32 playerEntity)
-    internal
-    view
-    returns (Bounds memory bounds)
-  {
+  function getPlayerBounds(bytes32 playerEntity) internal view returns (Bounds memory bounds) {
     uint32 playerLevel = Level.get(playerEntity);
     P_AsteroidData memory asteroidDims = P_Asteroid.get();
     DimensionsData memory range = Dimensions.get(ExpansionKey, playerLevel);
