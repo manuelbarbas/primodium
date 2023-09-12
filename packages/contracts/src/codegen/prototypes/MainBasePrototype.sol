@@ -6,7 +6,6 @@ pragma solidity >=0.8.0;
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
 import { ERock, EBuilding } from "../Types.sol";
-
 import { P_Blueprint, P_BlueprintTableId, P_MaxLevel, P_MaxLevelTableId } from "../Tables.sol";
 
 bytes32 constant prototypeId = "MainBase";

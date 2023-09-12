@@ -1,4 +1,5 @@
 import { renderList, renderedSolidityHeader } from "@latticexyz/common/codegen";
+import { StaticAbiType } from "@latticexyz/schema-type";
 import { StoreConfig } from "@latticexyz/store";
 import { StoreConfigWithPrototypes } from "./prototypeConfig";
 
@@ -13,6 +14,96 @@ const formatValue = (config: StoreConfig, fieldType: string, value: number | str
   return `${value}`;
 };
 
+export const renderSetLevelRecord = (
+  config: StoreConfig,
+  tableName: string,
+  value: { [k: string]: number },
+  level: string,
+  i: number
+) => {
+  const { schema } = config.tables[tableName];
+
+  // Iterate through the keys in the original schema to preserve ordering
+  const formattedValues = Object.keys(schema).map((fieldName) => {
+    const fieldValue = value[fieldName];
+
+    const variableName = `${tableName.toLowerCase()}_${fieldName}_level_${level}`;
+    const fieldType = schema[fieldName];
+    const isArray = Array.isArray(fieldValue);
+
+    if (isArray) {
+      const declaration = `${fieldType} memory ${variableName} = new ${fieldType}(${fieldValue.length})`;
+      const assignments = fieldValue.map((v, i) => `${variableName}[${i}] = ${formatValue(config, fieldType, v)}`);
+
+      return {
+        declaration: [declaration, ...assignments].join(";"),
+        name: variableName,
+        formattedValue: null,
+      };
+    }
+
+    return {
+      declaration: null,
+      name: null,
+      formattedValue: formatValue(config, fieldType, fieldValue),
+    };
+  });
+
+  return `${formattedValues.find((v) => v.declaration) ? formattedValues.map((v) => v.declaration).join(";") + ";" : ""}
+  values[${i}] = ${tableName}.encode(${formattedValues.map((v) => (v.name ? v.name : v.formattedValue)).join(",")});`;
+};
+
+export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: string) {
+  const prototype = config.prototypes[name];
+  const keys: Record<string, StaticAbiType> = prototype.keys ? prototype.keys : { prototypeId: "bytes32" };
+  keys["level"] = "uint32";
+  const values = prototype.levels;
+  if (!values) return undefined;
+
+  const keyTupleDefinition = `
+    bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
+    ${renderList(
+      Object.entries(keys),
+      (key, index) =>
+        `_keyTuple[${index}] = ${renderValueTypeToBytes32(key[0], {
+          typeUnwrap: "",
+          internalTypeId: key[1],
+        })};`
+    )}
+  `;
+  const renderLevels = Object.entries(values)
+    .map(([level, value], i) => {
+      return `
+    /* ----------------------------- LEVEL ${level} ----------------------------- */
+    levelKeys = ${name}LevelKeys(${level});
+    tableIds = new bytes32[](${Object.keys(value).length});
+    values = new bytes[](${Object.keys(value).length});
+
+    ${Object.keys(value)
+      .map((key, i) => `tableIds[${i}] = ${key}TableId`)
+      .join(";")};
+
+    ${Object.entries(value)
+      .map(([tableName, v], i) => (v ? renderSetLevelRecord(config, tableName, v, level, i) : ""))
+      .join("")}
+
+    createPrototype(store, levelKeys, tableIds, values);
+
+    `;
+    })
+    .join(";");
+
+  return {
+    levelKeys: `function ${name}LevelKeys(uint32 level) pure returns (bytes32[] memory) {
+    ${keyTupleDefinition}
+        return _keyTuple;
+  }`,
+    levels: `
+    bytes32[] memory levelKeys; 
+    ${renderLevels} 
+`,
+  };
+}
 export const renderSetRecord = (config: StoreConfig, tableName: string, value: { [k: string]: number }, i: number) => {
   const { schema } = config.tables[tableName];
 
@@ -50,7 +141,15 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
   const prototype = config.prototypes[name];
   const keys = prototype.keys ? prototype.keys : { prototypeId: "bytes32" };
   const values = prototype.tables;
-
+  const levelTables = Object.values(prototype.levels ?? {})
+    .map((v) => {
+      return Object.keys(v);
+    })
+    .flat();
+  const allImportedTableIds = [...Object.keys(prototype.tables), ...levelTables]
+    .map((tableName) => `${tableName}, ${tableName}TableId`)
+    .join(",");
+  const levelPrototype = renderLevelPrototype(config, name);
   const keyTupleDefinition = `
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
     ${renderList(
@@ -74,14 +173,7 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
           .join(",")} } from "../Types.sol";`
       : ""
   }
-
-  ${
-    Object.keys(values).length > 0
-      ? `import {${Object.keys(values)
-          .map((key) => `${key}, ${key}TableId`)
-          .join(",")}} from "../Tables.sol";`
-      : ""
-  }
+  import {${allImportedTableIds}} from "../Tables.sol";
   
   bytes32 constant prototypeId = "${name}";
   bytes32 constant ${name}PrototypeId = prototypeId;
@@ -92,6 +184,7 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
         return _keyTuple;
   }
 
+  ${levelPrototype ? levelPrototype.levelKeys : ""}
   function ${name}Prototype(IStore store) {
     bytes32[] memory keys = ${name}Keys();
     bytes32[] memory tableIds = new bytes32[](LENGTH);
@@ -106,6 +199,7 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
       .join("")}
 
     createPrototype(store, keys, tableIds, values);
+    ${levelPrototype ? levelPrototype.levels : ""}
   }
 `;
 }
@@ -115,13 +209,12 @@ export function renderValueTypeToBytes32(
   { typeUnwrap, internalTypeId }: { typeUnwrap: string; internalTypeId: string }
 ): string {
   const innerText = typeUnwrap.length ? `${typeUnwrap}(${name})` : name;
-  console.log("internalTypeId", internalTypeId);
+  console.log("name:", name, "typeUnwrap:", typeUnwrap, "internalTypeId:", internalTypeId);
   if (internalTypeId === "bytes32") {
     return innerText;
   } else if (internalTypeId.match(/^bytes\d{1,2}$/)) {
     return `bytes32(${innerText})`;
   } else if (internalTypeId.match(/^uint\d{1,3}$/)) {
-    console.log("hello!");
     return `bytes32(uint256(${innerText}))`;
   } else if (internalTypeId.match(/^int\d{1,3}$/)) {
     return `bytes32(uint256(int256(${innerText})))`;
