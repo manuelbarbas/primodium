@@ -14,6 +14,36 @@ export default mudConfig({
 
   enums: {
     ERock: ["Null", "Asteroid", "Motherlode"],
+    EBuilding: [
+      // Special
+      "MainBase",
+      "StarMapper",
+      "StorageUnit",
+      "DroneFactory",
+
+      // Mines
+      "LithiumMine",
+      "IronMine",
+      "CopperMine",
+      "TitaniumMine",
+      "IridiumMine",
+      "OsmiumMine",
+      "TungstenMine",
+      "KimberliteMine",
+      "UraniniteMine",
+      "BolutiteMine",
+      "SulfurMine",
+
+      // Factories
+      "IronPlateFactory",
+      "AlloyFactory",
+      "PVCellFactory",
+      "RocketFuelFactory",
+
+      // Utilities
+      "SolarPanel",
+      "Hangar",
+    ],
   },
   tables: {
     /* -------------------------------------------------------------------------- */
@@ -55,6 +85,12 @@ export default mudConfig({
       keySchema: { entity: "bytes32" },
       schema: "uint32",
     },
+
+    LastClaimedAt: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint32",
+    },
+
     /* -------------------------------------------------------------------------- */
     /*                                   Player                                   */
     /* -------------------------------------------------------------------------- */
@@ -81,5 +117,33 @@ export default mudConfig({
     /* -------------------------------------------------------------------------- */
     /*                                  Buildings                                 */
     /* -------------------------------------------------------------------------- */
+    /* -------------------------------- Prototype ------------------------------- */
+
+    P_Blueprint: {
+      keySchema: { entity: "bytes32" },
+      schema: "int32[]",
+    },
+
+    P_MaxLevel: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint32",
+    },
+
+    P_RequiredTile: {
+      keySchema: { entity: "bytes32" },
+      schema: "bytes32",
+    },
+
+    /* -------------------------------- Instance -------------------------------- */
+
+    BuildingType: {
+      keySchema: { entity: "bytes32" },
+      schema: "uint8",
+    },
+
+    Children: {
+      keySchema: { entity: "bytes32" },
+      schema: "bytes32[]",
+    },
   },
 });
