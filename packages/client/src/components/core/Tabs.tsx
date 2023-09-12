@@ -7,6 +7,7 @@ import {
   FC,
 } from "react";
 import { Button as _Button } from "./Button";
+import { Card } from "./Card";
 
 interface TabProps {
   children?: ReactNode;
@@ -30,22 +31,16 @@ const useIndex = (): IndexContextValue => {
 
 const Pane: FC<{
   index?: number;
+  className?: string;
   children: ReactNode;
-}> = memo(({ index, children }) => {
+}> = memo(({ index, children, className }) => {
   const { index: currIndex } = useIndex();
 
   if (index === undefined || currIndex !== index) {
     return null;
   }
 
-  return (
-    <div
-      style={{ transform: `scale(${index})`, transformOrigin: "top right" }}
-      className="absolute top-0 right-0"
-    >
-      {children}
-    </div>
-  );
+  return <Card className={`${className}`}>{children}</Card>;
 });
 
 const Button: FC<{
@@ -66,7 +61,7 @@ const Button: FC<{
   );
 });
 
-const Tabs: FC<TabProps> & {
+export const Tabs: FC<TabProps> & {
   Button: typeof Button;
   Pane: typeof Pane;
 } = ({ children, defaultIndex = 0 }) => {
@@ -78,7 +73,7 @@ const Tabs: FC<TabProps> & {
     <IndexContext.Provider
       value={{ index: currentIndex, setIndex: setCurrentIndex }}
     >
-      <div className="">{children}</div>
+      <div className="space-y-1">{children}</div>
     </IndexContext.Provider>
   );
 };

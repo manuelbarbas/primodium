@@ -10,6 +10,11 @@ module.exports = {
       fontFamily: {
         mono: ["Space Mono", ...defaultTheme.fontFamily.mono],
       },
+      width: {
+        108: "27rem",
+        120: "30rem",
+        132: "33rem",
+      },
     },
   },
   daisyui: {
@@ -24,9 +29,9 @@ module.exports = {
           info: colors.indigo[600],
           success: colors.green[600],
           warning: colors.amber[600],
-          error: colors.cyan[600],
+          error: colors.rose[600],
 
-          "--rounded-box": "1rem", // border radius rounded-box utility class, used in card and other large boxes
+          "--rounded-box": "0.5rem", // border radius rounded-box utility class, used in card and other large boxes
           "--rounded-btn": "0.5rem", // border radius rounded-btn utility class, used in buttons and similar element
           "--rounded-badge": "1.9rem", // border radius rounded-badge utility class, used in badges and similar
           "--animation-btn": "0.25s", // duration of animation when you click on button

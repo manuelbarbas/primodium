@@ -4,8 +4,11 @@ import { primodium } from "@game/api";
 import { AsteroidMap, KeybindActions } from "@game/constants";
 
 import { useGameStore } from "../../store/GameStore";
-import { BrandingLabel } from "../shared/BrandingLabel";
 import { HUD } from "../core/HUD";
+import { BrandingLabel } from "../shared/BrandingLabel";
+import { StatusBar } from "./StatusBar";
+import { Fleets } from "./Fleets";
+import { PlayerInfo } from "./PlayerInfo";
 
 export const AsteroidHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -30,10 +33,15 @@ export const AsteroidHUD = () => {
             <HUD.BottomMiddle>
               <button className="btn pointer-events-auto">Primary</button>
             </HUD.BottomMiddle>
-            <HUD.TopRight>Panes</HUD.TopRight>
-            <HUD.TopLeft>Menu</HUD.TopLeft>
-            <HUD.TopMiddle>Top Middle</HUD.TopMiddle>
-            <HUD.BottomLeft>Bottom Left</HUD.BottomLeft>
+            <HUD.TopLeft>
+              <PlayerInfo />
+            </HUD.TopLeft>
+            <HUD.TopMiddle>
+              <StatusBar />
+            </HUD.TopMiddle>
+            <HUD.TopRight>
+              <Fleets />
+            </HUD.TopRight>
           </HUD>
           <HUD>
             <HUD.BottomRight>
