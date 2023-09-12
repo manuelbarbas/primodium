@@ -67,10 +67,10 @@ export const Leaderboard = () => {
       >
         <div className="flex flex-col items-center gap-2 text-white w-96 min-w-full">
           <List
-            height={384} // Height of the list viewport
-            width="100%" // Width of the list viewport
-            itemCount={data.players.length} // Total number of items in list
-            itemSize={50} // Height of individual items
+            height={384}
+            width="100%"
+            itemCount={data.players.length}
+            itemSize={48}
           >
             {({ index, style }) => {
               const player = data.players[index];
@@ -139,10 +139,9 @@ const LeaderboardItem = ({
           }/linked-address/local-to-external/${getAddress(player)}`
         );
         const jsonRes = await res.json();
-        console.log(jsonRes);
         setFetchedExternalWallet(jsonRes);
       } catch (error) {
-        console.log(error);
+        return;
       }
     };
     fetchLocalLinkedAddress();
