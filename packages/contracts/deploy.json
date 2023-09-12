@@ -39,7 +39,12 @@
     "ScoreComponent",
     "BattleBlockNumberComponent",
     "PlayerMotherlodeComponent",
+    "HasCompletedObjectiveComponent",
 
+    "P_IsObjectiveComponent",
+    "P_ObjectiveRequirementComponent",
+    "P_ResourceRewardComponent",
+    "P_UnitRewardComponent",
     "P_MaxMovesComponent",
     "P_ProductionDependenciesComponent",
     "P_ProductionComponent",
@@ -125,6 +130,11 @@
       "name": "RecallUnitsFromMotherlodeSystem",
       "writeAccess": ["*"]
     },
+    {
+      "name": "ClaimObjectiveSystem",
+      "writeAccess": ["*"]
+    },
+
     {
       "name": "ComponentDevSystem",
       "writeAccess": ["*"]
