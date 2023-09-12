@@ -7,3 +7,27 @@ enum ERock {
   Asteroid,
   Motherlode
 }
+
+enum EBuilding {
+  MainBase,
+  StarMapper,
+  StorageUnit,
+  DroneFactory,
+  LithiumMine,
+  IronMine,
+  CopperMine,
+  TitaniumMine,
+  IridiumMine,
+  OsmiumMine,
+  TungstenMine,
+  KimberliteMine,
+  UraniniteMine,
+  BolutiteMine,
+  SulfurMine,
+  IronPlateFactory,
+  AlloyFactory,
+  PVCellFactory,
+  RocketFuelFactory,
+  SolarPanel,
+  Hangar
+}
