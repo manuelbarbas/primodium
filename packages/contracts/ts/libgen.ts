@@ -7,7 +7,7 @@ const librariesFolder = path.resolve(__dirname, "../../src/libraries");
 
 const outputFileName = "Libraries.sol";
 
-const files = fs.readdirSync(librariesFolder);
+const files = fs.readdirSync(librariesFolder).filter((file) => file.startsWith("Lib"));
 
 const fileList = files.map((file) => {
   if (file == outputFileName) return "";

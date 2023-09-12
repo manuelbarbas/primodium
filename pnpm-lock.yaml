@@ -261,6 +261,12 @@ importers:
       '@latticexyz/common':
         specifier: 2.0.0-next.5
         version: 2.0.0-next.5(typescript@4.7.4)(zod@3.22.2)
+      '@latticexyz/config':
+        specifier: 2.0.0-next.5
+        version: 2.0.0-next.5(typescript@4.7.4)
+      '@latticexyz/protocol-parser':
+        specifier: 2.0.0-next.5
+        version: 2.0.0-next.5(typescript@4.7.4)(zod@3.22.2)
       '@latticexyz/schema-type':
         specifier: 2.0.0-next.5
         version: 2.0.0-next.5(typescript@4.7.4)(zod@3.22.2)
