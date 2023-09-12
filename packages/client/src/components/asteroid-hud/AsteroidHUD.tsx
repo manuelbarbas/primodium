@@ -6,9 +6,10 @@ import { AsteroidMap, KeybindActions } from "@game/constants";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { StatusBar } from "./StatusBar";
+import { StatusBar } from "./StatusBar/StatusBar";
 import { Fleets } from "./Fleets";
 import { PlayerInfo } from "./PlayerInfo";
+import { BuildingMenu } from "./BuildingMenu/BuildingMenu";
 
 export const AsteroidHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -26,12 +27,12 @@ export const AsteroidHUD = () => {
   }, []);
 
   return (
-    <div className="star-background screen-container font-mono">
+    <div className="screen-container font-mono">
       {showUI && (
         <>
-          <HUD pad>
+          <HUD scale={1} pad>
             <HUD.BottomMiddle>
-              <button className="btn pointer-events-auto">Primary</button>
+              <BuildingMenu />
             </HUD.BottomMiddle>
             <HUD.TopLeft>
               <PlayerInfo />

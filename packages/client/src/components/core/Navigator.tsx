@@ -7,6 +7,7 @@ import {
   useCallback,
 } from "react";
 import { Button } from "./Button";
+import { Card, SecondaryCard } from "./Card";
 
 interface NavigationContextValue {
   navigateTo: (screenTitle: string, replace?: boolean) => void;
@@ -51,7 +52,7 @@ export const Navigator: FC<{ initialScreen?: string; children?: ReactNode }> & {
 
   return (
     <NavigationContext.Provider value={{ navigateTo, goBack, history }}>
-      {children}
+      <Card className={``}>{children}</Card>
     </NavigationContext.Provider>
   );
 };
@@ -64,13 +65,14 @@ const useNavigation = (): NavigationContextValue => {
   return context;
 };
 
-const Screen: FC<{ title: string; children?: ReactNode }> = ({
-  title,
-  children,
-}) => {
+const Screen: FC<{
+  title: string;
+  className?: string;
+  children?: ReactNode;
+}> = ({ title, className, children }) => {
   const { history } = useNavigation();
   if (history[history.length - 1] !== title) return null;
-  return <>{children}</>;
+  return <div className={className}>{children}</div>;
 };
 
 const NavButton: FC<{ to: string; children?: ReactNode }> = ({
@@ -78,18 +80,22 @@ const NavButton: FC<{ to: string; children?: ReactNode }> = ({
   children,
 }) => {
   const { navigateTo } = useNavigation();
-  return <button onClick={() => navigateTo(to)}>{children}</button>;
+  return <Button onClick={() => navigateTo(to, true)}>{children}</Button>;
 };
 
 const BackButton: FC<{ children?: ReactNode }> = ({ children }) => {
-  const { goBack } = useNavigation();
-  return <Button onClick={goBack}>{children || "Back"}</Button>;
+  const { goBack, history } = useNavigation();
+  return (
+    <Button disabled={history.length <= 1} onClick={goBack}>
+      {children || "Back"}
+    </Button>
+  );
 };
 
 const Breadcrumbs: FC<{ children?: ReactNode }> = () => {
   const { history, navigateTo } = useNavigation();
   return (
-    <div className="text-sm breadcrumbs">
+    <SecondaryCard className="text-sm breadcrumbs pointer-events-auto">
       <ul>
         {history.map((item, index) => (
           <li key={index}>
@@ -97,7 +103,7 @@ const Breadcrumbs: FC<{ children?: ReactNode }> = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </SecondaryCard>
   );
 };
 

@@ -19,7 +19,7 @@ export const Button: React.FC<{
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`btn inline gap-1 pointer-events-auto ${className} ${
+      className={`btn btn-sm inline gap-1 pointer-events-auto ${className} ${
         disabled ? "opacity-50" : ""
       } ${selected ? "border border-accent" : ""} `}
     >
