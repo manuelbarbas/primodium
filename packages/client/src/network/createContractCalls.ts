@@ -6,15 +6,18 @@ import { Hex } from "viem";
 import { Components, ContractComponent, SetupNetworkResult } from "./types";
 export function createContractCalls(
   { worldContract, waitForTransaction }: SetupNetworkResult,
-  { Counter }: Components
+  { Counter, CurrentTransaction }: Components
 ) {
   /* -------------------------------------------------------------------------- */
   /*                                 DEV SYSTEMS                                */
   /* -------------------------------------------------------------------------- */
 
   const increment = async () => {
+    CurrentTransaction.set({ value: true });
     const tx = await worldContract.write.increment();
     await waitForTransaction(tx);
+
+    CurrentTransaction.set({ value: false });
     return Counter.get();
   };
   async function removeComponent<S extends Schema>(component: ContractComponent<S>, entity: Entity) {
@@ -45,14 +48,20 @@ export function createContractCalls(
     });
   }
 
+  async function spawn() {
+    CurrentTransaction.set({ value: true });
+    const tx = await worldContract.write.spawn();
+    await waitForTransaction(tx);
+    CurrentTransaction.set({ value: false });
+  }
+
   return {
-    /* ------------------------------- dev systems ------------------------------ */
+    /* ------------------------------- Dev Systems ------------------------------ */
     increment,
     removeComponent,
     setComponentValue,
-    // pushToField,
-    // popFromField,
-    // updateInField,
-    // deleteRecord,
+
+    /* ------------------------------- Game Systems ------------------------------ */
+    spawn,
   };
 }

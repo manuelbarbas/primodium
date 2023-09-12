@@ -1,5 +1,5 @@
 import { Component, Schema } from "@latticexyz/recs";
-import { createComponents } from "./components/createComponents";
+import { createComponents } from "./components/components";
 import { getNetworkConfig } from "./config/getNetworkConfig";
 import { setup } from "./setup";
 import { setupNetwork } from "./setupNetwork";

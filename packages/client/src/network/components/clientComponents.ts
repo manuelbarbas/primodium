@@ -8,7 +8,16 @@ import {
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
 
-// todo: organize these alphabetically
+/* -------------------------------------------------------------------------- */
+/*                                     Dev                                    */
+/* -------------------------------------------------------------------------- */
+export const DoubleCounter = createExtendedNumberComponent(world, {
+  id: "DoubleCounter",
+});
+
+/* -------------------------------------------------------------------------- */
+/*                                 Chain State                                */
+/* -------------------------------------------------------------------------- */
 export const BlockNumber = createExtendedComponent(
   world,
   {
@@ -20,11 +29,15 @@ export const BlockNumber = createExtendedComponent(
   }
 );
 export const Account = createExtendedEntityComponent(world, { id: "Account" });
-
 export const GameReady = createExtendedBoolComponent(world, { id: "GameReady" });
-export const DoubleCounter = createExtendedNumberComponent(world, {
-  id: "DoubleCounter",
-});
+export const ActiveAsteroid = createExtendedComponent(world, { value: Type.Entity }, { id: "ActiveAsteroid" });
+
+// Todo: extend this with relevant tx data
+export const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
+
+/* -------------------------------------------------------------------------- */
+/*                                    Input                                   */
+/* -------------------------------------------------------------------------- */
 export const SelectedTile = createExtendedCoordComponent(world, { id: "SelectedTile" });
 export const HoverTile = createExtendedCoordComponent(world, { id: "HoverTile" });
 export const SelectedBuilding = createExtendedComponent(world, { value: Type.Entity }, { id: "SelectedBuilding" });
@@ -32,12 +45,9 @@ export const SelectedAction = createExtendedNumberComponent(world, {
   id: "SelectedAction",
 });
 
-// export const Marker = createExtendedMarkerComponent(world, {
-//   id: "MarkerTypeComponent",
-// });
-
-export const ActiveAsteroid = createExtendedComponent(world, { value: Type.Entity }, { id: "ActiveAsteroid" });
-
+/* -------------------------------------------------------------------------- */
+/*                                    Units                                   */
+/* -------------------------------------------------------------------------- */
 // export const Send = createExtendedSendComponent(world);
 
 export const TrainingQueue = createExtendedComponent(
@@ -64,6 +74,9 @@ export const Hangar = createExtendedComponent(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                 Leaderboard                                */
+/* -------------------------------------------------------------------------- */
 export const Leaderboard = createExtendedComponent(
   world,
   {
@@ -76,10 +89,10 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                   Battle                                   */
+/* -------------------------------------------------------------------------- */
 // export const Battle = BattleComponent();
-
-// export const NotificationQueue = NotificationQueueComponent();
-
 export const BattleReport = createExtendedComponent(
   world,
   {
@@ -91,20 +104,38 @@ export const BattleReport = createExtendedComponent(
   }
 );
 
-const DevHighlight = createExtendedComponent(world, { value: Type.OptionalNumber }, { id: "DevHighlight" });
+/* -------------------------------------------------------------------------- */
+/*                                Notifications                               */
+/* -------------------------------------------------------------------------- */
+// export const NotificationQueue = NotificationQueueComponent();
+
 export default {
-  Account,
-  ActiveAsteroid,
-  BlockNumber,
-  GameReady,
+  /* ----------------------------------- Dev ---------------------------------- */
   DoubleCounter,
+
+  /* ------------------------------ Chain State ------------------------------- */
+  BlockNumber,
+  Account,
+  GameReady,
+  ActiveAsteroid,
+  CurrentTransaction,
+
+  /* ---------------------------------- Input --------------------------------- */
   SelectedTile,
   HoverTile,
   SelectedBuilding,
   SelectedAction,
+
+  /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,
   Hangar,
+
+  /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,
+
+  /* --------------------------------- Battle --------------------------------- */
   BattleReport,
-  DevHighlight,
+
+  /* ------------------------------ Notifications ----------------------------- */
+  // NotificationQueue
 };
