@@ -17,6 +17,7 @@ import { EBuilding } from "codegen/Types.sol";
 contract BuildSystem is PrimodiumSystem {
   function build(EBuilding buildingType, PositionData memory coord) public returns (bytes32 buildingEntity) {
     require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
+    require(buildingType != EBuilding.MainBase, "[BuildSystem] Cannot build more than one main base per wallet");
 
     bytes32 playerEntity = addressToEntity(_msgSender());
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
@@ -30,8 +31,6 @@ contract BuildSystem is PrimodiumSystem {
     );
 
     // require(LibBuilding.canBuildOnTile(buildingType, coord), "[BuildSystem] Cannot build on this tile");
-
-    // require(buildingType != MainBaseID, "[BuildSystem] Cannot build more than one main base per wallet");
 
     LibBuilding.build(playerEntity, buildingType, coord);
   }
