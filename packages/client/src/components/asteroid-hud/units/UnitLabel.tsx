@@ -5,8 +5,10 @@ import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
 export const UnitLabel = ({
   name,
   resourceId,
+  count,
 }: {
   name: string;
+  count: number;
   resourceId: EntityID;
 }) => {
   const resourceIcon = BackgroundImage.get(resourceId)?.at(0);
@@ -15,7 +17,7 @@ export const UnitLabel = ({
     <div className="mx-1">
       <ResourceIconTooltip
         name={name}
-        amount={0}
+        amount={count}
         resourceId={resourceId}
         image={resourceIcon ?? ""}
         validate={false}
