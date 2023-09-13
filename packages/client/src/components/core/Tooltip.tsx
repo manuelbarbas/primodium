@@ -3,7 +3,7 @@ export const Tooltip: React.FC<{
   text: string;
 }> = ({ children, text }) => {
   return (
-    <div className="tooltip tooltip-right" data-tip={text}>
+    <div className="tooltip tooltip-right pointer-events-auto" data-tip={text}>
       {children}
     </div>
   );

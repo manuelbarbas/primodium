@@ -7,7 +7,7 @@ export const Divider: React.FC<{
     <div
       className={`divider ${className} ${
         direction === "horizontal" ? "divider-horizontal" : "divider-vertical"
-        }`}
+      }`}
     >
       {children}
     </div>

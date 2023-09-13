@@ -23,6 +23,11 @@ export const PlayerInfo: React.FC = () => {
         <Tabs.IconButton
           index={3}
           imageUri="/img/icons/settingsicon.png"
+          text="Leaderboard"
+        />
+        <Tabs.IconButton
+          index={4}
+          imageUri="/img/icons/settingsicon.png"
           text="Settings"
         />
       </Join>

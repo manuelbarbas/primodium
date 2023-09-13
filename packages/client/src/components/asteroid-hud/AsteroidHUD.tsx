@@ -6,10 +6,14 @@ import { AsteroidMap, KeybindActions } from "@game/constants";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { StatusBar } from "./StatusBar/StatusBar";
 import { Fleets } from "./Fleets";
 import { PlayerInfo } from "./PlayerInfo";
-import { BuildingMenu } from "./BuildingMenu/BuildingMenu";
+// import { BuildingMenu } from "./BuildingMenu/BuildingMenu";
+import { Resources } from "./resources/Resources";
+import Hotbar from "../asteroid-ui-old/hotbar/Hotbar";
+import { Units } from "./units/Units";
+import { Leaderboard } from "./Leaderboard";
+import { CurrentObjective } from "./CurrentObjective";
 
 export const AsteroidHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -32,17 +36,25 @@ export const AsteroidHUD = () => {
         <>
           <HUD scale={1} pad>
             <HUD.BottomMiddle>
-              <BuildingMenu />
+              <Hotbar />
+              {/* <BuildingMenu /> */}
             </HUD.BottomMiddle>
             <HUD.TopLeft>
               <PlayerInfo />
             </HUD.TopLeft>
             <HUD.TopMiddle>
-              <StatusBar />
+              <Leaderboard />
+              <CurrentObjective />
             </HUD.TopMiddle>
             <HUD.TopRight>
               <Fleets />
             </HUD.TopRight>
+            <HUD.BottomLeft>
+              <Resources />
+            </HUD.BottomLeft>
+            <HUD.BottomRight>
+              <Units />
+            </HUD.BottomRight>
           </HUD>
           <HUD>
             <HUD.BottomRight>

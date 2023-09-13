@@ -5,8 +5,8 @@ import { useAccount } from "src/hooks";
 import { MainBase, Level } from "src/network/components/chainComponents";
 import { useGameStore } from "src/store/GameStore";
 import { PanelButton } from "./PanelButton";
-import { AllResourceLabels } from "./panes/inventory/AllResourceLabels";
-import { AllUtilityResourceLabels } from "./panes/utilities/AllUtilityResourceLabels";
+import { AllMaterialLabels } from "../../asteroid-hud/resources/materials/AllMaterialLabels";
+import { AllUtilityLabels } from "../../asteroid-hud/resources/utilities/AllUtilityLabels";
 import { UserFleets } from "./panes/fleets/UserFleets";
 
 export const UserPanel = () => {
@@ -60,7 +60,7 @@ export const UserPanel = () => {
               exit={{ scale: 0 }}
               className="bg-gray-900 z-[999] w-full border rounded-md border-cyan-600 ring ring-cyan-900 p-2 text-xs"
             >
-              <AllResourceLabels />
+              <AllMaterialLabels />
             </motion.div>
           )}
 
@@ -71,7 +71,7 @@ export const UserPanel = () => {
               exit={{ scale: 0 }}
               className="bg-gray-900 z-[999] w-full border rounded-md border-cyan-600 ring ring-cyan-900 p-2 text-xs"
             >
-              <AllUtilityResourceLabels />
+              <AllUtilityLabels />
             </motion.div>
           )}
           {menuIndex === 2 && (
