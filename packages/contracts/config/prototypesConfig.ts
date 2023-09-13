@@ -54,6 +54,9 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
     },
+    levels: {
+      // 0: { Level: { value: 1 } },
+    },
   },
   CopperMine: {
     tables: {
