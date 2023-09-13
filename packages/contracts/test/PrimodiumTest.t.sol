@@ -132,4 +132,20 @@ contract PrimodiumTest is MudTest {
     bytes32 playerEntity = addressToEntity(player);
     return HomeAsteroid.get(world, playerEntity);
   }
+
+  function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {
+    blueprint = new int32[](8);
+
+    blueprint[0] = 0;
+    blueprint[1] = 0;
+
+    blueprint[2] = 0;
+    blueprint[3] = -1;
+
+    blueprint[4] = -1;
+    blueprint[5] = 0;
+
+    blueprint[6] = -1;
+    blueprint[7] = -1;
+  }
 }

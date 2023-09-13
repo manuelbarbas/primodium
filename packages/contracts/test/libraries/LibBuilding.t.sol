@@ -38,10 +38,6 @@ contract LibBuildingTest is PrimodiumTest {
     world.devSetRecord(DimensionsTableId, keys, Dimensions.encode(currX, currY), Dimensions.getValueSchema());
 
     Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
-    console.log("maxX", uint32(bounds.maxX));
-    console.log("maxY", uint32(bounds.maxY));
-    console.log("minX", uint32(bounds.minX));
-    console.log("minY", uint32(bounds.minY));
 
     assertEq(bounds.minX, (maxX - curr.x) / 2);
     assertEq(bounds.maxX, (maxX + curr.x) / 2 - 1);
@@ -60,9 +56,9 @@ contract LibBuildingTest is PrimodiumTest {
     bytes32 playerEntity = addressToEntity(alice);
 
     Bounds memory bounds = LibBuilding.getPlayerBounds(playerEntity);
-    console.log("maxX", uint32(bounds.maxX));
-    console.log("maxY", uint32(bounds.maxY));
-    console.log("minX", uint32(bounds.minX));
-    console.log("minY", uint32(bounds.minY));
+    // console.log("maxX", uint32(bounds.maxX));
+    // console.log("maxY", uint32(bounds.maxY));
+    // console.log("minX", uint32(bounds.minX));
+    // console.log("minY", uint32(bounds.minY));
   }
 }
