@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 // external
-import { PrimodiumSystem } from "./internal/PrimodiumSystem.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { Spawned, Position, PositionData, Level } from "codegen/Tables.sol";
 import { LibAsteroid, LibBuilding } from "codegen/Libraries.sol";
