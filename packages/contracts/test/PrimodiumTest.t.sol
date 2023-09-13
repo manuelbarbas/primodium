@@ -8,6 +8,7 @@ import { ResourceSelector } from "@latticexyz/world/src/ResourceSelector.sol";
 import "codegen/world/IWorld.sol";
 import "codegen/Tables.sol";
 import "codegen/Types.sol";
+import "codegen/Prototypes.sol";
 import "libraries/Libraries.sol";
 import "src/Keys.sol";
 import "src/PrimodiumTypes.sol";
@@ -28,6 +29,7 @@ contract PrimodiumTest is MudTest {
   function setUp() public virtual override {
     super.setUp();
     world = IWorld(worldAddress);
+
     alice = getUser();
     bob = getUser();
     eve = getUser();
@@ -72,7 +74,7 @@ contract PrimodiumTest is MudTest {
     console.logInt(coord.x);
     console.log("y");
     console.logInt(coord.y);
-    console.log("parent", ResourceSelector.toString(coord.parent));
+    console.log("parent", uint256(coord.parent));
   }
 
   function getPosition1(address player) internal view returns (PositionData memory) {

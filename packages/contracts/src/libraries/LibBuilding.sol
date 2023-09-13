@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { console } from "forge-std/console.sol";
 // tables
-import { P_Asteroid, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, P_RequiredTile, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
+import { P_Asteroid, P_BuildingTypeToPrototype, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -13,11 +14,6 @@ import { Bounds } from "src/PrimodiumTypes.sol";
 import { EBuilding } from "codegen/Types.sol";
 
 library LibBuilding {
-  function canBuildOnTile(EBuilding buildingType, PositionData memory coord) internal view returns (bool) {
-    return true;
-    // P_RequiredTile.get(buildingType) == LibTerrain.getResourceByPositionData(world, coord);
-  }
-
   function build(
     bytes32 playerEntity,
     EBuilding buildingType,
@@ -27,7 +23,7 @@ library LibBuilding {
     uint32 level = 1;
 
     Spawned.set(buildingEntity, true);
-    BuildingType.set(buildingEntity, uint8(buildingType));
+    BuildingType.set(buildingEntity, P_BuildingTypeToPrototype.get(buildingType));
     Level.set(buildingEntity, level);
     Position.set(buildingEntity, coord);
     LastClaimedAt.set(buildingEntity, block.number);
@@ -41,12 +37,16 @@ library LibBuilding {
     bytes32 buildingEntity,
     EBuilding buildingType,
     PositionData memory position
-  ) public returns (bytes memory) {
-    int32[] memory blueprint = P_Blueprint.get(uint8(buildingType));
+  ) public {
+    console.log("placing tiles");
+    bytes32 buildingPrototype = P_BuildingTypeToPrototype.get(buildingType);
+    console.log("buildingPrototype", uint256(buildingPrototype));
+    int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 
     bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
     for (uint32 i = 0; i < blueprint.length; i += 2) {
+      console.log("placing tile", i);
       PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
       PositionData memory absoluteCoord = PositionData(
         position.x + relativeCoord.x,
@@ -65,6 +65,12 @@ library LibBuilding {
   ) private returns (bytes32 tileEntity) {
     tileEntity = LibEncode.getHash(BuildingTileKey, coord);
     require(OwnedBy.get(tileEntity) == 0, "[BuildSystem] Cannot build tile on a non-empty coordinate");
+    console.logInt(bounds.minX);
+    console.logInt(bounds.minY);
+    console.logInt(bounds.maxX);
+    console.logInt(bounds.maxY);
+    console.logInt(coord.x);
+    console.logInt(coord.y);
     require(
       bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,
       "[BuildSystem] Building out of bounds"
@@ -77,6 +83,10 @@ library LibBuilding {
     uint32 playerLevel = Level.get(playerEntity);
     P_AsteroidData memory asteroidDims = P_Asteroid.get();
     DimensionsData memory range = Dimensions.get(ExpansionKey, playerLevel);
+    console.log("range");
+    console.logInt(range.x);
+    console.logInt(range.y);
+
     return
       Bounds({
         maxX: (asteroidDims.xBounds + range.x) / 2 - 1,
