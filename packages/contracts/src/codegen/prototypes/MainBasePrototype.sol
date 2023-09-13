@@ -6,7 +6,7 @@ pragma solidity >=0.8.0;
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
 import { ERock, EBuilding } from "../Types.sol";
-import { Position, PositionTableId, P_Blueprint, P_BlueprintTableId, P_MaxLevel, P_MaxLevelTableId, P_MaxLevel, P_MaxLevelTableId } from "../Tables.sol";
+import { Position, PositionTableId, P_Blueprint, P_BlueprintTableId, P_MaxLevel, P_MaxLevelTableId } from "../Tables.sol";
 
 bytes32 constant prototypeId = "MainBase";
 bytes32 constant MainBasePrototypeId = prototypeId;
@@ -15,14 +15,6 @@ uint256 constant LENGTH = 3;
 function MainBaseKeys() pure returns (bytes32[] memory) {
   bytes32[] memory _keyTuple = new bytes32[](1);
   _keyTuple[0] = prototypeId;
-
-  return _keyTuple;
-}
-
-function MainBaseLevelKeys(uint32 level) pure returns (bytes32[] memory) {
-  bytes32[] memory _keyTuple = new bytes32[](2);
-  _keyTuple[0] = prototypeId;
-  _keyTuple[1] = bytes32(uint256(level));
 
   return _keyTuple;
 }
@@ -54,17 +46,4 @@ function MainBasePrototype(IStore store) {
   values[2] = P_MaxLevel.encode(8);
 
   createPrototype(store, keys, tableIds, values);
-
-  bytes32[] memory levelKeys;
-
-  /* ----------------------------- LEVEL 1 ----------------------------- */
-  levelKeys = MainBaseLevelKeys(1);
-  tableIds = new bytes32[](1);
-  values = new bytes[](1);
-
-  tableIds[0] = P_MaxLevelTableId;
-
-  values[0] = P_MaxLevel.encode(3);
-
-  createPrototype(store, levelKeys, tableIds, values);
 }

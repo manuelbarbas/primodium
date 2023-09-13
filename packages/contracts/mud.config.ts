@@ -118,7 +118,7 @@ export const config = mudConfig({
 
     RockType: {
       keySchema: { entity: "bytes32" },
-      schema: "uint8",
+      schema: "ERock",
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
