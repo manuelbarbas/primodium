@@ -40,90 +40,84 @@ contract BuildSystemTest is PrimodiumTest {
     }
   }
 
-  // function testFailMineBeforeBase() public {
-  //   vm.startPrank(alice);
+  function testInvalidIndexFail() public {
+    vm.startPrank(alice);
 
-  //   // TEMP: tile -6, 2 does not have iron according to current generation seed
-  //   Coord memory nonIronCoord = getNonIronCoord(alice);
-  //   assertTrue(LibTerrain.getResourceByCoord(world, nonIronCoord) != IronID, "Tile should not have iron");
+    PositionData memory nonIronPositionData = getNonIronPosition(alice);
 
-  //   buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
+    vm.expectRevert(bytes("[BuildSystem] Invalid building type"));
+    world.build(EBuilding.LENGTH, nonIronPositionData);
 
-  //   vm.stopPrank();
-  // }
+    vm.stopPrank();
+  }
 
-  // function testFailIronMineOnNonIron() public {
-  //   vm.startPrank(alice);
+  function testFailIronMineOnNonIron() public {
+    vm.startPrank(alice);
 
-  //   // TEMP: tile -6, 2 does not have iron according to current generation seed
-  //   Coord memory nonIronCoord = getNonIronCoord(alice);
-  //   assertTrue(LibTerrain.getResourceByCoord(world, nonIronCoord) != IronID, "Tile should not have iron");
+    PositionData memory nonIronPositionData = getNonIronPosition(alice);
 
-  //   buildSystem.executeTyped(DebugIronMineWithBuildLimitID, nonIronCoord);
+    world.build(EBuilding.IronMine, nonIronPositionData);
 
-  //   vm.stopPrank();
-  // }
+    vm.stopPrank();
+  }
 
-  // function testSameXYCanCollide() public {
-  //   vm.startPrank(alice);
-  //   Coord memory ironCoord = getIronCoord(alice);
-  //   buildSystem.executeTyped(IronMineID, ironCoord);
-  //   vm.stopPrank();
-  //   spawn(bob);
-  //   vm.startPrank(bob);
-  //   ironCoord = getIronCoord(bob);
-  //   buildSystem.executeTyped(IronMineID, ironCoord);
+  function testSameXYCanCollide() public {
+    vm.startPrank(alice);
+    PositionData memory ironPositionData = getIronPosition(alice);
+    world.build(EBuilding.IronMine, ironPositionData);
+    vm.stopPrank();
+    spawn(bob);
+    vm.startPrank(bob);
+    ironPositionData = getIronPosition(bob);
+    world.build(EBuilding.IronMine, ironPositionData);
 
-  //   vm.stopPrank();
-  // }
+    vm.stopPrank();
+  }
 
-  // function testFailSameXYZCannotCollide() public {
-  //   vm.startPrank(alice);
-  //   buildSystem.executeTyped(IronMineID, getCoord1(alice));
-  //   buildSystem.executeTyped(DebugIronMineID, getCoord1(alice));
-  // }
+  function testSameXYZCannotCollideFail() public {
+    vm.startPrank(alice);
+    world.build(EBuilding.IronMine, getPosition1(alice));
 
-  // function testBuiltOnWrongAsteroid() public {
-  //   vm.startPrank(alice);
-  //   Coord memory coord = getCoord2(alice);
-  //   coord.parent = 69;
+    vm.expectRevert(bytes("[BuildSystem] Building already exists"));
+    world.build(EBuilding.IronMine, getPosition1(alice));
+  }
 
-  //   vm.expectRevert(bytes("[BuildSystem] Building must be built on your main asteroid"));
-  //   buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
-  // }
+  function testBuiltOnWrongAsteroid() public {
+    vm.startPrank(alice);
+    PositionData memory coord = getPosition2(alice);
+    coord.parent = bytes32(uint256(69));
 
-  // function testFailBuildTwiceSameCoord() public prank(alice) {
-  //   Coord memory coord = getCoord1(alice);
-  //   buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
-  //   buildSystem.executeTyped(DebugSimpleBuildingNoReqsID, coord);
-  // }
+    vm.expectRevert(bytes("[BuildSystem] Building must be built on your home asteroid"));
+    world.build(EBuilding.IronMine, coord);
+  }
 
-  // function testFailBuildTwiceMainBase() public {
-  //   vm.startPrank(alice);
+  function testBuildTwiceMainBaseFail() public {
+    vm.startPrank(alice);
 
-  //   Coord memory coord1 = getCoord3(alice);
-  //   buildSystem.executeTyped(MainBaseID, coord1);
-  //   vm.stopPrank();
-  // }
+    PositionData memory coord1 = getPosition3(alice);
+    vm.expectRevert(bytes("[BuildSystem] Cannot build more than one main base per wallet"));
+    world.build(EBuilding.MainBase, coord1);
+    vm.stopPrank();
+  }
 
   // function testFailBuildMainBaseLevelNotMet() public {
   //   vm.startPrank(alice);
 
-  //   Coord memory coord1 = getCoord3(alice);
-  //   buildSystem.executeTyped(DebugSimpleBuildingMainBaseLevelReqID, coord1);
+  //   PositionData memory coord1 = getPosition3(alice);
+  //   world.build(DebugSimpleBuildingMainBaseLevelReqID, coord1);
   //   vm.stopPrank();
   // }
 
   // function testBuildMainBaseLevelMet() public {
   //   vm.startPrank(alice);
 
-  //   Coord memory coord1 = getCoord3(alice);
+  //   PositionData memory coord1 = getPosition3(alice);
   //   componentDevSystem.executeTyped(
   //     LevelComponentID,
   //     mainBaseComponent.getValue(addressToEntity(alice)),
   //     abi.encode(2)
   //   );
-  //   buildSystem.executeTyped(DebugSimpleBuildingMainBaseLevelReqID, coord1);
+  //   world.build(DebugSimpleBuildingMainBaseLevelReqID, coord1);
   //   vm.stopPrank();
   // }
 }
