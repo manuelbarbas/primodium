@@ -82,4 +82,9 @@ library LibBuilding {
         minY: (asteroidDims.yBounds - range.y) / 2
       });
   }
+
+  function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
+    bytes32 buildingTile = LibEncode.getHash(BuildingTileKey, coord);
+    return OwnedBy.get(buildingTile);
+  }
 }

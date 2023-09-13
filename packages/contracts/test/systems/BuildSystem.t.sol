@@ -11,21 +11,6 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   // todo: sort these tests. the first test should be a vanilla build system call
-  function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {
-    blueprint = new int32[](8);
-
-    blueprint[0] = 0;
-    blueprint[1] = 0;
-
-    blueprint[2] = 0;
-    blueprint[3] = -1;
-
-    blueprint[4] = -1;
-    blueprint[5] = 0;
-
-    blueprint[6] = -1;
-    blueprint[7] = -1;
-  }
 
   function testBuildLargeBuilding() public {
     int32[] memory blueprint = get2x2Blueprint();
