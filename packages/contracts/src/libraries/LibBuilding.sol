@@ -22,7 +22,7 @@ library LibBuilding {
     uint32 level = 1;
 
     Spawned.set(buildingEntity, true);
-    BuildingType.set(buildingEntity, P_BuildingTypeToPrototype.get(buildingType));
+    BuildingType.set(buildingEntity, P_BuildingTypeToPrototype.get(uint32(buildingType)));
     Level.set(buildingEntity, level);
     Position.set(buildingEntity, coord);
     LastClaimedAt.set(buildingEntity, block.number);
@@ -37,7 +37,7 @@ library LibBuilding {
     EBuilding buildingType,
     PositionData memory position
   ) public {
-    bytes32 buildingPrototype = P_BuildingTypeToPrototype.get(buildingType);
+    bytes32 buildingPrototype = P_BuildingTypeToPrototype.get(uint32(buildingType));
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 
