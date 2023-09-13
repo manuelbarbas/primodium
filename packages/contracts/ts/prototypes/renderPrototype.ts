@@ -1,7 +1,7 @@
 import { renderList, renderedSolidityHeader } from "@latticexyz/common/codegen";
 import { StaticAbiType } from "@latticexyz/schema-type";
 import { StoreConfig } from "@latticexyz/store";
-import { StoreConfigWithPrototypes } from "./prototypeConfig";
+import { StoreConfigWithPrototypes } from "./types";
 
 const formatValue = (config: StoreConfig, fieldType: string, value: number | string) => {
   if (fieldType in config.enums) {
