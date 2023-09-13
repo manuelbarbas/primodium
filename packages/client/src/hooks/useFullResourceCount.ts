@@ -72,10 +72,14 @@ export function useFullResourceCount(
     return buildingProduction + motherlodeProduction;
   }, [buildingProduction, motherlodeProduction]);
 
-  const resourceCount = useResourceCount(Item, resourceID);
-
-  const maxStorage = useResourceCount(P_MaxStorage, resourceID);
-
+  const resourceCount = useResourceCount(
+    ResourceType.Resource === type ? Item : OccupiedUtilityResource,
+    resourceID
+  );
+  const maxStorage = useResourceCount(
+    ResourceType.Resource === type ? P_MaxStorage : MaxUtility,
+    resourceID
+  );
   //****claiming****//
 
   //motherlode//
