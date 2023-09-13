@@ -4,7 +4,7 @@ import { Tabs } from "../core/Tabs";
 export const PlayerInfo: React.FC = () => {
   return (
     <Tabs>
-      <Join className="border border-primary">
+      <Join>
         <Tabs.IconButton
           index={0}
           imageUri="/img/icons/debugicon.png"

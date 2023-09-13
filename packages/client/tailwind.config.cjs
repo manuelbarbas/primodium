@@ -21,9 +21,9 @@ module.exports = {
     themes: [
       {
         base: {
-          primary: colors.cyan[600],
-          secondary: colors.cyan[300],
-          accent: colors.cyan[600],
+          primary: colors.cyan[900],
+          secondary: colors.cyan[800],
+          accent: colors.cyan[400],
           neutral: colors.slate[900],
           "base-100": colors.slate[800],
           info: colors.indigo[600],

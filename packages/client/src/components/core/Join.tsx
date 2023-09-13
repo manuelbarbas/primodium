@@ -13,7 +13,7 @@ export const Join: FC<JoinProps> = ({
 }) => {
   return (
     <div
-      className={`join ${className} ${
+      className={`join ${className} border border-secondary drop-shadow-2xl ${
         direction === "horizontal" ? "join-horizontal" : "join-vertical"
       }`}
     >
