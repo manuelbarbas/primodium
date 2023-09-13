@@ -28,3 +28,30 @@ enum EBuilding {
   Starmapper,
   LENGTH
 }
+
+enum EResource {
+  NULL,
+  Sandstone,
+  Biofilm,
+  Alluvium,
+  Regolith,
+  Bedrock,
+  Water,
+  Lithium,
+  Iron,
+  Copper,
+  Sulfur,
+  Titanium,
+  Iridium,
+  Osmium,
+  Tungsten,
+  Kimberlite,
+  Platinum,
+  Uraninite,
+  Bolutite,
+  MoveCount,
+  U_Electricity,
+  U_Housing,
+  U_Vessel,
+  LENGTH
+}
