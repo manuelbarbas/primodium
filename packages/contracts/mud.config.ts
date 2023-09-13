@@ -191,9 +191,11 @@ const prototypesConfig: PrototypesConfig<typeof config> = {
     },
   },
 
-  /* -------------------------------- Buildings ------------------------------- */
-  // NOTE the key of a building prototype must match its EBuilding enum equivalent
-  // This is because we use the enum to look up the prototype in the P_BuildingTypeToPrototype table
+  /* -------------------------------- Buildings ------------------------------- 
+   NOTE the key of a building prototype must match its EBuilding enum equivalent
+   This is because we use the enum to look up the prototype in the P_BuildingTypeToPrototype table
+  ----------------------------------------------------------------------------- */
+
   MainBase: {
     tables: {
       Position: { x: Math.floor(maxRange.xBounds / 2), y: Math.floor(maxRange.yBounds / 2), parent: encodeBytes32(0) },
