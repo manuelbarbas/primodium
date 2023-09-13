@@ -4,7 +4,6 @@ import newComponent from "./ExtendedComponent";
 
 export const BattleComponent = () => {
   const component = newComponent(world, {
-    id: Type.Entity,
     attacker: Type.Entity,
     defender: Type.Entity,
     winner: Type.Entity,
@@ -44,7 +43,6 @@ export const BattleComponent = () => {
       });
     }
     return {
-      id: battle.id,
       attacker: battle.attacker,
       defender: battle.defender,
       winner: battle.winner,

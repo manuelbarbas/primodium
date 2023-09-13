@@ -1,3 +1,5 @@
+// import type OutlinePostFx from "phaser3-rex-plugins/plugins/outlinepipeline.js";
+
 export const createFxApi = () => {
   function outline(
     gameObject: Phaser.GameObjects.Sprite,
@@ -7,7 +9,7 @@ export const createFxApi = () => {
       knockout?: boolean;
     } = {}
   ) {
-    const { thickness = 3, color = 0xffff00, knockout } = options;
+    const { thickness = 5, color = 0xffff00, knockout } = options;
 
     if (!(gameObject instanceof Phaser.GameObjects.Sprite)) return;
 

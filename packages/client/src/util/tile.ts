@@ -1,5 +1,6 @@
 import { Has, HasValue, Not, runQuery } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
 
 export function getBuildingsOfTypeInRange(origin: Coord, type: Entity, range: number) {
   const tiles: Coord[] = [];
@@ -36,7 +37,7 @@ export const getBuildingAtCoord = (coord: Coord) => {
     HasValue(Position, {
       x: coord.x,
       y: coord.y,
-      parent: HomeAsteroid.get()?.value,
+      parent: ActiveAsteroid.get()?.value,
     }),
     Not(BuildingType),
   ]);

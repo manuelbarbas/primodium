@@ -32,10 +32,10 @@ export function encodeCoord(coord: Coord): EntityID {
 export function decodeCoord(encodedValue: EntityID) {
   const bigInt = BigInt(encodedValue);
   // Extract the y value (rightmost 32 bits)
-  const y = Number(bigInt & BigInt(0xffffffff));
+  const y: number = Number(bigInt & BigInt(0xffffffff));
 
   // Right shift by 32 bits to extract the x value
-  const x = Number(bigInt >> BigInt(32));
+  const x: number = Number(bigInt >> BigInt(32));
 
   // Convert uint32 back to int32
   const int32_x: number = (x << 0) >> 0;
@@ -64,34 +64,19 @@ export function hashEntities(...args: (EntityID | string | number)[]) {
   return solidityKeccak256(types, values) as EntityID;
 }
 
-export function hashAndTrimKeyEntity(
-  key: string | EntityID | number,
-  entity: EntityID | string | number
-): EntityID {
+export function hashAndTrimKeyEntity(key: string | EntityID | number, entity: EntityID | string | number): EntityID {
   return trim(hashKeyEntity(key, entity));
 }
 
 // Identical to hashKeyEntity in packages/contracts/src/libraries/LibEncode.sol
-export function hashKeyEntity(
-  key: EntityID | string | number,
-  entity: EntityID | string | number
-): EntityID {
+export function hashKeyEntity(key: EntityID | string | number, entity: EntityID | string | number): EntityID {
   // Compute the Keccak-256 hash of the concatenated key and entity
-  return solidityKeccak256(
-    ["uint256", "uint256"],
-    [BigNumber.from(key), BigNumber.from(entity)]
-  ) as EntityID;
+  return solidityKeccak256(["uint256", "uint256"], [BigNumber.from(key), BigNumber.from(entity)]) as EntityID;
 }
 // Identical to hashKeyEntity (with string param) in packages/contracts/src/libraries/LibEncode.sol
-export function hashStringEntity(
-  key: string,
-  entity: EntityID | string | number
-): EntityID {
+export function hashStringEntity(key: string, entity: EntityID | string | number): EntityID {
   // Compute the Keccak-256 hash of the concatenated key and entity
-  return solidityKeccak256(
-    ["bytes", "uint256"],
-    [utils.toUtf8Bytes(key), BigNumber.from(entity)]
-  ) as EntityID;
+  return solidityKeccak256(["bytes", "uint256"], [utils.toUtf8Bytes(key), BigNumber.from(entity)]) as EntityID;
 }
 // Remove leading zeros due to mudv1 hashing behavior
 // if there are leading zeroes, the key in world.entityToIndex will be trimmed
@@ -103,10 +88,7 @@ export function hashEntity(entity: EntityID) {
   return solidityKeccak256(["uint256"], [BigNumber.from(entity)]) as EntityID;
 }
 
-export function hashAndTrimKeyCoord(
-  key: string,
-  coord: ContractCoord
-): EntityID {
+export function hashAndTrimKeyCoord(key: string, coord: ContractCoord): EntityID {
   return trim(hashKeyCoord(key, coord));
 }
 

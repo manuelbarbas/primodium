@@ -1,16 +1,10 @@
+import { SyncState } from "@latticexyz/network";
 import { EntityID, defineComponentSystem } from "@latticexyz/recs";
-import { world } from "../world";
-import {
-  Battle,
-  Account,
-  NotificationQueue,
-  BlockNumber,
-} from "../components/clientComponents"; // Update with actual Battle and Player component imports
-import { Notification } from "../components/customComponents/NotificationQueueComponent";
-import { Arrival, LoadingState, Position } from "../components/chainComponents";
-import { SingletonID, SyncState } from "@latticexyz/network";
 import { uuid } from "@latticexyz/utils";
-import { toast } from "react-toastify";
+import { Arrival, LoadingState } from "../components/chainComponents";
+import { Account, Battle, BlockNumber, NotificationQueue } from "../components/clientComponents"; // Update with actual Battle and Player component imports
+import { Notification } from "../components/customComponents/NotificationQueueComponent";
+import { world } from "../world";
 
 const LENGTH = 3500;
 
@@ -20,10 +14,7 @@ export function setupNotificationQueue() {
     const playerAddress = Account.get()?.value; // Assuming Player component has an 'address' field
     const battle = update.value[0];
     if (!battle) return;
-    if (
-      battle.attacker === playerAddress ||
-      battle.defender === playerAddress
-    ) {
+    if (battle.attacker === playerAddress || battle.defender === playerAddress) {
       const newNotification: Notification = {
         id: uuid(),
         entity: world.entities[update.entity],
@@ -32,10 +23,6 @@ export function setupNotificationQueue() {
       };
 
       NotificationQueue.addNotification(newNotification);
-
-      toast.info(
-        "A battle has taken place. View Battle Reports for more info..."
-      );
     }
   });
 
@@ -52,8 +39,7 @@ export function setupNotificationQueue() {
     }
     usedArrivals.add(entityId);
     const arrival = Arrival.getWithId(entityId);
-    if (arrival?.from !== playerAddress && arrival?.to !== playerAddress)
-      return;
+    if (arrival?.from !== playerAddress && arrival?.to !== playerAddress) return;
     if (Number(arrival.arrivalBlock) < blockNumber) return;
     const newNotification: Notification = {
       id: uuid(),
@@ -64,14 +50,6 @@ export function setupNotificationQueue() {
 
     NotificationQueue.addNotification(newNotification);
     orbitingQueue.set(entityId, Number(arrival.arrivalBlock));
-
-    const coord = Position.get(arrival.destination, {
-      x: 0,
-      y: 0,
-      parent: SingletonID,
-    });
-
-    toast.info(`Your fleet on its way to [${coord.x}, ${coord.y}]`);
   });
 
   defineComponentSystem(world, BlockNumber, ({ value: [block] }) => {
@@ -96,10 +74,6 @@ export function setupNotificationQueue() {
 
         NotificationQueue.addNotification(newNotification);
         orbitingQueue.delete(entityId);
-
-        toast.info(
-          `Your fleet has arrived at its destination. Awaiting your command...`
-        );
       }
     });
   });

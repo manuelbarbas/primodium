@@ -30,8 +30,11 @@ export async function execute(
       // This is most likely a gas error. i.e.:
       //     TypeError: Cannot set properties of null (setting 'gasPrice')
       // so we tell the user to try again
-      //
-      toast.error(error.message);
+      if (setNotification) {
+        setNotification("Try Again", `${error}`);
+      } else {
+        alert(error);
+      }
       return undefined;
     }
   }

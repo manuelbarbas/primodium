@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 // world
 import { IWorld } from "codegen/world/IWorld.sol";
 // tables
-import { Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/Tables.sol";
+import { HomeAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/Tables.sol";
 
 // types
 import { ERock } from "src/Types.sol";
@@ -31,6 +31,7 @@ library LibAsteroid {
     Position.set(asteroidEntity, position);
     RockType.set(asteroidEntity, ERock.Asteroid);
     Spawned.set(ownerEntity, true);
+    HomeAsteroid.set(ownerEntity, asteroidEntity);
     ReversePosition.set(position.x, position.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidCount.set(asteroidCount);

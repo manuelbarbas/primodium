@@ -66,7 +66,7 @@ test("hashKeyEntity matches LibEncode outputs", () => {
 // E.g. console.logBytes32(bytes32(LibEncode.encodeCoordEntity(Coord({ x: 0, y: 0 }), "primodium")));
 const encodeCoordEntityOutputs = [
   {
-    coord: { x: 0, y: 0, parent: BigNumber.from(0).toHexString() },
+    coord: { x: 0, y: 0, parent: BigNumber.from("0").toHexString() },
     output: "0",
   },
   {
@@ -87,17 +87,12 @@ const encodeCoordEntityOutputs = [
   },
 ];
 
-// Takes an expected test output as input and returns a formatted EntityID string
 function formattedString(input: string) {
   return "0x" + BigInt(input).toString(16).padStart(64, "0");
 }
-function formattedEntityID(input: string) {
-  return trim(formattedString(input) as EntityID);
-}
-
 test("encodeCoordEntity matches LibEncode outputs", () => {
   for (const example of encodeCoordEntityOutputs) {
-    expect(formattedEntityID(example.output)).eq(encodeCoord(example.coord));
+    expect(formattedString(example.output)).eq(encodeCoord(example.coord));
     expect(example.output).not.eq(
       encodeCoord({
         x: example.coord.x - 10,
@@ -144,7 +139,7 @@ const hashEntityCoords = [
 
 test("hashKeyCoord", () => {
   for (const example of hashEntityCoords) {
-    expect(formattedEntityID(example.output)).eq(
+    expect(formattedString(example.output)).eq(
       hashKeyCoord(example.key, {
         ...example.coord,
         parent: example.coord.parent as EntityID,
@@ -215,7 +210,7 @@ const motherlodeHashes = [
 
 test("motherlodeHashes", () => {
   for (const example of motherlodeHashes) {
-    expect(formattedEntityID(example.motherlodeEntity)).eq(
+    expect(formattedString(example.motherlodeEntity)).eq(
       getMotherlodeEntity(example.i.toString() as EntityID, example.Coord)
     );
   }

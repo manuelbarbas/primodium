@@ -3,19 +3,22 @@ import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
+import { useNotificationStore } from "src/store/NotificationStore";
 import { parseReceipt } from "../analytics/parseReceipt";
 import { BlockIdToKey } from "../constants";
 
 export const research = async (item: EntityID, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
+  const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
   const receipt = await execute(
     systems["system.Research"].executeTyped(item, {
-      gasLimit: 5_000_000,
+      gasLimit: 2_000_000,
     }),
-    providers
+    providers,
+    setNotification
   );
 
   ampli.systemResearch({

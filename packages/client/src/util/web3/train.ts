@@ -1,34 +1,21 @@
 import { EntityID } from "@latticexyz/recs";
-import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
-import { parseReceipt } from "../analytics/parseReceipt";
-import { BlockIdToKey } from "../constants";
+import { useNotificationStore } from "src/store/NotificationStore";
 
-export const train = async (
-  buildingEntity: EntityID,
-  type: EntityID,
-  count: number,
-  network: Network
-) => {
+export const train = async (buildingEntity: EntityID, type: EntityID, count: number, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
+  const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
-  const receipt = await execute(
+  await execute(
     systems["system.TrainUnits"].executeTyped(buildingEntity, type, count, {
       gasLimit: 28_000_000,
     }),
-    providers
+    providers,
+    setNotification
   );
-
-  ampli.systemTrainUnits({
-    buildingName: BlockIdToKey[buildingEntity],
-    unitName: BlockIdToKey[type],
-    unitCount: count,
-    ...parseReceipt(receipt),
-  });
-
   setTransactionLoading(false);
 };

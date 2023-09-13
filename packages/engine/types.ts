@@ -47,10 +47,17 @@ export interface SceneConfig {
     chunkSize: number;
     tileWidth: number;
     tileHeight: number;
+<<<<<<< HEAD
     tilesets?: TilesetConfig;
     layerConfig?: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
     backgroundTile?: [number, ...number[]];
     animationInterval?: number;
+=======
+    tilesets: TilesetConfig;
+    layerConfig: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
+    backgroundTile?: [number, ...number[]];
+    animationInterval: number;
+>>>>>>> 1c951942 (fix: don't pnpm run clean on pnpm prepare such that types aren't deleted)
   };
 }
 
@@ -75,7 +82,10 @@ export type GameObjectComponent<Type extends keyof GameObjectTypes> = {
   now?: GameObjectFunction<Type>;
   once?: GameObjectFunction<Type>;
   update?: GameObjectFunction<Type>;
+<<<<<<< HEAD
   exit?: GameObjectFunction<Type>;
+=======
+>>>>>>> 1c951942 (fix: don't pnpm run clean on pnpm prepare such that types aren't deleted)
 };
 
 export declare type ObjectPool = ReturnType<typeof createObjectPool>;

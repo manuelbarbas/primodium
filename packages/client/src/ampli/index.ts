@@ -17,13 +17,13 @@
  * [Full Setup Instructions](https://data.amplitude.com/primodium/primodium-testnet2/implementation/web)
  */
 
-import * as amplitude from '@amplitude/analytics-browser';
+import * as amplitude from "@amplitude/analytics-browser";
 
-export type Environment = 'prod' | 'dev';
+export type Environment = "prod" | "dev";
 
 export const ApiKey: Record<Environment, string> = {
-  prod: '',
-  dev: ''
+  prod: "",
+  dev: "",
 };
 
 /**
@@ -31,24 +31,29 @@ export const ApiKey: Record<Environment, string> = {
  */
 export const DefaultConfiguration: BrowserOptions = {
   plan: {
-    version: '1',
-    branch: 'main',
-    source: 'web',
-    versionId: '8f0c2168-550a-4531-bc6b-f48fc69bf49e'
+    version: "1",
+    branch: "main",
+    source: "web",
+    versionId: "8f0c2168-550a-4531-bc6b-f48fc69bf49e",
   },
   ...{
     ingestionMetadata: {
-      sourceName: 'browser-typescript-ampli',
-      sourceVersion: '2.0.0'
-    }
-  }
+      sourceName: "browser-typescript-ampli",
+      sourceVersion: "2.0.0",
+    },
+  },
 };
 
-export interface LoadOptionsBase { disabled?: boolean }
+export interface LoadOptionsBase {
+  disabled?: boolean;
+}
 
-export type LoadOptionsWithEnvironment = LoadOptionsBase & { environment: Environment; client?: { configuration?: BrowserOptions; }; };
-export type LoadOptionsWithApiKey = LoadOptionsBase & { client: { apiKey: string; configuration?: BrowserOptions; } };
-export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instance: BrowserClient; } };
+export type LoadOptionsWithEnvironment = LoadOptionsBase & {
+  environment: Environment;
+  client?: { configuration?: BrowserOptions };
+};
+export type LoadOptionsWithApiKey = LoadOptionsBase & { client: { apiKey: string; configuration?: BrowserOptions } };
+export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instance: BrowserClient } };
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
@@ -93,7 +98,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -105,7 +110,7 @@ export interface SystemBuildProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -167,7 +172,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -179,7 +184,7 @@ export interface SystemBuildPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -228,7 +233,7 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -240,53 +245,7 @@ export interface SystemClaimFromMineProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
-   * | Min Value | 0 |
-   * | Max Value | 1 |
-   */
-  transactionStatus?: number;
-  /**
-   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
-   *
-   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
-   */
-  transactionTo?: string;
-  /**
-   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
-   *
-   *
-   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
-   */
-  transactionValid: boolean;
-}
-
-export interface SystemClaimObjectiveProperties {
-  /**
-   * Name of an objective in plaintext, as returned by \`BlockIdToKey\` in \`constants.ts\` when passing in an EntityID.
-   */
-  objectiveType: string;
-  /**
-   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
-   */
-  transactionFrom?: string;
-  /**
-   * The amount of gas actually used by this transaction.
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | integer |
-   */
-  transactionGasUsed?: number;
-  /**
-   * The hash of the transaction.
-   */
-  transactionHash?: string;
-  /**
-   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -335,7 +294,7 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -347,7 +306,7 @@ export interface SystemCraftProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -410,7 +369,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -422,7 +381,7 @@ export interface SystemDestroyProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -471,7 +430,7 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -483,7 +442,7 @@ export interface SystemDestroyPathProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -519,7 +478,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -531,7 +490,7 @@ export interface SystemIncrementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -565,7 +524,7 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -577,7 +536,7 @@ export interface SystemInvadeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -611,7 +570,7 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -623,7 +582,7 @@ export interface SystemRaidProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -657,7 +616,7 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -669,7 +628,7 @@ export interface SystemRecallReinforcementsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -711,7 +670,7 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -723,7 +682,7 @@ export interface SystemReceiveReinforcementProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -757,7 +716,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -769,7 +728,7 @@ export interface SystemResearchProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -819,7 +778,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -831,7 +790,7 @@ export interface SystemSendUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -877,7 +836,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -889,7 +848,7 @@ export interface SystemSpawnProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -923,7 +882,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -935,7 +894,7 @@ export interface SystemTrainUnitsProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -964,7 +923,7 @@ export interface SystemTrainUnitsProperties {
   /**
    * Name of a unit. On the client, this is fetched via its EntityID with `BlockIdToKey`.
    */
-  unitName: string;
+  unitType: string;
 }
 
 export interface SystemUpgradeProperties {
@@ -1008,7 +967,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -1020,7 +979,7 @@ export interface SystemUpgradeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -1075,7 +1034,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    */
   transactionGasUsed?: number;
   /**
@@ -1087,7 +1046,7 @@ export interface SystemUpgradeRangeProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | integer |
+   * | Type | number |
    * | Min Value | 0 |
    * | Max Value | 1 |
    */
@@ -1108,181 +1067,137 @@ export interface SystemUpgradeRangeProperties {
 }
 
 export class SystemBuild implements BaseEvent {
-  event_type = 'system.Build';
+  event_type = "system.Build";
 
-  constructor(
-    public event_properties: SystemBuildProperties,
-  ) {
+  constructor(public event_properties: SystemBuildProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemBuildPath implements BaseEvent {
-  event_type = 'system.BuildPath';
+  event_type = "system.BuildPath";
 
-  constructor(
-    public event_properties: SystemBuildPathProperties,
-  ) {
+  constructor(public event_properties: SystemBuildPathProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemClaimFromMine implements BaseEvent {
-  event_type = 'system.ClaimFromMine';
+  event_type = "system.ClaimFromMine";
 
-  constructor(
-    public event_properties: SystemClaimFromMineProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class SystemClaimObjective implements BaseEvent {
-  event_type = 'system.ClaimObjective';
-
-  constructor(
-    public event_properties: SystemClaimObjectiveProperties,
-  ) {
+  constructor(public event_properties: SystemClaimFromMineProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemCraft implements BaseEvent {
-  event_type = 'system.Craft';
+  event_type = "system.Craft";
 
-  constructor(
-    public event_properties: SystemCraftProperties,
-  ) {
+  constructor(public event_properties: SystemCraftProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemDestroy implements BaseEvent {
-  event_type = 'system.Destroy';
+  event_type = "system.Destroy";
 
-  constructor(
-    public event_properties: SystemDestroyProperties,
-  ) {
+  constructor(public event_properties: SystemDestroyProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemDestroyPath implements BaseEvent {
-  event_type = 'system.DestroyPath';
+  event_type = "system.DestroyPath";
 
-  constructor(
-    public event_properties: SystemDestroyPathProperties,
-  ) {
+  constructor(public event_properties: SystemDestroyPathProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemIncrement implements BaseEvent {
-  event_type = 'system.Increment';
+  event_type = "system.Increment";
 
-  constructor(
-    public event_properties: SystemIncrementProperties,
-  ) {
+  constructor(public event_properties: SystemIncrementProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemInvade implements BaseEvent {
-  event_type = 'system.Invade';
+  event_type = "system.Invade";
 
-  constructor(
-    public event_properties: SystemInvadeProperties,
-  ) {
+  constructor(public event_properties: SystemInvadeProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemRaid implements BaseEvent {
-  event_type = 'system.Raid';
+  event_type = "system.Raid";
 
-  constructor(
-    public event_properties: SystemRaidProperties,
-  ) {
+  constructor(public event_properties: SystemRaidProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemRecallReinforcements implements BaseEvent {
-  event_type = 'system.RecallReinforcements';
+  event_type = "system.RecallReinforcements";
 
-  constructor(
-    public event_properties: SystemRecallReinforcementsProperties,
-  ) {
+  constructor(public event_properties: SystemRecallReinforcementsProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemReceiveReinforcement implements BaseEvent {
-  event_type = 'system.ReceiveReinforcement';
+  event_type = "system.ReceiveReinforcement";
 
-  constructor(
-    public event_properties: SystemReceiveReinforcementProperties,
-  ) {
+  constructor(public event_properties: SystemReceiveReinforcementProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemResearch implements BaseEvent {
-  event_type = 'system.Research';
+  event_type = "system.Research";
 
-  constructor(
-    public event_properties: SystemResearchProperties,
-  ) {
+  constructor(public event_properties: SystemResearchProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemSendUnits implements BaseEvent {
-  event_type = 'system.SendUnits';
+  event_type = "system.SendUnits";
 
-  constructor(
-    public event_properties: SystemSendUnitsProperties,
-  ) {
+  constructor(public event_properties: SystemSendUnitsProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemSpawn implements BaseEvent {
-  event_type = 'system.Spawn';
+  event_type = "system.Spawn";
 
-  constructor(
-    public event_properties: SystemSpawnProperties,
-  ) {
+  constructor(public event_properties: SystemSpawnProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemTrainUnits implements BaseEvent {
-  event_type = 'system.TrainUnits';
+  event_type = "system.TrainUnits";
 
-  constructor(
-    public event_properties: SystemTrainUnitsProperties,
-  ) {
+  constructor(public event_properties: SystemTrainUnitsProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemUpgrade implements BaseEvent {
-  event_type = 'system.Upgrade';
+  event_type = "system.Upgrade";
 
-  constructor(
-    public event_properties: SystemUpgradeProperties,
-  ) {
+  constructor(public event_properties: SystemUpgradeProperties) {
     this.event_properties = event_properties;
   }
 }
 
 export class SystemUpgradeRange implements BaseEvent {
-  event_type = 'system.UpgradeRange';
+  event_type = "system.UpgradeRange";
 
-  constructor(
-    public event_properties: SystemUpgradeRangeProperties,
-  ) {
+  constructor(public event_properties: SystemUpgradeRangeProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -1371,17 +1286,6 @@ export class Ampli {
     );
   }
 
- /**
-  * Flush the event.
-  */
-  flush() : PromiseResult<Result> {
-    if (!this.isInitializedAndEnabled()) {
-      return getVoidPromiseResult();
-    }
-
-    return this.amplitude!.flush();
-  }
-
   /**
    * Track event
    *
@@ -1445,23 +1349,6 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemClaimFromMine(properties), options);
-  }
-
-  /**
-   * system.ClaimObjective
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ClaimObjective)
-   *
-   * Event has no description in tracking plan.
-   *
-   * @param properties The event's properties (e.g. objectiveType)
-   * @param options Amplitude event options.
-   */
-  systemClaimObjective(
-    properties: SystemClaimObjectiveProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new SystemClaimObjective(properties), options);
   }
 
   /**

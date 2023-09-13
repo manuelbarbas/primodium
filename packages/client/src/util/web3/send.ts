@@ -5,6 +5,7 @@ import { execute } from "src/network/actions";
 import { ReversePosition } from "src/network/components/chainComponents";
 import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
+import { useNotificationStore } from "src/store/NotificationStore";
 import { parseReceipt } from "../analytics/parseReceipt";
 import { BlockIdToKey } from "../constants";
 import { encodeCoord } from "../encode";
@@ -20,6 +21,7 @@ export const send = async (
 ) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
+  const setNotification = useNotificationStore.getState().setNotification;
 
   setTransactionLoading(true);
 
@@ -37,7 +39,8 @@ export const send = async (
         gasLimit: 5_000_000,
       }
     ),
-    providers
+    providers,
+    setNotification
   );
 
   ampli.systemSendUnits({

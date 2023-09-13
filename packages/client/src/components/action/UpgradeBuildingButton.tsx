@@ -1,29 +1,20 @@
+import { SingletonID } from "@latticexyz/network";
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { hashAndTrimKeyEntity } from "src/util/encode";
-import { useAccount } from "../../hooks/useAccount";
-import { useMud } from "src/hooks/useMud";
-import { useGameStore } from "../../store/GameStore";
-import { getBuildingResearchRequirement } from "../../util/research";
-import Spinner from "../shared/Spinner";
 import { useMemo } from "react";
-import { getRecipe } from "../../util/resource";
-import {
-  RESOURCE_SCALE,
-  ResourceImage,
-  ResourceType,
-} from "../../util/constants";
-import ResourceIconTooltip from "../shared/ResourceIconTooltip";
-import { GameButton } from "../shared/GameButton";
-import { upgradeBuilding } from "src/util/web3";
-import {
-  Level,
-  P_MaxLevel,
-  HasResearched,
-  MainBase,
-} from "src/network/components/chainComponents";
-import { SingletonID } from "@latticexyz/network";
+import { useMud } from "src/hooks/useMud";
+import { HasResearched, Level, P_MaxLevel } from "src/network/components/chainComponents";
 import { getBlockTypeName } from "src/util/common";
+import { hashAndTrimKeyEntity } from "src/util/encode";
+import { upgradeBuilding } from "src/util/web3";
+import { useAccount } from "../../hooks/useAccount";
+import { useGameStore } from "../../store/GameStore";
+import { RESOURCE_SCALE, ResourceImage, ResourceType } from "../../util/constants";
+import { getBuildingResearchRequirement } from "../../util/research";
+import { getRecipe } from "../../util/resource";
+import { GameButton } from "../shared/GameButton";
+import ResourceIconTooltip from "../shared/ResourceIconTooltip";
+import Spinner from "../shared/Spinner";
 
 export default function UpgradeBuildingButton({
   id,
@@ -38,9 +29,7 @@ export default function UpgradeBuildingButton({
 }) {
   const network = useMud();
   const { address } = useAccount();
-  const [transactionLoading] = useGameStore((state) => [
-    state.transactionLoading,
-  ]);
+  const [transactionLoading] = useGameStore((state) => [state.transactionLoading]);
 
   const currLevel = Level.use(buildingEntity);
   const maxLevel = P_MaxLevel.use(builtTile);
@@ -53,49 +42,12 @@ export default function UpgradeBuildingButton({
   }, [currLevel, maxLevel]);
 
   const buildingTypeLevel = useMemo(() => {
-    return hashAndTrimKeyEntity(
-      builtTile,
-      upgradedLevel as unknown as EntityID
-    ) as EntityID;
-  }, [upgradedLevel, builtTile]);
-
-  const buildingTypeLastLevel = useMemo(() => {
-    return hashAndTrimKeyEntity(
-      builtTile,
-      (upgradedLevel - 1) as unknown as EntityID
-    ) as EntityID;
-  }, [upgradedLevel, builtTile]);
-
-  const lastLevelReceipe = useMemo(() => {
-    return getRecipe(buildingTypeLastLevel);
-  }, [buildingTypeLastLevel]);
+    return hashAndTrimKeyEntity(builtTile, upgradedLevel as unknown as EntityID) as EntityID;
+  }, [currLevel, builtTile]);
 
   const recipe = useMemo(() => {
     return getRecipe(buildingTypeLevel);
   }, [buildingTypeLevel]);
-
-  const differenceRecipee = useMemo(() => {
-    if (!recipe || !lastLevelReceipe) return recipe;
-    const difference = recipe.map((resource) => {
-      let amount = resource.amount;
-      if (resource.type == ResourceType.Utility) {
-        let lastLevelResource = lastLevelReceipe.find(
-          (lastLevelResource) => resource.id === lastLevelResource.id
-        );
-
-        if (lastLevelResource) {
-          amount = resource.amount - lastLevelResource.amount;
-        }
-      }
-
-      return {
-        id: resource.id,
-        amount: amount,
-        type: resource.type,
-      };
-    });
-    return difference;
-  }, [recipe, lastLevelReceipe]);
 
   const researchRequirement = useMemo(() => {
     return getBuildingResearchRequirement(buildingTypeLevel);
@@ -103,35 +55,15 @@ export default function UpgradeBuildingButton({
 
   const researchOwner = useMemo(() => {
     if (!address || !researchRequirement) return SingletonID;
-    return hashAndTrimKeyEntity(
-      researchRequirement,
-      address.toString().toLowerCase()
-    ) as EntityID;
+    return hashAndTrimKeyEntity(researchRequirement, address.toString().toLowerCase()) as EntityID;
   }, [researchRequirement]);
 
   const isResearched = useMemo(() => {
     return HasResearched.get(researchOwner);
   }, [researchOwner]);
 
-  const mainBaseEntity = MainBase.use(address, {
-    value: "-1" as EntityID,
-  }).value;
-
-  const mainBaseLevel = Level.use(mainBaseEntity, {
-    value: 0,
-  }).value;
-  const requiredMainBaseLevel = Level.use(buildingTypeLevel, {
-    value: 0,
-  }).value;
-
-  const isMainBaseLevelRequirementsMet = useMemo(() => {
-    return mainBaseLevel >= requiredMainBaseLevel;
-  }, [mainBaseLevel, requiredMainBaseLevel]);
-
   const isUpgradeLocked = useMemo(() => {
-    return (
-      researchRequirement != undefined && !(isResearched && isResearched.value)
-    );
+    return researchRequirement != undefined && !(isResearched && isResearched.value);
   }, [isResearched, researchRequirement]);
 
   let upgradeText: string;
@@ -139,10 +71,8 @@ export default function UpgradeBuildingButton({
     upgradeText = "Research Not Met";
   } else if (!isLevelConditionMet) {
     upgradeText = "Max Level Reached";
-  } else if (isMainBaseLevelRequirementsMet) {
-    upgradeText = "Upgrade Building Level " + upgradedLevel.toString();
   } else {
-    upgradeText = "Lvl. " + requiredMainBaseLevel.toString() + " Base Required";
+    upgradeText = "Upgrade Building Level " + upgradedLevel.toString();
   }
 
   return (
@@ -151,25 +81,15 @@ export default function UpgradeBuildingButton({
         id={id}
         className="w-44 text-sm"
         onClick={() => upgradeBuilding(coord, network)}
-        color={
-          isUpgradeLocked ||
-          !isLevelConditionMet ||
-          !isMainBaseLevelRequirementsMet
-            ? "bg-gray-500"
-            : undefined
-        }
-        disable={
-          isUpgradeLocked ||
-          !isLevelConditionMet ||
-          !isMainBaseLevelRequirementsMet
-        }
+        color={isUpgradeLocked || !isLevelConditionMet ? "bg-gray-500" : undefined}
+        disable={isUpgradeLocked || !isLevelConditionMet}
       >
         <div className="font-bold leading-none h-8 flex justify-center items-center px-2">
           {transactionLoading ? <Spinner /> : upgradeText}
         </div>
       </GameButton>
       <div className="mt-2 flex justify-center items-center text-sm bg-slate-900/60 px-2 space-x-2">
-        {differenceRecipee.map((resource) => {
+        {recipe.map((resource) => {
           const resourceImage = ResourceImage.get(resource.id)!;
           const resourceName = getBlockTypeName(resource.id);
           return (
@@ -178,9 +98,7 @@ export default function UpgradeBuildingButton({
               image={resourceImage}
               resourceId={resource.id}
               name={resourceName}
-              scale={
-                resource.type === ResourceType.Resource ? RESOURCE_SCALE : 1
-              }
+              scale={resource.type === ResourceType.Resource ? RESOURCE_SCALE : 1}
               amount={resource.amount}
             />
           );

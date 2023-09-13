@@ -1,6 +1,6 @@
-import { createChunks } from "@latticexyz/phaserx";
 import type { createCamera } from "@latticexyz/phaserx";
-import { SceneConfig, TileAnimation } from "../../types";
+import { createChunks } from "@latticexyz/phaserx";
+import { SceneConfig, TileAnimation, TilesetConfig } from "../../types";
 import { createAnimatedTilemap } from "./tilemap/createAnimatedTilemap";
 
 export const createTilemap = (
@@ -9,59 +9,49 @@ export const createTilemap = (
   tileWidth: number,
   tileHeight: number,
   chunkSize: number,
-  tilesets: SceneConfig["tilemap"]["tilesets"],
+  tilesets: TilesetConfig,
   layerConfig: SceneConfig["tilemap"]["layerConfig"],
   animations: TileAnimation[] = [],
-  animationInterval = 100,
+  animationInterval: number,
   backgroundTile: [number, ...number[]] = [0]
 ) => {
   //create empty tilemap to create tilesets
-  const emptyMap = new Phaser.Tilemaps.Tilemap(
-    scene,
-    new Phaser.Tilemaps.MapData()
-  );
+  const emptyMap = new Phaser.Tilemaps.Tilemap(scene, new Phaser.Tilemaps.MapData());
 
   const generatedTilesets: Record<string, Phaser.Tilemaps.Tileset> = {};
-
-  if (tilesets) {
-    for (const [key, value] of Object.entries(tilesets)) {
-      try {
-        generatedTilesets[key] = emptyMap.addTilesetImage(
-          key,
-          value.key,
-          value.tileWidth,
-          value.tileHeight,
-          value.extrusion ?? 0,
-          value.extrusion ? value.extrusion * 2 : 0,
-          value.gid ?? 0
-        )!;
-      } catch (e) {
-        throw new Error("Failed to load tileset: " + key + "/" + value);
-      }
+  for (const [key, value] of Object.entries(tilesets)) {
+    try {
+      generatedTilesets[key] = emptyMap.addTilesetImage(
+        key,
+        value.key,
+        value.tileWidth,
+        value.tileHeight,
+        value.extrusion ?? 0,
+        value.extrusion ? value.extrusion * 2 : 0,
+        value.gid ?? 0
+      )!;
+    } catch (e) {
+      throw new Error("Failed to load tileset: " + key + "/" + value);
     }
   }
 
   //set up chunk
   const chunks = createChunks(camera.worldView$, chunkSize * tileWidth);
 
-  const tilemap = layerConfig
-    ? createAnimatedTilemap({
-        scene,
-        chunks,
-        tileWidth,
-        tileHeight,
-        backgroundTile,
-        tilesets: generatedTilesets,
-        layerConfig,
-        animationInterval,
-      })
-    : null;
+  const tilemap = createAnimatedTilemap({
+    scene,
+    chunks,
+    tileWidth,
+    tileHeight,
+    backgroundTile,
+    tilesets: generatedTilesets,
+    layerConfig,
+    animationInterval,
+  });
 
   //register tilemap animations
-  if (tilemap) {
-    for (const anim of animations) {
-      tilemap.registerAnimation(anim.key, anim.frames);
-    }
+  for (const anim of animations) {
+    tilemap.registerAnimation(anim.key, anim.frames);
   }
 
   return {
@@ -71,7 +61,7 @@ export const createTilemap = (
     map: tilemap,
     chunks,
     dispose: () => {
-      if (tilemap) tilemap.dispose();
+      tilemap.dispose();
     },
   };
 };

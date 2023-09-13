@@ -3,9 +3,8 @@ pragma solidity >=0.8.0;
 
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
-import { createPrototypes } from "codegen/scripts/CreatePrototypes.sol";
-import { createTerrain } from "codegen/scripts/CreateTerrain.sol";
+import { IWorld } from "../src/codegen/world/IWorld.sol";
+import { createPrototypes } from "../src/codegen/scripts/CreatePrototypes.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -23,7 +22,6 @@ contract PostDeploy is Script {
     console.log("Increment via IWorld:", newValue);
 
     createPrototypes(world);
-    createTerrain(world);
 
     vm.stopBroadcast();
   }

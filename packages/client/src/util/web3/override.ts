@@ -1,19 +1,11 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
-import {
-  BuildingType,
-  OwnedBy,
-  Position,
-} from "src/network/components/chainComponents";
-import { HomeAsteroid } from "src/network/components/clientComponents";
+import { BuildingType, OwnedBy, Position } from "src/network/components/chainComponents";
+import { ActiveAsteroid } from "src/network/components/clientComponents";
 import { singletonIndex } from "src/network/world";
 
 // Component overrides
-export const addTileOverride = (
-  pos: Coord,
-  blockType: EntityID,
-  player: EntityID
-) => {
+export const addTileOverride = (pos: Coord, blockType: EntityID, player: EntityID) => {
   const tempPositionId = uuid();
   const tempEntityIndex = singletonIndex;
   Position.addOverride(tempPositionId, {
@@ -21,7 +13,7 @@ export const addTileOverride = (
     value: {
       x: pos.x,
       y: pos.y,
-      parent: HomeAsteroid.get()?.value,
+      parent: ActiveAsteroid.get()?.value,
     },
   });
   BuildingType.addOverride(tempPositionId, {

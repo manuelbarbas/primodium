@@ -1,10 +1,12 @@
+import { EntityID } from "@latticexyz/recs";
 import { Network } from "src/network/setupNetworkOld";
 
-async function init(network: Network) {
-  const game = await engine.createGame(gameConfig);
+import { initAsteroidView } from "./lib/asteroid/init";
+import { initBeltView } from "./lib/belt/init";
 
-  await initAsteroidScene(game, network);
-  await initStarmapScene(game, network);
+async function init(player: EntityID, network: Network) {
+  await initAsteroidView(player, network);
+  await initBeltView(player, network);
 }
 
 export default init;

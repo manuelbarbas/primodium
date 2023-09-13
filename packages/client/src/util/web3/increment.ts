@@ -4,11 +4,13 @@ import { execute } from "src/network/actions";
 import { Counter } from "src/network/components/chainComponents";
 import { Network } from "src/network/setupNetworkOld";
 import { useGameStore } from "src/store/GameStore";
+import { useNotificationStore } from "src/store/NotificationStore";
 import { parseReceipt } from "../analytics/parseReceipt";
 
 export const increment = async (entity: EntityID, network: Network) => {
   const { providers, systems } = network;
   const setTransactionLoading = useGameStore.getState().setTransactionLoading;
+  const setNotification = useNotificationStore.getState().setNotification;
   setTransactionLoading(true);
 
   const counter = Counter.get();
@@ -17,7 +19,8 @@ export const increment = async (entity: EntityID, network: Network) => {
     systems["system.Increment"].executeTyped(entity, {
       gasLimit: 1_000_000,
     }),
-    providers
+    providers,
+    setNotification
   );
 
   ampli.systemIncrement({

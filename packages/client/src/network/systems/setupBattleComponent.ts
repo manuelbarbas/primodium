@@ -1,5 +1,4 @@
 import { Has, defineSystem } from "@latticexyz/recs";
-import { world } from "../world";
 import {
   BattleAttacker,
   BattleBlockNumber,
@@ -9,6 +8,7 @@ import {
   BattleSpaceRock,
 } from "../components/chainComponents";
 import { Battle } from "../components/clientComponents";
+import { world } from "../world";
 
 export const setupBattleComponent = () => {
   const query = [
@@ -32,7 +32,6 @@ export const setupBattleComponent = () => {
 
     Battle.set(
       {
-        id: entityId,
         attacker: attacker.participantEntity,
         defender: defender.participantEntity,
         attackerUnitCounts: attacker.unitCounts,

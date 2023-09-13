@@ -5,7 +5,7 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 // tables
-import { Position, PositionData, Spawned, Home } from "codegen/Tables.sol";
+import { Position, PositionData, Spawned, HomeAsteroid } from "codegen/Tables.sol";
 
 // libraries
 import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
@@ -26,13 +26,8 @@ contract BuildSystem is PrimodiumSystem {
     require(!Spawned.get(buildingEntity), "[BuildSystem] Building already exists");
 
     require(
-      coord.parent == Home.getAsteroid(playerEntity),
+      coord.parent == HomeAsteroid.get(playerEntity),
       "[BuildSystem] Building must be built on your home asteroid"
-    );
-
-    require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingType, 1),
-      "[BuildSystem] MainBase level requirement not met"
     );
 
     // require(LibBuilding.canBuildOnTile(buildingType, coord), "[BuildSystem] Cannot build on this tile");

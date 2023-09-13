@@ -1,28 +1,18 @@
-import {
-  coordEq,
-  pixelCoordToTileCoord,
-  tileCoordToPixelCoord,
-} from "@latticexyz/phaserx";
+import { coordEq, pixelCoordToTileCoord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 
 export const createCameraApi = (targetScene: Scene) => {
-  function pan(coord: Coord, duration = 1000, ease = "Power2") {
+  function pan(coord: Coord, duration: number = 1000, ease: string = "Power2") {
     const { phaserScene, camera, tilemap } = targetScene;
 
-    const pixelCoord = tileCoordToPixelCoord(
-      coord,
-      tilemap.tileWidth,
-      tilemap.tileHeight
-    );
+    const pixelCoord = tileCoordToPixelCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
 
     const scroll = camera.phaserCamera.getScroll(pixelCoord.x, -pixelCoord.y);
 
     //we want new tween to be active for responsive behavior. New tween are created if on new end coord.
     if (phaserScene.tweens.getTweensOf(camera.phaserCamera).length) {
-      const currentTween = phaserScene.tweens.getTweensOf(
-        camera.phaserCamera
-      )[0];
+      const currentTween = phaserScene.tweens.getTweensOf(camera.phaserCamera)[0];
 
       const endCoord = {
         //@ts-ignore
@@ -48,24 +38,12 @@ export const createCameraApi = (targetScene: Scene) => {
     });
   }
 
-  function zoomTo(zoom: number, duration = 1000, ease = "Power2") {
-    const { camera } = targetScene;
-
-    camera.phaserCamera.zoomTo(zoom, duration, ease, false, () => {
-      updateWorldView();
-    });
-  }
-
   function getPosition() {
     const { camera, tilemap } = targetScene;
 
     const { centerX: x, centerY: y } = camera?.phaserCamera.worldView!;
 
-    const tileCoord = pixelCoordToTileCoord(
-      { x, y },
-      tilemap.tileWidth,
-      tilemap.tileHeight
-    );
+    const tileCoord = pixelCoordToTileCoord({ x, y }, tilemap.tileWidth, tilemap.tileHeight);
 
     return {
       x: tileCoord.x,
@@ -76,9 +54,7 @@ export const createCameraApi = (targetScene: Scene) => {
   function updateWorldView() {
     const { camera } = targetScene;
 
-    requestAnimationFrame(() =>
-      camera?.worldView$.next(camera.phaserCamera.worldView)
-    );
+    requestAnimationFrame(() => camera?.worldView$.next(camera.phaserCamera.worldView));
   }
 
   const shake = () => {
@@ -89,7 +65,6 @@ export const createCameraApi = (targetScene: Scene) => {
 
   return {
     pan,
-    zoomTo,
     getPosition,
     updateWorldView,
     shake,

@@ -11,7 +11,6 @@ import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
-import { createSpriteApi } from "./sprite";
 
 async function init(player: Entity, network: Network, version = "v1") {
   const asciiArt = `
@@ -60,13 +59,15 @@ function api(instance: string | Game, sceneKey = "MAIN") {
   const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
-    throw Error("No instance found with key " + instance);
+    console.warn("No instance found with key " + instance);
+    return;
   }
 
   const scene = _instance.sceneManager.scenes.get(sceneKey);
 
   if (scene === undefined) {
-    throw Error("No scene found with key " + sceneKey);
+    console.warn("No scene found with key " + sceneKey);
+    return;
   }
 
   return {
@@ -74,9 +75,8 @@ function api(instance: string | Game, sceneKey = "MAIN") {
     game: createGameApi(_instance),
     hooks: createHooksApi(scene),
     input: createInputApi(scene),
-    scene: createSceneApi(_instance),
+    scene: createSceneApi(scene),
     fx: createFxApi(),
-    sprite: createSpriteApi(scene),
   };
 }
 

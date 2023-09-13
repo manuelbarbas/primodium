@@ -13,7 +13,6 @@ contract DestroySystem is PrimodiumSystem {
     bytes32 playerEntity = addressToEntity(msg.sender);
     bytes32 buildingType = BuildingType.get(buildingEntity);
 
-    require(buildingType != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
     require(OwnedBy.get(buildingEntity) == playerEntity, "[Destroy] : only owner can destroy building");
 
     bytes32[] memory children = Children.get(buildingEntity);
@@ -23,7 +22,9 @@ contract DestroySystem is PrimodiumSystem {
     Children.deleteRecord(buildingEntity);
 
     // for main base tile, remove main base initialized.
-
+    if (buildingType == MainBasePrototypeId) {
+      Spawned.deleteRecord(playerEntity);
+    }
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);

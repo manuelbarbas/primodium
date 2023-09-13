@@ -1,5 +1,5 @@
 import { EntityID, defineComponentSystem } from "@latticexyz/recs";
-import { Pirate, Score } from "src/network/components/chainComponents";
+import { Score } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
 import { Account, Leaderboard } from "../components/clientComponents";
 
@@ -10,14 +10,12 @@ export const setupLeaderboard = () => {
     const entityId = world.entities[entity];
     const player = Account.get()?.value;
 
-    if (!entityId || Pirate.has(entityId)) return;
+    if (!entityId) return;
 
     const scoreValue = parseInt(value?.at(0)?.value.toString() ?? "0");
     leaderboardMap.set(entityId, scoreValue);
 
-    const leaderboardArray = [...leaderboardMap.entries()].sort(
-      (a, b) => b[1] - a[1]
-    );
+    const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => b[1] - a[1]);
 
     const scores = leaderboardArray.map((entry) => entry[1]);
     const players = leaderboardArray.map((entry) => entry[0]);
@@ -32,8 +30,7 @@ export const setupLeaderboard = () => {
     }
 
     const playerIndex = players.indexOf(player);
-    const playerRank =
-      playerIndex !== -1 ? playerIndex + 1 : leaderboardArray.length + 1;
+    const playerRank = playerIndex !== -1 ? playerIndex + 1 : leaderboardArray.length + 1;
 
     Leaderboard.set({
       scores,

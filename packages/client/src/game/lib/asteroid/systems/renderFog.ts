@@ -1,23 +1,14 @@
-import {
-  EntityID,
-  defineComponentSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { AsteroidMap } from "@game/constants";
+import { EntityID, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { Level } from "src/network/components/chainComponents";
 import { world } from "src/network/world";
-import {
-  getAsteroidBounds,
-  getPlayerBounds,
-  getPlayerNextBounds,
-} from "src/util/outOfBounds";
+import { getAsteroidBounds, getPlayerBounds, getPlayerNextBounds } from "src/util/outOfBounds";
+import { ObjectPosition, SetValue } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
-import {
-  ObjectPosition,
-  SetValue,
-} from "../../common/object-components/common";
 import { ObjectText } from "../../common/object-components/text";
-import { DepthLayers, FogTilekeys } from "@game/constants";
+
+const { FogTilekeys, DepthLayers } = AsteroidMap;
 
 export function renderFog(scene: Scene, player: EntityID) {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -43,7 +34,7 @@ export function renderFog(scene: Scene, player: EntityID) {
       else if (maxTop) index = FogTilekeys.OuterTop;
       else if (maxBottom) index = FogTilekeys.OuterBottom;
 
-      scene.tilemap.map?.putTileAt({ x, y: -y }, index, "GameFog");
+      scene.tilemap.map.putTileAt({ x, y: -y }, index, "GameFog");
     }
   }
 
@@ -94,14 +85,9 @@ export function renderFog(scene: Scene, player: EntityID) {
         originY: -0.5,
         alpha: 0.7,
       }),
-      ObjectText(
-        bounds.maxX !== nextBounds.maxX
-          ? "+ NEXT EXPANSION"
-          : "FINAL EXPANSION",
-        {
-          color: "cyan",
-        }
-      ),
+      ObjectText(bounds.maxX !== nextBounds.maxX ? "+ NEXT EXPANSION" : "FINAL EXPANSION", {
+        color: "cyan",
+      }),
     ]);
 
     // clear fog from expansion area
@@ -126,7 +112,7 @@ export function renderFog(scene: Scene, player: EntityID) {
           else if (maxBottom) index = FogTilekeys.Bottom;
         }
 
-        scene.tilemap.map?.putTileAt({ x, y: -y }, index, "GameFog");
+        scene.tilemap.map.putTileAt({ x, y: -y }, index, "GameFog");
       }
     }
   });

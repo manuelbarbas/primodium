@@ -21,7 +21,7 @@ export const DoubleCounter = createExtendedNumberComponent(world, {
 export const BlockNumber = createExtendedComponent(
   world,
   {
-    value: Type.Number,
+    value: Type.BigInt,
     avgBlockTime: Type.Number, //seconds
   },
   {
