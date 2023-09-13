@@ -3,8 +3,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(import.meta.url);
-const librariesFolder = path.resolve(__dirname, "../../src/libraries");
-const codegenFolder = path.resolve(__dirname, "../../src/codegen");
+const librariesFolder = path.resolve(__dirname, "../../../../src/libraries");
+const codegenFolder = path.resolve(__dirname, "../../../../src/codegen");
 
 const outputFileName = "Libraries.sol";
 
