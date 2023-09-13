@@ -56,4 +56,15 @@ contract SpawnSystemTest is PrimodiumTest {
     assertTrue(OwnedBy.get(world, buildingEntity) != 0);
     assertEq(OwnedBy.get(world, buildingEntity), addressToEntity(alice));
   }
+
+  function testBuildBeforeSpawnFail() public {
+    vm.startPrank(alice);
+
+    PositionData memory nonIronPositionData = getNonIronPosition(alice);
+
+    vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
+    world.build(EBuilding.IronMine, nonIronPositionData);
+
+    vm.stopPrank();
+  }
 }
