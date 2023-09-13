@@ -59,6 +59,11 @@ export const config = mudConfig({
       schema: "uint256",
     },
 
+    Spawned: {
+      keySchema: { entity: "bytes32" },
+      schema: "bool",
+    },
+
     /* --------------------------------- Player --------------------------------- */
     HomeAsteroid: {
       keySchema: { entity: "bytes32" },
@@ -94,16 +99,18 @@ export const config = mudConfig({
       },
     },
 
-    Spawned: {
-      keySchema: { entity: "bytes32" },
-      schema: "bool",
+    P_Terrain: {
+      keySchema: { x: "int32", y: "int32" },
+      schema: "EResource",
     },
 
     /* -------------------------------- Resources ------------------------------- */
 
-    P_Terrain: {
-      keySchema: { x: "int32", y: "int32" },
-      schema: "EResource",
+    /* --------------------------- Build Requirements --------------------------- */
+
+    P_RequiredBaseLevel: {
+      keySchema: { entity: "bytes32", level: "uint32" },
+      schema: "uint32",
     },
     /* -------------------------------- Buildings ------------------------------- */
 
