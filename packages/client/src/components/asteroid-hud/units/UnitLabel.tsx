@@ -20,6 +20,7 @@ export const UnitLabel = ({
         image={resourceIcon ?? ""}
         validate={false}
         fontSize={"sm"}
+        direction="left"
       />
     </div>
   );

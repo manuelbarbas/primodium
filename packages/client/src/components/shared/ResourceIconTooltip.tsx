@@ -15,6 +15,7 @@ export default function ResourceIconTooltip({
   fontSize = "md",
   resourceType = ResourceType.Resource,
   validate = true,
+  direction = "right",
 }: {
   image: string;
   resourceId: EntityID;
@@ -25,6 +26,7 @@ export default function ResourceIconTooltip({
   scale?: number;
   fontSize?: string;
   validate?: boolean;
+  direction?: "top" | "bottom" | "right" | "left";
 }) {
   const hasEnough = useHasEnoughOfResource(resourceId, amount, resourceType);
   const { avgBlockTime } = BlockNumber.use(undefined, {
@@ -40,7 +42,7 @@ export default function ResourceIconTooltip({
       : `${formatNumber((amount * scale * 60) / avgBlockTime, 1)}/MIN`;
 
   return (
-    <Tooltip text={name}>
+    <Tooltip text={name} direction={direction}>
       <IconLabel
         imageUri={image}
         text={label}
