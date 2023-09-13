@@ -61,6 +61,8 @@ For production deployment on Caldera testnet:
 
 The client is automatically deployed on Vercel from the main branch. The live instance is located at `testnet2.primodium.com/?worldAddress=<world_address>?chainid=caldera>` with the rpc settings to the Caldera testnet.
 
+To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level directory.
+
 # Dev Systems
 
 - Functions in `DevSystem` expose direct table access. We can add abstractions as necessary.
