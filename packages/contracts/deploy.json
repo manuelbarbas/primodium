@@ -44,7 +44,9 @@
     "BuildingCountComponent",
     "TotalRaidComponent",
     "TotalMotherlodeMinedComponent",
+    "TotalUnitsDestroyedComponent",
 
+    "P_DestroyedUnitsRequirementComponent",
     "P_MotherlodeMinedRequirementComponent",
     "P_RaidRequirementComponent",
     "P_UnitRequirementComponent",
@@ -150,7 +152,7 @@
     },
     {
       "name": "S_ResolveBattleSystem",
-      "writeAccess": ["BattleResultComponent"]
+      "writeAccess": ["*"]
     },
     {
       "name": "S_ResolveRaidUnitsSystem",
