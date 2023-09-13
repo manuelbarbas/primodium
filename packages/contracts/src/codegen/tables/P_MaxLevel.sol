@@ -24,7 +24,7 @@ library P_MaxLevel {
   /** Get the table's key schema */
   function getKeySchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.UINT8;
+    _schema[0] = SchemaType.BYTES32;
 
     return SchemaLib.encode(_schema);
   }
@@ -40,7 +40,7 @@ library P_MaxLevel {
   /** Get the table's key names */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](1);
-    keyNames[0] = "entity";
+    keyNames[0] = "prototype";
   }
 
   /** Get the table's field names */
@@ -60,27 +60,27 @@ library P_MaxLevel {
   }
 
   /** Get value */
-  function get(uint8 entity) internal view returns (uint32 value) {
+  function get(bytes32 prototype) internal view returns (uint32 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = prototype;
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, uint8 entity) internal view returns (uint32 value) {
+  function get(IStore _store, bytes32 prototype) internal view returns (uint32 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = prototype;
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Set value */
-  function set(uint8 entity, uint32 value) internal {
+  function set(bytes32 prototype, uint32 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = prototype;
 
     StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)), getValueSchema());
   }
@@ -88,11 +88,11 @@ library P_MaxLevel {
   /** Set value (using the specified store) */
   function set(
     IStore _store,
-    uint8 entity,
+    bytes32 prototype,
     uint32 value
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = prototype;
 
     _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)), getValueSchema());
   }
@@ -103,25 +103,25 @@ library P_MaxLevel {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(uint8 entity) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(bytes32 prototype) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = prototype;
 
     return _keyTuple;
   }
 
   /* Delete all data for given keys */
-  function deleteRecord(uint8 entity) internal {
+  function deleteRecord(bytes32 prototype) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = prototype;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }
 
   /* Delete all data for given keys (using the specified store) */
-  function deleteRecord(IStore _store, uint8 entity) internal {
+  function deleteRecord(IStore _store, bytes32 prototype) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = prototype;
 
     _store.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }

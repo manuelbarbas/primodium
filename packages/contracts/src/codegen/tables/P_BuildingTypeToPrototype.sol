@@ -17,10 +17,13 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("P_RequiredTile")));
-bytes32 constant P_RequiredTileTableId = _tableId;
+// Import user types
+import { EBuilding } from "./../Types.sol";
 
-library P_RequiredTile {
+bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("P_BuildingTypeTo")));
+bytes32 constant P_BuildingTypeToPrototypeTableId = _tableId;
+
+library P_BuildingTypeToPrototype {
   /** Get the table's key schema */
   function getKeySchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
@@ -40,7 +43,7 @@ library P_RequiredTile {
   /** Get the table's key names */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
     keyNames = new string[](1);
-    keyNames[0] = "entity";
+    keyNames[0] = "buildingType";
   }
 
   /** Get the table's field names */
@@ -60,27 +63,27 @@ library P_RequiredTile {
   }
 
   /** Get value */
-  function get(uint8 entity) internal view returns (bytes32 value) {
+  function get(EBuilding buildingType) internal view returns (bytes32 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = bytes32(uint256(uint8(buildingType)));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (Bytes.slice32(_blob, 0));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, uint8 entity) internal view returns (bytes32 value) {
+  function get(IStore _store, EBuilding buildingType) internal view returns (bytes32 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = bytes32(uint256(uint8(buildingType)));
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
     return (Bytes.slice32(_blob, 0));
   }
 
   /** Set value */
-  function set(uint8 entity, bytes32 value) internal {
+  function set(EBuilding buildingType, bytes32 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = bytes32(uint256(uint8(buildingType)));
 
     StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)), getValueSchema());
   }
@@ -88,11 +91,11 @@ library P_RequiredTile {
   /** Set value (using the specified store) */
   function set(
     IStore _store,
-    uint8 entity,
+    EBuilding buildingType,
     bytes32 value
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = bytes32(uint256(uint8(buildingType)));
 
     _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((value)), getValueSchema());
   }
@@ -103,25 +106,25 @@ library P_RequiredTile {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(uint8 entity) internal pure returns (bytes32[] memory) {
+  function encodeKeyTuple(EBuilding buildingType) internal pure returns (bytes32[] memory) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = bytes32(uint256(uint8(buildingType)));
 
     return _keyTuple;
   }
 
   /* Delete all data for given keys */
-  function deleteRecord(uint8 entity) internal {
+  function deleteRecord(EBuilding buildingType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = bytes32(uint256(uint8(buildingType)));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }
 
   /* Delete all data for given keys (using the specified store) */
-  function deleteRecord(IStore _store, uint8 entity) internal {
+  function deleteRecord(IStore _store, EBuilding buildingType) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = bytes32(uint256(entity));
+    _keyTuple[0] = bytes32(uint256(uint8(buildingType)));
 
     _store.deleteRecord(_tableId, _keyTuple, getValueSchema());
   }
