@@ -6,7 +6,7 @@ import {
   useState,
   FC,
 } from "react";
-import { Button as _Button } from "./Button";
+import { Button as _Button, IconButton as _IconButton } from "./Button";
 import { Card } from "./Card";
 
 interface TabProps {
@@ -61,8 +61,29 @@ const Button: FC<{
   );
 });
 
+export const IconButton: FC<{
+  index: number;
+  text: string;
+  imageUri: string;
+}> = memo(({ index, text, imageUri }) => {
+  const { index: currIndex, setIndex } = useIndex();
+
+  const selected = currIndex === index;
+
+  return (
+    <_IconButton
+      text={text}
+      selected={selected}
+      imageUri={imageUri}
+      hideText={!selected}
+      onClick={() => setIndex(selected ? undefined : index)}
+    />
+  );
+});
+
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
+  IconButton: typeof IconButton;
   Pane: typeof Pane;
 } = ({ children, defaultIndex = 0 }) => {
   const [currentIndex, setCurrentIndex] = useState<number | undefined>(
@@ -79,4 +100,5 @@ export const Tabs: FC<TabProps> & {
 };
 
 Tabs.Button = Button;
+Tabs.IconButton = IconButton;
 Tabs.Pane = Pane;

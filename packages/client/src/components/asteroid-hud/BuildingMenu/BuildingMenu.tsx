@@ -1,22 +1,23 @@
+import { useMemo } from "react";
 import { Navigator } from "src/components/core/Navigator";
+import { SelectedBuilding } from "src/network/components/clientComponents";
+import { getBuildingName } from "src/util/building";
 
 export const BuildingMenu: React.FC = () => {
-  return (
-    <Navigator>
-      <Navigator.Breadcrumbs />
-      <Navigator.Screen title="Home">
-        This is a test
-        <Navigator.NavButton to="Test">Test</Navigator.NavButton>
-      </Navigator.Screen>
-      <Navigator.Screen title="Test">
-        This is a different test
-        <Navigator.NavButton to="Test2">test2</Navigator.NavButton>
-        <Navigator.NavButton to="Home">Home</Navigator.NavButton>
-      </Navigator.Screen>
-      <Navigator.Screen title="Test2">
-        Screen 3<Navigator.NavButton to="Home">Home</Navigator.NavButton>
-      </Navigator.Screen>
+  const selectedBuilding = SelectedBuilding.use()?.value;
 
+  const buildingName = useMemo(() => {
+    if (!selectedBuilding) return;
+
+    return getBuildingName(selectedBuilding);
+  }, [selectedBuilding]);
+
+  if (!buildingName) return null;
+
+  return (
+    <Navigator initialScreen={buildingName}>
+      <Navigator.Breadcrumbs />
+      <Navigator.Screen title={buildingName}>This is a test</Navigator.Screen>
       <Navigator.BackButton />
     </Navigator>
   );

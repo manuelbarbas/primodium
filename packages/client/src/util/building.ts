@@ -1,12 +1,15 @@
 import { EntityID } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import {
+  BuildingType,
+  Level,
   P_RequiredTile,
   RawBlueprint,
 } from "src/network/components/chainComponents";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { Account } from "src/network/components/clientComponents";
 import { outOfBounds } from "./outOfBounds";
+import { getBlockTypeName, toRomanNumeral } from "./common";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<EntityID, Dimensions>();
@@ -112,4 +115,13 @@ export const validateBuildingPlacement = (coord: Coord, bulding: EntityID) => {
   }
 
   return false;
+};
+
+export const getBuildingName = (building: EntityID) => {
+  const buildingType = BuildingType.get(building)?.value;
+  const level = Level.get(building)?.value ?? 1;
+
+  if (!buildingType) return null;
+
+  return `${getBlockTypeName(buildingType)} ${toRomanNumeral(level)}`;
 };
