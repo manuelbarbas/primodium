@@ -5,7 +5,7 @@ pragma solidity >=0.8.0;
 
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
-import { ERock, EBuilding } from "../Types.sol";
+import { ERock, EBuilding, EResource } from "../Types.sol";
 import { Position, PositionTableId, P_Blueprint, P_BlueprintTableId, P_MaxLevel, P_MaxLevelTableId } from "../Tables.sol";
 
 bytes32 constant prototypeId = "MainBase";
@@ -29,19 +29,25 @@ function MainBasePrototype(IStore store) {
   tableIds[2] = P_MaxLevelTableId;
 
   values[0] = Position.encode(18, 12, 0x0);
-  int32[] memory p_blueprint_value = new int32[](12);
+  int32[] memory p_blueprint_value = new int32[](18);
   p_blueprint_value[0] = 0;
   p_blueprint_value[1] = 0;
   p_blueprint_value[2] = 0;
   p_blueprint_value[3] = -1;
-  p_blueprint_value[4] = -1;
-  p_blueprint_value[5] = 0;
+  p_blueprint_value[4] = 0;
+  p_blueprint_value[5] = -2;
   p_blueprint_value[6] = -1;
-  p_blueprint_value[7] = -1;
-  p_blueprint_value[8] = -2;
-  p_blueprint_value[9] = 0;
-  p_blueprint_value[10] = -2;
-  p_blueprint_value[11] = -1;
+  p_blueprint_value[7] = 0;
+  p_blueprint_value[8] = -1;
+  p_blueprint_value[9] = -1;
+  p_blueprint_value[10] = -1;
+  p_blueprint_value[11] = -2;
+  p_blueprint_value[12] = -2;
+  p_blueprint_value[13] = 0;
+  p_blueprint_value[14] = -2;
+  p_blueprint_value[15] = -1;
+  p_blueprint_value[16] = -2;
+  p_blueprint_value[17] = -2;
   values[1] = P_Blueprint.encode(p_blueprint_value);
   values[2] = P_MaxLevel.encode(8);
 
