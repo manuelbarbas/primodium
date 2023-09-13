@@ -8,7 +8,7 @@ type Tables<C extends StoreConfig> = {
 
 export type PrototypeConfig<C extends StoreConfig> = {
   keys?: Record<string, StaticAbiType>;
-  tables: Tables<C>;
+  tables?: Tables<C>;
   levels?: Record<number, Tables<C>>;
 };
 
