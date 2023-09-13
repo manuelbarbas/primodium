@@ -5,8 +5,8 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "./internal/PrimodiumSystem.sol";
 
 import { Spawned, Position, PositionData, Level } from "codegen/Tables.sol";
-import { LibAsteroid, LibBuilding } from "libraries/Libraries.sol";
-import { EBuilding } from "codegen/Types.sol";
+import { LibAsteroid, LibBuilding } from "codegen/Libraries.sol";
+import { EBuilding } from "src/Types.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 /// @title Spawn System for Primodium Game

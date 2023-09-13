@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { Position, PositionData, BuildingType, OwnedBy, Children, Spawned, Level, BuildingType } from "codegen/Tables.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-import { LibBuilding } from "libraries/Libraries.sol";
+import { LibBuilding } from "codegen/Libraries.sol";
 
 contract DestroySystem is PrimodiumSystem {
   function destroy(PositionData memory coord) public returns (bytes32 buildingEntity) {

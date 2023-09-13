@@ -9,8 +9,8 @@ import { LibEncode } from "libraries/LibEncode.sol";
 
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
-import { Bounds } from "src/PrimodiumTypes.sol";
-import { EBuilding } from "codegen/Types.sol";
+import { Bounds } from "src/Types.sol";
+import { EBuilding } from "src/Types.sol";
 
 library LibBuilding {
   function build(

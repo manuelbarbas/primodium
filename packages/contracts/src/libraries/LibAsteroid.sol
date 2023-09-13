@@ -7,10 +7,11 @@ import { IWorld } from "../codegen/world/IWorld.sol";
 import { HomeAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/Tables.sol";
 
 // types
-import { ERock } from "codegen/Types.sol";
+import { ERock } from "src/Types.sol";
 
 // libraries
-import { LibMath, LibEncode } from "libraries/Libraries.sol";
+import { LibMath } from "./LibMath.sol";
+import { LibEncode } from "./LibEncode.sol";
 import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
 import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 

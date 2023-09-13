@@ -8,11 +8,11 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { Position, PositionData, Spawned, HomeAsteroid } from "codegen/Tables.sol";
 
 // libraries
-import { LibEncode, LibBuilding } from "libraries/Libraries.sol";
+import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
 
 // types
 import { BuildingKey } from "src/Keys.sol";
-import { EBuilding } from "codegen/Types.sol";
+import { EBuilding } from "src/Types.sol";
 
 contract BuildSystem is PrimodiumSystem {
   function build(EBuilding buildingType, PositionData memory coord) public returns (bytes32 buildingEntity) {

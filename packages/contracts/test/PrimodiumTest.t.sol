@@ -7,11 +7,11 @@ import { ResourceSelector } from "@latticexyz/world/src/ResourceSelector.sol";
 
 import "codegen/world/IWorld.sol";
 import "codegen/Tables.sol";
-import "codegen/Types.sol";
+import "src/Types.sol";
 import "codegen/Prototypes.sol";
-import "libraries/Libraries.sol";
+import "codegen/Libraries.sol";
 import "src/Keys.sol";
-import "src/PrimodiumTypes.sol";
+import "src/Types.sol";
 
 struct PositionData2D {
   int32 x;
