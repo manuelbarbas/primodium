@@ -32,7 +32,7 @@ library BuildingType {
   /** Get the table's value schema */
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.UINT8;
+    _schema[0] = SchemaType.BYTES32;
 
     return SchemaLib.encode(_schema);
   }
@@ -60,25 +60,25 @@ library BuildingType {
   }
 
   /** Get value */
-  function get(bytes32 entity) internal view returns (uint8 value) {
+  function get(bytes32 entity) internal view returns (bytes32 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0, getValueSchema());
-    return (uint8(Bytes.slice1(_blob, 0)));
+    return (Bytes.slice32(_blob, 0));
   }
 
   /** Get value (using the specified store) */
-  function get(IStore _store, bytes32 entity) internal view returns (uint8 value) {
+  function get(IStore _store, bytes32 entity) internal view returns (bytes32 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0, getValueSchema());
-    return (uint8(Bytes.slice1(_blob, 0)));
+    return (Bytes.slice32(_blob, 0));
   }
 
   /** Set value */
-  function set(bytes32 entity, uint8 value) internal {
+  function set(bytes32 entity, bytes32 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
 
@@ -89,7 +89,7 @@ library BuildingType {
   function set(
     IStore _store,
     bytes32 entity,
-    uint8 value
+    bytes32 value
   ) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = entity;
@@ -98,7 +98,7 @@ library BuildingType {
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint8 value) internal pure returns (bytes memory) {
+  function encode(bytes32 value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 

@@ -15,8 +15,8 @@ import { AsteroidCount, AsteroidCountTableId } from "./tables/AsteroidCount.sol"
 import { RockType, RockTypeTableId } from "./tables/RockType.sol";
 import { Dimensions, DimensionsData, DimensionsTableId } from "./tables/Dimensions.sol";
 import { Spawned, SpawnedTableId } from "./tables/Spawned.sol";
+import { P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId } from "./tables/P_BuildingTypeToPrototype.sol";
 import { P_Blueprint, P_BlueprintTableId } from "./tables/P_Blueprint.sol";
 import { P_MaxLevel, P_MaxLevelTableId } from "./tables/P_MaxLevel.sol";
-import { P_RequiredTile, P_RequiredTileTableId } from "./tables/P_RequiredTile.sol";
 import { BuildingType, BuildingTypeTableId } from "./tables/BuildingType.sol";
 import { Children, ChildrenTableId } from "./tables/Children.sol";
