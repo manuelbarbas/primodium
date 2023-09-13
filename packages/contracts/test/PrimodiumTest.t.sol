@@ -7,8 +7,11 @@ import { ResourceSelector } from "@latticexyz/world/src/ResourceSelector.sol";
 
 import "codegen/world/IWorld.sol";
 import "codegen/Tables.sol";
-import "codegen/Types.sol";
-import "libraries/Libraries.sol";
+import "src/Types.sol";
+import "codegen/Prototypes.sol";
+import "codegen/Libraries.sol";
+import "src/Keys.sol";
+import "src/Types.sol";
 
 struct PositionData2D {
   int32 x;
@@ -26,15 +29,18 @@ contract PrimodiumTest is MudTest {
   function setUp() public virtual override {
     super.setUp();
     world = IWorld(worldAddress);
+
     alice = getUser();
     bob = getUser();
     eve = getUser();
   }
 
+  function addressToEntity(address a) internal pure returns (bytes32) {
+    return bytes32(uint256(uint160((a))));
+  }
+
   function getUser() internal returns (address payable) {
-    address payable user = payable(
-      address(uint160(uint256(keccak256(abi.encodePacked(userNonce++)))))
-    );
+    address payable user = payable(address(uint160(uint256(keccak256(abi.encodePacked(userNonce++))))));
     vm.deal(user, 100 ether);
     return user;
   }
@@ -45,9 +51,7 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
-  function assertEq(PositionData memory coordA, PositionData memory coordB)
-    internal
-  {
+  function assertEq(PositionData memory coordA, PositionData memory coordB) internal {
     assertEq(coordA.x, coordB.x, "[assertEq]: x doesn't match");
     assertEq(coordA.y, coordB.y, "[assertEq]: y doesn't match");
     assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
@@ -70,59 +74,35 @@ contract PrimodiumTest is MudTest {
     console.logInt(coord.x);
     console.log("y");
     console.logInt(coord.y);
-    console.log("parent", ResourceSelector.toString(coord.parent));
+    console.log("parent", uint256(coord.parent));
   }
 
-  function getPosition1(address player)
-    internal
-    view
-    returns (PositionData memory)
-  {
+  function getPosition1(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord1 = PositionData2D(15, 12);
     return getPosition(coord1, player);
   }
 
-  function getPosition2(address player)
-    internal
-    view
-    returns (PositionData memory)
-  {
+  function getPosition2(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord2 = PositionData2D(23, 17);
     return getPosition(coord2, player);
   }
 
-  function getPosition3(address player)
-    internal
-    view
-    returns (PositionData memory)
-  {
+  function getPosition3(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord3 = PositionData2D(13, 8);
     return getPosition(coord3, player);
   }
 
-  function getIronPosition(address player)
-    internal
-    view
-    returns (PositionData memory)
-  {
+  function getIronPosition(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(20, 8);
     return getPosition(coord, player);
   }
 
-  function getCopperPosition(address player)
-    internal
-    view
-    returns (PositionData memory)
-  {
+  function getCopperPosition(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(20, 15);
     return getPosition(coord, player);
   }
 
-  function getNonIronPosition(address player)
-    internal
-    view
-    returns (PositionData memory)
-  {
+  function getNonIronPosition(address player) internal view returns (PositionData memory) {
     PositionData2D memory coord = PositionData2D(8, 15);
     return getPosition(coord, player);
   }
@@ -140,7 +120,7 @@ contract PrimodiumTest is MudTest {
     view
     returns (PositionData memory coord)
   {
-    bytes32 playerEntity = LibEncode.addressToEntity(player);
+    bytes32 playerEntity = addressToEntity(player);
     bytes32 asteroid = LibEncode.getHash(worldAddress, playerEntity);
 
     coord = PositionData(coord2D.x, coord2D.y, asteroid);
@@ -149,7 +129,23 @@ contract PrimodiumTest is MudTest {
   function spawn(address player) internal returns (bytes32) {
     vm.prank(player);
     world.spawn();
-    bytes32 playerEntity = LibEncode.addressToEntity(player);
-    return Player.getHomeAsteroid(world, playerEntity);
+    bytes32 playerEntity = addressToEntity(player);
+    return HomeAsteroid.get(world, playerEntity);
+  }
+
+  function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {
+    blueprint = new int32[](8);
+
+    blueprint[0] = 0;
+    blueprint[1] = 0;
+
+    blueprint[2] = 0;
+    blueprint[3] = -1;
+
+    blueprint[4] = -1;
+    blueprint[5] = 0;
+
+    blueprint[6] = -1;
+    blueprint[7] = -1;
   }
 }

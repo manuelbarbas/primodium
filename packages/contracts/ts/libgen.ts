@@ -4,14 +4,15 @@ import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(import.meta.url);
 const librariesFolder = path.resolve(__dirname, "../../src/libraries");
+const codegenFolder = path.resolve(__dirname, "../../src/codegen");
 
 const outputFileName = "Libraries.sol";
 
-const files = fs.readdirSync(librariesFolder);
+const files = fs.readdirSync(librariesFolder).filter((file) => file.startsWith("Lib"));
 
 const fileList = files.map((file) => {
   if (file == outputFileName) return "";
-  return `import { ${file.slice(0, -4)} } from "libraries/${file}";`;
+  return `import { ${file.slice(0, -4)} } from "../libraries/${file}";`;
 });
 
 const output = `// SPDX-License-Identifier: MIT
@@ -22,4 +23,4 @@ pragma solidity >=0.8.0;
 ${fileList.join("\n")}
 `;
 
-fs.writeFileSync(path.resolve(librariesFolder, outputFileName), output);
+fs.writeFileSync(path.resolve(codegenFolder, outputFileName), output);
