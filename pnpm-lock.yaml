@@ -285,6 +285,9 @@ importers:
       tsx:
         specifier: ^3.12.8
         version: 3.12.8
+      viem:
+        specifier: 1.6.0
+        version: 1.6.0(typescript@4.7.4)(zod@3.22.2)
     devDependencies:
       '@typechain/ethers-v5':
         specifier: ^10.2.0
@@ -302,7 +305,7 @@ importers:
         specifier: https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1
         version: github.com/foundry-rs/forge-std/74cfb77e308dd188d2f58864aaf44963ae6b88b1
       prettier:
-        specifier: ^2.8.4
+        specifier: ^2.6.2
         version: 2.8.4
       prettier-plugin-solidity:
         specifier: ^1.0.0-beta.19
