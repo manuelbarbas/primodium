@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import mudConfig from "../../contracts/mud.config";
+import mudConfig from "contracts/mud.config";
 import AppLoadingState from "./AppLoadingState";
 import { ampli } from "./ampli";
 import { MudProvider } from "./hooks/providers/MudProvider";

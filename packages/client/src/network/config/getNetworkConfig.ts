@@ -1,5 +1,5 @@
 import { getBurnerPrivateKey } from "@latticexyz/common";
-import worldsJson from "../../../../contracts/worlds.json";
+import worldsJson from "contracts/worlds.json";
 import { chainConfigs } from "./chainConfigs";
 
 const params = new URLSearchParams(window.location.search);
