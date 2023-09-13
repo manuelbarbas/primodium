@@ -32,11 +32,11 @@ export const renderSetLevelRecord = (
     const isArray = Array.isArray(fieldValue);
 
     if (isArray) {
-      const declaration = `${fieldType} memory ${variableName} = new ${fieldType}(${fieldValue.length})`;
-      const assignments = fieldValue.map((v, i) => `${variableName}[${i}] = ${formatValue(config, fieldType, v)}`);
+      const declaration = `${fieldType} memory ${variableName} = new ${fieldType}(${fieldValue.length});`;
+      const assignments = fieldValue.map((v, i) => `${variableName}[${i}] = ${formatValue(config, fieldType, v)};`);
 
       return {
-        declaration: [declaration, ...assignments].join(";"),
+        declaration: [declaration, ...assignments].join(""),
         name: variableName,
         formattedValue: null,
       };
@@ -49,13 +49,18 @@ export const renderSetLevelRecord = (
     };
   });
 
-  return `${formattedValues.find((v) => v.declaration) ? formattedValues.map((v) => v.declaration).join(";") + ";" : ""}
+  return `${formattedValues.find((v) => v.declaration) ? formattedValues.map((v) => v.declaration).join("") : ""}
   values[${i}] = ${tableName}.encode(${formattedValues.map((v) => (v.name ? v.name : v.formattedValue)).join(",")});`;
 };
 
 export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: string) {
   const prototype = config.prototypes[name];
-  const keys: Record<string, StaticAbiType> = prototype.keys ? prototype.keys : { prototypeId: "bytes32" };
+
+  const keys: Record<string, StaticAbiType> = prototype.keys
+    ? prototype.keys
+    : name == "World"
+    ? {}
+    : { prototypeId: "bytes32" };
   keys["level"] = "uint32";
   const values = prototype.levels;
   if (!values) return undefined;
@@ -80,18 +85,17 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
     values = new bytes[](${Object.keys(value).length});
 
     ${Object.keys(value)
-      .map((key, i) => `tableIds[${i}] = ${key}TableId`)
-      .join(";")};
+      .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
+      .join("")}
 
     ${Object.entries(value)
       .map(([tableName, v], i) => (v ? renderSetLevelRecord(config, tableName, v, level, i) : ""))
       .join("")}
 
     createPrototype(store, levelKeys, tableIds, values);
-
     `;
     })
-    .join(";");
+    .join("");
 
   return {
     levelKeys: `function ${name}LevelKeys(uint32 level) pure returns (bytes32[] memory) {
@@ -116,11 +120,11 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
     const isArray = Array.isArray(fieldValue);
 
     if (isArray) {
-      const declaration = `${fieldType} memory ${variableName} = new ${fieldType}(${fieldValue.length})`;
-      const assignments = fieldValue.map((v, i) => `${variableName}[${i}] = ${formatValue(config, fieldType, v)}`);
+      const declaration = `${fieldType} memory ${variableName} = new ${fieldType}(${fieldValue.length});`;
+      const assignments = fieldValue.map((v, i) => `${variableName}[${i}] = ${formatValue(config, fieldType, v)};`);
 
       return {
-        declaration: [declaration, ...assignments].join(";"),
+        declaration: [declaration, ...assignments].join(""),
         name: variableName,
         formattedValue: null,
       };
@@ -133,20 +137,20 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
     };
   });
 
-  return `${formattedValues.find((v) => v.declaration) ? formattedValues.map((v) => v.declaration).join(";") + ";" : ""}
+  return `${formattedValues.find((v) => v.declaration) ? formattedValues.map((v) => v.declaration).join("") : ""}
   values[${i}] = ${tableName}.encode(${formattedValues.map((v) => (v.name ? v.name : v.formattedValue)).join(",")});`;
 };
 
 export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
   const prototype = config.prototypes[name];
-  const keys = prototype.keys ? prototype.keys : name == "" ? {} : { prototypeId: "bytes32" };
-  const values = prototype.tables;
+  const keys = prototype.keys ? prototype.keys : name == "World" ? {} : { prototypeId: "bytes32" };
+  const values = prototype.tables ?? {};
   const levelTables = Object.values(prototype.levels ?? {})
     .map((v) => {
       return Object.keys(v);
     })
     .flat();
-  const allImportedTableIds = [...Object.keys(prototype.tables), ...levelTables]
+  const allImportedTableIds = [...Object.keys(prototype.tables ?? {}), ...levelTables]
     .map((tableName) => `${tableName}, ${tableName}TableId`)
     .join(",");
   const levelPrototype = renderLevelPrototype(config, name);
@@ -191,8 +195,8 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
     bytes[] memory values = new bytes[](LENGTH);
     
     ${Object.keys(values)
-      .map((key, i) => `tableIds[${i}] = ${key}TableId`)
-      .join(";")};
+      .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
+      .join("")}
 
     ${Object.entries(values)
       .map(([tableName, value], i) => (value ? renderSetRecord(config, tableName, value, i) : ""))
@@ -208,8 +212,8 @@ export function renderValueTypeToBytes32(
   name: string,
   { typeUnwrap, internalTypeId }: { typeUnwrap: string; internalTypeId: string }
 ): string {
+  console.log("name", name, "typeUnwrap", typeUnwrap, "internalTypeId", internalTypeId);
   const innerText = typeUnwrap.length ? `${typeUnwrap}(${name})` : name;
-  console.log("name:", name, "typeUnwrap:", typeUnwrap, "internalTypeId:", internalTypeId);
   if (internalTypeId === "bytes32") {
     return innerText.startsWith("0x") ? innerText.slice(2) : innerText;
   } else if (internalTypeId.match(/^bytes\d{1,2}$/)) {
