@@ -5,6 +5,7 @@ bindings/
 artifacts/
 abi/
 broadcast/
+src/codegen/
 
 # Ignore MUD deploy artifacts
 deploys/**/*.json
