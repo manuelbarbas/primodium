@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import "../PrimodiumTest.t.sol";
+import "test/PrimodiumTest.t.sol";
 
 contract LibBuildingTest is PrimodiumTest {
   function setUp() public override {

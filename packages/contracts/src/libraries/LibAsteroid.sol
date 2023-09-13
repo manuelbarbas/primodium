@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // world
-import { IWorld } from "../codegen/world/IWorld.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 // tables
 import { HomeAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData, AsteroidCount, RockType, PositionData } from "codegen/Tables.sol";
 
@@ -10,8 +10,8 @@ import { HomeAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData
 import { ERock } from "src/Types.sol";
 
 // libraries
-import { LibMath } from "./LibMath.sol";
-import { LibEncode } from "./LibEncode.sol";
+import { LibMath } from "libraries/LibMath.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
 import { Trigonometry as Trig } from "trig/src/Trigonometry.sol";
 import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
