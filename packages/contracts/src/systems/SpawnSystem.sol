@@ -5,7 +5,9 @@ pragma solidity >=0.8.0;
 import { PrimodiumSystem } from "./internal/PrimodiumSystem.sol";
 
 import { Spawned, Position, PositionData, Level } from "codegen/Tables.sol";
-import { LibAsteroid } from "libraries/Libraries.sol";
+import { LibAsteroid, LibBuilding } from "libraries/Libraries.sol";
+import { EBuilding } from "codegen/Types.sol";
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world
@@ -24,6 +26,9 @@ contract SpawnSystem is PrimodiumSystem {
     Level.set(playerEntity, 1);
 
     bytes32 asteroid = LibAsteroid.createAsteroid(_world(), playerEntity);
+    PositionData memory position = Position.get(MainBasePrototypeId);
+    position.parent = asteroid;
+    LibBuilding.build(playerEntity, EBuilding.MainBase, position);
     return asteroid;
   }
 }

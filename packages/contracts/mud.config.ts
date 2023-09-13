@@ -168,11 +168,12 @@ const buildingIdToPrototypeId = config.enums.EBuilding.map((building, i) => ({
 /* -------------------------------------------------------------------------- */
 /*                                 Prototypes                                 */
 /* -------------------------------------------------------------------------- */
+const maxRange = { xBounds: 37, yBounds: 25 };
 const prototypesConfig: PrototypesConfig<typeof config> = {
   /* ---------------------------------- World --------------------------------- */
   World: {
     tables: {
-      P_Asteroid: { xBounds: 37, yBounds: 25 },
+      P_Asteroid: maxRange,
     },
     levels: buildingIdToPrototypeId,
   },
@@ -186,7 +187,7 @@ const prototypesConfig: PrototypesConfig<typeof config> = {
       3: { Dimensions: { x: 25, y: 17 } },
       4: { Dimensions: { x: 29, y: 19 } },
       5: { Dimensions: { x: 33, y: 13 } },
-      6: { Dimensions: { x: 37, y: 15 } },
+      6: { Dimensions: { x: maxRange.xBounds, y: maxRange.yBounds } },
     },
   },
 
@@ -195,7 +196,7 @@ const prototypesConfig: PrototypesConfig<typeof config> = {
   // This is because we use the enum to look up the prototype in the P_BuildingTypeToPrototype table
   MainBase: {
     tables: {
-      Position: { x: 0, y: 0, parent: encodeBytes32(0) },
+      Position: { x: Math.floor(maxRange.xBounds / 2), y: Math.floor(maxRange.yBounds / 2), parent: encodeBytes32(0) },
       P_Blueprint: { value: getBlueprint(3, 2) },
       P_MaxLevel: { value: 8 },
     },

@@ -28,7 +28,7 @@ function MainBasePrototype(IStore store) {
   tableIds[1] = P_BlueprintTableId;
   tableIds[2] = P_MaxLevelTableId;
 
-  values[0] = Position.encode(0, 0, 0x0);
+  values[0] = Position.encode(18, 12, 0x0);
   int32[] memory p_blueprint_value = new int32[](12);
   p_blueprint_value[0] = 0;
   p_blueprint_value[1] = 0;

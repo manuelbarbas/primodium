@@ -109,7 +109,7 @@ function ExpansionPrototype(IStore store) {
 
   tableIds[0] = DimensionsTableId;
 
-  values[0] = Dimensions.encode(37, 15);
+  values[0] = Dimensions.encode(37, 25);
 
   createPrototype(store, levelKeys, tableIds, values);
 }
