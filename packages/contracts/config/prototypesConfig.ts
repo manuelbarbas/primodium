@@ -55,7 +55,11 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 5 },
     },
     levels: {
-      // 0: { Level: { value: 1 } },
+      0: { P_RequiredBaseLevel: { value: 1 } },
+      1: { P_RequiredBaseLevel: { value: 1 } },
+      2: { P_RequiredBaseLevel: { value: 3 } },
+      3: { P_RequiredBaseLevel: { value: 5 } },
+      4: { P_RequiredBaseLevel: { value: 8 } },
     },
   },
   CopperMine: {
@@ -63,17 +67,38 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
     },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 1 } },
+      1: { P_RequiredBaseLevel: { value: 2 } },
+      2: { P_RequiredBaseLevel: { value: 4 } },
+      3: { P_RequiredBaseLevel: { value: 6 } },
+      4: { P_RequiredBaseLevel: { value: 8 } },
+    },
   },
   LithiumMine: {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
     },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 2 } },
+      1: { P_RequiredBaseLevel: { value: 4 } },
+      2: { P_RequiredBaseLevel: { value: 6 } },
+      3: { P_RequiredBaseLevel: { value: 7 } },
+      4: { P_RequiredBaseLevel: { value: 8 } },
+    },
   },
   SulfurMine: {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
+    },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 2 } },
+      1: { P_RequiredBaseLevel: { value: 4 } },
+      2: { P_RequiredBaseLevel: { value: 6 } },
+      3: { P_RequiredBaseLevel: { value: 7 } },
+      4: { P_RequiredBaseLevel: { value: 8 } },
     },
   },
 
@@ -83,17 +108,34 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_Blueprint: { value: getBlueprint(2, 2) },
       P_MaxLevel: { value: 5 },
     },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 1 } },
+      1: { P_RequiredBaseLevel: { value: 3 } },
+      2: { P_RequiredBaseLevel: { value: 5 } },
+      3: { P_RequiredBaseLevel: { value: 7 } },
+      4: { P_RequiredBaseLevel: { value: 8 } },
+    },
   },
   AlloyFactory: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
       P_MaxLevel: { value: 3 },
     },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 3 } },
+      1: { P_RequiredBaseLevel: { value: 6 } },
+      2: { P_RequiredBaseLevel: { value: 8 } },
+    },
   },
   PVCellFactory: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
       P_MaxLevel: { value: 3 },
+    },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 2 } },
+      1: { P_RequiredBaseLevel: { value: 5 } },
+      2: { P_RequiredBaseLevel: { value: 8 } },
     },
   },
 
@@ -103,11 +145,21 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_Blueprint: { value: getBlueprint(2, 2) },
       P_MaxLevel: { value: 3 },
     },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 2 } },
+      1: { P_RequiredBaseLevel: { value: 4 } },
+      2: { P_RequiredBaseLevel: { value: 6 } },
+    },
   },
   SolarPanel: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
       P_MaxLevel: { value: 3 },
+    },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 2 } },
+      1: { P_RequiredBaseLevel: { value: 4 } },
+      2: { P_RequiredBaseLevel: { value: 6 } },
     },
   },
 
@@ -117,11 +169,12 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_Blueprint: { value: getBlueprint(4, 4) },
       P_MaxLevel: { value: 5 },
     },
-  },
-  UnitTraining: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(3, 3) },
-      P_MaxLevel: { value: 5 },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 2 } },
+      1: { P_RequiredBaseLevel: { value: 4 } },
+      2: { P_RequiredBaseLevel: { value: 6 } },
+      3: { P_RequiredBaseLevel: { value: 7 } },
+      4: { P_RequiredBaseLevel: { value: 8 } },
     },
   },
   DroneFactory: {
@@ -129,11 +182,22 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_Blueprint: { value: getBlueprint(3, 3) },
       P_MaxLevel: { value: 4 },
     },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 2 } },
+      1: { P_RequiredBaseLevel: { value: 4 } },
+      2: { P_RequiredBaseLevel: { value: 6 } },
+      3: { P_RequiredBaseLevel: { value: 8 } },
+    },
   },
   Starmapper: {
     tables: {
       P_Blueprint: { value: getBlueprint(3, 2) },
       P_MaxLevel: { value: 3 },
+    },
+    levels: {
+      0: { P_RequiredBaseLevel: { value: 3 } },
+      1: { P_RequiredBaseLevel: { value: 7 } },
+      2: { P_RequiredBaseLevel: { value: 8 } },
     },
   },
 };
