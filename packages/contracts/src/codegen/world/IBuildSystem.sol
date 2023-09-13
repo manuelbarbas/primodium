@@ -7,5 +7,5 @@ import { EBuilding } from "codegen/Types.sol";
 import { PositionData } from "codegen/Tables.sol";
 
 interface IBuildSystem {
-  function execute(EBuilding buildingType, PositionData memory coord) external returns (bytes memory);
+  function build(EBuilding buildingType, PositionData memory coord) external returns (bytes32 buildingEntity);
 }
