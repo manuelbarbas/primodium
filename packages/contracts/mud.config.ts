@@ -25,21 +25,11 @@ export const config = mudConfig({
       "NULL",
       // Special
       "MainBase",
-      "StarMapper",
-      "StorageUnit",
-      "DroneFactory",
 
       // Mines
       "LithiumMine",
       "IronMine",
       "CopperMine",
-      "TitaniumMine",
-      "IridiumMine",
-      "OsmiumMine",
-      "TungstenMine",
-      "KimberliteMine",
-      "UraniniteMine",
-      "BolutiteMine",
       "SulfurMine",
 
       // Factories
@@ -50,7 +40,13 @@ export const config = mudConfig({
 
       // Utilities
       "SolarPanel",
+
+      // Units
       "Hangar",
+      "UnitTrainingBuilding",
+      "StorageUnit",
+      "DroneFactory",
+      "Starmapper",
       "LENGTH",
     ],
   },
@@ -195,6 +191,8 @@ const prototypesConfig: PrototypesConfig<typeof config> = {
   },
 
   /* -------------------------------- Buildings ------------------------------- */
+  // NOTE the key of a building prototype must match its EBuilding enum equivalent
+  // This is because we use the enum to look up the prototype in the P_BuildingTypeToPrototype table
   MainBase: {
     tables: {
       Position: { x: 0, y: 0, parent: encodeBytes32(0) },
@@ -202,13 +200,94 @@ const prototypesConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 8 },
     },
   },
+
+  // Mines
   IronMine: {
     tables: {
       P_Blueprint: { value: getBlueprint(1, 1) },
       P_MaxLevel: { value: 5 },
     },
   },
+  CopperMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 5 },
+    },
+  },
+  LithiumMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 5 },
+    },
+  },
+  SulfurMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 5 },
+    },
+  },
+
+  // Factories
+  IronPlateFactory: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(2, 2) },
+      P_MaxLevel: { value: 5 },
+    },
+  },
+  AlloyFactory: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(2, 2) },
+      P_MaxLevel: { value: 3 },
+    },
+  },
+  PVCellFactory: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(2, 2) },
+      P_MaxLevel: { value: 3 },
+    },
+  },
+
+  // Utilities
+  StorageUnit: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(2, 2) },
+      P_MaxLevel: { value: 3 },
+    },
+  },
+  SolarPanel: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(2, 2) },
+      P_MaxLevel: { value: 3 },
+    },
+  },
+
+  // Units
+  Hangar: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(4, 4) },
+      P_MaxLevel: { value: 5 },
+    },
+  },
+  UnitTraining: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 3) },
+      P_MaxLevel: { value: 5 },
+    },
+  },
+  DroneFactory: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 3) },
+      P_MaxLevel: { value: 4 },
+    },
+  },
+  Starmapper: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(3, 2) },
+      P_MaxLevel: { value: 3 },
+    },
+  },
 };
+
 export default {
   ...config,
   prototypes: prototypesConfig,

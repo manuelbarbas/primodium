@@ -6,7 +6,7 @@ pragma solidity >=0.8.0;
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
 import { ERock, EBuilding } from "../Types.sol";
-import { P_Asteroid, P_AsteroidTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId } from "../Tables.sol";
+import { P_Asteroid, P_AsteroidTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId, P_BuildingTypeToPrototype, P_BuildingTypeToPrototypeTableId } from "../Tables.sol";
 
 bytes32 constant prototypeId = "World";
 bytes32 constant WorldPrototypeId = prototypeId;
@@ -67,7 +67,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x537461724d617070657200000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x4c69746869756d4d696e65000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -78,7 +78,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x53746f72616765556e6974000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x49726f6e4d696e65000000000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -89,7 +89,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x44726f6e65466163746f72790000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x436f707065724d696e6500000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -100,7 +100,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x4c69746869756d4d696e65000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x53756c6675724d696e6500000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -111,7 +111,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x49726f6e4d696e65000000000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x49726f6e506c617465466163746f727900000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -122,7 +122,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x436f707065724d696e6500000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x416c6c6f79466163746f72790000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -133,7 +133,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x546974616e69756d4d696e650000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x505643656c6c466163746f727900000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -144,7 +144,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x4972696469756d4d696e65000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x526f636b65744675656c466163746f7279000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -155,7 +155,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x4f736d69756d4d696e6500000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x536f6c617250616e656c00000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -166,7 +166,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x54756e677374656e4d696e650000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x48616e6761720000000000000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -177,7 +177,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x4b696d6265726c6974654d696e65000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x556e6974547261696e696e674275696c64696e67000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -188,7 +188,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x5572616e696e6974654d696e6500000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x53746f72616765556e6974000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -199,7 +199,7 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x426f6c75746974654d696e650000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x44726f6e65466163746f72790000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
@@ -210,78 +210,12 @@ function WorldPrototype(IStore store) {
 
   tableIds[0] = P_BuildingTypeToPrototypeTableId;
 
-  values[0] = P_BuildingTypeToPrototype.encode(0x53756c6675724d696e6500000000000000000000000000000000000000000000);
+  values[0] = P_BuildingTypeToPrototype.encode(0x537461726d617070657200000000000000000000000000000000000000000000);
 
   createPrototype(store, levelKeys, tableIds, values);
 
   /* ----------------------------- LEVEL 16 ----------------------------- */
   levelKeys = WorldLevelKeys(16);
-  tableIds = new bytes32[](1);
-  values = new bytes[](1);
-
-  tableIds[0] = P_BuildingTypeToPrototypeTableId;
-
-  values[0] = P_BuildingTypeToPrototype.encode(0x49726f6e506c617465466163746f727900000000000000000000000000000000);
-
-  createPrototype(store, levelKeys, tableIds, values);
-
-  /* ----------------------------- LEVEL 17 ----------------------------- */
-  levelKeys = WorldLevelKeys(17);
-  tableIds = new bytes32[](1);
-  values = new bytes[](1);
-
-  tableIds[0] = P_BuildingTypeToPrototypeTableId;
-
-  values[0] = P_BuildingTypeToPrototype.encode(0x416c6c6f79466163746f72790000000000000000000000000000000000000000);
-
-  createPrototype(store, levelKeys, tableIds, values);
-
-  /* ----------------------------- LEVEL 18 ----------------------------- */
-  levelKeys = WorldLevelKeys(18);
-  tableIds = new bytes32[](1);
-  values = new bytes[](1);
-
-  tableIds[0] = P_BuildingTypeToPrototypeTableId;
-
-  values[0] = P_BuildingTypeToPrototype.encode(0x505643656c6c466163746f727900000000000000000000000000000000000000);
-
-  createPrototype(store, levelKeys, tableIds, values);
-
-  /* ----------------------------- LEVEL 19 ----------------------------- */
-  levelKeys = WorldLevelKeys(19);
-  tableIds = new bytes32[](1);
-  values = new bytes[](1);
-
-  tableIds[0] = P_BuildingTypeToPrototypeTableId;
-
-  values[0] = P_BuildingTypeToPrototype.encode(0x526f636b65744675656c466163746f7279000000000000000000000000000000);
-
-  createPrototype(store, levelKeys, tableIds, values);
-
-  /* ----------------------------- LEVEL 20 ----------------------------- */
-  levelKeys = WorldLevelKeys(20);
-  tableIds = new bytes32[](1);
-  values = new bytes[](1);
-
-  tableIds[0] = P_BuildingTypeToPrototypeTableId;
-
-  values[0] = P_BuildingTypeToPrototype.encode(0x536f6c617250616e656c00000000000000000000000000000000000000000000);
-
-  createPrototype(store, levelKeys, tableIds, values);
-
-  /* ----------------------------- LEVEL 21 ----------------------------- */
-  levelKeys = WorldLevelKeys(21);
-  tableIds = new bytes32[](1);
-  values = new bytes[](1);
-
-  tableIds[0] = P_BuildingTypeToPrototypeTableId;
-
-  values[0] = P_BuildingTypeToPrototype.encode(0x48616e6761720000000000000000000000000000000000000000000000000000);
-
-  createPrototype(store, levelKeys, tableIds, values);
-
-  /* ----------------------------- LEVEL 22 ----------------------------- */
-  levelKeys = WorldLevelKeys(22);
   tableIds = new bytes32[](1);
   values = new bytes[](1);
 
