@@ -43,7 +43,9 @@
     "HasBuiltBuildingComponent",
     "BuildingCountComponent",
     "TotalRaidComponent",
+    "TotalMotherlodeMinedComponent",
 
+    "P_MotherlodeMinedRequirementComponent",
     "P_RaidRequirementComponent",
     "P_UnitRequirementComponent",
     "P_BuildingCountRequirementComponent",

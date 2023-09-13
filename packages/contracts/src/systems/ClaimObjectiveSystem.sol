@@ -19,6 +19,7 @@ import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibReward } from "libraries/LibReward.sol";
 import { LibRaid } from "libraries/LibRaid.sol";
+import { LibUpdateSpaceRock } from "libraries/LibUpdateSpaceRock.sol";
 import { ResourceValue } from "../types.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
@@ -100,6 +101,12 @@ contract ClaimObjectiveSystem is System {
     require(
       LibRaid.checkRaidRequirement(world, playerEntity, objective),
       "[ClaimObjectiveSystem] You have not raided the required amount of resources"
+    );
+
+    //motherlode mine
+    require(
+      LibUpdateSpaceRock.checkMotherlodeMinedRequirement(world, playerEntity, objective),
+      "[ClaimObjectiveSystem] You have not mined the required amount of motherlodes"
     );
 
     //can receive rewards
