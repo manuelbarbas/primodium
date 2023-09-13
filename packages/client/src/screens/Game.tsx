@@ -21,7 +21,7 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container">
+      <div id="game-container relative ">
         <PhaserWrapper />
         {gameReady && <AsteroidHUD />}
       </div>

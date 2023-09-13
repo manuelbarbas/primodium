@@ -31,7 +31,7 @@ module.exports = {
           warning: colors.amber[600],
           error: colors.rose[600],
 
-          "--rounded-box": "0.4rem", // border radius rounded-box utility class, used in card and other large boxes
+          "--rounded-box": ".4rem", // border radius rounded-box utility class, used in card and other large boxes
           "--rounded-btn": "0.4rem", // border radius rounded-btn utility class, used in buttons and similar element
           "--rounded-badge": "1.9rem", // border radius rounded-badge utility class, used in badges and similar
           "--animation-btn": "0.25s", // duration of animation when you click on button
