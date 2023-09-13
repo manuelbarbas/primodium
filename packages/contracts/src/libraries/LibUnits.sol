@@ -10,9 +10,11 @@ import { P_UnitTrainingTimeComponent, ID as P_UnitTrainingTimeComponentID } from
 import { P_RequiredUtilityComponent, ID as P_RequiredUtilityComponentID } from "components/P_RequiredUtilityComponent.sol";
 import { P_UnitProductionTypesComponent, ID as P_UnitProductionTypesComponentID } from "components/P_UnitProductionTypesComponent.sol";
 import { P_UnitProductionMultiplierComponent, ID as P_UnitProductionMultiplierComponentID } from "components/P_UnitProductionMultiplierComponent.sol";
+import { P_UnitRequirementComponent, ID as P_UnitRequirementComponentID } from "components/P_UnitRequirementComponent.sol";
 import { UnitProductionQueueIndexComponent, ID as UnitProductionQueueIndexComponentID } from "components/UnitProductionQueueIndexComponent.sol";
 import { UnitProductionLastQueueIndexComponent, ID as UnitProductionLastQueueIndexComponentID } from "components/UnitProductionLastQueueIndexComponent.sol";
 import { UnitsComponent, ID as UnitsComponentID } from "components/UnitsComponent.sol";
+import { LibUpdateSpaceRock } from "./LibUpdateSpaceRock.sol";
 import { LibUtilityResource } from "./LibUtilityResource.sol";
 import { LibEncode } from "./LibEncode.sol";
 import { LibMath } from "./LibMath.sol";
@@ -123,6 +125,28 @@ library LibUnits {
     for (uint256 i = 0; i < resourceIDs.length; i++) {
       uint32 requiredAmount = requiredAmounts[i] * count;
       if (LibUtilityResource.getAvailableUtilityCapacity(world, playerEntity, resourceIDs[i]) < requiredAmount) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function checkUnitRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_UnitRequirementComponent unitRequirementComponent = P_UnitRequirementComponent(
+      world.getComponent(P_UnitRequirementComponentID)
+    );
+    uint256 asteroidEntity = LibUpdateSpaceRock.getPlayerAsteroidEntity(world, playerEntity);
+    if (!unitRequirementComponent.has(objectiveEntity)) return true;
+    ResourceValues memory unitRequirements = unitRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < unitRequirements.resources.length; i++) {
+      if (
+        getUnitCountOnRock(world, playerEntity, asteroidEntity, unitRequirements.resources[i]) <
+        unitRequirements.values[i]
+      ) {
         return false;
       }
     }

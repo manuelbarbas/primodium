@@ -90,8 +90,12 @@ library LibUpdateSpaceRock {
     lastClaimedAtComponent.set(unitProductionBuildingEntity, blockNumber);
   }
 
+  function getPlayerAsteroidEntity(IWorld world, uint256 playerEntity) internal view returns (uint256) {
+    return PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
+  }
+
   function addPlayerUnitsToAsteroid(IWorld world, uint256 playerEntity, uint256 unitType, uint32 unitCount) internal {
-    uint256 asteroid = PositionComponent(world.getComponent(PositionComponentID)).getValue(playerEntity).parent;
+    uint256 asteroid = getPlayerAsteroidEntity(world, playerEntity);
     addUnitsToAsteroid(world, playerEntity, asteroid, unitType, unitCount);
   }
 

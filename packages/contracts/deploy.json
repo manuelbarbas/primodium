@@ -43,6 +43,7 @@
     "HasBuiltBuildingComponent",
     "BuildingCountComponent",
 
+    "P_UnitRequirementComponent",
     "P_BuildingCountRequirementComponent",
     "P_HasBuiltBuildingComponent",
     "P_IsObjectiveComponent",
