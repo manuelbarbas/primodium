@@ -5,11 +5,23 @@ pragma solidity >=0.8.0;
 
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 
-import { WorldPrototype, ExpansionPrototype, MainBasePrototype, IronMinePrototype } from "../Prototypes.sol";
+import { WorldPrototype, ExpansionPrototype, MainBasePrototype, IronMinePrototype, CopperMinePrototype, LithiumMinePrototype, SulfurMinePrototype, IronPlateFactoryPrototype, AlloyFactoryPrototype, PVCellFactoryPrototype, StorageUnitPrototype, SolarPanelPrototype, HangarPrototype, UnitTrainingPrototype, DroneFactoryPrototype, StarmapperPrototype } from "../Prototypes.sol";
 
 function createPrototypes(IStore store) {
   WorldPrototype(store);
   ExpansionPrototype(store);
   MainBasePrototype(store);
   IronMinePrototype(store);
+  CopperMinePrototype(store);
+  LithiumMinePrototype(store);
+  SulfurMinePrototype(store);
+  IronPlateFactoryPrototype(store);
+  AlloyFactoryPrototype(store);
+  PVCellFactoryPrototype(store);
+  StorageUnitPrototype(store);
+  SolarPanelPrototype(store);
+  HangarPrototype(store);
+  UnitTrainingPrototype(store);
+  DroneFactoryPrototype(store);
+  StarmapperPrototype(store);
 }

@@ -212,7 +212,6 @@ export function renderValueTypeToBytes32(
   name: string,
   { typeUnwrap, internalTypeId }: { typeUnwrap: string; internalTypeId: string }
 ): string {
-  console.log("name", name, "typeUnwrap", typeUnwrap, "internalTypeId", internalTypeId);
   const innerText = typeUnwrap.length ? `${typeUnwrap}(${name})` : name;
   if (internalTypeId === "bytes32") {
     return innerText.startsWith("0x") ? innerText.slice(2) : innerText;

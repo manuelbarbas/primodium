@@ -7,3 +7,15 @@ import { WorldPrototype, WorldPrototypeId } from "./prototypes/WorldPrototype.so
 import { ExpansionPrototype, ExpansionPrototypeId } from "./prototypes/ExpansionPrototype.sol";
 import { MainBasePrototype, MainBasePrototypeId } from "./prototypes/MainBasePrototype.sol";
 import { IronMinePrototype, IronMinePrototypeId } from "./prototypes/IronMinePrototype.sol";
+import { CopperMinePrototype, CopperMinePrototypeId } from "./prototypes/CopperMinePrototype.sol";
+import { LithiumMinePrototype, LithiumMinePrototypeId } from "./prototypes/LithiumMinePrototype.sol";
+import { SulfurMinePrototype, SulfurMinePrototypeId } from "./prototypes/SulfurMinePrototype.sol";
+import { IronPlateFactoryPrototype, IronPlateFactoryPrototypeId } from "./prototypes/IronPlateFactoryPrototype.sol";
+import { AlloyFactoryPrototype, AlloyFactoryPrototypeId } from "./prototypes/AlloyFactoryPrototype.sol";
+import { PVCellFactoryPrototype, PVCellFactoryPrototypeId } from "./prototypes/PVCellFactoryPrototype.sol";
+import { StorageUnitPrototype, StorageUnitPrototypeId } from "./prototypes/StorageUnitPrototype.sol";
+import { SolarPanelPrototype, SolarPanelPrototypeId } from "./prototypes/SolarPanelPrototype.sol";
+import { HangarPrototype, HangarPrototypeId } from "./prototypes/HangarPrototype.sol";
+import { UnitTrainingPrototype, UnitTrainingPrototypeId } from "./prototypes/UnitTrainingPrototype.sol";
+import { DroneFactoryPrototype, DroneFactoryPrototypeId } from "./prototypes/DroneFactoryPrototype.sol";
+import { StarmapperPrototype, StarmapperPrototypeId } from "./prototypes/StarmapperPrototype.sol";
