@@ -17,8 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@game/api": ["src/game/api"],
-      "@game/constants": ["src/game/constants"],
-      "contracts/*": ["../../contracts/*"]
+      "@game/constants": ["src/game/constants"]
     }
   },
   "include": ["src", "../game-tools/src/CheatcodesList.tsx"]
