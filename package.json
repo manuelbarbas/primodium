@@ -14,7 +14,8 @@
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up) && pnpm run clean",
     "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json'",
-    "test": "pnpm recursive run test"
+    "test": "pnpm recursive run test",
+    "upgrade:mud": "pnpm mud set-version --tag=next"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix",
@@ -22,7 +23,7 @@
     "package.json": "pnpm sort-package-json"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.0-next.5",
+    "@latticexyz/cli": "2.0.0-next.8",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",
     "concurrently": "^8.0.1",
