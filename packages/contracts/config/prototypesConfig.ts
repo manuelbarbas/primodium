@@ -21,7 +21,9 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
   },
 
   Expansion: {
-    tables: {},
+    tables: {
+      P_MaxLevel: { value: 6 },
+    },
     levels: {
       0: { Dimensions: { x: 13, y: 11 } },
       1: { Dimensions: { x: 17, y: 13 } },
