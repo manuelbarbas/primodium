@@ -42,7 +42,9 @@
     "HasCompletedObjectiveComponent",
     "HasBuiltBuildingComponent",
     "BuildingCountComponent",
+    "TotalRaidComponent",
 
+    "P_RaidRequirementComponent",
     "P_UnitRequirementComponent",
     "P_BuildingCountRequirementComponent",
     "P_HasBuiltBuildingComponent",

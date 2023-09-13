@@ -18,7 +18,7 @@ import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibUtilityResource } from "libraries/LibUtilityResource.sol";
 import { LibUnits } from "libraries/LibUnits.sol";
 import { LibReward } from "libraries/LibReward.sol";
-
+import { LibRaid } from "libraries/LibRaid.sol";
 import { ResourceValue } from "../types.sol";
 import { IOnEntitySubsystem } from "../interfaces/IOnEntitySubsystem.sol";
 import { ID as SpendRequiredResourcesSystemID } from "./S_SpendRequiredResourcesSystem.sol";
@@ -90,9 +90,16 @@ contract ClaimObjectiveSystem is System {
       "[ClaimObjectiveSystem] You do not have the required building count"
     );
 
+    //unit count
     require(
       LibUnits.checkUnitRequirement(world, playerEntity, objective),
       "[ClaimObjectiveSystem] You do not have the required units"
+    );
+
+    //raid requirement
+    require(
+      LibRaid.checkRaidRequirement(world, playerEntity, objective),
+      "[ClaimObjectiveSystem] You have not raided the required amount of resources"
     );
 
     //can receive rewards

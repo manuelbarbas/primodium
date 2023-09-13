@@ -18,6 +18,7 @@ import { ID as S_ResolveRaidUnitsSystemID } from "systems/S_ResolveRaidUnitsSyst
 import { P_IsUnitComponent, ID as P_IsUnitComponentID } from "components/P_IsUnitComponent.sol";
 import { P_UnitCargoComponent, ID as P_UnitCargoComponentID } from "components/P_UnitCargoComponent.sol";
 import { P_MaxResourceStorageComponent, ID as P_MaxResourceStorageComponentID } from "components/P_MaxResourceStorageComponent.sol";
+import { P_RaidRequirementComponent, ID as P_RaidRequirementComponentID } from "components/P_RaidRequirementComponent.sol";
 import { OwnedByComponent, ID as OwnedByComponentID } from "components/OwnedByComponent.sol";
 import { BattleSpaceRockComponent, ID as BattleSpaceRockComponentID } from "components/BattleSpaceRockComponent.sol";
 import { BattleDefenderComponent, ID as BattleDefenderComponentID } from "components/BattleDefenderComponent.sol";
@@ -27,7 +28,7 @@ import { AsteroidTypeComponent, ID as AsteroidTypeComponentID } from "components
 import { ItemComponent, ID as ItemComponentID } from "components/ItemComponent.sol";
 import { BattleRaidResultComponent, ID as BattleRaidResultComponentID } from "components/BattleRaidResultComponent.sol";
 import { BattleBlockNumberComponent, ID as BattleBlockNumberComponentID } from "components/BattleBlockNumberComponent.sol";
-
+import { TotalRaidComponent, ID as TotalRaidComponentID } from "components/TotalRaidComponent.sol";
 import { RaidResult } from "src/types.sol";
 
 // libs
@@ -41,7 +42,7 @@ import { LibBattle } from "libraries/LibBattle.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 // types
-import { Coord, Arrival, ArrivalUnit, BattleParticipant, ESendType, BattleResult, ESpaceRockType } from "src/types.sol";
+import { Coord, Arrival, ArrivalUnit, BattleParticipant, ESendType, BattleResult, ESpaceRockType, ResourceValues } from "src/types.sol";
 
 library LibRaid {
   function raid(IWorld world, uint256 invader, uint256 rockEntity) internal {
@@ -207,7 +208,7 @@ library LibRaid {
     IOnSubsystem(getAddressById(world.systems(), S_ClaimAllResourcesSystemID)).executeTyped(
       entityToAddress(attacker.participantEntity)
     );
-
+    TotalRaidComponent totalRaidComponent = TotalRaidComponent(world.getComponent(TotalRaidComponentID));
     for (uint256 i = 0; i < resources.length; i++) {
       uint32 raidAmount = (totalCargo * resources[i]) / totalResources;
 
@@ -216,10 +217,32 @@ library LibRaid {
       }
       raidResult.defenderValuesBeforeRaid[i] = resources[i];
       raidResult.raidedAmount[i] = raidAmount;
-
+      LibMath.add(totalRaidComponent, LibEncode.hashKeyEntity(resources[i], attacker.participantEntity), raidAmount);
       LibStorage.addResourceToStorage(world, attacker.participantEntity, resourceIds[i], raidAmount);
       LibStorage.reduceResourceFromStorage(world, defender.participantEntity, resourceIds[i], raidAmount);
     }
     BattleRaidResultComponent(world.getComponent(BattleRaidResultComponentID)).set(battleEntity, raidResult);
+  }
+
+  function checkRaidRequirement(
+    IWorld world,
+    uint256 playerEntity,
+    uint256 objectiveEntity
+  ) internal view returns (bool) {
+    P_RaidRequirementComponent raidRequirementComponent = P_RaidRequirementComponent(
+      world.getComponent(P_RaidRequirementComponentID)
+    );
+    if (!raidRequirementComponent.has(objectiveEntity)) return true;
+    TotalRaidComponent totalRaidComponent = TotalRaidComponent(world.getComponent(TotalRaidComponentID));
+    ResourceValues memory unitRequirements = raidRequirementComponent.getValue(objectiveEntity);
+    for (uint256 i = 0; i < unitRequirements.resources.length; i++) {
+      if (
+        LibMath.getSafe(totalRaidComponent, LibEncode.hashKeyEntity(unitRequirements.resources[i], playerEntity)) <
+        unitRequirements.values[i]
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 }
