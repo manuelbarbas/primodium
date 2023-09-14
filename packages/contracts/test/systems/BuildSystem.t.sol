@@ -100,24 +100,30 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  // function testFailBuildMainBaseLevelNotMet() public {
-  //   vm.startPrank(alice);
+  function testBuildMainBaseLevelNotMetFail() public {
+    vm.startPrank(alice);
 
-  //   PositionData memory coord1 = getPosition3(alice);
-  //   world.build(DebugSimpleBuildingMainBaseLevelReqID, coord1);
-  //   vm.stopPrank();
-  // }
+    PositionData memory coord1 = getPosition3(alice);
+    vm.expectRevert(bytes("[BuildSystem] MainBase level requirement not met"));
+    world.build(EBuilding.Hangar, coord1);
+    vm.stopPrank();
+  }
 
-  // function testBuildMainBaseLevelMet() public {
-  //   vm.startPrank(alice);
+  function testBuildMainBaseLevelMet() public {
+    vm.startPrank(alice);
 
-  //   PositionData memory coord1 = getPosition3(alice);
-  //   componentDevSystem.executeTyped(
-  //     LevelComponentID,
-  //     mainBaseComponent.getValue(addressToEntity(alice)),
-  //     abi.encode(2)
-  //   );
-  //   world.build(DebugSimpleBuildingMainBaseLevelReqID, coord1);
-  //   vm.stopPrank();
-  // }
+    PositionData memory coord1 = getPosition3(alice);
+
+    bytes32[] memory keys = new bytes32[](1);
+    keys[0] = addressToEntity(alice);
+    world.devSetRecord(
+      P_RequiredBaseLevelTableId,
+      keys,
+      P_RequiredBaseLevel.encode(2),
+      P_RequiredBaseLevel.getValueSchema()
+    );
+
+    world.build(EBuilding.IronMine, coord1);
+    vm.stopPrank();
+  }
 }
