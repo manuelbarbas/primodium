@@ -65,10 +65,11 @@ export const config = mudConfig({
     },
 
     /* --------------------------------- Player --------------------------------- */
-    HomeAsteroid: {
+    Home: {
       keySchema: { entity: "bytes32" },
       schema: {
-        value: "bytes32",
+        asteroid: "bytes32",
+        mainBase: "bytes32",
       },
     },
 

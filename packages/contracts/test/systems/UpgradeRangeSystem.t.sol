@@ -12,7 +12,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
   function testOutOfBounds() public {
     vm.startPrank(alice);
     bytes32 aliceEntity = addressToEntity(alice);
-    bytes32 asteroid = HomeAsteroid.get(aliceEntity);
+    bytes32 asteroid = Home.getAsteroid(aliceEntity);
 
     Bounds memory bounds = LibBuilding.getPlayerBounds(aliceEntity);
     vm.expectRevert(bytes("[BuildSystem] Building out of bounds"));
