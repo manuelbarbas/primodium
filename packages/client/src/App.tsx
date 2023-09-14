@@ -68,10 +68,10 @@ export default function App() {
       <WagmiConfig client={wagmiClient}>
         <MudProvider {...networkLayer}>
           <ToastContainer
-            toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
+            toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box drop-shadow-2xl`}
             progressClassName={"bg-accent"}
-            position="top-center"
-            autoClose={5000}
+            position="top-right"
+            autoClose={2000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
