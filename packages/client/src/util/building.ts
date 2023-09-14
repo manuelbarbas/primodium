@@ -107,14 +107,14 @@ export const validateBuildingPlacement = (coord: Coord, bulding: EntityID) => {
   for (let x = 0; x < buildingDimensions.width; x++) {
     for (let y = 0; y < buildingDimensions.height; y++) {
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
-      if (getBuildingAtCoord(buildingCoord)) return true;
-      if (outOfBounds(buildingCoord, player)) return true;
+      if (getBuildingAtCoord(buildingCoord)) return false;
+      if (outOfBounds(buildingCoord, player)) return false;
       if (requiredTile && requiredTile !== getResourceKey(buildingCoord))
-        return true;
+        return false;
     }
   }
 
-  return false;
+  return true;
 };
 
 export const getBuildingName = (building: EntityID) => {
