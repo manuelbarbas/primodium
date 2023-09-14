@@ -4,6 +4,9 @@ import { MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32 from "./util/encodeBytes32";
 
+/* -------------------------------------------------------------------------- */
+/*                                  Utilities                                 */
+/* -------------------------------------------------------------------------- */
 const buildingIdToPrototypeId = MUDEnums.EBuilding.map((building, i) => ({
   [i]: {
     P_EnumToPrototype: { value: encodeBytes32(building) },
@@ -24,6 +27,7 @@ const getResourceValues = (resourceValues: Record<string, number>) => {
 };
 
 const maxRange = { xBounds: 37, yBounds: 25 };
+
 export const prototypesConfig: PrototypesConfig<typeof config> = {
   /* ---------------------------------- World --------------------------------- */
   World: {
@@ -61,6 +65,15 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       Position: { x: Math.floor(maxRange.xBounds / 2), y: Math.floor(maxRange.yBounds / 2), parent: encodeBytes32(0) },
       P_Blueprint: { value: getBlueprint(3, 3) },
       P_MaxLevel: { value: 8 },
+    },
+    levels: {
+      2: { P_RequiredResources: getResourceValues({ IronPlate: 6000, Copper: 10000 }) },
+      3: { P_RequiredResources: getResourceValues({ Sulfur: 12000, PVCell: 6000 }) },
+      4: { P_RequiredResources: getResourceValues({ Alloy: 10000 }) },
+      5: { P_RequiredResources: getResourceValues({ Titanium: 80000 }) },
+      6: { P_RequiredResources: getResourceValues({ Platinum: 250000 }) },
+      7: { P_RequiredResources: getResourceValues({ Iridium: 420000 }) },
+      8: { P_RequiredResources: getResourceValues({ Kimberlite: 590000 }) },
     },
   },
 
@@ -171,15 +184,15 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 3 },
-        P_RequiredResources: getResourceValues({ Iron: 50000, IronPlate: 50000 }),
+        P_RequiredResources: getResourceValues({ Iron: 50000, IronPlate: 50000, U_Electricity: 100 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 6 },
-        P_RequiredResources: getResourceValues({ Copper: 500000, IronPlate: 25000 }),
+        P_RequiredResources: getResourceValues({ Copper: 500000, IronPlate: 25000, U_Electricity: 120 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8 },
-        P_RequiredResources: getResourceValues({ Copper: 1250000, IronPlate: 100000 }),
+        P_RequiredResources: getResourceValues({ Copper: 1250000, IronPlate: 100000, U_Electricity: 150 }),
       },
     },
   },
@@ -215,7 +228,7 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       },
       3: {
         P_RequiredBaseLevel: { value: 6 },
-        P_RequiredResources: getResourceValues({ Iron: 500000, Titanium: 1000 }),
+        P_RequiredResources: getResourceValues({ Iron: 500000, Titanium: 1000, U_Electricity: 50 }),
       },
     },
   },
@@ -244,22 +257,25 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 5 },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ Iron: 20000, Lithium: 15000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ Iron: 20000, Lithium: 15000, U_Electricity: 100 }),
+      },
       2: {
         P_RequiredBaseLevel: { value: 4 },
-        P_RequiredResources: getResourceValues({ Sulfur: 5000, Copper: 175000 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 5000, Copper: 175000, U_Electricity: 200 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6 },
-        P_RequiredResources: getResourceValues({ Sulfur: 15000, Copper: 300000 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 15000, Copper: 300000, U_Electricity: 300 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 7 },
-        P_RequiredResources: getResourceValues({ Sulfur: 50000, Platinum: 10000 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 50000, Platinum: 10000, U_Electricity: 400 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 8 },
-        P_RequiredResources: getResourceValues({ Sulfur: 100000, Kimberlite: 15000 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 100000, Kimberlite: 15000, U_Electricity: 500 }),
       },
     },
   },
@@ -269,18 +285,21 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       P_MaxLevel: { value: 4 },
     },
     levels: {
-      1: { P_RequiredBaseLevel: { value: 2 }, P_RequiredResources: getResourceValues({ Lithium: 5000 }) },
+      1: {
+        P_RequiredBaseLevel: { value: 2 },
+        P_RequiredResources: getResourceValues({ Lithium: 5000, U_Electricity: 100 }),
+      },
       2: {
         P_RequiredBaseLevel: { value: 4 },
-        P_RequiredResources: getResourceValues({ Sulfur: 25000 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 25000, U_Electricity: 200 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 6 },
-        P_RequiredResources: getResourceValues({ Sulfur: 100000, Iridium: 20000 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 100000, Iridium: 20000, U_Electricity: 350 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 8 },
-        P_RequiredResources: getResourceValues({ Sulfur: 275000, Kimberlite: 10000 }),
+        P_RequiredResources: getResourceValues({ Sulfur: 275000, Kimberlite: 10000, U_Electricity: 500 }),
       },
     },
   },

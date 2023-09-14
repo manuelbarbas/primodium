@@ -49,8 +49,8 @@ export const MUDEnums = {
     "Platinum",
     "Uraninite",
     "Bolutite",
-    "MoveCount",
-    // Crafted Item
+
+    // Crafted Items
     "IronPlate",
     "Alloy",
     "PVCell",
@@ -60,6 +60,7 @@ export const MUDEnums = {
     "U_Electricity",
     "U_Housing",
     "U_Vessel",
+    "MoveCount",
 
     "LENGTH",
   ],
