@@ -48,8 +48,9 @@ export const MaterialLabel = ({
         />
         {production !== 0 && (
           <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
+            +
             {formatNumber((production * RESOURCE_SCALE * 60) / avgBlockTime, 1)}
-            /MIN
+            /MIN <b>({maxStorage * RESOURCE_SCALE})</b>
           </p>
         )}
       </div>

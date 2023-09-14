@@ -44,15 +44,14 @@ export default function ResourceIconTooltip({
       : `${formatNumber((amount * scale * 60) / avgBlockTime, 1)}/MIN`;
 
   return (
-    <Tooltip text={name} direction={direction}>
-      <IconLabel
-        imageUri={image}
-        text={label}
-        className={`text-${fontSize} font-bold ${className} ${
-          !hasEnough && validate ? `text-error animate-pulse ` : ""
-        }
-        `}
-      />
-    </Tooltip>
+    <IconLabel
+      imageUri={image}
+      text={label}
+      tooltipDirection={direction}
+      tooltipText={name}
+      className={`text-${fontSize} font-bold ${className} ${
+        !hasEnough && validate ? `text-error animate-pulse ` : ""
+      }`}
+    />
   );
 }

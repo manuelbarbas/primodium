@@ -2,7 +2,7 @@ import React from "react";
 
 interface TooltipProps {
   children: React.ReactNode;
-  text: string;
+  text?: string;
   direction?: "left" | "right" | "top" | "bottom";
 }
 

@@ -1,4 +1,5 @@
 @import "@fontsource/space-mono";
+@import "@fontsource/space-mono/700.css";
 
 @tailwind base;
 @tailwind components;
