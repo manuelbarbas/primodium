@@ -320,4 +320,16 @@ export const prototypesConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
+
+  /* -------------------------------- Resources ------------------------------- */
+  // NOTE: To check if a resource is a utility, call P_IsUtility(EResource.<resource>);
+  IsUtility: {
+    keys: {},
+    levels: {
+      [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_Vessel")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("MoveCount")]: { P_IsUtility: { value: true } },
+    },
+  },
 };
