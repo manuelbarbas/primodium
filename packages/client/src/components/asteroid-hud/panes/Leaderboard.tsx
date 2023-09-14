@@ -10,12 +10,31 @@ import {
 import { shortenAddress } from "src/util/common";
 import { useGameStore } from "src/store/GameStore";
 import { SecondaryCard } from "src/components/core/Card";
+import { getLinkedAddress } from "src/util/web2/getLinkedAddress";
+import { Button } from "src/components/core/Button";
+import { linkAddress } from "src/util/web2/linkAddress";
 
 export const Leaderboard = () => {
   const address = Account.use()?.value;
-
   const transactionLoading = useGameStore((state) => state.transactionLoading);
   const data = _Leaderboard.use();
+  const [linkedAddress, setLinkedAddress] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLinkedAddress = async () => {
+      try {
+        const result = await getLinkedAddress();
+        setLinkedAddress(result.address);
+      } catch (error) {
+        console.error("Failed to get linked address:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLinkedAddress();
+  }, []);
 
   if (!data || !address) return null;
 
@@ -45,22 +64,28 @@ export const Leaderboard = () => {
       <hr className="w-full border-t border-cyan-800 my-2" />
       <SecondaryCard className="w-full overflow-y-auto border border-slate-700 rounded-md p-2 bg-slate-800">
         {address && (
-          <div className="grid grid-cols-6 w-full">
+          <div className="grid grid-cols-6 w-full items-center">
             <div>{data.playerRank}.</div>
             <div className="col-span-5 flex justify-between">
-              <div className="bg-rose-800 px-2 rounded-md">You</div>
-              <button
+              <p className="bg-rose-800 px-2 rounded-md flex items-center">
+                You
+              </p>
+              <Button
                 disabled={transactionLoading}
-                className="px-2 rounded-md hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-700 border-cyan-500"
-                onClick={() => "Link"}
+                className="btn-xs btn-secondary"
+                onClick={linkAddress}
               >
-                Link Wallet
-              </button>
-              <div className="font-bold rounded-md bg-cyan-700 px-2">
+                {loading
+                  ? "..."
+                  : linkedAddress
+                  ? "Wallet Linked"
+                  : "Link Wallet"}
+              </Button>
+              <p className="font-bold rounded-md bg-cyan-700 px-2 flex items-center">
                 {data.scores.length >= data.playerRank
                   ? data.scores[data.playerRank - 1].toLocaleString()
                   : 0}
-              </div>
+              </p>
             </div>
           </div>
         )}
