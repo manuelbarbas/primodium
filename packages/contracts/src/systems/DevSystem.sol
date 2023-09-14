@@ -15,7 +15,7 @@ contract DevSystem is System {
     bytes32[] calldata key,
     bytes calldata data,
     Schema valueSchema
-  ) public virtual {
+  ) public {
     StoreCore.setRecord(tableId, key, data, valueSchema);
   }
 
@@ -28,7 +28,7 @@ contract DevSystem is System {
     uint8 schemaIndex,
     bytes calldata data,
     Schema valueSchema
-  ) public virtual {
+  ) public {
     StoreCore.setField(tableId, key, schemaIndex, data, valueSchema);
   }
 
@@ -41,7 +41,7 @@ contract DevSystem is System {
     uint8 schemaIndex,
     bytes calldata dataToPush,
     Schema valueSchema
-  ) public virtual {
+  ) public {
     StoreCore.pushToField(tableId, key, schemaIndex, dataToPush, valueSchema);
   }
 
@@ -54,7 +54,7 @@ contract DevSystem is System {
     uint8 schemaIndex,
     uint256 byteLengthToPop,
     Schema valueSchema
-  ) public virtual {
+  ) public {
     // Push to the field
     StoreCore.popFromField(tableId, key, schemaIndex, byteLengthToPop, valueSchema);
   }
@@ -69,7 +69,7 @@ contract DevSystem is System {
     uint256 startByteIndex,
     bytes calldata dataToSet,
     Schema valueSchema
-  ) public virtual {
+  ) public {
     // Update data in the field
     StoreCore.updateInField(tableId, key, schemaIndex, startByteIndex, dataToSet, valueSchema);
   }
@@ -82,7 +82,7 @@ contract DevSystem is System {
     bytes32 tableId,
     bytes32[] calldata key,
     Schema valueSchema
-  ) public virtual {
+  ) public {
     // Delete the record
     StoreCore.deleteRecord(tableId, key, valueSchema);
   }

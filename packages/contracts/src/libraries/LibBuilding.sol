@@ -2,15 +2,14 @@
 pragma solidity >=0.8.0;
 
 // tables
-import { P_Asteroid, P_BuildingTypeToPrototype, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
+import { Home, P_RequiredTile, P_RequiredBaseLevel, P_Asteroid, P_Terrain, P_EnumToPrototype, P_AsteroidData, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint, Children } from "codegen/Tables.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
 
 // types
 import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
-import { Bounds } from "src/Types.sol";
-import { EBuilding } from "src/Types.sol";
+import { Bounds, EBuilding, EResource } from "src/Types.sol";
 
 library LibBuilding {
   function build(
@@ -22,7 +21,7 @@ library LibBuilding {
     uint32 level = 1;
 
     Spawned.set(buildingEntity, true);
-    BuildingType.set(buildingEntity, P_BuildingTypeToPrototype.get(buildingType));
+    BuildingType.set(buildingEntity, P_EnumToPrototype.get(BuildingKey, uint32(buildingType)));
     Level.set(buildingEntity, level);
     Position.set(buildingEntity, coord);
     LastClaimedAt.set(buildingEntity, block.number);
@@ -37,7 +36,7 @@ library LibBuilding {
     EBuilding buildingType,
     PositionData memory position
   ) public {
-    bytes32 buildingPrototype = P_BuildingTypeToPrototype.get(buildingType);
+    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint32(buildingType));
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getPlayerBounds(playerEntity);
 
@@ -86,5 +85,38 @@ library LibBuilding {
   function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
     bytes32 buildingTile = LibEncode.getHash(BuildingTileKey, coord);
     return OwnedBy.get(buildingTile);
+  }
+
+  function getBaseLevel(bytes32 playerEntity) internal view returns (uint32) {
+    if (!Spawned.get(playerEntity)) return 0;
+    bytes32 mainBase = Home.getMainBase(playerEntity);
+    return Level.get(mainBase);
+  }
+
+  function hasRequiredBaseLevel(
+    bytes32 playerEntity,
+    bytes32 prototype,
+    uint32 level
+  ) internal view returns (bool) {
+    uint32 mainLevel = getBaseLevel(playerEntity);
+    return mainLevel >= P_RequiredBaseLevel.get(prototype, level);
+  }
+
+  function hasRequiredBaseLevel(
+    bytes32 playerEntity,
+    EBuilding building,
+    uint32 level
+  ) internal view returns (bool) {
+    return hasRequiredBaseLevel(playerEntity, P_EnumToPrototype.get(BuildingKey, uint32(building)), level);
+  }
+
+  function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
+    EResource resource = P_RequiredTile.get(prototype);
+    return resource == EResource.NULL || resource == P_Terrain.get(coord.x, coord.y);
+  }
+
+  function canBuildOnTile(EBuilding building, PositionData memory coord) internal view returns (bool) {
+    EResource resource = P_RequiredTile.get(P_EnumToPrototype.get(BuildingKey, uint32(building)));
+    return resource == EResource.NULL || resource == P_Terrain.get(coord.x, coord.y);
   }
 }

@@ -76,6 +76,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testSameXYZCannotCollideFail() public {
     vm.startPrank(alice);
+    removeRequirements(EBuilding.IronMine);
     world.build(EBuilding.IronMine, getPosition1(alice));
 
     vm.expectRevert(bytes("[BuildSystem] Building already exists"));
@@ -111,13 +112,31 @@ contract BuildSystemTest is PrimodiumTest {
   // function testBuildMainBaseLevelMet() public {
   //   vm.startPrank(alice);
 
-  //   PositionData memory coord1 = getPosition3(alice);
-  //   componentDevSystem.executeTyped(
-  //     LevelComponentID,
-  //     mainBaseComponent.getValue(addressToEntity(alice)),
-  //     abi.encode(2)
-  //   );
-  //   world.build(DebugSimpleBuildingMainBaseLevelReqID, coord1);
-  //   vm.stopPrank();
-  // }
+    PositionData memory coord1 = getPosition3(alice);
+
+    bytes32[] memory keys = new bytes32[](1);
+    keys[0] = addressToEntity(alice);
+    world.devSetRecord(
+      P_RequiredBaseLevelTableId,
+      keys,
+      P_RequiredBaseLevel.encode(2),
+      P_RequiredBaseLevel.getValueSchema()
+    );
+
+    removeRequirements(EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord1);
+    vm.stopPrank();
+  }
+
+  function testIronMineOnNonIronFail() public {
+    vm.startPrank(alice);
+
+    PositionData memory nonIronCoord = getNonIronPosition(alice);
+    assertTrue(P_Terrain.get(nonIronCoord.x, nonIronCoord.y) != EResource.Iron, "Tile should not have iron");
+
+    vm.expectRevert(bytes("[BuildSystem] Cannot build on this tile"));
+    world.build(EBuilding.IronMine, nonIronCoord);
+
+    vm.stopPrank();
+  }
 }
