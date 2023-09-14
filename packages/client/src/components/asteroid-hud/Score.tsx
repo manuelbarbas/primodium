@@ -4,7 +4,7 @@ import {
 } from "src/network/components/clientComponents";
 import { Card, SecondaryCard } from "../core/Card";
 
-export const Leaderboard = () => {
+export const Score = () => {
   const address = Account.use()?.value;
   const data = _Leaderboard.use();
   if (!data || !address) return null;

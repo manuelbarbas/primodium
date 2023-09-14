@@ -5,7 +5,7 @@ export const Divider: React.FC<{
 }> = ({ className, children, direction = "horizontal" }) => {
   return (
     <div
-      className={`divider ${className} ${
+      className={`divider ${className} border border-secondary ${
         direction === "horizontal" ? "divider-horizontal" : "divider-vertical"
       }`}
     >

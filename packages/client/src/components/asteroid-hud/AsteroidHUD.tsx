@@ -6,19 +6,17 @@ import { AsteroidMap, KeybindActions } from "@game/constants";
 import { useGameStore } from "../../store/GameStore";
 import { HUD } from "../core/HUD";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { Fleets } from "./units-pane/Units";
-import { PlayerInfo } from "./player-info/PlayerInfo";
-// import { BuildingMenu } from "./BuildingMenu/BuildingMenu";
 import { Resources } from "./resources/Resources";
 import { Hotbar } from "./hotbar/Hotbar";
 import { Units } from "./units/Units";
-import { Leaderboard } from "./Leaderboard";
+import { Score } from "./Score";
 import { CurrentObjective } from "./CurrentObjective";
-import { Button } from "../core/Button";
 import { SelectedBuilding } from "src/network/components/clientComponents";
 import { BlueprintInfo } from "./tile-info/BlueprintInfo";
 import { getBlockTypeName } from "src/util/common";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { ViewStarmap } from "./ViewStarmap";
+import { Panes } from "./panes/Panes";
 
 export const AsteroidHUD = () => {
   const [showUI, toggleShowUI] = useGameStore((state) => [
@@ -48,38 +46,24 @@ export const AsteroidHUD = () => {
               {!getBlockTypeName(selectedBuilding) && <BuildingMenu />}
             </HUD.BottomMiddle>
             <HUD.TopMiddle>
-              {!getBlockTypeName(selectedBuilding) && (
-                <>
-                  <Leaderboard />
-                  <CurrentObjective />
-                </>
-              )}
               {getBlockTypeName(selectedBuilding) && selectedBuilding && (
                 <BlueprintInfo buildingType={selectedBuilding} />
               )}
+              {(!selectedBuilding || !getBlockTypeName(selectedBuilding)) && (
+                <ViewStarmap />
+              )}
             </HUD.TopMiddle>
             <HUD.TopLeft>
-              <PlayerInfo />
+              <Score />
+              <CurrentObjective />
             </HUD.TopLeft>
             <HUD.TopRight>
-              <Fleets />
+              <Panes />
             </HUD.TopRight>
             <HUD.BottomLeft>
               <Resources />
             </HUD.BottomLeft>
             <HUD.BottomRight>
-              <Button
-                className="w-full mb-2 flex border border-error ring ring-error/30 bg-error"
-                onClick={() => {
-                  return;
-                }}
-              >
-                <img
-                  src="img/icons/attackaircraft.png"
-                  className="pixel-images w-8 h-8"
-                />
-                <span className="flex font-bold gap-1">STARMAP</span>
-              </Button>
               <Units />
             </HUD.BottomRight>
           </HUD>

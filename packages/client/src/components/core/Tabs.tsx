@@ -41,7 +41,7 @@ const Pane: FC<{
     return null;
   }
 
-  return <Card className={`${className} h-fit w-fit`}>{children}</Card>;
+  return <Card className={`${className} `}>{children}</Card>;
 });
 
 const Button: FC<{
