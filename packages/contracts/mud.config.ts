@@ -134,15 +134,22 @@ export const config = mudConfig({
     /* -------------------------------- Resources ------------------------------- */
 
     /* --------------------------- Build Requirements --------------------------- */
-
+    P_RequiredTile: {
+      keySchema: { prototype: "bytes32" },
+      schema: "EResource",
+    },
     P_RequiredBaseLevel: {
-      keySchema: { entity: "bytes32", level: "uint32" },
+      keySchema: { prototype: "bytes32", level: "uint32" },
       schema: "uint32",
     },
 
-    P_RequiredTile: {
-      keySchema: { entity: "bytes32" },
-      schema: "EResource",
+    P_RequiredResources: {
+      keySchema: { prototype: "bytes32", level: "uint32" },
+      schema: {
+        // mud doesnt recognize enum arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint32[]",
+      },
     },
 
     /* -------------------------------- Buildings ------------------------------- */
