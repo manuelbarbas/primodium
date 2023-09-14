@@ -12,6 +12,7 @@ import { Card } from "./Card";
 interface TabProps {
   children?: ReactNode;
   defaultIndex?: number;
+  className?: string;
 }
 
 interface IndexContextValue {
@@ -40,7 +41,7 @@ const Pane: FC<{
     return null;
   }
 
-  return <Card className={`${className}`}>{children}</Card>;
+  return <Card className={`${className} h-fit w-fit`}>{children}</Card>;
 });
 
 const Button: FC<{
@@ -65,27 +66,41 @@ export const IconButton: FC<{
   index: number;
   text: string;
   imageUri: string;
-}> = memo(({ index, text, imageUri }) => {
-  const { index: currIndex, setIndex } = useIndex();
+  hideText?: boolean;
+  tooltipDirection?: "right" | "left" | "top" | "bottom";
+  tooltipText?: string;
+}> = memo(
+  ({
+    index,
+    text,
+    imageUri,
+    hideText = false,
+    tooltipDirection = "right",
+    tooltipText,
+  }) => {
+    const { index: currIndex, setIndex } = useIndex();
 
-  const selected = currIndex === index;
+    const selected = currIndex === index;
 
-  return (
-    <_IconButton
-      text={text}
-      selected={selected}
-      imageUri={imageUri}
-      hideText={!selected}
-      onClick={() => setIndex(selected ? undefined : index)}
-    />
-  );
-});
+    return (
+      <_IconButton
+        text={text}
+        selected={selected}
+        imageUri={imageUri}
+        hideText={hideText || !selected}
+        onClick={() => setIndex(selected ? undefined : index)}
+        tooltipDirection={tooltipDirection}
+        tooltipText={tooltipText}
+      />
+    );
+  }
+);
 
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
   IconButton: typeof IconButton;
   Pane: typeof Pane;
-} = ({ children, defaultIndex = 0 }) => {
+} = ({ children, defaultIndex = 0, className }) => {
   const [currentIndex, setCurrentIndex] = useState<number | undefined>(
     defaultIndex
   );
@@ -94,7 +109,7 @@ export const Tabs: FC<TabProps> & {
     <IndexContext.Provider
       value={{ index: currentIndex, setIndex: setCurrentIndex }}
     >
-      <div className="space-y-1">{children}</div>
+      <div className={`gap-2 ${className}`}>{children}</div>
     </IndexContext.Provider>
   );
 };

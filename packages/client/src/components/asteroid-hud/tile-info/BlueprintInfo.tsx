@@ -69,6 +69,8 @@ export const BlueprintInfo: React.FC<{
 
   const hasEnough = useHasEnoughResources(buildingLevelEntity);
 
+  if (!getBlockTypeName(buildingType)) return <></>;
+
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="flex flex-col justify-center items-center border border-yellow-400 border-dashed ring ring-yellow-700/20 rounded-md bg-slate-900 p-2">

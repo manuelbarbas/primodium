@@ -1,9 +1,9 @@
 import { FaDiscord, FaTwitter } from "react-icons/fa";
-import { GameButton } from "../shared/GameButton";
+import { GameButton } from "../../shared/GameButton";
 
 const params = new URLSearchParams(window.location.search);
 
-export const MainMenu = () => {
+export const Settings = () => {
   return (
     <div className="flex flex-col items-center gap-2 text-white w-80 min-w-full">
       <h1 className="inline-block align-middle text-xl font-bold">

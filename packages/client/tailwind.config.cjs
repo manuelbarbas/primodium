@@ -29,7 +29,7 @@ module.exports = {
           info: colors.indigo[600],
           success: colors.green[600],
           warning: colors.amber[600],
-          error: colors.rose[600],
+          error: colors.rose[700],
 
           "--rounded-box": ".4rem", // border radius rounded-box utility class, used in card and other large boxes
           "--rounded-btn": "0.4rem", // border radius rounded-btn utility class, used in buttons and similar element

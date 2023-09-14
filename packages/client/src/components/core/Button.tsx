@@ -39,6 +39,8 @@ export const IconButton: React.FC<{
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
+  tooltipText?: string;
+  tooltipDirection?: "right" | "left" | "top" | "bottom";
 }> = ({
   imageUri,
   text,
@@ -48,6 +50,8 @@ export const IconButton: React.FC<{
   disabled,
   selected = false,
   loading = false,
+  tooltipDirection = "right",
+  tooltipText,
 }) => {
   return (
     <button
@@ -59,7 +63,13 @@ export const IconButton: React.FC<{
     >
       {loading && <Loader />}
       {!loading && (
-        <IconLabel imageUri={imageUri} text={text} hideText={hideText} />
+        <IconLabel
+          imageUri={imageUri}
+          text={text}
+          hideText={hideText}
+          tooltipDirection={tooltipDirection}
+          tooltipText={tooltipText}
+        />
       )}
     </button>
   );
