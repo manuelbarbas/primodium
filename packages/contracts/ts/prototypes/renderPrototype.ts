@@ -151,17 +151,9 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
 
 export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
   const prototype = config.prototypes[name];
-  const keys = prototype.keys ? prototype.keys : name == "World" ? {} : { prototypeId: "bytes32" };
+  const keys = prototype.keys !== undefined ? prototype.keys : name == "World" ? {} : { prototypeId: "bytes32" };
+
   const values = prototype.tables ?? {};
-  const levelTables = Object.values(prototype.levels ?? {})
-    .map((v) => {
-      return Object.keys(v);
-    })
-    .flat();
-  const allImportedTableIds = [...Object.keys(prototype.tables ?? {}), ...levelTables]
-    .map((tableName) => `${tableName}, ${tableName}TableId`)
-    .join(",");
-  const levelPrototype = renderLevelPrototype(config, name);
   const keyTupleDefinition = `
     bytes32[] memory _keyTuple = new bytes32[](${Object.entries(keys).length});
     ${renderList(
@@ -173,6 +165,17 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
         })};`
     )}
   `;
+  const levelTables = Object.values(prototype.levels ?? {})
+    .map((v) => {
+      return Object.keys(v);
+    })
+    .flat();
+  const levelPrototype = renderLevelPrototype(config, name);
+
+  const allImportedTableIds = [...Object.keys(prototype.tables ?? {}), ...levelTables]
+    .map((tableName) => `${tableName}, ${tableName}TableId`)
+    .join(",");
+
   return `
   ${renderedSolidityHeader}
   

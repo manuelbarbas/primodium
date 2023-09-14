@@ -150,7 +150,7 @@ contract PrimodiumTest is MudTest {
   }
 
   function removeRequiredTile(EBuilding building) internal {
-    bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint32(building));
+    bytes32 buildingEntity = P_EnumToPrototype.get(BuildingKey, uint8(building));
     bytes32[] memory keys = new bytes32[](1);
     keys[0] = buildingEntity;
     world.devDeleteRecord(P_RequiredTileTableId, keys, P_RequiredTile.getValueSchema());

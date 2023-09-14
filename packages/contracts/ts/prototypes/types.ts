@@ -14,7 +14,7 @@ type Tables<C extends StoreConfig, T = undefined> = {
 export type PrototypeConfig<C extends StoreConfig> = {
   keys?: Record<string, StaticAbiType>;
   tables?: Tables<C>;
-  levels?: Record<number, Tables<C, { level: "uint32" }>>;
+  levels?: Record<number, Tables<C, { level: "uint32" } | { id: unknown }>>;
 };
 
 export type PrototypesConfig<C extends StoreConfig> = Record<string, PrototypeConfig<C>>;
