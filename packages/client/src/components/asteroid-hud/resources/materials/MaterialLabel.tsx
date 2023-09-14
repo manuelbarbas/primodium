@@ -1,7 +1,10 @@
 import { EntityID } from "@latticexyz/recs";
-import { ResourceImage } from "src/util/constants";
+import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import ResourceIconTooltip from "src/components/shared/ResourceIconTooltip";
+import { useMemo } from "react";
+import { formatNumber } from "src/util/common";
+import { BlockNumber } from "src/network/components/clientComponents";
 
 export const MaterialLabel = ({
   name,
@@ -10,18 +13,30 @@ export const MaterialLabel = ({
   name: string;
   resourceId: EntityID;
 }) => {
-  const { maxStorage, resourceCount, resourcesToClaim } =
+  const { maxStorage, resourceCount, resourcesToClaim, production } =
     useFullResourceCount(resourceId);
-  // const { avgBlockTime } = BlockNumber.use(undefined, {
-  //   value: 0,
-  //   avgBlockTime: 1,
-  // });
+  const { avgBlockTime } = BlockNumber.use(undefined, {
+    value: 0,
+    avgBlockTime: 1,
+  });
 
   const resourceIcon = ResourceImage.get(resourceId);
 
+  const tooltipClass = useMemo(() => {
+    const percentFull = (resourceCount + resourcesToClaim) / maxStorage;
+
+    if (percentFull >= 1) {
+      return "text-accent";
+    }
+
+    if (percentFull >= 0.9) return "text-accent animate-pulse";
+
+    return undefined;
+  }, [resourceCount, resourcesToClaim, maxStorage]);
+
   if (maxStorage > 0) {
     return (
-      <div className="mx-1">
+      <div className="gap-1 mx-1 group pointer-events-auto">
         <ResourceIconTooltip
           name={name}
           amount={resourceCount + resourcesToClaim}
@@ -29,7 +44,14 @@ export const MaterialLabel = ({
           image={resourceIcon ?? ""}
           validate={false}
           fontSize={"sm"}
+          className={`${tooltipClass}`}
         />
+        {production !== 0 && (
+          <p className="opacity-50 text-[0rem] group-hover:text-xs transition-all">
+            {formatNumber((production * RESOURCE_SCALE * 60) / avgBlockTime, 1)}
+            /MIN
+          </p>
+        )}
       </div>
     );
   } else {

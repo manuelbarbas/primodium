@@ -16,6 +16,7 @@ export default function ResourceIconTooltip({
   resourceType = ResourceType.Resource,
   validate = true,
   direction = "right",
+  className,
 }: {
   image: string;
   resourceId: EntityID;
@@ -27,6 +28,7 @@ export default function ResourceIconTooltip({
   fontSize?: string;
   validate?: boolean;
   direction?: "top" | "bottom" | "right" | "left";
+  className?: string;
 }) {
   const hasEnough = useHasEnoughOfResource(resourceId, amount, resourceType);
   const { avgBlockTime } = BlockNumber.use(undefined, {
@@ -46,7 +48,7 @@ export default function ResourceIconTooltip({
       <IconLabel
         imageUri={image}
         text={label}
-        className={`text-${fontSize} font-bold ${
+        className={`text-${fontSize} font-bold ${className} ${
           !hasEnough && validate ? `text-error animate-pulse ` : ""
         }
         `}
